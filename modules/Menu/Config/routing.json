@@ -1,0 +1,54 @@
+{
+    "menu.show": {
+        "path": "menu/:item",
+        "uses": "Menu@show",
+        "with": {
+            ":item": "[a-z-]+"
+        }
+    },
+    "menu.show.check": {
+        "path": "menu/:item/check",
+        "uses": "Menu@showCheck",
+        "with": {
+            ":item": "[a-z-]+"
+        }
+    },
+    "menu.link.add": {
+        "path": "menu/:item/link/add",
+        "uses": "Menu@addLink",
+        "with": {
+            ":item": "[a-z-]+"
+        }
+    },
+    "menu.link.add.check": {
+        "path": "menu/:item/link/add/check",
+        "uses": "Menu@addLinkCheck",
+        "with": {
+            ":item": "[a-z-]+"
+        }
+    },
+    "menu.link.edit": {
+        "path": "menu/:menu/link/:item/edit",
+        "uses": "Menu@editLink",
+        "with": {
+            ":item": "[0-9]+",
+            ":menu": "[a-z-]+"
+        }
+    },
+    "menu.link.edit.check": {
+        "path": "menu/:menu/link/:item/edit/check",
+        "uses": "Menu@editLinkCheck",
+        "with": {
+            ":item": "[0-9]+",
+            ":menu": "[a-z-]+"
+        }
+    },
+    "menu.link.delete": {
+        "path": "menu/:menu/link/:item/delete",
+        "uses": "Menu@deleteLink",
+        "with": {
+            ":menu": "[a-z-]+",
+            ":item": "[0-9]+"
+        }
+    }
+}

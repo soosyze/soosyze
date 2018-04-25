@@ -1,0 +1,41 @@
+{
+    "news.index": {
+        "path": "news",
+        "uses": "News@index"
+    },
+    "news.page": {
+        "path": "news/page/:id",
+        "uses": "News@page",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    },
+    "news.view.years": {
+        "path": "news/:years",
+        "uses": "News@viewYears",
+        "with": {
+            ":years": "[0-9]{4}"
+        }
+    },
+    "news.view.month": {
+        "path": "news/:years/:month",
+        "uses": "News@viewMonth",
+        "with": {
+            ":years": "[0-9]{4}",
+            ":month": "(0[1-9]|1[0-2])"
+        }
+    },
+    "news.view.day": {
+        "path": "news/:years/:month/:day",
+        "uses": "News@viewDay",
+        "with": {
+            ":years": "[0-9]{4}",
+            ":month": "(0[1-9]|1[0-2])",
+            ":day": "([0-2][1-9]|3[0-1])"
+        }
+    },
+    "news.view.rss": {
+        "path": "news/rss",
+        "uses": "News@viewRss"
+    }
+}

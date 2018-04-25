@@ -1,0 +1,10 @@
+{
+    "contact": {
+        "path": "contact",
+        "uses": "Contact@contact"
+    },
+    "contact.check": {
+        "path": "contact/check",
+        "uses": "Contact@contactCheck"
+    }
+}

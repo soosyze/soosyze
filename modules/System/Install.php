@@ -1,0 +1,129 @@
+<?php
+
+namespace System;
+
+use \Queryflatfile\TableBuilder;
+
+class Install
+{
+    public function install($container)
+    {
+        $container->schema()->createTableIfNotExists('module', function (TableBuilder $table) {
+            $table->string('name')
+                ->string('controller')
+                ->string('version')
+                ->text('description')
+                ->string('package')
+                ->boolean('locked');
+        });
+
+        $container->schema()->createTableIfNotExists('module_required', function (TableBuilder $table) {
+            $table->string('name_module')
+                ->string('name_required');
+        });
+
+        $container->schema()->createTableIfNotExists('option', function (TableBuilder $table) {
+            $table->string('name')
+                ->string('value');
+        });
+
+        $container->query()->insertInto('option', [ 'name', 'value' ])
+            ->values([ 'email', '' ])
+            ->values([ 'caches', '' ])
+            ->values([ 'maintenance', '' ])
+            ->values([ 'theme', '' ])
+            ->values([ 'pathIndex', '' ])
+            ->values([ 'pathAccessDenied', '' ])
+            ->values([ 'pathNoFound', '' ])
+            ->values([ 'title', '' ])
+            ->values([ 'description', '' ])
+            ->values([ 'keyboard', '' ])
+            ->values([ 'favicon', '' ])
+            ->execute();
+    }
+
+    public function hookInstall($container)
+    {
+        $this->hookInstallUser($container);
+        $this->hookInstallMenu($container);
+    }
+
+    public function hookInstallUser($container)
+    {
+        if ($container->schema()->hasTable('user')) {
+            $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
+                ->values([ 'system.config', 'Voir les configurations' ])
+                ->values([ 'system.config.check', 'Editer les configurations' ])
+                ->values([ 'system.modules', 'Voir les modules' ])
+                ->values([ 'system.modules.check', 'Editer les modules' ])
+                ->execute();
+
+            $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'system.config' ])
+                ->values([ 3, 'system.config.check' ])
+                ->values([ 3, 'system.modules' ])
+                ->values([ 3, 'system.modules.check' ])
+                ->execute();
+        }
+    }
+
+    public function hookInstallMenu($container)
+    {
+        if ($container->schema()->hasTable('menu')) {
+            $container->query()->insertInto('menu_link', [
+                    'title_link',
+                    'target_link',
+                    'menu',
+                    'weight',
+                    'parent',
+                    'active'
+                ])
+                ->values([
+                    '<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Modules',
+                    "admin/modules",
+                    "admin-menu",
+                    5,
+                    -1,
+                    true
+                ])
+                ->values([
+                    '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuration',
+                    'admin/config',
+                    'admin-menu',
+                    6,
+                    -1,
+                    true
+                ])
+                ->execute();
+        }
+    }
+
+    public function uninstall($container)
+    {
+        if ($container->schema()->hasTable('user')) {
+            $container->query()
+                ->from('permission')
+                ->delete()
+                ->regex('permission_id', '/^system./')
+                ->execute();
+
+            $container->query()
+                ->from('role_permission')
+                ->delete()
+                ->regex('permission_id', '/^system./')
+                ->execute();
+        }
+
+        if ($container->schema()->hasTable('menu')) {
+            $container->query()
+                ->from('menu_link')
+                ->delete()
+                ->where('target_link', 'admin/modules')
+                ->orWhere('target_link', 'admin/config')
+                ->execute();
+        }
+
+        $container->schema()->dropTable('module');
+        $container->schema()->dropTable('config');
+    }
+}

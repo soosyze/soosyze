@@ -1,0 +1,51 @@
+{
+    "user.login": {
+        "path": "user/login",
+        "uses": "User@login"
+    },
+    "user.login.check": {
+        "path": "user/login/check",
+        "uses": "User@loginCheck"
+    },
+    "user.relogin": {
+        "path": "user/relogin",
+        "uses": "User@relogin"
+    },
+    "user.relogin.check": {
+        "path": "user/relogin/check",
+        "uses": "User@reloginCheck"
+    },
+    "user.reset": {
+        "path": "user/:id/reset/:token",
+        "uses": "User@resetUser",
+        "with": {
+            ":id": "[0-9]+",
+            ":token": "[0-9a-zA-Z]+"
+        }
+    },
+    "user.logout": {
+        "path": "user/logout",
+        "uses": "User@logout"
+    },
+    "user.views": {
+        "path": "user/:id",
+        "uses": "User@views",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    },
+    "user.edit": {
+        "path": "user/:id/edit",
+        "uses": "User@edit",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    },
+    "user.edit.check": {
+        "path": "user/:id/edit/check",
+        "uses": "User@editCheck",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    }
+}

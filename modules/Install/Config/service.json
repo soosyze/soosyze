@@ -1,0 +1,11 @@
+{
+    "install": {
+        "class": "Install\\Services\\Install",
+        "arguments": [
+            "@router"
+        ],
+        "hooks": {
+            "app.404": "hook404"
+        }
+    }
+}

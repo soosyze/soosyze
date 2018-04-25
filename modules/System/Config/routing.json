@@ -1,0 +1,22 @@
+{
+    "system.maintenance": {
+        "path": "maintenance",
+        "uses": "System@maintenance"
+    },
+    "system.config": {
+        "path": "admin/config",
+        "uses": "System@config"
+    },
+    "system.config.check": {
+        "path": "admin/config/check",
+        "uses": "System@configCheck"
+    },
+    "system.modules": {
+        "path": "admin/modules",
+        "uses": "ModulesManager@modules"
+    },
+    "system.modules.check": {
+        "path": "admin/modules/check",
+        "uses": "ModulesManager@modulesCheck"
+    }
+}

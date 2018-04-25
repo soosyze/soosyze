@@ -1,0 +1,4 @@
+/vendor/
+/build/
+/nbproject/
+.php_cs.cache

@@ -1,0 +1,52 @@
+{
+    "node.add.view": {
+        "path": "node/add",
+        "uses": "Node@addView"
+    },
+    "node.add.item": {
+        "path": "node/add/:item",
+        "uses": "Node@addItem",
+        "with": {
+            ":item": "[a-z]+"
+        }
+    },
+    "node.add.item.check": {
+        "path": "node/add/:item/check",
+        "uses": "Node@addItemCheck",
+        "with": {
+            ":item": "[a-z]+"
+        }
+    },
+    "node.view": {
+        "path": "node/:item",
+        "uses": "Node@view",
+        "with": {
+            ":item": "[0-9]+"
+        }
+    },
+    "node.edit": {
+        "path": "node/:item/edit",
+        "uses": "Node@edit",
+        "with": {
+            ":item": "[0-9]+"
+        }
+    },
+    "node.edit.check": {
+        "path": "node/:item/edit/check",
+        "uses": "Node@editCheck",
+        "with": {
+            ":item": "[0-9]+"
+        }
+    },
+    "node.delete": {
+        "path": "node/:item/delete",
+        "uses": "Node@delete",
+        "with": {
+            ":item": "[0-9]+"
+        }
+    },
+    "node.view.all": {
+        "path": "admin/content",
+        "uses": "Node@views"
+    }
+}

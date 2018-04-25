@@ -1,0 +1,32 @@
+{
+    "name": "soosyze/soosyze",
+    "type": "cms",
+    "homepage": "http://soosyze.com",
+    "description": "Minimalist content management system without database.",
+    "keywords": ["cms", "php", "framework", "flat-file", "micro", "json", "website", "soosyze", "nosql", "responsive" ],
+    "authors": [
+        {
+            "name": "Mathieu NOËL",
+            "email": "noel-mathieu@soosyze.com",
+            "homepage": "http://mathieu-noel.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "soosyze/framework": "1.0.*",
+        "soosyze/queryflatfile": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "classmap": [
+            "modules/", 
+            "app/modules/"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
+    }
+}

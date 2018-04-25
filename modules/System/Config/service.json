@@ -1,0 +1,39 @@
+{
+    "template": {
+        "class": "System\\Services\\Templating",
+        "arguments": [
+            "@core",
+            "@router",
+            "@query"
+        ]
+    },
+    "module": {
+        "class": "System\\Services\\Modules",
+        "arguments": [
+            "@query"
+        ]
+    },
+    "option": {
+        "class": "System\\Services\\Option",
+        "arguments": [
+            "@router",
+            "@query",
+            "@template",
+            "@user",
+            "@core"
+        ],
+        "hooks": {
+            "app.404": "hooks404",
+            "app.403": "hooks403",
+            "app.reponse.before": "hookSys",
+            "app.reponse.after": "hookMeta"
+        }
+    },
+    "system.install": {
+        "class": "System\\Install",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
+        }
+    }
+}

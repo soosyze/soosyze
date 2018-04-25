@@ -1,0 +1,9 @@
+{
+    "node.install": {
+        "class": "Node\\Install",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
+        }
+    }
+}

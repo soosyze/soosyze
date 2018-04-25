@@ -1,0 +1,8 @@
+{
+    "news.install": {
+        "class": "News\\Install",
+        "hooks": {
+            "install.menu": "hookInstallMenu"
+        }
+    }
+}

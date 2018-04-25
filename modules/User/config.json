@@ -1,0 +1,11 @@
+{
+    "User": {
+        "name": "User",
+        "controller": "User\\Controller\\User",
+        "version": "1.0",
+        "description": "Gestion de l'autentification et des comptes utilisateur",
+        "package": "Core",
+        "locked": true,
+        "required": []
+    }
+}

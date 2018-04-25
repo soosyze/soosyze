@@ -1,0 +1,13 @@
+{
+    "menu": {
+        "class": "Menu\\Services\\Menu",
+        "arguments": [
+            "@core",
+            "@query",
+            "@template"
+        ],
+        "hooks": {
+            "app.reponse.after": "hookMenu"
+        }
+    }
+}

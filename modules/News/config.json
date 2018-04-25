@@ -1,0 +1,11 @@
+{
+    "News": {
+        "name": "News",
+        "controller": "News\\Controller\\NewsController",
+        "version": "1.0",
+        "description": "Gestion de vos articles",
+        "package": "Core",
+        "locked": false,
+        "required": ["Node"]
+    }
+}

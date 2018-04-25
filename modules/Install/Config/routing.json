@@ -1,0 +1,20 @@
+{
+    "install.index": {
+        "path": "/",
+        "uses": "Install@index"
+    },
+    "install.step": {
+        "path": "install/step/:id",
+        "uses": "Install@step",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    },
+    "install.step.check": {
+        "path": "install/step/:id/check",
+        "uses": "Install@stepCheck",
+        "with": {
+            ":id": "[0-9]+"
+        }
+    }
+}

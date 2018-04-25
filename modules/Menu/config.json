@@ -1,0 +1,11 @@
+{
+    "Menu": {
+        "name": "Menu",
+        "controller": "Menu\\Controller\\Menu",
+        "version": "1.0",
+        "description": "Gestion de vos menus.",
+        "package": "Core",
+        "locked": false,
+        "required": []
+    }
+}

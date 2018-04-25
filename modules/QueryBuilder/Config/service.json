@@ -1,0 +1,14 @@
+{
+    "schema": {
+        "class": "QueryBuilder\\Services\\SchemaSoosyze",
+        "arguments": [
+            "app/data"
+        ]
+    },
+    "query": {
+        "class": "QueryBuilder\\Services\\Query",
+        "arguments": [
+            "@schema"
+        ]
+    }
+}

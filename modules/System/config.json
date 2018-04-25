@@ -1,0 +1,20 @@
+{
+    "System": {
+        "name": "System",
+        "controller": "System\\Controller\\System",
+        "version": "1.0",
+        "description": "Core du CMS Soosyze (Configuration, ModuleManager, Template...)",
+        "package": "Core",
+        "locked": true,
+        "required": []
+    },
+    "ModulesManager": {
+        "name": "ModulesManager",
+        "controller": "System\\Controller\\ModulesManager",
+        "version": "1.0",
+        "description": "Gestion des extensions du CMS.",
+        "package": "Core",
+        "locked": true,
+        "required": []
+    }
+}
