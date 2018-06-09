@@ -35,15 +35,15 @@
                                 <?php echo $module[ 'description' ] ?><br>
                                 <?php if (!empty($module[ 'isRequired' ])): ?>
                                     Requiert 
-                                    <spans style="color:#D9534F">
+                                    <span style="color:#D9534F">
                                         <?php echo implode(',', $module[ 'isRequired' ]); ?>
-                                    </spans><br>
+                                    </span><br>
                                 <?php endif; ?>
                                 <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
                                     Est requis par 
-                                    <spans style="color:#5CD85C">
+                                    <span style="color:#5CD85C">
                                         <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
-                                    </spans><br>
+                                    </span><br>
                                 <?php endif; ?>
                             </div>
                         </div>

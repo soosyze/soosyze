@@ -5,7 +5,7 @@
         </div>
         <div class="col-sm-12">
             <fieldset>
-                <legend>Mes Contenu</legend>
+                <legend>Mes Contenus</legend>
                 <div class="div-thead row">
                     <div class="col-md-4">Nom</div>
                     <div class="col-md-2">Date de création</div>
@@ -13,9 +13,9 @@
                     <div class="col-md-3">Actions</div>
                     <div class="col-md-1">Publié</div>
                 </div>
-                <div class="div-tbody row">
-                    <?php if (!empty($nodes)): ?>
-                        <?php foreach ($nodes as $node): ?>
+                <?php if (!empty($nodes)): ?>
+                    <?php foreach ($nodes as $node): ?>
+                        <div class="div-tbody row">
                             <div class="col-md-4">
                                 <h3><a href="<?php echo $node[ 'link_view' ] ?>"><?php echo $node[ 'title' ] ?></a> <small><?php echo $node[ 'type' ] ?></small></h3>
                             </div>
@@ -46,13 +46,15 @@
                                     </div>
                                 <?php endif; ?>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="div-tbody row">
                         <div class="col-md-12">
                             Votre site ne possède aucun contenu pour le moment.
                         </div>
-                    <?php endif; ?>
-                </div>
+                    </div>
+                <?php endif; ?>
             </fieldset>
         </div> <!-- .col-sm-12 -->
     </div> <!-- .row -->

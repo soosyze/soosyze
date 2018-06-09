@@ -42,7 +42,7 @@ class Install
                 'node_type_name',
                 'node_type_description'
             ])
-            ->values([ 'page', 'Page', 'Utilisez les pages pour votre contenu statique' ])
+            ->values([ 'page', 'Page', 'Utilisez les pages pour votre contenu statique.' ])
             ->execute();
 
         $container->query()->insertInto('field', [

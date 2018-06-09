@@ -50,7 +50,7 @@ class System extends \Soosyze\Controller
             ->group('fieldset-information', 'fieldset', function ($form) use ($content, $optionThemes) {
                 $form->legend('legend-information', 'Information')
                 ->group('group-email', 'div', function ($form) use ($content) {
-                    $form->label('label-email', 'Emai du site', [ 'class' => 'control-label' ])
+                    $form->label('label-email', 'Email du site', [ 'class' => 'control-label' ])
                     ->email('email', 'email', [
                         'required'    => 'required',
                         'value'       => $content[ 'email' ],
