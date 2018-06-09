@@ -1,0 +1,1 @@
+Tous thèmes contributeurs devront être déposés dans le répertoire app/modules
