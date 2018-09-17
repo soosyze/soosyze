@@ -38,14 +38,16 @@ class User extends \Soosyze\Controller
             ->group('user-login-mail', 'div', function ($form) use ($content) {
                 $form->label('labelMail', 'Email')
                 ->email('mail', 'mail', [
-                    'value'    => $content[ 'mail' ], 'required' => 'required',
+                    'value'    => $content[ 'mail' ], 
+                    'required' => 1, 
                     'class'    => 'form-control'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('user-login-password', 'div', function ($form) {
                 $form->label('labelPassword', 'Password')
                 ->password('pass', 'pass', [
-                    'required' => 'required', 'class'    => 'form-control'
+                    'required' => 1, 
+                    'class'    => 'form-control'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token()

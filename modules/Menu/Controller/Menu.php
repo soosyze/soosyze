@@ -47,17 +47,13 @@ class Menu extends \Soosyze\Controller
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
         foreach ($query as $key => $link) {
-            $active = [];
-            if ($link[ 'active' ]) {
-                $active[ 'checked' ] = 1;
-            }
             $nameLinkWeight = "weight-" . $link[ 'id' ];
             $nameLinkActive = "active-" . $link[ 'id' ];
             $form->select($nameLinkWeight, $weight, [
                     'selected' => $link[ 'weight' ],
                     'class'    => 'form-control'
                 ])
-                ->checkbox($nameLinkActive, $nameLinkActive, $active);
+                ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ]]);
         }
         $form->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
@@ -155,7 +151,7 @@ class Menu extends \Soosyze\Controller
                             'value'       => $content[ 'title_link' ],
                             'placeholder' => 'Exemple: Ma page 1',
                             'class'       => 'form-control',
-                            'required'    => 'required'
+                            'required'    => 1
                         ]);
                     }, [ 'class' => "form-group" ])
                     ->group('menu-add-link', 'div', function ($form) use ($content) {
@@ -164,7 +160,7 @@ class Menu extends \Soosyze\Controller
                             'value'       => $content[ 'target_link' ],
                             'placeholder' => 'Exemple: http://monsite.fr/node/1',
                             'class'       => 'form-control',
-                            'required'    => 'required'
+                            'required'    => 1
                         ]);
                     }, [ 'class' => "form-group" ]);
             })
@@ -264,7 +260,7 @@ class Menu extends \Soosyze\Controller
                             'value'       => $query[ 'title_link' ],
                             'placeholder' => 'Exemple: Ma page 1',
                             'class'       => 'form-control',
-                            'required'    => 'required'
+                            'required'    => 1
                         ]);
                     }, [ 'class' => "form-group" ])
                     ->group('menuu-add-link', 'div', function ($form) use ($query) {
@@ -273,7 +269,7 @@ class Menu extends \Soosyze\Controller
                             'value'       => $query[ 'target_link' ],
                             'placeholder' => 'Exemple: http://monsite.fr/node/1',
                             'class'       => 'form-control',
-                            'required'    => 'required'
+                            'required'    => 1
                         ]);
                     }, [ 'class' => "form-group" ]);
             })

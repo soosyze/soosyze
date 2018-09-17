@@ -66,7 +66,7 @@ class Node extends \Soosyze\Controller
                     ->text('title', 'title', [
                         'class'       => 'form-control',
                         'value'       => $content[ 'title' ],
-                        'required'    => 'required',
+                        'required'    => 1,
                         'placeholder' => 'Titre du contenu',
                     ]);
                 }, [ 'class' => 'form-group' ]);
@@ -336,10 +336,7 @@ class Node extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
                 $form->group('publish', 'div', function ($form) use ($content) {
-                    $publish = $content[ 'published' ]
-                        ? 'on'
-                        : '';
-                    $form->checkbox('published', 'published', [ 'checked' => $publish ])
+                    $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ]])
                     ->label('labelPublished', '<span class="ui"></span> Publier le contenu', [
                         'for' => 'published' ]);
                 }, [ 'class' => 'form-group' ])

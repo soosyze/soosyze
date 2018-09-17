@@ -31,7 +31,7 @@ class Contact extends \Soosyze\Controller
                 $form->label('label-name', 'Votre nom')
                 ->text('name', 'name', [
                     'value'    => $content[ 'name' ],
-                    'required' => 'required',
+                    'required' => 1,
                     'class'    => 'form-control'
                 ]);
             }, [ 'class' => 'form-group' ])
@@ -39,7 +39,7 @@ class Contact extends \Soosyze\Controller
                 $form->label('label-email', 'Votre adresse de courriel')
                 ->email('email', 'email', [
                     'value'    => $content[ 'email' ],
-                    'required' => 'required',
+                    'required' => 1,
                     'class'    => 'form-control'
                 ]);
             }, [ 'class' => 'form-group' ])
@@ -47,14 +47,14 @@ class Contact extends \Soosyze\Controller
                 $form->label('label-object', 'Objet')
                 ->text('object', 'object', [
                     'value'    => $content[ 'object' ],
-                    'required' => 'required',
+                    'required' => 1,
                     'class'    => 'form-control'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('contact-message', 'div', function ($form) use ($content) {
                 $form->label('label-message', 'Message')
                 ->textarea('message', $content[ 'message' ], [
-                    'required' => 'required',
+                    'required' => 1,
                     'class'    => 'form-control',
                     'style'    => 'resize:vertical',
                     'rows'     => 8

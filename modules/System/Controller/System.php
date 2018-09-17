@@ -52,7 +52,7 @@ class System extends \Soosyze\Controller
                 ->group('group-email', 'div', function ($form) use ($content) {
                     $form->label('label-email', 'Email du site', [ 'class' => 'control-label' ])
                     ->email('email', 'email', [
-                        'required'    => 'required',
+                        'required'    => 1,
                         'value'       => $content[ 'email' ],
                         'class'       => 'form-control',
                         'placeholder' => 'Email'
@@ -69,7 +69,7 @@ class System extends \Soosyze\Controller
                 ->group('group-theme', 'div', function ($form) use ($optionThemes) {
                     $form->label('label-theme', 'Theme du site', [ 'class' => 'control-label' ])
                     ->select('theme', $optionThemes, [
-                        'required' => 'required',
+                        'required' => 1,
                         'class'    => 'form-control'
                     ]);
                 }, [ 'class' => 'form-group' ]);
@@ -80,7 +80,7 @@ class System extends \Soosyze\Controller
                     $form->label('label-pathIndex', 'Page d’accueil par défaut', [
                         'class' => 'control-label' ])
                     ->text('pathIndex', 'pathIndex', [
-                        'required'    => 'required',
+                        'required'    => 1,
                         'value'       => $content[ 'pathIndex' ],
                         'class'       => 'form-control',
                         'placeholder' => 'Path page index'

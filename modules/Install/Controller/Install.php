@@ -77,7 +77,7 @@ class Install extends \Soosyze\Controller
                 $form->label('label-email', 'Email', [ 'class' => 'control-label' ])
                 ->email('email', 'email', [
                     'class'       => 'form-control',
-                    'required'    => 'required',
+                    'required'    => 1,
                     'value'       => $content[ 'email' ],
                     'placeholder' => 'mon-mail@mail.com'
                 ]);
@@ -99,7 +99,7 @@ class Install extends \Soosyze\Controller
             ->group('group-password', 'div', function ($form) use ($content) {
                 $form->label('label-password', 'Mot de passe')
                 ->password('password', 'password', [
-                    'required' => 'required',
+                    'required' => 1,
                     'value'    => $content[ 'password' ],
                     'class'    => 'form-control'
                 ]);
@@ -107,7 +107,7 @@ class Install extends \Soosyze\Controller
             ->group('group-password-confirm', 'div', function ($form) use ($content) {
                 $form->label('label-password-confirm', 'Confirmation du mot de passe')
                 ->password('password-confirm', 'password-confirm', [
-                    'required' => 'required',
+                    'required' => 1,
                     'value'    => $content[ 'passwordConfirm' ],
                     'class'    => 'form-control'
                 ]);
