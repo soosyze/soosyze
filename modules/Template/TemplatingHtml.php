@@ -7,7 +7,7 @@ use Soosyze\Components\Util\Util;
 
 // Templates System
 define("TPL", 'html.php');
-define("TPL_PATH", VIEWS_SYSTEM);
+define("TPL_PATH", MODULES_CORE . 'Template' . DS);
 
 // Folder Templates CMS
 define("DEFAULT_TPL_PATH", 'app' . DS . 'themes');
