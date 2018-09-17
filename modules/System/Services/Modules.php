@@ -179,6 +179,9 @@ class Modules
 
     public function getConfigAll()
     {
-        return array_merge($this->getConfigModule(), $this->getConfigModuleCore());
+        $conf = array_merge($this->getConfigModule(), $this->getConfigModuleCore());
+        ksort($conf);
+
+        return $conf;
     }
 }
