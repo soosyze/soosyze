@@ -99,7 +99,7 @@ class Contact extends \Soosyze\Controller
         if ($validator->isValid()) {
             $inputs = $validator->getInputs();
             $mail   = new Email;
-            $isSend = $mail->to(self::core()->getConfig('settings.email'))
+            $isSend = $mail->to(self::config()->get('settings.email'))
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ])

@@ -1,26 +1,17 @@
 {
-    "template": {
-        "class": "System\\Services\\Templating",
-        "arguments": [
-            "@core",
-            "@router",
-            "@query"
-        ]
-    },
     "module": {
         "class": "System\\Services\\Modules",
         "arguments": [
             "@query"
         ]
     },
-    "option": {
-        "class": "System\\Services\\Option",
+    "system.hook": {
+        "class": "System\\Services\\System",
         "arguments": [
             "@router",
-            "@query",
+            "@config",
             "@template",
-            "@user",
-            "@core"
+            "@user"
         ],
         "hooks": {
             "app.404": "hooks404",

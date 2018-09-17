@@ -2,8 +2,6 @@
 
 namespace Menu\Services;
 
-use System\Services\Templating;
-
 class Menu
 {
     protected $query;
@@ -31,7 +29,7 @@ class Menu
 
     public function hookMenu($request, &$reponse)
     {
-        if ($reponse instanceof Templating) {
+        if ($reponse instanceof \Template\TemplatingHtml) {
             if (!$reponse->isThemeAdmin()) {
                 $query = $this->query
                     ->from('menu')

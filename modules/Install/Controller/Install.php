@@ -247,44 +247,13 @@ class Install extends \Soosyze\Controller
             ->values([ 1, 2 ])
             ->values([ 1, 3 ])
             ->execute();
-
-        Util::saveJson('app/config', 'settings', [
-            'local'          => 'fr_FR',
-            'timezone'       => 'Europe/Paris',
-            'time_installed' => time(),
-            'email'          => $data[ 'email' ]
-        ]);
-
-        self::query()->update('option', [ 'value' => $data[ 'email' ] ])
-            ->where('name', "email")
-            ->execute();
-
-        self::query()->update('option', [ 'value' => 'node/1' ])
-            ->where('name', 'pathNoFound')
-            ->execute();
-
-        self::query()->update('option', [ 'value' => 'node/2' ])
-            ->where('name', "pathIndex")
-            ->execute();
-
-        self::query()->update('option', [ 'value' => 'user/login' ])
-            ->where('name', 'pathAccessDenied')
-            ->execute();
-
-        self::query()->update('option', [ 'value' => "Soosyze" ])
-            ->where('name', 'title')
-            ->execute();
-
-        self::query()->update('option', [ 'value' => "Hello world !" ])
-            ->where('name', 'description')
-            ->execute();
-
-        self::query()->update('option', [ 'value' => "Bootstrap 3" ])
-            ->where('name', 'theme')
-            ->execute();
-
+        
+        self::config()->set('settings.email', $data[ 'email' ]);
+        self::config()->set('settings.time_installed', time());
+        self::config()->set('settings.local', 'fr_FR');
+        self::config()->set('settings.theme', 'Bootstrap 3');
+  
         unset($_SESSION[ 'save' ]);
-
         $route = self::router()->getBasePath();
 
         return new Redirect($route);

@@ -1,6 +1,6 @@
 <?php
 
-namespace QueryBuilder\Services;
+namespace QueryBuilder;
 
 class Query extends \Queryflatfile\Request
 {

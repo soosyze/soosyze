@@ -2,7 +2,7 @@
 
 namespace System\Services;
 
-class Option
+class System
 {
     protected $tpl;
 
@@ -12,40 +12,12 @@ class Option
 
     protected $user;
 
-    protected $core;
-
-    public function __construct($route, $query, $template, $user, $core)
+    public function __construct($route, $config, $template, $user)
     {
-        $this->route = $route;
-        $this->tpl   = $template;
-        $this->query = $query;
-        $this->user  = $user;
-        $this->core  = $core;
-    }
-
-    public function get($name)
-    {
-        $config = $this->query->select([ 'value' ])
-            ->from('option')
-            ->where('name', $name)
-            ->fetch();
-
-        return !is_null($config)
-            ? $config[ 'value' ]
-            : null;
-    }
-
-    public function getOption()
-    {
-        $config = $this->query
-            ->from('option')
-            ->fetchAll();
-
-        foreach ($config as $value) {
-            $output[ $value[ 'name' ] ] = $value[ 'value' ];
-        }
-
-        return $output;
+        $this->route  = $route;
+        $this->tpl    = $template;
+        $this->config = $config;
+        $this->user   = $user;
     }
 
     public function hookSys(&$request)
@@ -53,15 +25,15 @@ class Option
         $uri = $request->getUri();
 
         if ($uri->getQuery() == '' || $uri->getQuery() == '/') {
-            $pathIndex = $this->get('pathIndex')
-                ? '?' . $this->get('pathIndex')
+            $pathIndex = $this->config->get('settings.pathIndex')
+                ? '?' . $this->config->get('settings.pathIndex')
                 : '404';
             $url       = $uri->withQuery($pathIndex);
 
             $request = $request->withUri($url);
         }
 
-        if ($this->get('maintenance')) {
+        if ($this->config->get('settings.maintenance')) {
             if (!preg_match("/^user.*$/", $uri->getQuery()) && !$this->user->isConnected()) {
                 $request = $request->withUri($uri->withQuery('maintenance'));
             }
@@ -70,7 +42,7 @@ class Option
 
     public function hooks404($request, &$reponse)
     {
-        if (($path = $this->get('pathNoFound')) != '') {
+        if (($path = $this->config->get('settings.pathNoFound')) != '') {
             $request = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
@@ -97,7 +69,7 @@ class Option
 
     public function hooks403($request, &$reponse)
     {
-        if (($path = $this->get('pathAccessDenied')) != '') {
+        if (($path = $this->config->get('settings.pathAccessDenied')) != '') {
             $request = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
@@ -120,8 +92,8 @@ class Option
 
     public function hookMeta($request, &$reponse)
     {
-        if ($reponse instanceof Templating) {
-            $meta = $this->getOption();
+        if ($reponse instanceof \Template\TemplatingHtml) {
+            $meta = $this->config->get('settings');
 
             $reponse->add([
                 'title'       => $meta[ 'title' ],

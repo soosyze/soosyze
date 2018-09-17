@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Services;
+namespace Template;
 
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
@@ -13,23 +13,20 @@ define("TPL_PATH", VIEWS_SYSTEM);
 define("DEFAULT_TPL_PATH", 'app' . DS . 'themes');
 define("ADMIN_TPL_PATH", 'themes');
 
-class Templating extends \Soosyze\Components\Http\Reponse
+class TemplatingHtml extends \Soosyze\Components\Http\Reponse
 {
     protected $template;
 
     protected $themeAdmin = true;
 
-    protected $query;
+    protected $config;
 
     protected $core;
 
-    protected $router;
-
-    public function __construct($core, $router, $query)
+    public function __construct($core, $config)
     {
         $this->core   = $core;
-        $this->router = $router;
-        $this->query  = $query;
+        $this->config  = $config;
     }
 
     public function __toString()
@@ -51,13 +48,13 @@ class Templating extends \Soosyze\Components\Http\Reponse
             'title'    => '',
             'styles'   => '',
             'scripts'  => '',
-            'basePath' => $this->router->getBasePath(),
+            'basePath' => $this->core->getRequest()->getUri()->getBasePath(),
         ])->addVars($this->core->getSettings());
 
         $this->template->getBlock('page')
             ->addVars([
                 'title_main' => '',
-                'basePath'   => $this->router->getBasePath(),
+                'basePath'   => $this->core->getRequest()->getUri()->getBasePath(),
             ])
             ->addVars($this->core->getSettings())
             ->addBlock('content')
@@ -88,12 +85,9 @@ class Templating extends \Soosyze\Components\Http\Reponse
 
     public function themeOveride($tpl, $tplPath)
     {
-        $dir = $this->query->select('value')
-            ->from('option')
-            ->where('name', 'theme')
-            ->fetch();
+        $theme = $this->config->get('settings.theme');
 
-        $dir = DEFAULT_TPL_PATH . DS . $dir[ 'value' ];
+        $dir = DEFAULT_TPL_PATH . DS . $theme;
 
         if ($this->themeAdmin) {
             $dir = ADMIN_TPL_PATH . DS . 'admin';

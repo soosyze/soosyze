@@ -194,7 +194,7 @@ Vous pouvez désormais vous identifier en cliquant sur ce lien ou en le
 copiant dans votre navigateur : $url";
 
                 $email  = new Email();
-                $adress = self::core()->getConfig('settings.email', $query[ 'email' ]);
+                $adress = self::config()->get('settings.email', $query[ 'email' ]);
                 $isSend = $email->to($adress)
                     ->from($query[ 'email' ])
                     ->subject('Remplacement de mot de passe')

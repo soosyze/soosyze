@@ -26,9 +26,9 @@ class System extends \Soosyze\Controller
                 ->withStatus(503);
     }
 
-    public function config()
+    public function configuration()
     {
-        $content = self::option()->getOption();
+        $content = self::config()->get('settings');
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
@@ -191,10 +191,7 @@ class System extends \Soosyze\Controller
             unset($data[ 'token' ], $data[ 'submit' ]);
 
             foreach ($data as $key => $value) {
-                self::query()
-                    ->update('option', [ 'value' => $value ])
-                    ->where('name', $key)
-                    ->execute();
+                self::config()->set('settings.' . $key, $value);
             }
             $_SESSION[ 'success' ] = [ 'msg' => 'Configuration Enregistré' ];
         } else {

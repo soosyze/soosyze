@@ -21,25 +21,16 @@ class Install
             $table->string('name_module')
                 ->string('name_required');
         });
-
-        $container->schema()->createTableIfNotExists('option', function (TableBuilder $table) {
-            $table->string('name')
-                ->string('value');
-        });
-
-        $container->query()->insertInto('option', [ 'name', 'value' ])
-            ->values([ 'email', '' ])
-            ->values([ 'caches', '' ])
-            ->values([ 'maintenance', '' ])
-            ->values([ 'theme', '' ])
-            ->values([ 'pathIndex', '' ])
-            ->values([ 'pathAccessDenied', '' ])
-            ->values([ 'pathNoFound', '' ])
-            ->values([ 'title', '' ])
-            ->values([ 'description', '' ])
-            ->values([ 'keyboard', '' ])
-            ->values([ 'favicon', '' ])
-            ->execute();
+        
+        $container->config()->set('settings.maintenance', '');
+        $container->config()->set('settings.pathNoFound', 'node/1');
+        $container->config()->set('settings.pathIndex', 'node/2');
+        $container->config()->set('settings.pathAccessDenied', 'user/login');
+        $container->config()->set('settings.title', 'Soosyze');
+        $container->config()->set('settings.description', 'Hello world !');
+        $container->config()->set('settings.keyboard', '');
+        $container->config()->set('settings.favicon', '');
+        $container->config()->set('settings.timezone', 'Europe/Paris');
     }
 
     public function hookInstall($container)

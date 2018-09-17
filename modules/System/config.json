@@ -6,7 +6,7 @@
         "description": "Core du CMS Soosyze (Configuration, ModuleManager, Template...)",
         "package": "Core",
         "locked": true,
-        "required": []
+        "required": ["User"]
     },
     "ModulesManager": {
         "name": "ModulesManager",
