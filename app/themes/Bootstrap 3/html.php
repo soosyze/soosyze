@@ -28,6 +28,9 @@
             .card__date{
                 letter-spacing: 1px;
             }
+            .navbar-toggle{
+                color: #FFF;
+            }
         </style>
         <?php echo $styles ?>
         <?php echo $scripts ?>

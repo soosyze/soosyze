@@ -11,13 +11,16 @@
             "homepage": "http://mathieu-noel.fr"
         }
     ],
+    "support": {
+        "email": "mathieu@soosyze.com"
+    },
     "require": {
         "php": ">=5.4",
-        "soosyze/framework": "1.0.*",
-        "soosyze/queryflatfile": "1.0.*"
+        "soosyze/framework": "1.1.*",
+        "soosyze/queryflatfile": "1.1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "5.*"
     },
     "autoload": {
         "classmap": [

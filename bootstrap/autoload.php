@@ -13,12 +13,12 @@ $autoload = new Soosyze\Autoload([
     'Soosyze'          => $vendor . 'soosyze/framework/src',
     'Queryflatfile'    => $vendor . 'soosyze/queryflatfile/src',
     'Psr\Http\Message' => $vendor . 'psr/http-message/src',
-    'Psr\Container'    => $vendor . 'psr/container/src',
-    ]);
+    'Psr\Container'    => $vendor . 'psr/container/src'
+]);
 
 $autoload->setMap([
     $basePath . 'modules',
-    $basePath . 'app/modules',
+    $basePath . 'app/modules'
 ]);
 
 $autoload->register();

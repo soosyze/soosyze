@@ -1,4 +1,11 @@
-/vendor/
+# Repertory
 /build/
 /nbproject/
-.php_cs.cache
+/vendor/
+/app/data/
+/app/modules/
+
+# File
+/*.phar
+/.php_cs.cache
+/composer.lock
