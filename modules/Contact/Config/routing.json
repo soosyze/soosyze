@@ -1,10 +1,12 @@
 {
     "contact": {
+        "methode" : "GET",
         "path": "contact",
         "uses": "Contact@contact"
     },
     "contact.check": {
-        "path": "contact/check",
+        "methode" : "POST",
+        "path": "contact",
         "uses": "Contact@contactCheck"
     }
 }

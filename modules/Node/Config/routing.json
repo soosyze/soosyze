@@ -1,9 +1,11 @@
 {
     "node.add.view": {
+        "methode" : "GET",
         "path": "node/add",
         "uses": "Node@addView"
     },
     "node.add.item": {
+        "methode" : "GET",
         "path": "node/add/:item",
         "uses": "Node@addItem",
         "with": {
@@ -11,13 +13,15 @@
         }
     },
     "node.add.item.check": {
-        "path": "node/add/:item/check",
+        "methode" : "POST",
+        "path": "node/add/:item",
         "uses": "Node@addItemCheck",
         "with": {
             ":item": "[a-z]+"
         }
     },
     "node.view": {
+        "methode" : "GET",
         "path": "node/:item",
         "uses": "Node@view",
         "with": {
@@ -25,6 +29,7 @@
         }
     },
     "node.edit": {
+        "methode" : "GET",
         "path": "node/:item/edit",
         "uses": "Node@edit",
         "with": {
@@ -32,13 +37,15 @@
         }
     },
     "node.edit.check": {
-        "path": "node/:item/edit/check",
+        "methode" : "POST",
+        "path": "node/:item/edit",
         "uses": "Node@editCheck",
         "with": {
             ":item": "[0-9]+"
         }
     },
     "node.delete": {
+        "methode" : "GET",
         "path": "node/:item/delete",
         "uses": "Node@delete",
         "with": {
@@ -46,6 +53,7 @@
         }
     },
     "node.view.all": {
+        "methode" : "GET",
         "path": "admin/content",
         "uses": "Node@views"
     }

@@ -1,5 +1,6 @@
 {
     "menu.show": {
+        "methode" : "GET",
         "path": "menu/:item",
         "uses": "Menu@show",
         "with": {
@@ -7,13 +8,15 @@
         }
     },
     "menu.show.check": {
-        "path": "menu/:item/check",
+        "methode" : "POST",
+        "path": "menu/:item",
         "uses": "Menu@showCheck",
         "with": {
             ":item": "[a-z-]+"
         }
     },
     "menu.link.add": {
+        "methode" : "GET",
         "path": "menu/:item/link/add",
         "uses": "Menu@addLink",
         "with": {
@@ -21,13 +24,15 @@
         }
     },
     "menu.link.add.check": {
-        "path": "menu/:item/link/add/check",
+        "methode" : "POST",
+        "path": "menu/:item/link/add",
         "uses": "Menu@addLinkCheck",
         "with": {
             ":item": "[a-z-]+"
         }
     },
     "menu.link.edit": {
+        "methode" : "GET",
         "path": "menu/:menu/link/:item/edit",
         "uses": "Menu@editLink",
         "with": {
@@ -36,7 +41,8 @@
         }
     },
     "menu.link.edit.check": {
-        "path": "menu/:menu/link/:item/edit/check",
+        "methode" : "POST",
+        "path": "menu/:menu/link/:item/edit",
         "uses": "Menu@editLinkCheck",
         "with": {
             ":item": "[0-9]+",
@@ -44,6 +50,7 @@
         }
     },
     "menu.link.delete": {
+        "methode" : "GET",
         "path": "menu/:menu/link/:item/delete",
         "uses": "Menu@deleteLink",
         "with": {
