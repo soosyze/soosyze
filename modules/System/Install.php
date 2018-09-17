@@ -115,6 +115,6 @@ class Install
         }
 
         $container->schema()->dropTable('module');
-        $container->schema()->dropTable('config');
+        $container->schema()->dropTable('module_required');
     }
 }
