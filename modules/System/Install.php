@@ -10,6 +10,7 @@ class Install
     {
         $container->schema()->createTableIfNotExists('module', function (TableBuilder $table) {
             $table->string('name')
+                ->string('key_controller')
                 ->string('controller')
                 ->string('version')
                 ->text('description')

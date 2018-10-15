@@ -113,23 +113,31 @@ class Modules
     /**
      * Installe un module.
      *
-     * @param array $value Données du module.
+     * @param array $config Données du module.
      */
-    public function installModule($value)
+    public function create($config)
     {
-        $required = $value[ 'required' ];
-        unset($value[ 'required' ]);
+        $required = isset($config[ 'required' ])
+            ? $config[ 'required' ]
+            : [];
+        unset($config[ 'required' ]);
 
-        $this->query
-            ->insertInto('module', [ 'name', 'controller', 'version', 'description',
-                'package', 'locked' ])
-            ->values($value)
-            ->execute();
+        foreach ($config[ 'controller' ] as $key => $controller) {
+            $module                     = $config;
+            $module[ 'controller' ]     = $controller;
+            $module[ 'key_controller' ] = $key;
+
+            $this->query
+                ->insertInto('module', [ 'name', 'controller',
+                    'version', 'description', 'package', 'locked', 'key_controller' ])
+                ->values($module)
+                ->execute();
+        }
 
         foreach ($required as $require) {
             $this->query
                 ->insertInto('module_required', [ 'name_module', 'name_required' ])
-                ->values([ $value[ 'name' ], $require ])
+                ->values([ $config[ 'name' ], $require ])
                 ->execute();
         }
     }
