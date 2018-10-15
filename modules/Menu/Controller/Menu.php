@@ -15,12 +15,12 @@ class Menu extends \Soosyze\Controller
 
     protected $pathRoutes = CONFIG_MENU . 'routing.json';
 
-    public function show($name)
+    public function show($name, $req)
     {
         $menu = self::menu()->getMenu($name)->fetch();
 
         if (!$menu) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         $query = self::menu()

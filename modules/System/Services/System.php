@@ -59,7 +59,9 @@ class System
                 ->view('page', [
                     'title_main' => 'Page Not Found'
                 ])
-                ->render('page.content', 'page-404.php', VIEWS_SYSTEM)
+                ->render('page.content', 'page-404.php', VIEWS_SYSTEM, [
+                    'uri'       => $request->getUri()
+                ])
             : $this->route->execute($route, $request);
 
         if (!$reponse instanceof \Soosyze\Components\Http\Redirect) {
@@ -82,7 +84,9 @@ class System
                 ->view('page', [
                     'title_main' => 'Page Forbidden'
                 ])
-                ->render('page.content', 'page-403.php', VIEWS_SYSTEM)
+                ->render('page.content', 'page-403.php', VIEWS_SYSTEM, [
+                    'uri'       => $request->getUri()
+                ])
             : $this->route->execute($route, $request);
 
         if (!$reponse instanceof \Soosyze\Components\Http\Redirect) {

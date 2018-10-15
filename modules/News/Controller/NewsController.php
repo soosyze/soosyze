@@ -57,7 +57,7 @@ class NewsController extends \Soosyze\Controller
             ->fetchAll();
 
         if (!$nodes || $page == 0) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         foreach ($nodes as $key => $node) {

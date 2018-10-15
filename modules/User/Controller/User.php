@@ -228,7 +228,7 @@ copiant dans votre navigateur : $url";
         return new Redirect($route);
     }
 
-    public function resetUser($id, $token)
+    public function resetUser($id, $token, $req)
     {
         $query = self::query()
             ->from('user')
@@ -236,11 +236,11 @@ copiant dans votre navigateur : $url";
             ->fetch();
 
         if (!$query) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         if ($query[ 'forgetPass' ] != $token) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         self::user()->relogin($query[ 'email' ], $query[ 'password' ]);
@@ -250,7 +250,7 @@ copiant dans votre navigateur : $url";
         return new Redirect($route);
     }
 
-    public function views($id)
+    public function views($id, $req)
     {
         $query = self::query()
             ->from('user')
@@ -258,7 +258,7 @@ copiant dans votre navigateur : $url";
             ->fetch();
 
         if (!$query) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         return self::template()
@@ -271,7 +271,7 @@ copiant dans votre navigateur : $url";
         ]);
     }
 
-    public function edit($id)
+    public function edit($id, $req)
     {
         $query = self::query()
             ->from('user')
@@ -279,7 +279,7 @@ copiant dans votre navigateur : $url";
             ->fetch();
 
         if (!$query) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         if (isset($_SESSION[ 'inputs' ])) {

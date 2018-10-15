@@ -36,7 +36,7 @@ class Node extends \Soosyze\Controller
         ]);
     }
 
-    public function addItem($item, $r)
+    public function addItem($item, $req)
     {
         $query = self::query()
             ->from('node_type')
@@ -47,7 +47,7 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
 
         if (!$query) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         $content = [ 'title' => '', 'published' => '' ];
@@ -133,7 +133,7 @@ class Node extends \Soosyze\Controller
         return $reponse;
     }
 
-    public function addItemCheck($item, $r)
+    public function addItemCheck($item, $req)
     {
         $query = self::query()
             ->from('node_type')
@@ -201,7 +201,7 @@ class Node extends \Soosyze\Controller
         new Redirect($route);
     }
 
-    public function view($item)
+    public function view($item, $req)
     {
         $node = self::query()
             ->from('node')
@@ -209,7 +209,7 @@ class Node extends \Soosyze\Controller
             ->fetch();
 
         if (!$node) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         $tpl = self::template()
@@ -222,7 +222,7 @@ class Node extends \Soosyze\Controller
         ]);
 
         if (!$node[ 'published' ] && !self::user()->isGranted('node.views.notpublished')) {
-            return $this->get404();
+            return $this->get404($req);
         } else {
             $tpl->view('page', [
                 'messages' => [ 'info' => [ 'Ce contenu n\'est pas publié !' ] ]
@@ -261,7 +261,7 @@ class Node extends \Soosyze\Controller
         ]);
     }
 
-    public function edit($item, $r)
+    public function edit($item, $req)
     {
         $node = self::query()
             ->from('node')
@@ -269,7 +269,7 @@ class Node extends \Soosyze\Controller
             ->fetch();
 
         if (!$node) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         $query = self::query()
@@ -281,7 +281,7 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
 
         if (!$query) {
-            return $this->get404();
+            return $this->get404($req);
         }
 
         $content = [ 'title' => $node[ 'title' ], 'published' => $node[ 'published' ] ];
