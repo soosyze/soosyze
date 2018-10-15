@@ -23,9 +23,12 @@ class User
         $this->core    = $core;
     }
 
-    public function addUser($user)
+    public function find($id)
     {
-        echo $user;
+        return $this->query
+            ->from('user')
+            ->where('user_id', '==', $id)
+            ->fetch();
     }
 
     public function getUser($email)

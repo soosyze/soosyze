@@ -82,26 +82,27 @@ class Menu extends \Soosyze\Controller
         ]);
     }
 
-    public function showCheck($name, $r)
+    public function showCheck($name, $req)
     {
-        $post = $r->getParsedBody();
+        if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
+            $_SESSION[ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu '. $name . ' n\'existe pas.' ];
+            $route                = self::router()->getRoute('menu.show', [ ':item' => $name ]);
 
-        $query = self::menu()->getLinkPerMenu($name)->fetchAll();
+            return new Redirect($route);
+        }
 
         $validator = (new Validator());
 
-        foreach ($query as $link) {
-            $keyWeight = "weight-" . $link[ 'id' ];
-            $keyActive = "active-" . $link[ 'id' ];
-            $validator
-                ->addRule($keyActive, 'bool')
-                ->addRule($keyWeight, 'required|int|min:0|max:50');
+        foreach ($links as $link) {
+            $validator->addRule('active-' . $link[ 'id' ], 'bool')
+                ->addRule('weight-' . $link[ 'id' ], 'required|int|min:0|max:50');
         }
-
+        
+        $post = $req->getParsedBody();
         $validator->setInputs($post);
 
         if ($validator->isValid()) {
-            foreach ($query as $link) {
+            foreach ($links as $link) {
                 $linkUpdate = [
                     'weight' => $validator->getInput("weight-" . $link[ 'id' ]),
                     'active' => ($validator->getInput("active-" . $link[ 'id' ]) == 'on'

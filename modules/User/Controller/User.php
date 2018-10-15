@@ -230,12 +230,7 @@ copiant dans votre navigateur : $url";
 
     public function resetUser($id, $token, $req)
     {
-        $query = self::query()
-            ->from('user')
-            ->where('user_id', '==', $id)
-            ->fetch();
-
-        if (!$query) {
+        if (!($query = self::user()->find($id))) {
             return $this->get404($req);
         }
 
@@ -252,12 +247,7 @@ copiant dans votre navigateur : $url";
 
     public function views($id, $req)
     {
-        $query = self::query()
-            ->from('user')
-            ->where('user_id', '==', $id)
-            ->fetch();
-
-        if (!$query) {
+        if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
 
@@ -267,18 +257,13 @@ copiant dans votre navigateur : $url";
                     'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Voir le profil utilisateur'
                 ])
                 ->render('page.content', 'page-user-view.php', VIEWS_USER, [
-                    'user' => $query
+                    'user' => $user
         ]);
     }
 
     public function edit($id, $req)
     {
-        $query = self::query()
-            ->from('user')
-            ->where('user_id', '==', $id)
-            ->fetch();
-
-        if (!$query) {
+        if (!($query = self::user()->find($id))) {
             return $this->get404($req);
         }
 
@@ -341,9 +326,13 @@ copiant dans votre navigateur : $url";
         ]);
     }
 
-    public function editCheck($id, $r)
+    public function editCheck($id, $req)
     {
-        $post = $r->getParsedBody();
+        if (!self::user()->find($id)) {
+            return $this->get404($req);
+        }
+                
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([

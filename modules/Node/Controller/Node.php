@@ -143,7 +143,11 @@ class Node extends \Soosyze\Controller
             ->where('node_type', $item)
             ->fetchAll();
 
-        $post = $r->getParsedBody();
+        if (!$query) {
+            return $this->get404($req);
+        }
+
+        $post = $req->getParsedBody();
 
         /* Ttest les champs par defauts de la node. */
         $validator = (new Validator())
@@ -375,14 +379,18 @@ class Node extends \Soosyze\Controller
         return $reponse;
     }
 
-    public function editCheck($item, $r)
+    public function editCheck($item, $req)
     {
         $node = self::query()
             ->from('node')
             ->where('id', '==', $item)
             ->fetch();
 
-        $post = $r->getParsedBody();
+        if (!$node) {
+            return $this->get404($req);
+        }
+        
+        $post = $req->getParsedBody();
 
         $node_type = self::query()
             ->from('node_type')
@@ -443,8 +451,17 @@ class Node extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    public function delete($item)
+    public function delete($item, $req)
     {
+        $node = self::query()
+            ->from('node')
+            ->where('id', '==', $item)
+            ->fetch();
+
+        if (!$node) {
+            return $this->get404($req);
+        }
+        
         $validator = (new Validator())
             ->setRules([
                 'item' => 'required',
