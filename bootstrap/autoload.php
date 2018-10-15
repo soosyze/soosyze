@@ -11,12 +11,16 @@ require $vendor . 'soosyze/framework/src/Autoload.php';
 
 $autoload = new Soosyze\Autoload([
     'Soosyze'          => $vendor . 'soosyze/framework/src',
-    'Queryflatfile'    => $vendor . 'soosyze/queryflatfile/src',
-    'Psr\Http\Message' => $vendor . 'psr/http-message/src',
-    'Psr\Container'    => $vendor . 'psr/container/src'
+    'Queryflatfile'    => $vendor . 'soosyze/queryflatfile/src'
 ]);
 
-$autoload->setMap([
+$autoload->setPrefix([
+    'Queryflatfile'               => $vendor . 'soosyze/queryflatfile/src',
+    'Psr\Http\Message'            => $vendor . 'psr/http-message/src',
+    'Psr\Container'               => $vendor . 'psr/container/src',
+    'Soosyze'                     => $vendor . 'soosyze/framework/src',
+    'Soosyze\Components\Http'     => $vendor . 'soosyze/framework/src/Components/Http'
+])->setMap([
     $basePath . 'modules',
     $basePath . 'app/modules'
 ]);
