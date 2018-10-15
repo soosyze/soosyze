@@ -3,6 +3,7 @@
         "class": "Menu\\Services\\Menu",
         "arguments": [
             "@core",
+            "@config",
             "@query",
             "@template"
         ],

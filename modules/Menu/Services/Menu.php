@@ -2,17 +2,32 @@
 
 namespace Menu\Services;
 
+use Soosyze\Components\Validator\Validator;
+
 class Menu
 {
+    protected $core;
+    
+    protected $config;
+    
     protected $query;
 
     protected $template;
 
-    public function __construct($core, $query, $template)
+    public function __construct($core, $config, $query, $template)
     {
         $this->core     = $core;
+        $this->config   = $config;
         $this->query    = $query;
         $this->template = $template;
+    }
+    
+    public function find($id)
+    {
+        return $this->query
+            ->from('menu_link')
+            ->where('id', '==', $id)
+            ->fetch();
     }
 
     public function getMenu($name)
@@ -26,36 +41,42 @@ class Menu
                 ->leftJoin('menu_link', 'name', 'menu_link.menu')
                 ->isNotNull('id');
     }
+    
+    public function isUrlOrRoute($link, $request)
+    {
+        $output = (new Validator())
+            ->setRules([ 'link' => 'required|url' ])
+            ->setInputs([ 'link' => $link ])
+            ->isValid();
+
+        if (!$output) {
+            $query = $link === '/'
+                ? $this->config->get('settings.pathIndex', '/')
+                : $link;
+
+            $uri    = $request->getUri()->withQuery($query);
+            $output = $this->core->get('router')->parse($request->withUri($uri));
+        }
+
+        return $output;
+    }
 
     public function hookMenu($request, &$reponse)
     {
         if ($reponse instanceof \Template\TemplatingHtml) {
-            if (!$reponse->isThemeAdmin()) {
-                $query = $this->query
-                    ->from('menu')
-                    ->where(function ($query) {
-                        $query->where('name', "main-menu")
-                        ->where('active', '==', 1);
-                    })->leftJoin('menu_link', 'name', 'menu_link.menu')
-                    ->orderBy('weight')
-                    ->fetchAll();
-            } else {
-                $query = $this->query
-                    ->from('menu')
-                    ->where(function ($query) {
-                        $query->where('active', '==', 1)
-                        ->where('name', "admin-menu");
-                    })->leftJoin('menu_link', 'name', 'menu_link.menu')
-                    ->orderBy('weight')
-                    ->fetchAll();
-            }
-
+            $this->query
+                    ->from('menu_link')
+                    ->where('active', '==', 1)
+                    ->orderBy('weight');
+            !$reponse->isThemeAdmin()
+                ? $this->query->where('menu', "main-menu")
+                : $this->query->where('menu', "admin-menu");
+            
+            $query = $this->query->fetchAll();
             $query_second = $this->query
-                ->from('menu')
-                ->where(function ($query) {
-                    $query->where('active', '==', 1)
-                    ->where('name', "user-menu");
-                })->leftJoin('menu_link', 'name', 'menu_link.menu')
+                ->from('menu_link')
+                ->where('active', '==', 1)
+                ->where('menu', "user-menu")
                 ->orderBy('weight')
                 ->fetchAll();
 
@@ -81,10 +102,19 @@ class Menu
      */
     protected function getGrantedLink($query, $request)
     {
-        $route = $request->getUri()->getQuery();
+        $route = $request->getUri()->getQuery() !== ''
+            ? $request->getUri()->getQuery()
+            : '/';
 
         foreach ($query as $key => $menu) {
-            $menu_request = $request->withUri($request->getUri()->withQuery($menu[ 'target_link' ]), true);
+            $query[ $key ][ 'link_active' ] = strpos($route, $menu[ 'link' ]) === 0
+                ? 'active'
+                : '';
+            
+            if (filter_var($menu[ 'link' ], FILTER_VALIDATE_URL)) {
+                continue;
+            }
+            $menu_request = $request->withUri($request->getUri()->withQuery($menu[ 'link' ]), true);
             $menu_link    = $this->core->get('router')->parse($menu_request);
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
@@ -93,10 +123,7 @@ class Menu
 
                 continue;
             }
-
-            $query[ $key ][ 'link_active' ] = strpos($route, $menu[ 'target_link' ]) === 0
-                ? 'active'
-                : '';
+            $query[ $key ][ 'link' ] = $menu_request->getUri()->__toString();
         }
 
         return $query;

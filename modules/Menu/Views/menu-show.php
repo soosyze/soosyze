@@ -41,8 +41,9 @@
                             <?php foreach ($menu as $link): ?>
                                 <tr class="draggable">
                                     <td>
-                                        <a href="?<?php echo $link[ 'target_link' ] ?>">
-                                            <?php echo $link[ 'title_link' ] ?>
+                                        <a href="<?php echo $link[ 'link' ] ?>" target="<?php echo $link[ 'target_link' ] ?>"
+                                           <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>
+                                            <?php echo $link[ 'title_link' ]; ?>
                                         </a>
                                     </td>
                                     <td>
@@ -55,12 +56,12 @@
                                         <?php echo $form->form_select("weight-" . $link[ 'id' ]) ?>
                                     </td>	
                                     <td>
-                                        <a class="btn btn-default" href="<?php echo $link[ 'link_edit' ] ?>">
-                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editer
+                                        <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ] ?>">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Éditer
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="btn btn-default" href="<?php echo $link[ 'link_delete' ] ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
+                                        <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ] ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Supprimer
                                         </a>
                                     </td>

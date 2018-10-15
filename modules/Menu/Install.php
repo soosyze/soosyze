@@ -15,12 +15,13 @@ class Install
         });
         $container->schema()->createTableIfNotExists('menu_link', function (TableBuilder $table) {
             $table->increments('id')
+                ->string('link')
                 ->string('title_link')
-                ->string('target_link')
+                ->string('target_link')->valueDefault('_self')
                 ->string('menu')
                 ->integer('weight')
                 ->integer('parent')
-                ->boolean('active');
+                ->boolean('active')->valueDefault(true);
         });
         $container->query()->insertInto('menu', [ 'name', 'title', 'description' ])
             ->values([ 'admin-menu', 'Menu d\'administration', 'Le menu pour la gestion du site.' ])
@@ -28,31 +29,28 @@ class Install
             ->values([ 'user-menu', 'Menu utilisateur', 'Le menu des liens utilisateurs (compte, connexion...).' ])
             ->execute();
 
-        $container->query()->insertInto('menu_link', [ 'title_link', 'target_link',
-                'menu', 'weight', 'parent', 'active' ])
+        $container->query()->insertInto('menu_link', [ 'title_link', 'link',
+                'menu', 'weight', 'parent' ])
             ->values([
                 '<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Accueil',
                 '/',
                 'admin-menu',
                 1,
-                -1,
-                true
+                -1
             ])
             ->values([
                 '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Menu',
                 'menu/main-menu',
                 'admin-menu',
                 3,
-                -1,
-                true
+                -1
             ])
             ->values([
                 'Accueil',
                 '/',
                 'main-menu',
                 1,
-                -1,
-                true
+                -1
             ])
             ->execute();
     }
