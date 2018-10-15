@@ -68,9 +68,9 @@ class Install
                 ->values([ 'menu.show', 'Voir les menus' ])
                 ->values([ 'menu.show.check', 'Modifier le menu' ])
                 ->values([ 'menu.link.add', 'Voir d\'ajout des liens de menu' ])
-                ->values([ 'menu.link.add.check', 'Ajouter des liens de menu' ])
+                ->values([ 'menu.link.store', 'Ajouter des liens de menu' ])
                 ->values([ 'menu.link.edit', 'Voir l\'edition des liens de menu' ])
-                ->values([ 'menu.link.edit.check', 'Editer des liens de menu' ])
+                ->values([ 'menu.link.update', 'Éditer des liens de menu' ])
                 ->values([ 'menu.link.delete', 'Supprimer des liens de menu' ])
                 ->execute();
 
@@ -79,9 +79,9 @@ class Install
                 ->values([ 3, 'menu.show' ])
                 ->values([ 3, 'menu.show.check' ])
                 ->values([ 3, 'menu.link.add' ])
-                ->values([ 3, 'menu.link.add.check' ])
+                ->values([ 3, 'menu.link.store' ])
                 ->values([ 3, 'menu.link.edit' ])
-                ->values([ 3, 'menu.link.edit.check' ])
+                ->values([ 3, 'menu.link.update' ])
                 ->values([ 3, 'menu.link.delete' ])
                 ->execute();
         }
