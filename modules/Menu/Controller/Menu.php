@@ -58,14 +58,13 @@ class Menu extends \Soosyze\Controller
         $form->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:red;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         $linkAdd = self::router()->getRoute('menu.link.add', [ ':item' => $name ]);
@@ -116,8 +115,14 @@ class Menu extends \Soosyze\Controller
                     ->execute();
             }
 
-            $_SESSION[ 'success' ] = [ 'msg' => 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
             $route                 = self::router()->getRoute('menu.show', [ ':item' => $name ]);
+        } else {
+            $_SESSION[ 'inputs' ]      = $validator->getInputs();
+            $_SESSION[ 'errors' ]      = $validator->getErrors();
+            $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+            $route                     = self::router()->getRoute('menu.show', [
+                ':item' => $name ]);
         }
 
         return new Redirect($route);

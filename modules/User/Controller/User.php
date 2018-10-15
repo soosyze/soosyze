@@ -55,8 +55,9 @@ class User extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ]);
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         $url = self::router()->getRoute('user.relogin');
@@ -91,7 +92,7 @@ class User extends \Soosyze\Controller
 
         if (!$user) {
             $_SESSION[ 'inputs' ] = $validator->getInputs();
-            $_SESSION[ 'errors' ] = [ 'msg' => 'Désolé, nom d\'utilisateur ou mot de passe non reconnu.' ];
+            $_SESSION[ 'errors' ] = [ 'Désolé, nom d\'utilisateur ou mot de passe non reconnu.' ];
             $route                = self::router()->getRoute('user.login');
         } else {
             $route = self::router()->getRoute('user.views', [ ':id' => $user[ 'user_id' ] ]);
@@ -132,14 +133,13 @@ class User extends \Soosyze\Controller
             ->submit('sumbit', 'Validez', [ 'class' => 'btn btn-success' ]);
             }, [ 'class' => 'form-group' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            $form->addAttr('email', [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ]);
         }
 
         $url = self::router()->getRoute('user.login');
@@ -203,8 +203,8 @@ copiant dans votre navigateur : $url";
 
                 if ($isSend) {
                     $_SESSION[ 'success' ] = [
-                        'msg' => 'Un mail avec les instructions pour accéder à votre compte vient de vous être envoyé. '
-                        . 'Attention ! Il peut être dans vos courriers indésirables.'
+                        'Un mail avec les instructions pour accéder à votre compte vient de vous être envoyé. 
+                        Attention ! Il peut être dans vos courriers indésirables.'
                     ];
 
                     $route = self::router()->getRoute('user.login');
@@ -212,11 +212,11 @@ copiant dans votre navigateur : $url";
                     return new Redirect($route);
                 } else {
                     $_SESSION[ 'inputs' ] = $validator->getInputs();
-                    $_SESSION[ 'errors' ] = [ 'msg' => 'Impossible d\'envoyer le mail.' ];
+                    $_SESSION[ 'errors' ] = [ 'Impossible d\'envoyer le mail.' ];
                 }
             } else {
                 $_SESSION[ 'inputs' ] = $validator->getInputs();
-                $_SESSION[ 'errors' ] = [ 'msg' => 'Désolé, ce mail n\'est pas reconnu par le site.' ];
+                $_SESSION[ 'errors' ] = [ 'Désolé, ce mail n\'est pas reconnu par le site.' ];
             }
         } else {
             $_SESSION[ 'inputs' ] = $validator->getInputs();
@@ -322,14 +322,13 @@ copiant dans votre navigateur : $url";
             ->token()
             ->submit('sumbit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -387,7 +386,7 @@ copiant dans votre navigateur : $url";
             $user                  = self::user()->getUser($validator->getInput('email'));
             /* Modification du token_user à revoir. */
             self::user()->relogin($validator->getInput('email'), $user[ 'password' ]);
-            $_SESSION[ 'success' ] = [ 'msg' => 'Configuration Enregistré' ];
+            $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();

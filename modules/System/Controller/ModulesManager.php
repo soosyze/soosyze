@@ -58,13 +58,13 @@ class ModulesManager extends \Soosyze\Controller
 
         $form->token()->submit('submit', 'Enregistrer');
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ]);
         }
 
         return self::template()

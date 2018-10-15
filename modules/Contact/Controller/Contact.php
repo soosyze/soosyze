@@ -63,13 +63,13 @@ class Contact extends \Soosyze\Controller
             ->token()
             ->submit('submit', 'Envoyer le message', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -105,10 +105,10 @@ class Contact extends \Soosyze\Controller
                 ->message($inputs[ 'message' ])
                 ->send();
 
-            if ($isSend) {
-                $_SESSION[ 'success' ] = [ 'msg' => 'Votre message a bien été envoyé.' ];
+            if ($mail->send()) {
+                $_SESSION[ 'success' ] = [ 'Votre message a bien été envoyé.' ];
             } else {
-                $_SESSION[ 'errors' ] = [ 'msg' => 'Une erreur a empêché votre mail d\'être envoyé.' ];
+                $_SESSION[ 'errors' ] = [ 'Une erreur a empêché votre mail d\'être envoyé.' ];
             }
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();

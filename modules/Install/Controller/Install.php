@@ -108,14 +108,13 @@ class Install extends \Soosyze\Controller
             ->token()
             ->submit('submit', 'Installer', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
+        if (isset($_SESSION[ 'errors' ])) {
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         $block = (new Template('installUser.php', VIEWS_INSTALL))

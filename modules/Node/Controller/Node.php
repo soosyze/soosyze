@@ -115,8 +115,9 @@ class Node extends \Soosyze\Controller
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ]);
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
         $reponse = self::template()
@@ -182,7 +183,7 @@ class Node extends \Soosyze\Controller
                 ->values($node)
                 ->execute();
 
-            $_SESSION[ 'success' ] = [ 'msg' => 'Votre contenu a été enregistrée.' ];
+            $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
             $route                 = self::router()->getRoute('node.view.all');
 
             return new Redirect($route);
@@ -195,6 +196,10 @@ class Node extends \Soosyze\Controller
         $_SESSION[ 'errors' ] = array_merge(
             $validator->getErrors(),
             $validatorField->getErrors()
+        );
+        $_SESSION[ 'errors_keys' ] = array_merge(
+            $validator->getKeyUniqueErrors(),
+            $validatorField->getKeyUniqueErrors()
         );
 
         $route = self::router()->getRoute('node.add.item', [ ':item' => $item ]);
@@ -344,13 +349,13 @@ class Node extends \Soosyze\Controller
             })
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ]);
-        }
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ]);
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
+            $form->setSuccess($_SESSION[ 'success' ]);
+            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
         $reponse = self::template()
@@ -417,7 +422,7 @@ class Node extends \Soosyze\Controller
                 ])
                 ->where('id', '==', $item)
                 ->execute();
-            $_SESSION[ 'success' ] = [ 'msg' => 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
             $_SESSION[ 'inputs' ] = array_merge(
                 $validator->getInputs(),
@@ -426,6 +431,10 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'errors' ] = array_merge(
                 $validator->getErrors(),
                 $validatorField->getErrors()
+            );
+            $_SESSION[ 'errors_keys' ] = array_merge(
+                $validator->getKeyUniqueErrors(),
+                $validatorField->getKeyUniqueErrors()
             );
         }
 
