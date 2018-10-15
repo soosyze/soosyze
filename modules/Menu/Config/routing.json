@@ -18,15 +18,15 @@
     "menu.link.add": {
         "methode" : "GET",
         "path": "menu/:item/link/add",
-        "uses": "Menu@addLink",
+        "uses": "Link@create",
         "with": {
             ":item": "[a-z-]+"
         }
     },
-    "menu.link.add.check": {
+    "menu.link.store": {
         "methode" : "POST",
         "path": "menu/:item/link/add",
-        "uses": "Menu@addLinkCheck",
+        "uses": "Link@store",
         "with": {
             ":item": "[a-z-]+"
         }
@@ -34,16 +34,16 @@
     "menu.link.edit": {
         "methode" : "GET",
         "path": "menu/:menu/link/:item/edit",
-        "uses": "Menu@editLink",
+        "uses": "Link@edit",
         "with": {
             ":item": "[0-9]+",
             ":menu": "[a-z-]+"
         }
     },
-    "menu.link.edit.check": {
+    "menu.link.update": {
         "methode" : "POST",
         "path": "menu/:menu/link/:item/edit",
-        "uses": "Menu@editLinkCheck",
+        "uses": "Link@update",
         "with": {
             ":item": "[0-9]+",
             ":menu": "[a-z-]+"
@@ -52,7 +52,7 @@
     "menu.link.delete": {
         "methode" : "GET",
         "path": "menu/:menu/link/:item/delete",
-        "uses": "Menu@deleteLink",
+        "uses": "Link@delete",
         "with": {
             ":menu": "[a-z-]+",
             ":item": "[0-9]+"
