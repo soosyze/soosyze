@@ -46,90 +46,87 @@ class System extends \Soosyze\Controller
 
         $action = self::router()->getRoute('system.config.check');
 
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('fieldset-information', 'fieldset', function ($form) use ($content, $optionThemes) {
-                $form->legend('legend-information', 'Information')
-                ->group('group-email', 'div', function ($form) use ($content) {
-                    $form->label('label-email', 'Email du site', [ 'class' => 'control-label' ])
+        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action, 'enctype' => 'multipart/form-data' ]))
+            ->group('system-information-fieldset', 'fieldset', function ($form) use ($content, $optionThemes) {
+                $form->legend('system-information-legend', 'Information')
+                ->group('system-email-group', 'div', function ($form) use ($content) {
+                    $form->label('system-email-label', 'Email du site')
                     ->email('email', 'email', [
-                        'required'    => 1,
-                        'value'       => $content[ 'email' ],
                         'class'       => 'form-control',
-                        'placeholder' => 'Email'
+                        'required'    => 1,
+                        'placeholder' => 'Email',
+                        'value'       => $content[ 'email' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-maintenance', 'div', function ($form) use ($content) {
+                ->group('system-maintenance-group', 'div', function ($form) use ($content) {
                     $form->checkbox('maintenance', 'maintenance', [
                         'checked' => $content[ 'maintenance' ]
                     ])
-                    ->label('label-maintenance', '<span class="ui"></span>Mettre le site en maintenance', [
+                    ->label('system-maintenance-group', '<span class="ui"></span>Mettre le site en maintenance', [
                         'for' => 'maintenance'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-theme', 'div', function ($form) use ($optionThemes) {
-                    $form->label('label-theme', 'Theme du site', [ 'class' => 'control-label' ])
+                ->group('system-theme-group', 'div', function ($form) use ($optionThemes) {
+                    $form->label('system-theme-label', 'Theme du site')
                     ->select('theme', 'theme', $optionThemes, [
                         'class'    => 'form-control',
                         'required' => 1
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->group('fieldset-path', 'fieldset', function ($form) use ($content) {
-                $form->legend('legend-path', 'Page par défaut')
-                ->group('group-pathIndex', 'div', function ($form) use ($content) {
-                    $form->label('label-pathIndex', 'Page d’accueil par défaut', [
-                        'class' => 'control-label' ])
+           ->group('system-path-fieldset', 'fieldset', function ($form) use ($content) {
+               $form->legend('system-path-legend', 'Page par défaut')
+                ->group('system-path_index-group', 'div', function ($form) use ($content) {
+                    $form->label('system-path_index-label', 'Page d’accueil par défaut')
                     ->text('pathIndex', 'pathIndex', [
+                        'class'       => 'form-control',
                         'required'    => 1,
-                        'value'       => $content[ 'pathIndex' ],
-                        'class'       => 'form-control',
-                        'placeholder' => 'Path page index'
+                        'placeholder' => 'Path page index',
+                        'value'       => $content[ 'pathIndex' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-pathAccessDenied', 'div', function ($form) use ($content) {
-                    $form->label('label-pathAccessDenied', 'Page 403 par défaut (accès refusé)', [
-                        'class' => 'control-label' ])
+                ->group('system-path_access_denied-group', 'div', function ($form) use ($content) {
+                    $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)')
                     ->text('pathAccessDenied', 'pathAccessDenied', [
-                        'value'       => $content[ 'pathAccessDenied' ],
                         'class'       => 'form-control',
-                        'placeholder' => 'Path page access denied'
+                        'placeholder' => 'Path page access denied',
+                        'value'       => $content[ 'pathAccessDenied' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-pathNoFound', 'div', function ($form) use ($content) {
-                    $form->label('label-pathNoFound', 'Page 404 par défaut (page non trouvée)', [
-                        'class' => 'control-label' ])
+                ->group('system-path_no_found-group', 'div', function ($form) use ($content) {
+                    $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)')
                     ->text('pathNoFound', 'pathNoFound', [
-                        'value'       => $content[ 'pathNoFound' ],
                         'class'       => 'form-control',
-                        'placeholder' => 'Path page not found'
+                        'placeholder' => 'Path page not found',
+                        'value'       => $content[ 'pathNoFound' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
-            })
-            ->group('fieldset-meta', 'fieldset', function ($form) use ($content) {
-                $form->legend('legend-meta', 'SEO Metadonnées')
-                ->group('group-title', 'div', function ($form) use ($content) {
-                    $form->label('label-title', 'Titre du site', [ 'class' => 'control-label' ])
+           })
+            ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($content) {
+                $form->legend('system-metadata-legend', 'SEO Metadonnées')
+                ->group('system-title-group', 'div', function ($form) use ($content) {
+                    $form->label('system-title-label', 'Titre du site')
                     ->text('title', 'title', [
-                        'value'       => $content[ 'title' ],
                         'class'       => 'form-control',
                         'placeholder' => 'Titre du site',
-                        'required'    => 'required'
+                        'required'    => 'required',
+                        'value'       => $content[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-description', 'div', function ($form) use ($content) {
-                    $form->label('label-description', 'Description', [ 'class' => 'control-label' ])
+                ->group('system-description-group', 'div', function ($form) use ($content) {
+                    $form->label('system-description-label', 'Description')
                     ->textarea('description', 'description', $content[ 'description' ], [
                         'class'    => 'form-control',
                         'required' => 'required',
                         'rows'     => 5
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-keyboard', 'div', function ($form) use ($content) {
-                    $form->label('label-keyboard', 'Mots-clés', [ 'class' => 'control-label' ])
+                ->group('system-keyboard-group', 'div', function ($form) use ($content) {
+                    $form->label('system-keyboard-label', 'Mots-clés')
                     ->text('keyboard', 'keyboard', [
-                        'value'       => $content[ 'keyboard' ],
                         'class'       => 'form-control',
-                        'placeholder' => 'Mot1, Mot2, Mot3...'
+                        'placeholder' => 'Mot1, Mot2, Mot3...',
+                        'value'       => $content[ 'keyboard' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('group-favicon', 'div', function ($form) use ($content) {

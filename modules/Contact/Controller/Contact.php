@@ -27,32 +27,32 @@ class Contact extends \Soosyze\Controller
         $action = self::router()->getRoute('contact.check');
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('contact-name', 'div', function ($form) use ($content) {
-                $form->label('label-name', 'Votre nom')
+            ->group('contact-name-group', 'div', function ($form) use ($content) {
+                $form->label('contact-name-label', 'Votre nom')
                 ->text('name', 'name', [
-                    'value'    => $content[ 'name' ],
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'name' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('contact-email', 'div', function ($form) use ($content) {
-                $form->label('label-email', 'Votre adresse de courriel')
+            ->group('contact-email-group', 'div', function ($form) use ($content) {
+                $form->label('contact-email-label', 'Votre adresse de courriel')
                 ->email('email', 'email', [
-                    'value'    => $content[ 'email' ],
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'email' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('contact-object', 'div', function ($form) use ($content) {
-                $form->label('label-object', 'Objet')
+            ->group('contact-object-group', 'div', function ($form) use ($content) {
+                $form->label('contact-object-label', 'Objet')
                 ->text('object', 'object', [
-                    'value'    => $content[ 'object' ],
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'object' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('contact-message', 'div', function ($form) use ($content) {
-                $form->label('label-message', 'Message')
+            ->group('contact-message-group', 'div', function ($form) use ($content) {
+                $form->label('contact-message-label', 'Message')
                 ->textarea('message', 'message', $content[ 'message' ], [
                     'class'    => 'form-control',
                     'required' => 1,

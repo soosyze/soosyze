@@ -38,16 +38,16 @@ class User extends \Soosyze\Controller
             ->group('user-login-mail', 'div', function ($form) use ($content) {
                 $form->label('labelMail', 'Email')
                 ->email('mail', 'mail', [
-                    'value'    => $content[ 'mail' ], 
-                    'required' => 1, 
-                    'class'    => 'form-control'
+                    'required' => 1,
+                    'class'    => 'form-control',
+                    'value'    => $content[ 'mail' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('user-login-password', 'div', function ($form) {
                 $form->label('labelPassword', 'Password')
                 ->password('pass', 'pass', [
-                    'required' => 1, 
-                    'class'    => 'form-control'
+                    'class'    => 'form-control',
+                    'required' => 1
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token()
@@ -124,9 +124,9 @@ class User extends \Soosyze\Controller
                 $form->group('user-edit-email', 'div', function ($form) use ($content) {
                     $form->label('labelLogin', 'Email')
                 ->email('email', 'email', [
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'value'    => $content[ 'email' ],
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'email' ]
                 ]);
                 }, [ 'class' => 'form-group' ])
             ->token()
@@ -279,17 +279,25 @@ copiant dans votre navigateur : $url";
                 $form->legend('legen-edit-information', 'Informations')
                 ->group('user-edit-email', 'div', function ($form) use ($query) {
                     $form->label('label-email', 'Email')
-                    ->email('email', 'email', [ 'value' => $query[ 'email' ], 'class' => 'form-control' ]);
+                    ->email('email', 'email', [
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'value'    => $query[ 'email' ]
+                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('user-edit-name', 'div', function ($form) use ($query) {
                     $form->label('label-name', 'Nom')
-                    ->text('name', 'name', [ 'value' => $query[ 'name' ],
-                        'class' => 'form-control' ]);
+                    ->text('name', 'name', [
+                        'class' => 'form-control',
+                        'value' => $query[ 'name' ]
+                    ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('user-edit-firstname', 'div', function ($form) use ($query) {
                     $form->label('label-firstname', 'Prénom')
-                    ->text('firstname', 'firstname', [ 'value' => $query[ 'firstname' ],
-                        'class' => 'form-control' ]);
+                    ->text('firstname', 'firstname', [
+                        'class' => 'form-control',
+                        'value' => $query[ 'firstname' ]
+                    ]);
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('user-edit-newpassword', 'fieldset', function ($form) {

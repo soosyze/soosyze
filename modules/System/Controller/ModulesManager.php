@@ -34,18 +34,17 @@ class ModulesManager extends \Soosyze\Controller
 
             /* Si un des module requis est non installé. */
             $isRequired = [];
-            if (!empty($values[ 'required' ])) {
-                foreach ($values[ 'required' ] as $require) {
-                    if (!isset($content[ $require ])) {
-                        $isRequired         = $values[ 'required' ];
-                        $attr[ 'disabled' ] = 'disabled';
-                    }
+            foreach ($values[ 'required' ] as $require) {
+                if (!isset($content[ $require ])) {
+                    $isRequired         = $values[ 'required' ];
+                    $attr[ 'disabled' ] = 'disabled';
                 }
             }
 
             $form->checkbox($key, $key, $attr)
                 ->label("module-" . $key, '<span class="ui"></span> ' . $key, [
-                    'for' => $key ]);
+                    'for' => $key
+                ]);
 
             $package[ $values[ 'package' ] ][ $key ] = [
                 'name'                => $key,

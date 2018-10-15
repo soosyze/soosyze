@@ -66,43 +66,43 @@ class Install extends \Soosyze\Controller
         $action = self::router()->getRoute('install.step.check', [ ':id' => 1 ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('group-email', 'div', function ($form) use ($content) {
-                $form->label('label-email', 'Email', [ 'class' => 'control-label' ])
+            ->group('install-email-group', 'div', function ($form) use ($content) {
+                $form->label('install-email-label', 'Email')
                 ->email('email', 'email', [
                     'class'       => 'form-control',
+                    'placeholder' => 'mon-mail@mail.com',
                     'required'    => 1,
-                    'value'       => $content[ 'email' ],
-                    'placeholder' => 'mon-mail@mail.com'
+                    'value'       => $content[ 'email' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('group-name', 'div', function ($form) use ($content) {
-                $form->label('label-name', 'Nom', [ 'class' => 'control-label' ])
+            ->group('install-name-group', 'div', function ($form) use ($content) {
+                $form->label('install-name-label', 'Nom')
                 ->text('name', 'name', [
-                    'value' => $content[ 'name' ],
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'value' => $content[ 'name' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('group-firstname', 'div', function ($form) use ($content) {
-                $form->label('label-firstname', 'Prénom', [ 'class' => 'control-label' ])
+            ->group('install-firstname-group', 'div', function ($form) use ($content) {
+                $form->label('install-firstname-label', 'Prénom')
                 ->text('firstname', 'firstname', [
-                    'value' => $content[ 'firstname' ],
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'value' => $content[ 'firstname' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('group-password', 'div', function ($form) use ($content) {
-                $form->label('label-password', 'Mot de passe')
+            ->group('install-password-group', 'div', function ($form) use ($content) {
+                $form->label('install-password-label', 'Mot de passe')
                 ->password('password', 'password', [
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'value'    => $content[ 'password' ],
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'password' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('group-password-confirm', 'div', function ($form) use ($content) {
-                $form->label('label-password-confirm', 'Confirmation du mot de passe')
+            ->group('install-password-confirm-group', 'div', function ($form) use ($content) {
+                $form->label('install-password-confirm-label', 'Confirmation du mot de passe')
                 ->password('password-confirm', 'password-confirm', [
+                    'class'    => 'form-control',
                     'required' => 1,
-                    'value'    => $content[ 'passwordConfirm' ],
-                    'class'    => 'form-control'
+                    'value'    => $content[ 'password-confirm' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token()

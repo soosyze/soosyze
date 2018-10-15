@@ -59,15 +59,15 @@ class Node extends \Soosyze\Controller
         $action = self::router()->getRoute('node.add.item.check', [ ':item' => $item ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('fieldset-main', 'fieldset', function ($form) use ($query, $content, $item) {
-                $form->legend('legend-information', 'Remplissiez les champs suivants')
-                ->group('group-title', 'div', function ($form) use ($query, $content, $item) {
-                    $form->label('labelTitle', 'Titre du contenu')
+            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item) {
+                $form->legend('node-title-legend', 'Remplissiez les champs suivants')
+                ->group('node-title-group', 'div', function ($form) use ($query, $content, $item) {
+                    $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
                         'class'       => 'form-control',
-                        'value'       => $content[ 'title' ],
                         'required'    => 1,
                         'placeholder' => 'Titre du contenu',
+                        'value'       => $content[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
 
@@ -82,14 +82,14 @@ class Node extends \Soosyze\Controller
                         : '';
 
                     $form->group('node-' . $item . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
-                        $form->label('label-' . $key, $key);
+                        $form->label('node-' . $key . '-label', $key);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->textarea($key, $key, $content[ $key ], [
                                     'class'       => 'form-control',
-                                    'placeholder' => 'Entrer votre contenu içi...',
+                                    'required'    => $require,
                                     'rows'        => 8,
-                                    'required'    => $require
+                                    'placeholder' => 'Entrer votre contenu içi...'
                                 ]);
 
                                 break;
@@ -104,14 +104,14 @@ class Node extends \Soosyze\Controller
                         }
                     }, [ 'class' => "form-group" ]);
                 }
-
-                $form->group('publish', 'div', function ($form) {
-                    $form->checkbox('published', 'published')
-                    ->label('labelPublished', '<span class="ui"></span> Publier le contenu', [
-                        'for' => 'published' ]);
-                }, [ 'class' => "form-group" ])
-                ->token();
             })
+            ->group('node-publish-group', 'div', function ($form) {
+                $form->checkbox('published', 'published')
+                    ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                        'for' => 'published'
+                    ]);
+            }, [ 'class' => "form-group" ])
+            ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
@@ -302,13 +302,15 @@ class Node extends \Soosyze\Controller
         $action = self::router()->getRoute('node.edit.check', [ ':item' => $item ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('fieldset-main', 'fieldset', function ($form) use ($query, $content, $item, $node) {
-                $form->legend('legend-information', 'Remplissiez les champs suivants')
-                ->group('group-title', 'div', function ($form) use ($content) {
-                    $form->label('labelTitle', 'Titre du contenu')
+            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item, $node) {
+                $form->legend('node-title-legend', 'Remplissiez les champs suivants')
+                ->group('node-title-group', 'div', function ($form) use ($content) {
+                    $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
-                        'class'    => 'form-control', 'value'    => $content[ 'title' ],
-                        'required' => 1
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'rows'     => 8,
+                        'value'    => $content[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
 
@@ -325,17 +327,17 @@ class Node extends \Soosyze\Controller
                     $form->group('node-' . $item . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
-                                $form->label('label-' . $key, $key, [ 'for' => $key ])
+                                $form->label('label-' . $key, $key)
                                 ->textarea($key, $key, $content[ $key ], [
                                     'class'    => 'form-control',
-                                    'rows'     => 8,
                                     'required' => $require,
+                                    'rows'     => 8
                                 ]);
 
                                 break;
                             default:
                                 $type = $value[ 'field_type' ];
-                                $form->$type($key, $key, [
+                                $form->$type($key, 'node-' . $key, [
                                     'class'    => 'form-control',
                                     'required' => $require,
                                 ]);
@@ -344,13 +346,14 @@ class Node extends \Soosyze\Controller
                         }
                     }, [ 'class' => 'form-group' ]);
                 }
-                $form->group('publish', 'div', function ($form) use ($content) {
+                $form->group('node-publish-group', 'div', function ($form) use ($content) {
                     $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ]])
-                    ->label('labelPublished', '<span class="ui"></span> Publier le contenu', [
-                        'for' => 'published' ]);
-                }, [ 'class' => 'form-group' ])
-                ->token();
+                    ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                        'for' => 'published'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
             })
+            ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
