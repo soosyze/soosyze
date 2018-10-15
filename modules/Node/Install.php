@@ -162,23 +162,21 @@ class Install
     public function hookInstallMenu($container)
     {
         if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'title_link', 'target_link',
-                    'menu', 'weight', 'parent', 'active' ])
+            $container->query()->insertInto('menu_link', [ 'title_link', 'link',
+                    'menu', 'weight', 'parent' ])
                 ->values([
                     '<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Contenu',
                     'admin/content',
                     'admin-menu',
                     2,
-                    -1,
-                    true
+                    -1
                 ])
                 ->values([
                     'Page',
                     'node/3',
                     'main-menu',
                     2,
-                    -1,
-                    true
+                    -1
                 ])
                 ->execute();
         }

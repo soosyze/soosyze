@@ -90,19 +90,17 @@ class Install
         if ($container->schema()->hasTable('menu')) {
             $container->query()->insertInto('menu_link', [
                     'title_link',
-                    'target_link',
+                    'link',
                     'menu',
                     'weight',
                     'parent',
-                    'active'
                 ])
                 ->values([
                     'Blog',
                     'news',
                     'main-menu',
                     3,
-                    -1,
-                    true
+                    -1
                 ])
                 ->execute();
         }

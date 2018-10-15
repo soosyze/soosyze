@@ -16,15 +16,14 @@ class Install
     public function hookInstallMenu($container)
     {
         if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'title_link', 'target_link',
-                    'menu', 'weight', 'parent', 'active' ])
+            $container->query()->insertInto('menu_link', [ 'title_link', 'link',
+                    'menu', 'weight', 'parent'])
                 ->values([
                     'Contact',
                     'contact',
                     'main-menu',
                     4,
-                    -1,
-                    true
+                    -1
                 ])
                 ->execute();
         }
