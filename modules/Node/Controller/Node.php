@@ -85,7 +85,7 @@ class Node extends \Soosyze\Controller
                         $form->label('label-' . $key, $key);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
-                                $form->textarea($key, $content[ $key ], [
+                                $form->textarea($key, $key, $content[ $key ], [
                                     'class'       => 'form-control',
                                     'placeholder' => 'Entrer votre contenu içi...',
                                     'rows'        => 8,
@@ -326,7 +326,7 @@ class Node extends \Soosyze\Controller
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->label('label-' . $key, $key, [ 'for' => $key ])
-                                ->textarea($key, $content[ $key ], [
+                                ->textarea($key, $key, $content[ $key ], [
                                     'class'    => 'form-control',
                                     'rows'     => 8,
                                     'required' => $require,

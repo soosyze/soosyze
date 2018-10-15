@@ -53,11 +53,11 @@ class Contact extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('contact-message', 'div', function ($form) use ($content) {
                 $form->label('label-message', 'Message')
-                ->textarea('message', $content[ 'message' ], [
-                    'required' => 1,
+                ->textarea('message', 'message', $content[ 'message' ], [
                     'class'    => 'form-control',
-                    'style'    => 'resize:vertical',
-                    'rows'     => 8
+                    'required' => 1,
+                    'rows'     => 8,
+                    'style'    => 'resize:vertical'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token()

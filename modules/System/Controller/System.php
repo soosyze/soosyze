@@ -68,9 +68,9 @@ class System extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('group-theme', 'div', function ($form) use ($optionThemes) {
                     $form->label('label-theme', 'Theme du site', [ 'class' => 'control-label' ])
-                    ->select('theme', $optionThemes, [
-                        'required' => 1,
-                        'class'    => 'form-control'
+                    ->select('theme', 'theme', $optionThemes, [
+                        'class'    => 'form-control',
+                        'required' => 1
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -118,11 +118,10 @@ class System extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('group-description', 'div', function ($form) use ($content) {
                     $form->label('label-description', 'Description', [ 'class' => 'control-label' ])
-                    ->textarea('description', $content[ 'description' ], [
-                        'id'       => 'description',
+                    ->textarea('description', 'description', $content[ 'description' ], [
                         'class'    => 'form-control',
-                        'rows'     => 5,
-                        'required' => 'required'
+                        'required' => 'required',
+                        'rows'     => 5
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('group-keyboard', 'div', function ($form) use ($content) {

@@ -49,9 +49,9 @@ class Menu extends \Soosyze\Controller
         foreach ($query as $key => $link) {
             $nameLinkWeight = "weight-" . $link[ 'id' ];
             $nameLinkActive = "active-" . $link[ 'id' ];
-            $form->select($nameLinkWeight, $weight, [
-                    'selected' => $link[ 'weight' ],
-                    'class'    => 'form-control'
+            $form->select($nameLinkWeight, $nameLinkWeight, $weight, [
+                    'class'    => 'form-control',
+                    'selected' => $link[ 'weight' ]
                 ])
                 ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ]]);
         }
