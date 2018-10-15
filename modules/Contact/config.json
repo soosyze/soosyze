@@ -1,7 +1,9 @@
 {
     "Contact": {
         "name": "Contact",
-        "controller": "Contact\\Controller\\Contact",
+        "controller": {
+            "Contact": "Contact\\Controller\\Contact"
+        },
         "version": "1.0",
         "description": "Formulaire de contact pour les internautes",
         "package": "Core",

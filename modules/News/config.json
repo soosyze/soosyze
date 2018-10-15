@@ -1,7 +1,9 @@
 {
     "News": {
         "name": "News",
-        "controller": "News\\Controller\\NewsController",
+        "controller": {
+            "News": "News\\Controller\\NewsController"
+        },
         "version": "1.0",
         "description": "Gestion de vos articles",
         "package": "Core",

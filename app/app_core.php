@@ -44,9 +44,9 @@ class Core extends App
             return $modules;
         }
 
-        $data = $this->get('query')->select('name', 'controller')->from('module')->fetchAll();
+        $data = $this->get('query')->select('key_controller', 'controller')->from('module')->fetchAll();
         foreach ($data as $value) {
-            $modules[ $value[ 'name' ] ] = new $value[ 'controller' ]();
+            $modules[ $value[ 'key_controller' ] ] = new $value[ 'controller' ]();
         }
 
         return $modules;

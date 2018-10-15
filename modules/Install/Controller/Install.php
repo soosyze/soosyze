@@ -22,20 +22,13 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        "User"    => 'User\\Controller\\User',
-        "System"  => 'System\\Controller\\System',
-        "Node"    => 'Node\\Controller\\Node',
-        "Menu"    => 'Menu\\Controller\\Menu',
-        "Contact" => 'Contact\\Controller\\Contact',
-        "News"    => 'New\\Controller\\NewsController'
+        "User",
+        "System",
+        "Node",
+        "Menu",
+        "Contact",
+        "News"
     ];
-
-    /**
-     * Configuration d'installation.
-     *
-     * @var array
-     */
-    private $settings = [];
 
     public function step($id)
     {
@@ -170,43 +163,30 @@ class Install extends \Soosyze\Controller
 
     private function installModule()
     {
-        foreach ($this->modules as $key => $module) {
-            $obj = $key . '\Install';
+        foreach ($this->modules as $module) {
+            $obj = $module . '\Install';
             $obj = new $obj();
-            call_user_func([ $obj, 'install' ], $this->container);
+            $obj->install($this->container);
         }
 
         /* Charge les services pour utiliser les hooks d'installation. */
         $this->loadContainer();
 
-        foreach ($this->modules as $key => $module) {
-            $obj = $key . '\Install';
+        foreach ($this->modules as $module) {
+            $obj = $module . '\Install';
             $obj = new $obj();
 
             if (method_exists($obj, 'hookInstall')) {
-                call_user_func([ $obj, 'hookInstall' ], $this->container);
+                $obj->hookInstall($this->container);
             }
 
-            $config = Util::getJson('modules' . DS . $key . DS . 'config.json');
+            $config = Util::getJson('modules' . DS . $module . DS . 'config.json');
 
             foreach ($config as $conf) {
-                $requires = $conf[ 'required' ];
-                unset($conf[ 'required' ]);
-
-                self::query()
-                    ->insertInto('module', [ 'name', 'controller', 'version', 'description',
-                        'package', 'locked' ])
-                    ->values($conf)
-                    ->execute();
-
-                foreach ($requires as $require) {
-                    self::query()
-                        ->insertInto('module_required', [ 'name_module', 'name_required' ])
-                        ->values([ $conf[ 'name' ], $require ])
-                        ->execute();
-                }
+                $this->container->get('module')->create($conf);
             }
         }
+
         self::query()
             ->insertInto('module_required', [ 'name_module', 'name_required' ])
             ->values([ 'Core', 'System' ])
@@ -261,25 +241,26 @@ class Install extends \Soosyze\Controller
 
     private function loadContainer()
     {
-        $services = [];
-        foreach ($this->modules as $key => $module) {
-            $configs = Util::getJson('modules' . DS . $key . DS . 'config.json');
+        foreach ($this->modules as $module) {
+            $configs = Util::getJson('modules' . DS . $module . DS . 'config.json');
 
             foreach ($configs as $config) {
-                $obj = new $config[ 'controller' ]();
+                foreach ($config[ 'controller' ] as $controller) {
+                    $obj = new $controller();
 
-                if (empty($obj->getPathServices())) {
-                    continue;
-                }
+                    if (empty($obj->getPathServices())) {
+                        continue;
+                    }
 
-                $servicesConfig = Util::getJson($obj->getPathServices());
-                foreach ($servicesConfig as $key => $value) {
-                    $this->container->setService($key, $value);
-                    $services[ $key ] = $value;
+                    $servicesConfig = Util::getJson($obj->getPathServices());
+                    foreach ($servicesConfig as $key => $value) {
+                        $args = isset($value[ 'arguments' ])
+                            ? $value[ 'arguments' ]
+                            : [];
+                        $this->container->setService($key, $value[ 'class' ], $args);
+                    }
                 }
             }
         }
-
-        return $services;
     }
 }

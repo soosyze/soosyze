@@ -1,7 +1,9 @@
 {
     "Node": {
         "name": "Node",
-        "controller": "Node\\Controller\\Node",
+        "controller": {
+            "Node": "Node\\Controller\\Node"
+        },
         "version": "1.0",
         "description": "Gestion et création de contenu",
         "package": "Core",

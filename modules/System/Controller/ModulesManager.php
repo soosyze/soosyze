@@ -98,46 +98,10 @@ class ModulesManager extends \Soosyze\Controller
             unset($data[ 'token' ]);
 
             $module_active = array_flip(self::module()->listModuleActiveNotRequire());
+            $this->uninstallModule($module_active, $data);
+            $this->installModule($module_active, $data);
 
-            /* Si modules en moins alors désinstalle */
-            $diff = array_diff_key($module_active, $data);
-
-            if (!empty($diff)) {
-                foreach ($diff as $key => $value) {
-                    /* Instantie et exécute le service désinstallation. */
-                    $obj = $key . '\Install';
-                    $obj = new $obj();
-                    call_user_func([ $obj, 'uninstall' ], $this->container);
-
-                    /* Supprime le module à partir de son nom */
-                    self::module()->uninstallModule($key);
-                }
-            }
-
-            /* Si il y a des modules en plus, alors il seront installés. */
-            $diff = array_diff_key($data, $module_active);
-
-            if (!empty($diff)) {
-                foreach ($diff as $key => $value) {
-                    /* Instantie et exécute le service d'installation. */
-                    $obj = $key . '\Install';
-                    $obj = new $obj();
-                    call_user_func([ $obj, 'install' ], $this->container);
-
-                    /* Hook d'installation pour que le module utilise les autres modules. */
-                    if (method_exists($obj, 'hookInstall')) {
-                        call_user_func([ $obj, 'hookInstall' ], $this->container);
-                    }
-
-                    /* Récupère les configurations et les sauvegardes dans la table module */
-                    $config = self::module()->getConfig($key);
-                    self::module()->installModule($config);
-
-                    /* Hook d'installation pour les autres modules utilise le module actuel. */
-                    $this->container->callHook(strtolower('install.' . $key), [ $this->container ]);
-                }
-            }
-            $_SESSION[ 'success' ] = [ 'msg' => 'Configuration Enregistré' ];
+            $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
         } else {
             $_SESSION[ 'inputs' ] = $validator->getInputs();
             $_SESSION[ 'errors' ] = $validator->getErrors();
@@ -146,6 +110,54 @@ class ModulesManager extends \Soosyze\Controller
         $route = self::router()->getRoute('system.modules');
 
         return new Redirect($route);
+    }
+
+    private function installModule($module_active, $data)
+    {
+        /* Si il y a des modules en plus, alors il seront installés. */
+        $diff = array_diff_key($data, $module_active);
+
+        if (!empty($diff)) {
+            foreach ($diff as $key => $value) {
+                /* Instantie et exécute le service d'installation. */
+                $obj = $key . '\Install';
+                $obj = new $obj();
+                $obj->install($this->container);
+
+                /* Hook d'installation pour que le module utilise les autres modules. */
+                if (method_exists($obj, 'hookInstall')) {
+                    $obj->hookInstall($this->container);
+                }
+
+                /* Récupère les configurations et les sauvegardes dans la table module */
+                $config = self::module()->getConfig($key);
+                self::module()->create($config);
+
+                /* Hook d'installation pour les autres modules utilise le module actuel. */
+                $this->container->callHook(strtolower('install.' . $key), [ $this->container ]);
+            }
+        }
+    }
+
+    private function uninstallModule($module_active, $data)
+    {
+        /* Si modules en moins alors désinstalle */
+        $diff = array_diff_key($module_active, $data);
+
+        if (!empty($diff)) {
+            foreach ($diff as $key => $value) {
+                /* Instantie et exécute le service désinstallation. */
+                $obj = $key . '\Install';
+                if (!class_exists($obj)) {
+                    continue;
+                }
+                
+                $obj = new $obj();
+                $obj->uninstall($this->container);
+                /* Supprime le module à partir de son nom */
+                self::module()->uninstallModule($key);
+            }
+        }
     }
 
     /**
