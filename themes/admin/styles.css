@@ -248,3 +248,9 @@ textarea{
 [type=checkbox][disabled]:not(:checked) + label:before{
     background:#666; 
 }
+.btn-action{
+    color: #333;
+}
+.btn-action:hover{
+    text-decoration: underline;
+}

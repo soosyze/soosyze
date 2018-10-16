@@ -27,10 +27,10 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="btn-group" role="group" aria-label="action">
-                                    <a href=" <?php echo $node[ 'link_edit' ] ?>" class="btn btn-default">
-                                        <span class="glyphicon glyphicon-pencil" aria-label="Modifier"></span> Editer
+                                    <a href=" <?php echo $node[ 'link_edit' ] ?>" class="btn btn-action">
+                                        <span class="glyphicon glyphicon-pencil" aria-label="Modifier"></span> Éditer
                                     </a>
-                                    <a href="<?php echo $node[ 'link_delet' ] ?>" class="btn btn-default" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
+                                    <a href="<?php echo $node[ 'link_delet' ] ?>" class="btn btn-action" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
                                         <span class="glyphicon glyphicon-remove" aria-label="Supprimer"></span> Supprimer
                                     </a>
                                 </div>

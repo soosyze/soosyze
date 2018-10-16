@@ -160,9 +160,9 @@ class System extends \Soosyze\Controller
         ]);
     }
 
-    public function configCheck($r)
+    public function configCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([
@@ -188,7 +188,7 @@ class System extends \Soosyze\Controller
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
-            $_SESSION[ 'success' ] = [ 'msg' => 'Configuration Enregistré' ];
+            $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();

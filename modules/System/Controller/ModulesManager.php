@@ -77,9 +77,9 @@ class ModulesManager extends \Soosyze\Controller
         ]);
     }
 
-    public function modulesCheck($r)
+    public function modulesCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
         unset($post[ 'submit' ]);
 
         $validator = (new Validator())

@@ -137,9 +137,9 @@ class Install
                 ])
                 ->values([ 'node.add.view', 'Voir les contenus créables' ])
                 ->values([ 'node.add.item', 'Voir l\'ajout des contenus' ])
-                ->values([ 'node.add.item.check', 'Editer les contenus' ])
+                ->values([ 'node.add.item.check', 'Éditer les contenus' ])
                 ->values([ 'node.edit', 'Voir l\'édition des contenus' ])
-                ->values([ 'node.edit.check', 'Editer les contenus' ])
+                ->values([ 'node.edit.check', 'Éditer les contenus' ])
                 ->values([ 'node.delete', 'Supprimer les contenus' ])
                 ->values([ 'node.view.all', 'Voir le tableau des contenus' ])
                 ->execute();

@@ -46,7 +46,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
-        foreach ($query as $key => $link) {
+        foreach ($query as $link) {
             $nameLinkWeight = "weight-" . $link[ 'id' ];
             $nameLinkActive = "active-" . $link[ 'id' ];
             $form->select($nameLinkWeight, $nameLinkWeight, $weight, [
@@ -104,10 +104,8 @@ class Menu extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($links as $link) {
                 $linkUpdate = [
-                    'weight' => $validator->getInput("weight-" . $link[ 'id' ]),
-                    'active' => ($validator->getInput("active-" . $link[ 'id' ]) == 'on'
-                    ? true
-                    : false)
+                    'weight' => $validator->getInput('weight-' . $link[ 'id' ]),
+                    'active' => (bool) ($validator->getInput('active-' . $link[ 'id' ]) == 'on')
                 ];
 
                 self::query()

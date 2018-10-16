@@ -82,7 +82,10 @@ class User
     public function login($login, $password)
     {
         if (session_id() == '') {
-            session_start();
+            session_start([
+                'cookie_httponly' => true,
+                'cookie_secure' => true
+            ]);
         }
 
         if (($user = $this->getUser($login))) {
@@ -108,7 +111,10 @@ class User
     public function relogin($login, $password)
     {
         if (session_id() == '') {
-            session_start();
+            session_start([
+                'cookie_httponly' => true,
+                'cookie_secure' => true
+            ]);
         }
         $user = $this->getUser($login);
         if ($user) {

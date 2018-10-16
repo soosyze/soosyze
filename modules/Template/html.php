@@ -13,7 +13,6 @@
         <?php if (isset($page_top)): ?>
             <?php echo $page_top ?>
         <?php endif; ?>
-        <?php var_dump($block); ?>
         <?php echo $block[ 'page' ] ?>
         <?php if (isset($page_bottom)): ?>
             <?php echo $page_bottom ?>

@@ -40,11 +40,11 @@ class Install extends \Soosyze\Controller
         }
     }
 
-    public function stepCheck($id, $r)
+    public function stepCheck($id, $req)
     {
         switch ($id) {
             case 1:
-                return $this->installUserCheck($r);
+                return $this->installUserCheck($req);
         }
     }
 
@@ -125,9 +125,9 @@ class Install extends \Soosyze\Controller
                 ->render();
     }
 
-    private function installUserCheck($r)
+    private function installUserCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([

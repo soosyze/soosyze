@@ -15,7 +15,7 @@ class Node extends \Soosyze\Controller
 
     protected $pathRoutes = CONFIG_NODE . 'routing.json';
 
-    public function addView($r)
+    public function addView($req)
     {
         $query = self::query()
             ->from('node_type')
@@ -129,7 +129,7 @@ class Node extends \Soosyze\Controller
             'form' => $form
         ]);
 
-        $this->container->callHook('node.add.item.after', [ &$r, &$reponse ]);
+        $this->container->callHook('node.add.item.after', [ &$req, &$reponse ]);
 
         return $reponse;
     }
@@ -153,10 +153,12 @@ class Node extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'title'     => 'required|string|max:255|htmlsc',
-                'published' => 'bool|htmlsc',
+                'published' => 'bool',
                 'token'     => 'token'
             ])
             ->setInputs($post);
+
+        $this->container->callHook('node.item.add.check.validator', [ &$validator ]);
 
         /* Test des champs personnalisé de la node. */
         $validatorField = new Validator();
@@ -230,7 +232,7 @@ class Node extends \Soosyze\Controller
             'fields' => unserialize($node[ 'field' ])
         ]);
 
-        if (!$node[ 'published' ] && !self::user()->isGranted('node.views.notpublished')) {
+        if (!$node[ 'published' ] && !self::user()->isConnected()) {
             return $this->get404($req);
         } else {
             $tpl->view('page', [
@@ -377,7 +379,7 @@ class Node extends \Soosyze\Controller
                 [ 'form' => $form ]
         );
 
-        $this->container->callHook('node.edit.item.after', [ &$r, &$reponse ]);
+        $this->container->callHook('node.edit.item.after', [ &$req, &$reponse ]);
 
         return $reponse;
     }
@@ -406,7 +408,7 @@ class Node extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'title'     => 'required|string|max:255|htmlsc',
-                'published' => 'bool|htmlsc',
+                'published' => 'bool',
                 'token'     => 'token'
             ])
             ->setInputs($post);

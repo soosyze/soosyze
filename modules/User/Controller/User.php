@@ -72,9 +72,9 @@ class User extends \Soosyze\Controller
                     'url_relogin' => $url ]);
     }
 
-    public function loginCheck($r)
+    public function loginCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([
@@ -88,9 +88,7 @@ class User extends \Soosyze\Controller
             self::user()->login($validator->getInput('mail'), $validator->getInput('pass'));
         }
 
-        $user = self::user()->isConnected();
-
-        if (!$user) {
+        if (!($user = self::user()->isConnected())) {
             $_SESSION[ 'inputs' ] = $validator->getInputs();
             $_SESSION[ 'errors' ] = [ 'Désolé, nom d\'utilisateur ou mot de passe non reconnu.' ];
             $route                = self::router()->getRoute('user.login');
@@ -155,9 +153,9 @@ class User extends \Soosyze\Controller
         ]);
     }
 
-    public function reloginCheck($r)
+    public function reloginCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([
@@ -352,7 +350,7 @@ copiant dans votre navigateur : $url";
                 'token'           => 'required|token'
             ])
             ->setInputs($post);
-
+        
         if ($validator->isValid()) {
             /* Prépare les donnée à mettre à jour. */
             $dataUser = [

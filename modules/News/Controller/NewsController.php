@@ -44,7 +44,7 @@ class NewsController extends \Soosyze\Controller
         ]);
     }
 
-    public function page($page)
+    public function page($page, $req)
     {
         $offset = self::$limit * $page;
 

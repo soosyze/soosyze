@@ -45,9 +45,9 @@ class Install
         if ($container->schema()->hasTable('user')) {
             $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
                 ->values([ 'system.config', 'Voir les configurations' ])
-                ->values([ 'system.config.check', 'Editer les configurations' ])
+                ->values([ 'system.config.check', 'Éditer les configurations' ])
                 ->values([ 'system.modules', 'Voir les modules' ])
-                ->values([ 'system.modules.check', 'Editer les modules' ])
+                ->values([ 'system.modules.check', 'Éditer les modules' ])
                 ->execute();
 
             $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
