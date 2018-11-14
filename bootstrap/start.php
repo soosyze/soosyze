@@ -8,6 +8,8 @@ $app->setSettings([
     'config'              => 'app/config',
     /* Chemin de la racine. */
     'base_path'           => '',
+    /* Chemin des fichiers */
+    'files'               => 'app/files',
     /* Chemin des modules du core. */
     'modules'             => 'modules/',
     /* Chemin des modules contributeur. */
