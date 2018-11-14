@@ -271,6 +271,8 @@ class Link extends \Soosyze\Controller
                 'id'   => 'required|int'
             ])
             ->setInputs([ 'name' => $name, 'id' => $id ]);
+        
+        $this->container->callHook('menu.link.delete.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
             self::query()
@@ -278,6 +280,8 @@ class Link extends \Soosyze\Controller
                 ->delete()
                 ->where('id', '==', $id)
                 ->execute();
+            
+            $this->container->callHook('menu.link.delete.valid', [ $validator, $id ]);
         }
 
         $route = self::router()->getRoute('menu.show', [ ':item' => $name ]);

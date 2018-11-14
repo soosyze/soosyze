@@ -179,6 +179,16 @@ class Install
                     -1
                 ])
                 ->execute();
+
+            $container->schema()->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
+                $table->integer('node_id')
+                    ->integer('menu_link_id');
+            });
+
+            $container->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+                ->values([ 2, 3 ])
+                ->values([ 3, 10 ])
+                ->execute();
         }
     }
 
@@ -205,6 +215,7 @@ class Install
                 ->where('link', 'admin/content')
                 ->orRegex('link', '/^node/')
                 ->execute();
+            $container->schema()->dropTable('node_menu_link');
         }
 
         $container->schema()->dropTable('node_type_field');

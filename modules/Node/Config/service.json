@@ -5,5 +5,26 @@
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
         }
+    },
+    "node.hook": {
+        "class": "Node\\Services\\NodeHook",
+        "arguments": [
+            "@schema",
+            "@query"
+        ],
+        "hooks": {
+            "node.create.form.data": "hookCreateFormData",
+            "node.create.form": "hookCreateForm",
+            "node.create.after": "getForm",
+            "node.store.validator": "hookStoreValidator",
+            "node.store.valid": "hookStoreValid",
+            "node.edit.form.data": "hookEditFormData",
+            "node.edit.form": "hookCreateForm",
+            "node.edit.after": "getForm",
+            "node.update.validator": "hookStoreValidator",
+            "node.update.valid": "hookUpdateValid",
+            "node.delete.valid": "hookDeleteValid",
+            "menu.link.delete.valid": "hookLinkDeleteValid"
+        }
     }
 }

@@ -80,6 +80,9 @@ class Node extends \Soosyze\Controller
         }
 
         $content = [ 'title' => '', 'published' => '' ];
+        
+        $this->container->callHook('node.create.form.data', [ &$content ]);
+        
         if (isset($_SESSION[ 'inputs' ])) {
             $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
@@ -142,6 +145,8 @@ class Node extends \Soosyze\Controller
             }, [ 'class' => "form-group" ])
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+        
+        $this->container->callHook('node.create.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
@@ -158,7 +163,7 @@ class Node extends \Soosyze\Controller
             'form' => $form
         ]);
 
-        $this->container->callHook('node.add.item.after', [ &$req, &$reponse ]);
+        $this->container->callHook('node.create.after', [ &$req, &$reponse ]);
 
         return $reponse;
     }
@@ -187,7 +192,7 @@ class Node extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
-        $this->container->callHook('node.item.add.check.validator', [ &$validator ]);
+        $this->container->callHook('node.store.validator', [ &$validator ]);
 
         /* Test des champs personnalisé de la node. */
         $validatorField = new Validator();
@@ -218,6 +223,8 @@ class Node extends \Soosyze\Controller
                 ->values($node)
                 ->execute();
 
+            $this->container->callHook('node.store.valid', [ $validator ]);
+                        
             $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
             $route                 = self::router()->getRoute('node.index');
 
@@ -296,6 +303,9 @@ class Node extends \Soosyze\Controller
         }
 
         $content = [ 'title' => $node[ 'title' ], 'published' => $node[ 'published' ] ];
+        
+        $this->container->callHook('node.edit.form.data', [ &$content, $item ]);
+                
         if (isset($_SESSION[ 'inputs' ])) {
             $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
@@ -348,15 +358,17 @@ class Node extends \Soosyze\Controller
                         }
                     }, [ 'class' => 'form-group' ]);
                 }
-                $form->group('node-publish-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ]])
+            })
+            ->group('node-publish-group', 'div', function ($form) use ($content) {
+                $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ]])
                     ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
                         'for' => 'published'
                     ]);
-                }, [ 'class' => 'form-group' ]);
-            })
+            }, [ 'class' => 'form-group' ])
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            
+        $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
@@ -379,7 +391,7 @@ class Node extends \Soosyze\Controller
                 [ 'form' => $form ]
         );
 
-        $this->container->callHook('node.edit.item.after', [ &$req, &$reponse ]);
+        $this->container->callHook('node.edit.after', [ &$req, &$reponse ]);
 
         return $reponse;
     }
@@ -413,6 +425,8 @@ class Node extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
+        $this->container->callHook('node.update.validator', [ &$validator, $item ]);
+        
         /* Test les champs personnalisé de la node. */
         $validatorField = new Validator();
         foreach ($node_type as $value) {
@@ -435,6 +449,7 @@ class Node extends \Soosyze\Controller
                 ])
                 ->where('id', '==', $item)
                 ->execute();
+            $this->container->callHook('node.update.valid', [ $validator, $item ]);
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
             $_SESSION[ 'inputs' ] = array_merge(
@@ -472,6 +487,8 @@ class Node extends \Soosyze\Controller
                 'item' => 'required',
             ])
             ->setInputs([ 'item' => $item ]);
+        
+        $this->container->callHook('node.delete.validator', [ &$validator, $item ]);
 
         if ($validator->isValid()) {
             self::query()
@@ -479,6 +496,8 @@ class Node extends \Soosyze\Controller
                 ->delete()
                 ->where('id', '==', $item)
                 ->execute();
+
+            $this->container->callHook('node.delete.valid', [ $validator, $item ]);
         }
 
         $route = self::router()->getRoute('node.index');
