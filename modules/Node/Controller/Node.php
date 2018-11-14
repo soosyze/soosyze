@@ -15,14 +15,43 @@ class Node extends \Soosyze\Controller
 
     protected $pathRoutes = CONFIG_NODE . 'routing.json';
 
-    public function addView($req)
+    public function index()
+    {
+        $nodes = self::query()
+            ->from('node')
+            ->orderBy('changed', 'desc')
+            ->fetchAll();
+
+        foreach ($nodes as $key => $node) {
+            $nodes[ $key ][ 'link_view' ]  = self::router()->getRoute('node.show', [
+                ':item' => $node[ 'id' ] ]);
+            $nodes[ $key ][ 'link_edit' ]  = self::router()->getRoute('node.edit', [
+                ':item' => $node[ 'id' ] ]);
+            $nodes[ $key ][ 'link_delet' ] = self::router()->getRoute('node.delete', [
+                ':item' => $node[ 'id' ] ]);
+        }
+
+        $linkAdd = self::router()->getRoute('node.add');
+
+        return self::template()
+                ->setTheme()
+                ->view('page', [
+                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
+                ])
+                ->render('page.content', 'page-node-views.php', VIEWS_NODE, [
+                    'linkAdd' => $linkAdd,
+                    'nodes'   => $nodes
+        ]);
+    }
+
+    public function add($req)
     {
         $query = self::query()
             ->from('node_type')
             ->fetchAll();
 
         foreach ($query as $key => $node_type) {
-            $query[ $key ][ 'link' ] = self::router()->getRoute('node.add.item', [
+            $query[ $key ][ 'link' ] = self::router()->getRoute('node.create', [
                 ':item' => $node_type[ 'node_type' ] ]);
         }
 
@@ -36,7 +65,7 @@ class Node extends \Soosyze\Controller
         ]);
     }
 
-    public function addItem($item, $req)
+    public function create($item, $req)
     {
         $query = self::query()
             ->from('node_type')
@@ -56,7 +85,7 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.add.item.check', [ ':item' => $item ]);
+        $action = self::router()->getRoute('node.store', [ ':item' => $item ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item) {
@@ -134,7 +163,7 @@ class Node extends \Soosyze\Controller
         return $reponse;
     }
 
-    public function addItemCheck($item, $req)
+    public function store($item, $req)
     {
         $query = self::query()
             ->from('node_type')
@@ -190,7 +219,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
 
             $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
-            $route                 = self::router()->getRoute('node.view.all');
+            $route                 = self::router()->getRoute('node.index');
 
             return new Redirect($route);
         }
@@ -208,7 +237,7 @@ class Node extends \Soosyze\Controller
             $validatorField->getKeyUniqueErrors()
         );
 
-        $route = self::router()->getRoute('node.add.item', [ ':item' => $item ]);
+        $route = self::router()->getRoute('node.create', [ ':item' => $item ]);
         new Redirect($route);
     }
 
@@ -243,35 +272,6 @@ class Node extends \Soosyze\Controller
         return $tpl;
     }
 
-    public function views()
-    {
-        $nodes = self::query()
-            ->from('node')
-            ->orderBy('changed', 'desc')
-            ->fetchAll();
-
-        foreach ($nodes as $key => $node) {
-            $nodes[ $key ][ 'link_view' ]  = self::router()->getRoute('node.view', [
-                ':item' => $node[ 'id' ] ]);
-            $nodes[ $key ][ 'link_edit' ]  = self::router()->getRoute('node.edit', [
-                ':item' => $node[ 'id' ] ]);
-            $nodes[ $key ][ 'link_delet' ] = self::router()->getRoute('node.delete', [
-                ':item' => $node[ 'id' ] ]);
-        }
-
-        $linkAdd = self::router()->getRoute('node.add.view');
-
-        return self::template()
-                ->setTheme()
-                ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
-                ])
-                ->render('page.content', 'page-node-views.php', VIEWS_NODE, [
-                    'linkAdd' => $linkAdd,
-                    'nodes'   => $nodes
-        ]);
-    }
-
     public function edit($item, $req)
     {
         $node = self::query()
@@ -301,7 +301,7 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.edit.check', [ ':item' => $item ]);
+        $action = self::router()->getRoute('node.update', [ ':item' => $item ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item, $node) {
@@ -384,7 +384,7 @@ class Node extends \Soosyze\Controller
         return $reponse;
     }
 
-    public function editCheck($item, $req)
+    public function update($item, $req)
     {
         $node = self::query()
             ->from('node')
@@ -481,7 +481,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
         }
 
-        $route = self::router()->getRoute('node.view.all');
+        $route = self::router()->getRoute('node.index');
 
         return new Redirect($route);
     }

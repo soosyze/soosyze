@@ -135,26 +135,26 @@ class Install
                     'permission_id',
                     'permission_label'
                 ])
-                ->values([ 'node.add.view', 'Voir les contenus créables' ])
-                ->values([ 'node.add.item', 'Voir l\'ajout des contenus' ])
-                ->values([ 'node.add.item.check', 'Éditer les contenus' ])
+                ->values([ 'node.index', 'Voir le tableau des contenus' ])
+                ->values([ 'node.add', 'Voir les contenus créables' ])
+                ->values([ 'node.create', 'Voir l\'ajout des contenus' ])
+                ->values([ 'node.store', 'Éditer les contenus' ])
                 ->values([ 'node.edit', 'Voir l\'édition des contenus' ])
-                ->values([ 'node.edit.check', 'Éditer les contenus' ])
+                ->values([ 'node.update', 'Éditer les contenus' ])
                 ->values([ 'node.delete', 'Supprimer les contenus' ])
-                ->values([ 'node.view.all', 'Voir le tableau des contenus' ])
                 ->execute();
 
             $container->query()->insertInto('role_permission', [
                     'role_id',
                     'permission_id'
                 ])
-                ->values([ 3, 'node.add.view' ])
-                ->values([ 3, 'node.add.item' ])
-                ->values([ 3, 'node.add.item.check' ])
+                ->values([ 3, 'node.add' ])
+                ->values([ 3, 'node.create' ])
+                ->values([ 3, 'node.store' ])
                 ->values([ 3, 'node.edit' ])
-                ->values([ 3, 'node.edit.check' ])
+                ->values([ 3, 'node.update' ])
                 ->values([ 3, 'node.delete' ])
-                ->values([ 3, 'node.view.all' ])
+                ->values([ 3, 'node.index' ])
                 ->execute();
         }
     }

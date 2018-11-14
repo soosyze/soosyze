@@ -27,7 +27,7 @@ class NewsController extends \Soosyze\Controller
         } else {
             $default = "";
             foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.view', [
+                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
             }
         }
@@ -61,7 +61,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         foreach ($nodes as $key => $node) {
-            $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.view', [
+            $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                 ':item' => $node[ 'id' ] ]);
         }
 
@@ -86,7 +86,7 @@ class NewsController extends \Soosyze\Controller
         } else {
             $default = "";
             foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.view', [
+                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
             }
         }
@@ -115,7 +115,7 @@ class NewsController extends \Soosyze\Controller
         } else {
             $default = "";
             foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.view', [
+                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
             }
         }
@@ -144,7 +144,7 @@ class NewsController extends \Soosyze\Controller
         } else {
             $default = "";
             foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.view', [
+                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
             }
         }
