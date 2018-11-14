@@ -19,7 +19,7 @@ class Install
                 ->string('title_link')
                 ->string('target_link')->valueDefault('_self')
                 ->string('menu')
-                ->integer('weight')
+                ->integer('weight')->valueDefault(1)
                 ->integer('parent')
                 ->boolean('active')->valueDefault(true);
         });

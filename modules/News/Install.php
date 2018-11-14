@@ -111,7 +111,7 @@ class Install
         if ($container->schema()->hasTable('menu')) {
             $container->query()->from('menu_link')
                 ->delete()
-                ->where('target_link', 'news')
+                ->where('link', 'news')
                 ->execute();
         }
 

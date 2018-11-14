@@ -202,8 +202,8 @@ class Install
             $container->query()
                 ->from('menu_link')
                 ->delete()
-                ->where('target_link', 'admin/content')
-                ->orRegex('target_link', '/^node/')
+                ->where('link', 'admin/content')
+                ->orRegex('link', '/^node/')
                 ->execute();
         }
 

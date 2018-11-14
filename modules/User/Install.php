@@ -106,7 +106,7 @@ class Install
             $container->query()
                 ->from('menu_link')
                 ->delete()
-                ->regex('target_link', '/^user/')
+                ->regex('link', '/^user/')
                 ->execute();
         }
         // Table pivot

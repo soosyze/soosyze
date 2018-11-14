@@ -107,8 +107,8 @@ class Install
             $container->query()
                 ->from('menu_link')
                 ->delete()
-                ->where('target_link', 'admin/modules')
-                ->orWhere('target_link', 'admin/config')
+                ->where('link', 'admin/modules')
+                ->orWhere('link', 'admin/config')
                 ->execute();
         }
 
