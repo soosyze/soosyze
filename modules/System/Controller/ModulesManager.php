@@ -22,9 +22,7 @@ class ModulesManager extends \Soosyze\Controller
         foreach ($config as $key => $values) {
             $attr = [];
             /* Si le module est présent en base de données alors il est installé. */
-            if (isset($content[ $key ])) {
-                $attr[ 'checked' ] = true;
-            }
+            $attr[ 'checked' ] = isset($content[ $key ]);
 
             /* Si le module est activé est qu'il est requis. */
             $isRequiredForModule = [];
@@ -58,8 +56,7 @@ class ModulesManager extends \Soosyze\Controller
         $form->token()->submit('submit', 'Enregistrer');
 
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addErrors($_SESSION[ 'errors' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);
@@ -102,7 +99,6 @@ class ModulesManager extends \Soosyze\Controller
 
             $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
         } else {
-            $_SESSION[ 'inputs' ] = $validator->getInputs();
             $_SESSION[ 'errors' ] = $validator->getErrors();
         }
 
