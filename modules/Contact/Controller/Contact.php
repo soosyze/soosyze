@@ -60,6 +60,12 @@ class Contact extends \Soosyze\Controller
                     'style'    => 'resize:vertical'
                 ]);
             }, [ 'class' => 'form-group' ])
+            ->group('contact-copy-group', 'div', function ($form) {
+                $form->checkbox('copy', 'copy')
+                    ->label('contact-copy-label', 'M\'envoyer une copie du mail', [
+                        'for' => 'copy'
+                    ]);
+            }, [ 'class' => "form-group" ])
             ->token()
             ->submit('submit', 'Envoyer le message', [ 'class' => 'btn btn-success' ]);
 
@@ -82,28 +88,32 @@ class Contact extends \Soosyze\Controller
         ]);
     }
 
-    public function contactCheck($r)
+    public function contactCheck($req)
     {
-        $post = $r->getParsedBody();
+        $post = $req->getParsedBody();
 
         $validator = (new Validator())
             ->setRules([
                 'name'    => 'required|string|max:255',
                 'email'   => 'required|email',
                 'object'  => 'required|string|max:255',
-                'message' => 'required|string',
+                'message' => 'required|string|max:5000',
+                'copy'    => 'bool',
                 'token'   => 'required|token'
             ])
             ->setInputs($post);
 
         if ($validator->isValid()) {
             $inputs = $validator->getInputs();
-            $mail   = new Email;
-            $isSend = $mail->to(self::config()->get('settings.email'))
+            $mail   = (new Email)
+                ->to(self::config()->get('settings.email'))
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
                 ->subject($inputs[ 'object' ])
-                ->message($inputs[ 'message' ])
-                ->send();
+                ->message($inputs[ 'message' ]);
+            
+            if ($validator->getInput('copy')) {
+                $mail->addCc($inputs[ 'email' ]);
+            }
 
             if ($mail->send()) {
                 $_SESSION[ 'success' ] = [ 'Votre message a bien été envoyé.' ];
