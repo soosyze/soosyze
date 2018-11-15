@@ -46,16 +46,16 @@ function printException(Exception $exp)
             thead th{padding: 10px; border-bottom: 3px solid #FFF;}
             th{border:0px;}
             .table-trace td{border-left: #FFF 3px solid;}
-            .table-trace .row:hover td,
-            .table-trace .row:hover th{background-color: #272822; color:#FFF;}
+            .table-trace tr:hover td,
+            .table-trace tr:hover th{background-color: #272822; color:#FFF;}
             .table-exp{background-color: rgb(190, 50, 50); color: #FFF;}
             .exp-class,
             .exp-function{font-weight: bold;}
             .exp-class{color: #BE7132;}
             .exp-function{color: #1E7272;}
             .exp-args{color: #289828;}
-            .row th,
-            .row td{padding: 10px;}
+            .table-exp th, .table-exp td
+            .table-trace th, .table-trace td{padding: 10px;}
             .two th,
             .two td{background-color:#E9E9E9}
             </style>
@@ -63,15 +63,15 @@ function printException(Exception $exp)
          <div style='width: 80%; margin-left: auto; margin-right: auto; overflow-x:auto'>
          <h1 style='color: rgb(190, 50, 50); text-align:center;'>✘ Exception Occured</h1>
          <table class='table-exp'>
-            <tr class='row'>
+            <tr>
                 <th>Type</th>
                 <td>" . get_class($exp) . "</td>
             </tr>
-            <tr class='row'>
+            <tr>
                 <th>File</th>
                 <td>{$exp->getFile()} : {$exp->getLine()}</td>
             </tr>
-            <tr class='row'>
+            <tr>
                 <th>Message</th>
                 <td>{$exp->getMessage()}</td>
             </tr>
@@ -91,7 +91,7 @@ function printException(Exception $exp)
             ? "two"
             : "one";
 
-        $html .= "<tr class='row {$class}'><th>#{$key}</th><td>";
+        $html .= "<tr class='{$class}'><th>#{$key}</th><td>";
         $html .= isset($stackPoint[ 'class' ])
             ? "<span class='exp-class'>{$stackPoint[ 'class' ]}-></span>"
             : "";
