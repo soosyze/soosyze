@@ -254,3 +254,10 @@ textarea{
 .btn-action:hover{
     text-decoration: underline;
 }
+#btn_up {
+    bottom: 15px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    right: 25px;
+}

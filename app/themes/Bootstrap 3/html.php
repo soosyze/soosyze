@@ -31,15 +31,27 @@
             .navbar-toggle{
                 color: #FFF;
             }
+            #btn_up {
+                bottom: 15px;
+                cursor: pointer;
+                display: none;
+                position: fixed;
+                right: 25px;
+            }
         </style>
         <?php echo $styles ?>
-        <?php echo $scripts ?>
     </head>
     <body>
         <?php if (isset($block)): ?>
             <?php echo $block[ 'page' ] ?>
         <?php endif; ?>
+        <!-- To top -->
+        <div id="btn_up">
+            <img style="opacity: 0.50;" src="<?php echo $themes_contributed; ?>Bootstrap 3/files/arrow.png" alt="" width="40"/>
+        </div>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="<?php echo $themes_contributed; ?>Bootstrap 3/script.js"></script>
+        <?php echo $scripts ?>
     </body>
 </html>
