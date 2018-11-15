@@ -20,12 +20,12 @@
     <?php echo $form->form_open() ?>
     <div class="row">
         <div class="col-sm-6">
-            <?php echo $form->form_group('fieldset-information') ?>
-            <?php echo $form->form_group('fieldset-path') ?>
+            <?php echo $form->form_group('system-information-fieldset') ?>
+            <?php echo $form->form_group('system-path-fieldset') ?>
         </div>
         <div class="col-sm-6">
             <?php echo
-            $form->form_group('fieldset-meta')
+            $form->form_group('system-metadata-fieldset')
             ?>
         </div>
     </div> <!-- /.row -->

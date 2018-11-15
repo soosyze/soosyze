@@ -55,7 +55,7 @@ class Install extends \Soosyze\Controller
             'name'            => '',
             'firstname'       => '',
             'password'        => '',
-            'passwordConfirm' => ''
+            'password-confirm' => ''
         ];
 
         if (isset($_SESSION[ 'inputs' ])) {

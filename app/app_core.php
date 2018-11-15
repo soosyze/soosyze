@@ -34,10 +34,6 @@ class Core extends App
 
     public function loadModules()
     {
-        $modules = [
-            "TodoController" => new TodoModule\Controller\TodoController()
-        ];
-
         if (empty($this->get('config')->get('settings.time_installed'))) {
             $modules[ 'Install' ] = new Install\Controller\Install();
 

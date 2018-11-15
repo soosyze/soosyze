@@ -28,25 +28,18 @@ class Menu extends \Soosyze\Controller
             ->orderBy('weight')
             ->fetchAll();
 
-        foreach ($query as $key => $link) {
-            $query[ $key ][ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
-                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
-                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-        }
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $query = array_merge($query, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
-
-        for ($i = 0; $i <= 50; ++$i) {
+        for ($i = 1; $i <= 50; ++$i) {
             $weight[] = [ 'value' => $i, 'label' => $i ];
         }
 
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
-        foreach ($query as $link) {
+        foreach ($query as $key => $link) {
+            $query[ $key ][ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
+                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
+            $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
+                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
+
             $nameLinkWeight = "weight-" . $link[ 'id' ];
             $nameLinkActive = "active-" . $link[ 'id' ];
             $form->select($nameLinkWeight, $nameLinkWeight, $weight, [
@@ -95,7 +88,7 @@ class Menu extends \Soosyze\Controller
 
         foreach ($links as $link) {
             $validator->addRule('active-' . $link[ 'id' ], 'bool')
-                ->addRule('weight-' . $link[ 'id' ], 'required|int|min:0|max:50');
+                ->addRule('weight-' . $link[ 'id' ], 'required|int|min:1|max:50');
         }
         
         $post = $req->getParsedBody();
@@ -117,7 +110,6 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
             $route                 = self::router()->getRoute('menu.show', [ ':item' => $name ]);
         } else {
-            $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();
             $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
             $route                     = self::router()->getRoute('menu.show', [
