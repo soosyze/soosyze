@@ -171,9 +171,9 @@ class User extends \Soosyze\Controller
                 ->fetch();
 
             if ($query) {
-                $token = hash('sha256', $query[ 'email' ] . $query[ 'timeInstalled' ] . time());
+                $token = hash('sha256', $query[ 'email' ] . $query[ 'time_installed' ] . time());
 
-                $dataUser = [ 'forgetPass' => $token ];
+                $dataUser = [ 'forget_pass' => $token ];
 
                 self::query()
                     ->update('user', $dataUser)
@@ -232,7 +232,7 @@ copiant dans votre navigateur : $url";
             return $this->get404($req);
         }
 
-        if ($query[ 'forgetPass' ] != $token) {
+        if ($query[ 'forget_pass' ] != $token) {
             return $this->get404($req);
         }
 
@@ -343,8 +343,8 @@ copiant dans votre navigateur : $url";
         $validator = (new Validator())
             ->setRules([
                 'email'           => 'required|email',
-                'name'            => 'required|string',
-                'firstname'       => 'required|string',
+                'name'            => 'required|string|htmlsc',
+                'firstname'       => 'required|string|htmlsc',
                 'newpassword'     => '!required|string|equal:@confirmpassword',
                 'confirmpassword' => '!required|string|equal:@newpassword',
                 'token'           => 'required|token'

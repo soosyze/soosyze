@@ -51,7 +51,7 @@ class Menu
 
         if (!$output) {
             $query = $link === '/'
-                ? $this->config->get('settings.pathIndex', '/')
+                ? $this->config->get('settings.path_index', '/')
                 : $link;
 
             $uri    = $request->getUri()->withQuery($query);

@@ -206,7 +206,7 @@ class Install extends \Soosyze\Controller
 
         $salt = md5(time());
         self::query()->insertInto('user', [ 'email', 'password', 'salt', 'firstname',
-                'name', 'actived', 'forgetPass', 'timeReset', 'timeInstalled', 'timezone'
+                'name', 'actived', 'forget_pass', 'time_reset', 'time_installed', 'timezone'
             ])
             ->values([
                 'email'         => $data[ 'email' ],
@@ -215,9 +215,9 @@ class Install extends \Soosyze\Controller
                 'firstname'     => $data[ 'firstname' ],
                 'name'          => $data[ 'name' ],
                 'actived'       => true,
-                'forgetPass'    => "",
-                'timeReset'     => "",
-                'timeInstalled' => ( string ) time(),
+                'forget_pass'    => "",
+                'time_reset'     => "",
+                'time_installed' => ( string ) time(),
                 'timezone'      => "Europe/Paris"
             ])
             ->execute();

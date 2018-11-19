@@ -78,27 +78,27 @@ class System extends \Soosyze\Controller
                $form->legend('system-path-legend', 'Page par défaut')
                 ->group('system-path_index-group', 'div', function ($form) use ($content) {
                     $form->label('system-path_index-label', 'Page d’accueil par défaut')
-                    ->text('pathIndex', 'pathIndex', [
+                    ->text('path_index', 'path_index', [
                         'class'       => 'form-control',
                         'required'    => 1,
                         'placeholder' => 'Path page index',
-                        'value'       => $content[ 'pathIndex' ]
+                        'value'       => $content[ 'path_index' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('system-path_access_denied-group', 'div', function ($form) use ($content) {
                     $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)')
-                    ->text('pathAccessDenied', 'pathAccessDenied', [
+                    ->text('path_access_denied', 'path_access_denied', [
                         'class'       => 'form-control',
                         'placeholder' => 'Path page access denied',
-                        'value'       => $content[ 'pathAccessDenied' ]
+                        'value'       => $content[ 'path_access_denied' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('system-path_no_found-group', 'div', function ($form) use ($content) {
                     $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)')
-                    ->text('pathNoFound', 'pathNoFound', [
+                    ->text('path_no_found', 'path_no_found', [
                         'class'       => 'form-control',
                         'placeholder' => 'Path page not found',
-                        'value'       => $content[ 'pathNoFound' ]
+                        'value'       => $content[ 'path_no_found' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
            })
@@ -166,17 +166,17 @@ class System extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'email'            => 'required|email|htmlsc',
-                'maintenance'      => '!required|bool',
-                'theme'            => 'required|inarray:' . implode(',', self::template()->getThemes()),
-                'pathIndex'        => 'required|string|htmlsc',
-                'pathAccessDenied' => '!required|string|htmlsc',
-                'pathNoFound'      => '!required|string|htmlsc',
-                'title'            => 'required|string|htmlsc',
-                'description'      => 'required|string|max:255|htmlsc',
-                'keyboard'         => '!required|string|htmlsc',
-                'favicon'          => '!required|url|htmlsc',
-                'token'            => 'required|token'
+                'email'              => 'required|email|htmlsc',
+                'maintenance'        => '!required|bool',
+                'theme'              => 'required|inarray:' . implode(',', self::template()->getThemes()),
+                'path_index'         => 'required|string|htmlsc',
+                'path_access_denied' => '!required|string|htmlsc',
+                'path_no_found'      => '!required|string|htmlsc',
+                'title'              => 'required|string|htmlsc',
+                'description'        => 'required|string|max:255|htmlsc',
+                'keyboard'           => '!required|string|htmlsc',
+                'favicon'            => '!required|url|htmlsc',
+                'token'              => 'required|token'
             ])
             ->setInputs($post);
 

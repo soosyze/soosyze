@@ -16,9 +16,9 @@ class Install
                 ->string('firstname')
                 ->string('name')
                 ->boolean('actived')
-                ->text('forgetPass')
-                ->string('timeReset')
-                ->string('timeInstalled')
+                ->text('forget_pass')
+                ->string('time_reset')
+                ->string('time_installed')
                 ->text('timezone');
         });
         $container->schema()->createTableIfNotExists('role', function (TableBuilder $table) {

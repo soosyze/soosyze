@@ -24,9 +24,9 @@ class Install
         });
         
         $container->config()->set('settings.maintenance', '');
-        $container->config()->set('settings.pathNoFound', 'node/1');
-        $container->config()->set('settings.pathIndex', 'node/2');
-        $container->config()->set('settings.pathAccessDenied', 'user/login');
+        $container->config()->set('settings.path_no_found', 'node/1');
+        $container->config()->set('settings.path_index', 'node/2');
+        $container->config()->set('settings.path_access_denied', 'user/login');
         $container->config()->set('settings.title', 'Soosyze');
         $container->config()->set('settings.description', 'Hello world !');
         $container->config()->set('settings.keyboard', '');

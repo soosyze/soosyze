@@ -25,10 +25,10 @@ class System
         $uri = $request->getUri();
 
         if ($uri->getQuery() == '' || $uri->getQuery() == '/') {
-            $pathIndex = $this->config->get('settings.pathIndex')
-                ? '?' . $this->config->get('settings.pathIndex')
+            $path_index = $this->config->get('settings.path_index')
+                ? '?' . $this->config->get('settings.path_index')
                 : '404';
-            $url       = $uri->withQuery($pathIndex);
+            $url       = $uri->withQuery($path_index);
 
             $request = $request->withUri($url);
         }
@@ -42,7 +42,7 @@ class System
 
     public function hooks404($request, &$reponse)
     {
-        if (($path = $this->config->get('settings.pathNoFound')) != '') {
+        if (($path = $this->config->get('settings.path_no_found')) != '') {
             $request = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
@@ -71,7 +71,7 @@ class System
 
     public function hooks403($request, &$reponse)
     {
-        if (($path = $this->config->get('settings.pathAccessDenied')) != '') {
+        if (($path = $this->config->get('settings.path_access_denied')) != '') {
             $request = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
