@@ -13,9 +13,6 @@ define("CONFIG_INSTALL", MODULES_CORE . 'Install' . DS . 'Config' . DS);
 
 class Install extends \Soosyze\Controller
 {
-    protected $pathServices = CONFIG_INSTALL . 'service.json';
-
-    protected $pathRoutes = CONFIG_INSTALL . 'routing.json';
     /**
      * Liste des modules à installer.
      *
@@ -29,6 +26,12 @@ class Install extends \Soosyze\Controller
         "Contact",
         "News"
     ];
+    
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_INSTALL . 'service.json';
+        $this->pathRoutes   = CONFIG_INSTALL . 'routing.json';
+    }
 
     public function step($id)
     {
@@ -247,7 +250,7 @@ class Install extends \Soosyze\Controller
                 foreach ($config[ 'controller' ] as $controller) {
                     $obj = new $controller();
 
-                    if (empty($obj->getPathServices())) {
+                    if (!$obj->getPathServices()) {
                         continue;
                     }
 

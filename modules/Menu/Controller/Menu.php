@@ -11,9 +11,11 @@ define("CONFIG_MENU", MODULES_CORE . 'Menu' . DS . 'Config' . DS);
 
 class Menu extends \Soosyze\Controller
 {
-    protected $pathServices = CONFIG_MENU . 'service.json';
-
-    protected $pathRoutes = CONFIG_MENU . 'routing.json';
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_MENU . 'service.json';
+        $this->pathRoutes   = CONFIG_MENU . 'routing.json';
+    }
 
     public function show($name, $req)
     {

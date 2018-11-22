@@ -34,7 +34,7 @@ class Core extends App
 
     public function loadModules()
     {
-        if (empty($this->get('config')->get('settings.time_installed'))) {
+        if (!$this->get('config')->get('settings.time_installed')) {
             $modules[ 'Install' ] = new Install\Controller\Install();
 
             return $modules;

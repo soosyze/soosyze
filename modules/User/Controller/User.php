@@ -12,9 +12,11 @@ define("CONFIG_USER", MODULES_CORE . 'User' . DS . 'Config' . DS);
 
 class User extends \Soosyze\Controller
 {
-    protected $pathRoutes = CONFIG_USER . 'routing.json';
-
-    protected $pathServices = CONFIG_USER . 'service.json';
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_USER . 'service.json';
+        $this->pathRoutes   = CONFIG_USER . 'routing.json';
+    }
 
     public function login()
     {

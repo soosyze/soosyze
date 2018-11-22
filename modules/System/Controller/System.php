@@ -11,9 +11,11 @@ define("CONFIG_SYSTEM", MODULES_CORE . 'System' . DS . 'Config' . DS);
 
 class System extends \Soosyze\Controller
 {
-    protected $pathRoutes = CONFIG_SYSTEM . 'routing.json';
-
-    protected $pathServices = CONFIG_SYSTEM . 'service.json';
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_SYSTEM . 'service.json';
+        $this->pathRoutes   = CONFIG_SYSTEM . 'routing.json';
+    }
 
     public function maintenance()
     {

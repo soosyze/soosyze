@@ -11,9 +11,11 @@ define("CONFIG_NODE", MODULES_CORE . 'Node' . DS . 'Config' . DS);
 
 class Node extends \Soosyze\Controller
 {
-    protected $pathServices = CONFIG_NODE . 'service.json';
-
-    protected $pathRoutes = CONFIG_NODE . 'routing.json';
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_NODE . 'service.json';
+        $this->pathRoutes   = CONFIG_NODE . 'routing.json';
+    }
 
     public function index()
     {

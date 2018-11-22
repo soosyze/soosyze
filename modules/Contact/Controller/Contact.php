@@ -11,10 +11,12 @@ define("CONFIG_CONTACT", MODULES_CORE . 'Contact' . DS . 'Config' . DS);
 
 class Contact extends \Soosyze\Controller
 {
-    protected $pathRoutes = CONFIG_CONTACT . 'routing.json';
-
-    protected $pathServices = CONFIG_CONTACT . 'service.json';
-
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_CONTACT . 'service.json';
+        $this->pathRoutes   = CONFIG_CONTACT . 'routing.json';
+    }
+    
     public function contact()
     {
         $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];

@@ -8,9 +8,12 @@ define("CONFIG_NIEWS", MODULES_CORE . 'News' . DS . 'Config' . DS);
 class NewsController extends \Soosyze\Controller
 {
     public static $limit = 4;
-    protected $pathRoutes = CONFIG_NIEWS . 'routing.json';
 
-    protected $pathServices = CONFIG_NIEWS . 'service.json';
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_NIEWS . 'service.json';
+        $this->pathRoutes   = CONFIG_NIEWS . 'routing.json';
+    }
 
     public function index()
     {
