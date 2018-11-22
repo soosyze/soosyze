@@ -33,6 +33,7 @@ class Link extends \Soosyze\Controller
                         'for' => 'title_link' ])
                     ->text('title_link', 'title_link', [
                         'class'       => 'form-control',
+                        'maxlength'   => 255,
                         'placeholder' => 'Exemple: Ma page 1',
                         'required'    => 1,
                         'value'       => $content[ 'title_link' ]

@@ -36,12 +36,8 @@ class System extends \Soosyze\Controller
         }
 
         $optionThemes = [];
-        $themes       = self::template()->getThemes();
-
-        foreach ($themes as $theme) {
-            $optionThemes[] = $content[ 'theme' ] == $theme
-                ? [ 'value' => $theme, 'label' => $theme, 'selected' => 1 ]
-                : [ 'value' => $theme, 'label' => $theme ];
+        foreach (self::template()->getThemes() as $theme) {
+            $optionThemes[] = [ 'value' => $theme, 'label' => $theme ];
         }
 
         $action = self::router()->getRoute('system.config.check');
@@ -50,11 +46,11 @@ class System extends \Soosyze\Controller
             ->group('system-information-fieldset', 'fieldset', function ($form) use ($content, $optionThemes) {
                 $form->legend('system-information-legend', 'Information')
                 ->group('system-email-group', 'div', function ($form) use ($content) {
-                    $form->label('system-email-label', 'Email du site')
+                    $form->label('system-email-label', 'E-mail du site')
                     ->email('email', 'email', [
                         'class'       => 'form-control',
                         'required'    => 1,
-                        'placeholder' => 'Email',
+                        'placeholder' => 'E-mail',
                         'value'       => $content[ 'email' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -66,11 +62,12 @@ class System extends \Soosyze\Controller
                         'for' => 'maintenance'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('system-theme-group', 'div', function ($form) use ($optionThemes) {
+                ->group('system-theme-group', 'div', function ($form) use ($content, $optionThemes) {
                     $form->label('system-theme-label', 'Theme du site')
                     ->select('theme', 'theme', $optionThemes, [
                         'class'    => 'form-control',
-                        'required' => 1
+                        'required' => 1,
+                        'selected' => $content[ 'theme' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -108,6 +105,7 @@ class System extends \Soosyze\Controller
                     $form->label('system-title-label', 'Titre du site')
                     ->text('title', 'title', [
                         'class'       => 'form-control',
+                        'maxlength'   => 64,
                         'placeholder' => 'Titre du site',
                         'required'    => 'required',
                         'value'       => $content[ 'title' ]
@@ -116,9 +114,10 @@ class System extends \Soosyze\Controller
                 ->group('system-description-group', 'div', function ($form) use ($content) {
                     $form->label('system-description-label', 'Description')
                     ->textarea('description', 'description', $content[ 'description' ], [
-                        'class'    => 'form-control',
-                        'required' => 'required',
-                        'rows'     => 5
+                        'class'     => 'form-control',
+                        'maxlength' => 256,
+                        'required'  => 'required',
+                        'rows'      => 5
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('system-keyboard-group', 'div', function ($form) use ($content) {
@@ -166,14 +165,14 @@ class System extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'email'              => 'required|email|htmlsc',
+                'email'              => 'required|email|max:254|htmlsc',
                 'maintenance'        => '!required|bool',
                 'theme'              => 'required|inarray:' . implode(',', self::template()->getThemes()),
                 'path_index'         => 'required|string|htmlsc',
                 'path_access_denied' => '!required|string|htmlsc',
                 'path_no_found'      => '!required|string|htmlsc',
-                'title'              => 'required|string|htmlsc',
-                'description'        => 'required|string|max:255|htmlsc',
+                'title'              => 'required|string|max:64|htmlsc',
+                'description'        => 'required|string|max:256|htmlsc',
                 'keyboard'           => '!required|string|htmlsc',
                 'favicon'            => '!required|url|htmlsc',
                 'token'              => 'required|token'
@@ -188,7 +187,7 @@ class System extends \Soosyze\Controller
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
-            $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
+            $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();

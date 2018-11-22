@@ -97,6 +97,7 @@ class Node extends \Soosyze\Controller
                     $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
                         'class'       => 'form-control',
+                        'maxlength'   => 255,
                         'required'    => 1,
                         'placeholder' => 'Titre du contenu',
                         'value'       => $content[ 'title' ]
@@ -319,10 +320,11 @@ class Node extends \Soosyze\Controller
                 ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
-                        'class'    => 'form-control',
-                        'required' => 1,
-                        'rows'     => 8,
-                        'value'    => $content[ 'title' ]
+                        'class'     => 'form-control',
+                        'maxlength' => 255,
+                        'required'  => 1,
+                        'rows'      => 8,
+                        'value'     => $content[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
 

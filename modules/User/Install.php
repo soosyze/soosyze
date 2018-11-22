@@ -48,7 +48,7 @@ class Install
 
         $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
             ->values([ 'user.views', 'Voir les utilisateurs' ])
-            ->values([ 'user.edit', 'Voir l\'edition les utilisateurs' ])
+            ->values([ 'user.edit', 'Voir l\'édition les utilisateurs' ])
             ->values([ 'user.edit.check', 'Éditer les utilisateurs' ])
             ->values([ 'user.login', 'Voir le formulaire de connexion' ])
             ->values([ 'user.login.check', 'Se connecter' ])

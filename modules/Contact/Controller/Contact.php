@@ -118,7 +118,7 @@ class Contact extends \Soosyze\Controller
             if ($mail->send()) {
                 $_SESSION[ 'success' ] = [ 'Votre message a bien été envoyé.' ];
             } else {
-                $_SESSION[ 'errors' ] = [ 'Une erreur a empêché votre mail d\'être envoyé.' ];
+                $_SESSION[ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
             }
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();

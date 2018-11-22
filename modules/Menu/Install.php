@@ -69,7 +69,7 @@ class Install
                 ->values([ 'menu.show.check', 'Modifier le menu' ])
                 ->values([ 'menu.link.add', 'Voir d\'ajout des liens de menu' ])
                 ->values([ 'menu.link.store', 'Ajouter des liens de menu' ])
-                ->values([ 'menu.link.edit', 'Voir l\'edition des liens de menu' ])
+                ->values([ 'menu.link.edit', 'Voir l\'édition des liens de menu' ])
                 ->values([ 'menu.link.update', 'Éditer des liens de menu' ])
                 ->values([ 'menu.link.delete', 'Supprimer des liens de menu' ])
                 ->execute();

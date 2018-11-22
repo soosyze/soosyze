@@ -67,7 +67,7 @@ class Install extends \Soosyze\Controller
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('install-email-group', 'div', function ($form) use ($content) {
-                $form->label('install-email-label', 'Email')
+                $form->label('install-email-label', 'E-mail')
                 ->email('email', 'email', [
                     'class'       => 'form-control',
                     'placeholder' => 'mon-mail@mail.com',

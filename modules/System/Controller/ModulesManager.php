@@ -97,7 +97,7 @@ class ModulesManager extends \Soosyze\Controller
             $this->uninstallModule($module_active, $data);
             $this->installModule($module_active, $data);
 
-            $_SESSION[ 'success' ] = [ 'Configuration Enregistré' ];
+            $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
             $_SESSION[ 'errors' ] = $validator->getErrors();
         }
