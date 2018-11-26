@@ -2,13 +2,13 @@
 
 namespace User\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Email\Email;
+use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
-define("VIEWS_USER", MODULES_CORE . 'User' . DS . 'Views' . DS);
-define("CONFIG_USER", MODULES_CORE . 'User' . DS . 'Config' . DS);
+define('VIEWS_USER', MODULES_CORE . 'User' . DS . 'Views' . DS);
+define('CONFIG_USER', MODULES_CORE . 'User' . DS . 'Config' . DS);
 
 class User extends \Soosyze\Controller
 {
@@ -224,7 +224,7 @@ copiant dans votre navigateur : $url";
         }
 
         $_SESSION[ 'inputs' ] = $validator->getInputs();
-        $route = self::router()->getRoute('user.relogin');
+        $route                = self::router()->getRoute('user.relogin');
 
         return new Redirect($route);
     }
@@ -285,7 +285,7 @@ copiant dans votre navigateur : $url";
                         'maxlength' => 254,
                         'required'  => 1,
                         'value'     => $query[ 'email' ]
-                     ]);
+                    ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('user-edit-name-group', 'div', function ($form) use ($query) {
                     $form->label('user-edit-name-label', 'Nom')
@@ -343,7 +343,7 @@ copiant dans votre navigateur : $url";
         if (!self::user()->find($id)) {
             return $this->get404($req);
         }
-                
+
         $post = $req->getParsedBody();
 
         $validator = (new Validator())
@@ -357,7 +357,7 @@ copiant dans votre navigateur : $url";
                 'token'           => 'required|token'
             ])
             ->setInputs($post);
-        
+
         if ($validator->isValid()) {
             /* Prépare les donnée à mettre à jour. */
             $dataUser = [

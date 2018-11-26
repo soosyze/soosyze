@@ -9,24 +9,24 @@ class Core extends App
     public function loadServices()
     {
         return [
-            "schema"   => [
-                "class"     => "QueryBuilder\\Schema",
-                "arguments" => [
-                    "#database.host",
-                    "#database.schema"
+            'schema'   => [
+                'class'     => 'QueryBuilder\\Schema',
+                'arguments' => [
+                    '#database.host',
+                    '#database.schema'
                 ]
             ],
-            "query"    => [
-                "class"     => "QueryBuilder\\Query",
-                "arguments" => [
-                    "@schema"
+            'query'    => [
+                'class'     => 'QueryBuilder\\Query',
+                'arguments' => [
+                    '@schema'
                 ]
             ],
-            "template" => [
-                "class"     => "Template\\TemplatingHtml",
-                "arguments" => [
-                    "@core",
-                    "@config"
+            'template' => [
+                'class'     => 'Template\\TemplatingHtml',
+                'arguments' => [
+                    '@core',
+                    '@config'
                 ]
             ]
         ];

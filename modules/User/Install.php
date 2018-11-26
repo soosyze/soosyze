@@ -2,7 +2,7 @@
 
 namespace User;
 
-use \Queryflatfile\TableBuilder;
+use Queryflatfile\TableBuilder;
 
 class Install
 {

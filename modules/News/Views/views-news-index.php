@@ -1,5 +1,5 @@
 <div class="row">
-    <?php if (!empty($nodes)): ?>
+    <?php if ($nodes): ?>
         <?php foreach ($nodes as $key => $node): ?>
             <?php $node[ 'field' ] = unserialize($node[ 'field' ]); ?>
             <div class="col-md-12">

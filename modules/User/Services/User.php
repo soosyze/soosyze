@@ -26,9 +26,9 @@ class User
     public function find($id)
     {
         return $this->query
-            ->from('user')
-            ->where('user_id', '==', $id)
-            ->fetch();
+                ->from('user')
+                ->where('user_id', '==', $id)
+                ->fetch();
     }
 
     public function getUser($email)
@@ -77,14 +77,14 @@ class User
      * @param string $login
      * @param string $password
      *
-     * @return boolean
+     * @return bool
      */
     public function login($login, $password)
     {
-        if (session_id() == '') {
+        if ('' == session_id()) {
             session_start([
                 'cookie_httponly' => true,
-                'cookie_secure' => true
+                'cookie_secure'   => true,
             ]);
         }
 
@@ -106,14 +106,15 @@ class User
      *
      * @param type $login
      * @param type $password
-     * @return boolean
+     *
+     * @return bool
      */
     public function relogin($login, $password)
     {
         if (session_id() == '') {
             session_start([
                 'cookie_httponly' => true,
-                'cookie_secure' => true
+                'cookie_secure'   => true
             ]);
         }
         $user = $this->getUser($login);
@@ -131,7 +132,7 @@ class User
      * Si la session existe renvoie l'utilisateur,
      * sinon s'il y a correspondance dans les autres cas renvoie faux.
      *
-     * @return boolean
+     * @return bool
      */
     public function isConnected()
     {
@@ -152,6 +153,7 @@ class User
      *
      * @param type $key
      * @param type $grant
+     *
      * @return type
      */
     public function isGranted($key, &$grant = false)
@@ -159,12 +161,12 @@ class User
         $permission = $this->getPermission($key);
 
         /* Si la route ne contient pas de permission. */
-        if (empty($permission)) {
+        if (!$permission) {
             $grant = true;
         } elseif (($user = $this->isConnected())) {
-            $grant = ( bool ) $this->getGranted($user, $permission[ 'permission_id' ]);
+            $grant = (bool) $this->getGranted($user, $permission[ 'permission_id' ]);
         } else {
-            $grant = ( bool ) $this->getGrantedAnonymous($permission[ 'permission_id' ]);
+            $grant = (bool) $this->getGrantedAnonymous($permission[ 'permission_id' ]);
         }
 
         return $grant;

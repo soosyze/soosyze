@@ -1,6 +1,6 @@
 {
     "menu.show": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "menu/:item",
         "uses": "Menu@show",
         "with": {
@@ -8,7 +8,7 @@
         }
     },
     "menu.show.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "menu/:item",
         "uses": "Menu@showCheck",
         "with": {
@@ -16,7 +16,7 @@
         }
     },
     "menu.link.add": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "menu/:item/link/add",
         "uses": "Link@create",
         "with": {
@@ -24,7 +24,7 @@
         }
     },
     "menu.link.store": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "menu/:item/link/add",
         "uses": "Link@store",
         "with": {
@@ -32,7 +32,7 @@
         }
     },
     "menu.link.edit": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@edit",
         "with": {
@@ -41,7 +41,7 @@
         }
     },
     "menu.link.update": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@update",
         "with": {
@@ -50,7 +50,7 @@
         }
     },
     "menu.link.delete": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "menu/:menu/link/:item/delete",
         "uses": "Link@delete",
         "with": {

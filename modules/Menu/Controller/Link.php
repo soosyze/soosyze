@@ -3,8 +3,8 @@
 namespace Menu\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
 class Link extends \Soosyze\Controller
 {
@@ -38,16 +38,16 @@ class Link extends \Soosyze\Controller
                         'required'    => 1,
                         'value'       => $content[ 'title_link' ]
                     ]);
-                }, [ 'class' => "form-group" ])
+                }, [ 'class' => 'form-group' ])
                 ->group('menu-link-link-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-link-label', 'Lien')
                     ->text('link', 'link', [
                         'class'       => 'form-control',
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
-                        'value'       => $content[ 'link' ]
+                        'value'       => $content[ 'link' ],
                     ]);
-                }, [ 'class' => "form-group" ])
+                }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-target-label', 'Cîble')
                     ->select('target_link', 'target_link', self::$optionTarget, [
@@ -55,7 +55,7 @@ class Link extends \Soosyze\Controller
                         'required' => 1,
                         'selected' => $content[ 'target_link' ]
                     ]);
-                }, [ 'class' => "form-group" ]);
+                }, [ 'class' => 'form-group' ]);
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
@@ -97,7 +97,7 @@ class Link extends \Soosyze\Controller
             $req->withMethod('GET')
         );
 
-        if ($validator->isValid() && !empty($isUrlOrRoute)) {
+        if ($validator->isValid() && $isUrlOrRoute) {
             $link = [
                 $validator->getInput('title_link'),
                 $validator->getInput('link'),
@@ -125,7 +125,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'errors' ]      = $validator->getErrors();
         $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
 
-        if (empty($isUrlOrRoute)) {
+        if (!$isUrlOrRoute) {
             $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
             $_SESSION[ 'errors_keys' ][]          = 'link';
         }
@@ -162,7 +162,7 @@ class Link extends \Soosyze\Controller
                             'required'    => 1,
                             'value'       => $query[ 'title_link' ]
                         ]);
-                    }, [ 'class' => "form-group" ])
+                    }, [ 'class' => 'form-group' ])
                     ->group('menu-link-link-group', 'div', function ($form) use ($query) {
                         $form->label('menu-link-link-label', 'Lien')
                         ->text('link', 'link', [
@@ -171,7 +171,7 @@ class Link extends \Soosyze\Controller
                             'required'    => 1,
                             'value'       => $query[ 'link' ]
                         ]);
-                    }, [ 'class' => "form-group" ])
+                    }, [ 'class' => 'form-group' ])
                     ->group('menu-link-target-group', 'div', function ($form) use ($query) {
                         $form->label('menu-link-target-label', 'Cîble')
                         ->select('target_link', 'target_link', self::$optionTarget, [
@@ -179,7 +179,7 @@ class Link extends \Soosyze\Controller
                             'required' => 1,
                             'selected' => $query[ 'target_link' ]
                         ]);
-                    }, [ 'class' => "form-group" ]);
+                    }, [ 'class' => 'form-group' ]);
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
@@ -225,7 +225,7 @@ class Link extends \Soosyze\Controller
             $req->withMethod('GET')
         );
 
-        if ($validator->isValid() && !empty($isUrlOrRoute)) {
+        if ($validator->isValid() && $isUrlOrRoute) {
             $link = [
                 'title_link'  => $validator->getInput('title_link'),
                 'link'        => $validator->getInput('link'),
@@ -247,7 +247,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'errors' ]      = $validator->getErrors();
         $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
 
-        if (empty($isUrlOrRoute)) {
+        if (!$isUrlOrRoute) {
             $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
             $_SESSION[ 'errors_keys' ][]          = 'link';
         }
@@ -272,7 +272,7 @@ class Link extends \Soosyze\Controller
                 'id'   => 'required|int'
             ])
             ->setInputs([ 'name' => $name, 'id' => $id ]);
-        
+
         $this->container->callHook('menu.link.delete.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
@@ -281,7 +281,7 @@ class Link extends \Soosyze\Controller
                 ->delete()
                 ->where('id', '==', $id)
                 ->execute();
-            
+
             $this->container->callHook('menu.link.delete.valid', [ $validator, $id ]);
         }
 

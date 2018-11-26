@@ -1,11 +1,11 @@
 {
     "news.index": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news",
         "uses": "News@index"
     },
     "news.page": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news/page/:id",
         "uses": "News@page",
         "with": {
@@ -13,7 +13,7 @@
         }
     },
     "news.view.years": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news/:years",
         "uses": "News@viewYears",
         "with": {
@@ -21,7 +21,7 @@
         }
     },
     "news.view.month": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news/:years/:month",
         "uses": "News@viewMonth",
         "with": {
@@ -30,7 +30,7 @@
         }
     },
     "news.view.day": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news/:years/:month/:day",
         "uses": "News@viewDay",
         "with": {
@@ -40,7 +40,7 @@
         }
     },
     "news.view.rss": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "news/rss",
         "uses": "News@viewRss"
     }

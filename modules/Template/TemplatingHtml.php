@@ -6,12 +6,12 @@ use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
 
 // Templates System
-define("TPL", 'html.php');
-define("TPL_PATH", MODULES_CORE . 'Template' . DS);
+define('TPL', 'html.php');
+define('TPL_PATH', MODULES_CORE . 'Template' . DS);
 
 // Folder Templates CMS
-define("DEFAULT_TPL_PATH", 'app' . DS . 'themes');
-define("ADMIN_TPL_PATH", 'themes');
+define('DEFAULT_TPL_PATH', 'app' . DS . 'themes');
+define('ADMIN_TPL_PATH', 'themes');
 
 class TemplatingHtml extends \Soosyze\Components\Http\Reponse
 {
@@ -26,7 +26,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Reponse
     public function __construct($core, $config)
     {
         $this->core   = $core;
-        $this->config  = $config;
+        $this->config = $config;
     }
 
     public function __toString()
@@ -110,7 +110,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Reponse
     public function render($parent, $tpl, $tplPath, array $vars = null)
     {
         $template = $this->themeOveride($tpl, $tplPath);
-        if (!empty($vars)) {
+        if ($vars) {
             $template->addVars($vars);
         }
 

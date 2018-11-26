@@ -43,17 +43,17 @@
                                     <td>
                                         <a href="<?php echo $link[ 'link' ] ?>" target="<?php echo $link[ 'target_link' ] ?>"
                                            <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>
-                                            <?php echo $link[ 'title_link' ]; ?>
+                                               <?php echo $link[ 'title_link' ]; ?>
                                         </a>
                                     </td>
                                     <td>
                                         <div>
-                                            <?php echo $form->form_input("active-" . $link[ 'id' ]) ?>
+                                            <?php echo $form->form_input('active-' . $link[ 'id' ]) ?>
                                             <label for="active-<?php echo $link[ 'id' ] ?>"><span class="ui"></span>&nbsp;</label>
                                         </div>
                                     </td>
                                     <td>
-                                        <?php echo $form->form_select("weight-" . $link[ 'id' ]) ?>
+                                        <?php echo $form->form_select('weight-' . $link[ 'id' ]) ?>
                                     </td>	
                                     <td>
                                         <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ] ?>">
@@ -95,22 +95,22 @@
 </div> <!-- /.container -->
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
 <script>
-                                    $(document).ready(function ()
-                                    {
-                                        $("#sortable").sortable({
-                                            axis: "y",
-                                            containment: 'table',
-                                            stop: function (event, ui)
-                                            {
-                                                var i = 1;
-                                                $('.draggable select').each(function ()
-                                                {
-                                                    $('option[value=' + i + ']', $(this)).prop('selected', true);
-                                                    i++;
-                                                });
-                                            }
-                                        });
-                                    });
+        $(document).ready(function ()
+        {
+            $("#sortable").sortable({
+                axis: "y",
+                containment: 'table',
+                stop: function (event, ui)
+                {
+                    var i = 1;
+                    $('.draggable select').each(function ()
+                    {
+                        $('option[value=' + i + ']', $(this)).prop('selected', true);
+                        i++;
+                    });
+                }
+            });
+        });
 </script>
 <style>
     .draggable{ cursor: move; }

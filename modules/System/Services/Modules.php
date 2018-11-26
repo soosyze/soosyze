@@ -5,9 +5,9 @@ namespace System\Services;
 use Soosyze\Components\Util\Util;
 
 /* Folder Module CMS */
-define("DEFAULT_MODULES_PATH", 'app' . DS . 'modules');
+define('DEFAULT_MODULES_PATH', 'app' . DS . 'modules');
 /* Folder Module Core */
-define("ADMIN_MODULES_PATH", 'modules');
+define('ADMIN_MODULES_PATH', 'modules');
 
 class Modules
 {

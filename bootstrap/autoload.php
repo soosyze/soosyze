@@ -10,16 +10,16 @@ $vendor   = $basePath . 'vendor/';
 require $vendor . 'soosyze/framework/src/Autoload.php';
 
 $autoload = new Soosyze\Autoload([
-    'Soosyze'          => $vendor . 'soosyze/framework/src',
-    'Queryflatfile'    => $vendor . 'soosyze/queryflatfile/src'
-]);
+    'Soosyze'       => $vendor . 'soosyze/framework/src',
+    'Queryflatfile' => $vendor . 'soosyze/queryflatfile/src'
+    ]);
 
 $autoload->setPrefix([
-    'Queryflatfile'               => $vendor . 'soosyze/queryflatfile/src',
-    'Psr\Http\Message'            => $vendor . 'psr/http-message/src',
-    'Psr\Container'               => $vendor . 'psr/container/src',
-    'Soosyze'                     => $vendor . 'soosyze/framework/src',
-    'Soosyze\Components\Http'     => $vendor . 'soosyze/framework/src/Components/Http'
+    'Queryflatfile'           => $vendor . 'soosyze/queryflatfile/src',
+    'Psr\Http\Message'        => $vendor . 'psr/http-message/src',
+    'Psr\Container'           => $vendor . 'psr/container/src',
+    'Soosyze'                 => $vendor . 'soosyze/framework/src',
+    'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http'
 ])->setMap([
     $basePath . 'modules',
     $basePath . 'app/modules'
@@ -27,7 +27,7 @@ $autoload->setPrefix([
 
 $autoload->register();
 
-/**
+/*
  * Vous pouvez utilisez l'autoload de composer pour de meilleurs performance
  * http://www.darwinbiler.com/how-does-the-replace-property-work-in-composer/
  */

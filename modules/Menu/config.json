@@ -2,8 +2,8 @@
     "Menu": {
         "name": "Menu",
         "controller": {
-            "Menu" : "Menu\\Controller\\Menu",
-            "Link" : "Menu\\Controller\\Link"
+            "Menu": "Menu\\Controller\\Menu",
+            "Link": "Menu\\Controller\\Link"
         },
         "version": "1.0",
         "description": "Gestion de vos menus.",

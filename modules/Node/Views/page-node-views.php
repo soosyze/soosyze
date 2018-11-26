@@ -13,17 +13,17 @@
                     <div class="col-md-3">Actions</div>
                     <div class="col-md-1">Publié</div>
                 </div>
-                <?php if (!empty($nodes)): ?>
+                <?php if ($nodes): ?>
                     <?php foreach ($nodes as $node): ?>
                         <div class="div-tbody row">
                             <div class="col-md-4">
                                 <h3><a href="<?php echo $node[ 'link_view' ] ?>"><?php echo $node[ 'title' ] ?></a> <small><?php echo $node[ 'type' ] ?></small></h3>
                             </div>
                             <div class="col-md-2">
-                                <?php echo gmdate("d/m/Y - H:m:s", $node[ 'created' ]) ?>
+                                <?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]) ?>
                             </div>
                             <div class="col-md-2">
-                                <?php echo gmdate("d/m/Y - H:m:s", $node[ 'changed' ]) ?>
+                                <?php echo gmdate('d/m/Y - H:m:s', $node[ 'changed' ]) ?>
                             </div>
                             <div class="col-md-3">
                                 <div class="btn-group" role="group" aria-label="action">

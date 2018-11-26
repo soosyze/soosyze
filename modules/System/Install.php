@@ -2,7 +2,7 @@
 
 namespace System;
 
-use \Queryflatfile\TableBuilder;
+use Queryflatfile\TableBuilder;
 
 class Install
 {
@@ -22,7 +22,7 @@ class Install
             $table->string('name_module')
                 ->string('name_required');
         });
-        
+
         $container->config()->set('settings.maintenance', '');
         $container->config()->set('settings.path_no_found', 'node/1');
         $container->config()->set('settings.path_index', 'node/2');
@@ -71,8 +71,8 @@ class Install
                 ])
                 ->values([
                     '<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Modules',
-                    "admin/modules",
-                    "admin-menu",
+                    'admin/modules',
+                    'admin-menu',
                     5,
                     -1
                 ])

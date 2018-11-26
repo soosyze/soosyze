@@ -1,26 +1,26 @@
 {
     "system.maintenance": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "maintenance",
         "uses": "System@maintenance"
     },
     "system.config": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "admin/config",
         "uses": "System@configuration"
     },
     "system.config.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "admin/config",
         "uses": "System@configCheck"
     },
     "system.modules": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "admin/modules",
         "uses": "ModulesManager@modules"
     },
     "system.modules.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "admin/modules",
         "uses": "ModulesManager@modulesCheck"
     }

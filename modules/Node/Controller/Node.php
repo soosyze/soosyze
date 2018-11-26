@@ -3,11 +3,11 @@
 namespace Node\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
-define("VIEWS_NODE", MODULES_CORE . 'Node' . DS . 'Views' . DS);
-define("CONFIG_NODE", MODULES_CORE . 'Node' . DS . 'Config' . DS);
+define('VIEWS_NODE', MODULES_CORE . 'Node' . DS . 'Views' . DS);
+define('CONFIG_NODE', MODULES_CORE . 'Node' . DS . 'Config' . DS);
 
 class Node extends \Soosyze\Controller
 {
@@ -82,9 +82,9 @@ class Node extends \Soosyze\Controller
         }
 
         $content = [ 'title' => '', 'published' => '' ];
-        
+
         $this->container->callHook('node.create.form.data', [ &$content ]);
-        
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
@@ -137,18 +137,18 @@ class Node extends \Soosyze\Controller
 
                                 break;
                         }
-                    }, [ 'class' => "form-group" ]);
+                    }, [ 'class' => 'form-group' ]);
                 }
             })
             ->group('node-publish-group', 'div', function ($form) {
                 $form->checkbox('published', 'published')
-                    ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
-                        'for' => 'published'
-                    ]);
-            }, [ 'class' => "form-group" ])
+                ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                    'for' => 'published'
+                ]);
+            }, [ 'class' => 'form-group' ])
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-        
+
         $this->container->callHook('node.create.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
@@ -214,9 +214,9 @@ class Node extends \Soosyze\Controller
             $node = [
                 $validator->getInput('title'),
                 $item,
-                ( string ) time(),
-                ( string ) time(),
-                ( bool ) $validator->getInput('published'),
+                (string) time(),
+                (string) time(),
+                (bool) $validator->getInput('published'),
                 serialize($validatorField->getInputs())
             ];
 
@@ -227,18 +227,18 @@ class Node extends \Soosyze\Controller
                 ->execute();
 
             $this->container->callHook('node.store.valid', [ $validator ]);
-                        
+
             $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
             $route                 = self::router()->getRoute('node.index');
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ] = array_merge(
+        $_SESSION[ 'inputs' ]      = array_merge(
             $validator->getInputs(),
             $validatorField->getInputs()
         );
-        $_SESSION[ 'errors' ] = array_merge(
+        $_SESSION[ 'errors' ]      = array_merge(
             $validator->getErrors(),
             $validatorField->getErrors()
         );
@@ -306,9 +306,9 @@ class Node extends \Soosyze\Controller
         }
 
         $content = [ 'title' => $node[ 'title' ], 'published' => $node[ 'published' ] ];
-        
+
         $this->container->callHook('node.edit.form.data', [ &$content, $item ]);
-                
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
@@ -364,14 +364,14 @@ class Node extends \Soosyze\Controller
                 }
             })
             ->group('node-publish-group', 'div', function ($form) use ($content) {
-                $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ]])
-                    ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
-                        'for' => 'published'
-                    ]);
+                $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ] ])
+                ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                    'for' => 'published'
+                ]);
             }, [ 'class' => 'form-group' ])
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-            
+
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
@@ -389,7 +389,7 @@ class Node extends \Soosyze\Controller
                 'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
             ])
             ->render(
-                'page.content',
+            'page.content',
                 'page-node-add-item.php',
                 VIEWS_NODE,
                 [ 'form' => $form ]
@@ -410,7 +410,7 @@ class Node extends \Soosyze\Controller
         if (!$node) {
             return $this->get404($req);
         }
-        
+
         $post = $req->getParsedBody();
 
         $node_type = self::query()
@@ -430,7 +430,7 @@ class Node extends \Soosyze\Controller
             ->setInputs($post);
 
         $this->container->callHook('node.update.validator', [ &$validator, $item ]);
-        
+
         /* Test les champs personnalisé de la node. */
         $validatorField = new Validator();
         foreach ($node_type as $value) {
@@ -447,8 +447,8 @@ class Node extends \Soosyze\Controller
             self::query()
                 ->update('node', [
                     'title'     => $validator->getInput('title'),
-                    'changed'   => ( string ) time(),
-                    'published' => ( bool ) $validator->getInput('published'),
+                    'changed'   => (string) time(),
+                    'published' => (bool) $validator->getInput('published'),
                     'field'     => serialize($validatorField->getInputs())
                 ])
                 ->where('id', '==', $item)
@@ -456,11 +456,11 @@ class Node extends \Soosyze\Controller
             $this->container->callHook('node.update.valid', [ $validator, $item ]);
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
-            $_SESSION[ 'inputs' ] = array_merge(
+            $_SESSION[ 'inputs' ]      = array_merge(
                 $validator->getInputs(),
                 $validatorField->getInputs()
             );
-            $_SESSION[ 'errors' ] = array_merge(
+            $_SESSION[ 'errors' ]      = array_merge(
                 $validator->getErrors(),
                 $validatorField->getErrors()
             );
@@ -485,13 +485,13 @@ class Node extends \Soosyze\Controller
         if (!$node) {
             return $this->get404($req);
         }
-        
+
         $validator = (new Validator())
             ->setRules([
                 'item' => 'required',
             ])
             ->setInputs([ 'item' => $item ]);
-        
+
         $this->container->callHook('node.delete.validator', [ &$validator, $item ]);
 
         if ($validator->isValid()) {

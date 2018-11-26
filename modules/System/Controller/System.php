@@ -3,11 +3,11 @@
 namespace System\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
-define("VIEWS_SYSTEM", MODULES_CORE . 'System' . DS . 'Views' . DS);
-define("CONFIG_SYSTEM", MODULES_CORE . 'System' . DS . 'Config' . DS);
+define('VIEWS_SYSTEM', MODULES_CORE . 'System' . DS . 'Views' . DS);
+define('CONFIG_SYSTEM', MODULES_CORE . 'System' . DS . 'Config' . DS);
 
 class System extends \Soosyze\Controller
 {
@@ -73,8 +73,8 @@ class System extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-           ->group('system-path-fieldset', 'fieldset', function ($form) use ($content) {
-               $form->legend('system-path-legend', 'Page par défaut')
+            ->group('system-path-fieldset', 'fieldset', function ($form) use ($content) {
+                $form->legend('system-path-legend', 'Page par défaut')
                 ->group('system-path_index-group', 'div', function ($form) use ($content) {
                     $form->label('system-path_index-label', 'Page d’accueil par défaut')
                     ->text('path_index', 'path_index', [
@@ -100,7 +100,7 @@ class System extends \Soosyze\Controller
                         'value'       => $content[ 'path_no_found' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
-           })
+            })
             ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($content) {
                 $form->legend('system-metadata-legend', 'SEO Metadonnées')
                 ->group('system-title-group', 'div', function ($form) use ($content) {

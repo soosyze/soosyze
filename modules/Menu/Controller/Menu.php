@@ -3,11 +3,11 @@
 namespace Menu\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
-define("VIEWS_MENU", MODULES_CORE . 'Menu' . DS . 'Views' . DS);
-define("CONFIG_MENU", MODULES_CORE . 'Menu' . DS . 'Config' . DS);
+define('VIEWS_MENU', MODULES_CORE . 'Menu' . DS . 'Views' . DS);
+define('CONFIG_MENU', MODULES_CORE . 'Menu' . DS . 'Config' . DS);
 
 class Menu extends \Soosyze\Controller
 {
@@ -42,13 +42,13 @@ class Menu extends \Soosyze\Controller
             $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
 
-            $nameLinkWeight = "weight-" . $link[ 'id' ];
-            $nameLinkActive = "active-" . $link[ 'id' ];
+            $nameLinkWeight = 'weight-' . $link[ 'id' ];
+            $nameLinkActive = 'active-' . $link[ 'id' ];
             $form->select($nameLinkWeight, $nameLinkWeight, $weight, [
                     'class'    => 'form-control',
                     'selected' => $link[ 'weight' ]
                 ])
-                ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ]]);
+                ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ] ]);
         }
         $form->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
@@ -80,7 +80,7 @@ class Menu extends \Soosyze\Controller
     public function showCheck($name, $req)
     {
         if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
-            $_SESSION[ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu '. $name . ' n\'existe pas.' ];
+            $_SESSION[ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu ' . $name . ' n\'existe pas.' ];
             $route                = self::router()->getRoute('menu.show', [ ':item' => $name ]);
 
             return new Redirect($route);
@@ -92,7 +92,7 @@ class Menu extends \Soosyze\Controller
             $validator->addRule('active-' . $link[ 'id' ], 'bool')
                 ->addRule('weight-' . $link[ 'id' ], 'required|int|min:1|max:50');
         }
-        
+
         $post = $req->getParsedBody();
         $validator->setInputs($post);
 

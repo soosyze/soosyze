@@ -45,8 +45,8 @@ class Install
             ->values([
                 'title'     => 'Bienvenue sur mon site',
                 'type'      => 'article',
-                'created'   => ( string ) time(),
-                'changed'   => ( string ) time(),
+                'created'   => (string) time(),
+                'changed'   => (string) time(),
                 'published' => true,
                 'field'     => serialize([
                     'summary' => 'Un article se met en valeur par un résumé qui décrit brièvement '

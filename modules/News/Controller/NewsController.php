@@ -2,8 +2,8 @@
 
 namespace News\Controller;
 
-define("VIEWS_NIEWS", MODULES_CORE . 'News' . DS . 'Views' . DS);
-define("CONFIG_NIEWS", MODULES_CORE . 'News' . DS . 'Config' . DS);
+define('VIEWS_NIEWS', MODULES_CORE . 'News' . DS . 'Views' . DS);
+define('CONFIG_NIEWS', MODULES_CORE . 'News' . DS . 'Config' . DS);
 
 class NewsController extends \Soosyze\Controller
 {
@@ -26,9 +26,9 @@ class NewsController extends \Soosyze\Controller
             ->fetchAll();
 
         if (!$nodes) {
-            $default = "Aucun articles pour le moment !";
+            $default = 'Aucun articles pour le moment !';
         } else {
-            $default = "";
+            $default = '';
             foreach ($nodes as $key => $node) {
                 $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
@@ -85,9 +85,9 @@ class NewsController extends \Soosyze\Controller
         $nodes = $this->getNews(strtotime('01/01/' . $years), strtotime('01/01/' . $years . ' +1 year'));
 
         if (!$nodes) {
-            $default = "Aucun articles pour l'année";
+            $default = 'Aucun articles pour l\'année';
         } else {
-            $default = "";
+            $default = '';
             foreach ($nodes as $key => $node) {
                 $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
@@ -114,9 +114,9 @@ class NewsController extends \Soosyze\Controller
         $nodes = $this->getNews($dateCurrent, $dateNext);
 
         if (!$nodes) {
-            $default = "Aucun articles pour le mois.";
+            $default = 'Aucun articles pour le mois.';
         } else {
-            $default = "";
+            $default = '';
             foreach ($nodes as $key => $node) {
                 $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);
@@ -143,9 +143,9 @@ class NewsController extends \Soosyze\Controller
         $nodes = $this->getNews($dateCurrent, $dateNext);
 
         if (!$nodes) {
-            $default = "Aucun articles pour le jour.";
+            $default = 'Aucun articles pour le jour.';
         } else {
-            $default = "";
+            $default = '';
             foreach ($nodes as $key => $node) {
                 $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
                     ':item' => $node[ 'id' ] ]);

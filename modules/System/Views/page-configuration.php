@@ -24,9 +24,7 @@
             <?php echo $form->form_group('system-path-fieldset') ?>
         </div>
         <div class="col-sm-6">
-            <?php echo
-            $form->form_group('system-metadata-fieldset')
-            ?>
+            <?php echo $form->form_group('system-metadata-fieldset') ?>
         </div>
     </div> <!-- /.row -->
     <div class="row">

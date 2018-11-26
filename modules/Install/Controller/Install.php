@@ -2,14 +2,14 @@
 
 namespace Install\Controller;
 
-use Soosyze\Components\Util\Util;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
+use Soosyze\Components\Util\Util;
+use Soosyze\Components\Validator\Validator;
 
-define("VIEWS_INSTALL", MODULES_CORE . 'Install' . DS . 'Views' . DS);
-define("CONFIG_INSTALL", MODULES_CORE . 'Install' . DS . 'Config' . DS);
+define('VIEWS_INSTALL', MODULES_CORE . 'Install' . DS . 'Views' . DS);
+define('CONFIG_INSTALL', MODULES_CORE . 'Install' . DS . 'Config' . DS);
 
 class Install extends \Soosyze\Controller
 {
@@ -19,14 +19,14 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        "User",
-        "System",
-        "Node",
-        "Menu",
-        "Contact",
-        "News"
+        'User',
+        'System',
+        'Node',
+        'Menu',
+        'Contact',
+        'News'
     ];
-    
+
     public function __construct()
     {
         $this->pathServices = CONFIG_INSTALL . 'service.json';
@@ -54,10 +54,10 @@ class Install extends \Soosyze\Controller
     public function index()
     {
         $content = [
-            'email'           => '',
-            'name'            => '',
-            'firstname'       => '',
-            'password'        => '',
+            'email'            => '',
+            'name'             => '',
+            'firstname'        => '',
+            'password'         => '',
             'password-confirm' => ''
         ];
 
@@ -209,19 +209,20 @@ class Install extends \Soosyze\Controller
 
         $salt = md5(time());
         self::query()->insertInto('user', [ 'email', 'password', 'salt', 'firstname',
-                'name', 'actived', 'forget_pass', 'time_reset', 'time_installed', 'timezone'
+                'name', 'actived', 'forget_pass', 'time_reset', 'time_installed',
+                'timezone'
             ])
             ->values([
-                'email'         => $data[ 'email' ],
-                'password'      => hash('sha256', $data[ 'password' ] . $salt),
-                'salt'          => $salt,
-                'firstname'     => $data[ 'firstname' ],
-                'name'          => $data[ 'name' ],
-                'actived'       => true,
-                'forget_pass'    => "",
-                'time_reset'     => "",
-                'time_installed' => ( string ) time(),
-                'timezone'      => "Europe/Paris"
+                'email'          => $data[ 'email' ],
+                'password'       => hash('sha256', $data[ 'password' ] . $salt),
+                'salt'           => $salt,
+                'firstname'      => $data[ 'firstname' ],
+                'name'           => $data[ 'name' ],
+                'actived'        => true,
+                'forget_pass'    => '',
+                'time_reset'     => '',
+                'time_installed' => (string) time(),
+                'timezone'       => 'Europe/Paris'
             ])
             ->execute();
 
@@ -229,12 +230,12 @@ class Install extends \Soosyze\Controller
             ->values([ 1, 2 ])
             ->values([ 1, 3 ])
             ->execute();
-        
+
         self::config()->set('settings.email', $data[ 'email' ]);
         self::config()->set('settings.time_installed', time());
         self::config()->set('settings.local', 'fr_FR');
         self::config()->set('settings.theme', 'Bootstrap 3');
-  
+
         unset($_SESSION[ 'save' ]);
         $route = self::router()->getBasePath();
 

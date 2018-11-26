@@ -1,11 +1,11 @@
 {
     "install.index": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "/",
         "uses": "Install@index"
     },
     "install.step": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "install/step/:id",
         "uses": "Install@step",
         "with": {
@@ -13,7 +13,7 @@
         }
     },
     "install.step.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "install/step/:id",
         "uses": "Install@stepCheck",
         "with": {

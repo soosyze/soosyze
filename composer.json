@@ -22,6 +22,9 @@
     "require-dev": {
         "phpunit/phpunit": "5.*"
     },
+    "suggest": {
+        "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP."
+    },
     "autoload": {
         "classmap": [
             "modules/", 

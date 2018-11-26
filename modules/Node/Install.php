@@ -2,7 +2,7 @@
 
 namespace Node;
 
-use \Queryflatfile\TableBuilder;
+use Queryflatfile\TableBuilder;
 
 class Install
 {
@@ -59,23 +59,23 @@ class Install
 
         $container->query()->insertInto('node', [ 'title', 'type', 'created',
                 'changed', 'published', 'field' ])
-            ->values([ 'Page 404', 'page', ( string ) time(), ( string ) time(),
+            ->values([ 'Page 404', 'page', (string) time(), (string) time(),
                 true, serialize([
                     'body' => 'Page Not Found, Sorry, but the page you were trying to view does not exist.',
                 ])
             ])
-            ->values([ 'Accueil', 'page', ( string ) time(), ( string ) time(), true,
+            ->values([ 'Accueil', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => 'Bienvenue sur votre site <a href="?user/login">Connexion utilisateur</a>',
                 ])
             ])
-            ->values([ 'Page', 'page', ( string ) time(), ( string ) time(), true,
+            ->values([ 'Page', 'page', (string) time(), (string) time(), true,
                 serialize([
-                    "body" => "<h2>Text</h2>
+                    'body' => '<h2>Text</h2>
 <p>This is <strong>bold</strong> and this is <strong>strong</strong>. This is <em>italic</em> and this is <em>emphasized</em>.
     This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
     This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>.
-    Finally, this is a <a href='https://soosyze.com'>link</a>.
+    Finally, this is a <a href=\'https://soosyze.com\'>link</a>.
 </p>
 <hr>
 <h2>Heading Level 2</h2>
@@ -116,7 +116,7 @@ class Install
 <h3>Unordered</h3>
 <ul><li>Dolor pulvinar etiam.</li><li>Sagittis lorem eleifend.</li><li>Felis feugiat dolore viverra.</li><li>Dolor pulvinar etiam.</li></ul>
 <h3>Ordered</h3>
-<ol><li>Dolor pulvinar etiam.</li><li>Etiam vel felis at viverra.</li><li>Felis enim feugiat magna.</li><li>Etiam vel felis nullam.</li><li>Felis enim et tempus.</li></ol>"
+<ol><li>Dolor pulvinar etiam.</li><li>Etiam vel felis at viverra.</li><li>Felis enim feugiat magna.</li><li>Etiam vel felis nullam.</li><li>Felis enim et tempus.</li></ol>'
                 ])
             ])
             ->execute();

@@ -5,7 +5,6 @@ namespace Node\Services;
 class NodeHook
 {
     /**
-     *
      * @var \Queryflatfile\Schema
      */
     private $schema;
@@ -37,7 +36,7 @@ class NodeHook
                 ->where('node_id', '==', $item)
                 ->fetch();
 
-            if (!empty($link)) {
+            if ($link) {
                 $data[ 'title_link' ] = $link[ 'title_link' ];
                 $data[ 'active' ]     = $link[ 'active' ];
             }
@@ -53,12 +52,12 @@ class NodeHook
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {
                             $form->checkbox('active', 'menu', [
                                 'checked' => $data[ 'active' ],
-                                'onclick' => "toggle('menu_toogle')"
+                                'onclick' => 'toggle(\'menu_toogle\')'
                             ])
                             ->label('node-menu-active-label', '<span class="ui"></span> Ajouter un lien dans le menu', [
                                 'for' => 'menu'
                             ]);
-                        }, [ 'class' => "form-group" ])
+                        }, [ 'class' => 'form-group' ])
                         ->group('node-menu', 'div', function ($form) use ($data) {
                             $form->group('node-menu-title-group', 'div', function ($form) use ($data) {
                                 $form->label('node-menu-title-label', 'Titre du lien', [
@@ -68,7 +67,7 @@ class NodeHook
                                     'placeholder' => 'Exemple: Ma page 1',
                                     'value'       => $data[ 'title_link' ]
                                 ]);
-                            }, [ 'class' => "form-group" ]);
+                            }, [ 'class' => 'form-group' ]);
                         }, [
                             'id'    => 'menu_toogle',
                             'style' => !$data[ 'active' ]

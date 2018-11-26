@@ -17,7 +17,7 @@ class Install
     {
         if ($container->schema()->hasTable('menu')) {
             $container->query()->insertInto('menu_link', [ 'title_link', 'link',
-                    'menu', 'weight', 'parent'])
+                    'menu', 'weight', 'parent' ])
                 ->values([
                     'Contact',
                     'contact',

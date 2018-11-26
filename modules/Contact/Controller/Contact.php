@@ -2,12 +2,12 @@
 
 namespace Contact\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Email\Email;
+use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
-define("CONFIG_CONTACT", MODULES_CORE . 'Contact' . DS . 'Config' . DS);
+define('CONFIG_CONTACT', MODULES_CORE . 'Contact' . DS . 'Config' . DS);
 
 class Contact extends \Soosyze\Controller
 {
@@ -16,7 +16,7 @@ class Contact extends \Soosyze\Controller
         $this->pathServices = CONFIG_CONTACT . 'service.json';
         $this->pathRoutes   = CONFIG_CONTACT . 'routing.json';
     }
-    
+
     public function contact()
     {
         $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];
@@ -64,10 +64,10 @@ class Contact extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('contact-copy-group', 'div', function ($form) {
                 $form->checkbox('copy', 'copy')
-                    ->label('contact-copy-label', 'M\'envoyer une copie du mail', [
-                        'for' => 'copy'
-                    ]);
-            }, [ 'class' => "form-group" ])
+                ->label('contact-copy-label', 'M\'envoyer une copie du mail', [
+                    'for' => 'copy'
+                ]);
+            }, [ 'class' => 'form-group' ])
             ->token()
             ->submit('submit', 'Envoyer le message', [ 'class' => 'btn btn-success' ]);
 
@@ -107,12 +107,12 @@ class Contact extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $inputs = $validator->getInputs();
-            $mail   = (new Email)
+            $mail   = (new Email())
                 ->to(self::config()->get('settings.email'))
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ]);
-            
+
             if ($validator->getInput('copy')) {
                 $mail->addCc($inputs[ 'email' ]);
             }

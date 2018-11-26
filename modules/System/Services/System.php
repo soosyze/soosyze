@@ -28,13 +28,13 @@ class System
             $path_index = $this->config->get('settings.path_index')
                 ? '?' . $this->config->get('settings.path_index')
                 : '404';
-            $url       = $uri->withQuery($path_index);
+            $url        = $uri->withQuery($path_index);
 
             $request = $request->withUri($url);
         }
 
         if ($this->config->get('settings.maintenance')) {
-            if (!preg_match("/^user.*$/", $uri->getQuery()) && !$this->user->isConnected()) {
+            if (!preg_match('/^user.*$/', $uri->getQuery()) && !$this->user->isConnected()) {
                 $request = $request->withUri($uri->withQuery('maintenance'));
             }
         }
@@ -53,14 +53,14 @@ class System
          * Si il n'y a aucune route, une réponse sera construite à partir d'une template,
          * sinon l'execution de la route sera la page 404.
          */
-        $reponse = empty($route)
+        $reponse = $route
             ? $this->tpl
                 ->setTheme(false)
                 ->view('page', [
                     'title_main' => 'Page Not Found'
                 ])
                 ->render('page.content', 'page-404.php', VIEWS_SYSTEM, [
-                    'uri'       => $request->getUri()
+                    'uri' => $request->getUri()
                 ])
             : $this->route->execute($route, $request);
 
@@ -78,14 +78,14 @@ class System
             $route   = $this->route->parse($request);
         }
 
-        $reponse = empty($route)
+        $reponse = $route
             ? $this->tpl
                 ->setTheme(false)
                 ->view('page', [
                     'title_main' => 'Page Forbidden'
                 ])
                 ->render('page.content', 'page-403.php', VIEWS_SYSTEM, [
-                    'uri'       => $request->getUri()
+                    'uri' => $request->getUri()
                 ])
             : $this->route->execute($route, $request);
 

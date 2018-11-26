@@ -28,7 +28,7 @@
                         <div class="div-tbody row">
                             <div class="col-sm-3">
                                 <?php echo $form->form_input($module[ 'name' ]) ?>
-                                <?php echo $form->form_label("module-" . $module[ 'name' ]) ?>
+                                <?php echo $form->form_label('module-' . $module[ 'name' ]) ?>
                             </div>
                             <div class="col-sm-2"><?php echo $module[ 'version' ] ?></div>
                             <div class="col-sm-7">

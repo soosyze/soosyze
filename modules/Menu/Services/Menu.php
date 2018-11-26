@@ -7,9 +7,9 @@ use Soosyze\Components\Validator\Validator;
 class Menu
 {
     protected $core;
-    
+
     protected $config;
-    
+
     protected $query;
 
     protected $template;
@@ -21,13 +21,13 @@ class Menu
         $this->query    = $query;
         $this->template = $template;
     }
-    
+
     public function find($id)
     {
         return $this->query
-            ->from('menu_link')
-            ->where('id', '==', $id)
-            ->fetch();
+                ->from('menu_link')
+                ->where('id', '==', $id)
+                ->fetch();
     }
 
     public function getMenu($name)
@@ -41,7 +41,7 @@ class Menu
                 ->leftJoin('menu_link', 'name', 'menu_link.menu')
                 ->isNotNull('id');
     }
-    
+
     public function isUrlOrRoute($link, $request)
     {
         $output = (new Validator())
@@ -65,18 +65,18 @@ class Menu
     {
         if ($reponse instanceof \Template\TemplatingHtml) {
             $this->query
-                    ->from('menu_link')
-                    ->where('active', '==', 1)
-                    ->orderBy('weight');
+                ->from('menu_link')
+                ->where('active', '==', 1)
+                ->orderBy('weight');
             !$reponse->isThemeAdmin()
-                ? $this->query->where('menu', "main-menu")
-                : $this->query->where('menu', "admin-menu");
-            
-            $query = $this->query->fetchAll();
+                    ? $this->query->where('menu', 'main-menu')
+                    : $this->query->where('menu', 'admin-menu');
+
+            $query        = $this->query->fetchAll();
             $query_second = $this->query
                 ->from('menu_link')
                 ->where('active', '==', 1)
-                ->where('menu', "user-menu")
+                ->where('menu', 'user-menu')
                 ->orderBy('weight')
                 ->fetchAll();
 
@@ -95,22 +95,22 @@ class Menu
     /**
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
-     * @param array $query Liens du menu.
+     * @param array   $query   liens du menu
      * @param Request $request
      *
      * @return array
      */
     protected function getGrantedLink($query, $request)
     {
-        $route = $request->getUri()->getQuery() !== ''
+        $route = '' !== $request->getUri()->getQuery()
             ? $request->getUri()->getQuery()
             : '/';
 
         foreach ($query as $key => $menu) {
-            $query[ $key ][ 'link_active' ] = strpos($route, $menu[ 'link' ]) === 0
+            $query[ $key ][ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
                 ? 'active'
                 : '';
-            
+
             if (filter_var($menu[ 'link' ], FILTER_VALIDATE_URL)) {
                 continue;
             }

@@ -1,26 +1,26 @@
 {
     "user.login": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "user/login",
         "uses": "User@login"
     },
     "user.login.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "user/login",
         "uses": "User@loginCheck"
     },
     "user.relogin": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "user/relogin",
         "uses": "User@relogin"
     },
     "user.relogin.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "user/relogin",
         "uses": "User@reloginCheck"
     },
     "user.reset": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "user/:id/reset/:token",
         "uses": "User@resetUser",
         "with": {
@@ -29,12 +29,12 @@
         }
     },
     "user.logout": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "user/logout",
         "uses": "User@logout"
     },
     "user.views": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "user/:id",
         "uses": "User@views",
         "with": {
@@ -42,7 +42,7 @@
         }
     },
     "user.edit": {
-        "methode" : "GET",
+        "methode": "GET",
         "path": "user/:id/edit",
         "uses": "User@edit",
         "with": {
@@ -50,7 +50,7 @@
         }
     },
     "user.edit.check": {
-        "methode" : "POST",
+        "methode": "POST",
         "path": "user/:id/edit",
         "uses": "User@editCheck",
         "with": {

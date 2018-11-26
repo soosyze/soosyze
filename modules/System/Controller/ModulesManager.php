@@ -3,8 +3,8 @@
 namespace System\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Validator\Validator;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
 {
@@ -20,7 +20,7 @@ class ModulesManager extends \Soosyze\Controller
         $form   = new FormBuilder([ 'method' => 'post', 'action' => $action ]);
 
         foreach ($config as $key => $values) {
-            $attr = [];
+            $attr              = [];
             /* Si le module est présent en base de données alors il est installé. */
             $attr[ 'checked' ] = isset($content[ $key ]);
 
@@ -40,9 +40,9 @@ class ModulesManager extends \Soosyze\Controller
             }
 
             $form->checkbox($key, $key, $attr)
-                ->label("module-" . $key, '<span class="ui"></span> ' . $key, [
+                ->label('module-' . $key, '<span class="ui"></span> ' . $key, [
                     'for' => $key
-                ]);
+            ]);
 
             $package[ $values[ 'package' ] ][ $key ] = [
                 'name'                => $key,
@@ -112,7 +112,7 @@ class ModulesManager extends \Soosyze\Controller
         /* Si il y a des modules en plus, alors il seront installés. */
         $diff = array_diff_key($data, $module_active);
 
-        if (!empty($diff)) {
+        if ($diff) {
             foreach ($diff as $key => $value) {
                 /* Instantie et exécute le service d'installation. */
                 $obj = $key . '\Install';
@@ -139,14 +139,14 @@ class ModulesManager extends \Soosyze\Controller
         /* Si modules en moins alors désinstalle */
         $diff = array_diff_key($module_active, $data);
 
-        if (!empty($diff)) {
+        if ($diff) {
             foreach ($diff as $key => $value) {
                 /* Instantie et exécute le service désinstallation. */
                 $obj = $key . '\Install';
                 if (!class_exists($obj)) {
                     continue;
                 }
-                
+
                 $obj = new $obj();
                 $obj->uninstall($this->container);
                 /* Supprime le module à partir de son nom */
@@ -158,8 +158,8 @@ class ModulesManager extends \Soosyze\Controller
     /**
      * Si un module installé est requis par d'autre module.
      *
-     * @param string $key Nom du module à désactiver.
-     * @param array $modules Liste des modules requis par le module.
+     * @param string $key     Nom du module à désactiver.
+     * @param array  $modules Liste des modules requis par le module.
      *
      * @return bool
      */
