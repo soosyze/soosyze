@@ -28,7 +28,7 @@ class System extends \Soosyze\Controller
                 ->withStatus(503);
     }
 
-    public function configuration()
+    public function edit()
     {
         $content = self::config()->get('settings');
 
@@ -42,7 +42,7 @@ class System extends \Soosyze\Controller
             $optionThemes[] = [ 'value' => $theme, 'label' => $theme ];
         }
 
-        $action = self::router()->getRoute('system.config.check');
+        $action = self::router()->getRoute('system.config.update');
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action, 'enctype' => 'multipart/form-data' ]))
             ->group('system-information-fieldset', 'fieldset', function ($form) use ($content, $optionThemes) {
@@ -161,7 +161,7 @@ class System extends \Soosyze\Controller
         ]);
     }
 
-    public function configCheck($req)
+    public function update($req)
     {
         $post = $req->getParsedBody();
 
@@ -196,7 +196,7 @@ class System extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
         }
 
-        $route = self::router()->getRoute('system.config');
+        $route = self::router()->getRoute('system.config.edit');
 
         return new Redirect($route);
     }

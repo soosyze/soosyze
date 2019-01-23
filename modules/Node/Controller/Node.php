@@ -17,7 +17,7 @@ class Node extends \Soosyze\Controller
         $this->pathRoutes   = CONFIG_NODE . 'routing.json';
     }
 
-    public function index()
+    public function admin()
     {
         $nodes = self::query()
             ->from('node')
@@ -251,7 +251,7 @@ class Node extends \Soosyze\Controller
         new Redirect($route);
     }
 
-    public function view($item, $req)
+    public function show($item, $req)
     {
         $node = self::query()
             ->from('node')

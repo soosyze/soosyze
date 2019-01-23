@@ -4,24 +4,24 @@
         "path": "maintenance",
         "uses": "System@maintenance"
     },
-    "system.config": {
+    "system.config.edit": {
         "methode": "GET",
         "path": "admin/config",
-        "uses": "System@configuration"
+        "uses": "System@edit"
     },
-    "system.config.check": {
+    "system.config.update": {
         "methode": "POST",
         "path": "admin/config",
-        "uses": "System@configCheck"
+        "uses": "System@update"
     },
-    "system.modules": {
+    "system.module.edit": {
         "methode": "GET",
         "path": "admin/modules",
-        "uses": "ModulesManager@modules"
+        "uses": "ModulesManager@edit"
     },
-    "system.modules.check": {
+    "system.module.update": {
         "methode": "POST",
         "path": "admin/modules",
-        "uses": "ModulesManager@modulesCheck"
+        "uses": "ModulesManager@update"
     }
 }

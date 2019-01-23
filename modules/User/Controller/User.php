@@ -21,7 +21,7 @@ class User extends \Soosyze\Controller
     public function login()
     {
         if (($user = self::user()->isConnected())) {
-            $route = self::router()->getRoute('user.views', [ ':id' => $user[ 'user_id' ] ]);
+            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
 
             return new Redirect($route);
         }
@@ -96,7 +96,7 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'errors' ] = [ 'Désolé, e-mail ou mot de passe non reconnu.' ];
             $route                = self::router()->getRoute('user.login');
         } else {
-            $route = self::router()->getRoute('user.views', [ ':id' => $user[ 'user_id' ] ]);
+            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
         }
 
         return new Redirect($route);
@@ -246,7 +246,7 @@ copiant dans votre navigateur : $url";
         return new Redirect($route);
     }
 
-    public function views($id, $req)
+    public function show($id, $req)
     {
         if (!($user = self::user()->find($id))) {
             return $this->get404($req);
@@ -273,7 +273,7 @@ copiant dans votre navigateur : $url";
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('user.edit.check', [ ':id' => $id ]);
+        $action = self::router()->getRoute('user.update', [ ':id' => $id ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('user-edit-information-fieldset', 'fieldset', function ($form) use ($query) {
@@ -338,7 +338,7 @@ copiant dans votre navigateur : $url";
         ]);
     }
 
-    public function editCheck($id, $req)
+    public function udpate($id, $req)
     {
         if (!self::user()->find($id)) {
             return $this->get404($req);

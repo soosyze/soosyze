@@ -8,7 +8,7 @@ use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
 {
-    public function modules($r)
+    public function edit($r)
     {
         /* Récupère les modules en base de données. */
         $content = self::module()->listModuleActive();
@@ -16,7 +16,7 @@ class ModulesManager extends \Soosyze\Controller
         /* Récupère tous les fichiers de configuration. */
         $config = self::module()->getConfigAll();
 
-        $action = self::router()->getRoute('system.modules.check');
+        $action = self::router()->getRoute('system.module.update');
         $form   = new FormBuilder([ 'method' => 'post', 'action' => $action ]);
 
         foreach ($config as $key => $values) {
@@ -74,7 +74,7 @@ class ModulesManager extends \Soosyze\Controller
         ]);
     }
 
-    public function modulesCheck($req)
+    public function update($req)
     {
         $post = $req->getParsedBody();
         unset($post[ 'submit' ]);
@@ -102,7 +102,7 @@ class ModulesManager extends \Soosyze\Controller
             $_SESSION[ 'errors' ] = $validator->getErrors();
         }
 
-        $route = self::router()->getRoute('system.modules');
+        $route = self::router()->getRoute('system.module.edit');
 
         return new Redirect($route);
     }

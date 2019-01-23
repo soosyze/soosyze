@@ -167,7 +167,7 @@ class Install
                 ->values([
                     'node.admin',
                     '<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Contenu',
-                    'admin/content',
+                    'admin/node',
                     'admin-menu',
                     2,
                     -1
@@ -214,7 +214,7 @@ class Install
             $container->query()
                 ->from('menu_link')
                 ->delete()
-                ->where('link', 'admin/content')
+                ->where('link', 'admin/node')
                 ->orRegex('link', '/^node/')
                 ->execute();
             $container->schema()->dropTable('node_menu_link');

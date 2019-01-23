@@ -1,18 +1,18 @@
 {
     "node.index": {
         "methode": "GET",
-        "path": "admin/content",
-        "uses": "Node@index"
+        "path": "admin/node",
+        "uses": "Node@admin"
     },
     "node.add": {
         "methode": "GET",
-        "path": "admin/content/add",
+        "path": "admin/node/add",
         "uses": "Node@add"
     },
     "node.show": {
         "methode": "GET",
         "path": "node/:item",
-        "uses": "Node@view",
+        "uses": "Node@show",
         "with": {
             ":item": "\\d+"
         }

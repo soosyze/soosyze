@@ -44,17 +44,17 @@ class Install
     {
         if ($container->schema()->hasTable('user')) {
             $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
-                ->values([ 'system.config', 'Voir les configurations' ])
-                ->values([ 'system.config.check', 'Éditer les configurations' ])
-                ->values([ 'system.modules', 'Voir les modules' ])
-                ->values([ 'system.modules.check', 'Éditer les modules' ])
+                ->values([ 'system.config.edit', 'Voir les configurations' ])
+                ->values([ 'system.config.update', 'Éditer les configurations' ])
+                ->values([ 'system.module.edit', 'Voir les modules' ])
+                ->values([ 'system.module.update', 'Éditer les modules' ])
                 ->execute();
 
             $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'system.config' ])
-                ->values([ 3, 'system.config.check' ])
-                ->values([ 3, 'system.modules' ])
-                ->values([ 3, 'system.modules.check' ])
+                ->values([ 3, 'system.config.edit' ])
+                ->values([ 3, 'system.config.update' ])
+                ->values([ 3, 'system.module.edit' ])
+                ->values([ 3, 'system.module.update' ])
                 ->execute();
         }
     }
