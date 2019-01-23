@@ -1,5 +1,8 @@
 <?php
 
+/* Démarrage de la session. */
+session_start();
+
 require_once $basePath . 'app/app_core.php';
 
 $app = \Core::getInstance();
