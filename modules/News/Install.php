@@ -89,6 +89,7 @@ class Install
     {
         if ($container->schema()->hasTable('menu')) {
             $container->query()->insertInto('menu_link', [
+                    'key',
                     'title_link',
                     'link',
                     'menu',
@@ -96,6 +97,7 @@ class Install
                     'parent',
                 ])
                 ->values([
+                    'news.index',
                     'Blog',
                     'news',
                     'main-menu',

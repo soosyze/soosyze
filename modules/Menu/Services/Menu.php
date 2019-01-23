@@ -107,23 +107,23 @@ class Menu
             : '/';
 
         foreach ($query as $key => $menu) {
+            if (filter_var($menu[ 'link' ], FILTER_VALIDATE_URL)) {
+                $query[ $key ][ 'link_active' ] = '';
+
+                continue;
+            }
             $query[ $key ][ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
                 ? 'active'
                 : '';
 
-            if (filter_var($menu[ 'link' ], FILTER_VALIDATE_URL)) {
-                continue;
-            }
-            $menu_request = $request->withUri($request->getUri()->withQuery($menu[ 'link' ]), true);
-            $menu_link    = $this->core->get('router')->parse($menu_request);
-
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
-            if (!$this->core->callHook('app.granted', [ $menu_link[ 'key' ] ])) {
+            if (!$this->core->callHook('app.granted', [ $menu[ 'key' ] ])) {
                 unset($query[ $key ]);
 
                 continue;
             }
-            $query[ $key ][ 'link' ] = $menu_request->getUri()->__toString();
+            $link                    = $request->withUri($request->getUri()->withQuery($menu[ 'link' ]));
+            $query[ $key ][ 'link' ] = $link->getUri()->__toString();
         }
 
         return $query;

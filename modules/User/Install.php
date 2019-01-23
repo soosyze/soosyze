@@ -73,9 +73,10 @@ class Install
     public function hookInstallMenu($container)
     {
         if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'title_link', 'link',
+            $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
                     'menu', 'weight', 'parent' ])
                 ->values([
+                    'user.edit',
                     '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Utilisateur',
                     'user/1/edit',
                     'admin-menu',
@@ -83,6 +84,7 @@ class Install
                     -1
                 ])
                 ->values([
+                    'user.login',
                     'Connexion',
                     'user/login',
                     'user-menu',
@@ -90,6 +92,7 @@ class Install
                     -1
                 ])
                 ->values([
+                    'user.logout',
                     '<span class="glyphicon glyphicon-off" aria-hidden="true"></span> Déconnexion',
                     'user/logout',
                     'user-menu',

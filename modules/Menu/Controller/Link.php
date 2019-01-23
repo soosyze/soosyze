@@ -99,19 +99,20 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid() && $isUrlOrRoute) {
             $link = [
-                $validator->getInput('title_link'),
-                $validator->getInput('link'),
-                $validator->getInput('target_link'),
-                $nameMenu,
-                1,
-                -1,
-                true
+                'title_link'  => $validator->getInput('title_link'),
+                'link'        => $validator->getInput('link'),
+                'target_link' => $validator->getInput('target_link'),
+                'menu'        => $nameMenu,
+                'weight'      => 1,
+                'parent'      => -1,
+                'active'      => true
             ];
+            if (isset($isUrlOrRoute[ 'key' ])) {
+                $link[ 'key' ] = $isUrlOrRoute;
+            }
 
             self::query()
-                ->insertInto('menu_link', [ 'title_link', 'link', 'target_link',
-                    'menu',
-                    'weight', 'parent', 'active' ])
+                ->insertInto('menu_link', array_keys($link))
                 ->values($link)
                 ->execute();
 
@@ -231,6 +232,9 @@ class Link extends \Soosyze\Controller
                 'link'        => $validator->getInput('link'),
                 'target_link' => $validator->getInput('target_link')
             ];
+            if (isset($isUrlOrRoute[ 'key' ])) {
+                $link[ 'key' ] = $isUrlOrRoute[ 'key' ];
+            }
 
             self::query()
                 ->update('menu_link', $link)

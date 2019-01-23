@@ -63,6 +63,7 @@ class Install
     {
         if ($container->schema()->hasTable('menu')) {
             $container->query()->insertInto('menu_link', [
+                    'key',
                     'title_link',
                     'link',
                     'menu',
@@ -70,6 +71,7 @@ class Install
                     'parent'
                 ])
                 ->values([
+                    'system.module.edit',
                     '<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Modules',
                     'admin/modules',
                     'admin-menu',
@@ -77,6 +79,7 @@ class Install
                     -1
                 ])
                 ->values([
+                    'system.config.edit',
                     '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuration',
                     'admin/config',
                     'admin-menu',

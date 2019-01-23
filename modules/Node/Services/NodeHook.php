@@ -101,9 +101,10 @@ class NodeHook
                 ->fetch();
 
             if ($nodeLast && ($id = $nodeLast[ 'id' ])) {
-                $this->query->insertInto('menu_link', [ 'title_link', 'link',
+                $this->query->insertInto('menu_link', [ 'key', 'title_link', 'link',
                         'menu', 'weight', 'parent', 'active' ])
                     ->values([
+                        'node.show',
                         $validator->getInput('title_link'),
                         'node/' . $id,
                         'main-menu',
@@ -137,9 +138,10 @@ class NodeHook
                     ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
                     ->execute();
             } elseif ($validator->hasInput('active') && !$nodeMenuLink) {
-                $this->query->insertInto('menu_link', [ 'title_link', 'link',
+                $this->query->insertInto('menu_link', [ 'key', 'title_link', 'link',
                         'menu', 'weight', 'parent', 'active' ])
                     ->values([
+                        'node.show',
                         $validator->getInput('title_link'),
                         'node/' . $id,
                         'main-menu',
