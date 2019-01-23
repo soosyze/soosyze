@@ -9,17 +9,28 @@ class NodeHook
      */
     private $schema;
 
+    /**
+     * @var \Queryflatfile\Request
+     */
     private $query;
+
+    /**
+     * Si le module menu existe.
+     * 
+     * @var bool
+     */
+    private $is_menu;
 
     public function __construct($schema, $query)
     {
-        $this->schema = $schema;
-        $this->query  = $query;
+        $this->schema  = $schema;
+        $this->query   = $query;
+        $this->is_menu = $this->schema->hasTable('menu');
     }
 
     public function hookCreateFormData(&$data)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             $data[ 'title_link' ] = '';
             $data[ 'active' ]     = '';
         }
@@ -27,7 +38,7 @@ class NodeHook
 
     public function hookEditFormData(&$data, $item)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             $data[ 'title_link' ] = '';
             $data[ 'active' ]     = '';
             $link                 = $this->query
@@ -38,14 +49,14 @@ class NodeHook
 
             if ($link) {
                 $data[ 'title_link' ] = $link[ 'title_link' ];
-                $data[ 'active' ]     = $link[ 'active' ];
+                $data[ 'active' ]     = (bool) $link[ 'menu_link_id' ];
             }
         }
     }
 
     public function hookCreateForm($form, $data)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             $form->addBefore('node-publish-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', 'Menu')
@@ -81,7 +92,7 @@ class NodeHook
 
     public function hookStoreValidator($validator)
     {
-        if ($this->schema->hasTable('menu') && $validator->hasInput('active')) {
+        if ($this->is_menu && $validator->hasInput('active')) {
             $validator->addRule('title_link', 'required|string|max:255|striptags')
                 ->addRule('active', 'bool');
         }
@@ -89,7 +100,7 @@ class NodeHook
 
     public function hookStoreValid($validator)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             if (!$validator->hasInput('active')) {
                 return;
             }
@@ -110,7 +121,7 @@ class NodeHook
                         'main-menu',
                         0,
                         -1,
-                        true
+                        (bool) $validator->getInput('published'),
                     ])
                     ->execute();
 
@@ -128,14 +139,17 @@ class NodeHook
 
     public function hookUpdateValid($validator, $id)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             $nodeMenuLink = $this->query->from('node_menu_link')
                 ->where('node_id', '==', $id)
                 ->fetch();
 
             if ($validator->hasInput('active') && $nodeMenuLink) {
-                $this->query->update('menu_link', [ 'title_link' => $validator->getInput('title_link') ])
-                    ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
+                $this->query->update('menu_link', [
+                        'title_link' => $validator->getInput('title_link'),
+                        'active'     => (bool) $validator->getInput('published'),
+                    ])
+                    ->where('id', $nodeMenuLink[ 'menu_link_id' ])
                     ->execute();
             } elseif ($validator->hasInput('active') && !$nodeMenuLink) {
                 $this->query->insertInto('menu_link', [ 'key', 'title_link', 'link',
@@ -145,9 +159,9 @@ class NodeHook
                         $validator->getInput('title_link'),
                         'node/' . $id,
                         'main-menu',
-                        0,
+                        1,
                         -1,
-                        true
+                        (bool) $validator->getInput('published'),
                     ])
                     ->execute();
 
@@ -159,7 +173,7 @@ class NodeHook
                 $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
                     ->values([ $id, $linkLast[ 'id' ] ])
                     ->execute();
-            } elseif (!$validator->hasInput('active')) {
+            } elseif (!$validator->hasInput('active') && $nodeMenuLink) {
                 $this->query->from('node_menu_link')
                     ->where('node_id', '==', $id)
                     ->delete()
@@ -173,7 +187,7 @@ class NodeHook
         }
     }
 
-    public function getForm(&$request, &$reponse)
+    public function getForm($request, &$response)
     {
         $reponse->add([ 'scripts' => '<script>
                 function toggle (id) {
@@ -192,20 +206,22 @@ class NodeHook
 
     public function hookDeleteValid($validator, $item)
     {
-        if ($this->schema->hasTable('menu')) {
+        if ($this->is_menu) {
             $nodeMenuLink = $this->query->from('node_menu_link')
                 ->where('node_id', '==', $item)
                 ->fetch();
 
-            $this->query->from('node_menu_link')
-                ->where('node_id', '==', $item)
-                ->delete()
-                ->execute();
+            if ($nodeMenuLink) {
+                $this->query->from('node_menu_link')
+                    ->where('node_id', '==', $item)
+                    ->delete()
+                    ->execute();
 
-            $this->query->from('menu_link')
-                ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
-                ->delete()
-                ->execute();
+                $this->query->from('menu_link')
+                    ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
+                    ->delete()
+                    ->execute();
+            }
         }
     }
 
