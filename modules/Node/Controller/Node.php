@@ -40,7 +40,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
                 ])
-                ->render('page.content', 'page-node-views.php', VIEWS_NODE, [
+                ->render('page.content', 'node-admin.php', VIEWS_NODE, [
                     'linkAdd' => $linkAdd,
                     'nodes'   => $nodes
         ]);
@@ -62,7 +62,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu'
                 ])
-                ->render('page.content', 'page-node-add-view.php', VIEWS_NODE, [
+                ->render('page.content', 'node-add.php', VIEWS_NODE, [
                     'node_type' => $query
         ]);
     }
@@ -162,7 +162,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $item
                 ])
-                ->render('page.content', 'page-node-add-item.php', VIEWS_NODE, [
+                ->render('page.content', 'node-create.php', VIEWS_NODE, [
                     'form' => $form
         ]);
     }
@@ -262,7 +262,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
-                ->render('page.content', 'node.php', VIEWS_NODE, [
+                ->render('page.content', 'node-show.php', VIEWS_NODE, [
                     'fields' => unserialize($node[ 'field' ])
                 ])->override('page.content', [ 'node-show-' . $item . '.php', 'node-show-' . $node['type'] ]);
 
@@ -385,14 +385,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
-            ->render(
-            'page.content',
-                'page-node-add-item.php',
-                VIEWS_NODE,
-                [ 'form' => $form ]
-        );
-
-        return $reponse;
+                ->render('page.content', 'node-edit.php', VIEWS_NODE, [ 'form' => $form ]);
     }
 
     public function update($item, $req)
