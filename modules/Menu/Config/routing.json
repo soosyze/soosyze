@@ -36,7 +36,7 @@
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@edit",
         "with": {
-            ":item": "[0-9]+",
+            ":item": "\\d+",
             ":menu": "[a-z-]+"
         }
     },
@@ -45,7 +45,7 @@
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@update",
         "with": {
-            ":item": "[0-9]+",
+            ":item": "\\d+",
             ":menu": "[a-z-]+"
         }
     },
@@ -55,7 +55,7 @@
         "uses": "Link@delete",
         "with": {
             ":menu": "[a-z-]+",
-            ":item": "[0-9]+"
+            ":item": "\\d+"
         }
     }
 }

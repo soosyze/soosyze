@@ -24,7 +24,7 @@
         "path": "user/:id/reset/:token",
         "uses": "User@resetUser",
         "with": {
-            ":id": "[0-9]+",
+            ":id": "\\d+",
             ":token": "[0-9a-zA-Z]+"
         }
     },
@@ -38,7 +38,7 @@
         "path": "user/:id",
         "uses": "User@views",
         "with": {
-            ":id": "[0-9]+"
+            ":id": "\\d+"
         }
     },
     "user.edit": {
@@ -46,7 +46,7 @@
         "path": "user/:id/edit",
         "uses": "User@edit",
         "with": {
-            ":id": "[0-9]+"
+            ":id": "\\d+"
         }
     },
     "user.edit.check": {
@@ -54,7 +54,7 @@
         "path": "user/:id/edit",
         "uses": "User@editCheck",
         "with": {
-            ":id": "[0-9]+"
+            ":id": "\\d+"
         }
     }
 }
