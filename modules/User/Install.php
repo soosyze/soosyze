@@ -47,18 +47,18 @@ class Install
             ->execute();
 
         $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
-            ->values([ 'user.views', 'Voir les utilisateurs' ])
+            ->values([ 'user.show', 'Voir les utilisateurs' ])
             ->values([ 'user.edit', 'Voir l\'édition les utilisateurs' ])
-            ->values([ 'user.edit.check', 'Éditer les utilisateurs' ])
+            ->values([ 'user.update', 'Éditer les utilisateurs' ])
             ->values([ 'user.login', 'Voir le formulaire de connexion' ])
             ->values([ 'user.login.check', 'Se connecter' ])
             ->values([ 'user.logout', 'Se déconnecter' ])
             ->execute();
 
         $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'user.views' ])
+            ->values([ 3, 'user.show' ])
             ->values([ 3, 'user.edit' ])
-            ->values([ 3, 'user.edit.check' ])
+            ->values([ 3, 'user.update' ])
             ->values([ 1, 'user.login' ])
             ->values([ 1, 'user.login.check' ])
             ->values([ 2, 'user.logout' ])
