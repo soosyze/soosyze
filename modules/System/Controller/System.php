@@ -193,7 +193,7 @@ class System extends \Soosyze\Controller
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+                $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
         }
 
         $route = self::router()->getRoute('system.config.edit');

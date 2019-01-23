@@ -15,15 +15,15 @@
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
-            "node.create.after": "getForm",
+            "node.create.response.after": "getForm",
             "node.store.validator": "hookStoreValidator",
-            "node.store.valid": "hookStoreValid",
+            "node.store.before": "hookStoreValid",
             "node.edit.form.data": "hookEditFormData",
             "node.edit.form": "hookCreateForm",
-            "node.edit.after": "getForm",
+            "node.edit.response.after": "getForm",
             "node.update.validator": "hookStoreValidator",
-            "node.update.valid": "hookUpdateValid",
-            "node.delete.valid": "hookDeleteValid",
+            "node.update.after": "hookUpdateValid",
+            "node.delete.after": "hookDeleteValid",
             "menu.link.delete.valid": "hookLinkDeleteValid"
         }
     }

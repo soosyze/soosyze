@@ -124,7 +124,7 @@ class Link extends \Soosyze\Controller
 
         $_SESSION[ 'inputs' ]      = $validator->getInputs();
         $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
             $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
@@ -249,7 +249,7 @@ class Link extends \Soosyze\Controller
 
         $_SESSION[ 'inputs' ]      = $validator->getInputs();
         $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
             $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';

@@ -166,8 +166,6 @@ class Node extends \Soosyze\Controller
             'form' => $form
         ]);
 
-        $this->container->callHook('node.create.after', [ &$req, &$reponse ]);
-
         return $reponse;
     }
 
@@ -243,8 +241,8 @@ class Node extends \Soosyze\Controller
             $validatorField->getErrors()
         );
         $_SESSION[ 'errors_keys' ] = array_merge(
-            $validator->getKeyUniqueErrors(),
-            $validatorField->getKeyUniqueErrors()
+            $validator->getKeyInputErrors(),
+            $validatorField->getKeyInputErrors()
         );
 
         $route = self::router()->getRoute('node.create', [ ':item' => $item ]);
@@ -333,7 +331,7 @@ class Node extends \Soosyze\Controller
                 foreach ($query as $value) {
                     $key     = $value[ 'field_name' ];
                     $rules   = $value[ 'field_rules' ];
-                    $require = (new Validator())->addRule($key, $rules)->isRequire($key);
+                    $require = (new Validator())->addRule($key, $rules)->isRequired($key);
 
                     /* Si le contenu du champs n'existe pas alors il est déclaré vide. */
                     $content[ $key ] = isset($content[ $key ])
@@ -394,8 +392,6 @@ class Node extends \Soosyze\Controller
                 VIEWS_NODE,
                 [ 'form' => $form ]
         );
-
-        $this->container->callHook('node.edit.after', [ &$req, &$reponse ]);
 
         return $reponse;
     }
@@ -465,8 +461,8 @@ class Node extends \Soosyze\Controller
                 $validatorField->getErrors()
             );
             $_SESSION[ 'errors_keys' ] = array_merge(
-                $validator->getKeyUniqueErrors(),
-                $validatorField->getKeyUniqueErrors()
+                $validator->getKeyInputErrors(),
+                $validatorField->getKeyInputErrors()
             );
         }
 

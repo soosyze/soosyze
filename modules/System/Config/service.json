@@ -16,8 +16,8 @@
         "hooks": {
             "app.404": "hooks404",
             "app.403": "hooks403",
-            "app.reponse.before": "hookSys",
-            "app.reponse.after": "hookMeta"
+            "app.response.before": "hookSys",
+            "app.response.after": "hookMeta"
         }
     },
     "system.install": {

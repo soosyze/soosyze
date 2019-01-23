@@ -392,7 +392,7 @@ copiant dans votre navigateur : $url";
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
         }
 
         $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);

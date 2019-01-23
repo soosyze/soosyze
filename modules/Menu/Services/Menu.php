@@ -61,14 +61,14 @@ class Menu
         return $output;
     }
 
-    public function hookMenu($request, &$reponse)
+    public function hookMenu($request, &$response)
     {
-        if ($reponse instanceof \Template\TemplatingHtml) {
+        if ($response instanceof \Template\TemplatingHtml) {
             $this->query
                 ->from('menu_link')
                 ->where('active', '==', 1)
                 ->orderBy('weight');
-            !$reponse->isThemeAdmin()
+            !$response->isThemeAdmin()
                     ? $this->query->where('menu', 'main-menu')
                     : $this->query->where('menu', 'admin-menu');
 
@@ -83,7 +83,7 @@ class Menu
             $query_menu        = $this->getGrantedLink($query, $request);
             $query_menu_second = $this->getGrantedLink($query_second, $request);
 
-            $reponse->render('page.main_menu', 'menu.php', VIEWS_MENU, [
+            $response->render('page.main_menu', 'menu.php', VIEWS_MENU, [
                     'menu' => $query_menu
                 ])
                 ->render('page.second_menu', 'menu-second.php', VIEWS_MENU, [

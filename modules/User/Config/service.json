@@ -7,7 +7,7 @@
             "@core"
         ],
         "hooks": {
-            "app.reponse.before": "hookReponseBefore",
+            "app.response.before": "hookResponseBefore",
             "app.granted": "isGranted"
         }
     },

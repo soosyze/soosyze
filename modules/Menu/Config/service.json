@@ -8,7 +8,7 @@
             "@template"
         ],
         "hooks": {
-            "app.reponse.after": "hookMenu"
+            "app.response.after": "hookMenu"
         }
     }
 }

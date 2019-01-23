@@ -5,7 +5,9 @@ session_start();
 
 require_once $basePath . 'app/app_core.php';
 
-$app = \Core::getInstance();
+$req = Soosyze\Components\Http\ServerRequest::create();
+
+$app = \Core::getInstance($req);
 
 $app->setSettings([
     'config'              => 'app/config',

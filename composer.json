@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.4",
-        "soosyze/framework": "1.1.*",
+        "soosyze/framework": "1.2.*",
         "soosyze/queryflatfile": "1.1.*"
     },
     "require-dev": {

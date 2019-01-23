@@ -2,7 +2,7 @@
 
 namespace User\Services;
 
-use Soosyze\Components\Http\Reponse;
+use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 
 define('BDD_USER', 'user');
@@ -176,17 +176,17 @@ class User
      * Fonctionnement par défaut de l'application.
      * Défini les règles du déclenchement d'un retour 403 à l'aide des hooks.
      *
-     * @param Request $request
-     * @param Reponse $reponse
+     * @param Request  $request
+     * @param Response $response
      *
-     * @return Reponse
+     * @return Response
      */
-    public function hookReponseBefore(&$request, &$reponse)
+    public function hookResponseBefore(&$request, &$response)
     {
         $route = $this->routing->parse($request);
 
         if (!$this->isGranted($route[ 'key' ])) {
-            $reponse = new Reponse(403, new Stream('Erreur HTTP 403 Forbidden'));
+            $response = new Response(403, new Stream('Erreur HTTP 403 Forbidden'));
         }
     }
 }

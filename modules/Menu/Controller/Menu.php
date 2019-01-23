@@ -113,7 +113,7 @@ class Menu extends \Soosyze\Controller
             $route                 = self::router()->getRoute('menu.show', [ ':item' => $name ]);
         } else {
             $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyUniqueErrors();
+            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
             $route                     = self::router()->getRoute('menu.show', [
                 ':item' => $name ]);
         }
