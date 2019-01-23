@@ -70,7 +70,7 @@ class Link extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => 'Menu'
                 ])
@@ -195,7 +195,7 @@ class Link extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => 'Menu'
                 ])

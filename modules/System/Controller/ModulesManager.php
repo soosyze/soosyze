@@ -64,7 +64,7 @@ class ModulesManager extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-th-large" aria-hidden="true"></i> Modules'
                 ])

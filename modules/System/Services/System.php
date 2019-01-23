@@ -55,7 +55,6 @@ class System
          */
         $reponse = $route
             ? $this->tpl
-                ->setTheme(false)
                 ->view('page', [
                     'title_main' => 'Page Not Found'
                 ])
@@ -80,7 +79,6 @@ class System
 
         $reponse = $route
             ? $this->tpl
-                ->setTheme(false)
                 ->view('page', [
                     'title_main' => 'Page Forbidden'
                 ])
@@ -94,16 +92,23 @@ class System
         }
     }
 
-    public function hookMeta($request, &$reponse)
+    public function hookMeta($request, &$response)
     {
-        if ($reponse instanceof \Template\TemplatingHtml) {
+        if ($response instanceof \Template\Services\TemplatingHtml) {
+            $uri = $request->getUri();
+
+            if ($uri->getQuery() == '' || $uri->getQuery() == '/') {
+                $response->override('page', [ 'page-front.php' ]);
+            }
             $meta = $this->config->get('settings');
 
-            $reponse->add([
+            $response->add([
                 'title'       => $meta[ 'title' ],
                 'description' => $meta[ 'description' ],
                 'keyboard'    => $meta[ 'keyboard' ],
                 'favicon'     => $meta[ 'favicon' ]
+            ])->view('page', [
+                'logo' => $meta[ 'logo' ]
             ]);
         }
     }

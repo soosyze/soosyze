@@ -189,7 +189,8 @@ class NodeHook
 
     public function getForm($request, &$response)
     {
-        $reponse->add([ 'scripts' => '<script>
+        $script = $response->getVar('scripts');
+        $script .= '<script>
                 function toggle (id) {
                     var item             = document.getElementById(id);
                     var input_title      = document.getElementById("title");
@@ -200,8 +201,8 @@ class NodeHook
                         ? input_title_link.value 
                         : input_title.value;
                 }
-            </script>'
-        ]);
+            </script>';
+        $response->add([ 'scripts' => $script ]);
     }
 
     public function hookDeleteValid($validator, $item)

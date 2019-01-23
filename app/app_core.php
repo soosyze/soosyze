@@ -23,7 +23,7 @@ class Core extends App
                 ]
             ],
             'template' => [
-                'class'     => 'Template\\TemplatingHtml',
+                'class'     => 'Template\\Services\\TemplatingHtml',
                 'arguments' => [
                     '@core',
                     '@config'

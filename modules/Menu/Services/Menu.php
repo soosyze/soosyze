@@ -63,12 +63,12 @@ class Menu
 
     public function hookMenu($request, &$response)
     {
-        if ($response instanceof \Template\TemplatingHtml) {
+        if ($response instanceof \Template\Services\TemplatingHtml) {
             $this->query
                 ->from('menu_link')
                 ->where('active', '==', 1)
                 ->orderBy('weight');
-            !$response->isThemeAdmin()
+            $response->isTheme('theme')
                     ? $this->query->where('menu', 'main-menu')
                     : $this->query->where('menu', 'admin-menu');
 

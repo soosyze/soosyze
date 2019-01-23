@@ -19,10 +19,8 @@ $app->setSettings([
     'modules'             => 'modules/',
     /* Chemin des modules contributeur. */
     'modules_contributed' => 'app/modules/',
-    /* Chemin des themes du core. */
-    'themes'              => 'themes/',
-    /* Chemin des theme contributeur. */
-    'themes_contributed'  => 'app/themes/'
+    /* Chemins des themes par odre de prioritée d'appel. */
+    'themes_path'         => ['app/themes', 'themes']
 ]);
 
 $app->init();

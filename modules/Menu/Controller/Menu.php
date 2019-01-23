@@ -65,7 +65,7 @@ class Menu extends \Soosyze\Controller
         $linkAdd = self::router()->getRoute('menu.link.add', [ ':item' => $name ]);
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></i> Menu'
                 ])

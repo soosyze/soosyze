@@ -20,7 +20,6 @@ class System extends \Soosyze\Controller
     public function maintenance()
     {
         return self::template()
-                ->setTheme(false)
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Site en maintenance'
                 ])
@@ -152,7 +151,7 @@ class System extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Configuration'
                 ])

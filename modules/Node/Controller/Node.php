@@ -36,7 +36,7 @@ class Node extends \Soosyze\Controller
         $linkAdd = self::router()->getRoute('node.add');
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
                 ])
@@ -58,7 +58,7 @@ class Node extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu'
                 ])
@@ -157,16 +157,14 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         }
 
-        $reponse = self::template()
-            ->setTheme()
-            ->view('page', [
-                'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $item
-            ])
-            ->render('page.content', 'page-node-add-item.php', VIEWS_NODE, [
-            'form' => $form
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $item
+                ])
+                ->render('page.content', 'page-node-add-item.php', VIEWS_NODE, [
+                    'form' => $form
         ]);
-
-        return $reponse;
     }
 
     public function store($item, $req)
@@ -261,20 +259,21 @@ class Node extends \Soosyze\Controller
         }
 
         $tpl = self::template()
-            ->setTheme(false)
-            ->view('page', [
-                'title_main' => $node[ 'title' ],
-            ])
-            ->render('page.content', 'node.php', VIEWS_NODE, [
-            'fields' => unserialize($node[ 'field' ])
-        ]);
+                ->view('page', [
+                    'title_main' => $node[ 'title' ],
+                ])
+                ->render('page.content', 'node.php', VIEWS_NODE, [
+                    'fields' => unserialize($node[ 'field' ])
+                ])->override('page.content', [ 'node-show-' . $item . '.php', 'node-show-' . $node['type'] ]);
 
-        if (!$node[ 'published' ] && !self::user()->isConnected()) {
-            return $this->get404($req);
-        } else {
-            $tpl->view('page', [
-                'messages' => [ 'info' => [ 'Ce contenu n\'est pas publié !' ] ]
-            ]);
+        if (!$node[ 'published' ]) {
+            if (!self::user()->isConnected()) {
+                return $this->get404($req);
+            } else {
+                $tpl->view('page.messages', [
+                    'infos' => [ 'Ce contenu n\'est pas publié !' ]
+                ]);
+            }
         }
 
         return $tpl;
@@ -381,11 +380,11 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
-        $reponse = self::template()
-            ->setTheme()
-            ->view('page', [
-                'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
-            ])
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
+                ])
             ->render(
             'page.content',
                 'page-node-add-item.php',

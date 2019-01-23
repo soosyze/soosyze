@@ -36,7 +36,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
@@ -69,7 +69,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
@@ -95,7 +95,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
@@ -124,7 +124,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
@@ -153,7 +153,7 @@ class NewsController extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])

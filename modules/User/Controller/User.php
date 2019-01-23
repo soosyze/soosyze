@@ -66,7 +66,6 @@ class User extends \Soosyze\Controller
         $url = self::router()->getRoute('user.relogin');
 
         return self::template()
-                ->setTheme(false)
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Connexion'
                 ])
@@ -147,7 +146,6 @@ class User extends \Soosyze\Controller
         $url = self::router()->getRoute('user.login');
 
         return self::template()
-                ->setTheme(false)
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Demander un nouveau mot de passe'
                 ])
@@ -253,7 +251,7 @@ copiant dans votre navigateur : $url";
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Voir le profil utilisateur'
                 ])
@@ -329,7 +327,7 @@ copiant dans votre navigateur : $url";
         }
 
         return self::template()
-                ->setTheme()
+                ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Édition de l\'utilisateur'
                 ])

@@ -81,7 +81,7 @@ class Contact extends \Soosyze\Controller
         }
 
         return self::template()
-                ->setTheme(false)
+                ->getTheme('theme')
                 ->view('page', [
                     'title_main' => 'Contact'
                 ])
