@@ -16,6 +16,7 @@
     },
     "require": {
         "php": ">=5.4",
+        "ircmaxell/password-compat": "1.0.*",
         "soosyze/framework": "1.2.*",
         "soosyze/queryflatfile": "1.1.*"
     },
@@ -29,7 +30,8 @@
         "classmap": [
             "modules/", 
             "app/modules/"
-        ]
+        ],
+        "files": ["vendor/ircmaxell/password-compat/lib/password.php"]
     },
     "config": {
         "optimize-autoloader": true,

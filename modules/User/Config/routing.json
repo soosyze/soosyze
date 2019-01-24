@@ -20,7 +20,7 @@
         "uses": "User@reloginCheck"
     },
     "user.reset": {
-        "methode": "POST",
+        "methode": "GET",
         "path": "user/:id/reset/:token",
         "uses": "User@resetUser",
         "with": {

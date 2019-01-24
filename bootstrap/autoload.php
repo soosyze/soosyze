@@ -7,7 +7,8 @@ $vendor   = $basePath . 'vendor/';
  * L'autoload de Soosyze charge les objets à la volée, sans map ni cache.
  * Utilisation conseilliez pour les environnements de dev ou pour déboguer.
  */
-require $vendor . 'soosyze/framework/src/Autoload.php';
+require_once $vendor . 'soosyze/framework/src/Autoload.php';
+require_once $vendor . 'ircmaxell/password-compat/lib/password.php';
 
 $autoload = new Soosyze\Autoload([
     'Soosyze'       => $vendor . 'soosyze/framework/src',

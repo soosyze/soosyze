@@ -5,9 +5,6 @@ namespace User\Services;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 
-define('BDD_USER', 'user');
-define('BDD_PERMISSIONS', 'permissions');
-
 class User
 {
     protected $query;
@@ -16,6 +13,14 @@ class User
 
     protected $core;
 
+    protected $grantedA = [];
+
+    protected $granted = [];
+
+    protected $permissions = [];
+
+    private $connect = false;
+
     public function __construct($query, $routing, $core)
     {
         $this->query   = $query;
@@ -23,52 +28,69 @@ class User
         $this->core    = $core;
     }
 
-    public function find($id)
+    public function find($id, $actived = true)
     {
         return $this->query
                 ->from('user')
                 ->where('user_id', '==', $id)
+                ->where('actived', $actived)
                 ->fetch();
     }
 
-    public function getUser($email)
+    public function getUser($email, $actived = true)
     {
         return $this->query
                 ->from('user')
                 ->where('email', $email)
+                ->where('actived', $actived)
                 ->fetch();
     }
 
     public function getPermission($key)
     {
-        return $this->query
-                ->from('permission')
-                ->where('permission_id', '==', $key)
-                ->fetch();
+        if (!empty($this->permissions)) {
+            return in_array($key, $this->permissions);
+        }
+
+        $this->permissions = $this->query
+            ->from('permission')
+            ->lists('permission_id');
+
+        return in_array($key, $this->permissions);
     }
 
     public function getGranted($user, $permission)
     {
-        return $this->query
-                ->from('user')
-                ->leftJoin('user_role', 'user_id', 'user_role.user_id')
-                ->leftJoin('role', 'role_id', 'role.role_id')
-                ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
-                ->leftJoin('permission', 'permission_id', 'permission.permission_id')
-                ->where('permission_id', $permission)
-                ->where('user_id', $user[ 'user_id' ])
-                ->fetch();
+        if (!empty($this->granted)) {
+            return in_array($permission, $this->granted);
+        }
+
+        $this->granted = $this->query
+            ->from('user')
+            ->leftJoin('user_role', 'user_id', 'user_role.user_id')
+            ->leftJoin('role', 'role_id', 'role.role_id')
+            ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
+            ->leftJoin('permission', 'permission_id', 'permission.permission_id')
+            ->where('user_id', $user[ 'user_id' ])
+            ->lists('permission_id');
+
+        return in_array($permission, $this->granted);
     }
 
     public function getGrantedAnonymous($permission)
     {
-        return $this->query
-                ->from('role')
-                ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
-                ->leftJoin('permission', 'permission_id', 'permission.permission_id')
-                ->where('permission_id', $permission)
-                ->where('role_name', 'user_anonyme')
-                ->fetch();
+        if (!empty($this->grantedA)) {
+            return in_array($permission, $this->grantedA);
+        }
+
+        $this->grantedA = $this->query
+            ->from('role')
+            ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
+            ->leftJoin('permission', 'permission_id', 'permission.permission_id')
+            ->where('role_name', 'user_anonyme')
+            ->lists('permission_id');
+
+        return in_array($permission, $this->grantedA);
     }
 
     /**
@@ -89,8 +111,8 @@ class User
         }
 
         if (($user = $this->getUser($login))) {
-            $passwordHash = hash('sha256', $password . $user[ 'salt' ]);
-            if ($passwordHash == $user[ 'password' ]) {
+            $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
+            if (password_verify($passwordHash, $user[ 'password' ])) {
                 $_SESSION[ 'token_user' ]     = $login;
                 $_SESSION[ 'token_password' ] = $passwordHash;
 
@@ -100,32 +122,22 @@ class User
 
         return false;
     }
-
-    /**
-     * Créer la session et les token d'identification.
-     *
-     * @param type $login
-     * @param type $password
-     *
-     * @return bool
-     */
-    public function relogin($login, $password)
+    
+    public function hash_verify($password, array $user)
     {
-        if (session_id() == '') {
-            session_start([
-                'cookie_httponly' => true,
-                'cookie_secure'   => true
-            ]);
-        }
-        $user = $this->getUser($login);
-        if ($user) {
-            $_SESSION[ 'token_user' ]     = $login;
-            $_SESSION[ 'token_password' ] = $password;
+        $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
 
-            return true;
-        }
+        return password_verify($passwordHash, $user[ 'password' ]);
+    }
 
-        return false;
+    public function hash($password)
+    {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function hashSession($password, $salt = '')
+    {
+        return hash('sha256', $password . $salt);
     }
 
     /**
@@ -139,9 +151,14 @@ class User
         if (!empty($_SESSION[ 'token_user' ]) && !empty($_SESSION[ 'token_password' ])) {
             $user = $this->getUser($_SESSION[ 'token_user' ]);
             if ($user) {
-                return $_SESSION[ 'token_password' ] == $user[ 'password' ]
+                if ($this->connect) {
+                    return $this->connect;
+                }
+                $this->connect = password_verify($_SESSION[ 'token_password' ], $user[ 'password' ])
                     ? $user
                     : false;
+
+                return $this->connect;
             }
         }
 
@@ -164,9 +181,9 @@ class User
         if (!$permission) {
             $grant = true;
         } elseif (($user = $this->isConnected())) {
-            $grant = (bool) $this->getGranted($user, $permission[ 'permission_id' ]);
+            $grant = (bool) $this->getGranted($user, $key);
         } else {
-            $grant = (bool) $this->getGrantedAnonymous($permission[ 'permission_id' ]);
+            $grant = (bool) $this->getGrantedAnonymous($key);
         }
 
         return $grant;

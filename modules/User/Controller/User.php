@@ -58,9 +58,11 @@ class User extends \Soosyze\Controller
             ->submit('sumbit', 'Validez', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addErrors($_SESSION[ 'errors' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
+            $form->setSuccess($_SESSION[ 'success' ]);
+            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
         $url = self::router()->getRoute('user.relogin');
@@ -135,12 +137,8 @@ class User extends \Soosyze\Controller
             ->submit('sumbit', 'Validez', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addErrors($_SESSION[ 'errors' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
         $url = self::router()->getRoute('user.login');
@@ -167,18 +165,13 @@ class User extends \Soosyze\Controller
             ->setInputs($post);
 
         if ($validator->isValid()) {
-            $query = self::query()
-                ->from('user')
-                ->where('email', $validator->getInput('email'))
-                ->fetch();
+            $query = self::user()->getUser($validator->getInput('email'));
 
             if ($query) {
                 $token = hash('sha256', $query[ 'email' ] . $query[ 'time_installed' ] . time());
 
-                $dataUser = [ 'forget_pass' => $token ];
-
                 self::query()
-                    ->update('user', $dataUser)
+                    ->update('user', [ 'forget_pass' => $token ])
                     ->where('email', $validator->getInput('email'))
                     ->execute();
 
@@ -229,16 +222,23 @@ copiant dans votre navigateur : $url";
 
     public function resetUser($id, $token, $req)
     {
-        if (!($query = self::user()->find($id))) {
+        if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
 
-        if ($query[ 'forget_pass' ] != $token) {
+        if ($user[ 'forget_pass' ] != $token) {
             return $this->get404($req);
         }
 
-        self::user()->relogin($query[ 'email' ], $query[ 'password' ]);
-
+        $time         = time();
+        $passwordHash = self::user()->hashSession($time, $user[ 'salt' ]);
+        $mdp          = self::user()->hash($passwordHash);
+        self::query()
+            ->update('user', [ 'password' => $mdp, 'forget_pass' => '' ])
+            ->where('user_id', '==', $id)
+            ->execute();
+        self::user()->login($user[ 'email' ], $time);
+        
         $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         return new Redirect($route);
@@ -284,6 +284,10 @@ copiant dans votre navigateur : $url";
                         'required'  => 1,
                         'value'     => $query[ 'email' ]
                     ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('user-edit-currentpassword-group', 'div', function ($form) {
+                    $form->label('user-edit-currentpassword-label', 'Mot de passe actuel')
+                    ->password('currentpassword', 'currentpassword', [ 'class' => 'form-control' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('user-edit-name-group', 'div', function ($form) use ($query) {
                     $form->label('user-edit-name-label', 'Nom')
@@ -338,7 +342,7 @@ copiant dans votre navigateur : $url";
 
     public function udpate($id, $req)
     {
-        if (!self::user()->find($id)) {
+        if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
 
@@ -356,36 +360,43 @@ copiant dans votre navigateur : $url";
             ])
             ->setInputs($post);
 
+        /* En cas de modification du email. */
+        if (($isUpdateEmail = $post[ 'email' ] !== $user[ 'email' ])) {
+            $password = $validator->getInput('currentpassword');
+            $verify   = self::user()->hash_verify($password, $user);
+            $validator->addInput('currentpassword', '');
+            if (!$verify) {
+                $validator->addRule('currentpassword', 'required');
+            }
+        }
+
         if ($validator->isValid()) {
             /* Prépare les donnée à mettre à jour. */
-            $dataUser = [
+            $value = [
                 'name'      => $validator->getInput('name'),
                 'firstname' => $validator->getInput('firstname'),
                 'email'     => $validator->getInput('email')
             ];
 
-            $isUpdateMdp = ($validator->getInput('newpassword') != '') && ($validator->getInput('newpassword') == $validator->getInput('confirmpassword'));
-            /* En cas de modification du mot de passe et confirmation. */
-            if ($isUpdateMdp) {
-                /* Je vais chercher l'utilisateur et hash le mot de passe. */
-                $user = self::user()->getUser($validator->getInput('email'));
-
-                $dataUser[ 'password' ] = hash('sha256', $validator->getInput('newpassword') . $user[ 0 ][ 'salt' ]);
+            /* En cas de modification du mot de passe. */
+            if (($isUpdateMdp = $validator->getInput('newpassword') != '')) {
+                $passwordHash        = self::user()->hashSession($validator->getInput('newpassword'), $user[ 'salt' ]);
+                $value[ 'password' ] = self::user()->hash($passwordHash);
             }
 
             self::query()
-                ->update('user', $dataUser)
-                ->where('user_id', 1)
+                ->update('user', $value)
+                ->where('user_id', '==', $id)
                 ->execute();
 
-            /* En cas de modification du mdp, je me reconnecte. */
-            if ($isUpdateMdp) {
-                self::user()->login($validator->getInput('email'), $validator->getInput('newpassword'));
+            if ($isUpdateEmail) {
+                $user = self::user()->find($id);
+                self::user()->login($user['email'], $password);
             }
-
-            $user                  = self::user()->getUser($validator->getInput('email'));
-            /* Modification du token_user à revoir. */
-            self::user()->relogin($validator->getInput('email'), $user[ 'password' ]);
+            if ($isUpdateMdp) {
+                $user = self::user()->find($id);
+                self::user()->login($user[ 'email' ], $validator->getInput('newpassword'));
+            }
             $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();

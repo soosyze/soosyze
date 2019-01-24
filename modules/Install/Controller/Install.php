@@ -214,7 +214,7 @@ class Install extends \Soosyze\Controller
             ])
             ->values([
                 'email'          => $data[ 'email' ],
-                'password'       => hash('sha256', $data[ 'password' ] . $salt),
+                'password'       => password_hash(hash('sha256', $data[ 'password' ] . $salt), PASSWORD_DEFAULT),
                 'salt'           => $salt,
                 'firstname'      => $data[ 'firstname' ],
                 'name'           => $data[ 'name' ],
