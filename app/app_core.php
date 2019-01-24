@@ -28,6 +28,9 @@ class Core extends App
                     '@core',
                     '@config'
                 ]
+            ],
+            'file' => [
+                'class'     => 'FileSystem\\Services\File'
             ]
         ];
     }

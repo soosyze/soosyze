@@ -1,0 +1,1 @@
+Tous fichiers publics téléchargés devront être déposés dans le répertoire app/files

@@ -15,6 +15,8 @@ $app->setSettings([
     'base_path'           => '',
     /* Chemin des fichiers */
     'files'               => 'app/files',
+    /* Chemin des fichiers public */
+    'files_public'        => 'app/files/public',
     /* Chemin des modules du core. */
     'modules'             => 'modules/',
     /* Chemin des modules contributeur. */
