@@ -235,6 +235,8 @@ class Install extends \Soosyze\Controller
         self::config()->set('settings.time_installed', time());
         self::config()->set('settings.local', 'fr_FR');
         self::config()->set('settings.theme', 'Bootstrap 3');
+        self::config()->set('settings.logo', '');
+
         $path = self::config()->getPath();
         chmod($path . 'database.json', 0444);
 

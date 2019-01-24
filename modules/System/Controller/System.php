@@ -70,6 +70,9 @@ class System extends \Soosyze\Controller
                         'required' => 1,
                         'selected' => $content[ 'theme' ]
                     ]);
+                ->group('system-logo-group', 'div', function ($form) use ($content) {
+                    $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
+                    self::file()->formFile('logo', $form, $content[ 'logo' ]);
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('system-path-fieldset', 'fieldset', function ($form) use ($content) {
@@ -129,12 +132,13 @@ class System extends \Soosyze\Controller
                         'value'       => $content[ 'keyboard' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('group-favicon', 'div', function ($form) use ($content) {
-                    $form->label('label-favicon', 'Favicon', [ 'class' => 'control-label' ])
-                    ->text('favicon', 'favicon', [
-                        'value'       => $content[ 'favicon' ],
-                        'class'       => 'form-control',
-                        'placeholder' => 'http://mon-site/icon.ico'
+                ->group('system-group-favicon', 'div', function ($form) use ($content) {
+                    $form->label('system-favicon-label', 'Favicon', [ 'class' => 'control-label' ]);
+                    self::file()->formFile('favicon', $form, $content[ 'favicon' ]);
+                    $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
+                        '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
+                    ])->html('system-favicon-info-ext', '<p:css:attr>:_content</p>', [
+                        '_content' => 'Les Extensions autorisées sont <b>png ico</b>.'
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -162,41 +166,88 @@ class System extends \Soosyze\Controller
 
     public function update($req)
     {
-        $post = $req->getParsedBody();
+        $post  = $req->getParsedBody();
+        $files = $req->getUploadedFiles();
 
         $validator = (new Validator())
             ->setRules([
                 'email'              => 'required|email|max:254|htmlsc',
                 'maintenance'        => '!required|bool',
                 'theme'              => 'required|inarray:' . implode(',', self::template()->getThemes()),
+                'theme_admin'        => 'required|inarray:' . implode(',', self::template()->getThemes()),
                 'path_index'         => 'required|string|htmlsc',
                 'path_access_denied' => '!required|string|htmlsc',
                 'path_no_found'      => '!required|string|htmlsc',
                 'title'              => 'required|string|max:64|htmlsc',
                 'description'        => 'required|string|max:256|htmlsc',
                 'keyboard'           => '!required|string|htmlsc',
-                'favicon'            => '!required|url|htmlsc',
+                'favicon'            => '!required|file_mimes:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100000',
+                'logo'               => '!required|image|max:2000000',
                 'token'              => 'required|token'
             ])
-            ->setInputs($post);
+            ->setInputs($post + $files);
+
+        $this->container->callHook('system.update.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $data = $validator->getInputs();
-            /* N'enregistre pas le token de sécurité dans la bdd */
-            unset($data[ 'token' ], $data[ 'submit' ]);
+            $data = [
+                'email'              => $validator->getInput('email'),
+                'maintenance'        => (bool) $validator->getInput('maintenance'),
+                'theme'              => $validator->getInput('theme'),
+                'theme_admin'        => $validator->getInput('theme_admin'),
+                'path_index'         => $validator->getInput('path_index'),
+                'path_access_denied' => $validator->getInput('path_access_denied'),
+                'path_no_found'      => $validator->getInput('path_no_found'),
+                'title'              => $validator->getInput('title'),
+                'description'        => $validator->getInput('description'),
+                'keyboard'           => $validator->getInput('keyboard'),
+            ];
 
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
+            $this->saveFile('favicon', $validator);
+            $this->saveFile('logo', $validator);
             $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
-            $_SESSION[ 'inputs' ]      = $validator->getInputs();
-            $_SESSION[ 'errors' ]      = $validator->getErrors();
+            $server = $req->getServerParams();
+            if (empty($post) && empty($files) && $server[ 'CONTENT_LENGTH' ] > 0) {
+                $_SESSION[ 'errors' ]      = [ 'La quantité totales des données reçues '
+                    . 'dépasse la valeur maximale autorisée par la directive post_max_size '
+                    . 'de votre fichier php.ini' ];
+                $_SESSION[ 'errors_keys' ] = [];
+            } else {
+                $_SESSION[ 'inputs' ]      = $validator->getInputsWithout('favicon', 'logo');
+                $_SESSION[ 'errors' ]      = $validator->getErrors();
                 $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+            }
         }
 
         $route = self::router()->getRoute('system.config.edit');
 
         return new Redirect($route);
+    }
+
+    private function saveFile($key, $validator)
+    {
+        if (!($validator->getInput($key) instanceof \Psr\Http\Message\UploadedFileInterface)) {
+            return;
+        }
+        if ($validator->getInput($key)->getError() === UPLOAD_ERR_OK) {
+            $path    = self::core()->getSetting('files_public', 'app/files');
+            $favicon = $validator->getInput($key)->getClientFilename();
+            $ext     = \Soosyze\Components\Util\Util::getFileExtension($favicon);
+
+            $move = $path . "/$key." . $ext;
+            $validator->getInput($key)->moveTo($move);
+            self::config()->set("settings.$key", $move);
+        } elseif ($validator->getInput($key)->getError() === UPLOAD_ERR_NO_FILE) {
+            $name    = $validator->getInput("file-name-$key");
+            $favicon = self::config()->get("settings.$key");
+            if (empty($name) && $favicon) {
+                self::config()->set("settings.$key", '');
+                unlink($favicon);
+            }
+        }
     }
 }
