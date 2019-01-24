@@ -1,6 +1,6 @@
 <?php
 
-namespace QueryBuilder;
+namespace QueryBuilder\Services;
 
 class Schema extends \Queryflatfile\Schema
 {

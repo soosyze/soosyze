@@ -10,14 +10,14 @@ class Core extends App
     {
         return [
             'schema'   => [
-                'class'     => 'QueryBuilder\\Schema',
+                'class'     => 'QueryBuilder\\Services\\Schema',
                 'arguments' => [
                     '#database.host',
                     '#database.schema'
                 ]
             ],
             'query'    => [
-                'class'     => 'QueryBuilder\\Query',
+                'class'     => 'QueryBuilder\\Services\\Query',
                 'arguments' => [
                     '@schema'
                 ]
