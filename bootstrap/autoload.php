@@ -22,7 +22,7 @@ $autoload->setPrefix([
     'Soosyze'                 => $vendor . 'soosyze/framework/src',
     'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http'
 ])->setMap([
-    $basePath . 'modules',
+    $basePath . 'core/modules',
     $basePath . 'app/modules'
 ]);
 

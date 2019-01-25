@@ -19,7 +19,7 @@
     </logging>
     <files>
         <directory>app/modules/*/Services</directory>
-        <directory>modules/*/Services</directory>
+        <directory>core/modules/*/Services</directory>
         <ignore>vendor/*</ignore>
         <ignore>tests/*</ignore>
     </files>

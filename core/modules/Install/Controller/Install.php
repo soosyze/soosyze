@@ -173,6 +173,7 @@ class Install extends \Soosyze\Controller
 
         /* Charge les services pour utiliser les hooks d'installation. */
         $this->loadContainer();
+        $pathModules = self::core()->getSetting('modules');
 
         foreach ($this->modules as $module) {
             $obj = $module . '\Install';
@@ -182,7 +183,7 @@ class Install extends \Soosyze\Controller
                 $obj->hookInstall($this->container);
             }
 
-            $config = Util::getJson('modules' . DS . $module . DS . 'config.json');
+            $config = Util::getJson($pathModules . $module . DS . 'config.json');
 
             foreach ($config as $conf) {
                 $this->container->get('module')->create($conf);
@@ -249,8 +250,9 @@ class Install extends \Soosyze\Controller
 
     private function loadContainer()
     {
+        $pathModules = self::core()->getSetting('modules');
         foreach ($this->modules as $module) {
-            $configs = Util::getJson('modules' . DS . $module . DS . 'config.json');
+            $configs = Util::getJson($pathModules . $module . DS . 'config.json');
 
             foreach ($configs as $config) {
                 foreach ($config[ 'controller' ] as $controller) {

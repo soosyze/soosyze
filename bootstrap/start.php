@@ -16,11 +16,11 @@ $app->setSettings([
     /* Chemin des fichiers public */
     'files_public'        => 'app/files/public',
     /* Chemin des modules du core. */
-    'modules'             => 'modules/',
+    'modules'             => 'core/modules/',
     /* Chemin des modules contributeur. */
     'modules_contributed' => 'app/modules/',
     /* Chemins des themes par odre de prioritée d'appel. */
-    'themes_path'         => ['app/themes', 'themes']
+    'themes_path'         => ['app/themes', 'core/themes']
 ]);
 
 $app->init();
