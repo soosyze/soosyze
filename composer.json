@@ -24,7 +24,8 @@
         "phpunit/phpunit": "5.*"
     },
     "suggest": {
-        "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP."
+        "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP.",
+        "phpdocumentor/phpdocumentor": "Pour générer la documentation des services."
     },
     "autoload": {
         "classmap": [
