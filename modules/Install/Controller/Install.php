@@ -135,8 +135,8 @@ class Install extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'email'            => 'required|email|htmlsc',
-                'name'             => '!required',
-                'firstname'        => '!required',
+                'name'             => '!required|htmlsc',
+                'firstname'        => '!required|htmlsc',
                 'password'         => 'required|string',
                 'password-confirm' => 'required|string|equal:@password'
             ])

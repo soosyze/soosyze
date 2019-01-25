@@ -77,13 +77,12 @@ class ModulesManager extends \Soosyze\Controller
     public function update($req)
     {
         $post = $req->getParsedBody();
-        unset($post[ 'submit' ]);
 
         $validator = (new Validator())
             ->addInput('token', $post[ 'token' ])
             ->addRule('token', 'token');
 
-        unset($post[ 'token' ]);
+        unset($post[ 'token' ], $post[ 'submit' ]);
         foreach ($post as $key => $value) {
             $validator->addRule($key, 'bool')
                 ->addInput($key, $value);

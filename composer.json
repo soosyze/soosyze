@@ -3,7 +3,7 @@
     "type": "cms",
     "homepage": "http://soosyze.com",
     "description": "Minimalist content management system without database.",
-    "keywords": ["cms", "php", "framework", "flat-file", "micro", "json", "website", "soosyze", "nosql", "responsive" ],
+    "keywords": ["cms", "php", "framework", "flat-file", "micro", "json", "website", "soosyze", "nosql", "responsive"],
     "authors": [
         {
             "name": "Mathieu NOËL",

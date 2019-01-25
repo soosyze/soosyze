@@ -61,7 +61,7 @@ class Install
     <li>Les titres doivent suivre une logique : titre 2 > titre 3 > titre 4</li>
     <li>Il est déconseillé de dépasser les 3 niveaux de titre au risque de perdre votre lecteur.</li>
     <li>N\'utiliser pas le gras ou l\'italique juste pour mettre rendre jolie votre article.</li>
-    <li>Comme pour les titre, le gras et l\'italique ont un impact pour le reférencement de votre site. 
+    <li>Comme pour les titre, le gras et l\'italique ont un impact pour le référencement de votre site. 
     Ces balises doivent être utilisées pour faire ressortir les informations importantes de votre contenu.
     </li>
     <li>Trop de mise en forme rends la lecture difficile.</li>

@@ -30,7 +30,7 @@ class Core extends App
                 ]
             ],
             'file' => [
-                'class'     => 'FileSystem\\Services\File'
+                'class'     => 'FileSystem\\Services\\File'
             ]
         ];
     }

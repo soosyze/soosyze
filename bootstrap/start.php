@@ -11,8 +11,6 @@ $app = \Core::getInstance($req);
 
 $app->setSettings([
     'config'              => 'app/config',
-    /* Chemin de la racine. */
-    'base_path'           => '',
     /* Chemin des fichiers */
     'files'               => 'app/files',
     /* Chemin des fichiers public */

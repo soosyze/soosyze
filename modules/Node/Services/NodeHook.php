@@ -16,7 +16,7 @@ class NodeHook
 
     /**
      * Si le module menu existe.
-     * 
+     *
      * @var bool
      */
     private $is_menu;

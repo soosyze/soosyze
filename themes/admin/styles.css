@@ -32,6 +32,7 @@ fieldset legend{
 }
 textarea{
     resize:vertical;
+    min-height: 34px;
 }
 .icon-notPublish{
     border: 1px solid #d14;
@@ -266,12 +267,7 @@ textarea{
     color: #FFF;
 }
 [type="checkbox"]:focus + label:before {
-    border: 1px dashed #777;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-    margin-top: -1px;
+    outline: none; 
 }
 [type=checkbox][disabled]:checked + label:before,
 [type=checkbox][disabled]:not(:checked) + label:before{

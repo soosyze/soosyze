@@ -7,7 +7,7 @@ define('CONFIG_NIEWS', MODULES_CORE . 'News' . DS . 'Config' . DS);
 
 class NewsController extends \Soosyze\Controller
 {
-    public static $limit = 4;
+    public static $limit = 10;
 
     public function __construct()
     {
@@ -42,8 +42,7 @@ class NewsController extends \Soosyze\Controller
                 ])
                 ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
                     'nodes'   => $nodes,
-                    'default' => $default,
-                    'router'  => self::router()
+                    'default' => $default
         ]);
     }
 
@@ -75,8 +74,7 @@ class NewsController extends \Soosyze\Controller
                 ])
                 ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
                     'nodes'   => $nodes,
-                    'default' => '',
-                    'router'  => self::router()
+                    'default' => ''
         ]);
     }
 
@@ -97,7 +95,7 @@ class NewsController extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => 'Articles'
+                    'title_main' => 'Articles de ' . $years
                 ])
                 ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
                     'nodes'   => $nodes,
@@ -126,7 +124,7 @@ class NewsController extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => 'Articles'
+                    'title_main' => 'Articles de ' . date('M Y', $dateCurrent)
                 ])
                 ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
                     'nodes'   => $nodes,
@@ -155,7 +153,7 @@ class NewsController extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => 'Articles'
+                    'title_main' => 'Articles du ' . date('d M Y', $dateCurrent)
                 ])
                 ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
                     'nodes'   => $nodes,
@@ -163,13 +161,19 @@ class NewsController extends \Soosyze\Controller
         ]);
     }
 
+    public function viewRss($req)
+    {
+        return $this->get404($req);
+    }
+
     protected function getNews($dateCurrent, $dateNext, $offset = 0)
     {
         return self::query()
                 ->from('node')
                 ->where('type', 'article')
-                ->bwetween('created', $dateCurrent, $dateNext)
+                ->between('created', $dateCurrent, $dateNext)
                 ->where('published', '==', 1)
+                ->orderBy('created', 'desc')
                 ->limit(self::$limit, $offset)
                 ->fetchAll();
     }

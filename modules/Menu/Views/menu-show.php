@@ -24,7 +24,7 @@
         </div>
         <div class="col-sm-12">
             <?php echo $form->form_open() ?>
-            <fieldset>
+            <fieldset class="table-responsive">
                 <legend><?php echo $menuName ?></legend>
                 <table class="table">
                     <thead class="div-thead">

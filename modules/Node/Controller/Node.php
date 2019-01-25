@@ -109,7 +109,7 @@ class Node extends \Soosyze\Controller
                 foreach ($query as $value) {
                     $key     = $value[ 'field_name' ];
                     $rules   = $value[ 'field_rules' ];
-                    $require = (new Validator())->addRule($key, $rules)->isRequire($key);
+                    $require = (new Validator())->addRule($key, $rules)->isRequired($key);
 
                     /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
                     $content[ $key ] = isset($content[ $key ])
