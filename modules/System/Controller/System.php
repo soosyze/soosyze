@@ -70,6 +70,15 @@ class System extends \Soosyze\Controller
                         'required' => 1,
                         'selected' => $content[ 'theme' ]
                     ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('system-theme_admin-group', 'div', function ($form) use ($content, $optionThemes) {
+                    $form->label('system-theme_admin-label', 'Theme d\'administration du site')
+                    ->select('theme_admin', 'theme_admin', $optionThemes, [
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'selected' => $content[ 'theme_admin' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
                 ->group('system-logo-group', 'div', function ($form) use ($content) {
                     $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
                     self::file()->formFile('logo', $form, $content[ 'logo' ]);
