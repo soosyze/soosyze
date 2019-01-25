@@ -20,6 +20,8 @@ class Contact extends \Soosyze\Controller
     public function contact()
     {
         $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];
+        
+        $this->container->callHook('contact.form.data', [ &$content ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
@@ -70,6 +72,8 @@ class Contact extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->token()
             ->submit('submit', 'Envoyer le message', [ 'class' => 'btn btn-success' ]);
+        
+        $this->container->callHook('contact.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
@@ -104,6 +108,8 @@ class Contact extends \Soosyze\Controller
                 'token'   => 'required|token'
             ])
             ->setInputs($post);
+        
+        $this->container->callHook('contact.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
             $inputs = $validator->getInputs();
@@ -116,12 +122,14 @@ class Contact extends \Soosyze\Controller
             if ($validator->getInput('copy')) {
                 $mail->addCc($inputs[ 'email' ]);
             }
-
+            
+            $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
             if ($mail->send()) {
                 $_SESSION[ 'success' ] = [ 'Votre message a bien été envoyé.' ];
             } else {
                 $_SESSION[ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
             }
+            $this->container->callHook('contact.after', [ &$validator ]);
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
             $_SESSION[ 'errors' ]      = $validator->getErrors();

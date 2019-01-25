@@ -18,6 +18,9 @@ class Link extends \Soosyze\Controller
     public function create($nameMenu)
     {
         $content = [ 'title_link' => '', 'link' => '', 'target_link' => '_self' ];
+        
+        $this->container->callHook('menu.link.create.form.data', [ &$content ]);
+        
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -59,6 +62,8 @@ class Link extends \Soosyze\Controller
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            
+        $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
@@ -96,9 +101,11 @@ class Link extends \Soosyze\Controller
             $post[ 'link' ],
             $req->withMethod('GET')
         );
+        
+        $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && $isUrlOrRoute) {
-            $link = [
+            $data = [
                 'title_link'  => $validator->getInput('title_link'),
                 'link'        => $validator->getInput('link'),
                 'target_link' => $validator->getInput('target_link'),
@@ -108,13 +115,15 @@ class Link extends \Soosyze\Controller
                 'active'      => true
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {
-                $link[ 'key' ] = $isUrlOrRoute;
+                $data[ 'key' ] = $isUrlOrRoute;
             }
 
+            $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
             self::query()
-                ->insertInto('menu_link', array_keys($link))
-                ->values($link)
+                ->insertInto('menu_link', array_keys($data))
+                ->values($data)
                 ->execute();
+            $this->container->callHook('menu.link.store.after', [ &$validator ]);
 
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
             $route                 = self::router()->getRoute('menu.show', [ ':item' => $nameMenu ]);
@@ -141,6 +150,8 @@ class Link extends \Soosyze\Controller
         if (!($query = self::menu()->find($id))) {
             return $this->get404($req);
         }
+        
+        $this->container->callHook('menu.link.edit.form.data', [ &$query ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $query = array_merge($query, $_SESSION[ 'inputs' ]);
@@ -184,6 +195,8 @@ class Link extends \Soosyze\Controller
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+        
+        $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
@@ -226,20 +239,24 @@ class Link extends \Soosyze\Controller
             $req->withMethod('GET')
         );
 
+        $this->container->callHook('menu.link.update.validator', [ &$validator ]);
+
         if ($validator->isValid() && $isUrlOrRoute) {
-            $link = [
+            $data = [
                 'title_link'  => $validator->getInput('title_link'),
                 'link'        => $validator->getInput('link'),
                 'target_link' => $validator->getInput('target_link')
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {
-                $link[ 'key' ] = $isUrlOrRoute[ 'key' ];
+                $data[ 'key' ] = $isUrlOrRoute[ 'key' ];
             }
 
+            $this->container->callHook('menu.link.update.before', [ &$validator, &$data ]);
             self::query()
-                ->update('menu_link', $link)
+                ->update('menu_link', $data)
                 ->where('id', '==', $id)
                 ->execute();
+            $this->container->callHook('menu.link.update.after', [ &$validator ]);
 
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
             $route                 = self::router()->getRoute('menu.show', [ ':item' => $nameMenu ]);
@@ -280,13 +297,14 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.delete.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
+            $this->container->callHook('menu.link.delete.before', [ $validator, $id ]);
             self::query()
                 ->from('menu_link')
                 ->delete()
                 ->where('id', '==', $id)
                 ->execute();
 
-            $this->container->callHook('menu.link.delete.valid', [ $validator, $id ]);
+            $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 
         $route = self::router()->getRoute('menu.show', [ ':item' => $name ]);

@@ -31,6 +31,8 @@ class System extends \Soosyze\Controller
     {
         $content = self::config()->get('settings');
 
+        $this->container->callHook('system.edit.form.data', [ &$content ]);
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -154,6 +156,8 @@ class System extends \Soosyze\Controller
             ->token()
             ->submit('submit', 'Enregistrer');
 
+        $this->container->callHook('system.edit.form', [ &$form, $content ]);
+
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
                 ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
@@ -212,11 +216,14 @@ class System extends \Soosyze\Controller
                 'keyboard'           => $validator->getInput('keyboard'),
             ];
 
+            $this->container->callHook('system.update.before', [ &$validator, &$data ]);
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
             $this->saveFile('favicon', $validator);
             $this->saveFile('logo', $validator);
+            $this->container->callHook('system.update.after', [ &$validator ]);
+
             $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
             $server = $req->getServerParams();

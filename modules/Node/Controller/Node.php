@@ -208,21 +208,20 @@ class Node extends \Soosyze\Controller
         if ($isValid && $isValidField) {
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
-                $validator->getInput('title'),
-                $item,
-                (string) time(),
-                (string) time(),
-                (bool) $validator->getInput('published'),
-                serialize($validatorField->getInputs())
+                'title'     => $validator->getInput('title'),
+                'type'      => $item,
+                'created'   => (string) time(),
+                'changed'   => (string) time(),
+                'published' => (bool) $validator->getInput('published'),
+                'field'     => serialize($validatorField->getInputs())
             ];
 
+            $this->container->callHook('todo.store.before', [ $validator, &$node ]);
             self::query()
-                ->insertInto('node', [ 'title', 'type', 'created', 'changed',
-                    'published', 'field' ])
+                ->insertInto('node', array_keys($node))
                 ->values($node)
                 ->execute();
-
-            $this->container->callHook('node.store.valid', [ $validator ]);
+            $this->container->callHook('node.store.after', [ $validator ]);
 
             $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
             $route                 = self::router()->getRoute('node.index');
@@ -432,16 +431,21 @@ class Node extends \Soosyze\Controller
         $isValidField = $validatorField->isValid();
 
         if ($isValid && $isValidField) {
+            $value = [
+                'title'     => $validator->getInput('title'),
+                'changed'   => (string) time(),
+                'published' => (bool) $validator->getInput('published'),
+                'field'     => serialize($validatorField->getInputs())
+            ];
+
+            $this->container->callHook('node.update.before', [ $validator, &$value,
+                $item ]);
             self::query()
-                ->update('node', [
-                    'title'     => $validator->getInput('title'),
-                    'changed'   => (string) time(),
-                    'published' => (bool) $validator->getInput('published'),
-                    'field'     => serialize($validatorField->getInputs())
-                ])
+                ->update('node', $value)
                 ->where('id', '==', $item)
                 ->execute();
-            $this->container->callHook('node.update.valid', [ $validator, $item ]);
+            $this->container->callHook('node.update.after', [ $validator, $item ]);
+
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
             $_SESSION[ 'inputs' ]      = array_merge(
@@ -483,13 +487,13 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.delete.validator', [ &$validator, $item ]);
 
         if ($validator->isValid()) {
+            $this->container->callHook('node.delete.before', [ $validator, $item ]);
             self::query()
                 ->from('node')
                 ->delete()
                 ->where('id', '==', $item)
                 ->execute();
-
-            $this->container->callHook('node.delete.valid', [ $validator, $item ]);
+            $this->container->callHook('node.delete.after', [ $validator, $item ]);
         }
 
         $route = self::router()->getRoute('node.index');

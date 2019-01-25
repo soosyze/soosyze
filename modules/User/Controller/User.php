@@ -266,6 +266,8 @@ copiant dans votre navigateur : $url";
             return $this->get404($req);
         }
 
+        $this->container->callHook('user.edit.form.data', [ &$query ]);
+
         if (isset($_SESSION[ 'inputs' ])) {
             $query = array_merge($query, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -321,6 +323,8 @@ copiant dans votre navigateur : $url";
             ->token()
             ->submit('sumbit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
+        $this->container->callHook('user.edit.form', [ &$form, $query ]);
+
         if (isset($_SESSION[ 'errors' ])) {
             $form->addErrors($_SESSION[ 'errors' ])
                 ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
@@ -370,6 +374,8 @@ copiant dans votre navigateur : $url";
             }
         }
 
+        $this->container->callHook('user.update.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             /* Prépare les donnée à mettre à jour. */
             $value = [
@@ -384,10 +390,13 @@ copiant dans votre navigateur : $url";
                 $value[ 'password' ] = self::user()->hash($passwordHash);
             }
 
+            $this->container->callHook('user.update.before', [ &$validator, &$value,
+                $id ]);
             self::query()
                 ->update('user', $value)
                 ->where('user_id', '==', $id)
                 ->execute();
+            $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
             if ($isUpdateEmail) {
                 $user = self::user()->find($id);

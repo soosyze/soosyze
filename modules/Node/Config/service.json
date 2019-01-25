@@ -24,7 +24,7 @@
             "node.update.validator": "hookStoreValidator",
             "node.update.after": "hookUpdateValid",
             "node.delete.after": "hookDeleteValid",
-            "menu.link.delete.valid": "hookLinkDeleteValid"
+            "menu.link.delete.after": "hookLinkDeleteValid"
         }
     }
 }
