@@ -40,20 +40,23 @@ class System
         }
     }
 
-    public function hooks404($request, &$reponse)
+    public function hooks404($request, &$response)
     {
         if (($path = $this->config->get('settings.path_no_found')) != '') {
-            $request = $request->withUri(
+            $requestNoFound = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
-            $route   = $this->route->parse($request);
+            if (($route          = $this->route->parse($requestNoFound))) {
+                $responseNoFound = $this->route->execute($route, $requestNoFound);
+            }
         }
 
         /*
-         * Si il n'y a aucune route, une réponse sera construite à partir d'une template,
-         * sinon l'execution de la route sera la page 404.
+         * Si il n'y a aucune réponse ou que la réponse est déjà une page 404,
+         * une réponse sera construite à partir d'une template,
+         * sinon renvoie la réponse 404 de base.
          */
-        $reponse = $route
+        $response = empty($responseNoFound) || $responseNoFound->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
                     'title_main' => 'Page Not Found'
@@ -61,23 +64,25 @@ class System
                 ->render('page.content', 'page-404.php', VIEWS_SYSTEM, [
                     'uri' => $request->getUri()
                 ])
-            : $this->route->execute($route, $request);
+            : $responseNoFound;
 
-        if (!$reponse instanceof \Soosyze\Components\Http\Redirect) {
-            $reponse = $reponse->withStatus(404);
+        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+            $response = $response->withStatus(404);
         }
     }
 
-    public function hooks403($request, &$reponse)
+    public function hooks403($request, &$response)
     {
         if (($path = $this->config->get('settings.path_access_denied')) != '') {
-            $request = $request->withUri(
+            $requestDenied = $request->withUri(
                 $request->getUri()->withQuery($path)
             );
-            $route   = $this->route->parse($request);
+            if (($route         = $this->route->parse($requestDenied))) {
+                $responseDenied = $this->route->execute($route, $requestDenied);
+            }
         }
 
-        $reponse = $route
+        $response = empty($responseDenied) || $responseDenied->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
                     'title_main' => 'Page Forbidden'
@@ -85,10 +90,10 @@ class System
                 ->render('page.content', 'page-403.php', VIEWS_SYSTEM, [
                     'uri' => $request->getUri()
                 ])
-            : $this->route->execute($route, $request);
+            : $responseDenied;
 
-        if (!$reponse instanceof \Soosyze\Components\Http\Redirect) {
-            $reponse = $reponse->withStatus(403);
+        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+            $response = $response->withStatus(403);
         }
     }
 
