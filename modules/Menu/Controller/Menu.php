@@ -30,10 +30,6 @@ class Menu extends \Soosyze\Controller
             ->orderBy('weight')
             ->fetchAll();
 
-        for ($i = 1; $i <= 50; ++$i) {
-            $weight[] = [ 'value' => $i, 'label' => $i ];
-        }
-
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
         foreach ($query as $key => $link) {
@@ -44,9 +40,11 @@ class Menu extends \Soosyze\Controller
 
             $nameLinkWeight = 'weight-' . $link[ 'id' ];
             $nameLinkActive = 'active-' . $link[ 'id' ];
-            $form->select($nameLinkWeight, $nameLinkWeight, $weight, [
-                    'class'    => 'form-control',
-                    'selected' => $link[ 'weight' ]
+            $form->number($nameLinkWeight, $nameLinkWeight, [
+                    'class' => 'form-control',
+                    'max'   => 50,
+                    'min'   => 1,
+                    'value' => $link[ 'weight' ]
                 ])
                 ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ] ]);
         }

@@ -52,8 +52,8 @@
                                             <label for="active-<?php echo $link[ 'id' ] ?>"><span class="ui"></span>&nbsp;</label>
                                         </div>
                                     </td>
-                                    <td>
-                                        <?php echo $form->form_select('weight-' . $link[ 'id' ]) ?>
+                                    <td style="min-width:80px">
+                                        <?php echo $form->form_input('weight-' . $link[ 'id' ]) ?>
                                     </td>	
                                     <td>
                                         <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ] ?>">
