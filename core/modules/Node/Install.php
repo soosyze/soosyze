@@ -66,7 +66,26 @@ class Install
             ])
             ->values([ 'Accueil', 'page', (string) time(), (string) time(), true,
                 serialize([
-                    'body' => 'Bienvenue sur votre site <a href="?user/login">Connexion utilisateur</a>',
+                    'body' => '<p>Bienvenue sur votre site <a href="?user/login">Connexion utilisateur</a></p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam suscipit orci a purus accumsan posuere. 
+Nulla gravida risus quis elementum semper. Phasellus id molestie nulla, non viverra diam. Quisque non varius metus. 
+In pretium dui id lectus iaculis tempus. Donec ut vestibulum neque. Praesent sed viverra ante, non maximus urna. 
+Integer sed arcu semper, dictum elit in, hendrerit nisl. Aliquam tempus nibh diam, sed laoreet nulla fermentum nec.</p>
+<h3>Suspendisse auctor ullamcorper molestie.</h3>
+<p>Pellentesque turpis nisi, tempus eget facilisis a, imperdiet quis lorem. 
+Nunc semper libero libero, nec porttitor tellus ultrices ut. 
+Sed tristique facilisis turpis, vitae fringilla dolor suscipit non. 
+Cras vitae magna mauris. Quisque malesuada fermentum lectus, ac consectetur diam scelerisque quis. 
+Sed vitae finibus turpis.</p>
+<h3>Morbi eu viverra turpis. </h3>
+<p>Ut nunc odio, pulvinar id placerat eu, varius a diam. In nec nunc eu orci aliquam sodales. 
+Sed auctor consequat sem in rhoncus. Morbi quis lorem non elit aliquam laoreet. 
+Donec gravida turpis sit amet libero aliquam, eu luctus odio feugiat. 
+Nam id mi scelerisque ligula placerat sollicitudin a in lectus. 
+Sed vulputate augue eget risus pharetra porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Suspendisse maximus orci at consequat dictum. Vivamus dictum tellus ut elementum vehicula. 
+Suspendisse vitae diam ac lacus convallis varius. 
+Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</p>',
                 ])
             ])
             ->values([ 'Page', 'page', (string) time(), (string) time(), true,
