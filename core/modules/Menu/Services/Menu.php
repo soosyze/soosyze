@@ -86,9 +86,9 @@ class Menu
             $response->render('page.main_menu', 'menu.php', VIEWS_MENU, [
                     'menu' => $query_menu
                 ])
-                ->render('page.second_menu', 'menu-second.php', VIEWS_MENU, [
+                ->render('page.second_menu', 'menu.php', VIEWS_MENU, [
                     'menu' => $query_menu_second
-            ]);
+            ])->override('page.second_menu', [ 'menu-second.php' ]);
         }
     }
 
