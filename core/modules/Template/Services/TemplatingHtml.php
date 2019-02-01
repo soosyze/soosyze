@@ -65,6 +65,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
         $page = $this->themeOverride('page.php', TPL_PATH)
             ->addVars([
+                'title'      => '',
                 'title_main' => '',
                 'logo'       => ''
             ])

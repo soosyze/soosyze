@@ -113,7 +113,8 @@ class System
                 'keyboard'    => $meta[ 'keyboard' ],
                 'favicon'     => $meta[ 'favicon' ]
             ])->view('page', [
-                'logo' => $meta[ 'logo' ]
+                'title' => $meta[ 'title' ],
+                'logo'  => $meta[ 'logo' ]
             ]);
         }
     }
