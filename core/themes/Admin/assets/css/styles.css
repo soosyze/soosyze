@@ -232,7 +232,6 @@ textarea{
     top: 2px; 
     left: 5px;
 }
-
 /* on checked */
 [type="checkbox"]:checked + label:before {
     background:#5CD85C;
@@ -269,8 +268,8 @@ textarea{
 [type="checkbox"]:focus + label:before {
     outline: none; 
 }
-[type=checkbox][disabled]:checked + label:before,
-[type=checkbox][disabled]:not(:checked) + label:before{
+[type="checkbox"][disabled]:checked + label:before,
+[type="checkbox"][disabled]:not(:checked) + label:before{
     background:#666; 
 }
 .btn-action{
@@ -285,4 +284,10 @@ textarea{
     display: none;
     position: fixed;
     right: 25px;
+}
+.module-is_required{
+    color: #D9534F;
+}
+.module-is_required_for_module{
+    color:#5CD85C
 }

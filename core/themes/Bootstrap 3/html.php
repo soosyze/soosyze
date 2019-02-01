@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title><?php echo $title ?></title>
         <link rel="shortcut icon" type="image/png" href="<?php echo $favicon; ?>"/>
         <meta name="description" content="<?php echo $description ?>"/>
@@ -50,10 +51,10 @@
         <?php endif; ?>
         <!-- To top -->
         <div id="btn_up">
-            <img style="opacity: 0.50;" src="<?php echo $base_theme; ?>/files/arrow.png" alt="" width="40"/>
+            <img style="opacity: 0.50;" src="<?php echo $base_theme; ?>assets/files/arrow.png" alt="" width="40"/>
         </div>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="<?php echo $base_theme; ?>/script.js"></script>
+        <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
         <?php echo $scripts ?>
     </body>
 </html>
