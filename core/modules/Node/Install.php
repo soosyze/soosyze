@@ -208,7 +208,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
 
             $container->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
                 ->values([ 2, 3 ])
-                ->values([ 3, 10 ])
+                ->values([ 3, 11 ])
                 ->execute();
         }
     }
