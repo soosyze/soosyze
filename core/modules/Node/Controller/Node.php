@@ -174,6 +174,7 @@ class Node extends \Soosyze\Controller
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
             ->leftJoin('field', 'field_id', 'field.field_id')
             ->where('node_type', $item)
+            ->orderBy('field_weight')
             ->fetchAll();
 
         if (!$query) {
@@ -405,6 +406,7 @@ class Node extends \Soosyze\Controller
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
             ->leftJoin('field', 'field_id', 'field.field_id')
             ->where('node_type', $node[ 'type' ])
+            ->orderBy('field_weight')
             ->fetchAll();
 
         /* Test les champs par defauts de la node. */
