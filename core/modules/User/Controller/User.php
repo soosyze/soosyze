@@ -17,6 +17,17 @@ class User extends \Soosyze\Controller
         $this->pathServices = CONFIG_USER . 'service.json';
         $this->pathRoutes   = CONFIG_USER . 'routing.json';
     }
+    
+    public function account()
+    {
+        if (($user = self::user()->isConnected())) {
+            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
+        } else {
+            $route = self::router()->getRoute('user.login');
+        }
+        
+        return new Redirect($route);
+    }
 
     public function login()
     {

@@ -84,11 +84,19 @@ class Install
                     -1
                 ])
                 ->values([
+                    'user.account',
+                    'Mon compte',
+                    'user',
+                    'user-menu',
+                    1,
+                    -1
+                ])
+                ->values([
                     'user.login',
                     'Connexion',
                     'user/login',
                     'user-menu',
-                    1,
+                    2,
                     -1
                 ])
                 ->values([
@@ -96,7 +104,7 @@ class Install
                     '<span class="glyphicon glyphicon-off" aria-hidden="true"></span> Déconnexion',
                     'user/logout',
                     'user-menu',
-                    2,
+                    3,
                     -1
                 ])
                 ->execute();

@@ -33,6 +33,14 @@
         "path": "user/logout",
         "uses": "User@logout"
     },
+    "user.account": {
+        "methode": "GET",
+        "path": "user",
+        "uses": "User@account",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
     "user.show": {
         "methode": "GET",
         "path": "user/:id",
