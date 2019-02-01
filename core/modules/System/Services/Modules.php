@@ -4,11 +4,6 @@ namespace System\Services;
 
 use Soosyze\Components\Util\Util;
 
-/* Folder Module CMS */
-define('DEFAULT_MODULES_PATH', 'app' . DS . 'modules');
-/* Folder Module Core */
-define('ADMIN_MODULES_PATH', 'modules');
-
 class Modules
 {
     protected $query;
@@ -154,17 +149,17 @@ class Modules
         return array_merge($this->getModules(), $this->getModulesCore());
     }
 
-    public function getModules($dir = DEFAULT_MODULES_PATH)
+    public function getModules($dir = MODULES_CONTRIBUED)
     {
         return Util::getFolder($dir);
     }
 
     public function getModulesCore()
     {
-        return $this->getModules(ADMIN_MODULES_PATH);
+        return $this->getModules(MODULES_CORE);
     }
 
-    public function getConfigModule($dir = DEFAULT_MODULES_PATH)
+    public function getConfigModule($dir = MODULES_CONTRIBUED)
     {
         $config  = [];
         $modules = $this->getModules($dir);
@@ -182,7 +177,7 @@ class Modules
 
     public function getConfigModuleCore()
     {
-        return $this->getConfigModule(ADMIN_MODULES_PATH);
+        return $this->getConfigModule(MODULES_CORE);
     }
 
     public function getConfigAll()
