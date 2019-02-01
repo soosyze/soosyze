@@ -15,11 +15,11 @@
     <h1><?php echo $title_main; ?></h1>
     <div class="souligne" ></div>
 </header>
-<div class="main-wrapper">
-    <div class="main-content">
+<div class="container">
+    <div class="main-wrapper">
         <?php echo $block[ 'messages' ] ?>
         <?php echo $block[ 'content' ] ?>
-    </div> <!-- /.main-content -->
+    </div>
 </div>
 <div class="container">
     <div class="row">
