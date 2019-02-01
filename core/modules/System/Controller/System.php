@@ -84,6 +84,9 @@ class System extends \Soosyze\Controller
                 ->group('system-logo-group', 'div', function ($form) use ($content) {
                     $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
                     self::file()->formFile('logo', $form, $content[ 'logo' ]);
+                    $form->html('system-logo-info-size', '<p:css:attr>:_content</p>', [
+                        '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
+                    ]);
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('system-path-fieldset', 'fieldset', function ($form) use ($content) {
@@ -147,9 +150,9 @@ class System extends \Soosyze\Controller
                     $form->label('system-favicon-label', 'Favicon', [ 'class' => 'control-label' ]);
                     self::file()->formFile('favicon', $form, $content[ 'favicon' ]);
                     $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
-                        '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
-                    ])->html('system-favicon-info-ext', '<p:css:attr>:_content</p>', [
-                        '_content' => 'Les Extensions autorisées sont <b>png ico</b>.'
+                        '_content' => 'Le fichier doit peser moins de <b>100 Ko</b>.'
+                    ])->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                        '_content' => 'La largeur et hauteur min et max : <b>16px et 310px</b>.'
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -194,7 +197,7 @@ class System extends \Soosyze\Controller
                 'title'              => 'required|string|max:64|htmlsc',
                 'description'        => 'required|string|max:256|htmlsc',
                 'keyboard'           => '!required|string|htmlsc',
-                'favicon'            => '!required|file_mimes:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100000',
+                'favicon'            => '!required|image|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100000',
                 'logo'               => '!required|image|max:2000000',
                 'token'              => 'required|token'
             ])
