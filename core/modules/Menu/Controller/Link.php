@@ -115,7 +115,7 @@ class Link extends \Soosyze\Controller
                 'active'      => true
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {
-                $data[ 'key' ] = $isUrlOrRoute;
+                $data[ 'key' ] = $isUrlOrRoute['key'];
             }
 
             $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
