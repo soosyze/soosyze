@@ -37,7 +37,10 @@ class Menu extends \Soosyze\Controller
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
             $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-
+            if ($query[ $key ][ 'key' ]) {
+                $link_tmp                = $req->withUri($req->getUri()->withQuery($query[ $key ][ 'link' ]));
+                $query[ $key ][ 'link' ] = $link_tmp->getUri()->__toString();
+            }
             $nameLinkWeight = 'weight-' . $link[ 'id' ];
             $nameLinkActive = 'active-' . $link[ 'id' ];
             $form->number($nameLinkWeight, $nameLinkWeight, [

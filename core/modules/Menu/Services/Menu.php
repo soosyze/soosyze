@@ -107,7 +107,7 @@ class Menu
             : '/';
 
         foreach ($query as $key => $menu) {
-            if (filter_var($menu[ 'link' ], FILTER_VALIDATE_URL)) {
+            if (!$menu[ 'key' ]) {
                 $query[ $key ][ 'link_active' ] = '';
 
                 continue;
