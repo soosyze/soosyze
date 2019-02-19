@@ -5,7 +5,9 @@
         <meta content="IE=edge" http-equiv="X-UA-Compatible">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title><?php echo $title ?></title>
+        <?php if ($favicon): ?>
         <link rel="shortcut icon" type="image/png" href="<?php echo $favicon; ?>"/>
+        <?php endif; ?>
         <meta name="description" content="<?php echo $description ?>"/>
         <meta name="keywords" content="<?php echo $keyboard ?>"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">

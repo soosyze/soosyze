@@ -366,7 +366,7 @@ a.btn:hover,
     height: auto;
     line-height: 1.4;
     max-height: 150px;
-    max-width: 100%;
+    max-width: auto;
     padding: 4px;
 }
 /* NODE */

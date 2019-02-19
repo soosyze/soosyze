@@ -1,5 +1,5 @@
 <header id="wrapper_header_page">
-    <?php if( $logo ): ?>
+    <?php if ($logo): ?>
         <a href="<?php echo $base_path; ?>">
             <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
         </a>
