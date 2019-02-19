@@ -7,12 +7,14 @@
     "authors": [
         {
             "name": "Mathieu NOËL",
-            "email": "noel-mathieu@soosyze.com",
+            "email": "mathieu@soosyze.com",
             "homepage": "http://mathieu-noel.fr"
         }
     ],
     "support": {
-        "email": "mathieu@soosyze.com"
+        "email": "mathieu@soosyze.com",
+        "issues": "https://github.com/soosyze/soosyze/issues",
+        "source": "https://github.com/soosyze/soosyze"
     },
     "require": {
         "php": ">=5.4",

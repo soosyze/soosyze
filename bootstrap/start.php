@@ -3,6 +3,11 @@
 /* Démarrage de la session. */
 session_start();
 
+/* Définit par défaut la timezone. */
+if (!ini_get('date.timezone')) {
+    date_default_timezone_set('UTC');
+}
+
 require_once $basePath . 'app/app_core.php';
 
 $req = Soosyze\Components\Http\ServerRequest::create();

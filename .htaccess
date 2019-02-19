@@ -383,13 +383,15 @@ AddDefaultCharset utf-8
 # include: configuration files, files that contain metadata about the
 # project (e.g.: project dependencies), build scripts, etc..
 
-<FilesMatch "\.(po|sh|.*sql|twig|tpl(\.php)?|xtmpl|yml)|(composer\.(json|lock))$|(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|~)$">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-        Order allow,deny
-    </IfModule>
+<FilesMatch "(^#.*#|^composer\.(json|lock)$|\.(bak|conf|dist|fla|in[ci]|json|log|orig|po|psd|sh|sql|sw[op]|tpl|twig|xml|yml)|~)$">
+# Apache >= 2.4    
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+# Apache < 2.4
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+  </IfModule>
 </FilesMatch>
 
 # ----------------------------------------------------------------------

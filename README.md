@@ -6,15 +6,17 @@
 
 # À propos de Soosyze CMS
 
-Soosyze CMS est un micro système de gestion de contenu sans base de données. Il permet de créer et gérer votre site web facilement avec peu ou aucune connaissance technique. Basé sur un micro-framework PHP et une bibliothèque noSQL pour assurer sa stabilité et son évolution.
-* [Voir le site](https://soosyze.com/)
+SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il permet de créer et gérer votre site web facilement avec peu ou aucune connaissance technique. Il est basé sur un micro framework MVC en PHP orienté objet et une bibliothèque noSQL pour assurer sa stabilité et son évolution.
+* [Site](https://soosyze.com/)
+* [Demo](https://demo.soosyze.com)
+* [Docuementations](https://github.com/soosyze/documentations)
 
 # Sommaire
 
-* [Captures d'écrans](/README.md#captures-décrans)
-* [Exigences d'installation](/README.md#exigences-dinstallation)
-* [Installation](/README.md#installation)
-* [License](/README.md#license)
+* [Captures d'écrans](#captures-décrans)
+* [Exigences d'installation](#exigences-dinstallation)
+* [Installation](#installation)
+* [License](#license)
 
 # Captures d'écrans
 
@@ -30,14 +32,19 @@ Soosyze CMS est un micro système de gestion de contenu sans base de données. I
 | 5.4 / 5.5 / 5.6            | ✓ Supporté     |
 | 7.0 / 7.1 / 7.2 / 7.3      | ✓ Supporté     |
 
-En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mémoire et le temps d'exécution de 30% à 45%. Votre site en sera plus rapide.
+En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mémoire et le temps d'exécution de 30% à 45%. Votre site en sera plus rapide et mieux référencé.
 
 ## Extensions requises
 
+* `date` pour le format des dates,
+* `fileinfo` pour la validation de fichier,
+* `filter` pour valider vos données,
+* `gd` pour la maniplation d'image,
 * `json` pour l'enregistrement des données et des configurations,
-* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre,
 * `mbstring` pour vos emails,
-* `hash` pour crypter votre mot de passe.
+* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre.
+
+Ces extensions sont généralement actives par défaut. Mais si l'une venait à manquer un message d'erreur viendrait vous en informer.
 
 ## Mémoire requise
 
@@ -59,25 +66,32 @@ Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexio
 
 # Installation
 
-## Téléchargement rapide
+### Téléchargement rapide
 
-Télécharger et décompresser l'archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4/soosyze.zip ) dans le répertoire qui hébergera votre site.
+Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l'archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4/soosyze.zip) dans le répertoire qui hébergera votre site.
 
-## Téléchargement via Git & Composer
+### Téléchargement via Git & Composer
 
-Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.
+Pour installer la version de développement de SoosyzeCMS il est primordial d’avoir :
+* Un serveur http (en ligne ou en local) comme [Apache](http://httpd.apache.org/download.cgi) ou [Ngnix](https://nginx.org/en/download.html)
+* L'outil de versionning Git pour :
+  * [Windows](https://gitforwindows.org/),
+  * [Mac](http://sourceforge.net/projects/git-osx-installer/)
+  * Debian, Ubuntu et autres dérivées `sudo apt install git`,
+  * Red Hat, Fedora, CentOS et autres dérivées `sudo yum install git`,
+* L’installateur ou le fichier binaire [Composer](https://getcomposer.org/download/),
+* Et la commande `php` dans vos variables d’environnement.
+
+Rendez-vous dans le répertoire de votre serveur, ouvrer une invite de commandes et lancer les commandes suivantes :
+(*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
 
 Cloner le repo avec Git sur votre serveur,
 ```sh
 git clone https://github.com/soosyze/soosyze.git [my-directory]
-```
-
-Placer vous dans le répértoire de votre projet,
-```sh
 cd [my-directory]
 ```
 
-Installer les dépendances avec [Composer](https://getcomposer.org/) (assurez-vous que l'exécutable php.exe est dans votre PATH),
+Installer les dépendances avec Composer (assurez-vous que l'exécutable php.exe est dans votre PATH),
 ```sh
 composer install --no-dev
 ```
@@ -87,11 +101,20 @@ Ou, si vous utilisez le fichier PHAR,
 php composer.phar install --no-dev
 ```
 
-## Installation du CMS
+Pour suivre les tutoriels, je vous invite à installer le CMS à la racine de votre serveur local et à conserver le répertoire par défaut `soosyze`.
 
-Ouvrer votre navigateur web et rendez-vous sur l'URL de votre site,
-Renseigniez votre email, nom, prénom et mot de passe dans le formulaire d'installation et cliquez sur **Installer**,
-Ne reste plus qu'à vous connecter et gérer votre site.
+### Installation du CMS
+
+Maintenant que les fichiers sources sont au bon endroit, ouvrez un navigateur web (Firefox, Chrome, Opéra, Safarie, Edge…) et dans la barre d’adresse, entrer la valeur suivante :
+
+*   en local, [127.0.0.1/soosyze](http://127.0.0.1/soosyze),
+*   en ligne, votre nom de domaine.
+
+La page suivante se présentera à vous, remplissez tous les champs et cliquez sur **Installer**.
+
+![Screenshot de la page d’instalaltion de SoosyzeCMS](https://soosyze.com/assets/files/screen/install-desktop.png)
+
+Et voilà, le CMS est installé.
 
 # License
 
