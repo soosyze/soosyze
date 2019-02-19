@@ -26,7 +26,7 @@ class Link extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('menu.link.store', [ ':item' => $nameMenu ]);
+        $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($content) {
