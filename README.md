@@ -2,7 +2,7 @@
 
 [![GitHub](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
-[![Download Soosyze CMS](https://img.shields.io/badge/download-1.0.0--alpha4-blue.svg)](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4/soosyze.zip "Download Soosyze CMS")
+[![Download Soosyze CMS](https://img.shields.io/badge/download-1.0.0--alpha4.1-blue.svg)](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4.1/soosyze.zip "Download Soosyze CMS")
 
 # À propos de Soosyze CMS
 
@@ -79,7 +79,7 @@ Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexio
 
 ### Téléchargement rapide
 
-Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l'archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4/soosyze.zip) dans le répertoire qui hébergera votre site.
+Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4.1/soosyze.zip) dans le répertoire qui hébergera votre site.
 
 ### Téléchargement via Git & Composer
 
