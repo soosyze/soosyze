@@ -140,7 +140,7 @@ class Link extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ][]          = 'link';
         }
 
-        $route = self::router()->getRoute('menu.link.add', [ ':item' => $nameMenu ]);
+        $route = self::router()->getRoute('menu.link.create', [ ':menu' => $nameMenu ]);
 
         return new Redirect($route);
     }

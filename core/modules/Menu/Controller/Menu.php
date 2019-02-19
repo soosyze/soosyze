@@ -60,7 +60,7 @@ class Menu extends \Soosyze\Controller
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
-        $linkAdd = self::router()->getRoute('menu.link.add', [ ':item' => $name ]);
+        $linkAdd = self::router()->getRoute('menu.link.create', [ ':menu' => $name ]);
 
         return self::template()
                 ->getTheme('theme_admin')

@@ -15,20 +15,20 @@
             ":item": "[a-z-]+"
         }
     },
-    "menu.link.add": {
+    "menu.link.create": {
         "methode": "GET",
-        "path": "menu/:item/link/add",
+        "path": "menu/:menu/link",
         "uses": "Link@create",
         "with": {
-            ":item": "[a-z-]+"
+            ":menu": "[a-z-]+"
         }
     },
     "menu.link.store": {
         "methode": "POST",
-        "path": "menu/:item/link/add",
+        "path": "menu/:menu/link",
         "uses": "Link@store",
         "with": {
-            ":item": "[a-z-]+"
+            ":menu": "[a-z-]+"
         }
     },
     "menu.link.edit": {
@@ -36,8 +36,8 @@
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@edit",
         "with": {
-            ":item": "\\d+",
-            ":menu": "[a-z-]+"
+            ":menu": "[a-z-]+",
+            ":item": "\\d+"
         }
     },
     "menu.link.update": {
@@ -45,8 +45,8 @@
         "path": "menu/:menu/link/:item/edit",
         "uses": "Link@update",
         "with": {
-            ":item": "\\d+",
-            ":menu": "[a-z-]+"
+            ":menu": "[a-z-]+",
+            ":item": "\\d+"
         }
     },
     "menu.link.delete": {
