@@ -16,6 +16,7 @@ SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il
 * [Captures d'écrans](#captures-décrans)
 * [Exigences d'installation](#exigences-dinstallation)
 * [Installation](#installation)
+* [Configuration](#configuration)
 * [License](#license)
 
 # Captures d'écrans
@@ -23,6 +24,16 @@ SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il
 ![GitHub](https://soosyze.com/assets/files/screen/devices-accueil.png)
 
 # Exigences d'installation
+
+## Serveur Web
+
+| Serveur Web                | Soosyze 1.x    |
+|----------------------------|----------------|
+| Apache HTTP Server 2.2+    | ✓ Supporté     |
+| Ngnix 1.8.0+               | ✓ Supporté*    |
+| IIS                        | Need test      |
+
+*Pour Ngnix voir la [recommandation d'intallation](#ngnix)
 
 ## Version PHP
 
@@ -115,6 +126,16 @@ La page suivante se présentera à vous, remplissez tous les champs et cliquez s
 ![Screenshot de la page d’instalaltion de SoosyzeCMS](https://soosyze.com/assets/files/screen/install-desktop.png)
 
 Et voilà, le CMS est installé.
+
+## Configuration
+
+### Ngnix
+
+En supposant que vous ayez un site PHP configuré dans Nginx, ajoutez ce qui suit au bloc de configuration de votre serveur pour vous assurer de la sécurité de Soosyze CMS :
+
+```
+include path\soosyze\.nginx.conf;
+```
 
 # License
 
