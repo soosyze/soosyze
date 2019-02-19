@@ -156,9 +156,9 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                 ])
                 ->values([ 'node.index', 'Voir le tableau des contenus' ])
                 ->values([ 'node.add', 'Voir les contenus créables' ])
-                ->values([ 'node.create', 'Voir l\'ajout des contenus' ])
-                ->values([ 'node.store', 'Éditer les contenus' ])
-                ->values([ 'node.edit', 'Voir l\'édition des contenus' ])
+                ->values([ 'node.create', 'Voir le formulaire d’ajout des contenus' ])
+                ->values([ 'node.store', 'Ajouter les contenus' ])
+                ->values([ 'node.edit', 'Voir le formulaire d’édition des contenus' ])
                 ->values([ 'node.update', 'Éditer les contenus' ])
                 ->values([ 'node.delete', 'Supprimer les contenus' ])
                 ->execute();
@@ -184,7 +184,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
             $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
                     'menu', 'weight', 'parent' ])
                 ->values([
-                    'node.admin',
+                    'node.index',
                     '<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Contenu',
                     'admin/node',
                     'admin-menu',

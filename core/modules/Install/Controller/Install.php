@@ -73,7 +73,8 @@ class Install extends \Soosyze\Controller
                 $form->label('install-email-label', 'E-mail')
                 ->email('email', 'email', [
                     'class'       => 'form-control',
-                    'placeholder' => 'mon-mail@mail.com',
+                    'maxlength'   => 254,
+                    'placeholder' => 'email@exemple.com',
                     'required'    => 1,
                     'value'       => $content[ 'email' ]
                 ]);
@@ -81,15 +82,17 @@ class Install extends \Soosyze\Controller
             ->group('install-name-group', 'div', function ($form) use ($content) {
                 $form->label('install-name-label', 'Nom')
                 ->text('name', 'name', [
-                    'class' => 'form-control',
-                    'value' => $content[ 'name' ]
+                    'class'     => 'form-control',
+                    'maxlength' => 255,
+                    'value'     => $content[ 'name' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('install-firstname-group', 'div', function ($form) use ($content) {
                 $form->label('install-firstname-label', 'Prénom')
                 ->text('firstname', 'firstname', [
-                    'class' => 'form-control',
-                    'value' => $content[ 'firstname' ]
+                    'class'     => 'form-control',
+                    'maxlength' => 255,
+                    'value'     => $content[ 'firstname' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('install-password-group', 'div', function ($form) use ($content) {
@@ -134,20 +137,22 @@ class Install extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'email'            => 'required|email|htmlsc',
-                'name'             => '!required|htmlsc',
-                'firstname'        => '!required|htmlsc',
+                /* max:254 RFC5321 - 4.5.3.1.3. */
+                'email'            => 'required|email|max:254|htmlsc',
+                'name'             => '!required|string|max:255|htmlsc',
+                'firstname'        => '!required|string|max:255|htmlsc',
                 'password'         => 'required|string',
                 'password-confirm' => 'required|string|equal:@password'
             ])
             ->setInputs($post);
 
         if ($validator->isValid()) {
-            /* N'enregistre pas le token de sécurité dans la bdd. */
-            $data = $validator->getInputs();
-            unset($data[ 'token' ], $data[ 'submit' ]);
-
-            $_SESSION[ 'save' ] = $data;
+            $_SESSION[ 'save' ] = [
+                'email'     => $validator->getInput('email'),
+                'name'      => $validator->getInput('name'),
+                'firstname' => $validator->getInput('firstname'),
+                'password'  => $validator->getInput('password'),
+            ];
 
             $route = self::router()->getRoute('install.step', [ ':id' => 2 ]);
 
@@ -206,25 +211,22 @@ class Install extends \Soosyze\Controller
 
     private function installFinish()
     {
-        $data = $_SESSION[ 'save' ];
-
+        $save = $_SESSION[ 'save' ];
         $salt = md5(time());
-        self::query()->insertInto('user', [ 'email', 'password', 'salt', 'firstname',
-                'name', 'actived', 'forget_pass', 'time_reset', 'time_installed',
-                'timezone'
-            ])
-            ->values([
-                'email'          => $data[ 'email' ],
-                'password'       => password_hash(hash('sha256', $data[ 'password' ] . $salt), PASSWORD_DEFAULT),
+        $data = [
+                'email'          => $save[ 'email' ],
+                'password'       => password_hash(hash('sha256', $save[ 'password' ] . $salt), PASSWORD_DEFAULT),
                 'salt'           => $salt,
-                'firstname'      => $data[ 'firstname' ],
-                'name'           => $data[ 'name' ],
+                'firstname'      => $save[ 'firstname' ],
+                'name'           => $save[ 'name' ],
                 'actived'        => true,
                 'forget_pass'    => '',
                 'time_reset'     => '',
                 'time_installed' => (string) time(),
                 'timezone'       => 'Europe/Paris'
-            ])
+            ];
+        self::query()->insertInto('user', array_keys($data))
+            ->values($data)
             ->execute();
 
         self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])

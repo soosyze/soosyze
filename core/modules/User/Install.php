@@ -48,20 +48,24 @@ class Install
 
         $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
             ->values([ 'user.show', 'Voir les utilisateurs' ])
-            ->values([ 'user.edit', 'Voir l\'édition les utilisateurs' ])
+            ->values([ 'user.edit', 'Voir l’édition les utilisateurs' ])
             ->values([ 'user.update', 'Éditer les utilisateurs' ])
             ->values([ 'user.login', 'Voir le formulaire de connexion' ])
             ->values([ 'user.login.check', 'Se connecter' ])
             ->values([ 'user.logout', 'Se déconnecter' ])
+            ->values([ 'user.relogin', 'Voir le formulaire de demande d’un nouveau mot de passe' ])
+            ->values([ 'user.relogin.check', 'Demander un nouveau mot de passe' ])
             ->execute();
 
         $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'user.show' ])
             ->values([ 3, 'user.edit' ])
             ->values([ 3, 'user.update' ])
+            ->values([ 2, 'user.logout' ])
             ->values([ 1, 'user.login' ])
             ->values([ 1, 'user.login.check' ])
-            ->values([ 2, 'user.logout' ])
+            ->values([ 1, 'user.relogin' ])
+            ->values([ 1, 'user.relogin.check' ])
             ->execute();
     }
 

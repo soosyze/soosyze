@@ -25,7 +25,7 @@ class Install
                 ->boolean('active')->valueDefault(true);
         });
         $container->query()->insertInto('menu', [ 'name', 'title', 'description' ])
-            ->values([ 'admin-menu', 'Menu d\'administration', 'Le menu pour la gestion du site.' ])
+            ->values([ 'admin-menu', 'Menu d’administration', 'Le menu pour la gestion du site.' ])
             ->values([ 'main-menu', 'Menu principal', 'Le menu principal du site utilisable pour les internautes.' ])
             ->values([ 'user-menu', 'Menu utilisateur', 'Le menu des liens utilisateurs (compte, connexion...).' ])
             ->execute();
@@ -73,7 +73,7 @@ class Install
                 ->values([ 'menu.show.check', 'Modifier le menu' ])
                 ->values([ 'menu.link.add', 'Voir d\'ajout des liens de menu' ])
                 ->values([ 'menu.link.store', 'Ajouter des liens de menu' ])
-                ->values([ 'menu.link.edit', 'Voir l\'édition des liens de menu' ])
+                ->values([ 'menu.link.edit', 'Voir l’édition des liens de menu' ])
                 ->values([ 'menu.link.update', 'Éditer des liens de menu' ])
                 ->values([ 'menu.link.delete', 'Supprimer des liens de menu' ])
                 ->execute();
