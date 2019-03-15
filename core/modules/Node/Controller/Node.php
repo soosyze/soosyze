@@ -151,10 +151,14 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -162,6 +166,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $item
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'node-create.php', VIEWS_NODE, [
                     'form' => $form
         ]);
@@ -224,21 +229,21 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
-            $route                 = self::router()->getRoute('node.index');
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
+            $route                               = self::router()->getRoute('node.index');
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = array_merge(
+        $_SESSION[ 'inputs' ]               = array_merge(
             $validator->getInputs(),
             $validatorField->getInputs()
         );
-        $_SESSION[ 'errors' ]      = array_merge(
+        $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
             $validator->getErrors(),
             $validatorField->getErrors()
         );
-        $_SESSION[ 'errors_keys' ] = array_merge(
+        $_SESSION[ 'errors_keys' ]          = array_merge(
             $validator->getKeyInputErrors(),
             $validatorField->getKeyInputErrors()
         );
@@ -371,13 +376,14 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -385,6 +391,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'node-edit.php', VIEWS_NODE, [ 'form' => $form ]);
     }
 
@@ -448,17 +455,17 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $item ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
-            $_SESSION[ 'inputs' ]      = array_merge(
+            $_SESSION[ 'inputs' ]               = array_merge(
                 $validator->getInputs(),
                 $validatorField->getInputs()
             );
-            $_SESSION[ 'errors' ]      = array_merge(
+            $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
                 $validator->getErrors(),
                 $validatorField->getErrors()
             );
-            $_SESSION[ 'errors_keys' ] = array_merge(
+            $_SESSION[ 'errors_keys' ]          = array_merge(
                 $validator->getKeyInputErrors(),
                 $validatorField->getKeyInputErrors()
             );

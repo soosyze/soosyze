@@ -55,12 +55,14 @@ class ModulesManager extends \Soosyze\Controller
 
         $form->token()->submit('submit', 'Enregistrer');
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -68,6 +70,7 @@ class ModulesManager extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-th-large" aria-hidden="true"></i> Modules'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'page-modules.php', VIEWS_SYSTEM, [
                     'form'    => $form,
                     'package' => $package
@@ -96,9 +99,9 @@ class ModulesManager extends \Soosyze\Controller
             $this->uninstallModule($module_active, $data);
             $this->installModule($module_active, $data);
 
-            $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
-            $_SESSION[ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         }
 
         $route = self::router()->getRoute('system.module.edit');

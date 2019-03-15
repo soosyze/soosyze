@@ -65,13 +65,14 @@ class Link extends \Soosyze\Controller
             
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -79,6 +80,7 @@ class Link extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Menu'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-add.php', VIEWS_MENU, [
                     'form' => $form
         ]);
@@ -131,13 +133,13 @@ class Link extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
-            $_SESSION[ 'errors_keys' ][]          = 'link';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
         $route = self::router()->getRoute('menu.link.create', [ ':menu' => $nameMenu ]);
@@ -198,13 +200,14 @@ class Link extends \Soosyze\Controller
         
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -212,6 +215,7 @@ class Link extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Menu'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-edit.php', VIEWS_MENU, [
                     'form' => $form
         ]);
@@ -258,19 +262,20 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ &$validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
-            $route                 = self::router()->getRoute('menu.show', [ ':item' => $nameMenu ]);
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $route                               = self::router()->getRoute('menu.show', [
+                ':item' => $nameMenu ]);
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
-            $_SESSION[ 'errors_keys' ][]          = 'link';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
         $route = self::router()->getRoute('menu.link.edit', [

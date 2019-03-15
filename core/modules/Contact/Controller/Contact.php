@@ -75,13 +75,14 @@ class Contact extends \Soosyze\Controller
         
         $this->container->callHook('contact.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -89,6 +90,7 @@ class Contact extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Contact'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'page-contact.php', MODULES_CORE . 'Contact' . DS . 'Views' . DS, [
                     'form' => $form
         ]);
@@ -125,15 +127,15 @@ class Contact extends \Soosyze\Controller
             
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
             if ($mail->send()) {
-                $_SESSION[ 'success' ] = [ 'Votre message a bien été envoyé.' ];
+                $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre message a bien été envoyé.' ];
             } else {
-                $_SESSION[ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
+                $_SESSION[ 'messages' ][ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
             }
             $this->container->callHook('contact.after', [ &$validator ]);
         } else {
-            $_SESSION[ 'inputs' ]      = $validator->getInputs();
-            $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+            $_SESSION[ 'inputs' ]               = $validator->getInputs();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
         $route = self::router()->getRoute('contact');

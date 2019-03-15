@@ -161,13 +161,14 @@ class System extends \Soosyze\Controller
 
         $this->container->callHook('system.edit.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -175,6 +176,7 @@ class System extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Configuration'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'page-configuration.php', VIEWS_SYSTEM, [
                     'form' => $form
         ]);
@@ -227,18 +229,18 @@ class System extends \Soosyze\Controller
             $this->saveFile('logo', $validator);
             $this->container->callHook('system.update.after', [ &$validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
         } else {
             $server = $req->getServerParams();
             if (empty($post) && empty($files) && $server[ 'CONTENT_LENGTH' ] > 0) {
-                $_SESSION[ 'errors' ]      = [ 'La quantité totales des données reçues '
+                $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
                     . 'dépasse la valeur maximale autorisée par la directive post_max_size '
                     . 'de votre fichier php.ini' ];
-                $_SESSION[ 'errors_keys' ] = [];
+                $_SESSION[ 'errors_keys' ]          = [];
             } else {
-                $_SESSION[ 'inputs' ]      = $validator->getInputsWithout('favicon', 'logo');
-                $_SESSION[ 'errors' ]      = $validator->getErrors();
-                $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+                $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('favicon', 'logo');
+                $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+                $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             }
         }
 
