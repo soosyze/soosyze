@@ -13,16 +13,21 @@
 <div class="jumbotron">
     <div class="container">
         <?php if ($logo): ?>
+
             <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive">
         <?php endif; ?>
+
         <h1><?php echo $title_main; ?></h1>
     </div>
 </div>
 <div class="container">
     <div class="row">
         <div class="col-md-12" >
-            <?php echo $block[ 'messages' ] ?>
-            <?php echo $block[ 'content' ] ?>
+            <?php if (!empty($block[ 'messages' ])): ?>
+                <?php echo $block[ 'messages' ]; ?>
+            <?php endif; ?>
+            <?php echo $block[ 'content' ]; ?>
+
         </div>
     </div>
     <div class="row">
@@ -43,5 +48,6 @@
     <footer>
         <p>Power by <a href="http://soosyze.com/">SoosyzeCMS</a></p>
         <?php echo $block[ 'second_menu' ]; ?>
+
     </footer>
 </div>

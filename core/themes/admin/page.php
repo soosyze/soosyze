@@ -1,3 +1,4 @@
+
 <header>
     <nav class="navbar navbar-grey navbar-fixed-top">
         <div class="container-fluid">
@@ -9,6 +10,7 @@
             <div class="collapse navbar-collapse" id="navbar-admin">
                 <?php echo $block[ 'main_menu' ]; ?>
                 <?php echo $block[ 'second_menu' ]; ?>
+
             </div>
         </div>
     </nav>
@@ -17,8 +19,11 @@
 </header>
 <div class="container">
     <div class="main-wrapper">
-        <?php echo $block[ 'messages' ] ?>
-        <?php echo $block[ 'content' ] ?>
+        <?php if (!empty($block[ 'messages' ])): ?>
+            <?php echo $block[ 'messages' ]; ?>
+        <?php endif; ?>
+        <?php echo $block[ 'content' ]; ?>
+
     </div>
 </div>
 <div class="container">
