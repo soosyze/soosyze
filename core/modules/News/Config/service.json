@@ -4,5 +4,16 @@
         "hooks": {
             "install.menu": "hookInstallMenu"
         }
+    },
+    "news.hook.user": {
+        "class": "News\\Services\\HookUser",
+        "hooks": {
+            "route.news.index": "hookRouteNodeSow",
+            "route.news.page": "hookRouteNodeSow",
+            "route.news.view.years": "hookRouteNodeSow",
+            "route.news.view.month": "hookRouteNodeSow",
+            "route.news.view.day": "hookRouteNodeSow",
+            "route.news.view.rss": "hookRouteNodeSow"
+        }
     }
 }
