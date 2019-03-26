@@ -2,13 +2,20 @@
     "menu": {
         "class": "Menu\\Services\\Menu",
         "arguments": [
-            "@core",
+            "@router",
             "@config",
-            "@query",
-            "@template"
+            "@query"
+        ]
+    },
+    "menu.hook.app": {
+        "class": "Menu\\Services\\HookApp",
+        "arguments": [
+            "@core",
+            "@query"
         ],
         "hooks": {
-            "app.response.after": "hookMenu"
+            "app.response.after": "hookResponseAfter",
+            "menu.show.response.after": "hookMenuShowResponseAfter"
         }
     }
 }

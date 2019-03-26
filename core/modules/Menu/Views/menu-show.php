@@ -76,23 +76,3 @@
 
     </div>
 </div> <!-- /.row -->
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
-<script>
-$(document).ready(function () {
-    $("#sortable").sortable({
-        axis: "y",
-        containment: 'table',
-        stop: function (event, ui) {
-            var i = 1;
-            $('.draggable select').each(function () {
-                $('option[value=' + i + ']', $(this)).prop('selected', true);
-                i++;
-            });
-        }
-    });
-});
-</script>
-<style>
-    .draggable{ cursor: move; }
-    td{width:100%;background-color:#FFF;}
-</style>
