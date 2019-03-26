@@ -133,10 +133,10 @@ class Install extends \Soosyze\Controller
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
-        $block = (new Template('installUser.php', VIEWS_INSTALL))
+        $block = (new Template('page-install.php', VIEWS_INSTALL))
             ->addVar('form', $form);
 
-        return (new Template('install.php', VIEWS_INSTALL))
+        return (new Template('html.php', VIEWS_INSTALL))
                 ->addBlock('page', $block)
                 ->render();
     }

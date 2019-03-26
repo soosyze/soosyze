@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="logo-name">
-            <img alt="logo" src="logo.png">
+            <img alt="logo" src="logo.svg">
             <h1>Installation</h1>
         </div>
         <?php if ($form->form_errors()): ?>
