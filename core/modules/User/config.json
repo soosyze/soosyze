@@ -2,7 +2,12 @@
     "User": {
         "name": "User",
         "controller": {
-            "User": "User\\Controller\\User"
+            "User": "User\\Controller\\User",
+            "UsersManagement": "User\\Controller\\UsersManagement",
+            "Login": "User\\Controller\\Login",
+            "Permission": "User\\Controller\\Permission",
+            "Register": "User\\Controller\\Register",
+            "Role": "User\\Controller\\Role"
         },
         "version": "1.0",
         "description": "Gestion de l'autentification et des comptes utilisateur",

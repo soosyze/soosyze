@@ -2,10 +2,10 @@
 
 namespace User\Controller;
 
-use Soosyze\Components\Email\Email;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
+use User\Form\FormUser;
 
 define('VIEWS_USER', MODULES_CORE . 'User' . DS . 'Views' . DS);
 define('CONFIG_USER', MODULES_CORE . 'User' . DS . 'Config' . DS);
@@ -15,242 +15,16 @@ class User extends \Soosyze\Controller
     public function __construct()
     {
         $this->pathServices = CONFIG_USER . 'service.json';
-        $this->pathRoutes   = CONFIG_USER . 'routing.json';
+        $this->pathRoutes   = CONFIG_USER . 'routing-user.json';
     }
-    
-    public function account()
+
+    public function account($req)
     {
         if (($user = self::user()->isConnected())) {
-            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
-        } else {
-            $route = self::router()->getRoute('user.login');
-        }
-        
-        return new Redirect($route);
-    }
-
-    public function login()
-    {
-        if (($user = self::user()->isConnected())) {
-            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
-
-            return new Redirect($route);
+            return $this->show($user[ 'user_id' ], $req);
         }
 
-        $content = [ 'email' => '' ];
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
-        $action = self::router()->getRoute('user.login.check');
-
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('user-login-fieldset', 'fieldset', function ($form) use ($content) {
-                $form->legend('user-login-legend', 'Connexion utilisateur')
-                ->group('user-login-email-group', 'div', function ($form) use ($content) {
-                    $form->label('user-login-email-label', 'E-mail')
-                    ->email('email', 'email', [
-                        'class'     => 'form-control',
-                        'maxlength' => 254,
-                        'required'  => 1,
-                        'value'     => $content[ 'email' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('user-login-password-group', 'div', function ($form) {
-                    $form->label('user-login-password-label', 'Mot de passe')
-                    ->password('password', 'password', [
-                        'class'    => 'form-control',
-                        'required' => 1
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token()
-            ->submit('sumbit', 'Validez', [ 'class' => 'btn btn-success' ]);
-
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
-        }
-
-        $url = self::router()->getRoute('user.relogin');
-
-        return self::template()
-                ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Connexion'
-                ])
-                ->render('page.content', 'page-login.php', VIEWS_USER, [
-                    'form'        => $form,
-                    'url_relogin' => $url ]);
-    }
-
-    public function loginCheck($req)
-    {
-        $post = $req->getParsedBody();
-
-        $validator = (new Validator())
-            ->setRules([
-                'email'    => 'required|email|max:254',
-                'password' => 'required|string',
-                'token'    => 'required|token'
-            ])
-            ->setInputs($post);
-
-        if ($validator->isValid()) {
-            self::user()->login($validator->getInput('email'), $validator->getInput('password'));
-        }
-
-        if (!($user = self::user()->isConnected())) {
-            $_SESSION[ 'inputs' ] = $validator->getInputs();
-            $_SESSION[ 'errors' ] = [ 'Désolé, e-mail ou mot de passe non reconnu.' ];
-            $route                = self::router()->getRoute('user.login');
-        } else {
-            $route = self::router()->getRoute('user.show', [ ':id' => $user[ 'user_id' ] ]);
-        }
-
-        return new Redirect($route);
-    }
-
-    public function logout()
-    {
-        session_destroy();
-        session_unset();
-
-        return new Redirect('index.php');
-    }
-
-    public function relogin()
-    {
-        $action = self::router()->getRoute('user.relogin.check');
-
-        $content = [ 'email' => '' ];
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('user-relogin-fieldset', 'fieldset', function ($form) use ($content) {
-                $form->group('user-relogin-email-group', 'div', function ($form) use ($content) {
-                    $form->label('user-relogin-email-label', 'E-mail')
-                    ->email('email', 'email', [
-                        'class'     => 'form-control',
-                        'maxlength' => 254,
-                        'required'  => 1,
-                        'value'     => $content[ 'email' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token()
-            ->submit('sumbit', 'Validez', [ 'class' => 'btn btn-success' ]);
-
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        }
-
-        $url = self::router()->getRoute('user.login');
-
-        return self::template()
-                ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Demander un nouveau mot de passe'
-                ])
-                ->render('page.content', 'page-relogin.php', VIEWS_USER, [
-                    'form'      => $form,
-                    'url_login' => $url
-        ]);
-    }
-
-    public function reloginCheck($req)
-    {
-        $post = $req->getParsedBody();
-
-        $validator = (new Validator())
-            ->setRules([
-                'email' => 'required|email|max:254',
-                'token' => 'required|token'
-            ])
-            ->setInputs($post);
-
-        if ($validator->isValid()) {
-            $query = self::user()->getUser($validator->getInput('email'));
-
-            if ($query) {
-                $token = hash('sha256', $query[ 'email' ] . $query[ 'time_installed' ] . time());
-
-                self::query()
-                    ->update('user', [ 'forget_pass' => $token ])
-                    ->where('email', $validator->getInput('email'))
-                    ->execute();
-
-                $url = self::router()->getRoute('user.reset', [
-                    ':id'    => $query[ 'user_id' ],
-                    ':token' => $token
-                ]);
-
-                $message = "
-Une demande de renouvellement de mot de passe a été faite.
-
-Vous pouvez désormais vous identifier en cliquant sur ce lien ou en le
-copiant dans votre navigateur : $url";
-
-                $email  = new Email();
-                $adress = self::config()->get('settings.email', $query[ 'email' ]);
-                $isSend = $email->to($adress)
-                    ->from($query[ 'email' ])
-                    ->subject('Remplacement de mot de passe')
-                    ->message($message)
-                    ->send();
-
-                if ($isSend) {
-                    $_SESSION[ 'success' ] = [
-                        'Un email avec les instructions pour accéder à votre compte vient de vous être envoyé. 
-                        Attention ! Il peut être dans vos courriers indésirables.'
-                    ];
-
-                    $route = self::router()->getRoute('user.login');
-
-                    return new Redirect($route);
-                } else {
-                    $_SESSION[ 'inputs' ] = $validator->getInputs();
-                    $_SESSION[ 'errors' ] = [ 'Impossible d\'envoyer l\'email.' ];
-                }
-            } else {
-                $_SESSION[ 'errors' ] = [ 'Désolé, cette e-mail n\'est pas reconnu par le site.' ];
-            }
-        } else {
-            $_SESSION[ 'errors' ] = $validator->getErrors();
-        }
-
-        $_SESSION[ 'inputs' ] = $validator->getInputs();
-        $route                = self::router()->getRoute('user.relogin');
-
-        return new Redirect($route);
-    }
-
-    public function resetUser($id, $token, $req)
-    {
-        if (!($user = self::user()->find($id))) {
-            return $this->get404($req);
-        }
-
-        if ($user[ 'forget_pass' ] != $token) {
-            return $this->get404($req);
-        }
-
-        $time         = time();
-        $passwordHash = self::user()->hashSession($time, $user[ 'salt' ]);
-        $mdp          = self::user()->hash($passwordHash);
-        self::query()
-            ->update('user', [ 'password' => $mdp, 'forget_pass' => '' ])
-            ->where('user_id', '==', $id)
-            ->execute();
-        self::user()->login($user[ 'email' ], $time);
-        
-        $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
+        $route = self::router()->getRoute('user.login');
 
         return new Redirect($route);
     }
@@ -260,98 +34,211 @@ copiant dans votre navigateur : $url";
         if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
+        if (!$user[ 'actived' ] && !self::user()->isGranted('user.people.manage')) {
+            return $this->get404($req);
+        }
+
+        $roles = self::user()->getRolesUser($id);
+
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Voir le profil utilisateur'
+                    'title_main' => $user[ 'username' ]
                 ])
-                ->render('page.content', 'page-user-view.php', VIEWS_USER, [
-                    'user' => $user
+                ->view('page.messages', $messages)
+                ->render('page.content', 'page-user-show.php', VIEWS_USER, [
+                    'user'  => $user,
+                    'roles' => $roles
+                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                'menu' => $this->getMenuUser($id)
         ]);
+    }
+
+    public function create()
+    {
+        $data = [ 'username' => '', 'email' => '', 'firstname' => '', 'name' => '' ];
+        $this->container->callHook('user.create.form.data', [ &$data ]);
+
+        if (isset($_SESSION[ 'inputs' ])) {
+            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            unset($_SESSION[ 'inputs' ]);
+        }
+
+        $roles = self::query()->from('role')->where('role_id', '>', 1)->fetchAll();
+
+        $form = (new FormUser([ 'method' => 'post', 'action' => self::router()->getRoute('user.store') ]))
+            ->content($data)
+            ->fieldsetInformationsCreate()
+            ->fieldsetPassword()
+            ->fieldsetActived()
+            ->fieldsetRoles($roles)
+            ->submitForm();
+
+        $this->container->callHook('user.create.form', [ &$form, $data ]);
+
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
+        }
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'title_main' => 'Création de l’utilisateur'
+                ])
+                ->view('page.messages', $messages)
+                ->render('page.content', 'form-user.php', VIEWS_USER, [
+                    'form' => $form
+                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                'menu' => []
+        ]);
+    }
+
+    public function store($req)
+    {
+        $post = $req->getParsedBody();
+
+        $validator = (new Validator())
+            ->setRules([
+                'username'         => 'required|string|max:255|htmlsc',
+                'email'            => 'required|email|max:254|htmlsc',
+                'name'             => '!required|string|max:255|htmlsc',
+                'firstname'        => '!required|string|max:255|htmlsc',
+                'actived'          => 'bool',
+                'password_new'     => 'required|string',
+                'password_confirm' => 'required_with:password_new|string|equal:@password_new',
+                'role'             => '!required|array',
+                'token'            => 'token'
+            ])
+            ->setInputs($post);
+
+        if (isset($post[ 'role' ])) {
+            $roles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
+            foreach ($post[ 'role' ] as $role) {
+                $validator->addInput('role-' . $role, $role)
+                    ->addRule('role-' . $role, 'int|inarray:' . $roles);
+            }
+        }
+
+        $is_email    = self::user()->getUser($validator->getInput('email'));
+        $is_username = self::query()->from('user')
+                ->where('username', $validator->getInput('username'))->fetch();
+
+        $this->container->callHook('user.store.validator', [ &$validator ]);
+
+        if ($validator->isValid() && !$is_email && !$is_username) {
+            $salt        = md5(time());
+            $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
+            $data        = [
+                'username'       => $validator->getInput('username'),
+                'email'          => $validator->getInput('email'),
+                'name'           => $validator->getInput('name'),
+                'firstname'      => $validator->getInput('firstname'),
+                'password'       => self::user()->hash($passworHash),
+                'salt'           => $salt,
+                'actived'        => (bool) $validator->getInput('actived'),
+                'time_installed' => (string) time(),
+                'timezone'       => 'Europe/Paris'
+            ];
+
+            $this->container->callHook('user.store.before', [ &$validator, &$data ]);
+            self::query()->insertInto('user', array_keys($data))
+                ->values($data)
+                ->execute();
+
+            $user = self::user()->getUser($validator->getInput('email'));
+            self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+                ->values([ $user[ 'user_id' ], 2 ]);
+            if (isset($post[ 'role' ])) {
+                foreach ($post[ 'role' ] as $role) {
+                    self::query()->values([ $user[ 'user_id' ], $role ]);
+                }
+            }
+            self::query()->execute();
+            $this->container->callHook('user.store.after', [ &$validator ]);
+
+            $route = self::router()->getRoute('user.management.admin');
+
+            return new Redirect($route);
+        }
+
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        if ($is_email) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = 'L\'email <i>' . $validator->getInput('email') . '</i> est indisponible.';
+            $_SESSION[ 'errors_keys' ][]          = 'email';
+        }
+        if ($is_username) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
+            $_SESSION[ 'errors_keys' ][]          = 'username';
+        }
+
+        $route = self::router()->getRoute('user.create');
+
+        return new Redirect($route);
     }
 
     public function edit($id, $req)
     {
-        if (!($query = self::user()->find($id))) {
+        if (!($data = self::user()->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('user.edit.form.data', [ &$query ]);
+        $this->container->callHook('user.edit.form.data', [ &$data, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $query = array_merge($query, $_SESSION[ 'inputs' ]);
+            $data = array_merge($data, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('user.update', [ ':id' => $id ]);
+        $form = (new FormUser([
+            'method' => 'post',
+            'action' => self::router()->getRoute('user.update', [ ':id' => $id ]) ]))
+            ->content($data)
+            ->fieldsetInformations()
+            ->fieldsetPassword();
+        if (self::user()->isGranted('user.permission.manage')) {
+            $roles      = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
+            $roles_user = self::user()->getIdRolesUser($id);
+            $form->fieldsetActived()->fieldsetRoles($roles, $roles_user);
+        }
+        $form->submitForm();
 
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('user-edit-information-fieldset', 'fieldset', function ($form) use ($query) {
-                $form->legend('user-edit-information-legend', 'Informations')
-                ->group('user-edit-email-group', 'div', function ($form) use ($query) {
-                    $form->label('user-edit-email-label', 'E-mail')
-                    ->email('email', 'email', [
-                        'class'     => 'form-control',
-                        'maxlength' => 254,
-                        'required'  => 1,
-                        'value'     => $query[ 'email' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('user-edit-currentpassword-group', 'div', function ($form) {
-                    $form->label('user-edit-currentpassword-label', 'Mot de passe actuel')
-                    ->password('currentpassword', 'currentpassword', [ 'class' => 'form-control' ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('user-edit-name-group', 'div', function ($form) use ($query) {
-                    $form->label('user-edit-name-label', 'Nom')
-                    ->text('name', 'name', [
-                        'class'     => 'form-control',
-                        'maxlength' => 255,
-                        'value'     => $query[ 'name' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('user-edit-firstname-group', 'div', function ($form) use ($query) {
-                    $form->label('user-edit-firstname-label', 'Prénom')
-                    ->text('firstname', 'firstname', [
-                        'class'     => 'form-control',
-                        'maxlength' => 255,
-                        'value'     => $query[ 'firstname' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->group('user-edit-newpassword-fieldset', 'fieldset', function ($form) {
-                $form->legend('user-edit-newpassword-legend', 'Mot de passe')
-                ->group('user-edit-newpassword-group', 'div', function ($form) {
-                    $form->label('user-edit-newpassword-label', 'Nouveau mot de passe')
-                    ->password('newpassword', 'newpassword', [ 'class' => 'form-control' ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('confirmpassword-group', 'div', function ($form) {
-                    $form->label('user-edit-confirmpassword-label', 'Confirmation du nouveau mot de passe')
-                    ->password('confirmpassword', 'confirmpassword', [
-                        'class' => 'form-control' ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token()
-            ->submit('sumbit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+        $this->container->callHook('user.edit.form', [ &$form, $data, $id ]);
 
-        $this->container->callHook('user.edit.form', [ &$form, $query ]);
-
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Édition de l\'utilisateur'
+                    'title_main' => 'Édition de l’utilisateur'
                 ])
-                ->render('page.content', 'page-user-edit.php', VIEWS_USER, [
+                ->view('page.messages', $messages)
+                ->render('page.content', 'form-user.php', VIEWS_USER, [
                     'form' => $form
+                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                'menu' => $this->getMenuUser($id)
         ]);
     }
 
@@ -366,66 +253,205 @@ copiant dans votre navigateur : $url";
         $validator = (new Validator())
             ->setRules([
                 /* max:254 RFC5321 - 4.5.3.1.3. */
-                'email'           => 'required|email|max:254',
-                'name'            => 'required|string|max:255|htmlsc',
-                'firstname'       => 'required|string|max:255|htmlsc',
-                'newpassword'     => '!required|string|equal:@confirmpassword',
-                'confirmpassword' => '!required|string|equal:@newpassword',
-                'token'           => 'required|token'
+                'username'         => 'required|string|max:255|htmlsc',
+                'email'            => 'required|email|max:254',
+                'name'             => '!required|string|max:255|htmlsc',
+                'firstname'        => '!required|string|max:255|htmlsc',
+                'password_new'     => '!required|string',
+                'password_confirm' => 'required_with:password_new|string|equal:@password_new',
+                'actived'          => 'bool',
+                'token'            => 'required|token'
             ])
             ->setInputs($post);
 
+        $is_email = $is_username = false;
         /* En cas de modification du email. */
-        if (($isUpdateEmail = $post[ 'email' ] !== $user[ 'email' ])) {
-            $password = $validator->getInput('currentpassword');
-            $verify   = self::user()->hash_verify($password, $user);
-            $validator->addInput('currentpassword', '');
+        if (($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ])) {
+            $is_email = self::user()->getUser($validator->getInput('email'));
+            $password = $validator->getInput('password');
+            $verify   = self::user()->hashVerify($password, $user);
+            $validator->addInput('password', '');
             if (!$verify) {
-                $validator->addRule('currentpassword', 'required');
+                $validator->addRule('password', 'required');
             }
         }
+        if ($validator->getInput('username') !== $user[ 'username' ]) {
+            $is_username = self::query()->from('user')
+                    ->where('username', $validator->getInput('username'))->fetch();
+        }
 
-        $this->container->callHook('user.update.validator', [ &$validator ]);
+        $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
-        if ($validator->isValid()) {
+        if ($validator->isValid() && !$is_email && !$is_username) {
             /* Prépare les donnée à mettre à jour. */
             $value = [
+                'username'  => $validator->getInput('username'),
+                'email'     => $validator->getInput('email'),
                 'name'      => $validator->getInput('name'),
-                'firstname' => $validator->getInput('firstname'),
-                'email'     => $validator->getInput('email')
+                'firstname' => $validator->getInput('firstname')
             ];
 
+            /* Si l'utilisateur à les droits d'administrer les autres utilisateurs. */
+            if (self::user()->isGranted('user.people.manage')) {
+                $value[ 'actived' ] = (bool) $validator->getInput('actived');
+            }
+
             /* En cas de modification du mot de passe. */
-            if (($isUpdateMdp = $validator->getInput('newpassword') != '')) {
-                $passwordHash        = self::user()->hashSession($validator->getInput('newpassword'), $user[ 'salt' ]);
+            if (($isUpdateMdp = $validator->getInput('password_new') != '')) {
+                $passwordHash        = self::user()->hashSession($validator->getInput('password_new'), $user[ 'salt' ]);
                 $value[ 'password' ] = self::user()->hash($passwordHash);
             }
 
-            $this->container->callHook('user.update.before', [ &$validator, &$value,
-                $id ]);
-            self::query()
-                ->update('user', $value)
-                ->where('user_id', '==', $id)
-                ->execute();
+            $this->container->callHook('user.update.before', [ &$validator, &$value, $id ]);
+            self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
+            if (self::user()->isGranted('user.people.manage')) {
+                $this->updateRole($id, $req);
+            }
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
-            if ($isUpdateEmail) {
+            $user_current = self::user()->isConnected();
+            if ($isUpdateEmail && $user_current[ 'user_id' ] == $id) {
                 $user = self::user()->find($id);
-                self::user()->login($user['email'], $password);
+                self::user()->login($user[ 'email' ], $password);
             }
-            if ($isUpdateMdp) {
+            if ($isUpdateMdp && $user_current[ 'user_id' ] == $id) {
                 $user = self::user()->find($id);
-                self::user()->login($user[ 'email' ], $validator->getInput('newpassword'));
+                self::user()->login($user[ 'email' ], $validator->getInput('password_new'));
             }
-            $_SESSION[ 'success' ] = [ 'Configuration Enregistrée' ];
-        } else {
-            $_SESSION[ 'inputs' ]      = $validator->getInputs();
-            $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
+
+            return new Redirect($route);
         }
 
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        if ($is_email) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = 'L\'email <i>' . $validator->getInput('email') . '</i> est indisponible.';
+            $_SESSION[ 'errors_keys' ][]          = 'email';
+        }
+        if ($is_username) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
+            $_SESSION[ 'errors_keys' ][]          = 'username';
+        }
         $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         return new Redirect($route);
+    }
+
+    public function remove($id, $req)
+    {
+        if (!($data = self::user()->find($id))) {
+            return $this->get404($req);
+        }
+
+        $this->container->callHook('user.remove.form.data', [ &$data, $id ]);
+
+        $form = (new FormBuilder([
+            'method' => 'post',
+            'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
+            ]))
+            ->group('user-edit-information-fieldset', 'fieldset', function ($form) {
+                $form->legend('user-edit-information-legend', 'Suppression de compte')
+                ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                    '_content' => 'Attention ! La suppression du compte utilisateur est définitif.'
+                ]);
+            })->token()
+            ->submit('sumbit', 'Supprimer le compte', [ 'class' => 'btn btn-danger' ]);
+
+        $this->container->callHook('user.remove.form', [ &$form, $data, $id ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'title_main' => 'Supprimer du compte de <i>' . $data[ 'username' ] . '</i>'
+                ])
+                ->render('page.content', 'form-user.php', VIEWS_USER, [
+                    'form' => $form
+                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                'menu' => $this->getMenuUser($id)
+        ]);
+    }
+
+    public function delete($id, $req)
+    {
+        if (!($query = self::user()->find($id))) {
+            return $this->get404($req);
+        }
+
+        $validator = (new Validator())
+            ->setRules([
+                'id'    => 'required|int|!equal:1',
+                'token' => 'token'
+            ])
+            ->setInputs($req->getParsedBody())
+            ->addInput('id', $id);
+
+        $this->container->callHook('user.delete.validator', [ &$validator, $query, $id ]);
+
+        if ($validator->isValid()) {
+            $this->container->callHook('user.delete.before', [ $validator, $query, $id ]);
+            self::query()->from('user_role')->where('user_id', '==', $id)->delete()->execute();
+            self::query()->from('user')->where('user_id', '==', $id)->delete()->execute();
+            $this->container->callHook('user.delete.after', [ $validator, $query, $id ]);
+        } else {
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        }
+
+        return new Redirect(self::router()->getRoute('user.management.admin'));
+    }
+
+    protected function updateRole($idUser, $req)
+    {
+        $roles          = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
+        $post           = $req->getParsedBody();
+        $post[ 'role' ] = isset($post[ 'role' ])
+            ? $post[ 'role' ]
+            : [];
+        $validator      = new Validator();
+
+        foreach ($post[ 'role' ] as $role) {
+            $validator->addInput('role-' . $role, $role)
+                ->addRule('role-' . $role, 'int|inarray:' . $roles);
+        }
+
+        if ($validator->isValid()) {
+            self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
+            self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+                ->values([ $idUser, 2 ]);
+            foreach ($post[ 'role' ] as $role) {
+                self::query()->values([ $idUser, $role ]);
+            }
+            self::query()->execute();
+
+            return true;
+        }
+        $_SESSION[ 'messages' ][ 'errors' ] += $validator->getErrors();
+
+        return false;
+    }
+
+    protected function getMenuUser($id)
+    {
+        $menu[] = [
+            'title_link' => 'Voir',
+            'link'       => self::router()->getRoute('user.show', [ ':id' => $id ])
+        ];
+        if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.edited')) {
+            $menu[] = [
+                'title_link' => 'Éditer',
+                'link'       => self::router()->getRoute('user.edit', [ ':id' => $id ])
+            ];
+        }
+        if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.deleted')) {
+            $menu[] = [
+                'title_link' => 'Supprimer',
+                'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
+            ];
+        }
+
+        return $menu;
     }
 }

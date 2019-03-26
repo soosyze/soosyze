@@ -1,20 +1,11 @@
 <div class="row">
     <div class="col-sm-12">
-        <?php if ($form->form_errors()): ?>
-            <?php foreach ($form->form_errors() as $error): ?>
-                <div class="alert alert-danger">
-                    <p><?php echo $error ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        <?php if ($form->form_success()): ?>
-            <?php foreach ($form->form_success() as $success): ?>
-                <div class="alert alert-success">
-                    <p><?php echo $success ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
         <?php echo $form->renderForm() ?>
-        <p><a href="<?php echo $url_relogin; ?>">Mot de passe perdu ?</a></p>
+        <?php if ($granted_register): ?>
+            <p><a href="<?php echo $url_register ?>">Inscription utilisateur</a></p>
+        <?php endif; ?>
+        <?php if ($granted_relogin): ?>
+            <p><a href="<?php echo $url_relogin ?>">Mot de passe perdu ?</a></p>
+        <?php endif; ?>
     </div>
 </div>

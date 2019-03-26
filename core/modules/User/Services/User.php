@@ -7,101 +7,152 @@ use Soosyze\Components\Http\Stream;
 
 class User
 {
-    protected $query;
+    /**
+     * Dépendance du service.
+     * @var \QueryBuilder\Services\Query
+     */
+    private $query;
 
-    protected $routing;
+    /**
+     * Dépendance du service.
+     * @var \Soosyze\Router
+     */
+    private $router;
 
-    protected $core;
+    /**
+     * Dépendance du service.
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $grantedA = [];
+    /**
+     * La liste des permissions pour l'utilisateur courant.
+     * @var array
+     */
+    private $granted = [];
 
-    protected $granted = [];
+    /**
+     * La liste des permissions
+     * @var array
+     */
+    private $permissions = [];
 
-    protected $permissions = [];
-
+    /**
+     * Les données utilisateur courant ou false.
+     * @var bool|array
+     */
     private $connect = false;
 
-    public function __construct($query, $routing, $core)
+    public function __construct($query, $router, $core)
     {
-        $this->query   = $query;
-        $this->routing = $routing;
-        $this->core    = $core;
+        $this->query  = $query;
+        $this->router = $router;
+        $this->core   = $core;
     }
 
-    public function find($id, $actived = true)
+    public function find($id)
     {
-        return $this->query
-                ->from('user')
+        return $this->query->from('user')
+                ->where('user_id', '==', $id)
+                ->fetch();
+    }
+
+    public function findActived($id, $actived = true)
+    {
+        return $this->query->from('user')
                 ->where('user_id', '==', $id)
                 ->where('actived', $actived)
                 ->fetch();
     }
 
-    public function getUser($email, $actived = true)
+    public function getUser($email)
     {
-        return $this->query
-                ->from('user')
+        return $this->query->from('user')
+                ->where('email', $email)
+                ->fetch();
+    }
+
+    public function getUserActived($email, $actived = true)
+    {
+        return $this->query->from('user')
                 ->where('email', $email)
                 ->where('actived', $actived)
                 ->fetch();
     }
 
-    public function getPermission($key)
+    public function getUsers()
     {
-        if (!empty($this->permissions)) {
-            return in_array($key, $this->permissions);
-        }
-
-        $this->permissions = $this->query
-            ->from('permission')
-            ->lists('permission_id');
-
-        return in_array($key, $this->permissions);
+        return $this->query->from('user')->fetchAll();
     }
 
-    public function getGranted($user, $permission)
+    public function getRolesUser($idUser)
     {
-        if (!empty($this->granted)) {
-            return in_array($permission, $this->granted);
+        return $this->query->from('user_role')
+                ->leftJoin('role', 'role_id', 'role.role_id')
+                ->where('user_id', '==', $idUser)
+                ->fetchAll();
+    }
+
+    public function getIdRolesUser($idUser)
+    {
+        return $this->query->from('user_role')
+                ->leftJoin('role', 'role_id', 'role.role_id')
+                ->where('user_id', '==', $idUser)
+                ->lists('role_id');
+    }
+
+    public function hasPermission($idPermission)
+    {
+        if (!empty($this->permissions)) {
+            return isset($this->permissions[ $idPermission ]);
         }
 
-        $this->granted = $this->query
-            ->from('user')
-            ->leftJoin('user_role', 'user_id', 'user_role.user_id')
+        $permission = [];
+        $this->core->callHook('user.permission.module', [ &$permission ]);
+        foreach ($permission as $value) {
+            $this->permissions += $value;
+        }
+
+        return isset($this->permissions[ $idPermission ]);
+    }
+
+    public function getGranted($user, $idPermission)
+    {
+        if (!empty($this->granted)) {
+            return in_array($idPermission, $this->granted);
+        }
+
+        $this->granted = $this->query->from('user_role')
             ->leftJoin('role', 'role_id', 'role.role_id')
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
-            ->leftJoin('permission', 'permission_id', 'permission.permission_id')
             ->where('user_id', $user[ 'user_id' ])
             ->lists('permission_id');
 
-        return in_array($permission, $this->granted);
+        return in_array($idPermission, $this->granted);
     }
 
-    public function getGrantedAnonymous($permission)
+    public function getGrantedAnonymous($idPermission)
     {
-        if (!empty($this->grantedA)) {
-            return in_array($permission, $this->grantedA);
+        if (!empty($this->granted)) {
+            return in_array($idPermission, $this->granted);
         }
 
-        $this->grantedA = $this->query
-            ->from('role')
-            ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
-            ->leftJoin('permission', 'permission_id', 'permission.permission_id')
-            ->where('role_name', 'user_anonyme')
+        $this->granted = $this->query->from('role_permission')
+            ->where('role_id', 1)
             ->lists('permission_id');
 
-        return in_array($permission, $this->grantedA);
+        return in_array($idPermission, $this->granted);
     }
 
     /**
      * Créer la session et les token d'identification.
      *
-     * @param string $login
+     * @param string $email
      * @param string $password
      *
      * @return bool
      */
-    public function login($login, $password)
+    public function login($email, $password)
     {
         if ('' == session_id()) {
             session_start([
@@ -110,10 +161,10 @@ class User
             ]);
         }
 
-        if (($user = $this->getUser($login))) {
+        if (($user = $this->getUserActived($email))) {
             $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
             if (password_verify($passwordHash, $user[ 'password' ])) {
-                $_SESSION[ 'token_user' ]     = $login;
+                $_SESSION[ 'token_user' ]     = $email;
                 $_SESSION[ 'token_password' ] = $passwordHash;
 
                 return true;
@@ -122,8 +173,8 @@ class User
 
         return false;
     }
-    
-    public function hash_verify($password, array $user)
+
+    public function hashVerify($password, array $user)
     {
         $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
 
@@ -144,22 +195,23 @@ class User
      * Si la session existe renvoie l'utilisateur,
      * sinon s'il y a correspondance dans les autres cas renvoie faux.
      *
-     * @return bool
+     * @return bool|array
      */
     public function isConnected()
     {
+        if ($this->connect) {
+            return $this->connect;
+        }
         if (!empty($_SESSION[ 'token_user' ]) && !empty($_SESSION[ 'token_password' ])) {
-            $user = $this->getUser($_SESSION[ 'token_user' ]);
-            if ($user) {
-                if ($this->connect) {
-                    return $this->connect;
-                }
-                $this->connect = password_verify($_SESSION[ 'token_password' ], $user[ 'password' ])
-                    ? $user
-                    : false;
-
-                return $this->connect;
+            if (!($user = $this->getUserActived($_SESSION[ 'token_user' ]))) {
+                return false;
             }
+
+            $this->connect = password_verify($_SESSION[ 'token_password' ], $user[ 'password' ])
+                ? $user
+                : false;
+
+            return $this->connect;
         }
 
         return false;
@@ -173,20 +225,55 @@ class User
      *
      * @return type
      */
-    public function isGranted($key, &$grant = false)
+    public function isGranted($key, &$grant = false, $with = [])
     {
-        $permission = $this->getPermission($key);
-
-        /* Si la route ne contient pas de permission. */
-        if (!$permission) {
+        /* Si la permission n'existe pas. */
+        if (!$this->hasPermission($key)) {
             $grant = true;
-        } elseif (($user = $this->isConnected())) {
+        }
+        /* Si l'utilisateur et connecté. */
+        elseif (($user = $this->isConnected())) {
             $grant = (bool) $this->getGranted($user, $key);
-        } else {
+        }
+        /* Si l'utilisateur annonyme peut voir la route. */
+        else {
             $grant = (bool) $this->getGrantedAnonymous($key);
         }
 
         return $grant;
+    }
+
+    public function isGrantedRoute($request)
+    {
+        $route = $this->router->parse($request);
+
+        /* Si la permission n'existe pas. */
+        if ($this->hasPermission($route[ 'key' ])) {
+            return $this->isGranted($route[ 'key' ]);
+        }
+
+        $params = [];
+        if (isset($route[ 'with' ])) {
+            $query  = $this->router->parseQueryFromRequest($request);
+            $params = $this->router->parseParam($route[ 'path' ], $query, $route[ 'with' ]);
+        }
+
+        $params[]    = $this->isConnected();
+        $permissions = $this->core->callHook('route.' . $route[ 'key' ], $params);
+
+        if (\is_bool($permissions)) {
+            return $permissions;
+        }
+        if (!is_array($permissions)) {
+            return $this->isGranted($permissions);
+        }
+        foreach ($permissions as $permission) {
+            if ($this->isGranted($permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -200,10 +287,32 @@ class User
      */
     public function hookResponseBefore(&$request, &$response)
     {
-        $route = $this->routing->parse($request);
-
-        if (!$this->isGranted($route[ 'key' ])) {
+        if (!$this->isGrantedRoute($request)) {
             $response = new Response(403, new Stream('Erreur HTTP 403 Forbidden'));
         }
+    }
+
+    public function hooRoleResponseAfter($request, &$response)
+    {
+        $script = $response->getVar('scripts');
+
+        $script .= '<script>      
+        function toogleForm(id_form)
+        {
+            var form = document.getElementById(id_form);
+            form.style.display = form.style.display === "none" ? "" : "none";
+        }
+        function getRandomColor() {
+            var letters = "0123456789abcdef";
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }</script>';
+
+        $response->add([
+            'scripts' => $script
+        ]);
     }
 }

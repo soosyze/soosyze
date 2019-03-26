@@ -1,0 +1,12 @@
+{
+    "user.permission.admin": {
+        "methode": "GET",
+        "path": "admin/user/permission",
+        "uses": "Permission@admin"
+    },
+    "user.permission.update": {
+        "methode": "POST",
+        "path": "admin/user/permission",
+        "uses": "Permission@udpate"
+    }
+}
