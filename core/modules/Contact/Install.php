@@ -11,6 +11,7 @@ class Install
     public function hookInstall($container)
     {
         $this->hookInstallMenu($container);
+        $this->hookInstallUser($container);
     }
 
     public function hookInstallMenu($container)
@@ -26,6 +27,18 @@ class Install
                     4,
                     -1
                 ])
+                ->execute();
+        }
+    }
+    
+    public function hookInstallUser($container)
+    {
+        if ($container->schema()->hasTable('user')) {
+            $container->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'contact.main' ])
+                ->values([ 2, 'contact.main' ])
+                ->values([ 1, 'contact.main' ])
                 ->execute();
         }
     }

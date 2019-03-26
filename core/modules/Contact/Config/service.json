@@ -4,5 +4,13 @@
         "hooks": {
             "install.menu": "hookInstallMenu"
         }
+    },
+    "contact.hook.user": {
+        "class": "Contact\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.contact": "hookRouteContact",
+            "route.contact.check": "hookRouteContact"
+        }
     }
 }
