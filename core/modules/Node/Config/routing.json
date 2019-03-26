@@ -11,50 +11,50 @@
     },
     "node.show": {
         "methode": "GET",
-        "path": "node/:item",
+        "path": "node/:id",
         "uses": "Node@show",
         "with": {
-            ":item": "\\d+"
+            ":id": "\\d+"
         }
     },
     "node.create": {
         "methode": "GET",
-        "path": "node/add/:item",
+        "path": "node/add/:type",
         "uses": "Node@create",
         "with": {
-            ":item": "[a-z]+"
+            ":type": "[a-z]+"
         }
     },
     "node.store": {
         "methode": "POST",
-        "path": "node/add/:item",
+        "path": "node/add/:type",
         "uses": "Node@store",
         "with": {
-            ":item": "[a-z]+"
+            ":type": "[a-z]+"
         }
     },
     "node.edit": {
         "methode": "GET",
-        "path": "node/:item/edit",
+        "path": "node/:id/edit",
         "uses": "Node@edit",
         "with": {
-            ":item": "\\d+"
+            ":id": "\\d+"
         }
     },
     "node.update": {
         "methode": "POST",
-        "path": "node/:item/edit",
+        "path": "node/:id/edit",
         "uses": "Node@update",
         "with": {
-            ":item": "\\d+"
+            ":id": "\\d+"
         }
     },
     "node.delete": {
         "methode": "GET",
-        "path": "node/:item/delete",
+        "path": "node/:id/delete",
         "uses": "Node@delete",
         "with": {
-            ":item": "\\d+"
+            ":id": "\\d+"
         }
     }
 }

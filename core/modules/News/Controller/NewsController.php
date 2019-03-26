@@ -29,9 +29,9 @@ class NewsController extends \Soosyze\Controller
             $default = 'Aucun articles pour le moment !';
         } else {
             $default = '';
-            foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':item' => $node[ 'id' ] ]);
+            foreach ($nodes as &$node) {
+                $node[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id' => $node[ 'id' ] ]);
             }
         }
 
@@ -62,9 +62,9 @@ class NewsController extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        foreach ($nodes as $key => $node) {
-            $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':item' => $node[ 'id' ] ]);
+        foreach ($nodes as &$node) {
+            $node[ 'link_view' ] = self::router()->getRoute('node.show', [
+                ':id' => $node[ 'id' ] ]);
         }
 
         return self::template()
@@ -86,9 +86,9 @@ class NewsController extends \Soosyze\Controller
             $default = 'Aucun articles pour l\'année';
         } else {
             $default = '';
-            foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':item' => $node[ 'id' ] ]);
+            foreach ($nodes as &$node) {
+                $node[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id' => $node[ 'id' ] ]);
             }
         }
 
@@ -115,9 +115,9 @@ class NewsController extends \Soosyze\Controller
             $default = 'Aucun articles pour le mois.';
         } else {
             $default = '';
-            foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':item' => $node[ 'id' ] ]);
+            foreach ($nodes as &$node) {
+                $node[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id' => $node[ 'id' ] ]);
             }
         }
 
@@ -144,9 +144,9 @@ class NewsController extends \Soosyze\Controller
             $default = 'Aucun articles pour le jour.';
         } else {
             $default = '';
-            foreach ($nodes as $key => $node) {
-                $nodes[ $key ][ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':item' => $node[ 'id' ] ]);
+            foreach ($nodes as &$node) {
+                $node[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id' => $node[ 'id' ] ]);
             }
         }
 
