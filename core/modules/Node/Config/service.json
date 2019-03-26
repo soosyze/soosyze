@@ -6,8 +6,8 @@
             "install.menu": "hookInstallMenu"
         }
     },
-    "node.hook": {
-        "class": "Node\\Services\\NodeHook",
+    "node.hook.menu": {
+        "class": "Node\\Services\\HookMenu",
         "arguments": [
             "@schema",
             "@query"
@@ -17,7 +17,7 @@
             "node.create.form": "hookCreateForm",
             "node.create.response.after": "getForm",
             "node.store.validator": "hookStoreValidator",
-            "node.store.before": "hookStoreValid",
+            "node.store.after": "hookStoreValid",
             "node.edit.form.data": "hookEditFormData",
             "node.edit.form": "hookCreateForm",
             "node.edit.response.after": "getForm",

@@ -2,7 +2,7 @@
 
 namespace Node\Services;
 
-class NodeHook
+class HookMenu
 {
     /**
      * @var \Queryflatfile\Schema
@@ -111,7 +111,8 @@ class NodeHook
                 ->orderBy('created', 'desc')
                 ->fetch();
 
-            if ($nodeLast && ($id = $nodeLast[ 'id' ])) {
+            if ($nodeLast) {
+                $id = $nodeLast[ 'id' ];
                 $this->query->insertInto('menu_link', [ 'key', 'title_link', 'link',
                         'menu', 'weight', 'parent', 'active' ])
                     ->values([
@@ -119,7 +120,7 @@ class NodeHook
                         $validator->getInput('title_link'),
                         'node/' . $id,
                         'main-menu',
-                        0,
+                        1,
                         -1,
                         (bool) $validator->getInput('published'),
                     ])
