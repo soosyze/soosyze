@@ -67,26 +67,9 @@ class Install
     public function hookInstallUser($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()->insertInto('permission', [ 'permission_id',
-                    'permission_label' ])
-                ->values([ 'menu.show', 'Voir les menus' ])
-                ->values([ 'menu.show.check', 'Modifier le menu' ])
-                ->values([ 'menu.link.create', 'Voir d’ajout des liens de menu' ])
-                ->values([ 'menu.link.store', 'Ajouter des liens de menu' ])
-                ->values([ 'menu.link.edit', 'Voir l’édition des liens de menu' ])
-                ->values([ 'menu.link.update', 'Éditer des liens de menu' ])
-                ->values([ 'menu.link.delete', 'Supprimer des liens de menu' ])
-                ->execute();
-
-            $container->query()->insertInto('role_permission', [ 'role_id',
-                    'permission_id' ])
-                ->values([ 3, 'menu.show' ])
-                ->values([ 3, 'menu.show.check' ])
-                ->values([ 3, 'menu.link.create' ])
-                ->values([ 3, 'menu.link.store' ])
-                ->values([ 3, 'menu.link.edit' ])
-                ->values([ 3, 'menu.link.update' ])
-                ->values([ 3, 'menu.link.delete' ])
+            $container->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'menu.administer' ])
                 ->execute();
         }
     }
@@ -94,12 +77,6 @@ class Install
     public function uninstall($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('permission')
-                ->delete()
-                ->regex('permission_id', '/^menu./')
-                ->execute();
-
             $container->query()
                 ->from('role_permission')
                 ->delete()
