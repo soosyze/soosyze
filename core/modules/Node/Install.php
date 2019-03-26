@@ -16,22 +16,16 @@ class Install
                 ->string('changed')
                 ->boolean('published')
                 ->text('field');
-        });
-
-        $container->schema()->createTableIfNotExists('node_type', function (TableBuilder $table) {
+        })->createTableIfNotExists('node_type', function (TableBuilder $table) {
             $table->string('node_type')
                 ->string('node_type_name')
                 ->text('node_type_description');
-        });
-
-        $container->schema()->createTableIfNotExists('field', function (TableBuilder $table) {
+        })->createTableIfNotExists('field', function (TableBuilder $table) {
             $table->increments('field_id')
                 ->string('field_name')
                 ->string('field_type')
                 ->string('field_rules');
-        });
-
-        $container->schema()->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
+        })->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
             $table->string('node_type')
                 ->integer('field_id')
                 ->integer('field_weight')->valueDefault(1);

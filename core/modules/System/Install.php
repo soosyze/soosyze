@@ -16,9 +16,7 @@ class Install
                 ->text('description')
                 ->string('package')
                 ->boolean('locked');
-        });
-
-        $container->schema()->createTableIfNotExists('module_required', function (TableBuilder $table) {
+        })->createTableIfNotExists('module_required', function (TableBuilder $table) {
             $table->string('name_module')
                 ->string('name_required');
         });

@@ -4,8 +4,7 @@ namespace Contact\Services;
 
 class HookUser
 {
-
-    public function hookPermission( &$permission )
+    public function hookPermission(&$permission)
     {
         $permission[ 'Contact' ] = [
             'contact.main' => 'Utiliser le formulaire de contact général'

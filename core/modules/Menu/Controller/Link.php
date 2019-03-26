@@ -18,9 +18,9 @@ class Link extends \Soosyze\Controller
     public function create($nameMenu)
     {
         $content = [ 'title_link' => '', 'link' => '', 'target_link' => '_self' ];
-        
+
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
-        
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -62,7 +62,7 @@ class Link extends \Soosyze\Controller
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-            
+
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
         $messages = [];
@@ -103,7 +103,7 @@ class Link extends \Soosyze\Controller
             $post[ 'link' ],
             $req->withMethod('GET')
         );
-        
+
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && $isUrlOrRoute) {
@@ -117,7 +117,7 @@ class Link extends \Soosyze\Controller
                 'active'      => true
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {
-                $data[ 'key' ] = $isUrlOrRoute['key'];
+                $data[ 'key' ] = $isUrlOrRoute[ 'key' ];
             }
 
             $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
@@ -152,7 +152,7 @@ class Link extends \Soosyze\Controller
         if (!($query = self::menu()->find($id))) {
             return $this->get404($req);
         }
-        
+
         $this->container->callHook('menu.link.edit.form.data', [ &$query ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
@@ -167,37 +167,37 @@ class Link extends \Soosyze\Controller
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($query) {
-                return $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
-                    ->group('menu-link-title-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-title-label', 'Titre du lien')
-                        ->text('title_link', 'title_link', [
-                            'class'       => 'form-control',
-                            'placeholder' => 'Exemple: Ma page 1',
-                            'required'    => 1,
-                            'value'       => $query[ 'title_link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('menu-link-link-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-link-label', 'Lien')
-                        ->text('link', 'link', [
-                            'class'       => 'form-control',
-                            'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
-                            'required'    => 1,
-                            'value'       => $query[ 'link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('menu-link-target-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-target-label', 'Cîble')
-                        ->select('target_link', 'target_link', self::$optionTarget, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $query[ 'target_link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ]);
+                $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
+                ->group('menu-link-title-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-title-label', 'Titre du lien')
+                    ->text('title_link', 'title_link', [
+                        'class'       => 'form-control',
+                        'placeholder' => 'Exemple: Ma page 1',
+                        'required'    => 1,
+                        'value'       => $query[ 'title_link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-link-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-link-label', 'Lien')
+                    ->text('link', 'link', [
+                        'class'       => 'form-control',
+                        'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
+                        'required'    => 1,
+                        'value'       => $query[ 'link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-target-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-target-label', 'Cîble')
+                    ->select('target_link', 'target_link', self::$optionTarget, [
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'selected' => $query[ 'target_link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-        
+
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
         $messages = [];

@@ -32,14 +32,14 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
-        foreach ($query as $key => $link) {
-            $query[ $key ][ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
+        foreach ($query as &$link) {
+            $link[ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
+            $link[ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            if ($query[ $key ][ 'key' ]) {
-                $link_tmp                = $req->withUri($req->getUri()->withQuery($query[ $key ][ 'link' ]));
-                $query[ $key ][ 'link' ] = $link_tmp->getUri()->__toString();
+            if ($link[ 'key' ]) {
+                $link_tmp       = $req->withUri($req->getUri()->withQuery($link[ 'link' ]));
+                $link[ 'link' ] = $link_tmp->getUri()->__toString();
             }
             $nameLinkWeight = 'weight-' . $link[ 'id' ];
             $nameLinkActive = 'active-' . $link[ 'id' ];

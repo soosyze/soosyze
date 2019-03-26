@@ -53,26 +53,30 @@ class Modules
      */
     public function isRequiredForModule($key)
     {
-        return $this->query
-                ->from('module')
-                ->leftJoin('module_required', 'name', 'module_required.name_required')
-                ->where('name', $key)
-                ->isNotNull('name_module')
-                ->lists('name_module');
+        $output = $this->query
+            ->from('module')
+            ->leftJoin('module_required', 'name', 'module_required.name_required')
+            ->where('name', $key)
+            ->isNotNull('name_module')
+            ->lists('name_module');
+
+        return array_unique($output);
     }
 
     public function listModuleActive(array $columns = [])
     {
-        $moduleKey = [];
-        $modules   = $this->query
+        $output  = [];
+        $modules = $this->query
             ->select($columns)
             ->from('module')
             ->fetchAll();
         foreach ($modules as $value) {
-            $moduleKey[ $value[ 'name' ] ] = $value;
+            if (!isset($output[ $value[ 'name' ] ])) {
+                $output[ $value[ 'name' ] ] = $value;
+            }
         }
 
-        return $moduleKey;
+        return $output;
     }
 
     public function listModuleActiveNotRequire(array $columns = [])

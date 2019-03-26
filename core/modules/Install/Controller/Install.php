@@ -207,16 +207,9 @@ class Install extends \Soosyze\Controller
             }
         }
 
-        self::query()
-            ->insertInto('module_required', [ 'name_module', 'name_required' ])
+        self::query()->insertInto('module_required', [ 'name_module', 'name_required' ])
             ->values([ 'Core', 'System' ])
-            ->execute();
-        self::query()
-            ->insertInto('module_required', [ 'name_module', 'name_required' ])
             ->values([ 'Core', 'ModulesManager' ])
-            ->execute();
-        self::query()
-            ->insertInto('module_required', [ 'name_module', 'name_required' ])
             ->values([ 'Core', 'User' ])
             ->execute();
     }

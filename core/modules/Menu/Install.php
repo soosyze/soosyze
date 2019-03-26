@@ -12,8 +12,7 @@ class Install
             $table->string('name')
                 ->string('title')
                 ->text('description');
-        });
-        $container->schema()->createTableIfNotExists('menu_link', function (TableBuilder $table) {
+        })->createTableIfNotExists('menu_link', function (TableBuilder $table) {
             $table->increments('id')
                 ->string('key')->nullable()
                 ->string('link')
