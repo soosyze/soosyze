@@ -276,13 +276,9 @@ class Node extends \Soosyze\Controller
                 ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] ]);
 
         if (!$node[ 'published' ]) {
-            if (!self::user()->isConnected()) {
-                return $this->get404($req);
-            } else {
-                $tpl->view('page.messages', [
-                    'infos' => [ 'Ce contenu n\'est pas publié !' ]
-                ]);
-            }
+            $tpl->view('page.messages', [
+                'infos' => [ 'Ce contenu n\'est pas publié !' ]
+            ]);
         }
 
         return $tpl;

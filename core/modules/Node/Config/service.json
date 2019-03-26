@@ -26,5 +26,21 @@
             "node.delete.after": "hookDeleteValid",
             "menu.link.delete.after": "hookLinkDeleteValid"
         }
+    },
+    "node.hook.user": {
+        "class": "Node\\Services\\HookUser",
+        "arguments": [
+            "@query"
+        ],
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.node.show": "hookRouteNodeSow",
+            "route.node.create": "hookRouteNodeCreated",
+            "route.node.store": "hookRouteNodeCreated",
+            "route.node.edit": "hookRouteNodeEdited",
+            "route.node.update": "hookRouteNodeEdited",
+            "route.node.delete": "hookRouteNodeDeleted",
+            "route.node.add": "hookRouteNodeAdd"
+        }
     }
 }
