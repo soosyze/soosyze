@@ -54,6 +54,7 @@ class Install extends \Soosyze\Controller
     public function index()
     {
         $content = [
+            'username'         => '',
             'email'            => '',
             'name'             => '',
             'firstname'        => '',
@@ -69,6 +70,15 @@ class Install extends \Soosyze\Controller
         $action = self::router()->getRoute('install.step.check', [ ':id' => 1 ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
+            ->group('install-username-group', 'div', function ($form) use ($content) {
+                $form->label('install-username-label', 'Nom utilisateur')
+                ->text('username', 'username', [
+                    'class'     => 'form-control',
+                    'maxlength' => 255,
+                    'required'  => 1,
+                    'value'     => $content[ 'username' ]
+                ]);
+            }, [ 'class' => 'form-group' ])
             ->group('install-email-group', 'div', function ($form) use ($content) {
                 $form->label('install-email-label', 'E-mail')
                 ->email('email', 'email', [
@@ -137,6 +147,7 @@ class Install extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
+                'username'         => 'required|string|max:255|htmlsc',
                 /* max:254 RFC5321 - 4.5.3.1.3. */
                 'email'            => 'required|email|max:254|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
@@ -148,6 +159,7 @@ class Install extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $_SESSION[ 'save' ] = [
+                'username'  => $validator->getInput('username'),
                 'email'     => $validator->getInput('email'),
                 'name'      => $validator->getInput('name'),
                 'firstname' => $validator->getInput('firstname'),
@@ -214,17 +226,17 @@ class Install extends \Soosyze\Controller
         $save = $_SESSION[ 'save' ];
         $salt = md5(time());
         $data = [
-                'email'          => $save[ 'email' ],
-                'password'       => password_hash(hash('sha256', $save[ 'password' ] . $salt), PASSWORD_DEFAULT),
-                'salt'           => $salt,
-                'firstname'      => $save[ 'firstname' ],
-                'name'           => $save[ 'name' ],
-                'actived'        => true,
-                'forget_pass'    => '',
-                'time_reset'     => '',
-                'time_installed' => (string) time(),
-                'timezone'       => 'Europe/Paris'
-            ];
+            'username'       => $save[ 'username' ],
+            'email'          => $save[ 'email' ],
+            'password'       => password_hash(hash('sha256', $save[ 'password' ] . $salt), PASSWORD_DEFAULT),
+            'salt'           => $salt,
+            'firstname'      => $save[ 'firstname' ],
+            'name'           => $save[ 'name' ],
+            'actived'        => true,
+            'time_reset'     => '',
+            'time_installed' => (string) time(),
+            'timezone'       => 'Europe/Paris'
+        ];
         self::query()->insertInto('user', array_keys($data))
             ->values($data)
             ->execute();
