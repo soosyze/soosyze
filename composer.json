@@ -19,7 +19,7 @@
     "require": {
         "php": ">=5.4",
         "ircmaxell/password-compat": "1.0.*",
-        "soosyze/framework": "1.2.*",
+        "soosyze/framework": "1.2.2",
         "soosyze/queryflatfile": "1.1.*"
     },
     "require-dev": {
