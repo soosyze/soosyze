@@ -59,6 +59,9 @@ class Install
             ->values([ 2, 'user.showed' ])
             ->values([ 2, 'user.edited' ])
             ->execute();
+
+        $container->config()->set('settings.user_register', '');
+        $container->config()->set('settings.user_relogin', '');
     }
 
     public function hookInstall($container)
