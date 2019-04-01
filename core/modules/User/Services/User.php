@@ -252,12 +252,12 @@ class User
             return $this->isGranted($route[ 'key' ]);
         }
 
-        $params = [];
         if (isset($route[ 'with' ])) {
             $query  = $this->router->parseQueryFromRequest($request);
             $params = $this->router->parseParam($route[ 'path' ], $query, $route[ 'with' ]);
         }
-
+        
+        $params[]    = $request;
         $params[]    = $this->isConnected();
         $permissions = $this->core->callHook('route.' . $route[ 'key' ], $params);
 

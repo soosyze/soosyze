@@ -36,7 +36,7 @@ class HookUser
         return 'user.people.manage';
     }
 
-    public function hookUserShow($id, $user)
+    public function hookUserShow($id, $req, $user)
     {
         if ($id == $user[ 'user_id' ]) {
             return true;
@@ -45,17 +45,17 @@ class HookUser
         return [ 'user.people.manage', 'user.showed' ];
     }
 
-    public function hookUserEdited($id, $user)
+    public function hookUserEdited($id, $req, $user)
     {
         $output[] = 'user.people.manage';
-        if ($id == $user[ 'user_id' ]) {
+        if ($id === $user[ 'user_id' ]) {
             $output[] = 'user.edited';
         }
 
         return $output;
     }
 
-    public function hookUserDeleted($id, $user)
+    public function hookUserDeleted($id, $req, $user)
     {
         $output[] = 'user.people.manage';
         if ($id == $user[ 'user_id' ]) {
@@ -65,27 +65,27 @@ class HookUser
         return $output;
     }
 
-    public function hookRegister($user)
+    public function hookRegister($req, $user)
     {
         return empty($user) && $this->config->get('settings.user_register');
     }
 
-    public function hookActivate($id, $token, $user)
+    public function hookActivate($id, $token, $req, $user)
     {
         return empty($user) && $this->config->get('settings.user_register');
     }
 
-    public function hookLogin($user)
+    public function hookLogin($req, $user)
     {
         return empty($user);
     }
 
-    public function hookLogout($user)
+    public function hookLogout($req, $user)
     {
         return !empty($user);
     }
 
-    public function hookRelogin($user)
+    public function hookRelogin($req, $user)
     {
         return empty($user) && $this->config->get('settings.user_relogin');
     }

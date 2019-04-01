@@ -48,7 +48,7 @@ class HookUser
             : '';
     }
     
-    public function hookRouteNodeAdd($user)
+    public function hookRouteNodeAdd($req, $user)
     {
         return !empty($user);
     }
