@@ -69,14 +69,6 @@ class Install
                     5,
                     -1
                 ])
-                ->values([
-                    'system.config.edit',
-                    '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuration',
-                    'admin/config',
-                    'admin-menu',
-                    6,
-                    -1
-                ])
                 ->execute();
         }
     }
@@ -96,7 +88,6 @@ class Install
                 ->from('menu_link')
                 ->delete()
                 ->where('link', 'admin/modules')
-                ->orWhere('link', 'admin/config')
                 ->execute();
         }
 

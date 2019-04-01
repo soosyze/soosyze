@@ -24,7 +24,8 @@ class Install extends \Soosyze\Controller
         'Node',
         'Menu',
         'Contact',
-        'News'
+        'News',
+        'Config'
     ];
 
     public function __construct()

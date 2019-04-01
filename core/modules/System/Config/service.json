@@ -36,5 +36,19 @@
             "route.system.module.edit": "hookModuleManage",
             "route.system.module.update": "hookModuleManage"
         }
+    },
+    "system.hook.config": {
+        "class": "System\\Services\\HookConfig",
+        "arguments": [
+            "@template",
+            "@file"
+        ],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.system.form.generate": "form",
+            "config.update.system.validator": "validator",
+            "config.update.system.before": "before",
+            "config.update.system.files": "files"
+        }
     }
 }
