@@ -49,5 +49,17 @@
             "route.user.relogin": "hookRelogin",
             "route.user.relogin.check": "hookRelogin"
         }
+    },
+    "user.hook.config": {
+        "class": "User\\Services\\HookConfig",
+        "arguments": [
+            "@config"
+        ],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.user.form.generate": "form",
+            "config.update.user.validator": "validator",
+            "config.update.user.before": "before"
+        }
     }
 }

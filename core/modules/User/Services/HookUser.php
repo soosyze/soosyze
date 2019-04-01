@@ -17,6 +17,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'User' ] = [
+            'user.config.manage'     => 'Administrer les configurations',
             'user.people.manage'     => 'Administrer les utilisateurs',
             'user.permission.manage' => 'Administrer les droits',
             'user.showed'            => 'Voir les profils utilisateurs',

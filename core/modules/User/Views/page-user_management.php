@@ -6,7 +6,6 @@
                 <li><a href="<?php echo $link_role ?>">Administrer les rôles</a></li>
                 <li><a href="<?php echo $link_permission ?>">Administrer les permissions</a></li>
             <?php endif; ?>
-            <li><a href="<?php echo $link_config ?>">Configuration</a></li>
         </ul>
         <fieldset class="table-responsive">
             <legend>Gestion des utilisateurs</legend>
