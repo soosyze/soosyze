@@ -9,9 +9,15 @@ class HookUser
      */
     protected $config;
 
-    public function __construct($config)
+    /**
+     * @var User
+     */
+    protected $user;
+
+    public function __construct($config, $user)
     {
         $this->config = $config;
+        $this->user   = $user;
     }
 
     public function hookPermission(&$permission)
@@ -78,6 +84,24 @@ class HookUser
     public function hookLogin($req, $user)
     {
         return empty($user);
+    }
+
+    public function hookLoginCheck($req, $user)
+    {
+        /* Si le site est en maintenance. */
+        if (!$this->config->get('settings.maintenance')) {
+            return empty($user);
+        }
+        /* Et que l'utilisateur qui se connect existe. */
+        $post = $req->getParsedBody();
+        if (!isset($post[ 'email' ]) || !filter_var($post[ 'email' ], FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+        if (!($userActived = $this->user->getUserActived($post[ 'email' ]))) {
+            return false;
+        }
+        /* Si l'utilisateur à le droit de se connecter en mode maintenance. */
+        return $this->user->getGranted($userActived, 'system.config.maintenance');
     }
 
     public function hookLogout($req, $user)

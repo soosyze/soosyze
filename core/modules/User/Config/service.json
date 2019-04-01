@@ -23,7 +23,8 @@
     "user.hook.user": {
         "class": "User\\Services\\HookUser",
         "arguments": [
-            "@config"
+            "@config",
+            "@user"
         ],
         "hooks": {
             "user.permission.module": "hookPermission",
@@ -44,7 +45,7 @@
             "route.user.register.check": "hookRegister",
             "route.user.activate": "hookActivate",
             "route.user.login": "hookLogin",
-            "route.user.login.check": "hookLogin",
+            "route.user.login.check": "hookLoginCheck",
             "route.user.logout": "hookLogout",
             "route.user.relogin": "hookRelogin",
             "route.user.relogin.check": "hookRelogin"

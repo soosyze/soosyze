@@ -1,9 +1,4 @@
 {
-    "system.maintenance": {
-        "methode": "GET",
-        "path": "maintenance",
-        "uses": "System@maintenance"
-    },
     "system.module.edit": {
         "methode": "GET",
         "path": "admin/modules",

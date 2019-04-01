@@ -2,7 +2,6 @@
     "System": {
         "name": "System",
         "controller": {
-            "System": "System\\Controller\\System",
             "ModulesManager": "System\\Controller\\ModulesManager"
         },
         "version": "1.0",

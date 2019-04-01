@@ -4,23 +4,23 @@ namespace System\Services;
 
 class System
 {
-    protected $tpl;
-
-    protected $query;
-
     protected $route;
 
-    protected $user;
+    protected $config;
 
-    public function __construct($route, $config, $template, $user)
+    protected $tpl;
+
+    protected $core;
+
+    public function __construct($route, $config, $template, $core)
     {
         $this->route  = $route;
-        $this->tpl    = $template;
         $this->config = $config;
-        $this->user   = $user;
+        $this->tpl    = $template;
+        $this->core   = $core;
     }
 
-    public function hookSys(&$request)
+    public function hookSys(&$request, &$response)
     {
         $uri = $request->getUri();
 
@@ -30,12 +30,13 @@ class System
                 : '404';
             $url        = $uri->withQuery($path_index);
 
-            $request = $request->withUri($url);
+            $request = $request->withUri($url)->withMethod('GET');
         }
 
         if ($this->config->get('settings.maintenance')) {
-            if (!preg_match('/^user.*$/', $uri->getQuery()) && !$this->user->isConnected()) {
-                $request = $request->withUri($uri->withQuery('maintenance'));
+            if (!preg_match('/^user.login$/', $uri->getQuery()) && !$this->core->callHook('app.granted', [
+                    'system.config.maintenance' ])) {
+                $response = $response->withStatus(503);
             }
         }
     }
@@ -43,9 +44,9 @@ class System
     public function hooks404($request, &$response)
     {
         if (($path = $this->config->get('settings.path_no_found')) != '') {
-            $requestNoFound = $request->withUri(
-                $request->getUri()->withQuery($path)
-            );
+            $requestNoFound = $request
+                ->withUri($request->getUri()->withQuery($path))
+                ->withMethod('GET');
             if (($route          = $this->route->parse($requestNoFound))) {
                 $responseNoFound = $this->route->execute($route, $requestNoFound);
             }
@@ -74,9 +75,9 @@ class System
     public function hooks403($request, &$response)
     {
         if (($path = $this->config->get('settings.path_access_denied')) != '') {
-            $requestDenied = $request->withUri(
-                $request->getUri()->withQuery($path)
-            );
+            $requestDenied = $request
+                ->withUri($request->getUri()->withQuery($path))
+                ->withMethod('GET');
             if (($route         = $this->route->parse($requestDenied))) {
                 $responseDenied = $this->route->execute($route, $requestDenied);
             }
@@ -97,25 +98,38 @@ class System
         }
     }
 
+    public function hooks503($request, &$response)
+    {
+        $response = $this->tpl->render('page', 'page-maintenance.php', VIEWS_SYSTEM, [
+                'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Site en maintenance'
+            ])
+            ->withStatus(503);
+    }
+
     public function hookMeta($request, &$response)
     {
         if ($response instanceof \Template\Services\TemplatingHtml) {
-            $uri = $request->getUri();
+            $data = $this->config->get('settings');
+            $response->add([
+                'title'       => $data[ 'title' ],
+                'description' => $data[ 'description' ],
+                'keyboard'    => $data[ 'keyboard' ],
+                'favicon'     => $data[ 'favicon' ]
+            ])->view('page', [
+                'title' => $data[ 'title' ],
+                'logo'  => $data[ 'logo' ]
+            ]);
 
-            if ($uri->getQuery() == '' || $uri->getQuery() == '/') {
+            $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
+            if ($data[ 'maintenance' ] && $granted) {
+                $response->view('page.messages', [ 'infos' => [ 'Le site est en maintenance.' ] ]);
+            }
+            if (!in_array($request->getUri()->getQuery(), [ '', '/' ])) {
+                return;
+            }
+            if (!$data[ 'maintenance' ] || ($data[ 'maintenance' ] && $granted)) {
                 $response->override('page', [ 'page-front.php' ]);
             }
-            $meta = $this->config->get('settings');
-
-            $response->add([
-                'title'       => $meta[ 'title' ],
-                'description' => $meta[ 'description' ],
-                'keyboard'    => $meta[ 'keyboard' ],
-                'favicon'     => $meta[ 'favicon' ]
-            ])->view('page', [
-                'title' => $meta[ 'title' ],
-                'logo'  => $meta[ 'logo' ]
-            ]);
         }
     }
 }

@@ -6,8 +6,17 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
+define('VIEWS_SYSTEM', MODULES_CORE . 'System' . DS . 'Views' . DS);
+define('CONFIG_SYSTEM', MODULES_CORE . 'System' . DS . 'Config' . DS);
+
 class ModulesManager extends \Soosyze\Controller
 {
+    public function __construct()
+    {
+        $this->pathServices = CONFIG_SYSTEM . 'service.json';
+        $this->pathRoutes   = CONFIG_SYSTEM . 'routing.json';
+    }
+
     public function edit($r)
     {
         /* Récupère les modules en base de données. */

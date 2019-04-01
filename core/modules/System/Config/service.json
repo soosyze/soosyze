@@ -5,18 +5,19 @@
             "@query"
         ]
     },
-    "system.hook": {
+    "system.hook.app": {
         "class": "System\\Services\\System",
         "arguments": [
             "@router",
             "@config",
             "@template",
-            "@user"
+            "@core"
         ],
         "hooks": {
-            "app.404": "hooks404",
-            "app.403": "hooks403",
             "app.response.before": "hookSys",
+            "app.403": "hooks403",
+            "app.404": "hooks404",
+            "app.503": "hooks503",
             "app.response.after": "hookMeta"
         }
     },
