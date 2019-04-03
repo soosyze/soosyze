@@ -6,7 +6,7 @@
         ]
     },
     "system.hook.app": {
-        "class": "System\\Services\\System",
+        "class": "System\\Services\\HookApp",
         "arguments": [
             "@router",
             "@config",

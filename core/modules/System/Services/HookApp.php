@@ -2,7 +2,7 @@
 
 namespace System\Services;
 
-class System
+class HookApp
 {
     protected $route;
 
