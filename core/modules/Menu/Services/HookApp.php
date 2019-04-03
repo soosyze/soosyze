@@ -55,6 +55,12 @@ class HookApp
             $("#sortable").sortable({
                 axis: "y",
                 containment: \'table\',
+                helper: function (e, ui) {
+                    ui.children().each(function() {
+                        $(this).width($(this).width());
+                    });
+                    return ui;
+                },
                 stop: function (event, ui) {
                     var i = 1;
                     $(".draggable input[type=\'number\']").each(function () {
@@ -65,7 +71,7 @@ class HookApp
             });
         });</script>';
 
-        $style .= '<style>.draggable{cursor: move;}td{width:100%;background-color:#FFF;}</style>';
+        $style .= '<style>.draggable{cursor: move;}td{background-color:#FFF;}</style>';
         $response->add([
             'scripts' => $script,
             'styles'  => $style

@@ -12,7 +12,6 @@
                         <th>Activé</th>
                         <th>Poids</th>
                         <th>Actions</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="sortable">
@@ -30,15 +29,13 @@
                                 <label for="active-<?php echo $link[ 'id' ]; ?>"><span class="ui"></span>&nbsp;</label>
                             </div>
                         </td>
-                        <td style="min-width:80px">
+                        <td>
                             <?php echo $form->form_input('weight-' . $link[ 'id' ]); ?>
                         </td>	
                         <td>
                             <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ]; ?>">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Éditer
                             </a>
-                        </td>
-                        <td>
                             <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ]; ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Supprimer
                             </a>
