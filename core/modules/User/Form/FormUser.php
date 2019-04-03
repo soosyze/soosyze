@@ -9,12 +9,22 @@ class FormUser extends FormBuilder
     protected $content = [
         'username'  => '',
         'email'     => '',
+        'picture'   => '',
+        'bio'       => '',
         'name'      => '',
         'firstname' => '',
         'actived'   => '',
     ];
 
+    protected $file;
+
     protected static $attrGrp = [ 'class' => 'form-group' ];
+
+    public function __construct(array $attributes, $file = null)
+    {
+        parent::__construct($attributes);
+        $this->file = $file;
+    }
 
     public function content($content)
     {
@@ -43,11 +53,36 @@ class FormUser extends FormBuilder
         $form->group('user-email-group', 'div', function ($form) {
             $form->label('user-email-label', 'E-mail')
                 ->email('email', 'email', [
-                    'class'     => 'form-control',
-                    'maxlength' => 254,
+                    'class'       => 'form-control',
+                    'maxlength'   => 254,
                     'placeholder' => 'exemple@mail.com',
-                    'required'  => 1,
-                    'value'     => $this->content[ 'email' ]
+                    'required'    => 1,
+                    'value'       => $this->content[ 'email' ]
+            ]);
+        }, self::$attrGrp);
+
+        return $this;
+    }
+
+    public function picture(&$form)
+    {
+        $form->group('user-picture-group', 'div', function ($form) {
+            $form->label('user-picture-label', 'Image', [ 'for' => 'file-name-picture' ]);
+            $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
+        }, self::$attrGrp);
+
+        return $this;
+    }
+
+    public function bio(&$form)
+    {
+        $form->group('system-description-group', 'div', function ($form) {
+            $form->label('system-bio-label', 'Biographie')
+                ->textarea('bio', 'bio', $this->content[ 'bio' ], [
+                    'class'       => 'form-control',
+                    'maxlength'   => 255,
+                    'placeholder' => 'Décrivez-vous en 255 caractères maximum.',
+                    'rows'        => 3,
             ]);
         }, self::$attrGrp);
 
@@ -129,7 +164,16 @@ class FormUser extends FormBuilder
             $form->legend('user-informations-legend', 'Informations');
             $this->username($form)
                     ->email($form)
-                    ->passwordCurrent($form)
+                    ->passwordCurrent($form);
+        });
+    }
+
+    public function fieldsetProfil()
+    {
+        return $this->group('user-profil-fieldset', 'fieldset', function ($form) {
+            $form->legend('user-informations-legend', 'Profil');
+            $this->picture($form)
+                    ->bio($form)
                     ->name($form)
                     ->firstname($form);
         });

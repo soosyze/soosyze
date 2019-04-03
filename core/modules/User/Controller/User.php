@@ -72,9 +72,13 @@ class User extends \Soosyze\Controller
 
         $roles = self::query()->from('role')->where('role_id', '>', 1)->fetchAll();
 
-        $form = (new FormUser([ 'method' => 'post', 'action' => self::router()->getRoute('user.store') ]))
+        $form = (new FormUser([
+            'method'  => 'post',
+            'action'  => self::router()->getRoute('user.store'),
+            'enctype' => 'multipart/form-data' ], self::file()))
             ->content($data)
             ->fieldsetInformationsCreate()
+            ->fieldsetProfil()
             ->fieldsetPassword()
             ->fieldsetActived()
             ->fieldsetRoles($roles)
@@ -107,12 +111,25 @@ class User extends \Soosyze\Controller
 
     public function store($req)
     {
-        $post = $req->getParsedBody();
+        $post   = $req->getParsedBody();
+        $files  = $req->getUploadedFiles();
+        $server = $req->getServerParams();
+
+        if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
+                . 'dépasse la valeur maximale autorisée par la directive post_max_size '
+                . 'de votre fichier php.ini' ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect(self::router()->getRoute('user.create'));
+        }
 
         $validator = (new Validator())
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
                 'email'            => 'required|email|max:254|htmlsc',
+                'picture'          => '!required|image|max:200000',
+                'bio'              => '!required|string|max:255|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
                 'firstname'        => '!required|string|max:255|htmlsc',
                 'actived'          => 'bool',
@@ -121,7 +138,7 @@ class User extends \Soosyze\Controller
                 'role'             => '!required|array',
                 'token'            => 'token'
             ])
-            ->setInputs($post);
+            ->setInputs($post + $files);
 
         if (isset($post[ 'role' ])) {
             $roles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
@@ -143,6 +160,7 @@ class User extends \Soosyze\Controller
             $data        = [
                 'username'       => $validator->getInput('username'),
                 'email'          => $validator->getInput('email'),
+                'bio'            => $validator->getInput('bio'),
                 'name'           => $validator->getInput('name'),
                 'firstname'      => $validator->getInput('firstname'),
                 'password'       => self::user()->hash($passworHash),
@@ -166,14 +184,14 @@ class User extends \Soosyze\Controller
                 }
             }
             self::query()->execute();
+            $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
             $route = self::router()->getRoute('user.management.admin');
 
             return new Redirect($route);
         }
-
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
@@ -205,10 +223,12 @@ class User extends \Soosyze\Controller
         }
 
         $form = (new FormUser([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.update', [ ':id' => $id ]) ]))
+            'method'  => 'post',
+            'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
+            'enctype' => 'multipart/form-data' ], self::file()))
             ->content($data)
             ->fieldsetInformations()
+            ->fieldsetProfil()
             ->fieldsetPassword();
         if (self::user()->isGranted('user.permission.manage')) {
             $roles      = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
@@ -248,13 +268,27 @@ class User extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post = $req->getParsedBody();
+        $post   = $req->getParsedBody();
+        $files  = $req->getUploadedFiles();
+        $server = $req->getServerParams();
+        $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
+
+        if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
+                . 'dépasse la valeur maximale autorisée par la directive post_max_size '
+                . 'de votre fichier php.ini' ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect($route);
+        }
 
         $validator = (new Validator())
             ->setRules([
                 /* max:254 RFC5321 - 4.5.3.1.3. */
                 'username'         => 'required|string|max:255|htmlsc',
                 'email'            => 'required|email|max:254',
+                'picture'          => '!required|image|max:200000',
+                'bio'              => '!required|string|max:255|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
                 'firstname'        => '!required|string|max:255|htmlsc',
                 'password_new'     => '!required|string',
@@ -262,9 +296,9 @@ class User extends \Soosyze\Controller
                 'actived'          => 'bool',
                 'token'            => 'required|token'
             ])
-            ->setInputs($post);
+            ->setInputs($post + $files);
 
-        $is_email = $is_username = false;
+        $is_email      = $is_username   = false;
         /* En cas de modification du email. */
         if (($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ])) {
             $is_email = self::user()->getUser($validator->getInput('email'));
@@ -287,6 +321,7 @@ class User extends \Soosyze\Controller
             $value = [
                 'username'  => $validator->getInput('username'),
                 'email'     => $validator->getInput('email'),
+                'bio'       => $validator->getInput('bio'),
                 'name'      => $validator->getInput('name'),
                 'firstname' => $validator->getInput('firstname')
             ];
@@ -302,11 +337,13 @@ class User extends \Soosyze\Controller
                 $value[ 'password' ] = self::user()->hash($passwordHash);
             }
 
-            $this->container->callHook('user.update.before', [ &$validator, &$value, $id ]);
+            $this->container->callHook('user.update.before', [ &$validator, &$value,
+                $id ]);
             self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
             if (self::user()->isGranted('user.people.manage')) {
                 $this->updateRole($id, $req);
             }
+            $this->savePicture($id, $validator);
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
             $user_current = self::user()->isConnected();
@@ -319,12 +356,11 @@ class User extends \Soosyze\Controller
                 self::user()->login($user[ 'email' ], $validator->getInput('password_new'));
             }
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
-            $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
@@ -336,7 +372,6 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
             $_SESSION[ 'errors_keys' ][]          = 'username';
         }
-        $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         return new Redirect($route);
     }
@@ -453,5 +488,27 @@ class User extends \Soosyze\Controller
         }
 
         return $menu;
+    }
+
+    private function savePicture($id, $validator)
+    {
+        $dir = self::core()->getSetting('files_public') . "/user/$id";
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $key = 'picture';
+        self::file()
+            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->moveTo($key, $dir)
+            ->callGet(function ($key) use ($id) {
+                return self::user()->find($id)[ $key ];
+            })
+            ->callMove(function ($key, $move) use ($id) {
+                self::query()->update('user', [ $key => $move ])->where('user_id', '==', $id)->execute();
+            })
+            ->callDelete(function ($key) use ($id) {
+                self::query()->update('user', [ $key => '' ])->where('user_id', '==', $id)->execute();
+            })
+            ->save();
     }
 }
