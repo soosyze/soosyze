@@ -29,8 +29,12 @@ class Core extends App
                     '@config'
                 ]
             ],
-            'file' => [
-                'class'     => 'FileSystem\\Services\\File'
+            'file'     => [
+                'class' => 'FileSystem\\Services\\File',
+                'arguments' => [
+                    '@core'
+                ]
+                
             ]
         ];
     }

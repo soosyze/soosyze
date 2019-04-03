@@ -145,25 +145,18 @@ class Configuration extends \Soosyze\Controller
 
     private function saveFile($key, $validator)
     {
-        $uploadFile = $validator->getInput($key);
-        if (!($uploadFile instanceof UploadedFileInterface)) {
-            return;
-        }
-        if ($uploadFile->getError() === UPLOAD_ERR_OK) {
-            $path     = self::core()->getSetting('files_public', 'app/files');
-            $filename = $uploadFile->getClientFilename();
-            $ext      = Util::getFileExtension($filename);
-
-            $move = $path . "/$key." . $ext;
-            $uploadFile->moveTo($move);
-            self::config()->set("settings.$key", $move);
-        } elseif ($uploadFile->getError() === UPLOAD_ERR_NO_FILE) {
-            $name = $validator->getInput("file-name-$key");
-            $file = self::config()->get("settings.$key");
-            if (empty($name) && $file) {
+        self::file()
+            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->moveTo($key)
+            ->callGet(function ($key) {
+                return self::config()->get("settings.$key");
+            })
+            ->callMove(function ($key, $move) {
+                self::config()->set("settings.$key", $move);
+            })
+            ->callDelete(function ($key) {
                 self::config()->set("settings.$key", '');
-                unlink($file);
-            }
-        }
+            })
+            ->save();
     }
 }

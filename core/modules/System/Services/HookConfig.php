@@ -66,7 +66,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                     ->group('system-logo-group', 'div', function ($form) use ($data) {
                         $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
-                        $this->file->formFile('logo', $form, $data[ 'logo' ]);
+                        $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                         $form->html('system-logo-info-size', '<p:css:attr>:_content</p>', [
                             '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
                         ]);
@@ -131,7 +131,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                     ->group('system-group-favicon', 'div', function ($form) use ($data) {
                         $form->label('system-favicon-label', 'Favicon', [ 'class' => 'control-label' ]);
-                        $this->file->formFile('favicon', $form, $data[ 'favicon' ]);
+                        $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
                         $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
                             '_content' => 'Le fichier doit peser moins de <b>100 Ko</b>.'
                         ])->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
