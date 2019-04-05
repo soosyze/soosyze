@@ -33,7 +33,7 @@ class Install
                 'menu', 'weight', 'parent' ])
             ->values([
                 'node.show',
-                '<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Accueil',
+                '<i class="fa fa-home"></i> Accueil',
                 '/',
                 'admin-menu',
                 1,
@@ -41,7 +41,7 @@ class Install
             ])
             ->values([
                 'menu.show',
-                '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Menu',
+                '<i class="fa fa-bars"></i> Menu',
                 'menu/main-menu',
                 'admin-menu',
                 3,

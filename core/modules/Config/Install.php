@@ -36,7 +36,7 @@ class Install
                 ])
                 ->values([
                     'config.index',
-                    '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuration',
+                    '<i class="fa fa-cog"></i> Configuration',
                     'admin/config',
                     'admin-menu',
                     6,

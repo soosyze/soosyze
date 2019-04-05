@@ -23,27 +23,27 @@
                 <div class="col-md-2"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></div>
                 <div class="col-md-2"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'changed' ]); ?></div>
                 <div class="col-md-3">
-                    <div class="btn-group" role="group" aria-label="action">
-                        <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
-                            <span class="glyphicon glyphicon-pencil" aria-label="Modifier"></span> Éditer
-                        </a>
-                        <a href="<?php echo $node[ 'link_delet' ]; ?>" class="btn btn-action" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
-                            <span class="glyphicon glyphicon-remove" aria-label="Supprimer"></span> Supprimer
-                        </a>
-                    </div>
                 </div>
                 <div class="col-md-1">
                 <?php if ($node[ 'published' ] == 'on'): ?>
+                            <div class="btn-group" role="group" aria-label="action">
+                                <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
+                                    <span class="fa fa-edit"></span> Éditer
+                                </a>
+                                <a href="<?php echo $node[ 'link_delet' ]; ?>" class="btn btn-action" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
+                                    <span class="fa fa-times"></span> Supprimer
+                                </a>
+                            </div>
 
-                    <div class="icon-publish">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    </div>
-                <?php else: ?>
+                            <div class="icon-publish">
+                                <span class="fa fa-ok" aria-hidden="Publish"></span>
+                            </div>
+                        <?php else: ?>
 
-                    <div class="icon-notPublish">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </div>
-                <?php endif; ?>
+                            <div class="icon-notPublish">
+                                <span class="fa fa-times" aria-hidden="Not publish"></span>
+                            </div>
+                        <?php endif; ?>
 
                 </div>
             </div>

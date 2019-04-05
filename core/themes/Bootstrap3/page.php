@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-admin" aria-expanded="false">
-                Menu <span class="glyphicon glyphicon-menu-hamburger"></span>
+                Menu <i class="fa fa-bars"></i>
             </button>
         </div>
         <div class="collapse navbar-collapse" id="navbar-admin">

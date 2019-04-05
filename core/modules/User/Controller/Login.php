@@ -51,7 +51,7 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Connexion'
+                    'title_main' => '<i class="fa fa-user"></i> Connexion'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-login.php', VIEWS_USER, [
@@ -130,7 +130,7 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-user" aria-hidden="true"></i> Demander un nouveau mot de passe'
+                    'title_main' => '<i class="fa fa-user"></i> Demander un nouveau mot de passe'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-relogin.php', VIEWS_USER, [

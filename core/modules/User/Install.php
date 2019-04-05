@@ -79,7 +79,7 @@ class Install
                     'menu', 'weight', 'parent' ])
                 ->values([
                     'user.management.admin',
-                    '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Utilisateur',
+                    '<i class="fa fa-user"></i> Utilisateur',
                     'admin/user',
                     'admin-menu',
                     4,
@@ -103,7 +103,7 @@ class Install
                 ])
                 ->values([
                     'user.logout',
-                    '<span class="glyphicon glyphicon-off" aria-hidden="true"></span> Déconnexion',
+                    '<i class="fa fa-power-off"></i> Déconnexion',
                     'user/logout',
                     'user-menu',
                     3,

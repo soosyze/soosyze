@@ -78,7 +78,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Ajouter un lien'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-add.php', VIEWS_MENU, [
@@ -213,7 +213,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Éditer un lien'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-edit.php', VIEWS_MENU, [

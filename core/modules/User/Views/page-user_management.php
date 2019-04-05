@@ -50,8 +50,12 @@
 
                             </td>
                             <td>
-                                <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">Éditer</a>
-                                <a class="btn btn-action" href="<?php echo $user[ 'link_remove' ] ?>">Supprimer</a>
+                                <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
+                                    <span class="fa fa-edit"></span> Éditer
+                                </a>
+                                <a class="btn btn-action" href="<?php echo $user[ 'link_remove' ] ?>">
+                                    <span class="fa fa-times"></span> Supprimer
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -38,7 +38,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
+                    'title_main' => '<i class="fa fa-file"></i>  Mes contenus'
                 ])
                 ->render('page.content', 'node-admin.php', VIEWS_NODE, [
                     'linkAdd' => $linkAdd,
@@ -64,7 +64,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu'
+                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu'
                 ])
                 ->render('page.content', 'node-add.php', VIEWS_NODE, [
                     'node_type' => $query
@@ -168,7 +168,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $type
+                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu de type ' . $type
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-create.php', VIEWS_NODE, [
@@ -389,7 +389,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
+                    'title_main' => '<i class="fa fa-file"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-edit.php', VIEWS_NODE, [ 'form' => $form ]);

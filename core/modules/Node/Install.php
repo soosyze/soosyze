@@ -163,7 +163,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                     'menu', 'weight', 'parent' ])
                 ->values([
                     'node.index',
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Contenu',
+                    '<i class="fa fa-file"></i> Contenu',
                     'admin/node',
                     'admin-menu',
                     2,

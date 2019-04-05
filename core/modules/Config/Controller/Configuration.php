@@ -28,7 +28,7 @@ class Configuration extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Configuration'
+                    'title_main' => '<i class="fa fa-cog"></i> Configuration'
                 ])
                 ->view('page.messages', [ 'infos' => [ 'Aucune configuration disponible' ] ])
                 ->render('page.content', 'page-config.php', VIEWS_CONFIG, [
@@ -71,7 +71,7 @@ class Configuration extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Configuration'
+                    'title_main' => '<i class="fa fa-cog"></i> Configuration'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-config.php', VIEWS_CONFIG, [

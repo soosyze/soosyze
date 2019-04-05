@@ -63,7 +63,7 @@ class Install
                 ])
                 ->values([
                     'system.module.edit',
-                    '<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Modules',
+                    '<i class="fa fa-th-large"></i> Modules',
                     'admin/modules',
                     'admin-menu',
                     5,

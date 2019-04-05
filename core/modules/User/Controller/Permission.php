@@ -49,7 +49,7 @@ class Permission extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Administrer les permissions'
+                    'title_main' => '<i class="fa fa-user"></i> Administrer les permissions'
                 ])
                 ->render('page.content', 'page-permission.php', VIEWS_USER, [
                     'link_update' => self::router()->getRoute('user.permission.update'),

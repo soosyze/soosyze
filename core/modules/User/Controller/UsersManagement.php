@@ -38,7 +38,7 @@ class UsersManagement extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Administrer les utilisateurs'
+                    'title_main' => '<i class="fa fa-user"></i> Administrer les utilisateurs'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-user_management.php', VIEWS_USER, [

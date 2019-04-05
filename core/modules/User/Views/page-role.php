@@ -22,9 +22,13 @@
                             <td><i><?php echo $role[ 'role_description' ] ?></i></td>
                             <td><?php echo $role[ 'role_weight' ]; ?></td>
                             <td>
-                                <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ] ?>">Éditer</a>
+                                <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ] ?>">
+                                    <i class="fa fa-edit"></i> Éditer
+                                </a>
                                 <?php if (isset($role[ 'link_remove' ])): ?>
-                                    <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ] ?>">Supprimer</a>
+                                    <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ] ?>">
+                                        <i class="fa fa-times"></i> Supprimer
+                                    </a>
                                 <?php endif; ?>
                             </td>
                         </tr>

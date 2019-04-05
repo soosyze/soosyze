@@ -23,7 +23,7 @@
 
         <div class="cadre">
             <fieldset>
-                <legend><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Utilisateur</legend>
+                <legend><i class="fa fa-user"></i> Utilisateur</legend>
                 <?php echo $form->renderForm(); ?>
             </fieldset>
         </div>

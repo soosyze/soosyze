@@ -34,10 +34,10 @@
                         </td>	
                         <td>
                             <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ]; ?>">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Éditer
+                                <i class="fa fa-edit"></i> Éditer
                             </a>
                             <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ]; ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Supprimer
+                                <i class="fa fa-times"></i> Supprimer
                             </a>
                         </td>
                     </tr>

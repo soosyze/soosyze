@@ -69,7 +69,7 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></i> Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Menu'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-show.php', VIEWS_MENU, [

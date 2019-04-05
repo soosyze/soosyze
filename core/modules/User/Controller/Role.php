@@ -38,7 +38,7 @@ class Role extends \Soosyze\Controller
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->view('page', [ 'title_main' => 'Administrer les rôles' ])
+                ->view('page', [ 'title_main' => '<i class="fa fa-user"></i> Administrer les rôles' ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-role.php', VIEWS_USER, [
                     'roles'    => $roles,
@@ -76,7 +76,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Création d\'un role'
+                    'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', VIEWS_USER, [
@@ -158,7 +158,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Création d\'un role'
+                    'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', VIEWS_USER, [
@@ -240,7 +240,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Supression du role <i>' . $data[ 'role_label' ] . '</i>'
+                    'title_main' => '<i class="fa fa-user"></i> Supression du role <i>' . $data[ 'role_label' ] . '</i>'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', VIEWS_USER, [
