@@ -484,7 +484,8 @@ th{
 .table > tfoot > tr > td{
     border-top: 1px solid #ddd;
     line-height: 1.4;
-    padding: 8px;
+    vertical-align: middle;
+    padding: 1em;
 }
 .table > thead > tr > th{
     border-bottom: 2px solid #ddd;
@@ -503,64 +504,6 @@ th{
 }
 .table .table{
     background-color: #fff;
-}
-.table-responsive{
-    min-height: 0.01%;
-    overflow-x: auto;
-}
-@media screen and (max-width: 767px){
-    .table-responsive {
-        border: 1px solid #ddd;
-        margin-bottom: 15px;
-        overflow-y: hidden;
-        -ms-overflow-style: -ms-autohiding-scrollbar;
-        width: 100%;
-    }
-    .table-responsive > .table{
-        margin-bottom: 0;
-    }
-    .table-responsive > .table > thead > tr > th,
-    .table-responsive > .table > tbody > tr > th,
-    .table-responsive > .table > tfoot > tr > th,
-    .table-responsive > .table > thead > tr > td,
-    .table-responsive > .table > tbody > tr > td,
-    .table-responsive > .table > tfoot > tr > td{
-        white-space: nowrap;
-    }
-}
-/* TABLE DIV */
-.div-thead tr th,
-.div-thead{
-    background-color: #20222d;
-    color: #fff;
-    font-family: "Open Sans","Segoe UI","Helvetica",sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-.div-thead tr th,
-.div-thead div{
-    padding: 1em 0 1em 1em !important;
-}
-.div-tbody{
-    padding-bottom: 15px;
-    padding-top: 15px;
-}
-.div-tbody div{
-    padding-bottom: .2em;
-}
-.div-tbody h3,
-.div-tbody h4{
-    margin: 0;
-    padding: 0;
-}
-.div-tbody:hover {
-    background-color: #eee;
-    -webkit-transition: background-color .2s;
-    -moz-transition: background-color .2s;
-    -ms-transition: background-color .2s;
-    -o-transition: background-color .2s;
-    transition: background-color .2s;
 }
 /* BLOG */
 .card{

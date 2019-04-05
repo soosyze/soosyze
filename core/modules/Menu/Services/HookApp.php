@@ -55,23 +55,17 @@ class HookApp
             $("#sortable").sortable({
                 axis: "y",
                 containment: \'table\',
-                helper: function (e, ui) {
-                    ui.children().each(function() {
-                        $(this).width($(this).width());
-                    });
-                    return ui;
-                },
-                stop: function (event, ui) {
+                stop: function (e, ui) {
                     var i = 1;
                     $(".draggable input[type=\'number\']").each(function () {
                         this.value = i;
                         i++;
                     });
                 }
-            });
+            }).disableSelection();
         });</script>';
 
-        $style .= '<style>.draggable{cursor: move;}td{background-color:#FFF;}</style>';
+        $style .= '<style>.draggable{cursor: ns-resize;}.ui-sortable-helper{display: table;}</style>';
         $response->add([
             'scripts' => $script,
             'styles'  => $style

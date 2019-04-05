@@ -7,10 +7,10 @@
                 <li><a href="<?php echo $link_permission ?>">Administrer les permissions</a></li>
             <?php endif; ?>
         </ul>
-        <fieldset class="table-responsive">
+        <fieldset class="responsive">
             <legend>Gestion des utilisateurs</legend>
-            <table class="table">
-                <thead class="div-thead">
+            <table class="table table-hover">
+                <thead>
                     <tr class="form-head">
                         <th>Id</th>
                         <th>Nom utilisateur</th>
@@ -24,7 +24,7 @@
                     <?php foreach ($users as $user): ?>
                         <tr>
                             <th>#<?php echo $user[ 'user_id' ] ?></th>
-                            <td>
+                            <td data-title="Nom utilisateur">
                                 <a href="<?php echo $user[ 'link_show' ] ?>"><?php echo $user[ 'username' ] ?></a>
                                 <?php foreach ($user[ 'roles' ] as $role): ?>
 
@@ -32,7 +32,7 @@
                                 <?php endforeach; ?>
 
                             </td>
-                            <td>
+                            <td data-title="Statut">
                                 <?php if ($user[ 'actived' ] == 1): ?>
                                     actif
                                 <?php else: ?>
@@ -40,8 +40,8 @@
                                 <?php endif; ?>
 
                             </td>
-                            <td><?php echo date('d/m/Y', $user[ 'time_installed' ]) ?></td>
-                            <td>
+                            <td data-title="Date d'inscription"><?php echo date('d/m/Y', $user[ 'time_installed' ]) ?></td>
+                            <td data-title="Date du dernier accès">
                                 <?php if ($user[ 'time_access' ]): ?>
                                     <?php echo date('d/m/Y', $user[ 'time_access' ]) ?>
                                 <?php else: ?>
@@ -49,7 +49,7 @@
                                 <?php endif; ?>
 
                             </td>
-                            <td>
+                            <td data-title="Actions">
                                 <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
                                     <span class="fa fa-edit"></span> Éditer
                                 </a>

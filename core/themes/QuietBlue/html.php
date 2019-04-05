@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/normalize.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/layout.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/style.css">
+        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/admin.css">
         <?php echo $styles; ?>
 
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>

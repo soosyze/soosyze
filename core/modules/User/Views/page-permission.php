@@ -4,10 +4,10 @@
             <input type="text" id="search" class="form-control" placeholder="Rechercher permission (exemple: voir, éditer, supprimer...)" onkeyup="searchPermission();">
         </div>
         <form method="post" action="<?php echo $link_update ?>">
-            <fieldset class="table-responsive">
+            <fieldset class="responsive">
                 <legend>Permissions utilisateurs</legend>
-                <table class="table">
-                    <thead class="div-thead">
+                <table class="table table-hover">
+                    <thead>
                         <tr class="form-head">
                             <th>Droit</th>
                             <?php foreach ($roles as $role): ?>
@@ -28,7 +28,7 @@
                                 <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
                                     <?php $name = $role . '[' . $key . ']' ?>
 
-                                <td>
+                                <td data-title="<?php echo $roles[$role - 1]['role_label']; ?>">
                                     <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?>>
                                     <label for="<?php echo $name ?>"><i class="ui"></i></label>
                                 </td>

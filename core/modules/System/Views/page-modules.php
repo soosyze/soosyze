@@ -1,47 +1,53 @@
 
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-md-12">
         <?php echo $form->form_open(); ?>
         <?php foreach ($package as $key => $modules): ?>
 
-        <fieldset>
+        <fieldset class="responsive">
             <legend><?php echo $key; ?></legend>
-            <div class="row div-thead">
-                <div class="col-sm-3">(Activé) Nom</div>
-                <div class="col-sm-2">Version</div>
-                <div class="col-sm-7">Description</div>
-            </div>
-            <?php foreach ($modules as $module): ?>
+            <table class="table table-hover">
+                <thead>
+                    <tr class="form-head">
+                        <th>(Activé) Nom</th>
+                        <th>Version</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($modules as $module): ?>
 
-            <div class="div-tbody row">
-                <div class="col-sm-3">
-                    <?php echo $form->form_input($module[ 'name' ]); ?>
-                    <?php echo $form->form_label('module-' . $module[ 'name' ]); ?>
-                </div>
-                <div class="col-sm-2"><?php echo $module[ 'version' ]; ?></div>
-                <div class="col-sm-7">
-                    <?php echo $module[ 'description' ]; ?><br>
-                    <?php if (!empty($module[ 'isRequired' ])): ?>
+                <tr>
+                    <th>
+                        <?php echo $form->form_input($module[ 'name' ]); ?>
+                        <?php echo $form->form_label('module-' . $module[ 'name' ]); ?>
+                    </th>
+                    <td data-title="Version"><?php echo $module[ 'version' ]; ?></td>
+                    <td data-title="Description">
+                        <?php echo $module[ 'description' ]; ?><br>
+                        <?php if (!empty($module[ 'isRequired' ])): ?>
 
-                    Requiert 
-                    <span class="module-is_required">
-                        <?php echo implode(',', $module[ 'isRequired' ]); ?>
+                        Requiert 
+                        <span class="module-is_required">
+                            <?php echo implode(',', $module[ 'isRequired' ]); ?>
 
-                    </span><br>
-                    <?php endif; ?>
-                    <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
+                        </span><br>
+                        <?php endif; ?>
+                        <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
 
-                    Est requis par 
-                    <span class="module-is_required_for_module">
-                        <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
+                        Est requis par 
+                        <span class="module-is_required_for_module">
+                            <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
 
-                    </span><br>
-                    <?php endif; ?>
+                        </span><br>
+                        <?php endif; ?>
 
-                </div>
-            </div>
-            <?php endforeach; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
 
+                </tbody>
+            </table>
         </fieldset>
         <?php endforeach; ?>
 

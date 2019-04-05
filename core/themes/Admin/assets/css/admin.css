@@ -1,0 +1,183 @@
+.btn.btn-action {
+    margin-right: 5px;
+}
+
+
+/* --------------------------- */
+/* ------ CONFIGURATION ------ */
+/* --------------------------- */
+#nav_config ul{
+    padding: 0;
+}
+#nav_config ul li{
+    list-style: none;
+}
+#nav_config ul li a{
+    display:block;
+    padding: .5em 1em;
+}
+#nav_config ul li a:hover{
+    background: #e1e4e8;
+}
+#nav_config ul li.active a{
+    color: #FFF;
+    background: #1a92bb;
+}
+
+
+/* --------------------------- */
+/* ---------- FILE ----------- */
+/* --------------------------- */
+.input-file-img {
+    width: auto;
+    max-height: 200px;
+}
+
+
+/* --------------------------- */
+/* ---------- USER ----------- */
+/* --------------------------- */
+#nav_user{
+    padding-bottom: 1em;
+}
+#nav_user ul{
+    list-style-type: none;
+    padding: 0;
+}
+#nav_user li{
+    display: inline;
+}
+.user-picture,
+.user-picture_default{
+    border: 1px solid #e1e4e8;
+    border-bottom-color: rgb(225, 228, 232);
+    border-bottom-style: solid;
+    border-bottom-width: 1px; 
+}
+.user-picture_default {
+    position: relative;
+    width: 100%;
+    white-space: nowrap;
+    background: #e6e7f4;
+}
+.user-picture_default:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.user-picture_default_username {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5em;
+    color: #FFF;
+}
+.user-title{
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin: 0;
+}
+.user-fullname,
+.user-username{
+    display:block;
+}
+.user-fullname{
+    color: #333;
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: bold;
+}
+.user-username {
+    color: #666;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px;
+}
+
+
+/* --------------------------- */
+/* ---------- ROLE ----------- */
+/* --------------------------- */
+.badge-role {
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    border-radius: 10px;
+}
+#role_color_btn{
+    text-shadow: rgba(0, 0, 0, 0.75) 0px 0px 3px;
+}
+
+
+/* --------------------------- */
+/* ---------- TABLE ---------- */
+/* --------------------------- */
+.table > tbody > tr > td, 
+.table > tbody > tr > th, 
+.table > tfoot > tr > td, 
+.table > tfoot > tr > th, 
+.table > thead > tr > td, 
+.table > thead > tr > th {
+    vertical-align: middle;
+    padding: 1em;
+}
+thead{
+    background-color: #1c889e;
+    color: #fff;
+    font-family: "Open Sans","Segoe UI","Helvetica",sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+thead tr th{
+    padding: 1em 0 1em 1em !important;
+}
+@media (max-width: 768px) {
+    .table > tbody > tr > td, 
+    .table > tbody > tr > th, 
+    .table > tfoot > tr > td, 
+    .table > tfoot > tr > th, 
+    .table > thead > tr > td, 
+    .table > thead > tr > th {
+        border: 0;
+    }
+    .responsive table, 
+    .responsive thead, 
+    .responsive tbody, 
+    .responsive th, 
+    .responsive td, 
+    .responsive tr { 
+        display: block; 
+    }
+    .responsive thead {
+        display:none;
+    }
+    .responsive td { 
+        position: relative;
+        border: 0px solid transparent;
+        padding-left: 50% !important; 
+        white-space: normal;
+        text-align:right;
+        border-bottom: 0;
+    }
+    .responsive td:before { 
+        content: attr(data-title);
+        position: absolute;
+        left: 0;
+        width: 45%; 
+        height:100%;
+        white-space: nowrap;
+        text-overflow: ellipsis !important;
+        overflow:hidden !important;
+        text-align:left;
+        font-weight: 600;
+        padding-left: 1em;
+    }
+    .responsive tbody tr th a,
+    .responsive tbody tr th{ 
+        background-color:#1c889e;
+        color: #fff;
+    }
+}

@@ -44,6 +44,7 @@
                 right: 25px;
             }
         </style>
+        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/admin.css">
         <?php echo $styles; ?>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     </head>
