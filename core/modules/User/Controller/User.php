@@ -442,24 +442,28 @@ class User extends \Soosyze\Controller
     {
         $roles          = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
         $post           = $req->getParsedBody();
-        $post[ 'role' ] = isset($post[ 'role' ])
+        $data[ 'role' ] = isset($post[ 'role' ])
             ? $post[ 'role' ]
             : [];
         $validator      = new Validator();
 
-        foreach ($post[ 'role' ] as $role) {
-            $validator->addInput('role-' . $role, $role)
-                ->addRule('role-' . $role, 'int|inarray:' . $roles);
+        foreach ($data[ 'role' ] as $idRole) {
+            $validator->addInput('role-' . $idRole, $idRole)
+                ->addRule('role-' . $idRole, 'int|inarray:' . $roles);
         }
 
         if ($validator->isValid()) {
+            $this->container->callHook('user.update.role.before', [ &$validator,
+                &$data, $idUser ]);
             self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
             self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $idUser, 2 ]);
-            foreach ($post[ 'role' ] as $role) {
-                self::query()->values([ $idUser, $role ]);
+            foreach ($data[ 'role' ] as $idRole) {
+                self::query()->values([ $idUser, $idRole ]);
             }
             self::query()->execute();
+            $this->container->callHook('user.update.role.after', [ &$validator, &$data,
+                $idUser ]);
 
             return true;
         }
