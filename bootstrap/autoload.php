@@ -1,7 +1,6 @@
 <?php
 
-$basePath = __DIR__ . '/../';
-$vendor   = $basePath . 'vendor/';
+$vendor   = ROOT . 'vendor/';
 
 /**
  * L'autoload de Soosyze charge les objets à la volée, sans map ni cache.
@@ -22,8 +21,8 @@ $autoload->setPrefix([
     'Soosyze'                 => $vendor . 'soosyze/framework/src',
     'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http'
 ])->setMap([
-    $basePath . 'core/modules',
-    $basePath . 'app/modules'
+    ROOT . 'core/modules',
+    ROOT . 'app/modules'
 ]);
 
 $autoload->register();

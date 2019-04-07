@@ -2,7 +2,7 @@
 
 use Soosyze\App;
 
-require_once 'vendor/soosyze/framework/src/App.php';
+require_once ROOT . '/vendor/soosyze/framework/src/App.php';
 
 class Core extends App
 {

@@ -246,6 +246,7 @@ class Install extends \Soosyze\Controller
         self::config()->set('settings.theme', 'QuietBlue');
         self::config()->set('settings.theme_admin', 'Admin');
         self::config()->set('settings.logo', '');
+        self::config()->set('settings.key_cron', Util::strRandom(50));
 
         $path = self::config()->getPath();
         chmod($path . 'database.json', 0444);
