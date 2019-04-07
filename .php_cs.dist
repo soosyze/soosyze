@@ -1,10 +1,11 @@
 <?php
 
 /**
- * friendsofphp/php-cs-fixer: 1.13.*
+ * friendsofphp/php-cs-fixer: 2.13.*
  * @see http://cs.sensiolabs.org/
  */
 $finder = PhpCsFixer\Finder::create()
+    ->notPath('bootstrap/requirements.php')
     ->in(__DIR__);
 
 return PhpCsFixer\Config::create()

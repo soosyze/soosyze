@@ -2,14 +2,19 @@
 
 [![GitHub](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
-[![Download Soosyze CMS](https://img.shields.io/badge/download-1.0.0--alpha4.1-blue.svg)](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4.1/soosyze.zip "Download Soosyze CMS")
+[![Download Soosyze CMS](https://img.shields.io/badge/download-1.0.0--alpha4.1-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Download Soosyze CMS")
 
 # À propos de Soosyze CMS
 
 SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il permet de créer et gérer votre site web facilement avec peu ou aucune connaissance technique. Il est basé sur un micro framework MVC en PHP orienté objet et une bibliothèque noSQL pour assurer sa stabilité et son évolution.
-* [Site](https://soosyze.com/)
-* [Demo](https://demo.soosyze.com)
-* [Docuementations](https://github.com/soosyze/documentations)
+
+* :computer: [Site](https://soosyze.com)
+* :eyes: [Démo](https://demo.soosyze.com)
+* :dizzy: Extensions et thèmes
+* :speech_balloon: [Forum](https://community.soosyze.com)
+* :blue_book: [Docuementations](https://github.com/soosyze/documentations)
+* :green_book: [PHP Doc](https://api.soosyze.com)
+* :busts_in_silhouette: [Mastodon](https://mamot.fr/@soosyze)
 
 # Sommaire
 
@@ -21,7 +26,7 @@ SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il
 
 # Captures d'écrans
 
-![GitHub](https://soosyze.com/assets/files/screen/devices-accueil.png)
+[![GitHub](https://soosyze.com/assets/files/screen/devices-accueil.png)](https://soosyze.com/#screenshot)
 
 # Exigences d'installation
 
@@ -30,7 +35,7 @@ SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il
 | Serveur Web                | Soosyze 1.x    |
 |----------------------------|----------------|
 | Apache HTTP Server 2.2+    | ✓ Supporté     |
-| Ngnix 1.8.0+               | ✓ Supporté*    |
+| Ngnix 1+                   | ✓ Supporté*    |
 | IIS                        | Need test      |
 
 *Pour Ngnix voir la [recommandation d'intallation](#ngnix)
@@ -79,7 +84,7 @@ Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexio
 
 ### Téléchargement rapide
 
-Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/download/1.0.0-alpha4.1/soosyze.zip) dans le répertoire qui hébergera votre site.
+Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip) dans le répertoire qui hébergera votre site.
 
 ### Téléchargement via Git & Composer
 
