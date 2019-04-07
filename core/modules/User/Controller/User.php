@@ -55,8 +55,9 @@ class User extends \Soosyze\Controller
                 ->render('page.content', 'page-user-show.php', VIEWS_USER, [
                     'user'  => $user,
                     'roles' => $roles
-                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
-                'menu' => $this->getMenuUser($id)
+                ])
+                ->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                    'menu' => $this->getMenuUser($id)
         ]);
     }
 

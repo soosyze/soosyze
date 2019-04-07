@@ -275,7 +275,7 @@ class User
 
         return false;
     }
-
+    
     /**
      * Fonctionnement par défaut de l'application.
      * Défini les règles du déclenchement d'un retour 403 à l'aide des hooks.

@@ -133,7 +133,7 @@ class Configuration extends \Soosyze\Controller
         sort($menu);
         foreach ($menu as $key => &$link) {
             if (!$this->container->callHook('app.granted', [ $link[ 'key' ] . '.config.manage' ])) {
-                unset($menu[$key]);
+                unset($menu[ $key ]);
 
                 continue;
             }
