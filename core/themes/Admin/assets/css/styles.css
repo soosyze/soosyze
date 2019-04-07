@@ -199,6 +199,9 @@ textarea{
     padding-left: 75px;
     cursor: pointer;
 }
+[type="checkbox"] + label{
+    min-height: 1em;
+}
 [type="checkbox"]:not(:checked) + label:before,
 [type="checkbox"]:checked + label:before,
 [type="checkbox"]:not(:checked) + label:after,
@@ -290,4 +293,13 @@ textarea{
 }
 .module-is_required_for_module{
     color:#5CD85C
+}
+.permission-module {
+    border-bottom: #9769ac 3px solid;
+}
+.badge-role {
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    border-radius: 10px;
 }
