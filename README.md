@@ -2,15 +2,15 @@
 
 [![GitHub](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
-[![Download Soosyze CMS](https://img.shields.io/badge/download-1.0.0--alpha4.1-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Download Soosyze CMS")
+[![Download Soosyze CMS](https://img.shields.io/badge/download-releases%20latest-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Download Soosyze CMS")
 
 # À propos de Soosyze CMS
 
 SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il permet de créer et gérer votre site web facilement avec peu ou aucune connaissance technique. Il est basé sur un micro framework MVC en PHP orienté objet et une bibliothèque noSQL pour assurer sa stabilité et son évolution.
 
-* :computer: [Site](https://soosyze.com)
+* :globe_with_meridians: [Site](https://soosyze.com)
 * :eyes: [Démo](https://demo.soosyze.com)
-* :dizzy: Extensions et thèmes
+* :dizzy: [Extensions et thèmes](https://github.com/soosyze-extension)
 * :speech_balloon: [Forum](https://community.soosyze.com)
 * :blue_book: [Docuementations](https://github.com/soosyze/documentations)
 * :green_book: [PHP Doc](https://api.soosyze.com)
@@ -75,21 +75,37 @@ Le thème de base et d'administration sont réalisés avec le framework Bootstra
 ## Connexion à internet
 
 Le thème de base et d'administration se décharge d'une partie des bibliothèques d'affichages (front-end) en fesant appel à des CND (Content delivery network) :
+
 * Bootstrap 3.3.7
 * JQuery 3.2.1,
 * JQuery UI 1.12.0
+
 Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexion réseau pour que ces bibliothèques soient utilisées.
 
 # Installation
 
-### Téléchargement rapide
+### :bike: Téléchargement simple
 
-Pour installer la version de production de SoosyzeCMS, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip) dans le répertoire qui hébergera votre site.
+Pour installer **la version de production de SoosyzeCMS**, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip) dans le répertoire qui hébergera votre site.
 
-### Téléchargement via Git & Composer
+### :car: Téléchargement via Composer
 
-Pour installer la version de développement de SoosyzeCMS il est primordial d’avoir :
-* Un serveur http (en ligne ou en local) comme [Apache](http://httpd.apache.org/download.cgi) ou [Ngnix](https://nginx.org/en/download.html)
+Pour installer **la version de production de SoosyzeCMS** via Composer il est primordial d’avoir :
+
+* L’installateur ou le fichier binaire [Composer](https://getcomposer.org/download/),
+* Et la commande `php` dans vos variables d’environnement.
+
+Rendez-vous dans le répertoire de votre serveur, ouvrer une invite de commandes et lancer la commande suivante :
+(*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
+
+```sh
+php composer.phar create-project soosyze/soosyze [my-directory] --stability=alpha --no-dev
+```
+
+### :airplane: Téléchargement via Git & Composer
+
+Pour installer **la version de développement de SoosyzeCMS** via Git & Composer il est primordial d’avoir :
+
 * L'outil de versionning Git pour :
   * [Windows](https://gitforwindows.org/),
   * [Mac](http://sourceforge.net/projects/git-osx-installer/)
