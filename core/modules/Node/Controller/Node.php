@@ -24,13 +24,13 @@ class Node extends \Soosyze\Controller
             ->orderBy('changed', 'desc')
             ->fetchAll();
 
-        foreach ($nodes as $key => $node) {
-            $nodes[ $key ][ 'link_view' ]  = self::router()->getRoute('node.show', [
-                ':item' => $node[ 'id' ] ]);
-            $nodes[ $key ][ 'link_edit' ]  = self::router()->getRoute('node.edit', [
-                ':item' => $node[ 'id' ] ]);
-            $nodes[ $key ][ 'link_delet' ] = self::router()->getRoute('node.delete', [
-                ':item' => $node[ 'id' ] ]);
+        foreach ($nodes as &$node) {
+            $node[ 'link_view' ]  = self::router()->getRoute('node.show', [
+                ':id' => $node[ 'id' ] ]);
+            $node[ 'link_edit' ]  = self::router()->getRoute('node.edit', [
+                ':id' => $node[ 'id' ] ]);
+            $node[ 'link_delet' ] = self::router()->getRoute('node.delete', [
+                ':id' => $node[ 'id' ] ]);
         }
 
         $linkAdd = self::router()->getRoute('node.add');
@@ -38,7 +38,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i>  Mes contenus'
+                    'title_main' => '<i class="fa fa-file"></i>  Mes contenus'
                 ])
                 ->render('page.content', 'node-admin.php', VIEWS_NODE, [
                     'linkAdd' => $linkAdd,
@@ -52,28 +52,32 @@ class Node extends \Soosyze\Controller
             ->from('node_type')
             ->fetchAll();
 
-        foreach ($query as $key => $node_type) {
-            $query[ $key ][ 'link' ] = self::router()->getRoute('node.create', [
-                ':item' => $node_type[ 'node_type' ] ]);
+        foreach ($query as $key => &$value) {
+            $req_granted         = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
+            if (!self::core()->callHook('app.granted.route', [ $req_granted ])) {
+                unset($query[$key]);
+            }
+            $value[ 'link' ] = self::router()->getRoute('node.create', [
+                ':type' => $value[ 'node_type' ] ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu'
+                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu'
                 ])
                 ->render('page.content', 'node-add.php', VIEWS_NODE, [
                     'node_type' => $query
         ]);
     }
 
-    public function create($item, $req)
+    public function create($type, $req)
     {
         $query = self::query()
             ->from('node_type')
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
             ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $item)
+            ->where('node_type', $type)
             ->orderBy('field_weight', 'asc')
             ->fetchAll();
 
@@ -90,12 +94,12 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.store', [ ':item' => $item ]);
+        $action = self::router()->getRoute('node.store', [ ':type' => $type ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item) {
+            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $type) {
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
-                ->group('node-title-group', 'div', function ($form) use ($query, $content, $item) {
+                ->group('node-title-group', 'div', function ($form) use ($query, $content, $type) {
                     $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
                         'class'       => 'form-control',
@@ -116,7 +120,7 @@ class Node extends \Soosyze\Controller
                         ? $content[ $key ]
                         : '';
 
-                    $form->group('node-' . $item . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
+                    $form->group('node-' . $type . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
                         $form->label('node-' . $key . '-label', $key);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
@@ -151,29 +155,34 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $item
+                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu de type ' . $type
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'node-create.php', VIEWS_NODE, [
                     'form' => $form
         ]);
     }
 
-    public function store($item, $req)
+    public function store($type, $req)
     {
         $query = self::query()
             ->from('node_type')
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
             ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $item)
+            ->where('node_type', $type)
             ->orderBy('field_weight')
             ->fetchAll();
 
@@ -210,7 +219,7 @@ class Node extends \Soosyze\Controller
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
                 'title'     => $validator->getInput('title'),
-                'type'      => $item,
+                'type'      => $type,
                 'created'   => (string) time(),
                 'changed'   => (string) time(),
                 'published' => (bool) $validator->getInput('published'),
@@ -224,34 +233,34 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
-            $route                 = self::router()->getRoute('node.index');
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
+            $route                               = self::router()->getRoute('node.index');
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = array_merge(
+        $_SESSION[ 'inputs' ]               = array_merge(
             $validator->getInputs(),
             $validatorField->getInputs()
         );
-        $_SESSION[ 'errors' ]      = array_merge(
+        $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
             $validator->getErrors(),
             $validatorField->getErrors()
         );
-        $_SESSION[ 'errors_keys' ] = array_merge(
+        $_SESSION[ 'errors_keys' ]          = array_merge(
             $validator->getKeyInputErrors(),
             $validatorField->getKeyInputErrors()
         );
 
-        $route = self::router()->getRoute('node.create', [ ':item' => $item ]);
+        $route = self::router()->getRoute('node.create', [ ':type' => $type ]);
         new Redirect($route);
     }
 
-    public function show($item, $req)
+    public function show($id, $req)
     {
         $node = self::query()
             ->from('node')
-            ->where('id', '==', $item)
+            ->where('id', '==', $id)
             ->fetch();
 
         if (!$node) {
@@ -264,26 +273,22 @@ class Node extends \Soosyze\Controller
                 ])
                 ->render('page.content', 'node-show.php', VIEWS_NODE, [
                     'fields' => unserialize($node[ 'field' ])
-                ])->override('page.content', [ 'node-show-' . $item . '.php', 'node-show-' . $node['type'] ]);
+                ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] ]);
 
         if (!$node[ 'published' ]) {
-            if (!self::user()->isConnected()) {
-                return $this->get404($req);
-            } else {
-                $tpl->view('page.messages', [
-                    'infos' => [ 'Ce contenu n\'est pas publié !' ]
-                ]);
-            }
+            $tpl->view('page.messages', [
+                'infos' => [ 'Ce contenu n\'est pas publié !' ]
+            ]);
         }
 
         return $tpl;
     }
 
-    public function edit($item, $req)
+    public function edit($id, $req)
     {
         $node = self::query()
             ->from('node')
-            ->where('id', '==', $item)
+            ->where('id', '==', $id)
             ->fetch();
 
         if (!$node) {
@@ -304,17 +309,17 @@ class Node extends \Soosyze\Controller
 
         $content = [ 'title' => $node[ 'title' ], 'published' => $node[ 'published' ] ];
 
-        $this->container->callHook('node.edit.form.data', [ &$content, $item ]);
+        $this->container->callHook('node.edit.form.data', [ &$content, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.update', [ ':item' => $item ]);
+        $action = self::router()->getRoute('node.update', [ ':id' => $id ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $item, $node) {
+            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id, $node) {
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
                 ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', 'Titre du contenu')
@@ -337,7 +342,7 @@ class Node extends \Soosyze\Controller
                         ? $content[ $key ]
                         : unserialize($node[ 'field' ])[ $key ];
 
-                    $form->group('node-' . $item . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
+                    $form->group('node-' . $id . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->label('label-' . $key, $key)
@@ -371,28 +376,30 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
+                    'title_main' => '<i class="fa fa-file"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'node-edit.php', VIEWS_NODE, [ 'form' => $form ]);
     }
 
-    public function update($item, $req)
+    public function update($id, $req)
     {
         $node = self::query()
             ->from('node')
-            ->where('id', '==', $item)
+            ->where('id', '==', $id)
             ->fetch();
 
         if (!$node) {
@@ -418,7 +425,7 @@ class Node extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
-        $this->container->callHook('node.update.validator', [ &$validator, $item ]);
+        $this->container->callHook('node.update.validator', [ &$validator, $id ]);
 
         /* Test les champs personnalisé de la node. */
         $validatorField = new Validator();
@@ -441,39 +448,39 @@ class Node extends \Soosyze\Controller
             ];
 
             $this->container->callHook('node.update.before', [ $validator, &$value,
-                $item ]);
+                $id ]);
             self::query()
                 ->update('node', $value)
-                ->where('id', '==', $item)
+                ->where('id', '==', $id)
                 ->execute();
-            $this->container->callHook('node.update.after', [ $validator, $item ]);
+            $this->container->callHook('node.update.after', [ $validator, $id ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
-            $_SESSION[ 'inputs' ]      = array_merge(
+            $_SESSION[ 'inputs' ]               = array_merge(
                 $validator->getInputs(),
                 $validatorField->getInputs()
             );
-            $_SESSION[ 'errors' ]      = array_merge(
+            $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
                 $validator->getErrors(),
                 $validatorField->getErrors()
             );
-            $_SESSION[ 'errors_keys' ] = array_merge(
+            $_SESSION[ 'errors_keys' ]          = array_merge(
                 $validator->getKeyInputErrors(),
                 $validatorField->getKeyInputErrors()
             );
         }
 
-        $route = self::router()->getRoute('node.edit', [ ':item' => $item ]);
+        $route = self::router()->getRoute('node.edit', [ ':id' => $id ]);
 
         return new Redirect($route);
     }
 
-    public function delete($item, $req)
+    public function delete($id, $req)
     {
         $node = self::query()
             ->from('node')
-            ->where('id', '==', $item)
+            ->where('id', '==', $id)
             ->fetch();
 
         if (!$node) {
@@ -482,20 +489,20 @@ class Node extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'item' => 'required',
+                'id' => 'required',
             ])
-            ->setInputs([ 'item' => $item ]);
+            ->setInputs([ 'id' => $id ]);
 
-        $this->container->callHook('node.delete.validator', [ &$validator, $item ]);
+        $this->container->callHook('node.delete.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('node.delete.before', [ $validator, $item ]);
+            $this->container->callHook('node.delete.before', [ $validator, $id ]);
             self::query()
                 ->from('node')
                 ->delete()
-                ->where('id', '==', $item)
+                ->where('id', '==', $id)
                 ->execute();
-            $this->container->callHook('node.delete.after', [ $validator, $item ]);
+            $this->container->callHook('node.delete.after', [ $validator, $id ]);
         }
 
         $route = self::router()->getRoute('node.index');

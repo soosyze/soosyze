@@ -1,14 +1,16 @@
+
 <header>
     <nav class="navbar navbar-grey navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-admin" aria-expanded="false">
-                    Menu <span class="glyphicon glyphicon-menu-hamburger"></span>
+                    Menu <i class="fa fa-bars"></i>
                 </button>
             </div>
             <div class="collapse navbar-collapse" id="navbar-admin">
                 <?php echo $block[ 'main_menu' ]; ?>
                 <?php echo $block[ 'second_menu' ]; ?>
+
             </div>
         </div>
     </nav>
@@ -17,8 +19,11 @@
 </header>
 <div class="container">
     <div class="main-wrapper">
-        <?php echo $block[ 'messages' ] ?>
-        <?php echo $block[ 'content' ] ?>
+        <?php if (!empty($block[ 'messages' ])): ?>
+            <?php echo $block[ 'messages' ]; ?>
+        <?php endif; ?>
+        <?php echo $block[ 'content' ]; ?>
+
     </div>
 </div>
 <div class="container">

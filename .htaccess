@@ -1,4 +1,4 @@
-# Apache Server Configs v3.0.0 | MIT License
+# Apache Server Configs v3.1.0 | MIT License
 # https://github.com/h5bp/server-configs-apache
 
 # (!) Using `.htaccess` files slows down Apache, therefore, if you have
@@ -97,14 +97,7 @@ Options -MultiViews
 # https://msdn.microsoft.com/en-us/library/ff955275.aspx
 
 <IfModule mod_headers.c>
-    Header set X-UA-Compatible "IE=edge"
-    # `mod_headers` cannot match based on the content-type, however,
-    # the `X-UA-Compatible` response header should be sent only for
-    # HTML documents and not for the other resources.
-
-    <FilesMatch "\.(appcache|atom|bbaw|bmp|br|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|gz|htc|ic[os]|jpe?g|m?js|json(ld)?|m4[av]|manifest|map|markdown|md|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|wasm|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)$">
-        Header unset X-UA-Compatible
-    </FilesMatch>
+    Header set X-UA-Compatible "IE=edge" "expr=%{CONTENT_TYPE} =~ m#text/html#i"
 </IfModule>
 
 # ######################################################################
@@ -126,8 +119,9 @@ Options -MultiViews
     AddType application/json                            json map topojson
     AddType application/ld+json                         jsonld
     AddType application/rss+xml                         rss
-    AddType application/vnd.geo+json                    geojson
-    AddType application/xml                             rdf xml
+    AddType application/geo+json                        geojson
+    AddType application/rdf+xml                         rdf
+    AddType application/xml                             xml
   # JavaScript
     # Servers should use text/javascript for JavaScript resources.
     # https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages
@@ -192,26 +186,24 @@ AddDefaultCharset utf-8
 # https://httpd.apache.org/docs/current/mod/mod_mime.html#addcharset
 
 <IfModule mod_mime.c>
-    AddCharset utf-8 .atom \
+    AddCharset utf-8 .appcache \
                      .bbaw \
                      .css \
-                     .geojson \
+                     .htc \
                      .ics \
                      .js \
                      .json \
-                     .jsonld \
                      .manifest \
+                     .map \
                      .markdown \
                      .md \
                      .mjs \
-                     .rdf \
-                     .rss \
                      .topojson \
                      .vtt \
-                     .webapp \
+                     .vcard \
+                     .vcf \
                      .webmanifest \
-                     .xloc \
-                     .xml
+                     .xloc
 </IfModule>
 
 # ######################################################################
@@ -385,13 +377,13 @@ AddDefaultCharset utf-8
 
 <FilesMatch "(^#.*#|^composer\.(json|lock)$|\.(bak|conf|dist|fla|in[ci]|json|log|orig|po|psd|sh|sql|sw[op]|tpl|twig|xml|yml)|~)$">
 # Apache >= 2.4    
-  <IfModule mod_authz_core.c>
-    Require all denied
-  </IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
 # Apache < 2.4
-  <IfModule !mod_authz_core.c>
-    Order allow,deny
-  </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+    </IfModule>
 </FilesMatch>
 
 # ----------------------------------------------------------------------
@@ -486,7 +478,7 @@ ServerSignature Off
                                       "application/rdf+xml" \
                                       "application/rss+xml" \
                                       "application/schema+json" \
-                                      "application/vnd.geo+json" \
+                                      "application/geo+json" \
                                       "application/vnd.ms-fontobject" \
                                       "application/wasm" \
                                       "application/x-font-ttf" \
@@ -494,15 +486,12 @@ ServerSignature Off
                                       "application/x-web-app-manifest+json" \
                                       "application/xhtml+xml" \
                                       "application/xml" \
-                                      "font/collection" \
                                       "font/eot" \
                                       "font/opentype" \
                                       "font/otf" \
-                                      "font/ttf" \
                                       "image/bmp" \
                                       "image/svg+xml" \
                                       "image/vnd.microsoft.icon" \
-                                      "image/x-icon" \
                                       "text/cache-manifest" \
                                       "text/calendar" \
                                       "text/css" \
@@ -583,7 +572,7 @@ FileETag None
     ExpiresByType application/json                      "access plus 0 seconds"
     ExpiresByType application/ld+json                   "access plus 0 seconds"
     ExpiresByType application/schema+json               "access plus 0 seconds"
-    ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
+    ExpiresByType application/geo+json                  "access plus 0 seconds"
     ExpiresByType application/xml                       "access plus 0 seconds"
     ExpiresByType text/calendar                         "access plus 0 seconds"
     ExpiresByType text/xml                              "access plus 0 seconds"

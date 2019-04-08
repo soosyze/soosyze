@@ -8,13 +8,59 @@
         ],
         "hooks": {
             "app.response.before": "hookResponseBefore",
-            "app.granted": "isGranted"
+            "user.role.create.response.after": "hooRoleResponseAfter",
+            "user.role.edit.response.after": "hooRoleResponseAfter",
+            "app.granted": "isGranted",
+            "app.granted.route": "isGrantedRoute"
         }
     },
     "user.install": {
         "class": "User\\Install",
         "hooks": {
             "install.menu": "hookInstallMenu"
+        }
+    },
+    "user.hook.user": {
+        "class": "User\\Services\\HookUser",
+        "arguments": [
+            "@config",
+            "@user"
+        ],
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.user.permission.admin": "hookPermissionAdminister",
+            "route.user.permission.update": "hookPermissionAdminister",
+            "route.user.management.admin": "hookPeopleAdminister",
+            "route.user.role.admin": "hookPeopleAdminister",
+            "route.user.role.edit": "hookPeopleAdminister",
+            "route.user.role.update": "hookPeopleAdminister",
+            "route.user.show": "hookUserShow",
+            "route.user.create": "hookPeopleAdminister",
+            "route.user.store": "hookPeopleAdminister",
+            "route.user.edit": "hookUserEdited",
+            "route.user.update": "hookUserEdited",
+            "route.user.remove": "hookUserDeleted",
+            "route.user.delete": "hookUserDeleted",
+            "route.user.register": "hookRegister",
+            "route.user.register.check": "hookRegister",
+            "route.user.activate": "hookActivate",
+            "route.user.login": "hookLogin",
+            "route.user.login.check": "hookLoginCheck",
+            "route.user.logout": "hookLogout",
+            "route.user.relogin": "hookRelogin",
+            "route.user.relogin.check": "hookRelogin"
+        }
+    },
+    "user.hook.config": {
+        "class": "User\\Services\\HookConfig",
+        "arguments": [
+            "@config"
+        ],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.user.form.generate": "form",
+            "config.update.user.validator": "validator",
+            "config.update.user.before": "before"
         }
     }
 }

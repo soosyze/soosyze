@@ -1,0 +1,13 @@
+{
+    "config.hook.user": {
+        "class": "Config\\Services\\HookUser",
+        "arguments": [
+            "@core"
+        ],
+        "hooks": {
+            "route.config.index" : "hookConfigIndex",
+            "route.config.edit": "hookConfigManage",
+            "route.config.update": "hookConfigManage"
+        }
+    }
+}

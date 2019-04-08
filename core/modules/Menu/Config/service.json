@@ -2,13 +2,33 @@
     "menu": {
         "class": "Menu\\Services\\Menu",
         "arguments": [
-            "@core",
+            "@router",
             "@config",
-            "@query",
-            "@template"
+            "@query"
+        ]
+    },
+    "menu.hook.user": {
+        "class": "Menu\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.menu.show": "hookMenuAdminister",
+            "route.menu.show.check": "hookMenuAdminister",
+            "route.menu.link.create": "hookMenuAdminister",
+            "route.menu.link.store": "hookMenuAdminister",
+            "route.menu.link.edit": "hookMenuAdminister",
+            "route.menu.link.update": "hookMenuAdminister",
+            "route.menu.link.delete": "hookMenuAdminister"
+        }
+    },
+    "menu.hook.app": {
+        "class": "Menu\\Services\\HookApp",
+        "arguments": [
+            "@core",
+            "@query"
         ],
         "hooks": {
-            "app.response.after": "hookMenu"
+            "app.response.after": "hookResponseAfter",
+            "menu.show.response.after": "hookMenuShowResponseAfter"
         }
     }
 }

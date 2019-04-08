@@ -1,57 +1,58 @@
 
 <div class="row">
-    <div class="col-sm-12">
-        <?php if ($form->form_errors()): ?>
-            <?php foreach ($form->form_errors() as $error): ?>
-                <div class="alert alert-danger">
-                    <p><?php echo $error ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        <?php if ($form->form_success()): ?>
-            <?php foreach ($form->form_success() as $success): ?>
-                <div class="alert alert-success">
-                    <p><?php echo $success ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        <?php echo $form->form_open() ?>
+    <div class="col-md-12">
+        <?php echo $form->form_open(); ?>
         <?php foreach ($package as $key => $modules): ?>
-            <fieldset>
-                <legend><?php echo $key ?></legend>
-                <div class="row div-thead">
-                    <div class="col-sm-3">(Activé) Nom</div>
-                    <div class="col-sm-2">Version</div>
-                    <div class="col-sm-7">Description</div>
-                </div>
+
+        <fieldset class="responsive">
+            <legend><?php echo $key; ?></legend>
+            <table class="table table-hover">
+                <thead>
+                    <tr class="form-head">
+                        <th>(Activé) Nom</th>
+                        <th>Version</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php foreach ($modules as $module): ?>
-                    <div class="div-tbody row">
-                        <div class="col-sm-3">
-                            <?php echo $form->form_input($module[ 'name' ]) ?>
-                            <?php echo $form->form_label('module-' . $module[ 'name' ]) ?>
-                        </div>
-                        <div class="col-sm-2"><?php echo $module[ 'version' ] ?></div>
-                        <div class="col-sm-7">
-                            <?php echo $module[ 'description' ] ?><br>
-                            <?php if (!empty($module[ 'isRequired' ])): ?>
-                                Requiert 
-                                <span class="module-is_required">
-                                    <?php echo implode(',', $module[ 'isRequired' ]); ?>
-                                </span><br>
-                            <?php endif; ?>
-                            <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
-                                Est requis par 
-                                <span class="module-is_required_for_module">
-                                    <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
-                                </span><br>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+
+                <tr>
+                    <th>
+                        <?php echo $form->form_input($module[ 'name' ]); ?>
+                        <?php echo $form->form_label('module-' . $module[ 'name' ]); ?>
+                    </th>
+                    <td data-title="Version"><?php echo $module[ 'version' ]; ?></td>
+                    <td data-title="Description">
+                        <?php echo $module[ 'description' ]; ?><br>
+                        <?php if (!empty($module[ 'isRequired' ])): ?>
+
+                        Requiert 
+                        <span class="module-is_required">
+                            <?php echo implode(',', $module[ 'isRequired' ]); ?>
+
+                        </span><br>
+                        <?php endif; ?>
+                        <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
+
+                        Est requis par 
+                        <span class="module-is_required_for_module">
+                            <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
+
+                        </span><br>
+                        <?php endif; ?>
+
+                    </td>
+                </tr>
                 <?php endforeach; ?>
-            </fieldset>
+
+                </tbody>
+            </table>
+        </fieldset>
         <?php endforeach; ?>
-        <?php echo $form->form_token() ?>
-        <?php echo $form->form_input('submit', [ 'class' => 'btn btn-success' ]) ?>
-        <?php echo $form->form_close() ?>  
-    </div> <!-- .col-sm-12 -->
-</div> <!-- .row -->
+
+        <?php echo $form->form_token(); ?>
+        <?php echo $form->form_input('submit', [ 'class' => 'btn btn-success' ]); ?>
+        <?php echo $form->form_close(); ?>  
+    </div>
+</div> <!-- /.row -->

@@ -6,20 +6,17 @@ use Soosyze\Components\Validator\Validator;
 
 class Menu
 {
-    protected $core;
+    protected $router;
 
     protected $config;
 
     protected $query;
 
-    protected $template;
-
-    public function __construct($core, $config, $query, $template)
+    public function __construct($router, $config, $query)
     {
-        $this->core     = $core;
-        $this->config   = $config;
-        $this->query    = $query;
-        $this->template = $template;
+        $this->router = $router;
+        $this->config = $config;
+        $this->query  = $query;
     }
 
     public function find($id)
@@ -55,77 +52,9 @@ class Menu
                 : $link;
 
             $uri    = $request->getUri()->withQuery($query);
-            $output = $this->core->get('router')->parse($request->withUri($uri));
+            $output = $this->router->parse($request->withUri($uri));
         }
 
         return $output;
-    }
-
-    public function hookMenu($request, &$response)
-    {
-        if ($response instanceof \Template\Services\TemplatingHtml) {
-            $this->query
-                ->from('menu_link')
-                ->where('active', '==', 1)
-                ->orderBy('weight');
-            $response->isTheme('theme')
-                    ? $this->query->where('menu', 'main-menu')
-                    : $this->query->where('menu', 'admin-menu');
-
-            $query        = $this->query->fetchAll();
-            $query_second = $this->query
-                ->from('menu_link')
-                ->where('active', '==', 1)
-                ->where('menu', 'user-menu')
-                ->orderBy('weight')
-                ->fetchAll();
-
-            $query_menu        = $this->getGrantedLink($query, $request);
-            $query_menu_second = $this->getGrantedLink($query_second, $request);
-
-            $response->render('page.main_menu', 'menu.php', VIEWS_MENU, [
-                    'menu' => $query_menu
-                ])
-                ->render('page.second_menu', 'menu.php', VIEWS_MENU, [
-                    'menu' => $query_menu_second
-            ])->override('page.second_menu', [ 'menu-second.php' ]);
-        }
-    }
-
-    /**
-     * Retire les liens restreins dans un menu et définit le lien courant.
-     *
-     * @param array   $query   liens du menu
-     * @param Request $request
-     *
-     * @return array
-     */
-    protected function getGrantedLink($query, $request)
-    {
-        $route = '' !== $request->getUri()->getQuery()
-            ? $request->getUri()->getQuery()
-            : '/';
-
-        foreach ($query as $key => $menu) {
-            if (!$menu[ 'key' ]) {
-                $query[ $key ][ 'link_active' ] = '';
-
-                continue;
-            }
-            $query[ $key ][ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
-                ? 'active'
-                : '';
-
-            /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
-            if (!$this->core->callHook('app.granted', [ $menu[ 'key' ] ])) {
-                unset($query[ $key ]);
-
-                continue;
-            }
-            $link                    = $request->withUri($request->getUri()->withQuery($menu[ 'link' ]));
-            $query[ $key ][ 'link' ] = $link->getUri()->__toString();
-        }
-
-        return $query;
     }
 }

@@ -1,0 +1,30 @@
+.jumbotron{
+    margin-top: 51px;
+}
+h1,
+h2,
+h3{
+    font-family: 'Kelly Slab','Myriad Pro', Arial, sans-serif;
+    text-shadow: 1px 1px 0 #F2F2F2, 1px 2px 0 #B1B1B2;
+}
+.card{
+    border-bottom: 1px dotted #bac2c9;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+.card__content{
+    margin: 15px 0;
+}
+.card__date{
+    letter-spacing: 1px;
+}
+.navbar-toggle{
+    color: #FFF;
+}
+#btn_up {
+    bottom: 15px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    right: 25px;
+}

@@ -18,9 +18,9 @@ class Link extends \Soosyze\Controller
     public function create($nameMenu)
     {
         $content = [ 'title_link' => '', 'link' => '', 'target_link' => '_self' ];
-        
+
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
-        
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -62,23 +62,25 @@ class Link extends \Soosyze\Controller
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-            
+
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Ajouter un lien'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-add.php', VIEWS_MENU, [
                     'form' => $form
         ]);
@@ -101,7 +103,7 @@ class Link extends \Soosyze\Controller
             $post[ 'link' ],
             $req->withMethod('GET')
         );
-        
+
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && $isUrlOrRoute) {
@@ -115,7 +117,7 @@ class Link extends \Soosyze\Controller
                 'active'      => true
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {
-                $data[ 'key' ] = $isUrlOrRoute['key'];
+                $data[ 'key' ] = $isUrlOrRoute[ 'key' ];
             }
 
             $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
@@ -131,13 +133,13 @@ class Link extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
-            $_SESSION[ 'errors_keys' ][]          = 'link';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
         $route = self::router()->getRoute('menu.link.create', [ ':menu' => $nameMenu ]);
@@ -150,7 +152,7 @@ class Link extends \Soosyze\Controller
         if (!($query = self::menu()->find($id))) {
             return $this->get404($req);
         }
-        
+
         $this->container->callHook('menu.link.edit.form.data', [ &$query ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
@@ -165,53 +167,55 @@ class Link extends \Soosyze\Controller
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($query) {
-                return $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
-                    ->group('menu-link-title-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-title-label', 'Titre du lien')
-                        ->text('title_link', 'title_link', [
-                            'class'       => 'form-control',
-                            'placeholder' => 'Exemple: Ma page 1',
-                            'required'    => 1,
-                            'value'       => $query[ 'title_link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('menu-link-link-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-link-label', 'Lien')
-                        ->text('link', 'link', [
-                            'class'       => 'form-control',
-                            'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
-                            'required'    => 1,
-                            'value'       => $query[ 'link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('menu-link-target-group', 'div', function ($form) use ($query) {
-                        $form->label('menu-link-target-label', 'Cîble')
-                        ->select('target_link', 'target_link', self::$optionTarget, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $query[ 'target_link' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ]);
+                $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
+                ->group('menu-link-title-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-title-label', 'Titre du lien')
+                    ->text('title_link', 'title_link', [
+                        'class'       => 'form-control',
+                        'placeholder' => 'Exemple: Ma page 1',
+                        'required'    => 1,
+                        'value'       => $query[ 'title_link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-link-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-link-label', 'Lien')
+                    ->text('link', 'link', [
+                        'class'       => 'form-control',
+                        'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
+                        'required'    => 1,
+                        'value'       => $query[ 'link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-target-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-target-label', 'Cîble')
+                    ->select('target_link', 'target_link', self::$optionTarget, [
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'selected' => $query[ 'target_link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
             })
             ->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
-        
+
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => 'Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Éditer un lien'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-edit.php', VIEWS_MENU, [
                     'form' => $form
         ]);
@@ -258,19 +262,20 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ &$validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
-            $route                 = self::router()->getRoute('menu.show', [ ':item' => $nameMenu ]);
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $route                               = self::router()->getRoute('menu.show', [
+                ':item' => $nameMenu ]);
 
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
-            $_SESSION[ 'errors_keys' ][]          = 'link';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
         $route = self::router()->getRoute('menu.link.edit', [

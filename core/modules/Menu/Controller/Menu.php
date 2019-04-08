@@ -32,14 +32,14 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
-        foreach ($query as $key => $link) {
-            $query[ $key ][ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
+        foreach ($query as &$link) {
+            $link[ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $query[ $key ][ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
+            $link[ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            if ($query[ $key ][ 'key' ]) {
-                $link_tmp                = $req->withUri($req->getUri()->withQuery($query[ $key ][ 'link' ]));
-                $query[ $key ][ 'link' ] = $link_tmp->getUri()->__toString();
+            if ($link[ 'key' ]) {
+                $link_tmp       = $req->withUri($req->getUri()->withQuery($link[ 'link' ]));
+                $link[ 'link' ] = $link_tmp->getUri()->__toString();
             }
             $nameLinkWeight = 'weight-' . $link[ 'id' ];
             $nameLinkActive = 'active-' . $link[ 'id' ];
@@ -54,13 +54,14 @@ class Menu extends \Soosyze\Controller
         $form->token()
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
         }
 
         $linkAdd = self::router()->getRoute('menu.link.create', [ ':menu' => $name ]);
@@ -68,8 +69,9 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></i> Menu'
+                    'title_main' => '<i class="fa fa-bars"></i> Menu'
                 ])
+                ->view('page.messages', $messages)
                 ->render('page.content', 'menu-show.php', VIEWS_MENU, [
                     'menu'     => $query,
                     'form'     => $form,
@@ -81,8 +83,9 @@ class Menu extends \Soosyze\Controller
     public function showCheck($name, $req)
     {
         if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
-            $_SESSION[ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu ' . $name . ' n\'existe pas.' ];
-            $route                = self::router()->getRoute('menu.show', [ ':item' => $name ]);
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu ' . $name . ' n\'existe pas.' ];
+            $route                              = self::router()->getRoute('menu.show', [
+                ':item' => $name ]);
 
             return new Redirect($route);
         }
@@ -110,12 +113,13 @@ class Menu extends \Soosyze\Controller
                     ->execute();
             }
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
-            $route                 = self::router()->getRoute('menu.show', [ ':item' => $name ]);
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $route                               = self::router()->getRoute('menu.show', [
+                ':item' => $name ]);
         } else {
-            $_SESSION[ 'errors' ]      = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
-            $route                     = self::router()->getRoute('menu.show', [
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+            $route                              = self::router()->getRoute('menu.show', [
                 ':item' => $name ]);
         }
 

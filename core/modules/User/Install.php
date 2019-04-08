@@ -11,26 +11,30 @@ class Install
         $container->schema()->createTableIfNotExists('user', function (TableBuilder $table) {
             $table->increments('user_id')
                 ->string('email')
+                ->string('username')
                 ->text('password')
                 ->text('salt')
-                ->string('firstname')
-                ->string('name')
-                ->boolean('actived')
-                ->text('forget_pass')
-                ->string('time_reset')
+                ->string('key_api')->nullable()
+                ->string('color', 7)->valueDefault('#e6e7f4')
+                ->string('picture')->nullable()
+                ->string('bio')->nullable()
+                ->string('firstname')->nullable()
+                ->string('name')->nullable()
+                ->boolean('actived')->valueDefault(false)
+                ->text('token_forget')->nullable()
+                ->text('token_actived')->nullable()
+                ->string('time_reset')->nullable()
                 ->string('time_installed')
+                ->string('time_access')->nullable()
                 ->text('timezone');
         });
         $container->schema()->createTableIfNotExists('role', function (TableBuilder $table) {
             $table->increments('role_id')
-                ->string('role_name')
-                ->string('role_label');
+                ->string('role_description')->nullable()
+                ->string('role_label')
+                ->string('role_color', 7)->valueDefault('#e6e7f4')
+                ->integer('role_weight')->valueDefault(1);
         });
-        $container->schema()->createTableIfNotExists('permission', function (TableBuilder $table) {
-            $table->string('permission_id')
-                ->string('permission_label');
-        });
-
         $container->schema()->createTableIfNotExists('user_role', function (TableBuilder $table) {
             $table->integer('user_id')
                 ->integer('role_id');
@@ -40,33 +44,27 @@ class Install
                 ->string('permission_id');
         });
 
-        $container->query()->insertInto('role', [ 'role_name', 'role_label' ])
-            ->values([ 'user_anonyme', 'Utilisateur non connecté' ])
-            ->values([ 'user_connected', 'Utilisateur connecté' ])
-            ->values([ 'admin', 'Administrateur' ])
+        $container->query()
+            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight' ])
+            ->values([ 'Utilisateur non connecté', 'Rôle requis par le système', 1 ])
+            ->values([ 'Utilisateur connecté', 'Rôle requis par le système', 2 ])
+            ->values([ 'Administrateur', 'Rôle requis par le système', 3 ])
             ->execute();
 
-        $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
-            ->values([ 'user.show', 'Voir les utilisateurs' ])
-            ->values([ 'user.edit', 'Voir l’édition les utilisateurs' ])
-            ->values([ 'user.update', 'Éditer les utilisateurs' ])
-            ->values([ 'user.login', 'Voir le formulaire de connexion' ])
-            ->values([ 'user.login.check', 'Se connecter' ])
-            ->values([ 'user.logout', 'Se déconnecter' ])
-            ->values([ 'user.relogin', 'Voir le formulaire de demande d’un nouveau mot de passe' ])
-            ->values([ 'user.relogin.check', 'Demander un nouveau mot de passe' ])
+        $container->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'user.config.manage' ])
+            ->values([ 3, 'user.permission.manage' ])
+            ->values([ 3, 'user.people.manage' ])
+            ->values([ 3, 'user.showed' ])
+            ->values([ 3, 'user.edited' ])
+            ->values([ 3, 'user.deleted' ])
+            ->values([ 2, 'user.showed' ])
+            ->values([ 2, 'user.edited' ])
             ->execute();
 
-        $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'user.show' ])
-            ->values([ 3, 'user.edit' ])
-            ->values([ 3, 'user.update' ])
-            ->values([ 2, 'user.logout' ])
-            ->values([ 1, 'user.login' ])
-            ->values([ 1, 'user.login.check' ])
-            ->values([ 1, 'user.relogin' ])
-            ->values([ 1, 'user.relogin.check' ])
-            ->execute();
+        $container->config()->set('settings.user_register', '');
+        $container->config()->set('settings.user_relogin', '');
     }
 
     public function hookInstall($container)
@@ -80,9 +78,9 @@ class Install
             $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
                     'menu', 'weight', 'parent' ])
                 ->values([
-                    'user.edit',
-                    '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Utilisateur',
-                    'user/1/edit',
+                    'user.management.admin',
+                    '<i class="fa fa-user"></i> Utilisateur',
+                    'admin/user',
                     'admin-menu',
                     4,
                     -1
@@ -90,7 +88,7 @@ class Install
                 ->values([
                     'user.account',
                     'Mon compte',
-                    'user',
+                    'user/account',
                     'user-menu',
                     1,
                     -1
@@ -105,7 +103,7 @@ class Install
                 ])
                 ->values([
                     'user.logout',
-                    '<span class="glyphicon glyphicon-off" aria-hidden="true"></span> Déconnexion',
+                    '<i class="fa fa-power-off"></i> Déconnexion',
                     'user/logout',
                     'user-menu',
                     3,
@@ -130,6 +128,5 @@ class Install
         // Table référentes
         $container->schema()->dropTable('user');
         $container->schema()->dropTable('role');
-        $container->schema()->dropTable('permission');
     }
 }

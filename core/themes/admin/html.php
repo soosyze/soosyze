@@ -8,14 +8,16 @@
         <link rel="shortcut icon" href="<?php echo $base_theme; ?>assets/files/favicon.ico"/>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/styles.css">
-        <?php echo $styles ?>
+        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/admin.css">
+        <?php echo $styles; ?>
     </head>
         
     <body>
-        <?php echo $block[ 'page' ] ?>
+        <?php echo $block[ 'page' ]; ?>
         <?php if (isset($block[ 'page_bottom' ])): ?>
-            <?php echo $block[ 'page_bottom' ] ?>
+            <?php echo $block[ 'page_bottom' ]; ?>
         <?php endif; ?>
         <!-- To top -->
         <div id="btn_up">
@@ -24,5 +26,6 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
         <?php echo $scripts; ?>
+
     </body>
 </html>

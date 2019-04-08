@@ -1,19 +1,4 @@
 {
-    "system.maintenance": {
-        "methode": "GET",
-        "path": "maintenance",
-        "uses": "System@maintenance"
-    },
-    "system.config.edit": {
-        "methode": "GET",
-        "path": "admin/config",
-        "uses": "System@edit"
-    },
-    "system.config.update": {
-        "methode": "POST",
-        "path": "admin/config",
-        "uses": "System@update"
-    },
     "system.module.edit": {
         "methode": "GET",
         "path": "admin/modules",

@@ -16,9 +16,7 @@ class Install
                 ->text('description')
                 ->string('package')
                 ->boolean('locked');
-        });
-
-        $container->schema()->createTableIfNotExists('module_required', function (TableBuilder $table) {
+        })->createTableIfNotExists('module_required', function (TableBuilder $table) {
             $table->string('name_module')
                 ->string('name_required');
         });
@@ -43,18 +41,11 @@ class Install
     public function hookInstallUser($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()->insertInto('permission', [ 'permission_id', 'permission_label' ])
-                ->values([ 'system.config.edit', 'Voir les configurations' ])
-                ->values([ 'system.config.update', 'Éditer les configurations' ])
-                ->values([ 'system.module.edit', 'Voir les modules' ])
-                ->values([ 'system.module.update', 'Éditer les modules' ])
-                ->execute();
-
-            $container->query()->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'system.config.edit' ])
-                ->values([ 3, 'system.config.update' ])
-                ->values([ 3, 'system.module.edit' ])
-                ->values([ 3, 'system.module.update' ])
+            $container->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'system.config.manage' ])
+                ->values([ 3, 'system.module.manage' ])
+                ->values([ 3, 'system.config.maintenance' ])
                 ->execute();
         }
     }
@@ -72,18 +63,10 @@ class Install
                 ])
                 ->values([
                     'system.module.edit',
-                    '<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Modules',
+                    '<i class="fa fa-th-large"></i> Modules',
                     'admin/modules',
                     'admin-menu',
                     5,
-                    -1
-                ])
-                ->values([
-                    'system.config.edit',
-                    '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuration',
-                    'admin/config',
-                    'admin-menu',
-                    6,
                     -1
                 ])
                 ->execute();
@@ -93,12 +76,6 @@ class Install
     public function uninstall($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('permission')
-                ->delete()
-                ->regex('permission_id', '/^system./')
-                ->execute();
-
             $container->query()
                 ->from('role_permission')
                 ->delete()
@@ -111,7 +88,6 @@ class Install
                 ->from('menu_link')
                 ->delete()
                 ->where('link', 'admin/modules')
-                ->orWhere('link', 'admin/config')
                 ->execute();
         }
 

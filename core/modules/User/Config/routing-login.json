@@ -1,0 +1,36 @@
+{
+    "user.login": {
+        "methode": "GET",
+        "path": "user/login",
+        "uses": "Login@login"
+    },
+    "user.login.check": {
+        "methode": "POST",
+        "path": "user/login",
+        "uses": "Login@loginCheck"
+    },
+    "user.relogin": {
+        "methode": "GET",
+        "path": "user/relogin",
+        "uses": "Login@relogin"
+    },
+    "user.relogin.check": {
+        "methode": "POST",
+        "path": "user/relogin",
+        "uses": "Login@reloginCheck"
+    },
+    "user.reset": {
+        "methode": "GET",
+        "path": "user/:id/reset/:token",
+        "uses": "Login@resetUser",
+        "with": {
+            ":id": "\\d+",
+            ":token": "[0-9a-zA-Z]+"
+        }
+    },
+    "user.logout": {
+        "methode": "GET",
+        "path": "user/logout",
+        "uses": "Login@logout"
+    }
+}

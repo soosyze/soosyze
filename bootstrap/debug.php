@@ -83,6 +83,7 @@ function printException($exp)
             thead{background-color: #272822; color:#FFF;}
             thead th{padding: 10px; border-bottom: 3px solid #FFF;}
             th{border:0px;}
+            .table-trace, .table-exp {font-family: Roboto,"Source Sans Pro",sans-serif;}
             .table-trace td{border-left: #FFF 3px solid;}
             .table-trace tr:hover td,
             .table-trace tr:hover th{background-color: #272822; color:#FFF;}

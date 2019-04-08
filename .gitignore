@@ -3,9 +3,11 @@
 /nbproject/
 /vendor/
 /app/data/
+/app/files/public/
 /app/modules/
+/app/themes/
 
 # Files
 /*.lock
 /*.phar
-/.php_cs.cache
+/*.cache

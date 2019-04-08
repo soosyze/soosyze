@@ -1,0 +1,17 @@
+{
+    "user.management.admin": {
+        "methode": "GET",
+        "path": "admin/user",
+        "uses": "UsersManagement@admin"
+    },
+    "user.management.config": {
+        "methode": "GET",
+        "path": "admin/user/config",
+        "uses": "UsersManagement@configuration"
+    },
+    "user.management.config.check": {
+        "methode": "POST",
+        "path": "admin/user/config",
+        "uses": "UsersManagement@configurationCheck"
+    }
+}

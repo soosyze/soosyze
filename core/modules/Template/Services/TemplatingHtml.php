@@ -25,23 +25,32 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
     protected $core;
 
     /**
-     * Chemin du thème.
-     *
-     * @var string
-     */
-    protected $theme_default = '';
-
-    /**
      * Nom du theme utilisé par défaut.
      *
      * @var string
      */
-    protected $theme_default_name = '';
+    protected $default_theme_name = '';
+
+    /**
+     * Chemin du thème.
+     *
+     * @var string
+     */
+    protected $default_theme_path = '';
+
+    /**
+     * Liste des répertoires contenant les thèmes.
+     *
+     * @var array
+     */
+    protected $themes_path = [];
 
     public function __construct($core, $config)
     {
-        $this->core   = $core;
-        $this->config = $config;
+        $this->core        = $core;
+        $this->config      = $config;
+        $this->themes_path = $this->core->getSetting('themes_path');
+        $this->base_path   = $this->core->getRequest()->getBasePath();
         $this->getTheme();
     }
 
@@ -90,11 +99,11 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
     public function getTheme($theme = 'theme')
     {
-        $this->theme_default_name = $theme;
-        foreach ($this->core->getSetting('themes_path') as $path) {
-            $dir = $path . DS . $this->config->get('settings.' . $theme, '');
+        $this->default_theme_name = $theme;
+        foreach ($this->themes_path as $path) {
+            $dir = $path . '/' . $this->config->get('settings.' . $theme, '');
             if (is_dir($dir)) {
-                $this->theme_default = $dir;
+                $this->default_theme_path = $dir;
 
                 break;
             }
@@ -104,9 +113,9 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
         return $this;
     }
 
-    public function isTheme($theme)
+    public function isTheme($themeName)
     {
-        return $this->theme_default_name === $theme;
+        return $this->default_theme_name === $themeName;
     }
 
     /**
@@ -192,13 +201,13 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
     public function override($parent, array $templates)
     {
-        $dir   = $this->theme_default;
+        $dir   = $this->default_theme_path;
         $block = $this->template->getBlockWithParent($parent)
             ->addNamesOverride($templates);
 
         if (is_dir($dir)) {
             foreach ($templates as $tpl) {
-                if (is_file($dir . DS . $tpl)) {
+                if (is_file($dir . '/' . $tpl)) {
                     $block->setName($tpl);
 
                     break;
@@ -232,7 +241,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
     public function getThemes()
     {
         $folders = [];
-        foreach ($this->core->getSetting('themes_path') as $path) {
+        foreach ($this->themes_path as $path) {
             if (is_dir($path)) {
                 $folders = array_merge($folders, Util::getFolder($path));
             }
@@ -241,20 +250,17 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
         return $folders;
     }
 
-    protected function themeOverride($templates, $tplPath)
+    protected function themeOverride($tpl, $tplPath)
     {
-        $dir = $this->theme_default;
-
-        if (is_dir($dir)) {
-            if (is_file($dir . DS . $templates)) {
-                $tplPath = $dir . DS;
-            }
+        $dir = $this->default_theme_path;
+        if (is_dir($dir) && is_file($dir . DS . $tpl)) {
+            $tplPath = $dir . '/';
         }
 
-        return (new TemplateHtml($templates, $tplPath))
+        return (new TemplateHtml($tpl, $tplPath))
                 ->addVars([
-                    'base_path' => $this->core->getRequest()->getUri()->getBasePath()
+                    'base_path' => $this->base_path
                 ])
-                ->addVar('base_theme', $tplPath);
+                ->addVar('base_theme', $this->base_path . $tplPath);
     }
 }

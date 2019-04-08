@@ -2,11 +2,10 @@
     "System": {
         "name": "System",
         "controller": {
-            "System": "System\\Controller\\System",
             "ModulesManager": "System\\Controller\\ModulesManager"
         },
         "version": "1.0",
-        "description": "Core du CMS Soosyze (Configuration, ModuleManager)",
+        "description": "Core du CMS Soosyze",
         "package": "Core",
         "locked": true,
         "required": ["User"]

@@ -16,22 +16,16 @@ class Install
                 ->string('changed')
                 ->boolean('published')
                 ->text('field');
-        });
-
-        $container->schema()->createTableIfNotExists('node_type', function (TableBuilder $table) {
+        })->createTableIfNotExists('node_type', function (TableBuilder $table) {
             $table->string('node_type')
                 ->string('node_type_name')
                 ->text('node_type_description');
-        });
-
-        $container->schema()->createTableIfNotExists('field', function (TableBuilder $table) {
+        })->createTableIfNotExists('field', function (TableBuilder $table) {
             $table->increments('field_id')
                 ->string('field_name')
                 ->string('field_type')
                 ->string('field_rules');
-        });
-
-        $container->schema()->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
+        })->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
             $table->string('node_type')
                 ->integer('field_id')
                 ->integer('field_weight')->valueDefault(1);
@@ -150,30 +144,14 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
     public function hookInstallUser($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()->insertInto('permission', [
-                    'permission_id',
-                    'permission_label'
-                ])
-                ->values([ 'node.index', 'Voir le tableau des contenus' ])
-                ->values([ 'node.add', 'Voir les contenus créables' ])
-                ->values([ 'node.create', 'Voir le formulaire d’ajout des contenus' ])
-                ->values([ 'node.store', 'Ajouter les contenus' ])
-                ->values([ 'node.edit', 'Voir le formulaire d’édition des contenus' ])
-                ->values([ 'node.update', 'Éditer les contenus' ])
-                ->values([ 'node.delete', 'Supprimer les contenus' ])
-                ->execute();
-
-            $container->query()->insertInto('role_permission', [
-                    'role_id',
-                    'permission_id'
-                ])
-                ->values([ 3, 'node.add' ])
-                ->values([ 3, 'node.create' ])
-                ->values([ 3, 'node.store' ])
-                ->values([ 3, 'node.edit' ])
-                ->values([ 3, 'node.update' ])
-                ->values([ 3, 'node.delete' ])
+            $container->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'node.show.not_published' ])
+                ->values([ 3, 'node.show.published' ])
+                ->values([ 3, 'node.administer' ])
                 ->values([ 3, 'node.index' ])
+                ->values([ 2, 'node.show.published' ])
+                ->values([ 1, 'node.show.published' ])
                 ->execute();
         }
     }
@@ -185,7 +163,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                     'menu', 'weight', 'parent' ])
                 ->values([
                     'node.index',
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Contenu',
+                    '<i class="fa fa-file"></i> Contenu',
                     'admin/node',
                     'admin-menu',
                     2,
@@ -216,12 +194,6 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
     public function uninstall($container)
     {
         if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('permission')
-                ->delete()
-                ->regex('permission_id', '/^node./')
-                ->execute();
-
             $container->query()
                 ->from('role_permission')
                 ->delete()

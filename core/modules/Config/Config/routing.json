@@ -1,0 +1,23 @@
+{
+    "config.index": {
+        "methode": "GET",
+        "path": "admin/config",
+        "uses": "Config@index"
+    },
+    "config.edit": {
+        "methode": "GET",
+        "path": "admin/config/:id",
+        "uses": "Config@edit",
+        "with": {
+            ":id": "[a-z-]+"
+        }
+    },
+    "config.update": {
+        "methode": "POST",
+        "path": "admin/config/:id",
+        "uses": "Config@update",
+        "with": {
+            ":id": "[a-z-]+"
+        }
+    }
+}

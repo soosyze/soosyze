@@ -5,18 +5,19 @@
             "@query"
         ]
     },
-    "system.hook": {
-        "class": "System\\Services\\System",
+    "system.hook.app": {
+        "class": "System\\Services\\HookApp",
         "arguments": [
             "@router",
             "@config",
             "@template",
-            "@user"
+            "@core"
         ],
         "hooks": {
-            "app.404": "hooks404",
-            "app.403": "hooks403",
             "app.response.before": "hookSys",
+            "app.403": "hooks403",
+            "app.404": "hooks404",
+            "app.503": "hooks503",
             "app.response.after": "hookMeta"
         }
     },
@@ -25,6 +26,30 @@
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
+        }
+    },
+    "system.hook.user": {
+        "class": "System\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.system.config.edit": "hookConfigManage",
+            "route.system.config.update": "hookConfigManage",
+            "route.system.module.edit": "hookModuleManage",
+            "route.system.module.update": "hookModuleManage"
+        }
+    },
+    "system.hook.config": {
+        "class": "System\\Services\\HookConfig",
+        "arguments": [
+            "@template",
+            "@file"
+        ],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.system.form.generate": "form",
+            "config.update.system.validator": "validator",
+            "config.update.system.before": "before",
+            "config.update.system.files": "files"
         }
     }
 }

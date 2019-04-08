@@ -1,0 +1,60 @@
+{
+    "user.account": {
+        "methode": "GET",
+        "path": "user/account",
+        "uses": "User@account",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "user.show": {
+        "methode": "GET",
+        "path": "user/:id",
+        "uses": "User@show",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "user.create": {
+        "methode": "GET",
+        "path": "user",
+        "uses": "User@create"
+    },
+    "user.store": {
+        "methode": "POST",
+        "path": "user",
+        "uses": "User@store"
+    },
+    "user.edit": {
+        "methode": "GET",
+        "path": "user/:id/edit",
+        "uses": "User@edit",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "user.update": {
+        "methode": "POST",
+        "path": "user/:id/edit",
+        "uses": "User@udpate",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "user.remove": {
+        "methode": "GET",
+        "path": "user/:id/delete",
+        "uses": "User@remove",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "user.delete": {
+        "methode": "POST",
+        "path": "user/:id/delete",
+        "uses": "User@delete",
+        "with": {
+            ":id": "\\d+"
+        }
+    }
+}
