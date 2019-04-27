@@ -48,9 +48,9 @@ class ModulesManager extends \Soosyze\Controller
                 }
             }
 
-            $form->checkbox($key, $key, $attr)
+            $form->checkbox($key, 'module-' . $key, $attr)
                 ->label('module-' . $key, '<span class="ui"></span> ' . $key, [
-                    'for' => $key
+                    'for' => 'module-' . $key
             ]);
 
             $package[ $values[ 'package' ] ][ $key ] = [
@@ -58,7 +58,8 @@ class ModulesManager extends \Soosyze\Controller
                 'description'         => $values[ 'description' ],
                 'version'             => $values[ 'version' ],
                 'isRequired'          => $isRequired,
-                'isRequiredForModule' => $isRequiredForModule
+                'isRequiredForModule' => $isRequiredForModule,
+                'ckecked'             => isset($content[ $key ])
             ];
         }
 
