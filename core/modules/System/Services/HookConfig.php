@@ -30,9 +30,11 @@ class HookConfig
         }
 
         return $form->group('system-information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
-                    $form->legend('system-information-legend', 'Information')
+            $form->legend('system-information-legend', 'Information')
                     ->group('system-email-group', 'div', function ($form) use ($data) {
-                        $form->label('system-email-label', 'E-mail du site')
+                        $form->label('system-email-label', 'E-mail du site', [
+                            'data-tooltip' => 'E-mail utilisé pour la configuration générale, pour vos contacts (pour la récupération de votre mot de passe...).'
+                        ])
                         ->email('email', 'email', [
                             'class'       => 'form-control',
                             'required'    => 1,
@@ -75,7 +77,9 @@ class HookConfig
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-path-legend', 'Page par défaut')
                     ->group('system-path_index-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_index-label', 'Page d’accueil par défaut')
+                        $form->label('system-path_index-label', 'Page d’accueil par défaut', [
+                            'data-tooltip' => 'Lien du contenu affiché en page d’accueil de votre site.'
+                        ])
                         ->text('path_index', 'path_index', [
                             'class'       => 'form-control',
                             'required'    => 1,
@@ -84,7 +88,9 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_access_denied-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)')
+                        $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)', [
+                            'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui lui est interdite.'
+                        ])
                         ->text('path_access_denied', 'path_access_denied', [
                             'class'       => 'form-control',
                             'placeholder' => 'Path page access denied',
@@ -92,7 +98,9 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_no_found-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)')
+                        $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)', [
+                            'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui n’existe pas.'
+                        ])
                         ->text('path_no_found', 'path_no_found', [
                             'class'       => 'form-control',
                             'placeholder' => 'Path page not found',
@@ -103,7 +111,9 @@ class HookConfig
                 ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-metadata-legend', 'SEO Metadonnées')
                     ->group('system-title-group', 'div', function ($form) use ($data) {
-                        $form->label('system-title-label', 'Titre du site')
+                        $form->label('system-title-label', 'Titre du site', [
+                            'data-tooltip' => 'Le titre principal de votre site apparait aussi dans le titre de la fenêtre de votre navigateur.'
+                        ])
                         ->text('title', 'title', [
                             'class'       => 'form-control',
                             'maxlength'   => 64,
@@ -113,7 +123,9 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-description-group', 'div', function ($form) use ($data) {
-                        $form->label('system-description-label', 'Description')
+                        $form->label('system-description-label', 'Description', [
+                            'data-tooltip' => 'Aide à votre référencement et s’affiche dans les moteurs de recherche.'
+                        ])
                         ->textarea('description', 'description', $data[ 'description' ], [
                             'class'     => 'form-control',
                             'maxlength' => 256,
@@ -130,7 +142,10 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-group-favicon', 'div', function ($form) use ($data) {
-                        $form->label('system-favicon-label', 'Favicon', [ 'class' => 'control-label' ]);
+                        $form->label('system-favicon-label', 'Favicon', [
+                            'class'        => 'control-label',
+                            'data-tooltip' => 'Image à gauche du titre de la fenêtre de votre navigateur.'
+                        ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
                         $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
                             '_content' => 'Le fichier doit peser moins de <b>100 Ko</b>.'

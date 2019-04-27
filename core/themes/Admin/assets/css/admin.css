@@ -181,3 +181,53 @@ thead tr th{
         color: #fff;
     }
 }
+
+
+/* --------------------------- */
+/* -------- TOOLTIP ---------- */
+/* --------------------------- */
+label[data-tooltip] {
+    display: block;
+}
+[data-tooltip] {
+    cursor: help;
+    position: relative;
+}
+[data-tooltip]:before,
+[data-tooltip]:after {
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9999;
+}
+[data-tooltip]:before {
+    bottom: 100%;
+    background: #20222d;
+    background: rgba(32, 34, 45, 0.8);
+    color: #fff;
+    content: attr(data-tooltip);
+    font-size: 14px;
+    left: -10px;
+    transform: translateX(-50%) translateY(0);
+    margin-bottom: 9px;
+    padding: 8px 10px;
+    position: absolute;
+}
+label[data-tooltip]:before {
+    transform: none;
+}
+/* Triangle */
+[data-tooltip]:after {
+    border-top: 10px solid #20222d;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    bottom: 100%;
+    content: "";
+    left: 0;
+    position: absolute;
+}
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+    opacity: 1;
+    transition: opacity .5s;
+    visibility: visible;
+}

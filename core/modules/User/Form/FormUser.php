@@ -67,7 +67,10 @@ class FormUser extends FormBuilder
     public function picture(&$form)
     {
         $form->group('user-picture-group', 'div', function ($form) {
-            $form->label('user-picture-label', 'Image', [ 'for' => 'file-name-picture' ]);
+            $form->label('user-picture-label', 'Image', [
+                'for' => 'file-name-picture',
+                'data-tooltip' => '200ko maximum. Extensions autorisées : jpeg, jpg, png, gif.'
+            ]);
             $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
         }, self::$attrGrp);
 
@@ -77,7 +80,9 @@ class FormUser extends FormBuilder
     public function bio(&$form)
     {
         $form->group('system-description-group', 'div', function ($form) {
-            $form->label('system-bio-label', 'Biographie')
+            $form->label('system-bio-label', 'Biographie', [
+                    'data-tooltip' => 'Décrivez-vous en 255 caractères maximum.'
+                ])
                 ->textarea('bio', 'bio', $this->content[ 'bio' ], [
                     'class'       => 'form-control',
                     'maxlength'   => 255,
