@@ -20,10 +20,11 @@ class FormUser extends FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function __construct(array $attributes, $file = null)
+    public function __construct(array $attributes, $file = null, $config = null)
     {
         parent::__construct($attributes);
-        $this->file = $file;
+        $this->file   = $file;
+        $this->config = $config;
     }
 
     public function content($content)
@@ -125,8 +126,8 @@ class FormUser extends FormBuilder
     public function passwordCurrent(&$form)
     {
         $form->group('user-password-group', 'div', function ($form) {
-            $form->label('user-password-label', 'Mot de passe')
-                ->password('password', 'password', [ 'class' => 'form-control' ]);
+            $form->label('user-password-label', 'Mot de passe');
+            $this->password($form, 'password');
         }, self::$attrGrp);
 
         return $this;
@@ -135,8 +136,8 @@ class FormUser extends FormBuilder
     public function passwordNew(&$form)
     {
         $form->group('user-password_new-group', 'div', function ($form) {
-            $form->label('user-password_new-label', 'Nouveau mot de passe')
-                ->password('password_new', 'password_new', [ 'class' => 'form-control' ]);
+            $form->label('user-password_new-label', 'Nouveau mot de passe');
+            $this->password($form, 'password_new');
         }, self::$attrGrp);
 
         return $this;
@@ -145,11 +146,27 @@ class FormUser extends FormBuilder
     public function passwordConfirm(&$form)
     {
         $form->group('user-password_confirm-group', 'div', function ($form) {
-            $form->label('user-password_confirm-label', 'Confirmation du nouveau mot de passe')
-                ->password('password_confirm', 'password_confirm', [ 'class' => 'form-control' ]);
+            $form->label('user-password_confirm-label', 'Confirmation du nouveau mot de passe');
+            $this->password($form, 'password_confirm');
         }, self::$attrGrp);
 
         return $this;
+    }
+    
+    public function password(&$form, $id)
+    {
+        $form->group("user-$id-group", 'div', function ($form) use ($id) {
+            $form->password($id, $id, [ 'class' => 'form-control' ]);
+            if ($this->config && $this->config->get('settings.password_show', true)) {
+                $form->html('password_show', '<button:css:attr>:_content</button>', [
+                    'class'        => 'btn-toogle-password',
+                    'onclick'      => "togglePassword(this, '$id')",
+                    'type'         => 'button',
+                    '_content'     => '<i id="eyeIcon" class="fa fa-eye"></i>',
+                    'data-tooltip' => 'Afficher/Cacher le mot de passe'
+                ]);
+            }
+        }, [ 'class' => 'form-group-flex' ]);
     }
 
     public function fieldsetInformationsCreate()

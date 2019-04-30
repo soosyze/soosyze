@@ -26,7 +26,7 @@ class Register extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.register.check')
-            ]))->content($data);
+            ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('register-legend', 'Inscription utilisateur');
             $form->username($formbuilder)
@@ -65,7 +65,7 @@ class Register extends \Soosyze\Controller
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
                 'email'            => 'required|email|htmlsc',
-                'password'         => 'required|string',
+                'password'         => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password',
                 'token'            => 'required|token'
             ])

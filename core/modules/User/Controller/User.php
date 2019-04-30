@@ -134,7 +134,7 @@ class User extends \Soosyze\Controller
                 'name'             => '!required|string|max:255|htmlsc',
                 'firstname'        => '!required|string|max:255|htmlsc',
                 'actived'          => 'bool',
-                'password_new'     => 'required|string',
+                'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'role'             => '!required|array',
                 'token'            => 'token'
@@ -226,7 +226,7 @@ class User extends \Soosyze\Controller
         $form = (new FormUser([
             'method'  => 'post',
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data' ], self::file()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::config()))
             ->content($data)
             ->fieldsetInformations()
             ->fieldsetProfil()
@@ -292,7 +292,7 @@ class User extends \Soosyze\Controller
                 'bio'              => '!required|string|max:255|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
                 'firstname'        => '!required|string|max:255|htmlsc',
-                'password_new'     => '!required|string',
+                'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'actived'          => 'bool',
                 'token'            => 'required|token'

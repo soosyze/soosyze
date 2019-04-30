@@ -33,7 +33,7 @@ class Login extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.login.check')
-            ]))->content($data);
+            ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', 'Connexion utilisateur');
             $form->email($formbuilder)

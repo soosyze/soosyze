@@ -64,7 +64,13 @@ class Install
             ->execute();
 
         $container->config()->set('settings.user_register', '');
-        $container->config()->set('settings.user_relogin', '');
+        $container->config()->set('settings.user_relogin', 'on');
+
+        $container->config()->set('settings.password_show', 'on');
+        $container->config()->set('settings.password_length', 8);
+        $container->config()->set('settings.password_upper', 1);
+        $container->config()->set('settings.password_digit', 1);
+        $container->config()->set('settings.password_special', 1);
     }
 
     public function hookInstall($container)

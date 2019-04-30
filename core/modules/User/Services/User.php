@@ -217,6 +217,16 @@ class User
         return false;
     }
 
+    public function passwordPolicy()
+    {
+        $length  = $this->core->get('config')->get('password_length', 8);
+        $upper   = $this->core->get('config')->get('password_upper', 1);
+        $digit   = $this->core->get('config')->get('password_digit', 1);
+        $special = $this->core->get('config')->get('password_special', 1);
+
+        return '/(?=.*\d){' . $digit . ',}(?=.*[a-z])(?=.*\W){' . $special . ',}(?=.*[A-Z]){' . $upper . ',}.{' . $length . ',}/';
+    }
+
     /**
      * Vérifie les droits d'accès aux contrôleurs.
      *
@@ -292,27 +302,15 @@ class User
         }
     }
 
-    public function hooRoleResponseAfter($request, &$response)
+    public function hookReponseAfter($request, &$response)
     {
-        $script = $response->getVar('scripts');
-
-        $script .= '<script>      
-        function toogleForm(id_form)
-        {
-            var form = document.getElementById(id_form);
-            form.style.display = form.style.display === "none" ? "" : "none";
+        if ($response instanceof \Template\Services\TemplatingHtml) {
+            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules') . 'User/Assets';
+            $script = $response->getVar('scripts');
+            $script .= '<script src="' . $vendor . '/js/script.js"></script>';
+            $response->add([
+                'scripts' => $script
+            ]);
         }
-        function getRandomColor() {
-            var letters = "0123456789abcdef";
-            var color = "#";
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }</script>';
-
-        $response->add([
-            'scripts' => $script
-        ]);
     }
 }

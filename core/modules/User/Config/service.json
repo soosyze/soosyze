@@ -7,11 +7,10 @@
             "@core"
         ],
         "hooks": {
-            "app.response.before": "hookResponseBefore",
-            "user.role.create.response.after": "hooRoleResponseAfter",
-            "user.role.edit.response.after": "hooRoleResponseAfter",
             "app.granted": "isGranted",
-            "app.granted.route": "isGrantedRoute"
+            "app.granted.route": "isGrantedRoute",
+            "app.response.before": "hookResponseBefore",
+            "app.response.after": "hookReponseAfter"
         }
     },
     "user.install": {

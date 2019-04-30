@@ -1,6 +1,23 @@
 .btn.btn-action {
     margin-right: 5px;
 }
+.btn-toogle-password {
+    background: none;
+    border: none;
+    color: #337ab7;
+    font-weight: 600;
+    padding: 0 8px;
+    position: absolute !important;
+    right: .75em;
+    top: 2.25em;
+    z-index: 9;
+}
+.btn-toogle-password i {
+    width: 22px;
+}
+.form-group-flex{
+    display: flex;
+}
 
 
 /* --------------------------- */
