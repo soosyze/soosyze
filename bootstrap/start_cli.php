@@ -18,7 +18,7 @@ if (empty($home) && isset($_SERVER[ 'HOMEDRIVE' ], $_SERVER[ 'HOMEPATH' ])) {
 }
 
 /* Construit une requête dédié à PHP CLI. */
-$uri = new Soosyze\Components\Http\Uri('http', $home, '/', 80, '?node/1');
+$uri = new Soosyze\Components\Http\Uri('http', $home, '/', 80, '?q=node/1');
 $req = new Soosyze\Components\Http\ServerRequest(
     'GET',
     $uri,

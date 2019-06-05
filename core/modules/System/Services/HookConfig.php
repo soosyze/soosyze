@@ -49,30 +49,40 @@ class HookConfig
                         ->label('system-maintenance-group', '<span class="ui"></span>Mettre le site en maintenance', [
                             'for' => 'maintenance'
                         ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                        $form->label('system-theme-label', 'Theme du site')
-                        ->select('theme', 'theme', $optionThemes, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'theme' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
-                        $form->label('system-theme_admin-label', 'Theme d\'administration du site')
-                        ->select('theme_admin', 'theme_admin', $optionThemes, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'theme_admin' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('system-logo-group', 'div', function ($form) use ($data) {
-                        $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
-                        $this->file->inputFile('logo', $form, $data[ 'logo' ]);
-                        $form->html('system-logo-info-size', '<p:css:attr>:_content</p>', [
-                            '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
-                        ]);
                     }, [ 'class' => 'form-group' ]);
+                if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
+                    $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
+                        $form->checkbox('rewrite_engine', 'rewrite_engine', [
+                                    'checked' => $data[ 'rewrite_engine' ]
+                                ])
+                                ->label('system-maintenance-group', '<span class="ui"></span>Rendre les URL propre', [
+                                    'for' => 'rewrite_engine'
+                                ]);
+                    }, [ 'class' => 'form-group' ]);
+                }
+                $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
+                    $form->label('system-theme-label', 'Theme du site')
+                            ->select('theme', 'theme', $optionThemes, [
+                                'class'    => 'form-control',
+                                'required' => 1,
+                                'selected' => $data[ 'theme' ]
+                            ]);
+                }, [ 'class' => 'form-group' ])
+                        ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
+                            $form->label('system-theme_admin-label', 'Theme d\'administration du site')
+                            ->select('theme_admin', 'theme_admin', $optionThemes, [
+                                'class'    => 'form-control',
+                                'required' => 1,
+                                'selected' => $data[ 'theme_admin' ]
+                            ]);
+                        }, [ 'class' => 'form-group' ])
+                        ->group('system-logo-group', 'div', function ($form) use ($data) {
+                            $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
+                            $this->file->inputFile('logo', $form, $data[ 'logo' ]);
+                            $form->html('system-logo-info-size', '<p:css:attr>:_content</p>', [
+                                '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
+                            ]);
+                        }, [ 'class' => 'form-group' ]);
                 })
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-path-legend', 'Page par défaut')
@@ -164,6 +174,7 @@ class HookConfig
         $validator->setRules([
             'email'              => 'required|email|max:254|htmlsc',
             'maintenance'        => '!required|bool',
+            'rewrite_engine'     => 'bool',
             'theme'              => 'required|inarray:' . $themes,
             'theme_admin'        => 'required|inarray:' . $themes,
             'path_index'         => 'required|string|htmlsc',
@@ -183,6 +194,7 @@ class HookConfig
         $data = [
             'email'              => $validator->getInput('email'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
+            'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
             'theme'              => $validator->getInput('theme'),
             'theme_admin'        => $validator->getInput('theme_admin'),
             'path_index'         => $validator->getInput('path_index'),

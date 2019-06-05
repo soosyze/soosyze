@@ -46,7 +46,7 @@ class HookApp
     {
         if (($path = $this->config->get('settings.path_no_found')) != '') {
             $requestNoFound = $request
-                ->withUri($request->getUri()->withQuery($path))
+                ->withUri($request->getUri()->withQuery('q=' . $path))
                 ->withMethod('GET');
             if (($route          = $this->route->parse($requestNoFound))) {
                 $responseNoFound = $this->route->execute($route, $requestNoFound);
@@ -77,7 +77,7 @@ class HookApp
     {
         if (($path = $this->config->get('settings.path_access_denied')) != '') {
             $requestDenied = $request
-                ->withUri($request->getUri()->withQuery($path))
+                ->withUri($request->getUri()->withQuery('q=' . $path))
                 ->withMethod('GET');
             if (($route         = $this->route->parse($requestDenied))) {
                 $responseDenied = $this->route->execute($route, $requestDenied);

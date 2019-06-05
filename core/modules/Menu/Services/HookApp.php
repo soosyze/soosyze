@@ -85,28 +85,51 @@ class HookApp
     {
         $route = '' !== $request->getUri()->getQuery()
             ? $request->getUri()->getQuery()
-            : '/';
+            : '';
 
+        $isRewite = $this->core->get('config')->get('settings.rewrite_engine');
         foreach ($query as $key => &$menu) {
             if (!$menu[ 'key' ]) {
                 $menu[ 'link_active' ] = '';
 
                 continue;
             }
-            $menu[ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
+            $menu[ 'link_active' ] = 0 === strpos($route, 'q=' . $menu[ 'link' ]) || ($route === ''  && $menu[ 'link' ] === '/')
                 ? 'active'
                 : '';
-
-            $link = $request->withUri($request->getUri()->withQuery($menu[ 'link' ]));
+            $link = $request->withUri($request->getUri()->withQuery('q=' . $menu[ 'link' ]));
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
             if (!$this->core->callHook('app.granted.route', [ $link ])) {
                 unset($query[ $key ]);
 
                 continue;
             }
-            $menu[ 'link' ] = $link->getUri()->__toString();
+            $menu[ 'link' ] = $this->rewiteUri($isRewite, $link);
         }
 
         return $query;
+    }
+
+    protected function rewiteUri($isRewite, $request)
+    {
+        $basePath = $request->getBasePath();
+        $query    = str_replace('q=/', '', $request->getUri()->getQuery());
+        $req      = $request->withUri($request->getUri()->withQuery($query));
+        $uri      = $req->getUri();
+
+        if ($isRewite) {
+            $link = $basePath;
+
+            $link .= $uri->getQuery() !== ''
+                ? str_replace('q=', '', $uri->getQuery())
+                : '';
+            $link .= $uri->getFragment() !== ''
+                ? '#' . $uri->getFragment()
+                : '';
+
+            return $link;
+        }
+
+        return $uri->__toString();
     }
 }

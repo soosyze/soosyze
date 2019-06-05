@@ -80,7 +80,7 @@ class Install implements \SoosyzeCore\System\Migration
             ->values([
                 'Accueil', 'page', (string) time(), (string) time(), true,
                 serialize([
-                    'body' => '<p>Bienvenue sur votre site <a href="?user/login">Connexion utilisateur</a></p>
+                    'body' => '<p>Bienvenue sur votre site <a href="?q=user/login">Connexion utilisateur</a></p>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam suscipit orci a purus accumsan posuere. 
 Nulla gravida risus quis elementum semper. Phasellus id molestie nulla, non viverra diam. Quisque non varius metus. 
 In pretium dui id lectus iaculis tempus. Donec ut vestibulum neque. Praesent sed viverra ante, non maximus urna. 
