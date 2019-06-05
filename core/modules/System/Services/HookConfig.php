@@ -183,8 +183,8 @@ class HookConfig
             'title'              => 'required|string|max:64|htmlsc',
             'description'        => 'required|string|max:256|htmlsc',
             'keyboard'           => '!required|string|htmlsc',
-            'favicon'            => '!required|image|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100000',
-            'logo'               => '!required|image|max:2000000',
+            'favicon'            => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
+            'logo'               => '!required|image|max:200Kb',
             'token'              => 'required|token'
         ]);
     }

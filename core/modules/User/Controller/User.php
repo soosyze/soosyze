@@ -129,7 +129,7 @@ class User extends \Soosyze\Controller
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
                 'email'            => 'required|email|max:254|htmlsc',
-                'picture'          => '!required|image|max:200000',
+                'picture'          => '!required|image|max:200Kb',
                 'bio'              => '!required|string|max:255|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
                 'firstname'        => '!required|string|max:255|htmlsc',
