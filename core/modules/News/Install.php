@@ -1,13 +1,21 @@
 <?php
 
-namespace News;
+namespace SoosyzeCore\News;
 
-class Install
+use Psr\Container\ContainerInterface;
+
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
     {
-        $container->query()->insertInto('node_type', [ 'node_type', 'node_type_name',
-                'node_type_description' ])
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
+    {
+        $ci->query()->insertInto('node_type', [
+                'node_type', 'node_type_name', 'node_type_description'
+            ])
             ->values([
                 'node_type'             => 'article',
                 'node_type_name'        => 'Article',
@@ -15,40 +23,31 @@ class Install
             ])
             ->execute();
 
-        $container->query()->insertInto('field', [
-                'field_name',
-                'field_type',
-                'field_rules'
-            ])
-            ->values([ 'summary', 'textarea', '!required|string|max:255' ])
-            ->execute();
+        $idSummary = $ci->query()->from('field')->where('field_name', 'summary')->fetch()[ 'field_id' ];
+        $idBody    = $ci->query()->from('field')->where('field_name', 'body')->fetch()[ 'field_id' ];
 
-        $container->query()->insertInto('node_type_field', [
-                'node_type',
-                'field_id',
-                'field_weight'
+        $ci->query()
+            ->insertInto('node_type_field', [
+                'node_type', 'field_id', 'field_weight', 'field_label'
             ])
-            /* Body */
-            ->values([ 'article', 1, 2 ])
-            /* Summaray */
-            ->values([ 'article', 2, 1 ])
+            ->values([ 'article', $idSummary, 2, 'Résumé' ])
+            ->values([ 'article', $idBody, 3, 'Corps' ])
             ->execute();
+    }
 
-        $container->query()->insertInto('node', [
-                'title',
-                'type',
-                'created',
-                'changed',
-                'published',
-                'field'
+    public function seeders(ContainerInterface $ci)
+    {
+        $ci->query()
+            ->insertInto('node', [
+                'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                'title'     => 'Bienvenue sur mon site',
-                'type'      => 'article',
-                'created'   => (string) time(),
-                'changed'   => (string) time(),
-                'published' => true,
-                'field'     => serialize([
+                'Bienvenue sur mon site',
+                'article',
+                (string) time(),
+                (string) time(),
+                true,
+                serialize([
                     'summary' => 'Un article se met en valeur par un résumé qui décrit brièvement '
                     . 'son contenu avec un nombre de caractères limité (maximum 255 caractères).',
                     'body'    => '<p>Quelques conseils pour l\'écriture de vos articles</p>
@@ -74,62 +73,58 @@ class Install
 
 <p>Il ne s\'agit pas de règles immuables, juste des conseils pour l\'écriture de vos articles.</p>
 <p>Pensez bien à rester sobre, l\'internaute vient avant tout lire le contenu de vos articles.</p>
-<p>Le reste ne dépend que de vous. Bon courage !</p>'
+<p>Le reste ne dépend que de vous. Bon courage !</p>',
+                    'image'   => ''
                 ])
             ])
             ->execute();
     }
 
-    public function hookInstall($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($container);
+        $this->hookInstallMenu($ci);
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [
-                    'key',
-                    'title_link',
-                    'link',
-                    'menu',
-                    'weight',
-                    'parent',
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
-                ->values([
-                    'news.index',
-                    'Blog',
-                    'news',
-                    'main-menu',
-                    3,
-                    -1
-                ])
+                ->values([ 'news.index', 'Blog', 'news', 'main-menu', 3, -1 ])
                 ->execute();
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->from('menu_link')
-                ->delete()
-                ->where('link', 'news')
-                ->execute();
-        }
-
-        $container->query()->from('node')
+        $ci->query()->from('node')
             ->delete()
             ->where('type', 'article')
             ->execute();
-
-        $container->query()->from('node_type_field')
+        $ci->query()->from('node_type_field')
             ->delete()
             ->where('node_type', 'article')
             ->execute();
-
-        $container->query()->from('node_type')
+        $ci->query()->from('node_type')
             ->delete()
             ->where('node_type', 'article')
             ->execute();
+    }
+
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallUser($ci);
+    }
+    
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()->from('menu_link')
+                ->delete()
+                ->where('link', 'like', 'news%')
+                ->execute();
+        }
     }
 }

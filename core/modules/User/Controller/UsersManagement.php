@@ -1,10 +1,6 @@
 <?php
 
-namespace User\Controller;
-
-use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
-use Soosyze\Components\Validator\Validator;
+namespace SoosyzeCore\User\Controller;
 
 class UsersManagement extends \Soosyze\Controller
 {

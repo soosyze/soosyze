@@ -1,9 +1,8 @@
 <?php
 
-namespace News\Controller;
-
 define('VIEWS_NIEWS', MODULES_CORE . 'News' . DS . 'Views' . DS);
 define('CONFIG_NIEWS', MODULES_CORE . 'News' . DS . 'Config' . DS);
+namespace SoosyzeCore\News\Controller;
 
 class NewsController extends \Soosyze\Controller
 {

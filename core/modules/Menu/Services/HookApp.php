@@ -1,6 +1,6 @@
 <?php
 
-namespace Menu\Services;
+namespace SoosyzeCore\Menu\Services;
 
 class HookApp
 {
@@ -16,7 +16,7 @@ class HookApp
 
     public function hookResponseAfter($request, &$response)
     {
-        if ($response instanceof \Template\Services\TemplatingHtml) {
+        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
             $this->query
                 ->from('menu_link')
                 ->where('active', '==', 1)

@@ -1,11 +1,11 @@
 <?php
 
-namespace User\Controller;
+namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
-use User\Form\FormUser;
+use SoosyzeCore\User\Form\FormUser;
 
 class Login extends \Soosyze\Controller
 {

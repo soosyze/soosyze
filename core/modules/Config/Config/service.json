@@ -1,6 +1,6 @@
 {
     "config.hook.user": {
-        "class": "Config\\Services\\HookUser",
+        "class": "SoosyzeCore\\Config\\Services\\HookUser",
         "arguments": [
             "@core"
         ],
@@ -8,6 +8,13 @@
             "route.config.index" : "hookConfigIndex",
             "route.config.edit": "hookConfigManage",
             "route.config.update": "hookConfigManage"
+        }
+    },
+    "config.install": {
+        "class": "SoosyzeCore\\Config\\Install",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
         }
     }
 }

@@ -1,47 +1,62 @@
 <?php
 
-namespace System;
+namespace SoosyzeCore\System;
 
+use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Install
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
     {
-        $container->schema()->createTableIfNotExists('module', function (TableBuilder $table) {
-            $table->string('name')
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
+    {
+        $ci->schema()
+            ->createTableIfNotExists('module_active', function (TableBuilder $table) {
+                $table->string('title')
+                ->string('version');
+            })
+            ->createTableIfNotExists('module_controller', function (TableBuilder $table) {
+                $table->string('title')
                 ->string('key_controller')
-                ->string('controller')
-                ->string('version')
-                ->text('description')
-                ->string('package')
-                ->boolean('locked');
-        })->createTableIfNotExists('module_required', function (TableBuilder $table) {
-            $table->string('name_module')
-                ->string('name_required');
-        });
+                ->string('controller');
+            })
+            ->createTableIfNotExists('module_require', function (TableBuilder $table) {
+                $table->string('title_module')
+                ->string('title_required')
+                ->string('version');
+            });
 
-        $container->config()->set('settings.maintenance', '');
-        $container->config()->set('settings.path_no_found', 'node/1');
-        $container->config()->set('settings.path_index', 'node/2');
-        $container->config()->set('settings.path_access_denied', 'user/login');
-        $container->config()->set('settings.title', 'Soosyze');
-        $container->config()->set('settings.description', 'Hello world !');
-        $container->config()->set('settings.keyboard', '');
-        $container->config()->set('settings.favicon', '');
-        $container->config()->set('settings.timezone', 'Europe/Paris');
+        $ci->config()
+            ->set('settings.maintenance', '')
+            ->set('settings.rewrite_engine', '')
+            ->set('settings.path_no_found', 'node/1')
+            ->set('settings.path_index', 'node/2')
+            ->set('settings.path_access_denied', 'user/login')
+            ->set('settings.title', 'Soosyze')
+            ->set('settings.description', 'Hello world !')
+            ->set('settings.keyboard', '')
+            ->set('settings.favicon', '')
+            ->set('settings.timezone', 'Europe/Paris');
     }
 
-    public function hookInstall($container)
+    public function seeders(ContainerInterface $ci)
     {
-        $this->hookInstallUser($container);
-        $this->hookInstallMenu($container);
     }
 
-    public function hookInstallUser($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
+        $this->hookInstallUser($ci);
+        $this->hookInstallMenu($ci);
+    }
+
+    public function hookInstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
                 ->values([ 3, 'system.config.manage' ])
                 ->values([ 3, 'system.module.manage' ])
@@ -50,16 +65,12 @@ class Install
         }
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [
-                    'key',
-                    'title_link',
-                    'link',
-                    'menu',
-                    'weight',
-                    'parent'
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
                     'system.module.edit',
@@ -73,25 +84,38 @@ class Install
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('role_permission')
-                ->delete()
-                ->regex('permission_id', '/^system./')
-                ->execute();
-        }
+        $ci->schema()->dropTable('module_controller');
+        $ci->schema()->dropTable('module_active');
+        $ci->schema()->dropTable('module_required');
+    }
 
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallMenu($ci);
+        $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
                 ->from('menu_link')
                 ->delete()
                 ->where('link', 'admin/modules')
                 ->execute();
         }
-
-        $container->schema()->dropTable('module');
-        $container->schema()->dropTable('module_required');
+    }
+    
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'system.%')
+                ->execute();
+        }
     }
 }

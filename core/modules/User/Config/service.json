@@ -1,6 +1,6 @@
 {
     "user": {
-        "class": "User\\Services\\User",
+        "class": "SoosyzeCore\\User\\Services\\User",
         "arguments": [
             "@query",
             "@router",
@@ -14,13 +14,13 @@
         }
     },
     "user.install": {
-        "class": "User\\Install",
+        "class": "SoosyzeCore\\User\\Install",
         "hooks": {
             "install.menu": "hookInstallMenu"
         }
     },
     "user.hook.user": {
-        "class": "User\\Services\\HookUser",
+        "class": "SoosyzeCore\\User\\Services\\HookUser",
         "arguments": [
             "@config",
             "@user"
@@ -51,7 +51,7 @@
         }
     },
     "user.hook.config": {
-        "class": "User\\Services\\HookConfig",
+        "class": "SoosyzeCore\\User\\Services\\HookConfig",
         "arguments": [
             "@config"
         ],

@@ -1,11 +1,12 @@
 <?php
 
-namespace System\Services;
-
-use Soosyze\Components\Util\Util;
+namespace SoosyzeCore\System\Services;
 
 class Modules
 {
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
     protected $query;
 
     public function __construct($query)
@@ -16,179 +17,134 @@ class Modules
     /**
      * Si le module est installé.
      *
-     * @param string $name Nom du module.
+     * @param string $title Nom du module.
      *
      * @return array
      */
-    public function isInstall($name)
+    public function has($title)
     {
         return $this->query
-                ->from('module')
-                ->where('name', $name)
+                ->from('module_active')
+                ->where('title', $title)
                 ->fetch();
     }
 
     /**
      * Si le module est requis par le module virtuel "core".
      *
-     * @param string $key Nom du module.
+     * @param string $title Nom du module.
      *
      * @return array
      */
-    public function isRequiredCore($key)
+    public function isRequiredCore($title)
     {
         return $this->query
-                ->from('module_required')
-                ->where('name_module', $key)
-                ->where('name_required', 'Core')
-                ->lists('name_required');
+                ->from('module_require')
+                ->where('title_module', $title)
+                ->where('title_required', 'Core')
+                ->lists('title_required');
     }
 
     /**
      * Si le module est requis par un autre module installé.
      *
-     * @param string $key Nom du module.
+     * @param string $title Nom du module.
      *
      * @return array
      */
-    public function isRequiredForModule($key)
+    public function isRequiredForModule($title)
     {
         $output = $this->query
-            ->from('module')
-            ->leftJoin('module_required', 'name', 'module_required.name_required')
-            ->where('name', $key)
-            ->isNotNull('name_module')
-            ->lists('name_module');
+            ->from('module_active')
+            ->leftJoin('module_require', 'title', 'module_require.title_required')
+            ->where('title', $title)
+            ->isNotNull('title_module')
+            ->lists('title_module');
 
         return array_unique($output);
     }
 
     public function listModuleActive(array $columns = [])
     {
-        $output  = [];
         $modules = $this->query
             ->select($columns)
-            ->from('module')
+            ->from('module_active')
             ->fetchAll();
         foreach ($modules as $value) {
-            if (!isset($output[ $value[ 'name' ] ])) {
-                $output[ $value[ 'name' ] ] = $value;
-            }
+            $modules[ $value[ 'title' ] ] = $value;
         }
 
-        return $output;
+        return $modules;
     }
 
     public function listModuleActiveNotRequire(array $columns = [])
     {
         return $this->query
                 ->select($columns)
-                ->from('module')
-                ->leftJoin('module_required', 'name', 'module_required.name_required')
-                ->isNull('name_module')
-                ->lists('name');
+                ->from('module_active')
+                ->leftJoin('module_require', 'title', 'module_require.title_required')
+                ->isNull('title_module')
+                ->lists('title');
     }
 
     /**
      * Désinstalle un module.
      *
-     * @param string $name Nom du module.
+     * @param string $title Nom du module.
      */
-    public function uninstallModule($name)
+    public function uninstallModule($title)
     {
         $this->query
-            ->from('module')
+            ->from('module_active')
             ->delete()
-            ->where('name', $name)
+            ->where('title', $title)
             ->execute();
 
         $this->query
-            ->from('module_required')
+            ->from('module_require')
             ->delete()
-            ->where('name_module', $name)
+            ->where('title_module', $title)
+            ->execute();
+
+        $this->query
+            ->from('module_controller')
+            ->delete()
+            ->where('title', $title)
             ->execute();
     }
 
     /**
-     * Installe un module.
+     * Créer un module à partir du contenu de son fichier composer.json
      *
-     * @param array $config Données du module.
+     * @param array $composer Données du module.
      */
-    public function create($config)
+    public function create(array $composer)
     {
-        $required = isset($config[ 'required' ])
-            ? $config[ 'required' ]
-            : [];
-        unset($config[ 'required' ]);
+        $module = $composer[ 'extra' ][ 'soosyze-module' ];
+        /* Enregistrement du module. */
+        $this->query
+            ->insertInto('module_active', [ 'title', 'version' ])
+            ->values([ $module[ 'title' ], $composer[ 'version' ] ])
+            ->execute();
 
-        foreach ($config[ 'controller' ] as $key => $controller) {
-            $module                     = $config;
-            $module[ 'controller' ]     = $controller;
-            $module[ 'key_controller' ] = $key;
-
-            $this->query
-                ->insertInto('module', [ 'name', 'controller',
-                    'version', 'description', 'package', 'locked', 'key_controller' ])
-                ->values($module)
-                ->execute();
+        /* Enregistrement des contrôleurs. */
+        $this->query->insertInto('module_controller', [
+            'title', 'key_controller', 'controller'
+        ]);
+        foreach ($module[ 'controllers' ] as $key => $controller) {
+            $this->query->values([ $module[ 'title' ], $key, $controller ]);
         }
+        $this->query->execute();
 
-        foreach ($required as $require) {
-            $this->query
-                ->insertInto('module_required', [ 'name_module', 'name_required' ])
-                ->values([ $config[ 'name' ], $require ])
-                ->execute();
-        }
-    }
-
-    public function getConfig($nameModule)
-    {
-        $config = $this->getConfigAll();
-
-        return $config[ $nameModule ];
-    }
-
-    public function getModuleAll()
-    {
-        return array_merge($this->getModules(), $this->getModulesCore());
-    }
-
-    public function getModules($dir = MODULES_CONTRIBUED)
-    {
-        return Util::getFolder($dir);
-    }
-
-    public function getModulesCore()
-    {
-        return $this->getModules(MODULES_CORE);
-    }
-
-    public function getConfigModule($dir = MODULES_CONTRIBUED)
-    {
-        $config  = [];
-        $modules = $this->getModules($dir);
-
-        foreach ($modules as $module) {
-            $file = $dir . DS . $module . DS . 'config.json';
-            if (file_exists($file)) {
-                $tmp    = Util::getJson($file);
-                $config = array_merge($config, $tmp);
+        if (isset($module[ 'require' ])) {
+            /* Enregistrement des dépendances. */
+            $this->query->insertInto('module_require', [
+                'title_module', 'title_required', 'version'
+            ]);
+            foreach ($module[ 'require' ] as $require => $version) {
+                $this->query->values([ $module[ 'title' ], $require, $version ]);
             }
+            $this->query->execute();
         }
-
-        return $config;
-    }
-
-    public function getConfigModuleCore()
-    {
-        return $this->getConfigModule(MODULES_CORE);
-    }
-
-    public function getConfigAll()
-    {
-        $conf = array_merge($this->getConfigModule(), $this->getConfigModuleCore());
-        ksort($conf);
-
-        return $conf;
     }
 }

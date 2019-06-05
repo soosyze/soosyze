@@ -1,6 +1,6 @@
 {
     "install": {
-        "class": "Install\\Services\\Install",
+        "class": "SoosyzeCore\\System\\Services\\Install",
         "arguments": [
             "@router"
         ],

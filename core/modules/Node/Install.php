@@ -1,64 +1,84 @@
 <?php
 
-namespace Node;
+namespace SoosyzeCore\Node;
 
+use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Install
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
     {
-        $container->schema()->createTableIfNotExists('node', function (TableBuilder $table) {
-            $table->increments('id')
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
+    {
+        $ci->schema()
+            ->createTableIfNotExists('node', function (TableBuilder $table) {
+                $table->increments('id')
                 ->string('title')
                 ->string('type')
                 ->string('created')
                 ->string('changed')
                 ->boolean('published')
                 ->text('field');
-        })->createTableIfNotExists('node_type', function (TableBuilder $table) {
-            $table->string('node_type')
+            })
+            ->createTableIfNotExists('node_type', function (TableBuilder $table) {
+                $table->string('node_type')
                 ->string('node_type_name')
                 ->text('node_type_description');
-        })->createTableIfNotExists('field', function (TableBuilder $table) {
-            $table->increments('field_id')
+            })
+            ->createTableIfNotExists('field', function (TableBuilder $table) {
+                $table->increments('field_id')
                 ->string('field_name')
                 ->string('field_type')
                 ->string('field_rules');
-        })->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
-            $table->string('node_type')
+            })
+            ->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
+                $table->string('node_type')
                 ->integer('field_id')
+                ->string('field_label')
+                ->text('field_description')->valueDefault('')
+                ->text('field_default_value')->nullable()
                 ->integer('field_weight')->valueDefault(1);
-        });
+            });
 
-        $container->query()->insertInto('node_type', [
-                'node_type',
-                'node_type_name',
-                'node_type_description'
+        $ci->query()->insertInto('node_type', [
+                'node_type', 'node_type_name', 'node_type_description'
             ])
             ->values([ 'page', 'Page', 'Utilisez les pages pour votre contenu statique.' ])
             ->execute();
 
-        $container->query()->insertInto('field', [
-                'field_name',
-                'field_type',
-                'field_rules'
+        $ci->query()->insertInto('field', [
+                'field_name', 'field_type', 'field_rules'
             ])
             ->values([ 'body', 'textarea', 'required|string' ])
+            ->values([ 'summary', 'textarea', '!required|string|max:255' ])
             ->execute();
 
-        $container->query()->insertInto('node_type_field', [ 'node_type', 'field_id' ])
-            ->values([ 'page', 1 ])
+        $ci->query()
+            ->insertInto('node_type_field', [
+                'node_type', 'field_id', 'field_label'
+            ])
+            ->values([ 'page', 1, 'Corps' ])
             ->execute();
+    }
 
-        $container->query()->insertInto('node', [ 'title', 'type', 'created',
-                'changed', 'published', 'field' ])
-            ->values([ 'Page 404', 'page', (string) time(), (string) time(),
-                true, serialize([
+    public function seeders(ContainerInterface $ci)
+    {
+        $ci->query()
+            ->insertInto('node', [
+                'title', 'type', 'created', 'changed', 'published', 'field'
+            ])
+            ->values([
+                'Page 404', 'page', (string) time(), (string) time(), true,
+                serialize([
                     'body' => 'Page Not Found, Sorry, but the page you were trying to view does not exist.',
                 ])
             ])
-            ->values([ 'Accueil', 'page', (string) time(), (string) time(), true,
+            ->values([
+                'Accueil', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => '<p>Bienvenue sur votre site <a href="?user/login">Connexion utilisateur</a></p>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam suscipit orci a purus accumsan posuere. 
@@ -82,7 +102,8 @@ Suspendisse vitae diam ac lacus convallis varius.
 Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</p>',
                 ])
             ])
-            ->values([ 'Page', 'page', (string) time(), (string) time(), true,
+            ->values([
+                'Page', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => '<h2>Text</h2>
 <p>This is <strong>bold</strong> and this is <strong>strong</strong>. This is <em>italic</em> and this is <em>emphasized</em>.
@@ -135,16 +156,16 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
             ->execute();
     }
 
-    public function hookInstall($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($container);
-        $this->hookInstallMenu($container);
+        $this->hookInstallUser($ci);
+        $this->hookInstallMenu($ci);
     }
 
-    public function hookInstallUser($container)
+    public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
+        if ($ci->module()->has('User')) {
+            $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
                 ->values([ 3, 'node.show.not_published' ])
                 ->values([ 3, 'node.show.published' ])
@@ -156,11 +177,13 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
         }
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
-                    'menu', 'weight', 'parent' ])
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                ])
                 ->values([
                     'node.index',
                     '<i class="fa fa-file"></i> Contenu',
@@ -170,50 +193,74 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                     -1
                 ])
                 ->values([
-                    'node.show',
-                    'Page',
-                    'node/3',
-                    'main-menu',
-                    2,
-                    -1
+                    'node.show', 'Page', 'node/3', 'main-menu', 2, -1
                 ])
+                ->values([ 'node.show', 'Accueil', '/', 'main-menu', 1, -1 ])
                 ->execute();
 
-            $container->schema()->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
-                $table->integer('node_id')
+            $ci->schema()
+                ->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
+                    $table->integer('node_id')
                     ->integer('menu_link_id');
-            });
+                });
 
-            $container->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
-                ->values([ 2, 3 ])
-                ->values([ 3, 11 ])
+            $menuAccueil = $ci->query()
+                ->from('menu_link')
+                ->where('key', '==', 'node.show')
+                ->where('title_link', '=', 'Accueil')
+                ->fetch();
+
+            $menuPage = $ci->query()
+                ->from('menu_link')
+                ->where('key', '==', 'node.show')
+                ->where('title_link', '=', 'Page')
+                ->fetch();
+
+            $ci->query()
+                ->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+                ->values([ 2, $menuAccueil['id'] ])
+                ->values([ 3, $menuPage['id'] ])
                 ->execute();
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('role_permission')
-                ->delete()
-                ->regex('permission_id', '/^node./')
-                ->execute();
-        }
+        $ci->schema()->dropTable('node_type_field');
+        $ci->schema()->dropTable('field');
+        $ci->schema()->dropTable('node_type');
+        $ci->schema()->dropTable('node');
+    }
 
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallMenu($ci);
+        $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->schema()->hasTable('node_menu_link')) {
+            $ci->schema()->dropTable('node_menu_link');
+        }
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
                 ->from('menu_link')
                 ->delete()
                 ->where('link', 'admin/node')
-                ->orRegex('link', '/^node/')
+                ->orWhere('link', 'like', 'node%')
                 ->execute();
-            $container->schema()->dropTable('node_menu_link');
         }
-
-        $container->schema()->dropTable('node_type_field');
-        $container->schema()->dropTable('field');
-        $container->schema()->dropTable('node_type');
-        $container->schema()->dropTable('node');
+    }
+    
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'node%')
+                ->execute();
+        }
     }
 }

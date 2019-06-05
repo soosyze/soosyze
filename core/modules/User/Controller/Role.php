@@ -1,10 +1,10 @@
 <?php
 
-namespace User\Controller;
+namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
-use User\Form\FormUserRole;
+use SoosyzeCore\User\Form\FormUserRole;
 
 class Role extends \Soosyze\Controller
 {

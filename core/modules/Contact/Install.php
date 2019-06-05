@@ -1,40 +1,46 @@
 <?php
 
-namespace Contact;
+namespace SoosyzeCore\Contact;
 
-class Install
+use Psr\Container\ContainerInterface;
+
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install()
+    public function getComposer()
+    {
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
     {
     }
 
-    public function hookInstall($container)
+    public function seeders(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($container);
-        $this->hookInstallUser($container);
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
-                    'menu', 'weight', 'parent' ])
-                ->values([
-                    'contact',
-                    'Contact',
-                    'contact',
-                    'main-menu',
-                    4,
-                    -1
+        $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
+    }
+
+    public function hookInstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
+                ->values([ 'contact', 'Contact', 'contact', 'main-menu', 4, -1 ])
                 ->execute();
         }
     }
-    
-    public function hookInstallUser($container)
+
+    public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
+        if ($ci->module()->has('User')) {
+            $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
                 ->values([ 3, 'contact.main' ])
                 ->values([ 2, 'contact.main' ])
@@ -43,12 +49,34 @@ class Install
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->from('menu_link')
+    }
+
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallMenu($ci);
+        $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->from('menu_link')
                 ->delete()
-                ->where('link', 'contact')
+                ->where('link', 'like', 'contact%')
+                ->execute();
+        }
+    }
+
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'contact.%')
                 ->execute();
         }
     }

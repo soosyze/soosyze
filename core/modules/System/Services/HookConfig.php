@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Services;
+namespace SoosyzeCore\System\Services;
 
 class HookConfig
 {

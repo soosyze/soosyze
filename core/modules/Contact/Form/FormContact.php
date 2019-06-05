@@ -1,6 +1,6 @@
 <?php
 
-namespace Contact\Form;
+namespace SoosyzeCore\Contact\Form;
 
 use Soosyze\Components\Form\FormBuilder;
 

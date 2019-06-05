@@ -1,0 +1,29 @@
+{
+    "name": "soosyze-core/menu",
+    "type": "soosyze-module",
+    "description": "Gestion de vos menus",
+    "version": "1.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Menu": "/"
+        }
+    },
+    "extra": {
+        "soosyze-module": {
+            "title": "Menu",
+            "package": "Core",
+            "controllers": {
+                "Menu": "SoosyzeCore\\Menu\\Controller\\Menu",
+                "Link": "SoosyzeCore\\Menu\\Controller\\Link"
+            },
+            "icon": {
+                "name": "fas fa-bars",
+                "background-color": "#275dba",
+                "color": "#b7ccea"
+            }
+        }
+    },
+    "support": {
+        "docs": "https://soosyze.com/documentation/utilisateur"
+    }
+}

@@ -1,19 +1,27 @@
 <?php
 
-namespace Menu;
+namespace SoosyzeCore\Menu;
 
+use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Install
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
     {
-        $container->schema()->createTableIfNotExists('menu', function (TableBuilder $table) {
-            $table->string('name')
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
+    {
+        $ci->schema()
+            ->createTableIfNotExists('menu', function (TableBuilder $table) {
+                $table->string('name')
                 ->string('title')
                 ->text('description');
-        })->createTableIfNotExists('menu_link', function (TableBuilder $table) {
-            $table->increments('id')
+            })
+            ->createTableIfNotExists('menu_link', function (TableBuilder $table) {
+                $table->increments('id')
                 ->string('key')->nullable()
                 ->string('link')
                 ->string('title_link')
@@ -22,68 +30,65 @@ class Install
                 ->integer('weight')->valueDefault(1)
                 ->integer('parent')
                 ->boolean('active')->valueDefault(true);
-        });
-        $container->query()->insertInto('menu', [ 'name', 'title', 'description' ])
+            });
+    }
+
+    public function seeders(ContainerInterface $ci)
+    {
+        $ci->query()
+            ->insertInto('menu', [ 'name', 'title', 'description' ])
             ->values([ 'admin-menu', 'Menu d’administration', 'Le menu pour la gestion du site.' ])
             ->values([ 'main-menu', 'Menu principal', 'Le menu principal du site utilisable pour les internautes.' ])
             ->values([ 'user-menu', 'Menu utilisateur', 'Le menu des liens utilisateurs (compte, connexion...).' ])
             ->execute();
 
-        $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
-                'menu', 'weight', 'parent' ])
-            ->values([
-                'node.show',
-                '<i class="fa fa-home"></i> Accueil',
-                '/',
-                'admin-menu',
-                1,
-                -1
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'menu.show',
-                '<i class="fa fa-bars"></i> Menu',
-                'menu/main-menu',
-                'admin-menu',
-                3,
-                -1
+                'node.show', '<i class="fa fa-home"></i> Accueil', '/', 'admin-menu', 1, -1
             ])
             ->values([
-                'node.show',
-                'Accueil',
-                '/',
-                'main-menu',
-                1,
-                -1
+                'menu.show', '<i class="fa fa-bars"></i> Menu', 'menu/main-menu', 'admin-menu', 3, -1
             ])
             ->execute();
     }
 
-    public function hookInstall($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($container);
+        $this->hookInstallUser($ci);
     }
 
-    public function hookInstallUser($container)
+    public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
+        if ($ci->module()->has('User')) {
+            $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
                 ->values([ 3, 'menu.administer' ])
                 ->execute();
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
+        $ci->schema()->dropTable('menu_link');
+        $ci->schema()->dropTable('menu');
+    }
+
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
                 ->from('role_permission')
                 ->delete()
-                ->regex('permission_id', '/^menu./')
+                ->where('permission_id', 'like', 'menu.%')
                 ->execute();
         }
-
-        $container->schema()->dropTable('menu_link');
-        $container->schema()->dropTable('menu');
     }
 }

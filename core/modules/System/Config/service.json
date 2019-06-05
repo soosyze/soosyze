@@ -1,12 +1,20 @@
 {
-    "module": {
-        "class": "System\\Services\\Modules",
+    "composer": {
+        "class": "SoosyzeCore\\System\\Services\\Composer",
         "arguments": [
-            "@query"
+            "@module",
+            "@core"
+        ]
+    },
+    "module": {
+        "class": "SoosyzeCore\\System\\Services\\Modules",
+        "arguments": [
+            "@query",
+            "@core"
         ]
     },
     "system.hook.app": {
-        "class": "System\\Services\\HookApp",
+        "class": "SoosyzeCore\\System\\Services\\HookApp",
         "arguments": [
             "@router",
             "@config",
@@ -22,14 +30,14 @@
         }
     },
     "system.install": {
-        "class": "System\\Install",
+        "class": "SoosyzeCore\\System\\Install",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
         }
     },
     "system.hook.user": {
-        "class": "System\\Services\\HookUser",
+        "class": "SoosyzeCore\\System\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.system.config.edit": "hookConfigManage",
@@ -39,7 +47,7 @@
         }
     },
     "system.hook.config": {
-        "class": "System\\Services\\HookConfig",
+        "class": "SoosyzeCore\\System\\Services\\HookConfig",
         "arguments": [
             "@template",
             "@file"

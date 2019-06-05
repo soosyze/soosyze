@@ -1,6 +1,6 @@
 <?php
 
-namespace QueryBuilder\Services;
+namespace SoosyzeCore\QueryBuilder\Services;
 
 class Schema extends \Queryflatfile\Schema
 {

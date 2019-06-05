@@ -1,13 +1,13 @@
 <?php
 
-namespace Contact\Controller;
+namespace SoosyzeCore\Contact\Controller;
 
-use Contact\Form\FormContact;
 use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
 define('CONFIG_CONTACT', MODULES_CORE . 'Contact' . DS . 'Config' . DS);
+use SoosyzeCore\Contact\Form\FormContact;
 
 class Contact extends \Soosyze\Controller
 {

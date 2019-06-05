@@ -1,12 +1,12 @@
 {
     "news.install": {
-        "class": "News\\Install",
+        "class": "SoosyzeCore\\News\\Install",
         "hooks": {
             "install.menu": "hookInstallMenu"
         }
     },
     "news.hook.user": {
-        "class": "News\\Services\\HookUser",
+        "class": "SoosyzeCore\\News\\Services\\HookUser",
         "hooks": {
             "route.news.index": "hookRouteNodeSow",
             "route.news.page": "hookRouteNodeSow",

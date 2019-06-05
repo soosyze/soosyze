@@ -1,15 +1,12 @@
 <?php
 
-namespace Install\Controller;
+namespace SoosyzeCore\System\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-
-define('VIEWS_INSTALL', MODULES_CORE . 'Install' . DS . 'Views' . DS);
-define('CONFIG_INSTALL', MODULES_CORE . 'Install' . DS . 'Config' . DS);
 
 class Install extends \Soosyze\Controller
 {
@@ -19,19 +16,21 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        'User',
-        'System',
-        'Node',
-        'Menu',
-        'Contact',
-        'News',
-        'Config'
+        'Config'      => 'SoosyzeCore\Config',
+        'Contact'     => 'SoosyzeCore\Contact',
+        'FileManager' => 'SoosyzeCore\FileManager',
+        'Node'        => 'SoosyzeCore\Node',
+        'News'        => 'SoosyzeCore\News',
+        'Menu'        => 'SoosyzeCore\Menu',
+        'System'      => 'SoosyzeCore\System',
+        'User'        => 'SoosyzeCore\User'
     ];
 
     public function __construct()
     {
-        $this->pathServices = CONFIG_INSTALL . 'service.json';
-        $this->pathRoutes   = CONFIG_INSTALL . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-install.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function step($id)
@@ -134,10 +133,10 @@ class Install extends \Soosyze\Controller
             unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
-        $block = (new Template('page-install.php', VIEWS_INSTALL))
+        $block = (new Template('page-install.php', $this->pathViews))
             ->addVar('form', $form);
 
-        return (new Template('html.php', VIEWS_INSTALL))
+        return (new Template('html.php', $this->pathViews))
                 ->addBlock('page', $block)
                 ->render();
     }
@@ -183,35 +182,35 @@ class Install extends \Soosyze\Controller
 
     private function installModule()
     {
-        foreach ($this->modules as $module) {
-            $obj = $module . '\Install';
-            $obj = new $obj();
-            $obj->install($this->container);
+        /* Installation */
+        $instances = [];
+        foreach ($this->modules as $title => $namespace) {
+            $migration = $namespace . '\Install';
+            $installer   = new $migration();
+            /* Lance les scripts d'installation (database, configuration...) */
+            $installer->install($this->container);
+            /* Lance les scripts de remplissages de la base de données. */
+            $installer->seeders($this->container);
+            $composer = Util::getJson($installer->getComposer());
+            /* Charge le container de nouveaux services. */
+            $this->loadContainer($composer);
+            $instances[$title] = ['obj' => $installer, 'composer'=> $composer];
         }
 
-        /* Charge les services pour utiliser les hooks d'installation. */
-        $this->loadContainer();
-        $pathModules = self::core()->getSetting('modules');
-
-        foreach ($this->modules as $module) {
-            $obj = $module . '\Install';
-            $obj = new $obj();
-
-            if (method_exists($obj, 'hookInstall')) {
-                $obj->hookInstall($this->container);
-            }
-
-            $config = Util::getJson($pathModules . $module . DS . 'config.json');
-
-            foreach ($config as $conf) {
-                $this->container->get('module')->create($conf);
-            }
+        foreach ($instances as $title => $installer) {
+            self::module()->create($installer['composer']);
+            /* Hook d'installation pour les autres modules utilise le module actuel. */
+            $this->container->callHook(
+                strtolower('install.' . self::composer()->getTitle($title)),
+                [
+                $this->container
+            ]
+            );
         }
 
-        self::query()->insertInto('module_required', [ 'name_module', 'name_required' ])
-            ->values([ 'Core', 'System' ])
-            ->values([ 'Core', 'ModulesManager' ])
-            ->values([ 'Core', 'User' ])
+        self::query()->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
+            ->values([ 'Core', 'System', '1.0' ])
+            ->values([ 'Core', 'User', '1.0' ])
             ->execute();
     }
 
@@ -240,13 +239,14 @@ class Install extends \Soosyze\Controller
             ->values([ 1, 3 ])
             ->execute();
 
-        self::config()->set('settings.email', $data[ 'email' ]);
-        self::config()->set('settings.time_installed', time());
-        self::config()->set('settings.local', 'fr_FR');
-        self::config()->set('settings.theme', 'QuietBlue');
-        self::config()->set('settings.theme_admin', 'Admin');
-        self::config()->set('settings.logo', '');
-        self::config()->set('settings.key_cron', Util::strRandom(50));
+        self::config()->set('settings.email', $data[ 'email' ])
+            ->set('settings.time_installed', time())
+            ->set('settings.local', 'fr_FR')
+            ->set('settings.theme', 'QuietBlue')
+            ->set('settings.theme_admin', 'Admin')
+            ->set('settings.logo', '')
+            ->set('settings.key_cron', Util::strRandom(50))
+            ->set('settings.rewrite_engine', false);
 
         $path = self::config()->getPath();
         chmod($path . 'database.json', 0444);
@@ -257,29 +257,15 @@ class Install extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    private function loadContainer()
+    private function loadContainer($composer)
     {
-        $pathModules = self::core()->getSetting('modules');
-        foreach ($this->modules as $module) {
-            $configs = Util::getJson($pathModules . $module . DS . 'config.json');
-
-            foreach ($configs as $config) {
-                foreach ($config[ 'controller' ] as $controller) {
-                    $obj = new $controller();
-
-                    if (!$obj->getPathServices()) {
-                        continue;
-                    }
-
-                    $servicesConfig = Util::getJson($obj->getPathServices());
-                    foreach ($servicesConfig as $key => $value) {
-                        $args = isset($value[ 'arguments' ])
-                            ? $value[ 'arguments' ]
-                            : [];
-                        $this->container->setService($key, $value[ 'class' ], $args);
-                    }
-                }
+        foreach ($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ] as $controller) {
+            $obj  = new $controller();
+            if (!($path = $obj->getPathServices())) {
+                continue;
             }
+
+            $this->container->addServices(Util::getJson($path));
         }
     }
 }

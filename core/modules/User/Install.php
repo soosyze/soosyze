@@ -1,15 +1,22 @@
 <?php
 
-namespace User;
+namespace SoosyzeCore\User;
 
+use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Install
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
     {
-        $container->schema()->createTableIfNotExists('user', function (TableBuilder $table) {
-            $table->increments('user_id')
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
+    {
+        $ci->schema()
+            ->createTableIfNotExists('user', function (TableBuilder $table) {
+                $table->increments('user_id')
                 ->string('email')
                 ->string('username')
                 ->text('password')
@@ -27,31 +34,43 @@ class Install
                 ->string('time_installed')
                 ->string('time_access')->nullable()
                 ->text('timezone');
-        });
-        $container->schema()->createTableIfNotExists('role', function (TableBuilder $table) {
-            $table->increments('role_id')
+            })
+            ->createTableIfNotExists('role', function (TableBuilder $table) {
+                $table->increments('role_id')
                 ->string('role_description')->nullable()
                 ->string('role_label')
                 ->string('role_color', 7)->valueDefault('#e6e7f4')
                 ->integer('role_weight')->valueDefault(1);
-        });
-        $container->schema()->createTableIfNotExists('user_role', function (TableBuilder $table) {
-            $table->integer('user_id')
+            })
+            ->createTableIfNotExists('user_role', function (TableBuilder $table) {
+                $table->integer('user_id')
                 ->integer('role_id');
-        });
-        $container->schema()->createTableIfNotExists('role_permission', function (TableBuilder $table) {
-            $table->integer('role_id')
+            })
+            ->createTableIfNotExists('role_permission', function (TableBuilder $table) {
+                $table->integer('role_id')
                 ->string('permission_id');
-        });
+            });
 
-        $container->query()
+        $ci->config()
+            ->set('settings.user_register', '')
+            ->set('settings.user_relogin', 'on')
+            ->set('settings.password_show', 'on')
+            ->set('settings.password_length', 8)
+            ->set('settings.password_upper', 1)
+            ->set('settings.password_digit', 1)
+            ->set('settings.password_special', 1);
+    }
+    
+    public function seeders(ContainerInterface $ci)
+    {
+        $ci->query()
             ->insertInto('role', [ 'role_label', 'role_description', 'role_weight' ])
             ->values([ 'Utilisateur non connecté', 'Rôle requis par le système', 1 ])
             ->values([ 'Utilisateur connecté', 'Rôle requis par le système', 2 ])
             ->values([ 'Administrateur', 'Rôle requis par le système', 3 ])
             ->execute();
 
-        $container->query()
+        $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'user.config.manage' ])
             ->values([ 3, 'user.permission.manage' ])
@@ -62,27 +81,20 @@ class Install
             ->values([ 2, 'user.showed' ])
             ->values([ 2, 'user.edited' ])
             ->execute();
-
-        $container->config()->set('settings.user_register', '');
-        $container->config()->set('settings.user_relogin', 'on');
-
-        $container->config()->set('settings.password_show', 'on');
-        $container->config()->set('settings.password_length', 8);
-        $container->config()->set('settings.password_upper', 1);
-        $container->config()->set('settings.password_digit', 1);
-        $container->config()->set('settings.password_special', 1);
     }
 
-    public function hookInstall($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($container);
+        $this->hookInstallMenu($ci);
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [ 'key', 'title_link', 'link',
-                    'menu', 'weight', 'parent' ])
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                ])
                 ->values([
                     'user.management.admin',
                     '<i class="fa fa-user"></i> Utilisateur',
@@ -92,20 +104,11 @@ class Install
                     -1
                 ])
                 ->values([
-                    'user.account',
-                    'Mon compte',
-                    'user/account',
-                    'user-menu',
-                    1,
+                    'user.account', 'Mon compte', 'user/account', 'user-menu', 1,
                     -1
                 ])
                 ->values([
-                    'user.login',
-                    'Connexion',
-                    'user/login',
-                    'user-menu',
-                    2,
-                    -1
+                    'user.login', 'Connexion', 'user/login', 'user-menu', 2, -1
                 ])
                 ->values([
                     'user.logout',
@@ -119,20 +122,30 @@ class Install
         }
     }
 
-    public function uninstall($container)
+    public function uninstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()
+        // Table pivot
+        $ci->schema()->dropTable('user_role');
+        $ci->schema()->dropTable('role_permission');
+        // Table référentes
+        $ci->schema()->dropTable('user');
+        $ci->schema()->dropTable('role');
+    }
+
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallMenu($ci);
+    }
+
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
                 ->from('menu_link')
                 ->delete()
-                ->regex('link', '/^user/')
+                ->where('link', 'like', 'user%')
+                ->orWhere('link', 'like', 'admin/user%')
                 ->execute();
         }
-        // Table pivot
-        $container->schema()->dropTable('user_role');
-        $container->schema()->dropTable('role_permission');
-        // Table référentes
-        $container->schema()->dropTable('user');
-        $container->schema()->dropTable('role');
     }
 }

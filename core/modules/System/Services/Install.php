@@ -1,6 +1,6 @@
 <?php
 
-namespace Install\Services;
+namespace SoosyzeCore\System\Services;
 
 use Soosyze\Components\Http\Redirect;
 

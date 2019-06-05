@@ -1,68 +1,91 @@
 <?php
 
-namespace System\Controller;
+namespace SoosyzeCore\System\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-
-define('VIEWS_SYSTEM', MODULES_CORE . 'System' . DS . 'Views' . DS);
-define('CONFIG_SYSTEM', MODULES_CORE . 'System' . DS . 'Config' . DS);
 
 class ModulesManager extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathServices = CONFIG_SYSTEM . 'service.json';
-        $this->pathRoutes   = CONFIG_SYSTEM . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function edit($r)
     {
         /* Récupère les modules en base de données. */
-        $content = self::module()->listModuleActive();
+        $data = self::module()->listModuleActive();
 
         /* Récupère tous les fichiers de configuration. */
-        $config = self::module()->getConfigAll();
+        $composer = self::composer()->getAllComposer();
 
         $action = self::router()->getRoute('system.module.update');
         $form   = new FormBuilder([ 'method' => 'post', 'action' => $action ]);
 
-        foreach ($config as $key => $values) {
+        foreach ($composer as $values) {
+            $module = $values[ 'extra' ][ 'soosyze-module' ];
+            $title  = htmlspecialchars($module[ 'title' ]);
+
             $attr              = [];
             /* Si le module est présent en base de données alors il est installé. */
-            $attr[ 'checked' ] = isset($content[ $key ]);
+            $attr[ 'checked' ] = isset($data[ $title ]);
 
             /* Si le module est activé est qu'il est requis. */
             $isRequiredForModule = [];
-            if ($this->isDisabled($key, $isRequiredForModule)) {
+            if ($this->isDisabled($title, $isRequiredForModule)) {
                 $attr[ 'disabled' ] = 'disabled';
             }
 
             /* Si un des module requis est non installé. */
             $isRequired = [];
-            foreach ($values[ 'required' ] as $require) {
-                if (!isset($content[ $require ])) {
-                    $isRequired         = $values[ 'required' ];
-                    $attr[ 'disabled' ] = 'disabled';
+            if (isset($module[ 'require' ])) {
+                foreach ($module[ 'require' ] as $require => $version) {
+                    if (!isset($data[ $require ])) {
+                        $isRequired[]       = htmlspecialchars($require);
+                        $attr[ 'disabled' ] = 'disabled';
+                    } elseif (!self::composer()->validVersion($version, $data[ $require ]['version'], true)) {
+                        $isRequired[]       = htmlspecialchars($require . " (v$version)");
+                        $attr[ 'disabled' ] = 'disabled';
+                    }
                 }
             }
 
-            $form->checkbox($key, 'module-' . $key, $attr)
-                ->label('module-' . $key, '<span class="ui"></span> ' . $key, [
-                    'for' => 'module-' . $key
+            $form->checkbox("modules[$title]", "modules[$title]", $attr)
+                ->label($title, '<span class="ui"></span> ' . $title, [
+                    'for' => "modules[$title]"
             ]);
 
-            $package[ $values[ 'package' ] ][ $key ] = [
-                'name'                => $key,
-                'description'         => $values[ 'description' ],
-                'version'             => $values[ 'version' ],
+            $packages[ htmlspecialchars($module[ 'package' ]) ][ $title ] = [
+                'icon'                => [
+                    'name'             => isset($module[ 'icon' ][ 'name' ])
+                        ? htmlspecialchars($module[ 'icon' ][ 'name' ])
+                        : 'fas fa-puzzle-piece',
+                    'background-color' => isset($module[ 'icon' ][ 'background-color' ])
+                        ? htmlspecialchars($module[ 'icon' ][ 'background-color' ])
+                        : '#ddd',
+                    'color'            => isset($module[ 'icon' ][ 'color' ])
+                        ? htmlspecialchars($module[ 'icon' ][ 'color' ])
+                        : '#666'
+                ],
+                'title'               => $title,
+                'description'         => isset($values[ 'description' ])
+                    ? htmlspecialchars($values[ 'description' ])
+                    : null,
                 'isRequired'          => $isRequired,
                 'isRequiredForModule' => $isRequiredForModule,
-                'ckecked'             => isset($content[ $key ])
+                'version'             => isset($values[ 'version' ])
+                    ? htmlspecialchars($values[ 'version' ])
+                    : null,
+                'support'             => isset($values[ 'support' ][ 'docs' ])
+                    ? htmlspecialchars($values[ 'support' ][ 'docs' ])
+                    : null
             ];
         }
-
         $form->token()->submit('submit', 'Enregistrer');
 
         $messages = [];
@@ -70,10 +93,7 @@ class ModulesManager extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors_keys' ]);
-        }
+        ksort($packages);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -81,90 +101,156 @@ class ModulesManager extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-th-large"></i> Modules'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-modules.php', VIEWS_SYSTEM, [
-                    'form'    => $form,
-                    'package' => $package
+                ->render('page.content', 'page-modules.php', $this->pathViews, [
+                    'count'    => count($composer),
+                    'form'     => $form,
+                    'packages' => $packages
         ]);
     }
 
     public function update($req)
     {
-        $post = $req->getParsedBody();
-
+        $post      = $req->getParsedBody();
+        $route     = self::router()->getRoute('system.module.edit');
         $validator = (new Validator())
-            ->addInput('token', $post[ 'token' ])
-            ->addRule('token', 'token');
+            ->setRules([
+                'modules' => '!required|array',
+                'token'   => 'token'
+            ])
+            ->setInputs($post);
 
-        unset($post[ 'token' ], $post[ 'submit' ]);
-        foreach ($post as $key => $value) {
-            $validator->addRule($key, 'bool')
-                ->addInput($key, $value);
-        }
-
-        if ($validator->isValid()) {
-            $data = $validator->getInputs();
-            unset($data[ 'token' ]);
-
-            $module_active = array_flip(self::module()->listModuleActiveNotRequire());
-            $this->uninstallModule($module_active, $data);
-            $this->installModule($module_active, $data);
-
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
-        } else {
+        if (!$validator->isValid()) {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+
+            return new Redirect($route);
         }
 
-        $route = self::router()->getRoute('system.module.edit');
+        $data          = $validator->getInput('modules')
+            ? $validator->getInput('modules')
+            : [];
+        $module_active = array_flip(self::module()->listModuleActiveNotRequire());
+
+        $outUninstall = $this->uninstallModule($module_active, $data);
+        $outInstall   = $this->installModule($module_active, $data);
+
+        if (!empty($outInstall) || !empty($outUninstall)) {
+            $_SESSION[ 'messages' ][ 'errors' ] = $outInstall + $outUninstall;
+        } else {
+            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+        }
 
         return new Redirect($route);
     }
 
     private function installModule($module_active, $data)
     {
-        /* Si il y a des modules en plus, alors il seront installés. */
-        $diff = array_diff_key($data, $module_active);
+        /* S'il n'y a pas de modules à installer. */
+        if (!($diff = array_diff_key($data, $module_active))) {
+            return [];
+        }
 
-        if ($diff) {
-            foreach ($diff as $key => $value) {
-                /* Instantie et exécute le service d'installation. */
-                $obj = $key . '\Install';
-                $obj = new $obj();
-                $obj->install($this->container);
+        $composer = self::composer()->getAllComposer();
+        $errors   = [];
+        $modules  = array_keys($diff);
 
-                /* Hook d'installation pour que le module utilise les autres modules. */
-                if (method_exists($obj, 'hookInstall')) {
-                    $obj->hookInstall($this->container);
-                }
-
-                /* Récupère les configurations et les sauvegardes dans la table module */
-                $config = self::module()->getConfig($key);
-                self::module()->create($config);
-
-                /* Hook d'installation pour les autres modules utilise le module actuel. */
-                $this->container->callHook(strtolower('install.' . $key), [ $this->container ]);
+        foreach ($modules as $title) {
+            /* Vérifie que le module existe. */
+            if (!isset($composer[ $title ])) {
+                /* Installation d'un module non existant. */
+                $errors[] = htmlspecialchars("Le module $title n'existe pas.");
+            }
+            /* Vérifie que le fichier composer n'est pas corrompu. */
+            elseif (($out = self::composer()->validComposer($title, $composer[ $title ]))) {
+                $errors += $out;
+            }
+            /* Vérifie s'il a des modules qu'il requit et si leur version est conforme. */
+            elseif (($out = self::composer()->validRequireModule($title, $composer))) {
+                $errors += $out;
             }
         }
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        /* Installation */
+        foreach ($modules as $title) {
+            $migration = self::composer()->getNamespace($title) . '\Install';
+            $installer   = new $migration();
+            /* Lance les scripts d'installation (database, configuration...) */
+            $installer->install($this->container);
+            /* Lance les scripts de remplissages de la base de données. */
+            $installer->seeders($this->container);
+            /* Lance l'installation des hooks déjà présents. */
+            $installer->hookInstall($this->container);
+            /* Charge le container de nouveaux services. */
+            $this->loadContainer($composer[ $title ]);
+        }
+
+        /* Lance l'installation des hooks présents dans les modules nouvellement installés. */
+        foreach ($modules as $title) {
+            /* Enregistre le module en base de données. */
+            self::module()->create($composer[ $title ]);
+            $this->container->callHook(
+                strtolower('install.' . self::composer()->getTitle($title)),
+                [
+                $this->container
+            ]
+            );
+        }
+
+        return [];
     }
 
     private function uninstallModule($module_active, $data)
     {
-        /* Si modules en moins alors désinstalle */
-        $diff = array_diff_key($module_active, $data);
+        /* S'il n'y a pas des modules à désinstaller. */
+        if (!($diff = array_diff_key($module_active, $data))) {
+            return [];
+        }
+        
+        $composer = self::composer()->getAllComposer();
+        $errors   = [];
+        $modules  = array_keys($diff);
 
-        if ($diff) {
-            foreach ($diff as $key => $value) {
-                /* Instantie et exécute le service désinstallation. */
-                $obj = $key . '\Install';
-                if (!class_exists($obj)) {
-                    continue;
-                }
-
-                $obj = new $obj();
-                $obj->uninstall($this->container);
-                /* Supprime le module à partir de son nom */
-                self::module()->uninstallModule($key);
+        foreach ($modules as $title) {
+            /* Vérifie que le module existe. */
+            if (!isset($composer[ $title ])) {
+                /* Dé-installation d'un module non existant. */
+                $errors[] = htmlspecialchars("Le module $title n'existe pas.");
+            }
+            /* Vérifie que le fichier composer n'est pas corrompu. */
+            elseif (($out = self::composer()->validComposer($title, $composer[ $title ]))) {
+                $errors += $out;
             }
         }
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        $instances = [];
+        foreach ($modules as $title) {
+            $migration = self::composer()->getNamespace($title) . '\Install';
+            $installer   = new $migration();
+            $instances[ $title ] = $installer;
+            /* Supprime le module à partir de son nom. */
+            self::module()->uninstallModule($title);
+            /* Lance les scripts de dé-installation (database, configuration...). */
+            $installer->uninstall($this->container);
+        }
+
+        foreach ($instances as $title => $installer) {
+            $installer->hookUninstall($this->container);
+            $this->container->callHook(
+                strtolower('uninstall.' . self::composer()->getTitle($title)),
+                [
+                $this->container
+            ]
+            );
+        }
+
+        return [];
     }
 
     /**
@@ -188,5 +274,17 @@ class ModulesManager extends \Soosyze\Controller
         }
 
         return false;
+    }
+
+    private function loadContainer($composer)
+    {
+        foreach ($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ] as $controller) {
+            $obj  = new $controller();
+            if (!($path = $obj->getPathServices())) {
+                continue;
+            }
+
+            $this->container->addServices(Util::getJson($path));
+        }
     }
 }

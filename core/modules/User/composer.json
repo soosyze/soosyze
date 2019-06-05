@@ -1,0 +1,33 @@
+{
+    "name": "soosyze-core/user",
+    "type": "soosyze-module",
+    "description": "Gestion de l'autentification et des comptes utilisateur",
+    "version": "1.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\User": "/"
+        }
+    },
+    "extra": {
+        "soosyze-module": {
+            "title": "User",
+            "package": "Core",
+            "controllers": {
+                "Login": "SoosyzeCore\\User\\Controller\\Login",
+                "Permission": "SoosyzeCore\\User\\Controller\\Permission",
+                "Register": "SoosyzeCore\\User\\Controller\\Register",
+                "Role": "SoosyzeCore\\User\\Controller\\Role",
+                "User": "SoosyzeCore\\User\\Controller\\User",
+                "UsersManagement": "SoosyzeCore\\User\\Controller\\UsersManagement"
+            },
+            "icon": {
+                "name": "fas fa-user",
+                "background-color": "#c13056",
+                "color": "#fff"
+            }
+        }
+    },
+    "support": {
+        "docs": "https://soosyze.com/documentation/utilisateur"
+    }
+}

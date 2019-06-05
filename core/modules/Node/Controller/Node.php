@@ -1,6 +1,6 @@
 <?php
 
-namespace Node\Controller;
+namespace SoosyzeCore\Node\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;

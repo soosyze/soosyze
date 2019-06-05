@@ -1,38 +1,36 @@
 <?php
 
-namespace Config;
+namespace SoosyzeCore\Config;
 
-class Install
+use Psr\Container\ContainerInterface;
+
+class Install implements \SoosyzeCore\System\Migration
 {
-    public function install($container)
+    public function getComposer()
+    {
+        return __DIR__ . '/composer.json';
+    }
+
+    public function install(ContainerInterface $ci)
     {
     }
 
-    public function hookInstall($container)
+    public function seeders(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($container);
     }
 
-    public function hookInstallUser($container)
+    public function hookInstall(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'config.manage' ])
-                ->execute();
-        }
+        $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
-    public function hookInstallMenu($container)
+    public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()->insertInto('menu_link', [
-                    'key',
-                    'title_link',
-                    'link',
-                    'menu',
-                    'weight',
-                    'parent'
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
+                ->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
                     'config.index',
@@ -46,21 +44,44 @@ class Install
         }
     }
 
-    public function uninstall($container)
+    public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($container->schema()->hasTable('user')) {
-            $container->query()
-                ->from('role_permission')
-                ->delete()
-                ->regex('permission_id', '/^config./')
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'config.manage' ])
                 ->execute();
         }
+    }
 
-        if ($container->schema()->hasTable('menu')) {
-            $container->query()
+    public function uninstall(ContainerInterface $ci)
+    {
+    }
+
+    public function hookUninstall(ContainerInterface $ci)
+    {
+        $this->hookUninstallMenu($ci);
+        $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Menu')) {
+            $ci->query()
                 ->from('menu_link')
                 ->delete()
-                ->where('link', 'admin/config')
+                ->where('link', 'like', 'admin/config%')
+                ->execute();
+        }
+    }
+
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'config.%')
                 ->execute();
         }
     }

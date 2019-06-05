@@ -1,6 +1,6 @@
 <?php
 
-namespace News\Services;
+namespace SoosyzeCore\News\Services;
 
 class HookUser
 {

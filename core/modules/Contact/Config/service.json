@@ -1,12 +1,13 @@
 {
     "contact.install": {
-        "class": "Contact\\Install",
+        "class": "SoosyzeCore\\Contact\\Install",
         "hooks": {
+            "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
         }
     },
     "contact.hook.user": {
-        "class": "Contact\\Services\\HookUser",
+        "class": "SoosyzeCore\\Contact\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.contact": "hookRouteContact",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Node\Services;
+namespace SoosyzeCore\Node\Services;
 
 class HookMenu
 {

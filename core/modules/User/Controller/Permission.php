@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Controller;
+namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Http\Redirect;
 

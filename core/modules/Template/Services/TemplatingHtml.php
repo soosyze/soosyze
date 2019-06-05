@@ -1,6 +1,6 @@
 <?php
 
-namespace Template\Services;
+namespace SoosyzeCore\Template\Services;
 
 use Soosyze\Components\Util\Util;
 

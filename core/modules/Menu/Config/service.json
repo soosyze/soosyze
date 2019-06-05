@@ -1,14 +1,20 @@
 {
     "menu": {
-        "class": "Menu\\Services\\Menu",
+        "class": "SoosyzeCore\\Menu\\Services\\Menu",
         "arguments": [
             "@router",
             "@config",
             "@query"
         ]
     },
+    "menu.install": {
+        "class": "SoosyzeCore\\Menu\\Install",
+        "hooks": {
+            "install.user": "hookInstallUser"
+        }
+    },
     "menu.hook.user": {
-        "class": "Menu\\Services\\HookUser",
+        "class": "SoosyzeCore\\Menu\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.menu.show": "hookMenuAdminister",
@@ -21,7 +27,7 @@
         }
     },
     "menu.hook.app": {
-        "class": "Menu\\Services\\HookApp",
+        "class": "SoosyzeCore\\Menu\\Services\\HookApp",
         "arguments": [
             "@core",
             "@query"

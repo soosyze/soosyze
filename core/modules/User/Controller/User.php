@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Controller;
+namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
@@ -9,6 +9,7 @@ use User\Form\FormUser;
 
 define('VIEWS_USER', MODULES_CORE . 'User' . DS . 'Views' . DS);
 define('CONFIG_USER', MODULES_CORE . 'User' . DS . 'Config' . DS);
+use SoosyzeCore\User\Form\FormUser;
 
 class User extends \Soosyze\Controller
 {

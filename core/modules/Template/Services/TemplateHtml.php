@@ -1,6 +1,6 @@
 <?php
 
-namespace Template\Services;
+namespace SoosyzeCore\Template\Services;
 
 class TemplateHtml extends \Soosyze\Components\Template\Template
 {

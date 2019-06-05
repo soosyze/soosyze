@@ -1,13 +1,14 @@
 {
     "node.install": {
-        "class": "Node\\Install",
+        "class": "SoosyzeCore\\Node\\Install",
         "hooks": {
             "install.user": "hookInstallUser",
-            "install.menu": "hookInstallMenu"
+            "install.menu": "hookInstallMenu",
+            "uninstall.menu": "hookUninstallMenu"
         }
     },
     "node.hook.menu": {
-        "class": "Node\\Services\\HookMenu",
+        "class": "SoosyzeCore\\Node\\Services\\HookMenu",
         "arguments": [
             "@schema",
             "@query"
@@ -28,7 +29,7 @@
         }
     },
     "node.hook.user": {
-        "class": "Node\\Services\\HookUser",
+        "class": "SoosyzeCore\\Node\\Services\\HookUser",
         "arguments": [
             "@query"
         ],

@@ -71,7 +71,7 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <br>
-                    <p>Power by <strong><a class="footer" href="http://soosyze.com/">SoosyzeCMS</a></strong></p>
+                    <p>Power by <strong><a class="footer" href="https://soosyze.com">SoosyzeCMS</a></strong></p>
                 </div>
             </div>
         </div>

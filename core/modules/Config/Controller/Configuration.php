@@ -1,6 +1,6 @@
 <?php
 
-namespace Config\Controller;
+namespace SoosyzeCore\Config\Controller;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;

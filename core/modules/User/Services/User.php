@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Services;
+namespace SoosyzeCore\User\Services;
 
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
@@ -304,8 +304,8 @@ class User
 
     public function hookReponseAfter($request, &$response)
     {
-        if ($response instanceof \Template\Services\TemplatingHtml) {
-            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules') . 'User/Assets';
+        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
+            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'User/Assets';
             $script = $response->getVar('scripts');
             $script .= '<script src="' . $vendor . '/js/script.js"></script>';
             $response->add([

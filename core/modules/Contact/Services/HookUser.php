@@ -1,6 +1,6 @@
 <?php
 
-namespace Contact\Services;
+namespace SoosyzeCore\Contact\Services;
 
 class HookUser
 {

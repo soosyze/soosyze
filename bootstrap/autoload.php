@@ -10,9 +10,11 @@ require_once $vendor . 'soosyze/framework/src/Autoload.php';
 require_once $vendor . 'ircmaxell/password-compat/lib/password.php';
 
 $autoload = new Soosyze\Autoload([
-    'Soosyze'       => $vendor . 'soosyze/framework/src',
-    'Queryflatfile' => $vendor . 'soosyze/queryflatfile/src'
-    ]);
+    'Soosyze'          => $vendor . 'soosyze/framework/src',
+    'Queryflatfile'    => $vendor . 'soosyze/queryflatfile/src',
+    'SoosyzeCore'      => ROOT . 'core/modules',
+    'SoosyzeExtension' => ROOT . 'app/modules'
+]);
 
 $autoload->setPrefix([
     'Queryflatfile'           => $vendor . 'soosyze/queryflatfile/src',
