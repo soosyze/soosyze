@@ -109,7 +109,7 @@ class HookApp
 
     public function hookMeta($request, &$response)
     {
-        if ($response instanceof \Template\Services\TemplatingHtml) {
+        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
             $data = $this->config->get('settings');
             $response->add([
                 'title'       => $data[ 'title' ],
