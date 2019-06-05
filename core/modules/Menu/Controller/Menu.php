@@ -6,15 +6,13 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
-define('VIEWS_MENU', MODULES_CORE . 'Menu' . DS . 'Views' . DS);
-define('CONFIG_MENU', MODULES_CORE . 'Menu' . DS . 'Config' . DS);
-
 class Menu extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathServices = CONFIG_MENU . 'service.json';
-        $this->pathRoutes   = CONFIG_MENU . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function show($name, $req)
@@ -72,7 +70,7 @@ class Menu extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars"></i> Menu'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-show.php', VIEWS_MENU, [
+                ->render('page.content', 'menu-show.php', $this->pathViews, [
                     'menu'     => $query,
                     'form'     => $form,
                     'linkAdd'  => $linkAdd,

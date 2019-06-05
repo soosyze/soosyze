@@ -2,8 +2,6 @@
 
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', __DIR__ . DS);
-define('MODULES_CORE', ROOT . 'core' . DS . 'modules' . DS);
-define('MODULES_CONTRIBUED', ROOT . 'app' . DS . 'modules' . DS);
 
 require_once ROOT . 'bootstrap/autoload.php';
 require_once ROOT . 'app/app_core.php';

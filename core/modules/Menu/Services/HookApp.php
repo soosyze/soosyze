@@ -12,6 +12,7 @@ class HookApp
     {
         $this->core  = $core;
         $this->query = $query;
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function hookResponseAfter($request, &$response)
@@ -35,10 +36,10 @@ class HookApp
             $query_menu        = $this->getGrantedLink($query, $request);
             $query_menu_second = $this->getGrantedLink($query_second, $request);
 
-            $response->render('page.main_menu', 'menu.php', VIEWS_MENU, [
+            $response->render('page.main_menu', 'menu.php', $this->pathViews, [
                     'menu' => $query_menu
                 ])
-                ->render('page.second_menu', 'menu.php', VIEWS_MENU, [
+                ->render('page.second_menu', 'menu.php', $this->pathViews, [
                     'menu' => $query_menu_second
                 ])->override('page.second_menu', [ 'menu-second.php' ]);
         }

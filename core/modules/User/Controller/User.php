@@ -7,16 +7,15 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use User\Form\FormUser;
 
-define('VIEWS_USER', MODULES_CORE . 'User' . DS . 'Views' . DS);
-define('CONFIG_USER', MODULES_CORE . 'User' . DS . 'Config' . DS);
 use SoosyzeCore\User\Form\FormUser;
 
 class User extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathServices = CONFIG_USER . 'service.json';
-        $this->pathRoutes   = CONFIG_USER . 'routing-user.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-user.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function account($req)
@@ -53,11 +52,11 @@ class User extends \Soosyze\Controller
                     'title_main' => $user[ 'username' ]
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-user-show.php', VIEWS_USER, [
+                ->render('page.content', 'page-user-show.php', $this->pathViews, [
                     'user'  => $user,
                     'roles' => $roles
                 ])
-                ->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                ->render('content.menu_user', 'menu-user.php', $this->pathViews, [
                     'menu' => $this->getMenuUser($id)
         ]);
     }
@@ -104,9 +103,9 @@ class User extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i>  Création de l’utilisateur'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-user.php', VIEWS_USER, [
+                ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                ])->render('content.menu_user', 'menu-user.php', $this->pathViews, [
                 'menu' => []
         ]);
     }
@@ -257,9 +256,9 @@ class User extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Édition de l’utilisateur'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-user.php', VIEWS_USER, [
+                ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                ])->render('content.menu_user', 'menu-user.php', $this->pathViews, [
                 'menu' => $this->getMenuUser($id)
         ]);
     }
@@ -405,9 +404,9 @@ class User extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-user"></i> Supprimer du compte de <i>' . $data[ 'username' ] . '</i>'
                 ])
-                ->render('page.content', 'form-user.php', VIEWS_USER, [
+                ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'menu-user.php', VIEWS_USER, [
+                ])->render('content.menu_user', 'menu-user.php', $this->pathViews, [
                 'menu' => $this->getMenuUser($id)
         ]);
     }

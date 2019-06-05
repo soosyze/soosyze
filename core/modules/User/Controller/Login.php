@@ -11,7 +11,8 @@ class Login extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = CONFIG_USER . 'routing-login.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-login.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function login()
@@ -53,7 +54,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Connexion'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-login.php', VIEWS_USER, [
+                ->render('page.content', 'page-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin'),
                     'url_register'     => self::router()->getRoute('user.register'),
@@ -132,7 +133,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Demander un nouveau mot de passe'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-relogin.php', VIEWS_USER, [
+                ->render('page.content', 'page-relogin.php', $this->pathViews, [
                     'form'      => $form,
                     'url_login' => self::router()->getRoute('user.login')
         ]);

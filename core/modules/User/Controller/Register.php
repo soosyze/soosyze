@@ -11,7 +11,8 @@ class Register extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = CONFIG_USER . 'routing-register.json';
+        $this->pathRoutes = dirname(__DIR__) . '/Config/routing-register.json';
+        $this->pathViews  = dirname(__DIR__) . '/Views/';
     }
 
     public function register()
@@ -52,7 +53,7 @@ class Register extends \Soosyze\Controller
                     'title_main' => 'Inscription'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-register.php', VIEWS_USER, [
+                ->render('page.content', 'page-register.php', $this->pathViews, [
                     'form'        => $form,
                     'url_relogin' => $url ]);
     }

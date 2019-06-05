@@ -15,6 +15,11 @@ class Link extends \Soosyze\Controller
         [ 'value' => '_top', 'label' => '(_top) Charge dans le corps entier de la fenêtre' ]
     ];
 
+    public function __construct()
+    {
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
+    }
+
     public function create($nameMenu)
     {
         $content = [ 'title_link' => '', 'link' => '', 'target_link' => '_self' ];
@@ -81,7 +86,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars"></i> Ajouter un lien'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-link-add.php', VIEWS_MENU, [
+                ->render('page.content', 'menu-link-add.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -216,7 +221,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars"></i> Éditer un lien'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-link-edit.php', VIEWS_MENU, [
+                ->render('page.content', 'menu-link-edit.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

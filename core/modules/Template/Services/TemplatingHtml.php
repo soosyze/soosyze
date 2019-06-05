@@ -4,9 +4,6 @@ namespace SoosyzeCore\Template\Services;
 
 use Soosyze\Components\Util\Util;
 
-/* Chemin des vues par défauts. */
-define('TPL_PATH', MODULES_CORE . 'Template' . DS . 'Views' . DS);
-
 class TemplatingHtml extends \Soosyze\Components\Http\Response
 {
     /**
@@ -51,6 +48,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
         $this->config      = $config;
         $this->themes_path = $this->core->getSetting('themes_path');
         $this->base_path   = $this->core->getRequest()->getBasePath();
+        $this->pathViews   = dirname(__DIR__) . '/Views/';
         $this->getTheme();
     }
 
@@ -64,7 +62,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
     public function init()
     {
-        $messages = $this->themeOverride('messages.php', TPL_PATH)
+        $messages = $this->themeOverride('messages.php', $this->pathViews)
             ->addVars([
             'errors'   => [],
             'warnings' => [],
@@ -72,7 +70,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
             'success'  => []
         ]);
 
-        $page = $this->themeOverride('page.php', TPL_PATH)
+        $page = $this->themeOverride('page.php', $this->pathViews)
             ->addVars([
                 'title'      => '',
                 'title_main' => '',
@@ -84,7 +82,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
             ->addBlock('main_menu')
             ->addBlock('second_menu');
 
-        $this->template = $this->themeOverride('html.php', TPL_PATH)
+        $this->template = $this->themeOverride('html.php', $this->pathViews)
                 ->addBlock('page', $page)
                 ->addVars([
                     'title'       => '',

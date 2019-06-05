@@ -6,15 +6,13 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
-define('VIEWS_NODE', MODULES_CORE . 'Node' . DS . 'Views' . DS);
-define('CONFIG_NODE', MODULES_CORE . 'Node' . DS . 'Config' . DS);
-
 class Node extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathServices = CONFIG_NODE . 'service.json';
-        $this->pathRoutes   = CONFIG_NODE . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function admin()
@@ -40,7 +38,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-file"></i>  Mes contenus'
                 ])
-                ->render('page.content', 'node-admin.php', VIEWS_NODE, [
+                ->render('page.content', 'node-admin.php', $this->pathViews, [
                     'linkAdd' => $linkAdd,
                     'nodes'   => $nodes
         ]);
@@ -66,7 +64,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu'
                 ])
-                ->render('page.content', 'node-add.php', VIEWS_NODE, [
+                ->render('page.content', 'node-add.php', $this->pathViews, [
                     'node_type' => $query
         ]);
     }
@@ -171,7 +169,7 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu de type ' . $type
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'node-create.php', VIEWS_NODE, [
+                ->render('page.content', 'node-create.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -271,7 +269,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
-                ->render('page.content', 'node-show.php', VIEWS_NODE, [
+                ->render('page.content', 'node-show.php', $this->pathViews, [
                     'fields' => unserialize($node[ 'field' ])
                 ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] ]);
 

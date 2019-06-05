@@ -1,7 +1,5 @@
 <?php
 
-define('VIEWS_NIEWS', MODULES_CORE . 'News' . DS . 'Views' . DS);
-define('CONFIG_NIEWS', MODULES_CORE . 'News' . DS . 'Config' . DS);
 namespace SoosyzeCore\News\Controller;
 
 class NewsController extends \Soosyze\Controller
@@ -10,8 +8,9 @@ class NewsController extends \Soosyze\Controller
 
     public function __construct()
     {
-        $this->pathServices = CONFIG_NIEWS . 'service.json';
-        $this->pathRoutes   = CONFIG_NIEWS . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function index()
@@ -39,7 +38,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
-                ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
+                ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'nodes'   => $nodes,
                     'default' => $default
         ]);
@@ -71,7 +70,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
-                ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
+                ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'nodes'   => $nodes,
                     'default' => ''
         ]);
@@ -96,7 +95,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles de ' . $years
                 ])
-                ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
+                ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'nodes'   => $nodes,
                     'default' => $default
         ]);
@@ -125,7 +124,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles de ' . date('M Y', $dateCurrent)
                 ])
-                ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
+                ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'nodes'   => $nodes,
                     'default' => $default
         ]);
@@ -154,7 +153,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles du ' . date('d M Y', $dateCurrent)
                 ])
-                ->render('page.content', 'views-news-index.php', VIEWS_NIEWS, [
+                ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'nodes'   => $nodes,
                     'default' => $default
         ]);

@@ -18,15 +18,16 @@ class HookApp
         $this->config = $config;
         $this->tpl    = $template;
         $this->core   = $core;
+        $this->views  = dirname(__DIR__) . '/Views/';
     }
 
     public function hookSys(&$request, &$response)
     {
         $uri = $request->getUri();
 
-        if ($uri->getQuery() == '' || $uri->getQuery() == '/') {
+        if ($uri->getQuery() == '' || $uri->getQuery() == 'q=/') {
             $path_index = $this->config->get('settings.path_index')
-                ? '?' . $this->config->get('settings.path_index')
+                ? 'q=' . $this->config->get('settings.path_index')
                 : '404';
             $url        = $uri->withQuery($path_index);
 
@@ -62,7 +63,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => 'Page Not Found'
                 ])
-                ->render('page.content', 'page-404.php', VIEWS_SYSTEM, [
+                ->render('page.content', 'page-404.php', $this->views, [
                     'uri' => $request->getUri()
                 ])
             : $responseNoFound;
@@ -88,7 +89,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => 'Page Forbidden'
                 ])
-                ->render('page.content', 'page-403.php', VIEWS_SYSTEM, [
+                ->render('page.content', 'page-403.php', $this->views, [
                     'uri' => $request->getUri()
                 ])
             : $responseDenied;
@@ -100,7 +101,7 @@ class HookApp
 
     public function hooks503($request, &$response)
     {
-        $response = $this->tpl->render('page', 'page-maintenance.php', VIEWS_SYSTEM, [
+        $response = $this->tpl->render('page', 'page-maintenance.php', $this->views, [
                 'title_main' => '<i class="fa fa-cog"></i> Site en maintenance'
             ])
             ->withStatus(503);

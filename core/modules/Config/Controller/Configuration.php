@@ -8,15 +8,13 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
-define('VIEWS_CONFIG', MODULES_CORE . 'Config' . DS . 'Views' . DS);
-define('CONFIG_CONFIG', MODULES_CORE . 'Config' . DS . 'Config' . DS);
-
 class Configuration extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes   = CONFIG_CONFIG . 'routing.json';
-        $this->pathServices = CONFIG_CONFIG . 'service.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function index($req)
@@ -31,7 +29,7 @@ class Configuration extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-cog"></i> Configuration'
                 ])
                 ->view('page.messages', [ 'infos' => [ 'Aucune configuration disponible' ] ])
-                ->render('page.content', 'page-config.php', VIEWS_CONFIG, [
+                ->render('page.content', 'page-config.php', $this->pathViews, [
                     'form' => null
         ]);
     }
@@ -74,10 +72,10 @@ class Configuration extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-cog"></i> Configuration'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-config.php', VIEWS_CONFIG, [
+                ->render('page.content', 'page-config.php', $this->pathViews, [
                     'form' => $form
                 ])
-                ->render('content.menu_config', 'menu-config.php', VIEWS_CONFIG, [
+                ->render('content.menu_config', 'menu-config.php', $this->pathViews, [
                     'menu' => $menu,
                     'id'   => $id
         ]);

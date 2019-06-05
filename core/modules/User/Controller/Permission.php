@@ -8,7 +8,8 @@ class Permission extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = CONFIG_USER . 'routing-permission.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-permission.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function admin($req)
@@ -51,7 +52,7 @@ class Permission extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-user"></i> Administrer les permissions'
                 ])
-                ->render('page.content', 'page-permission.php', VIEWS_USER, [
+                ->render('page.content', 'page-permission.php', $this->pathViews, [
                     'link_update' => self::router()->getRoute('user.permission.update'),
                     'roles'       => $roles,
                     'colspan'     => count($roles) + 1,

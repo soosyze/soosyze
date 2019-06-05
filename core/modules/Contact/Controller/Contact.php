@@ -5,16 +5,15 @@ namespace SoosyzeCore\Contact\Controller;
 use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
-
-define('CONFIG_CONTACT', MODULES_CORE . 'Contact' . DS . 'Config' . DS);
 use SoosyzeCore\Contact\Form\FormContact;
 
 class Contact extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathServices = CONFIG_CONTACT . 'service.json';
-        $this->pathRoutes   = CONFIG_CONTACT . 'routing.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function contact()
@@ -49,7 +48,7 @@ class Contact extends \Soosyze\Controller
                     'title_main' => 'Contact'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-contact.php', MODULES_CORE . 'Contact' . DS . 'Views' . DS, [
+                ->render('page.content', 'page-contact.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

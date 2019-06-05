@@ -2,8 +2,6 @@
 
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', __DIR__ . DS);
-define('MODULES_CORE', ROOT . 'core' . DS . 'modules' . DS);
-define('MODULES_CONTRIBUED', ROOT . 'app' . DS . 'modules' . DS);
 
 //$config[ 'debug' ] = true;
 require_once 'bootstrap/requirements.php';

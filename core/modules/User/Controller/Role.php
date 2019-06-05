@@ -10,7 +10,8 @@ class Role extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = CONFIG_USER . 'routing-role.json';
+        $this->pathRoutes = dirname(__DIR__) . '/Config/routing-role.json';
+        $this->pathViews  = dirname(__DIR__) . '/Views/';
     }
 
     public function admin($req)
@@ -40,7 +41,7 @@ class Role extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [ 'title_main' => '<i class="fa fa-user"></i> Administrer les rôles' ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-role.php', VIEWS_USER, [
+                ->render('page.content', 'page-role.php', $this->pathViews, [
                     'roles'    => $roles,
                     'link_add' => self::router()->getRoute('user.role.create')
         ]);
@@ -79,7 +80,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', VIEWS_USER, [
+                ->render('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -161,7 +162,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', VIEWS_USER, [
+                ->render('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -243,7 +244,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Supression du role <i>' . $data[ 'role_label' ] . '</i>'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', VIEWS_USER, [
+                ->render('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

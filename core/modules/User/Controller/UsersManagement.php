@@ -6,7 +6,8 @@ class UsersManagement extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = CONFIG_USER . 'routing-user_management.json';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-user_management.json';
+        $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
     public function admin()
@@ -37,7 +38,7 @@ class UsersManagement extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user"></i> Administrer les utilisateurs'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-user_management.php', VIEWS_USER, [
+                ->render('page.content', 'page-user_management.php', $this->pathViews, [
                     'users'              => $users,
                     'link_add'           => self::router()->getRoute('user.create'),
                     'link_role'          => self::router()->getRoute('user.role.admin'),
