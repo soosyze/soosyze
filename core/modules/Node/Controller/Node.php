@@ -390,7 +390,7 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'node-edit.php', VIEWS_NODE, [ 'form' => $form ]);
+                ->render('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
     }
 
     public function update($id, $req)
