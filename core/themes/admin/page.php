@@ -31,7 +31,7 @@
         <div class="col-md-12">
             <footer>
                 <hr>
-                <p>Power by <a href="http://soosyze.com/">SoosyzeCMS</a></p>
+                <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
             </footer>
         </div>
     </div>

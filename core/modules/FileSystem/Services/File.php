@@ -72,7 +72,7 @@ class File
         return $targetPath;
     }
 
-    public function add($file, $fileHidden)
+    public function add($file, $fileHidden = '')
     {
         $this->file        = $file;
         $this->file_hidden = $fileHidden;
@@ -82,8 +82,7 @@ class File
 
     public function moveTo($name, $path = null)
     {
-        $this->path = $path;
-        $this->name = $name;
+        $this->name = Util::strSlug($name);
         $this->path = $path === null
             ? $this->core->getSetting('files_public', 'app/files')
             : $path;

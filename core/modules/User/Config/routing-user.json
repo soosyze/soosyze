@@ -2,10 +2,7 @@
     "user.account": {
         "methode": "GET",
         "path": "user/account",
-        "uses": "User@account",
-        "with": {
-            ":id": "\\d+"
-        }
+        "uses": "User@account"
     },
     "user.show": {
         "methode": "GET",

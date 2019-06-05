@@ -266,7 +266,7 @@ class User
             $query  = $this->router->parseQueryFromRequest($request);
             $params = $this->router->parseParam($route[ 'path' ], $query, $route[ 'with' ]);
         }
-        
+
         $params[]    = $request;
         $params[]    = $this->isConnected();
         $permissions = $this->core->callHook('route.' . $route[ 'key' ], $params);
@@ -285,7 +285,7 @@ class User
 
         return false;
     }
-    
+
     /**
      * Fonctionnement par défaut de l'application.
      * Défini les règles du déclenchement d'un retour 403 à l'aide des hooks.

@@ -88,7 +88,7 @@ class FormUser extends FormBuilder
                     'class'       => 'form-control',
                     'maxlength'   => 255,
                     'placeholder' => 'Décrivez-vous en 255 caractères maximum.',
-                    'rows'        => 3,
+                    'rows'        => 3
             ]);
         }, self::$attrGrp);
 

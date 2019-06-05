@@ -2,10 +2,8 @@
 
 namespace SoosyzeCore\Config\Controller;
 
-use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
-use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
 class Configuration extends \Soosyze\Controller

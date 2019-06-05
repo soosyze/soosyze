@@ -23,7 +23,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p>Power by <a href="http://soosyze.com/">SoosyzeCMS</a></p>
+                <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
             </div>
         </div>
     </div>

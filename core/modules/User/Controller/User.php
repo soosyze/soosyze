@@ -5,8 +5,6 @@ namespace SoosyzeCore\User\Controller;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
-use User\Form\FormUser;
-
 use SoosyzeCore\User\Form\FormUser;
 
 class User extends \Soosyze\Controller
@@ -497,7 +495,7 @@ class User extends \Soosyze\Controller
 
     private function savePicture($id, $validator)
     {
-        $dir = self::core()->getSetting('files_public') . "/user/$id";
+        $dir = self::core()->getSetting('files_public', 'app/files') . "/user/$id";
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }

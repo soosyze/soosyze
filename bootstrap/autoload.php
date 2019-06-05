@@ -1,6 +1,6 @@
 <?php
 
-$vendor   = ROOT . 'vendor/';
+$vendor = ROOT . 'vendor/';
 
 /**
  * L'autoload de Soosyze charge les objets à la volée, sans map ni cache.
@@ -34,4 +34,4 @@ $autoload->register();
  * http://www.darwinbiler.com/how-does-the-replace-property-work-in-composer/
  */
 
-//require $basePath . 'vendor/autoload.php';
+//require ROOT . 'vendor/autoload.php';

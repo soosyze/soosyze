@@ -3,7 +3,7 @@
 /* Démarrage de la session. */
 session_start();
 
-/* Définit par défaut la timezone. */
+/* Définit par défaut la timezone. polyfills */
 if (!ini_get('date.timezone')) {
     date_default_timezone_set('UTC');
 }

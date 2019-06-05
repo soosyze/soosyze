@@ -99,14 +99,16 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
         if ($validator->isValid()) {
+            $role_weight = $validator->getInput('role_weight');
+            $role_color  = $validator->getInput('role_color');
             $value = [
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => !empty($validator->getInput('role_weight'))
-                ? $validator->getInput('role_weight')
+                'role_weight'      => !empty($role_weight)
+                ? $role_weight
                 : 1,
-                'role_color'       => !empty($validator->getInput('role_color'))
-                ? strtolower($validator->getInput('role_color'))
+                'role_color'       => !empty($role_color)
+                ? strtolower($role_color)
                 : '#e6e7f4'
             ];
 

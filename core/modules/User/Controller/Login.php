@@ -99,7 +99,7 @@ class Login extends \Soosyze\Controller
         session_destroy();
         session_unset();
 
-        return new Redirect('index.php');
+        return new Redirect(self::router()->getBasePath());
     }
 
     public function relogin()

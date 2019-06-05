@@ -47,7 +47,7 @@
     </div>
     <hr>
     <footer>
-        <p>Power by <a href="http://soosyze.com/">SoosyzeCMS</a></p>
+        <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
         <?php echo $block[ 'second_menu' ]; ?>
 
     </footer>

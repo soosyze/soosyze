@@ -51,9 +51,9 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
 
         foreach ($query as $key => &$value) {
-            $req_granted         = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
+            $req_granted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
             if (!self::core()->callHook('app.granted.route', [ $req_granted ])) {
-                unset($query[$key]);
+                unset($query[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
                 ':type' => $value[ 'node_type' ] ]);
@@ -92,9 +92,10 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.store', [ ':type' => $type ]);
-
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormBuilder([
+            'method'  => 'post',
+            'action'  => self::router()->getRoute('node.store', [ ':type' => $type ]),
+            'enctype' => 'multipart/form-data' ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $type) {
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
                 ->group('node-title-group', 'div', function ($form) use ($query, $content, $type) {
@@ -119,7 +120,7 @@ class Node extends \Soosyze\Controller
                         : '';
 
                     $form->group('node-' . $type . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
-                        $form->label('node-' . $key . '-label', $key);
+                        $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->textarea($key, $key, $content[ $key ], [
@@ -198,22 +199,17 @@ class Node extends \Soosyze\Controller
                 'token'     => 'token'
             ])
             ->setInputs($post);
+        /* Test des champs personnalisé de la node. */
+        foreach ($query as $value) {
+            $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+            $fields[ $value[ 'field_name' ] ] = $validator->hasInput($value[ 'field_name' ])
+                ? $validator->getInput($value[ 'field_name' ])
+                : null;
+        }
 
         $this->container->callHook('node.store.validator', [ &$validator ]);
 
-        /* Test des champs personnalisé de la node. */
-        $validatorField = new Validator();
-        foreach ($query as $value) {
-            $key = $value[ 'field_name' ];
-            $validatorField
-                ->addRule($key, $value[ 'field_rules' ])
-                ->addInput($key, $post[ $key ]);
-        }
-
-        $isValid      = $validator->isValid();
-        $isValidField = $validatorField->isValid();
-
-        if ($isValid && $isValidField) {
+        if ($validator->isValid()) {
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
                 'title'     => $validator->getInput('title'),
@@ -221,7 +217,7 @@ class Node extends \Soosyze\Controller
                 'created'   => (string) time(),
                 'changed'   => (string) time(),
                 'published' => (bool) $validator->getInput('published'),
-                'field'     => serialize($validatorField->getInputs())
+                'field'     => serialize($fields)
             ];
 
             $this->container->callHook('todo.store.before', [ $validator, &$node ]);
@@ -236,21 +232,12 @@ class Node extends \Soosyze\Controller
 
             return new Redirect($route);
         }
-
-        $_SESSION[ 'inputs' ]               = array_merge(
-            $validator->getInputs(),
-            $validatorField->getInputs()
-        );
-        $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
-            $validator->getErrors(),
-            $validatorField->getErrors()
-        );
-        $_SESSION[ 'errors_keys' ]          = array_merge(
-            $validator->getKeyInputErrors(),
-            $validatorField->getKeyInputErrors()
-        );
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         $route = self::router()->getRoute('node.create', [ ':type' => $type ]);
+
         new Redirect($route);
     }
 
@@ -314,9 +301,10 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('node.update', [ ':id' => $id ]);
-
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormBuilder([
+            'method'  => 'post',
+            'action'  => self::router()->getRoute('node.update', [ ':id' => $id ]),
+            'enctype' => 'multipart/form-data' ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id, $node) {
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
                 ->group('node-title-group', 'div', function ($form) use ($content) {
@@ -341,13 +329,14 @@ class Node extends \Soosyze\Controller
                         : unserialize($node[ 'field' ])[ $key ];
 
                     $form->group('node-' . $id . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
+                        $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
-                                $form->label('label-' . $key, $key)
-                                ->textarea($key, $key, $content[ $key ], [
-                                    'class'    => 'form-control',
-                                    'required' => $require,
-                                    'rows'     => 8
+                                $form->textarea($key, $key, $content[ $key ], [
+                                    'class'       => 'form-control',
+                                    'required'    => $require,
+                                    'rows'        => 8,
+                                    'placeholder' => 'Entrer votre contenu içi...'
                                 ]);
 
                                 break;
@@ -422,27 +411,22 @@ class Node extends \Soosyze\Controller
                 'token'     => 'token'
             ])
             ->setInputs($post);
+        /* Test des champs personnalisé de la node. */
+        foreach ($node_type as $value) {
+            $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+            $fields[ $value[ 'field_name' ] ] = $validator->hasInput($value[ 'field_name' ])
+                ? $validator->getInput($value[ 'field_name' ])
+                : null;
+        }
 
         $this->container->callHook('node.update.validator', [ &$validator, $id ]);
 
-        /* Test les champs personnalisé de la node. */
-        $validatorField = new Validator();
-        foreach ($node_type as $value) {
-            $key = $value[ 'field_name' ];
-            $validatorField
-                ->addRule($key, $value[ 'field_rules' ])
-                ->addInput($key, $post[ $key ]);
-        }
-
-        $isValid      = $validator->isValid();
-        $isValidField = $validatorField->isValid();
-
-        if ($isValid && $isValidField) {
+        if ($validator->isValid()) {
             $value = [
                 'title'     => $validator->getInput('title'),
                 'changed'   => (string) time(),
                 'published' => (bool) $validator->getInput('published'),
-                'field'     => serialize($validatorField->getInputs())
+                'field'     => serialize($fields)
             ];
 
             $this->container->callHook('node.update.before', [ $validator, &$value,
@@ -455,18 +439,9 @@ class Node extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
-            $_SESSION[ 'inputs' ]               = array_merge(
-                $validator->getInputs(),
-                $validatorField->getInputs()
-            );
-            $_SESSION[ 'messages' ][ 'errors' ] = array_merge(
-                $validator->getErrors(),
-                $validatorField->getErrors()
-            );
-            $_SESSION[ 'errors_keys' ]          = array_merge(
-                $validator->getKeyInputErrors(),
-                $validatorField->getKeyInputErrors()
-            );
+            $_SESSION[ 'inputs' ]               = $validator->getInputs();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
         $route = self::router()->getRoute('node.edit', [ ':id' => $id ]);

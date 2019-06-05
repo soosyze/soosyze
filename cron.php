@@ -16,7 +16,7 @@ if ($maintenance) {
     exit();
 }
 /* Si le script est exécuté en cli. */
-if (!(PHP_SAPI != 'cli' && PHP_SAPI != 'cgi' && PHP_SAPI != 'cgi-fcgi')) {
+if (PHP_SAPI === 'cli' || PHP_SAPI === 'cgi' || PHP_SAPI === 'cgi-fcgi') {
     $app->callHook('app.cron', [ $req ]);
 }
 /* Si le script est exécuté avec la clé du cron. */
