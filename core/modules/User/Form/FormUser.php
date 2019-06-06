@@ -174,9 +174,7 @@ class FormUser extends FormBuilder
         return $this->group('user-informations-fieldset', 'fieldset', function ($form) {
             $form->legend('user-informations-legend', 'Informations');
             $this->username($form)
-                    ->email($form)
-                    ->name($form)
-                    ->firstname($form);
+                    ->email($form);
         });
     }
 
@@ -251,9 +249,9 @@ class FormUser extends FormBuilder
      * @param  type  $content
      * @return $this
      */
-    public function submitForm()
+    public function submitForm($label = 'Enregistrer')
     {
         return $this->token()
-                ->submit('sumbit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+                ->submit('sumbit', $label, [ 'class' => 'btn btn-success' ]);
     }
 }

@@ -74,7 +74,7 @@ class User extends \Soosyze\Controller
         $form = (new FormUser([
             'method'  => 'post',
             'action'  => self::router()->getRoute('user.store'),
-            'enctype' => 'multipart/form-data' ], self::file()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::config()))
             ->content($data)
             ->fieldsetInformationsCreate()
             ->fieldsetProfil()

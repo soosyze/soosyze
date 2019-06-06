@@ -53,8 +53,9 @@ class HookUser
 
     public function hookUserEdited($id, $req, $user)
     {
+        
         $output[] = 'user.people.manage';
-        if ($id === $user[ 'user_id' ]) {
+        if ($id == $user[ 'user_id' ]) {
             $output[] = 'user.edited';
         }
 

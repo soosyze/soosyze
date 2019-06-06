@@ -39,7 +39,7 @@ class Login extends \Soosyze\Controller
             $formbuilder->legend('login-legend', 'Connexion utilisateur');
             $form->email($formbuilder)
                 ->passwordCurrent($formbuilder);
-        })->submitForm();
+        })->submitForm('Se connecter');
 
         $this->container->callHook('login.form', [ &$form, $data ]);
 
