@@ -12,6 +12,16 @@
 .btn-toogle-password i {
     width: 18px;
 }
+.sticky{
+    position: initial;
+    top: 5em;
+}
+@media (min-width: 992px){
+    .sticky{
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
 .form-group-flex{
     display: flex;
 }
