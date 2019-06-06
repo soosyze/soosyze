@@ -49,7 +49,7 @@ class File
                     'onclick' => "document.getElementById('file-$name').click();",
                     'value'   => $content
                 ])->button("file-reset-$name", "file-reset-$name", $attr);
-        }, [ 'class' => 'form-group' ]);
+        }, [ 'class' => 'form-group-flex' ]);
     }
 
     public function validImage($name, Validator &$validator)

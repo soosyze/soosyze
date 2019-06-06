@@ -28,3 +28,6 @@ h3{
     position: fixed;
     right: 25px;
 }
+.form-group{
+    position: relative;
+}

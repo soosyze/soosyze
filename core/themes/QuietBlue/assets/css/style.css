@@ -287,6 +287,7 @@ select[size]{
 }
 .form-group{
     margin-bottom: 15px;
+    position: relative;
 }
 .form-control{
     border: solid 2px #eee;
@@ -342,33 +343,6 @@ a.btn:hover,
 }
 .btn-action{
     padding: .5em;
-}
-/* INPUT FILE */
-.form-file-name,
-.form-file-reset{
-    float: left;
-    height: 40px;
-    vertical-align: middle;
-}
-.form-file-name{
-    -webkit-border-top-right-radius: 0;
-    -webkit-border-bottom-right-radius: 0;
-    -moz-border-radius-topright: 0;
-    -moz-border-radius-bottomright: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    width: 90%;
-}
-.form-file-reset{
-    -webkit-border-top-left-radius: 0;
-    -webkit-border-bottom-left-radius: 0;
-    -moz-border-radius-topleft: 0;
-    -moz-border-radius-bottomleft: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    font-weight: bold;
-    padding: 6px 0;
-    width: 10%;
 }
 .img-thumbnail{
     background-color: #fff;
