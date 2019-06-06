@@ -18,7 +18,6 @@ class Install extends \Soosyze\Controller
     private $modules = [
         'Config'      => 'SoosyzeCore\Config',
         'Contact'     => 'SoosyzeCore\Contact',
-        'FileManager' => 'SoosyzeCore\FileManager',
         'Node'        => 'SoosyzeCore\Node',
         'News'        => 'SoosyzeCore\News',
         'Menu'        => 'SoosyzeCore\Menu',

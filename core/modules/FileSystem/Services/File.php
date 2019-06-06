@@ -131,4 +131,20 @@ class File
             }
         }
     }
+    
+    public function saveOne()
+    {
+        if (!($this->file instanceof UploadedFileInterface)) {
+            return;
+        }
+        if ($this->file->getError() === UPLOAD_ERR_OK) {
+            $ClientFilename = $this->file->getClientFilename();
+            $ext            = Util::getFileExtension($ClientFilename);
+            $filename       = pathinfo($ClientFilename, PATHINFO_FILENAME);
+            $name           = Util::strSlug($filename);
+
+            $move = "$this->path/$name.$ext";
+            $this->file->moveTo($move);
+        }
+    }
 }

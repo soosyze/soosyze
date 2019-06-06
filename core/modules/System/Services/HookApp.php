@@ -35,7 +35,7 @@ class HookApp
         }
 
         if ($this->config->get('settings.maintenance')) {
-            if (!preg_match('/^user.login$/', $uri->getQuery()) && !$this->core->callHook('app.granted', [
+            if ('q=user/login' !== $uri->getQuery() && !$this->core->callHook('app.granted', [
                     'system.config.maintenance' ])) {
                 $response = $response->withStatus(503);
             }
