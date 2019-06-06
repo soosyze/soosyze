@@ -1,0 +1,22 @@
+User-agent: *
+# Directories
+Disallow: /app/data/
+Disallow: /app/config/
+Disallow: /bootstrap/
+Disallow: /core/
+Disallow: /vendor/
+# Files
+Disallow: /composer.json
+Disallow: /cron.php
+Disallow: /LICENSE
+Disallow: /README.md
+# Paths (clean URLs)
+Disallow: /admin/
+Disallow: /user/register/
+Disallow: /user/login/
+Disallow: /user/logout/
+# Paths (no clean URLs)
+Disallow: /?q=admin/
+Disallow: /?q=user/register/
+Disallow: /?q=user/login/
+Disallow: /?q=user/logout/
