@@ -1,26 +1,31 @@
 {
     "name": "soosyze/soosyze",
     "type": "cms",
-    "homepage": "http://soosyze.com",
+    "homepage": "https://soosyze.com",
     "description": "Soosyze CMS is a minimalist content management system in PHP, without database to create and manage your website easily.",
     "keywords": ["cms", "php", "framework", "flat-file", "micro", "json", "website", "soosyze", "nosql", "responsive", "mvc"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Mathieu NOËL",
             "email": "mathieu@soosyze.com",
-            "homepage": "http://mathieu-noel.fr"
+            "homepage": "https://mathieu-noel.fr",
+            "role": "Lead developer"
         }
     ],
     "support": {
         "email": "mathieu@soosyze.com",
         "issues": "https://github.com/soosyze/soosyze/issues",
-        "source": "https://github.com/soosyze/soosyze"
+        "forum": "https://community.soosyze.com",
+        "source": "https://github.com/soosyze/soosyze",
+        "docs": "https://github.com/soosyze/documentations",
+        "chat": "https://discord.gg/parFfTt"
     },
     "require": {
         "php": ">=5.4",
         "ircmaxell/password-compat": "1.0.*",
-        "soosyze/framework": "~1.2.3",
-        "soosyze/queryflatfile": "~1.1.8"
+        "soosyze/framework": "~1.3",
+        "soosyze/queryflatfile": "~1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "5.*"

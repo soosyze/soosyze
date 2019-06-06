@@ -6,6 +6,7 @@
 /app/files/public/
 /app/modules/
 /app/themes/
+/node_modules/
 
 # Files
 /*.lock

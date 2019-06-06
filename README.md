@@ -12,9 +12,14 @@ SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il
 * :eyes: [Démo](https://demo.soosyze.com)
 * :dizzy: [Extensions et thèmes](https://github.com/soosyze-extension)
 * :speech_balloon: [Forum](https://community.soosyze.com)
-* :blue_book: [Docuementations](https://github.com/soosyze/documentations)
+* :mortar_board: [Docuementations](https://github.com/soosyze/documentations)
 * :green_book: [PHP Doc](https://api.soosyze.com)
+
+Vous pouvez également nous trouver sur les réseaux :
+
 * :busts_in_silhouette: [Mastodon](https://mamot.fr/@soosyze)
+* :telephone_receiver: [Discord](https://discordapp.com/invite/parFfTt)
+* :newspaper: [Diaspora](https://framasphere.org/people/10978ab0dd6301362e322a0000053625)
 
 # Sommaire
 
@@ -78,7 +83,8 @@ Le thème de base et d'administration se décharge d'une partie des bibliothèqu
 
 * Bootstrap 3.3.7
 * JQuery 3.2.1,
-* JQuery UI 1.12.0
+* JQuery UI 1.12.0,
+* Font Awesome 5.4
 
 Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexion réseau pour que ces bibliothèques soient utilisées.
 
