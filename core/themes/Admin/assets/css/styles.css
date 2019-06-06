@@ -223,7 +223,6 @@ textarea{
 [type="checkbox"]:checked + label .ui:after {
     position: absolute;
     left: 6px;
-    width: 65px;
     border-radius: 15px;
     font-size: 14px;
     font-weight: bold;

@@ -50,8 +50,7 @@ class HookApp
         $script = $response->getVar('scripts');
         $style  = $response->getVar('styles');
 
-        $script .= '<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
-            <script>      
+        $script .= '<script>      
             $(document).ready(function () {
             $("#sortable").sortable({
                 axis: "y",

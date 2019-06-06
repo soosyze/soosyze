@@ -305,12 +305,10 @@ class User
     public function hookReponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
-            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'User/Assets';
+            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'User/Assets/js/script.js';
             $script = $response->getVar('scripts');
-            $script .= '<script src="' . $vendor . '/js/script.js"></script>';
-            $response->add([
-                'scripts' => $script
-            ]);
+            $script .= '<script src="' . $vendor . '"></script>';
+            $response->add([ 'scripts' => $script ]);
         }
     }
 }

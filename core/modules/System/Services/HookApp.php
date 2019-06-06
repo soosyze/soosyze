@@ -107,7 +107,7 @@ class HookApp
             ->withStatus(503);
     }
 
-    public function hookMeta($request, &$response)
+    public function hookResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
             $data = $this->config->get('settings');
@@ -120,6 +120,10 @@ class HookApp
                 'title' => $data[ 'title' ],
                 'logo'  => $data[ 'logo' ]
             ]);
+            $vendor = $this->route->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
+            $script = $response->getVar('scripts');
+            $script .= '<script src="' . $vendor . '"></script>';
+            $response->add([ 'scripts' => $script ]);
 
             $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
             if ($data[ 'maintenance' ] && $granted) {

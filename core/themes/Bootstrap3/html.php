@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/style.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/admin.css">
         <?php echo $styles; ?>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     </head>
     <body>
         <?php echo $block[ 'page' ]; ?>
@@ -24,8 +23,10 @@
         <?php endif; ?>
         <!-- To top -->
         <div id="btn_up">
-            <img style="opacity: 0.50;" src="<?php echo $base_theme; ?>assets/files/arrow.png" alt="" width="40"/>
+            <img style="opacity: .5;" src="<?php echo $base_theme; ?>assets/files/arrow.png" alt="" width="40"/>
         </div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
         <?php echo $scripts; ?>

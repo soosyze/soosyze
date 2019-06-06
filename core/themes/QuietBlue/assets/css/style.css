@@ -158,6 +158,8 @@ dt{
         margin-left: 180px;
     }
 }
+
+/* BUTTONS */
 #btn_up{
     bottom: 15px;
     cursor: pointer;
@@ -165,6 +167,15 @@ dt{
     position: fixed;
     right: 25px;
 }
+.btn.disabled, .btn[disabled], 
+fieldset[disabled] .btn {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
+
 /* NAVIGATION */
 #nav_main ul{
     font-size: 0;
@@ -223,6 +234,7 @@ dt{
     #nav_main li ul.niv2 li{display:inline-block;}
     #toogle_menu{display:none;}
 }
+
 /* FORM */
 label{
     display: inline-block;
@@ -306,6 +318,7 @@ select[size]{
 .form-required{
     color: #d9534f;
 }
+
 /* BUTTONS */
 .btn{
     background-color: #0086b3;
@@ -344,6 +357,8 @@ a.btn:hover,
 .btn-action{
     padding: .5em;
 }
+
+/* IMAGES */
 .img-thumbnail{
     background-color: #fff;
     border: 1px solid #ddd;
@@ -358,6 +373,7 @@ img, .img-responsive {
     max-width: 100%;
     height: auto;
 }
+
 /* NODE */
 .icon-publish,
 .icon-notPublish{
@@ -391,6 +407,7 @@ img, .img-responsive {
 .icon-notPublish .glyphicon-remove:before{
     content: '✗';
 }
+
 /* MODULES */
 .module-is_required,
 .module-is_required_for_module{
@@ -410,6 +427,7 @@ img, .img-responsive {
 #table-permission td {
     text-align: center;
 }
+
 /* ALERTE */
 .alert{
     border-left: 5px solid;
@@ -441,6 +459,7 @@ img, .img-responsive {
     background-color: #e17572;
     border-color: #D9534F;
 }
+
 /* TABLE */
 table{
     background-color: transparent;
@@ -500,6 +519,7 @@ th{
 .table .table{
     background-color: #fff;
 }
+
 /* BLOG */
 .card{
     margin-bottom: 3em;
