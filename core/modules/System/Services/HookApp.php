@@ -4,7 +4,7 @@ namespace SoosyzeCore\System\Services;
 
 class HookApp
 {
-    protected $route;
+    protected $router;
 
     protected $config;
 
@@ -14,7 +14,7 @@ class HookApp
 
     public function __construct($route, $config, $template, $core)
     {
-        $this->route  = $route;
+        $this->router  = $route;
         $this->config = $config;
         $this->tpl    = $template;
         $this->core   = $core;
@@ -48,8 +48,8 @@ class HookApp
             $requestNoFound = $request
                 ->withUri($request->getUri()->withQuery('q=' . $path))
                 ->withMethod('GET');
-            if (($route          = $this->route->parse($requestNoFound))) {
-                $responseNoFound = $this->route->execute($route, $requestNoFound);
+            if ($route          = $this->router->parse($requestNoFound)) {
+                $responseNoFound = $this->router->execute($route, $requestNoFound);
             }
         }
 
@@ -79,8 +79,8 @@ class HookApp
             $requestDenied = $request
                 ->withUri($request->getUri()->withQuery('q=' . $path))
                 ->withMethod('GET');
-            if (($route         = $this->route->parse($requestDenied))) {
-                $responseDenied = $this->route->execute($route, $requestDenied);
+            if ($route         = $this->router->parse($requestDenied)) {
+                $responseDenied = $this->router->execute($route, $requestDenied);
             }
         }
 
@@ -120,7 +120,7 @@ class HookApp
                 'title' => $data[ 'title' ],
                 'logo'  => $data[ 'logo' ]
             ]);
-            $vendor = $this->route->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
+            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
             $script = $response->getVar('scripts');
             $script .= '<script src="' . $vendor . '"></script>';
             $response->add([ 'scripts' => $script ]);

@@ -17,7 +17,7 @@ class Login extends \Soosyze\Controller
 
     public function login()
     {
-        if (($user = self::user()->isConnected())) {
+        if ($user = self::user()->isConnected()) {
             $route = self::router()->getRoute('user.account');
 
             return new Redirect($route);
@@ -79,7 +79,7 @@ class Login extends \Soosyze\Controller
             self::user()->login($validator->getInput('email'), $validator->getInput('password'));
         }
 
-        if (($user = self::user()->isConnected())) {
+        if ($user = self::user()->isConnected()) {
             self::query()
                 ->update('user', [ 'time_access' => time() ])
                 ->where('user_id', '==', $user[ 'user_id' ])

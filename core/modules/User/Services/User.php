@@ -161,7 +161,7 @@ class User
             ]);
         }
 
-        if (($user = $this->getUserActived($email))) {
+        if ($user = $this->getUserActived($email)) {
             $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
             if (password_verify($passwordHash, $user[ 'password' ])) {
                 $_SESSION[ 'token_user' ]     = $email;
@@ -242,7 +242,7 @@ class User
             $grant = true;
         }
         /* Si l'utilisateur et connecté. */
-        elseif (($user = $this->isConnected())) {
+        elseif ($user = $this->isConnected()) {
             $grant = (bool) $this->getGranted($user, $key);
         }
         /* Si l'utilisateur annonyme peut voir la route. */

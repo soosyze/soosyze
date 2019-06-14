@@ -17,7 +17,7 @@ class Configuration extends \Soosyze\Controller
 
     public function index($req)
     {
-        if (($menu = $this->getMenuConfig())) {
+        if ($menu = $this->getMenuConfig()) {
             return $this->edit($menu[ 0 ][ 'key' ], $req);
         }
 

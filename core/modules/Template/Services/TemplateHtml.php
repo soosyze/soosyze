@@ -20,7 +20,7 @@ class TemplateHtml extends \Soosyze\Components\Template\Template
 
     public function getBlockWithParent($parent)
     {
-        if (($block = strstr($parent, '.', true))) {
+        if ($block = strstr($parent, '.', true)) {
             return $this->getBlock($block)
                     ->getBlock(substr(strstr($parent, '.'), 1));
         }

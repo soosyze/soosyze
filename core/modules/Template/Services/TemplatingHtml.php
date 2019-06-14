@@ -163,7 +163,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
             $template->addVars($vars);
         }
 
-        if (($block = strstr($parent, '.', true))) {
+        if ($block = strstr($parent, '.', true)) {
             $this->template->getBlock($block)
                 ->addBlock(substr(strstr($parent, '.'), 1), $template);
         } else {

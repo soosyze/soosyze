@@ -160,11 +160,11 @@ class ModulesManager extends \Soosyze\Controller
                 $errors[] = htmlspecialchars("Le module $title n'existe pas.");
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
-            elseif (($out = self::composer()->validComposer($title, $composer[ $title ]))) {
+            elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {
                 $errors += $out;
             }
             /* Vérifie s'il a des modules qu'il requit et si leur version est conforme. */
-            elseif (($out = self::composer()->validRequireModule($title, $composer))) {
+            elseif ($out = self::composer()->validRequireModule($title, $composer)) {
                 $errors += $out;
             }
         }
@@ -220,7 +220,7 @@ class ModulesManager extends \Soosyze\Controller
                 $errors[] = htmlspecialchars("Le module $title n'existe pas.");
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
-            elseif (($out = self::composer()->validComposer($title, $composer[ $title ]))) {
+            elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {
                 $errors += $out;
             }
         }
@@ -264,12 +264,12 @@ class ModulesManager extends \Soosyze\Controller
     private function isDisabled($key, array &$isRequiredForModule)
     {
         /* Si le module est requis par le core. */
-        if (($isRequiredForModule = self::module()->isRequiredCore($key))) {
+        if ($isRequiredForModule = self::module()->isRequiredCore($key)) {
             return true;
         }
 
         /* Si le module est activé est qu'il est requis. */
-        if (($isRequiredForModule = self::module()->isRequiredForModule($key))) {
+        if ($isRequiredForModule = self::module()->isRequiredForModule($key)) {
             return true;
         }
 

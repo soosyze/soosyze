@@ -18,7 +18,7 @@ class User extends \Soosyze\Controller
 
     public function account($req)
     {
-        if (($user = self::user()->isConnected())) {
+        if ($user = self::user()->isConnected()) {
             return $this->show($user[ 'user_id' ], $req);
         }
 
@@ -299,7 +299,7 @@ class User extends \Soosyze\Controller
 
         $is_email      = $is_username   = false;
         /* En cas de modification du email. */
-        if (($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ])) {
+        if ($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ]) {
             $is_email = self::user()->getUser($validator->getInput('email'));
             $password = $validator->getInput('password');
             $verify   = self::user()->hashVerify($password, $user);
@@ -331,7 +331,7 @@ class User extends \Soosyze\Controller
             }
 
             /* En cas de modification du mot de passe. */
-            if (($isUpdateMdp = $validator->getInput('password_new') != '')) {
+            if ($isUpdateMdp = $validator->getInput('password_new') != '') {
                 $passwordHash        = self::user()->hashSession($validator->getInput('password_new'), $user[ 'salt' ]);
                 $value[ 'password' ] = self::user()->hash($passwordHash);
             }

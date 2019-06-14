@@ -89,7 +89,7 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if (($diff_create = array_diff_key($newPermission, $permission))) {
+        if ($diff_create = array_diff_key($newPermission, $permission)) {
             self::query()->insertInto('role_permission', [ 'role_id', 'permission_id' ]);
             foreach ($diff_create as $create) {
                 if (!self::user()->hasPermission($create)) {
