@@ -54,7 +54,7 @@ class Composer
         } elseif (empty($data[ 'autoload' ][ 'psr-4' ]) || !is_array($data[ 'autoload' ][ 'psr-4' ])) {
             $errors[] = 'Les informations sur ne namespace du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
         } else {
-            $migration = array_keys($data[ 'autoload' ][ 'psr-4' ])[ 0 ] . '\Install';
+            $migration = array_keys($data[ 'autoload' ][ 'psr-4' ])[ 0 ] . '\Installer';
             if (!class_exists($migration)) {
                 $errors[] = 'Les scripts d\'installation du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
             }

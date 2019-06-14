@@ -1,6 +1,6 @@
 {
     "contact.install": {
-        "class": "SoosyzeCore\\Contact\\Install",
+        "class": "SoosyzeCore\\Contact\\Installer",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

@@ -1,6 +1,6 @@
 {
     "news.install": {
-        "class": "SoosyzeCore\\News\\Install",
+        "class": "SoosyzeCore\\News\\Installer",
         "hooks": {
             "install.menu": "hookInstallMenu"
         }

@@ -1,6 +1,6 @@
 {
     "node.install": {
-        "class": "SoosyzeCore\\Node\\Install",
+        "class": "SoosyzeCore\\Node\\Installer",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu",

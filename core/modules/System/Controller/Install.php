@@ -184,7 +184,7 @@ class Install extends \Soosyze\Controller
         /* Installation */
         $instances = [];
         foreach ($this->modules as $title => $namespace) {
-            $migration = $namespace . '\Install';
+            $migration = $namespace . '\Installer';
             $installer   = new $migration();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);

@@ -4,7 +4,7 @@ namespace SoosyzeCore\Config;
 
 use Psr\Container\ContainerInterface;
 
-class Install implements \SoosyzeCore\System\Migration
+class Installer implements \SoosyzeCore\System\Migration
 {
     public function getComposer()
     {

@@ -11,7 +11,7 @@
         }
     },
     "config.install": {
-        "class": "SoosyzeCore\\Config\\Install",
+        "class": "SoosyzeCore\\Config\\Installer",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

@@ -15,7 +15,7 @@ class Login extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function login()
+    public function formLogin()
     {
         if ($user = self::user()->isConnected()) {
             $route = self::router()->getRoute('user.account');
@@ -57,7 +57,7 @@ class Login extends \Soosyze\Controller
                 ->render('page.content', 'page-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin'),
-                    'url_register'     => self::router()->getRoute('user.register'),
+                    'url_register'     => self::router()->getRoute('user.register.create'),
                     'granted_relogin'  => empty($user) && self::config()->get('settings.user_relogin'),
                     'granted_register' => empty($user) && self::config()->get('settings.user_register')
         ]);

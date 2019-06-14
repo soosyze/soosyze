@@ -1,10 +1,10 @@
 {
-    "user.register": {
+    "user.register.create": {
         "methode": "GET",
         "path": "user/register",
-        "uses": "Register@register"
+        "uses": "Register@create"
     },
-    "user.register.check": {
+    "user.register.store": {
         "methode": "POST",
         "path": "user/register",
         "uses": "Register@store"

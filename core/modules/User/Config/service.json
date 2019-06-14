@@ -14,7 +14,7 @@
         }
     },
     "user.install": {
-        "class": "SoosyzeCore\\User\\Install",
+        "class": "SoosyzeCore\\User\\Installer",
         "hooks": {
             "install.menu": "hookInstallMenu"
         }
@@ -40,8 +40,8 @@
             "route.user.update": "hookUserEdited",
             "route.user.remove": "hookUserDeleted",
             "route.user.delete": "hookUserDeleted",
-            "route.user.register": "hookRegister",
-            "route.user.register.check": "hookRegister",
+            "route.user.register.create": "hookRegister",
+            "route.user.register.store": "hookRegister",
             "route.user.activate": "hookActivate",
             "route.user.login": "hookLogin",
             "route.user.login.check": "hookLoginCheck",

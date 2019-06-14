@@ -2,7 +2,7 @@
     "user.login": {
         "methode": "GET",
         "path": "user/login",
-        "uses": "Login@login"
+        "uses": "Login@formLogin"
     },
     "user.login.check": {
         "methode": "POST",

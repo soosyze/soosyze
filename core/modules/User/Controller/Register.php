@@ -15,7 +15,7 @@ class Register extends \Soosyze\Controller
         $this->pathViews  = dirname(__DIR__) . '/Views/';
     }
 
-    public function register()
+    public function create()
     {
         $data = [ 'username' => '', 'email' => '', 'password' => '', 'password_confirm' => '' ];
 
@@ -26,7 +26,7 @@ class Register extends \Soosyze\Controller
 
         $form = (new FormUser([
             'method' => 'post',
-            'action' => self::router()->getRoute('user.register.check')
+            'action' => self::router()->getRoute('user.register.store')
             ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('register-legend', 'Inscription utilisateur');
@@ -60,8 +60,8 @@ class Register extends \Soosyze\Controller
 
     public function store($req)
     {
-        $post = $req->getParsedBody();
-
+        $route     = self::router()->getRoute('user.register.create');
+        $post      = $req->getParsedBody();
         $validator = (new Validator())
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
@@ -99,8 +99,6 @@ class Register extends \Soosyze\Controller
             $this->sendMailRegister($data[ 'email' ]);
             $this->container->callHook('register.store.after', [ &$validator ]);
 
-            $route = self::router()->getRoute('user.register');
-
             return new Redirect($route);
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
@@ -114,7 +112,6 @@ class Register extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
             $_SESSION[ 'errors_keys' ][]          = 'username';
         }
-        $route = self::router()->getRoute('user.register');
 
         return new Redirect($route);
     }

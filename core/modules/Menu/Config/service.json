@@ -8,7 +8,7 @@
         ]
     },
     "menu.install": {
-        "class": "SoosyzeCore\\Menu\\Install",
+        "class": "SoosyzeCore\\Menu\\Installer",
         "hooks": {
             "install.user": "hookInstallUser"
         }

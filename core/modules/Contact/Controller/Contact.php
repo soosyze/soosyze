@@ -16,7 +16,7 @@ class Contact extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function contact()
+    public function form()
     {
         $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];
 
@@ -53,7 +53,7 @@ class Contact extends \Soosyze\Controller
         ]);
     }
 
-    public function contactCheck($req)
+    public function formCheck($req)
     {
         $post = $req->getParsedBody();
 

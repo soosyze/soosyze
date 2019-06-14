@@ -30,7 +30,7 @@
         }
     },
     "system.install": {
-        "class": "SoosyzeCore\\System\\Install",
+        "class": "SoosyzeCore\\System\\Installer",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
