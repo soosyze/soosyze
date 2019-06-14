@@ -84,7 +84,6 @@ class Configuration extends \Soosyze\Controller
         $post      = $req->getParsedBody();
         $files     = $req->getUploadedFiles();
         $validator = (new Validator())->setInputs($post + $files);
-        $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
         $dataFiles = [];
         self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
 
@@ -103,6 +102,7 @@ class Configuration extends \Soosyze\Controller
             self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
 
             return new Redirect($route);
         }
@@ -118,7 +118,8 @@ class Configuration extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
-
+        $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
+        
         return new Redirect($route);
     }
 

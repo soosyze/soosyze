@@ -105,7 +105,7 @@ class HookApp
             }
             $menu[ 'link' ] = $this->rewiteUri($isRewite, $link);
         }
-
+        
         return $query;
     }
 
@@ -120,10 +120,9 @@ class HookApp
             $link .= $uri->getQuery() !== ''
                 ? str_replace('q=', '', $uri->getQuery())
                 : '';
-
-            return $link . $uri->getFragment() !== ''
+            return $link . ($uri->getFragment() !== ''
                 ? '#' . $uri->getFragment()
-                : '';
+                : '');
         }
 
         return $uri->__toString();
