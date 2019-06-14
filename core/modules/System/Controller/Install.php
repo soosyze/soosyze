@@ -216,7 +216,7 @@ class Install extends \Soosyze\Controller
     private function installFinish()
     {
         $save = $_SESSION[ 'save' ];
-        $salt = md5(time());
+        $salt = base64_encode(random_bytes(32));
         $data = [
             'username'       => $save[ 'username' ],
             'email'          => $save[ 'email' ],

@@ -8,6 +8,7 @@ $vendor = ROOT . 'vendor/';
  */
 require_once $vendor . 'soosyze/framework/src/Autoload.php';
 require_once $vendor . 'ircmaxell/password-compat/lib/password.php';
+require_once $vendor . 'paragonie/random_compat/lib/random.php';
 
 $autoload = new Soosyze\Autoload([
     'Soosyze'          => $vendor . 'soosyze/framework/src',

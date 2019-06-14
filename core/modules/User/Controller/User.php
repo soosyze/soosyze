@@ -154,7 +154,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && !$is_email && !$is_username) {
-            $salt        = md5(time());
+            $salt        = base64_encode(random_bytes(32));
             $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
             $data        = [
                 'username'       => $validator->getInput('username'),
