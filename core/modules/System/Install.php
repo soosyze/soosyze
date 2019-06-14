@@ -74,7 +74,7 @@ class Install implements \SoosyzeCore\System\Migration
                 ])
                 ->values([
                     'system.module.edit',
-                    '<i class="fa fa-th-large"></i> Modules',
+                    '<i class="fa fa-th-large" aria-hidden="true"></i> Modules',
                     'admin/modules',
                     'admin-menu',
                     5,

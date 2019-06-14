@@ -162,7 +162,7 @@ class FormUser extends FormBuilder
                     'class'        => 'btn-toogle-password',
                     'onclick'      => "togglePassword(this, '$id')",
                     'type'         => 'button',
-                    '_content'     => '<i id="eyeIcon" class="fa fa-eye"></i>',
+                    '_content'     => '<i id="eyeIcon" class="fa fa-eye" aria-hidden="true"></i>',
                     'data-tooltip' => 'Afficher/Cacher le mot de passe'
                 ]);
             }

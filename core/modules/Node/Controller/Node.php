@@ -36,7 +36,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file"></i>  Mes contenus'
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i>  Mes contenus'
                 ])
                 ->render('page.content', 'node-admin.php', $this->pathViews, [
                     'linkAdd' => $linkAdd,
@@ -62,7 +62,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu'
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Ajouter du contenu'
                 ])
                 ->render('page.content', 'node-add.php', $this->pathViews, [
                     'node_type' => $query
@@ -167,7 +167,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file"></i> Ajouter du contenu de type ' . $type
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $type
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-create.php', $this->pathViews, [
@@ -376,7 +376,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file"></i> Modifier le contenu ' . $node[ 'title' ]
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);

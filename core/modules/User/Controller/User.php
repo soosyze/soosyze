@@ -98,7 +98,7 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i>  Création de l’utilisateur'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i>  Création de l’utilisateur'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-user.php', $this->pathViews, [
@@ -251,7 +251,7 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i> Édition de l’utilisateur'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Édition de l’utilisateur'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-user.php', $this->pathViews, [
@@ -400,7 +400,7 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i> Supprimer du compte de <i>' . $data[ 'username' ] . '</i>'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Supprimer du compte de <i>' . $data[ 'username' ] . '</i>'
                 ])
                 ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form

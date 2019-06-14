@@ -186,7 +186,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                 ])
                 ->values([
                     'node.index',
-                    '<i class="fa fa-file"></i> Contenu',
+                    '<i class="fa fa-file" aria-hidden="true"></i> Contenu',
                     'admin/node',
                     'admin-menu',
                     2,

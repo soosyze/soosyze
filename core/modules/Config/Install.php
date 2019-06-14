@@ -34,7 +34,7 @@ class Install implements \SoosyzeCore\System\Migration
                 ])
                 ->values([
                     'config.index',
-                    '<i class="fa fa-cog"></i> Configuration',
+                    '<i class="fa fa-cog" aria-hidden="true"></i> Configuration',
                     'admin/config',
                     'admin-menu',
                     6,

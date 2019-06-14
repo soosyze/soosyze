@@ -46,7 +46,9 @@
                     <tr id="<?php echo $module[ 'title' ]; ?>" class="module" data-title="<?php echo $module[ 'title' ]; ?>">
                         <th>
                             <div class="module-icon" style="background-color:<?php echo $module['icon']['background-color']; ?>">
-                                <i class="<?php echo $module['icon']['name']; ?>" style="color:<?php echo $module['icon']['color']; ?>"></i>
+                                <i class="<?php echo $module['icon']['name']; ?>" 
+                                   style="color:<?php echo $module['icon']['color']; ?>" 
+                                   aria-hidden="true"></i>
                             </div>
                         </th>
                         <td data-title="Module">
@@ -79,7 +81,7 @@
 
                         <td data-title="Actions">
                             <a class="btn btn-action" href="<?php echo $module['support']; ?>" target="_blank">
-                                <i class="fas fa-question"></i> Aide
+                                <i class="fas fa-question" aria-hidden="true"></i> Aide
                             </a>
                         </td>
                         <?php else: ?>

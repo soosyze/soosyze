@@ -47,10 +47,10 @@ class Install implements \SoosyzeCore\System\Migration
                 'key', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'node.show', '<i class="fa fa-home"></i> Accueil', '/', 'admin-menu', 1, -1
+                'node.show', '<i class="fa fa-home" aria-hidden="true"></i> Accueil', '/', 'admin-menu', 1, -1
             ])
             ->values([
-                'menu.show', '<i class="fa fa-bars"></i> Menu', 'menu/main-menu', 'admin-menu', 3, -1
+                'menu.show', '<i class="fa fa-bars" aria-hidden="true"></i> Menu', 'menu/main-menu', 'admin-menu', 3, -1
             ])
             ->execute();
     }

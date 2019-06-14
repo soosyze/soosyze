@@ -102,7 +102,7 @@ class HookApp
     public function hooks503($request, &$response)
     {
         $response = $this->tpl->render('page', 'page-maintenance.php', $this->views, [
-                'title_main' => '<i class="fa fa-cog"></i> Site en maintenance'
+                'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> Site en maintenance'
             ])
             ->withStatus(503);
     }

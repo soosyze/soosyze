@@ -55,7 +55,7 @@ class HookConfig
                         $form->checkbox('rewrite_engine', 'rewrite_engine', [
                                     'checked' => $data[ 'rewrite_engine' ]
                                 ])
-                                ->label('system-maintenance-group', '<span class="ui"></span>Rendre les URL propre', [
+                                ->label('system-maintenance-group', '<span class="ui"></span>Rendre les URL propres', [
                                     'for' => 'rewrite_engine'
                                 ]);
                     }, [ 'class' => 'form-group' ]);

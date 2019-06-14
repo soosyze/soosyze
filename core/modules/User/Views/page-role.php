@@ -23,11 +23,11 @@
                             <td data-title="Poids"><?php echo $role[ 'role_weight' ]; ?></td>
                             <td data-title="Actions">
                                 <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ] ?>">
-                                    <i class="fa fa-edit"></i> Éditer
+                                    <i class="fa fa-edit" aria-hidden="true"></i> Éditer
                                 </a>
                                 <?php if (isset($role[ 'link_remove' ])): ?>
                                     <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ] ?>">
-                                        <i class="fa fa-times"></i> Supprimer
+                                        <i class="fa fa-times" aria-hidden="true"></i> Supprimer
                                     </a>
                                 <?php endif; ?>
                             </td>

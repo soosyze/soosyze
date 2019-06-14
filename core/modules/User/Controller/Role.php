@@ -39,7 +39,7 @@ class Role extends \Soosyze\Controller
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->view('page', [ 'title_main' => '<i class="fa fa-user"></i> Administrer les rôles' ])
+                ->view('page', [ 'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Administrer les rôles' ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-role.php', $this->pathViews, [
                     'roles'    => $roles,
@@ -77,7 +77,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [
@@ -161,7 +161,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i> Création d\'un role'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Création d\'un role'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [
@@ -243,7 +243,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user"></i> Supression du role <i>' . $data[ 'role_label' ] . '</i>'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Supression du role <i>' . $data[ 'role_label' ] . '</i>'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [

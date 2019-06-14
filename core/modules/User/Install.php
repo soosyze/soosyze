@@ -97,7 +97,7 @@ class Install implements \SoosyzeCore\System\Migration
                 ])
                 ->values([
                     'user.management.admin',
-                    '<i class="fa fa-user"></i> Utilisateur',
+                    '<i class="fa fa-user" aria-hidden="true"></i> Utilisateur',
                     'admin/user',
                     'admin-menu',
                     4,
@@ -112,7 +112,7 @@ class Install implements \SoosyzeCore\System\Migration
                 ])
                 ->values([
                     'user.logout',
-                    '<i class="fa fa-power-off"></i> Déconnexion',
+                    '<i class="fa fa-power-off" aria-hidden="true"></i> Déconnexion',
                     'user/logout',
                     'user-menu',
                     3,

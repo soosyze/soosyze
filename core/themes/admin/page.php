@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-admin" aria-expanded="false">
-                    Menu <i class="fa fa-bars"></i>
+                    Menu <i class="fa fa-bars" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="collapse navbar-collapse" id="navbar-admin">

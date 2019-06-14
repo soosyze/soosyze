@@ -23,7 +23,7 @@
 
         <div class="cadre">
             <fieldset>
-                <legend><i class="fa fa-user"></i> Utilisateur</legend>
+                <legend><i class="fa fa-user" aria-hidden="true"></i> Utilisateur</legend>
                 <?php echo $form->renderForm(); ?>
             </fieldset>
         </div>

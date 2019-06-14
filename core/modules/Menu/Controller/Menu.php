@@ -67,7 +67,7 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-bars"></i> Menu'
+                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> Menu'
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-show.php', $this->pathViews, [

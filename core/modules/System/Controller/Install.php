@@ -246,7 +246,7 @@ class Install extends \Soosyze\Controller
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
             ->set('settings.rewrite_engine', false);
-
+        
         $path = self::config()->getPath();
         chmod($path . 'database.json', 0444);
 
