@@ -5,7 +5,7 @@
     "version": "1.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\News": "/"
+            "SoosyzeCore\\News\\": "/"
         }
     },
     "extra": {

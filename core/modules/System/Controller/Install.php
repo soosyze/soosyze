@@ -16,13 +16,13 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        'Config'      => 'SoosyzeCore\Config',
-        'Contact'     => 'SoosyzeCore\Contact',
-        'Node'        => 'SoosyzeCore\Node',
-        'News'        => 'SoosyzeCore\News',
-        'Menu'        => 'SoosyzeCore\Menu',
-        'System'      => 'SoosyzeCore\System',
-        'User'        => 'SoosyzeCore\User'
+        'Config'      => 'SoosyzeCore\\Config\\',
+        'Contact'     => 'SoosyzeCore\\Contact\\',
+        'Node'        => 'SoosyzeCore\\Node\\',
+        'News'        => 'SoosyzeCore\\News\\',
+        'Menu'        => 'SoosyzeCore\\Menu\\',
+        'System'      => 'SoosyzeCore\\System\\',
+        'User'        => 'SoosyzeCore\\User\\'
     ];
 
     public function __construct()
@@ -184,7 +184,7 @@ class Install extends \Soosyze\Controller
         /* Installation */
         $instances = [];
         foreach ($this->modules as $title => $namespace) {
-            $migration = $namespace . '\Installer';
+            $migration = $namespace . 'Installer';
             $installer   = new $migration();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);

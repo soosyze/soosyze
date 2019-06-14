@@ -175,7 +175,7 @@ class ModulesManager extends \Soosyze\Controller
 
         /* Installation */
         foreach ($modules as $title) {
-            $migration = self::composer()->getNamespace($title) . '\Installer';
+            $migration = self::composer()->getNamespace($title) . 'Installer';
             $installer   = new $migration();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
@@ -231,7 +231,7 @@ class ModulesManager extends \Soosyze\Controller
 
         $instances = [];
         foreach ($modules as $title) {
-            $migration = self::composer()->getNamespace($title) . '\Installer';
+            $migration = self::composer()->getNamespace($title) . 'Installer';
             $installer   = new $migration();
             $instances[ $title ] = $installer;
             /* Supprime le module à partir de son nom. */
