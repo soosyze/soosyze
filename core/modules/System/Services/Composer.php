@@ -57,10 +57,8 @@ class Composer
             $migration = array_keys($data[ 'autoload' ][ 'psr-4' ])[ 0 ] . '\Installer';
             if (!class_exists($migration)) {
                 $errors[] = 'Les scripts d\'installation du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
-            }
-            $install   = new $migration();
-            if (!($install instanceof Migration)) {
-                $errors[] = 'La classe d\'installation ' . htmlspecialchars($migration) . ' n\'implemente pas l\'interface Migration.';
+            } elseif (!(new $migration() instanceof Migration)) {
+                $errors[] = 'La classe d\'installation <b>' . htmlspecialchars($migration) . '</b> n\'implemente pas l\'interface Migration.';
             }
         }
 

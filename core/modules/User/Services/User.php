@@ -235,7 +235,7 @@ class User
      *
      * @return type
      */
-    public function isGranted($key, &$grant = false, $with = [])
+    public function isGranted($key, &$grant = false)
     {
         /* Si la permission n'existe pas. */
         if (!$this->hasPermission($key)) {
@@ -271,10 +271,15 @@ class User
         $params[]    = $this->isConnected();
         $permissions = $this->core->callHook('route.' . $route[ 'key' ], $params);
 
+        return $this->isGrantedPermission($permissions);
+    }
+    
+    public function isGrantedPermission($permissions)
+    {
         if (\is_bool($permissions)) {
             return $permissions;
         }
-        if (!is_array($permissions)) {
+        if (\is_string($permissions)) {
             return $this->isGranted($permissions);
         }
         foreach ($permissions as $permission) {

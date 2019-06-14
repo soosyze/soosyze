@@ -82,13 +82,11 @@ class Requiement
                     <td>{$value[ 'message' ]}</td>
                 </tr>";
         }
-        $html .= '</tbody>
+        return $html . '</tbody>
                 </table>
             </div>
         </body>
         </html>';
-
-        return $html;
     }
 
     public function versionPhp($version, $operator = '>=')

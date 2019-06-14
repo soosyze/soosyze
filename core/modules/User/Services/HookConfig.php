@@ -42,7 +42,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                         ->group('config-password_show-group', 'div', function ($form) use ($data) {
                             $form->checkbox('password_show', 'password_show', [ 'checked' => $data[ 'password_show' ] ])
-                        ->label('config-password_show-label', '<span class="ui"></span> Ajout d\'un bouton <i class="fa fa-eye"></i> pour visualiser les mots de passe', [
+                        ->label('config-password_show-label', '<span class="ui"></span> Ajout d\'un bouton <i class="fa fa-eye" aria-hidden="true"></i> pour visualiser les mots de passe', [
                             'for' => 'password_show'
                         ]);
                         }, [ 'class' => 'form-group' ])
@@ -78,7 +78,7 @@ class HookConfig
                             'value' => $data[ 'password_special' ]
                         ]);
                     }, [ 'class' => 'form-group' ]);
-                })
+        })
                 ->token()
                 ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
     }

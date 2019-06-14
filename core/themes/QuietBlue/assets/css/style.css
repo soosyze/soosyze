@@ -260,6 +260,7 @@ select[size]{
 [type="checkbox"] + label{
     cursor: pointer;
     display: inline-block;
+    min-height: 1em;
     padding-left: 2em;
     position: relative;
 }
@@ -268,9 +269,6 @@ select[size]{
     border-color: #20222d;
     color: #fff;
     content: "✔";
-}
-[type="checkbox"] + label{
-    min-height: 1em;
 }
 [type="checkbox"] + label::before{
     border: solid 2px;

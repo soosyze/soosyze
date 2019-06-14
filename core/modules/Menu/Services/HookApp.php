@@ -44,7 +44,7 @@ class HookApp
                 ])->override('page.second_menu', [ 'menu-second.php' ]);
         }
     }
-
+    
     public function hookMenuShowResponseAfter($request, &$response)
     {
         $script = $response->getVar('scripts');
@@ -61,7 +61,7 @@ class HookApp
                         this.value = i;
                         i++;
                     });
-                }
+            }
             }).disableSelection();
         });</script>';
 

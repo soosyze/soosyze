@@ -50,24 +50,24 @@ class HookConfig
                             'for' => 'maintenance'
                         ]);
                     }, [ 'class' => 'form-group' ]);
-                if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
-                    $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
-                        $form->checkbox('rewrite_engine', 'rewrite_engine', [
+            if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
+                $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
+                    $form->checkbox('rewrite_engine', 'rewrite_engine', [
                                     'checked' => $data[ 'rewrite_engine' ]
                                 ])
                                 ->label('system-maintenance-group', '<span class="ui"></span>Rendre les URL propres', [
                                     'for' => 'rewrite_engine'
                                 ]);
-                    }, [ 'class' => 'form-group' ]);
-                }
-                $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                    $form->label('system-theme-label', 'Theme du site')
+                }, [ 'class' => 'form-group' ]);
+            }
+            $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
+                $form->label('system-theme-label', 'Theme du site')
                             ->select('theme', 'theme', $optionThemes, [
                                 'class'    => 'form-control',
                                 'required' => 1,
                                 'selected' => $data[ 'theme' ]
                             ]);
-                }, [ 'class' => 'form-group' ])
+            }, [ 'class' => 'form-group' ])
                         ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
                             $form->label('system-theme_admin-label', 'Theme d\'administration du site')
                             ->select('theme_admin', 'theme_admin', $optionThemes, [
@@ -83,7 +83,7 @@ class HookConfig
                                 '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
                             ]);
                         }, [ 'class' => 'form-group' ]);
-                })
+        })
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-path-legend', 'Page par défaut')
                     ->group('system-path_index-group', 'div', function ($form) use ($data) {

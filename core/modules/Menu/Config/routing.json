@@ -1,18 +1,18 @@
 {
     "menu.show": {
         "methode": "GET",
-        "path": "menu/:item",
+        "path": "menu/:menu",
         "uses": "Menu@show",
         "with": {
-            ":item": "[a-z-]+"
+            ":menu": "[a-z-]+"
         }
     },
     "menu.show.check": {
         "methode": "POST",
-        "path": "menu/:item",
+        "path": "menu/:menu",
         "uses": "Menu@showCheck",
         "with": {
-            ":item": "[a-z-]+"
+            ":menu": "[a-z-]+"
         }
     },
     "menu.link.create": {

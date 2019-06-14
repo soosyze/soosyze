@@ -19,7 +19,7 @@
                                 <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span>
                                 <?php echo $role[ 'role_label' ] ?>
                             </th>
-                            <td data-title="Description"><i><?php echo $role[ 'role_description' ] ?></i></td>
+                            <td data-title="Description"><em><?php echo $role[ 'role_description' ] ?></em></td>
                             <td data-title="Poids"><?php echo $role[ 'role_weight' ]; ?></td>
                             <td data-title="Actions">
                                 <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ] ?>">

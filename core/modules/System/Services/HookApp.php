@@ -34,11 +34,11 @@ class HookApp
             $request = $request->withUri($url)->withMethod('GET');
         }
 
-        if ($this->config->get('settings.maintenance')) {
-            if ('q=user/login' !== $uri->getQuery() && !$this->core->callHook('app.granted', [
-                    'system.config.maintenance' ])) {
-                $response = $response->withStatus(503);
-            }
+        if (
+            $this->config->get('settings.maintenance')
+            && 'q=user/login' !== $uri->getQuery()
+            && !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
+            $response = $response->withStatus(503);
         }
     }
 

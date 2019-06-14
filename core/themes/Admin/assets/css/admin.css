@@ -298,7 +298,6 @@ label[data-tooltip]:before {
     text-align: center;
     padding: 1em;
     border-radius: 4em;
-    font-size: 1em;
 }
 .table > tbody > tr > th{
     padding: 0;

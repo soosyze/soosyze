@@ -35,4 +35,4 @@ $autoload->register();
  * http://www.darwinbiler.com/how-does-the-replace-property-work-in-composer/
  */
 
-//require ROOT . 'vendor/autoload.php';
+/* require ROOT . 'vendor/autoload.php'; */

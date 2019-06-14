@@ -17,9 +17,7 @@ class Menu extends \Soosyze\Controller
 
     public function show($name, $req)
     {
-        $menu = self::menu()->getMenu($name)->fetch();
-
-        if (!$menu) {
+        if (!($menu = self::menu()->getMenu($name)->fetch())) {
             return $this->get404($req);
         }
 
@@ -28,7 +26,7 @@ class Menu extends \Soosyze\Controller
             ->orderBy('weight')
             ->fetchAll();
 
-        $action = self::router()->getRoute('menu.show.check', [ ':item' => $name ]);
+        $action = self::router()->getRoute('menu.show.check', [ ':menu' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
         foreach ($query as &$link) {
             $link[ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
@@ -62,8 +60,6 @@ class Menu extends \Soosyze\Controller
             unset($_SESSION[ 'errors_keys' ]);
         }
 
-        $linkAdd = self::router()->getRoute('menu.link.create', [ ':menu' => $name ]);
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -73,29 +69,25 @@ class Menu extends \Soosyze\Controller
                 ->render('page.content', 'menu-show.php', $this->pathViews, [
                     'menu'     => $query,
                     'form'     => $form,
-                    'linkAdd'  => $linkAdd,
+                    'linkAdd'  => self::router()->getRoute('menu.link.create', [ ':menu' => $name ]),
                     'menuName' => $menu[ 'title' ]
         ]);
     }
 
     public function showCheck($name, $req)
     {
+        $route = self::router()->getRoute('menu.show', [ ':menu' => $name ]);
         if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Impossible d\'enregistrer la configuration, le menu ' . $name . ' n\'existe pas.' ];
-            $route                              = self::router()->getRoute('menu.show', [
-                ':item' => $name ]);
-
             return new Redirect($route);
         }
 
-        $validator = (new Validator());
-
+        $post      = $req->getParsedBody();
+        $validator = new Validator();
         foreach ($links as $link) {
-            $validator->addRule('active-' . $link[ 'id' ], 'bool')
+            $validator
+                ->addRule('active-' . $link[ 'id' ], 'bool')
                 ->addRule('weight-' . $link[ 'id' ], 'required|int|min:1|max:50');
         }
-
-        $post = $req->getParsedBody();
         $validator->setInputs($post);
 
         if ($validator->isValid()) {
@@ -112,13 +104,9 @@ class Menu extends \Soosyze\Controller
             }
 
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
-            $route                               = self::router()->getRoute('menu.show', [
-                ':item' => $name ]);
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $route                              = self::router()->getRoute('menu.show', [
-                ':item' => $name ]);
         }
 
         return new Redirect($route);

@@ -98,7 +98,7 @@ class Node extends \Soosyze\Controller
             'enctype' => 'multipart/form-data' ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $type) {
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
-                ->group('node-title-group', 'div', function ($form) use ($query, $content, $type) {
+                ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', 'Titre du contenu')
                     ->text('title', 'title', [
                         'class'       => 'form-control',
@@ -238,7 +238,7 @@ class Node extends \Soosyze\Controller
 
         $route = self::router()->getRoute('node.create', [ ':type' => $type ]);
 
-        new Redirect($route);
+        return new Redirect($route);
     }
 
     public function show($id, $req)

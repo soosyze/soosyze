@@ -21,7 +21,7 @@
                     <tr class="draggable">
                         <th>
                             <a href="<?php echo $link[ 'link' ]; ?>" target="<?php echo $link[ 'target_link' ]; ?>" <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>
-                                <i class="fa fa-arrows-alt-v"></i> <?php echo $link[ 'title_link' ]; ?>
+                                <i class="fa fa-arrows-alt-v" aria-hidden="true"></i> <?php echo $link[ 'title_link' ]; ?>
                             </a>
                         </th>
                         <td data-title="Activé">
@@ -35,10 +35,10 @@
                         </td>	
                         <td data-title="Actions">
                             <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ]; ?>">
-                                <i class="fa fa-edit"></i> Éditer
+                                <i class="fa fa-edit" aria-hidden="true"></i> Éditer
                             </a>
                             <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ]; ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
-                                <i class="fa fa-times"></i> Supprimer
+                                <i class="fa fa-times" aria-hidden="true"></i> Supprimer
                             </a>
                         </td>
                     </tr>
@@ -47,7 +47,7 @@
 
                     <tr class="info">
                         <td colspan="5">
-                            Aucun lien dans le menu.
+                        Aucun lien dans le menu.
                         </td>
                     </tr>
                 <?php endif; ?>

@@ -56,15 +56,6 @@
 /* ---------- FILE ----------- */
 /* --------------------------- */
 .input-file-img {
-    width: auto;
-    max-height: 200px;
-}
-
-
-/* --------------------------- */
-/* ---------- FILE ----------- */
-/* --------------------------- */
-.input-file-img {
     max-height: 200px;
     width: auto;
 }
@@ -301,7 +292,6 @@ label[data-tooltip]:before {
     text-align: center;
     padding: 1em;
     border-radius: 4em;
-    font-size: 1em;
 }
 .table > tbody > tr > th{
     padding: 0;

@@ -133,7 +133,7 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.store.after', [ &$validator ]);
 
             $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
-            $route                 = self::router()->getRoute('menu.show', [ ':item' => $nameMenu ]);
+            $route                 = self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ]);
 
             return new Redirect($route);
         }
@@ -269,7 +269,7 @@ class Link extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
             $route                               = self::router()->getRoute('menu.show', [
-                ':item' => $nameMenu ]);
+                ':menu' => $nameMenu ]);
 
             return new Redirect($route);
         }
@@ -317,7 +317,7 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 
-        $route = self::router()->getRoute('menu.show', [ ':item' => $name ]);
+        $route = self::router()->getRoute('menu.show', [ ':menu' => $name ]);
 
         return new Redirect($route);
     }
