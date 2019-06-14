@@ -50,8 +50,14 @@ class Menu
             $query = $link === '/'
                 ? $this->config->get('settings.path_index', '/')
                 : $link;
-
-            $uri    = $request->getUri()->withQuery($query);
+            
+            $parse = parse_url("?q=$query");
+            $uri = $request->getUri();
+            if (!empty($parse['query'])) {
+                $uri = $uri->withQuery($parse['query']);
+            } elseif (!empty($parse['fragment'])) {
+                $uri = $uri->withFragment($parse['fragment']);
+            }
             $output = $this->router->parse($request->withUri($uri));
         }
 

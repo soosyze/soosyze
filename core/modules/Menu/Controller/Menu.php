@@ -36,7 +36,7 @@ class Menu extends \Soosyze\Controller
             $link[ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
                 ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
             if ($link[ 'key' ]) {
-                $link_tmp       = $req->withUri($req->getUri()->withQuery($link[ 'link' ]));
+                $link_tmp       = $req->withUri($req->getUri()->withQuery('?q=' . $link[ 'link' ]));
                 $link[ 'link' ] = $link_tmp->getUri()->__toString();
             }
             $nameLinkWeight = 'weight-' . $link[ 'id' ];

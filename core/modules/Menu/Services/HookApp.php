@@ -111,22 +111,19 @@ class HookApp
 
     protected function rewiteUri($isRewite, $request)
     {
-        $basePath = $request->getBasePath();
         $query    = str_replace('q=/', '', $request->getUri()->getQuery());
-        $req      = $request->withUri($request->getUri()->withQuery($query));
-        $uri      = $req->getUri();
+        $uri      = $request->getUri()->withQuery($query);
 
         if ($isRewite) {
-            $link = $basePath;
+            $link = $request->getBasePath();
 
             $link .= $uri->getQuery() !== ''
                 ? str_replace('q=', '', $uri->getQuery())
                 : '';
-            $link .= $uri->getFragment() !== ''
+
+            return $link . $uri->getFragment() !== ''
                 ? '#' . $uri->getFragment()
                 : '';
-
-            return $link;
         }
 
         return $uri->__toString();
