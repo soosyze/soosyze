@@ -47,7 +47,7 @@ class Menu extends \Soosyze\Controller
                 ])
                 ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ] ]);
         }
-        $form->token()
+        $form->token('token_menu')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $messages = [];

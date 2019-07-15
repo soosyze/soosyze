@@ -164,7 +164,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
-                ->token()
+                ->token('token_system_config')
                 ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
     }
 
@@ -172,20 +172,20 @@ class HookConfig
     {
         $themes = implode(',', $this->template->getThemes());
         $validator->setRules([
-            'email'              => 'required|email|max:254|htmlsc',
-            'maintenance'        => '!required|bool',
-            'rewrite_engine'     => 'bool',
-            'theme'              => 'required|inarray:' . $themes,
-            'theme_admin'        => 'required|inarray:' . $themes,
-            'path_index'         => 'required|string|htmlsc',
-            'path_access_denied' => '!required|string|htmlsc',
-            'path_no_found'      => '!required|string|htmlsc',
-            'title'              => 'required|string|max:64|htmlsc',
-            'description'        => 'required|string|max:256|htmlsc',
-            'keyboard'           => '!required|string|htmlsc',
-            'favicon'            => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
-            'logo'               => '!required|image|max:200Kb',
-            'token'              => 'required|token'
+            'email'               => 'required|email|max:254|htmlsc',
+            'maintenance'         => '!required|bool',
+            'rewrite_engine'      => 'bool',
+            'theme'               => 'required|inarray:' . $themes,
+            'theme_admin'         => 'required|inarray:' . $themes,
+            'path_index'          => 'required|string|htmlsc',
+            'path_access_denied'  => '!required|string|htmlsc',
+            'path_no_found'       => '!required|string|htmlsc',
+            'title'               => 'required|string|max:64|htmlsc',
+            'description'         => 'required|string|max:256|htmlsc',
+            'keyboard'            => '!required|string|htmlsc',
+            'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
+            'logo'                => '!required|image|max:200Kb',
+            'token_system_config' => 'required|token'
         ]);
     }
 

@@ -17,7 +17,7 @@ class FormContact extends FormBuilder
                 ->object()
                 ->message()
                 ->copy()
-                ->token()
+                ->token('token_contact')
                 ->submit('submit', 'Envoyer le message', [ 'class' => 'btn btn-success' ]);
     }
 

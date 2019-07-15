@@ -67,7 +67,7 @@
         </fieldset>
         <?php if ($menu): ?>
 
-            <?php echo $form->form_token(); ?>
+            <?php echo $form->form_token('token_menu'); ?>
             <?php echo $form->form_input('submit'); ?>
             <?php echo $form->form_close(); ?>
         <?php endif; ?>

@@ -79,7 +79,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
-                ->token()
+                ->token('token_user_config')
                 ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
     }
 

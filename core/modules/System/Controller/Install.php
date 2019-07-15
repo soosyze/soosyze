@@ -120,7 +120,7 @@ class Install extends \Soosyze\Controller
                     'value'    => $content[ 'password-confirm' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->token()
+            ->token('token_install')
             ->submit('submit', 'Installer', [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors' ])) {

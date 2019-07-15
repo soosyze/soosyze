@@ -97,7 +97,7 @@
         </fieldset>
         <?php endforeach; ?>
 
-        <?php echo $form->form_token(); ?>
+        <?php echo $form->form_token('token_module_edit'); ?>
         <?php echo $form->form_input('submit', [ 'class' => 'btn btn-success' ]); ?>
         <?php echo $form->form_close(); ?>
     </div>

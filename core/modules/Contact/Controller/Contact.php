@@ -59,12 +59,12 @@ class Contact extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'name'    => 'required|string|max:255',
-                'email'   => 'required|email',
-                'object'  => 'required|string|max:255',
-                'message' => 'required|string|max:5000',
-                'copy'    => 'bool',
-                'token'   => 'required|token'
+                'name'          => 'required|string|max:255',
+                'email'         => 'required|email',
+                'object'        => 'required|string|max:255',
+                'message'       => 'required|string|max:5000',
+                'copy'          => 'bool',
+                'token_contact' => 'required|token'
             ])
             ->setInputs($post);
 

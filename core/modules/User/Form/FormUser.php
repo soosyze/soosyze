@@ -251,7 +251,7 @@ class FormUser extends FormBuilder
      */
     public function submitForm($label = 'Enregistrer')
     {
-        return $this->token()
+        return $this->token('token_user_form')
                 ->submit('sumbit', $label, [ 'class' => 'btn btn-success' ]);
     }
 }

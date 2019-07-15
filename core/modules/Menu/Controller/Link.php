@@ -65,7 +65,7 @@ class Link extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->token()
+            ->token('token_link_create')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
@@ -97,10 +97,10 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'title_link'  => 'required|string|max:255|striptags',
-                'link'        => 'required',
-                'target_link' => 'required|inArray:_blank,_self,_parent,_top',
-                'token'       => 'required|token'
+                'title_link'        => 'required|string|max:255|striptags',
+                'link'              => 'required',
+                'target_link'       => 'required|inArray:_blank,_self,_parent,_top',
+                'token_link_create' => 'required|token'
             ])
             ->setInputs($post);
 
@@ -200,7 +200,7 @@ class Link extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->token()
+            ->token('token_link_edit')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
@@ -236,10 +236,10 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'title_link'  => 'required|string|max:255|striptags',
-                'link'        => 'required',
-                'target_link' => 'required|inArray:_blank,_self,_parent,_top',
-                'token'       => 'required|token'
+                'title_link'      => 'required|string|max:255|striptags',
+                'link'            => 'required',
+                'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
+                'token_link_edit' => 'required|token'
             ])
             ->setInputs($post);
 

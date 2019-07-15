@@ -89,11 +89,11 @@ class Role extends \Soosyze\Controller
     {
         $validator = (new Validator())
             ->setRules([
-                'role_label'       => 'required|string|max:255|htmlsc',
-                'role_description' => '!required|string|max:255|htmlsc',
-                'role_weight'      => '!required|int|max:50',
-                'role_color'       => '!required|colorhex',
-                'token'            => 'required|token'
+                'role_label'        => 'required|string|max:255|htmlsc',
+                'role_description'  => '!required|string|max:255|htmlsc',
+                'role_weight'       => '!required|int|max:50',
+                'role_color'        => '!required|colorhex',
+                'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
 
@@ -177,11 +177,11 @@ class Role extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'role_label'       => 'required|string|max:255|htmlsc',
-                'role_description' => '!required|string|max:255|htmlsc',
-                'role_weight'      => '!required|int|max:50',
-                'role_color'       => '!required|colorhex',
-                'token'            => 'required|token'
+                'role_label'        => 'required|string|max:255|htmlsc',
+                'role_description'  => '!required|string|max:255|htmlsc',
+                'role_weight'       => '!required|int|max:50',
+                'role_color'        => '!required|colorhex',
+                'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
 
@@ -259,8 +259,8 @@ class Role extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'id'    => 'required|int|!inarray:1,2,3',
-                'token' => 'required|token'
+                'id'                => 'required|int|!inarray:1,2,3',
+                'token_role_delete' => 'required|token'
             ])
             ->setInputs($req->getParsedBody())
             ->addInput('id', $id);

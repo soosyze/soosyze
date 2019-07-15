@@ -149,7 +149,7 @@ class Node extends \Soosyze\Controller
                     'for' => 'published'
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->token()
+            ->token('token_node_create')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
@@ -194,9 +194,9 @@ class Node extends \Soosyze\Controller
         /* Ttest les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
-                'title'     => 'required|string|max:255|htmlsc',
-                'published' => 'bool',
-                'token'     => 'token'
+                'title'             => 'required|string|max:255|htmlsc',
+                'published'         => 'bool',
+                'token_node_create' => 'token'
             ])
             ->setInputs($post);
         /* Test des champs personnalisé de la node. */
@@ -358,7 +358,7 @@ class Node extends \Soosyze\Controller
                     'for' => 'published'
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->token()
+            ->token('token_node_edit')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
@@ -406,9 +406,9 @@ class Node extends \Soosyze\Controller
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
-                'title'     => 'required|string|max:255|htmlsc',
-                'published' => 'bool',
-                'token'     => 'token'
+                'title'           => 'required|string|max:255|htmlsc',
+                'published'       => 'bool',
+                'token_node_edit' => 'token'
             ])
             ->setInputs($post);
         /* Test des champs personnalisé de la node. */

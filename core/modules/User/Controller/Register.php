@@ -68,7 +68,7 @@ class Register extends \Soosyze\Controller
                 'email'            => 'required|email|htmlsc',
                 'password'         => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password',
-                'token'            => 'required|token'
+                'token_user_form'  => 'required|token'
             ])
             ->setInputs($post);
 

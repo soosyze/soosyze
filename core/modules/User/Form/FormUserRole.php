@@ -109,7 +109,7 @@ class FormUserRole extends FormBuilder
                     'onclick'  => 'javascript:history.back();',
                     'type'     => 'button'
                 ])
-                ->token()
+                ->token('token_role_submit')
                 ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
     }
     
@@ -117,10 +117,11 @@ class FormUserRole extends FormBuilder
     {
         return $this->group('user-edit-information-fieldset', 'fieldset', function ($form) {
             $form->legend('user-edit-information-legend', 'Suppression de rôle')
-                ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
-                    '_content' => 'Attention ! La suppression du rôle est définitif.'
-                ]);
-        })->token()
-            ->submit('sumbit', 'Supprimer le rôle', [ 'class' => 'btn btn-danger' ]);
+                    ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                        '_content' => 'Attention ! La suppression du rôle est définitif.'
+                    ]);
+        })
+                ->token('token_role_delete')
+                ->submit('sumbit', 'Supprimer le rôle', [ 'class' => 'btn btn-danger' ]);
     }
 }

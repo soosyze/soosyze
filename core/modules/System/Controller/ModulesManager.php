@@ -86,7 +86,8 @@ class ModulesManager extends \Soosyze\Controller
                     : null
             ];
         }
-        $form->token()->submit('submit', 'Enregistrer');
+        $form->token('token_module_edit')
+            ->submit('submit', 'Enregistrer');
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -114,8 +115,8 @@ class ModulesManager extends \Soosyze\Controller
         $route     = self::router()->getRoute('system.module.edit');
         $validator = (new Validator())
             ->setRules([
-                'modules' => '!required|array',
-                'token'   => 'token'
+                'modules'           => '!required|array',
+                'token_module_edit' => 'token'
             ])
             ->setInputs($post);
 

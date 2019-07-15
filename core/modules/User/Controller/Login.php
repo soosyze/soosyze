@@ -69,9 +69,9 @@ class Login extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'email'    => 'required|email|max:254',
-                'password' => 'required|string',
-                'token'    => 'required|token'
+                'email'           => 'required|email|max:254',
+                'password'        => 'required|string',
+                'token_user_form' => 'required|token'
             ])
             ->setInputs($post);
 
@@ -145,8 +145,8 @@ class Login extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'email' => 'required|email|max:254',
-                'token' => 'required|token'
+                'email'           => 'required|email|max:254',
+                'token_user_form' => 'required|token'
             ])
             ->setInputs($post);
 

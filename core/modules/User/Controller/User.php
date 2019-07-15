@@ -135,7 +135,7 @@ class User extends \Soosyze\Controller
                 'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'role'             => '!required|array',
-                'token'            => 'token'
+                'token_user_form'  => 'token'
             ])
             ->setInputs($post + $files);
 
@@ -293,7 +293,7 @@ class User extends \Soosyze\Controller
                 'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'actived'          => 'bool',
-                'token'            => 'required|token'
+                'token_user_form'  => 'required|token'
             ])
             ->setInputs($post + $files);
 
@@ -392,7 +392,8 @@ class User extends \Soosyze\Controller
                 ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
                     '_content' => 'Attention ! La suppression du compte utilisateur est définitif.'
                 ]);
-            })->token()
+            })
+            ->token('token_user_remove')
             ->submit('sumbit', 'Supprimer le compte', [ 'class' => 'btn btn-danger' ]);
 
         $this->container->callHook('user.remove.form', [ &$form, $data, $id ]);
@@ -417,8 +418,8 @@ class User extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'id'    => 'required|int|!equal:1',
-                'token' => 'token'
+                'id'                => 'required|int|!equal:1',
+                'token_user_remove' => 'token'
             ])
             ->setInputs($req->getParsedBody())
             ->addInput('id', $id);
