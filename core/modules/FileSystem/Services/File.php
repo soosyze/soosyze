@@ -19,12 +19,14 @@ class File
     public function inputFile($name, FormBuilder &$form, $content = '')
     {
         $attr = [
-            'class'   => 'btn btn-danger form-file-reset',
-            'onclick' => "document.getElementById('file-image-$name').style.display='none';"
+            'class'    => 'btn btn-danger form-file-reset',
+            'onclick'  => "document.getElementById('file-image-$name').style.display='none';"
             . "document.getElementById('file-$name').value='';"
             . "document.getElementById('file-name-$name').value='';"
             . "document.getElementById('file-reset-$name').disabled = true;",
-            'value'   => '✗'
+            '_content' => '✗',
+            'id'       => "file-reset-$name",
+            'type'     => 'button'
         ];
         if (!empty($content)) {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $content) {
@@ -48,7 +50,8 @@ class File
                     'class'   => 'form-control form-file-name',
                     'onclick' => "document.getElementById('file-$name').click();",
                     'value'   => $content
-                ])->button("file-reset-$name", "file-reset-$name", $attr);
+                ])
+                ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr);
         }, [ 'class' => 'form-group-flex' ]);
     }
 

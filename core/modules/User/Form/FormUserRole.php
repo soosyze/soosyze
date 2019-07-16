@@ -71,20 +71,24 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role-color-group', 'div', function ($form) {
             $form->label('role-color-label', 'Color')
-                ->text('role_color', 'role_color', [
-                    'class'   => 'form-control',
-                    'pattern' => '#([a-fA-F0-9]{6})',
-                    'value'   => $this->content[ 'role_color' ]
-                ])->html('btn-color', '<button:css:attr>:_content</button>', [
-                '_content' => 'Couleur aléatoire',
-                'class'    => 'btn',
-                'id'       => 'role_color_btn',
-                'style'    => 'background-color:' . $this->content[ 'role_color' ],
-                'onclick'  => 'randomColor = getRandomColor();'
-                . 'document.getElementById(\'role_color\').value = randomColor;'
-                . 'document.getElementById(\'role_color_btn\').style.background = randomColor;',
-                'type'     => 'button'
-            ]);
+                ->group('role-color-group', 'div', function ($form) {
+                    $form->text('role_color', 'role_color', [
+                        'class'   => 'form-control',
+                        'pattern' => '#([a-fA-F0-9]{6})',
+                        'value'   => $this->content[ 'role_color' ]
+                    ])
+                    ->html('btn-color', '<button:css:attr>:_content</button>', [
+                        '_content' => '<i class="fa fa-sync"></i>',
+                        'class'    => 'btn',
+                        'id'       => 'role_color_btn',
+                        'style'    => 'background-color:' . $this->content[ 'role_color' ],
+                        'onclick'  => 'randomColor = getRandomColor();'
+                        . 'document.getElementById(\'role_color\').value = randomColor;'
+                        . 'document.getElementById(\'role_color_btn\').style.background = randomColor;',
+                        'type'     => 'button',
+                        'data-tooltip' => 'Couleur aléatoire'
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
         }, self::$attrGrp);
 
         return $this;
