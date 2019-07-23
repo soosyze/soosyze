@@ -322,7 +322,6 @@ label[data-tooltip]:before {
 .nested-sortable {
     cursor: move;
     list-style-type: none;
-    min-height: .8em;
     padding: 0;
 }
 .nested-sortable .link-item {

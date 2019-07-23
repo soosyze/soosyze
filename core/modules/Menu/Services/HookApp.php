@@ -75,8 +75,9 @@ class HookApp
                         group: \'nested\',
                         animation: 150,
                         fallbackOnBody: true,
-                        swapThreshold: 0.5,
+                        swapThreshold: 0.1,
                         ghostClass: \'placeholder\',
+                        dragoverBubble: true,
                         onEnd: function (evt) {
                             render(\'#main_sortable\');
                         }
