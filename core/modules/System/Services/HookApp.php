@@ -109,9 +109,9 @@ class HookApp
 
     public function hookResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
+        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $data = $this->config->get('settings');
-            $response->add([
+            $response->view('this', [
                 'title'       => $data[ 'title' ],
                 'description' => $data[ 'description' ],
                 'keyboard'    => $data[ 'keyboard' ],
@@ -121,9 +121,9 @@ class HookApp
                 'logo'  => $data[ 'logo' ]
             ]);
             $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
-            $script = $response->getVar('scripts');
+            $script = $response->getBlock('this')->getVar('scripts');
             $script .= '<script src="' . $vendor . '"></script>';
-            $response->add([ 'scripts' => $script ]);
+            $response->view('this', [ 'scripts' => $script ]);
 
             $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
             if ($data[ 'maintenance' ] && $granted) {

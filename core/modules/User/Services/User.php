@@ -309,11 +309,11 @@ class User
 
     public function hookReponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
+        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'User/Assets/js/script.js';
-            $script = $response->getVar('scripts');
+            $script = $response->getBlock('this')->getVar('scripts');
             $script .= '<script src="' . $vendor . '"></script>';
-            $response->add([ 'scripts' => $script ]);
+            $response->view('this', [ 'scripts' => $script ]);
         }
     }
 }

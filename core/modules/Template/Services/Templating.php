@@ -4,10 +4,10 @@ namespace SoosyzeCore\Template\Services;
 
 use Soosyze\Components\Util\Util;
 
-class TemplatingHtml extends \Soosyze\Components\Http\Response
+class Templating extends \Soosyze\Components\Http\Response
 {
     /**
-     * @var TemplateHtml
+     * @var Block
      */
     protected $template;
 
@@ -38,16 +38,23 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
     /**
      * Liste des répertoires contenant les thèmes.
      *
-     * @var array
+     * @var string[]
      */
     protected $themes_path = [];
+
+    /**
+     * Les données du fichier composer.json
+     *
+     * @var array
+     */
+    protected $composer = [];
 
     public function __construct($core, $config)
     {
         $this->core        = $core;
         $this->config      = $config;
-        $this->themes_path = $this->core->getSetting('themes_path');
-        $this->base_path   = $this->core->getRequest()->getBasePath();
+        $this->themes_path = $core->getSetting('themes_path');
+        $this->base_path   = $core->getRequest()->getBasePath();
         $this->pathViews   = dirname(__DIR__) . '/Views/';
         $this->getTheme();
     }
@@ -62,7 +69,8 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
     public function init()
     {
-        $messages = $this->themeOverride('messages.php', $this->pathViews)
+        $this->loadComposer();
+        $messages = $this->createBlock('messages.php', $this->pathViews)
             ->addVars([
             'errors'   => [],
             'warnings' => [],
@@ -70,7 +78,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
             'success'  => []
         ]);
 
-        $page = $this->themeOverride('page.php', $this->pathViews)
+        $page = $this->createBlock('page.php', $this->pathViews)
             ->addVars([
                 'title'      => '',
                 'title_main' => '',
@@ -82,17 +90,24 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
             ->addBlock('main_menu')
             ->addBlock('second_menu');
 
-        $this->template = $this->themeOverride('html.php', $this->pathViews)
-                ->addBlock('page', $page)
-                ->addVars([
-                    'title'       => '',
-                    'logo'        => '',
-                    'favicon'     => '',
-                    'description' => '',
-                    'keyboard'    => '',
-                    'styles'      => '',
-                    'scripts'     => ''
-                ])->addVars($this->core->getSettings());
+        if (!empty($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'blocks' ])) {
+            foreach ($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'blocks' ] as $newBlock) {
+                $page->addBlock($newBlock);
+            }
+        }
+
+        $this->template = $this->createBlock('html.php', $this->pathViews)
+            ->addBlock('page', $page)
+            ->addVars([
+                'title'       => '',
+                'logo'        => '',
+                'favicon'     => '',
+                'description' => '',
+                'keyboard'    => '',
+                'styles'      => '',
+                'scripts'     => ''
+            ])
+            ->addVars($this->core->getSettings());
     }
 
     public function getTheme($theme = 'theme')
@@ -117,20 +132,6 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
     }
 
     /**
-     * Ajoute des variables à la template courante.
-     *
-     * @param array $vars
-     *
-     * @return $this
-     */
-    public function add(array $vars)
-    {
-        $this->template->addVars($vars);
-
-        return $this;
-    }
-
-    /**
      * Ajoute des variables à la template courante ou à une sous template.
      *
      * @param string $parent
@@ -140,7 +141,7 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
      */
     public function view($parent, array $vars)
     {
-        $this->template->getBlockWithParent($parent)->addVars($vars);
+        $this->getBlock($parent)->addVars($vars);
 
         return $this;
     }
@@ -156,16 +157,13 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
      *
      * @return $this
      */
-    public function render($parent, $tpl, $tplPath, array $vars = null)
+    public function render($parent, $tpl, $tplPath, array $vars = [])
     {
-        $template = $this->themeOverride($tpl, $tplPath);
-        if ($vars) {
-            $template->addVars($vars);
-        }
+        $template = $this->createBlock($tpl, $tplPath)
+            ->addVars($vars);
 
         if ($block = strstr($parent, '.', true)) {
-            $this->template->getBlock($block)
-                ->addBlock(substr(strstr($parent, '.'), 1), $template);
+            $this->getBlock($block)->addBlock(substr(strstr($parent, '.'), 1), $template);
         } else {
             $this->template->addBlock($parent, $template);
         }
@@ -175,65 +173,35 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
 
     public function addFilterVar($parent, $key, callable $function)
     {
-        $this->template->getBlockWithParent($parent)
-            ->addFilterVar($key, $function);
+        $this->getBlock($parent)->addFilterVar($key, $function);
 
         return $this;
     }
 
     public function addFilterBlock($parent, $key, callable $function)
     {
-        $this->template->getBlockWithParent($parent)
-            ->addFilterBlock($key, $function);
+        $this->getBlock($parent)->addFilterBlock($key, $function);
 
         return $this;
     }
 
     public function addFilterOutput($parent, $key, callable $function)
     {
-        $this->template->getBlockWithParent($parent)
-            ->addFilterOutput($key, $function);
+        $this->getBlock($parent)->addFilterOutput($key, $function);
 
         return $this;
     }
 
     public function override($parent, array $templates)
     {
-        $dir   = $this->default_theme_path;
-        $block = $this->template->getBlockWithParent($parent)
-            ->addNamesOverride($templates);
-
-        if (is_dir($dir)) {
-            foreach ($templates as $tpl) {
-                if (is_file($dir . '/' . $tpl)) {
-                    $block->setName($tpl);
-
-                    break;
-                }
-            }
-        }
+        $this->getBlock($parent)->addNamesOverride($templates);
 
         return $this;
     }
 
-    public function getBlock($key)
+    public function getBlock($parent)
     {
-        return $this->template->getBlockWithParent($key);
-    }
-
-    public function getBlocks()
-    {
-        return $this->template->getBlocks();
-    }
-
-    public function getVar($key)
-    {
-        return $this->template->getVar($key);
-    }
-
-    public function getVars()
-    {
-        return $this->template->getVars();
+        return $this->template->getBlockWithParent($parent);
     }
 
     public function getThemes()
@@ -248,17 +216,42 @@ class TemplatingHtml extends \Soosyze\Components\Http\Response
         return $folders;
     }
 
-    protected function themeOverride($tpl, $tplPath)
+    public function createBlock($tpl, $tplPath)
     {
-        $dir = $this->default_theme_path;
-        if (is_dir($dir) && is_file($dir . DS . $tpl)) {
-            $tplPath = $dir . '/';
+        return (new Block($tpl, $tplPath))
+                ->addVars([
+                    'base_path'  => $this->base_path,
+                    'base_theme' => $this->base_path . $this->default_theme_path . DS
+                ])
+                ->pathOverride($this->getPathTheme());
+    }
+
+    public function addBlock($parent, $template, array $vars = [])
+    {
+        $template->addVars($vars);
+
+        if ($block = strstr($parent, '.', true)) {
+            $this->getBlock($block)
+                ->addBlock(substr(strstr($parent, '.'), 1), $template);
+        } else {
+            $this->template->addBlock($parent, $template);
         }
 
-        return (new TemplateHtml($tpl, $tplPath))
-                ->addVars([
-                    'base_path' => $this->base_path
-                ])
-                ->addVar('base_theme', $this->base_path . $tplPath);
+        return $this;
+    }
+
+    public function getPathTheme()
+    {
+        return is_dir(ROOT . $this->default_theme_path)
+            ? ROOT . $this->default_theme_path . '/'
+            : $this->default_theme_path;
+    }
+
+    public function loadComposer()
+    {
+        $pathTheme = $this->getPathTheme();
+        if (is_file($pathTheme . 'composer.json')) {
+            $this->composer = Util::getJson($pathTheme . 'composer.json');
+        }
     }
 }

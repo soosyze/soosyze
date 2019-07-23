@@ -8,8 +8,8 @@
                 </button>
             </div>
             <div class="collapse navbar-collapse" id="navbar-admin">
-                <?php echo $block[ 'main_menu' ]; ?>
-                <?php echo $block[ 'second_menu' ]; ?>
+                <?php echo $section[ 'main_menu' ]; ?>
+                <?php echo $section[ 'second_menu' ]; ?>
 
             </div>
         </div>
@@ -19,10 +19,10 @@
 </header>
 <div class="container">
     <div class="main-wrapper">
-        <?php if (!empty($block[ 'messages' ])): ?>
-            <?php echo $block[ 'messages' ]; ?>
+        <?php if (!empty($section[ 'messages' ])): ?>
+            <?php echo $section[ 'messages' ]; ?>
         <?php endif; ?>
-        <?php echo $block[ 'content' ]; ?>
+        <?php echo $section[ 'content' ]; ?>
 
     </div>
 </div>

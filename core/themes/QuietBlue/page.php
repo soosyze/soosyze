@@ -9,7 +9,7 @@
     <h2><a href="<?php echo $base_path; ?>"><?php echo $title; ?></a></h2>
 </header>
 <nav id="nav_main">
-    <?php echo $block[ 'main_menu' ]; ?>
+            <?php echo $section[ 'main_menu' ]; ?>
 
 </nav>
 <div id="wrapper_main">
@@ -17,11 +17,10 @@
         <h1><?php echo $title_main; ?></h1>
     </header>
     <div class="container">
-        <?php if (!empty($block[ 'messages' ])): ?>
-            <?php echo $block[ 'messages' ]; ?>
+        <?php if (!empty($section[ 'messages' ])): ?>
+            <?php echo $section[ 'messages' ]; ?>
         <?php endif; ?>
-        <?php echo $block[ 'content' ]; ?>
-
+        <?php echo $section[ 'content' ]; ?>
     </div>
 </div>
 <footer id="wrapper_footer">
@@ -29,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
-                <?php echo $block[ 'second_menu' ]; ?>
+                <?php echo $section[ 'second_menu' ]; ?>
 
             </div>
         </div>

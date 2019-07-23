@@ -17,9 +17,9 @@
         <?php echo $styles; ?>
     </head>
     <body>
-        <?php echo $block[ 'page' ]; ?>
-        <?php if (isset($block[ 'page_bottom' ])): ?>
-            <?php echo $block[ 'page_bottom' ]; ?>
+        <?php echo $section[ 'page' ]; ?>
+        <?php if (isset($section[ 'page_bottom' ])): ?>
+            <?php echo $section[ 'page_bottom' ]; ?>
         <?php endif; ?>
         <!-- To top -->
         <div id="btn_up">

@@ -23,7 +23,7 @@ class Core extends App
                 ]
             ],
             'template' => [
-                'class'     => 'SoosyzeCore\\Template\\Services\\TemplatingHtml',
+                'class'     => 'SoosyzeCore\\Template\\Services\\Templating',
                 'arguments' => [
                     '@core',
                     '@config'
