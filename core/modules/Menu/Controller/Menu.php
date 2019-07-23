@@ -45,6 +45,10 @@ class Menu extends \Soosyze\Controller
                         ':menu' => $name
                     ]),
                     'menuName' => $menu[ 'title' ]
+                ])
+                ->render('content.submenu', 'submenu-menu.php', $this->pathViews, [
+                    'menu' => $this->renderSubMenu(),
+                    'id' =>$name
         ]);
     }
 
@@ -109,5 +113,19 @@ class Menu extends \Soosyze\Controller
                 ->createBlock('menu-show.php', $this->pathViews)
                 ->nameOverride("menu-show-$nameMenu.php")
                 ->addVars([ 'menu' => $query, 'level' => $level ]);
+    }
+    
+    public function renderSubMenu()
+    {
+        $menus = self::query()
+            ->from('menu')
+            ->fetchAll();
+
+        foreach ($menus as &$menu) {
+            $menu[ 'link' ]   = self::router()
+                ->getRoute('menu.show', [ ':menu' => $menu[ 'name' ] ]);
+        }
+
+        return $menus;
     }
 }
