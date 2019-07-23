@@ -193,27 +193,19 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
         if ($ci->module()->has('Menu')) {
             $ci->query()
                 ->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'node.index',
-                    '<i class="fa fa-file" aria-hidden="true"></i> Contenu',
-                    'admin/node',
-                    'menu-admin',
-                    2,
-                    -1
+                    'node.index', 'fa fa-file', 'Contenu', 'admin/node', 'menu-admin', 2, -1
                 ])
                 ->values([
-                    'node.show', 'Page', 'node/3', 'menu-main', 2, -1
+                    'node.show', null, 'Page', 'node/3', 'menu-main', 2, -1
                 ])
-                ->values([ 'node.show', 'Accueil', '/', 'menu-main', 1, -1 ])
                 ->values([
-                    'node.show',
-                    '<i class="fa fa-home" aria-hidden="true"></i> Accueil',
-                    '/',
-                    'menu-admin',
-                    1,
-                    -1
+                    'node.show', null, 'Accueil', '/', 'menu-main', 1, -1
+                ])
+                ->values([
+                    'node.show', 'fa fa-home', 'Accueil', '/', 'menu-admin', 1, -1
                 ])
                 ->execute();
    

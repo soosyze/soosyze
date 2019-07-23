@@ -23,6 +23,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->createTableIfNotExists('menu_link', function (TableBuilder $table) {
                 $table->increments('id')
                 ->string('key')->nullable()
+                ->string('icon')->nullable()
                 ->string('link')
                 ->string('title_link')
                 ->string('target_link')->valueDefault('_self')
@@ -44,13 +45,13 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                null, 'Site de Soosyze', 'https:\\soosyze.com', 'menu-main', 10, -1
+                null, null, 'Site de Soosyze', 'https:\\soosyze.com', 'menu-main', 10, -1
             ])
             ->values([
-                'menu.show', '<i class="fa fa-bars" aria-hidden="true"></i> Menu', 'menu/menu-main', 'menu-admin', 3, -1
+                'menu.show', 'fa fa-bars', 'Menu', 'menu/menu-main', 'menu-admin', 3, -1
             ])
             ->execute();
     }

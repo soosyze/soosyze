@@ -70,15 +70,10 @@ class Installer implements \SoosyzeCore\System\Migration
         if ($ci->module()->has('Menu')) {
             $ci->query()
                 ->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'system.module.edit',
-                    '<i class="fa fa-th-large" aria-hidden="true"></i> Modules',
-                    'admin/modules',
-                    'menu-admin',
-                    5,
-                    -1
+                    'system.module.edit', 'fa fa-th-large', 'Modules', 'admin/modules', 'menu-admin', 5, -1
                 ])
                 ->execute();
         }

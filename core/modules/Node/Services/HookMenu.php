@@ -113,8 +113,9 @@ class HookMenu
 
             if ($nodeLast) {
                 $id = $nodeLast[ 'id' ];
-                $this->query->insertInto('menu_link', [ 'key', 'title_link', 'link',
-                        'menu', 'weight', 'parent', 'active' ])
+                $this->query->insertInto('menu_link', [
+                    'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
+                    ])
                     ->values([
                         'node.show',
                         $validator->getInput('title_link'),

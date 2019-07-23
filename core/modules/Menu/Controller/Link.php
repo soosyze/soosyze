@@ -22,7 +22,7 @@ class Link extends \Soosyze\Controller
 
     public function create($nameMenu)
     {
-        $content = [ 'title_link' => '', 'link' => '', 'target_link' => '_self' ];
+        $content = [ 'title_link' => '', 'icon' => '', 'link' => '', 'target_link' => '_self' ];
 
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
 
@@ -54,6 +54,17 @@ class Link extends \Soosyze\Controller
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
                         'value'       => $content[ 'link' ],
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
+                    $form->label('menu-link-icon-label', 'Icon',[
+                        'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
+                    ])
+                    ->text('icon', 'icon', [
+                        'class'       => 'form-control',
+                        'maxlength'   => 255,
+                        'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
+                        'value'       => $content[ 'icon' ],
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($content) {
@@ -99,6 +110,7 @@ class Link extends \Soosyze\Controller
             ->setRules([
                 'title_link'        => 'required|string|max:255|striptags',
                 'link'              => 'required',
+                'icon'              => '!required|string|max:255|striptags',
                 'target_link'       => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_create' => 'required|token'
             ])
@@ -114,6 +126,7 @@ class Link extends \Soosyze\Controller
         if ($validator->isValid() && $isUrlOrRoute) {
             $data = [
                 'title_link'  => $validator->getInput('title_link'),
+                'icon'        => $validator->getInput('icon'),
                 'link'        => $validator->getInput('link'),
                 'target_link' => $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
@@ -177,6 +190,7 @@ class Link extends \Soosyze\Controller
                     $form->label('menu-link-title-label', 'Titre du lien')
                     ->text('title_link', 'title_link', [
                         'class'       => 'form-control',
+                        'maxlength'   => 255,
                         'placeholder' => 'Exemple: Ma page 1',
                         'required'    => 1,
                         'value'       => $query[ 'title_link' ]
@@ -189,6 +203,17 @@ class Link extends \Soosyze\Controller
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
                         'value'       => $query[ 'link' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
+                    $form->label('menu-link-icon-label', 'Icon',[
+                        'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
+                    ])
+                    ->text('icon', 'icon', [
+                        'class'       => 'form-control',
+                        'maxlength'   => 255,
+                        'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
+                        'value'       => $query[ 'icon' ],
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($query) {
@@ -236,7 +261,8 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'title_link'      => 'required|string|max:255|striptags',
+                'title_link'      => 'required|string|max:255|htmlsc',
+                'icon'            => '!required|string|max:255|htmlsc',
                 'link'            => 'required',
                 'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_edit' => 'required|token'
@@ -253,6 +279,7 @@ class Link extends \Soosyze\Controller
         if ($validator->isValid() && $isUrlOrRoute) {
             $data = [
                 'title_link'  => $validator->getInput('title_link'),
+                'icon'        => $validator->getInput('icon'),
                 'link'        => $validator->getInput('link'),
                 'target_link' => $validator->getInput('target_link')
             ];
