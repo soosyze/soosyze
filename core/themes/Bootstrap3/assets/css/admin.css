@@ -318,3 +318,30 @@ label[data-tooltip]:before {
         border-radius: 0;
     }
 }
+
+
+/* --------------------------- */
+/* ---------- MENU ----------- */
+/* --------------------------- */
+.nested-sortable {
+    cursor: move;
+    list-style-type: none;
+    min-height: .8em;
+    padding: 0;
+}
+.nested-sortable .link-item {
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+    margin-top: 1em;
+    padding: 1em;
+}
+.nested-sortable .link-item:hover {
+    border: 1px dashed rgba(0,0,0,.5);
+}
+.nested-sortable .link-item.placeholder {
+    background: #e1e4e8;
+    opacity: .5;
+}
+.nested-sortable .link-title {
+    margin-bottom: 5px;
+}

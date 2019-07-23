@@ -36,7 +36,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'config.index',
                     '<i class="fa fa-cog" aria-hidden="true"></i> Configuration',
                     'admin/config',
-                    'admin-menu',
+                    'menu-admin',
                     6,
                     -1
                 ])

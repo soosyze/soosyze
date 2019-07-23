@@ -76,7 +76,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'system.module.edit',
                     '<i class="fa fa-th-large" aria-hidden="true"></i> Modules',
                     'admin/modules',
-                    'admin-menu',
+                    'menu-admin',
                     5,
                     -1
                 ])

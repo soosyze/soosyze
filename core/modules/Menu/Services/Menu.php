@@ -29,14 +29,18 @@ class Menu
 
     public function getMenu($name)
     {
-        return $this->query->from('menu')->where('name', $name);
+        return $this->query
+            ->from('menu')
+            ->where('name', $name);
     }
 
     public function getLinkPerMenu($name)
     {
-        return $this->getMenu($name)
-                ->leftJoin('menu_link', 'name', 'menu_link.menu')
-                ->isNotNull('id');
+        $menu = $this->getMenu($name)->fetch();
+
+        return $this->query
+                ->from('menu_link')
+                ->where('menu', '==', $menu['name']);
     }
 
     public function isUrlOrRoute($link, $request)

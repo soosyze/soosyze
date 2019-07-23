@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/layout.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/style.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/admin.css">
+        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/menu.css">
         <?php echo $styles; ?>
     </head>
     <body>

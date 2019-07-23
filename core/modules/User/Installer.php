@@ -99,22 +99,22 @@ class Installer implements \SoosyzeCore\System\Migration
                     'user.management.admin',
                     '<i class="fa fa-user" aria-hidden="true"></i> Utilisateur',
                     'admin/user',
-                    'admin-menu',
+                    'menu-admin',
                     4,
                     -1
                 ])
                 ->values([
-                    'user.account', 'Mon compte', 'user/account', 'user-menu', 1,
+                    'user.account', 'Mon compte', 'user/account', 'menu-user', 1,
                     -1
                 ])
                 ->values([
-                    'user.login', 'Connexion', 'user/login', 'user-menu', 2, -1
+                    'user.login', 'Connexion', 'user/login', 'menu-user', 2, -1
                 ])
                 ->values([
                     'user.logout',
                     '<i class="fa fa-power-off" aria-hidden="true"></i> Déconnexion',
                     'user/logout',
-                    'user-menu',
+                    'menu-user',
                     3,
                     -1
                 ])

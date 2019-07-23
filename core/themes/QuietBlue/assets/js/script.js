@@ -13,10 +13,10 @@ $(function () {
     /* MENU */
     $(window).resize(function () {
         if ($(this).innerWidth() > 768) {
-            $('#nav_main .niv2').css('display', '');
+            $('#menu').css('display', '');
         }
     });
     $('#toogle_menu').click(function () {
-        $('#nav_main li ul.niv2').slideToggle();
+        $('#menu').slideToggle();
     });
 });

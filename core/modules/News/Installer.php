@@ -92,7 +92,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->insertInto('menu_link', [
                     'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
-                ->values([ 'news.index', 'Blog', 'news', 'main-menu', 3, -1 ])
+                ->values([ 'news.index', 'Blog', 'news', 'menu-main', 3, -1 ])
                 ->execute();
         }
     }

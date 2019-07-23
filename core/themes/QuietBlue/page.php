@@ -9,8 +9,13 @@
     <h2><a href="<?php echo $base_path; ?>"><?php echo $title; ?></a></h2>
 </header>
 <nav id="nav_main">
+    <ul>
+        <li>
+            <span id="toogle_menu"><i class="fa fa-ellipsis-v"></i> Menu</span>
             <?php echo $section[ 'main_menu' ]; ?>
 
+        </li>
+    </ul>
 </nav>
 <div id="wrapper_main">
     <header>

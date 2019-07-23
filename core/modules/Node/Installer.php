@@ -153,6 +153,17 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
 <ol><li>Dolor pulvinar etiam.</li><li>Etiam vel felis at viverra.</li><li>Felis enim feugiat magna.</li><li>Etiam vel felis nullam.</li><li>Felis enim et tempus.</li></ol>'
                 ])
             ])
+            ->values([
+                'Sub Page', 'page', (string) time(), (string) time(), true,
+                serialize([
+                    'body' => '<h2>Text</h2>
+<p>This is <strong>bold</strong> and this is <strong>strong</strong>. This is <em>italic</em> and this is <em>emphasized</em>.
+    This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
+    This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>.
+    Finally, this is a <a href=\'https://soosyze.com\'>link</a>.
+</p>'
+                ])
+            ])
             ->execute();
     }
 
@@ -188,15 +199,40 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
                     'node.index',
                     '<i class="fa fa-file" aria-hidden="true"></i> Contenu',
                     'admin/node',
-                    'admin-menu',
+                    'menu-admin',
                     2,
                     -1
                 ])
                 ->values([
-                    'node.show', 'Page', 'node/3', 'main-menu', 2, -1
+                    'node.show', 'Page', 'node/3', 'menu-main', 2, -1
                 ])
-                ->values([ 'node.show', 'Accueil', '/', 'main-menu', 1, -1 ])
+                ->values([ 'node.show', 'Accueil', '/', 'menu-main', 1, -1 ])
+                ->values([
+                    'node.show',
+                    '<i class="fa fa-home" aria-hidden="true"></i> Accueil',
+                    '/',
+                    'menu-admin',
+                    1,
+                    -1
+                ])
                 ->execute();
+   
+            $subpage = $ci->query()
+                ->from('menu_link')
+                ->where('key', 'node.show')
+                ->where('menu', 'menu-main')
+                ->fetch();
+
+            if ($subpage) {
+                $ci->query()
+                    ->insertInto('menu_link', [
+                        'key', 'title_link', 'link', 'menu', 'parent'
+                    ])
+                    ->values([
+                        'node.show', 'Sub Page', 'node/4', 'menu-main', $subpage['id']
+                    ])
+                    ->execute();
+            }
 
             $ci->schema()
                 ->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
@@ -247,8 +283,7 @@ Proin laoreet congue nunc, tempus interdum massa dapibus ut. In et enim purus.</
             $ci->query()
                 ->from('menu_link')
                 ->delete()
-                ->where('link', 'admin/node')
-                ->orWhere('link', 'like', 'node%')
+                ->orWhere('key', 'like', 'node%')
                 ->execute();
         }
     }

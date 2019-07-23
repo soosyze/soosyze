@@ -73,7 +73,7 @@ class Configuration extends \Soosyze\Controller
                 ->render('page.content', 'page-config.php', $this->pathViews, [
                     'form' => $form
                 ])
-                ->render('content.menu_config', 'menu-config.php', $this->pathViews, [
+                ->render('content.menu_config', 'submenu-config.php', $this->pathViews, [
                     'menu' => $menu,
                     'id'   => $id
         ]);

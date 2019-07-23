@@ -10,66 +10,99 @@ class HookApp
 
     public function __construct($core, $query)
     {
-        $this->core  = $core;
-        $this->query = $query;
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->core      = $core;
+        $this->query     = $query;
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function hookResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\TemplatingHtml) {
-            $this->query
-                ->from('menu_link')
-                ->where('active', '==', 1)
-                ->orderBy('weight');
-            $response->isTheme('theme')
-                    ? $this->query->where('menu', 'main-menu')
-                    : $this->query->where('menu', 'admin-menu');
+        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
+            $nameMenu = $response->isTheme('theme')
+                ? 'menu-main'
+                : 'menu-admin';
 
-            $query        = $this->query->fetchAll();
-            $query_second = $this->query->from('menu_link')
-                ->where('active', '==', 1)
-                ->where('menu', 'user-menu')
-                ->orderBy('weight')
-                ->fetchAll();
+            $blockMain = $this->renderMenu($nameMenu, $request, $response);
+            $blockUser = $this->renderMenu('menu-user', $request, $response);
 
-            $query_menu        = $this->getGrantedLink($query, $request);
-            $query_menu_second = $this->getGrantedLink($query_second, $request);
-
-            $response->render('page.main_menu', 'menu.php', $this->pathViews, [
-                    'menu' => $query_menu
-                ])
-                ->render('page.second_menu', 'menu.php', $this->pathViews, [
-                    'menu' => $query_menu_second
-                ])->override('page.second_menu', [ 'menu-second.php' ]);
+            $response
+                ->addBlock('page.main_menu', $blockMain)
+                ->addBlock('page.second_menu', $blockUser);
         }
     }
-    
+
+    public function renderMenu(
+    $nameMenu,
+        $request,
+        $response,
+        $parent = -1,
+        $level = 1
+    ) {
+        $query = $this->query
+            ->from('menu_link')
+            ->where('active', '==', 1)
+            ->where('menu', $nameMenu)
+            ->where('parent', '==', $parent)
+            ->orderBy('weight')
+            ->fetchAll();
+
+        if (empty($query)) {
+            return null;
+        }
+
+        foreach ($query as $key => $menu) {
+            $query[ $key ][ 'submenu' ] = $this->renderMenu($nameMenu, $request, $response, $menu[ 'id' ], $level + 1);
+        }
+        $menus = $this->getGrantedLink($query, $request);
+
+        return $response
+                ->createBlock('menu.php', $this->pathViews)
+                ->nameOverride($nameMenu . '.php')
+                ->addVars([ 'menu' => $menus, 'level' => $level ]);
+    }
+
     public function hookMenuShowResponseAfter($request, &$response)
     {
-        $script = $response->getVar('scripts');
-        $style  = $response->getVar('styles');
+        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
+            $script  = $response->getBlock('this')->getVar('scripts');
+            $script .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js"></script>';
+            $script .= '<script>
+            $().ready(function () {
+                var nestedSortables = [].slice.call($(\'.nested-sortable\'));
 
-        $script .= '<script>      
-            $(document).ready(function () {
-            $("#sortable").sortable({
-                axis: "y",
-                containment: \'table\',
-                stop: function (e, ui) {
-                    var i = 1;
-                    $(".draggable input[type=\'number\']").each(function () {
-                        this.value = i;
-                        i++;
+                for (var i = 0; i < nestedSortables.length; i++) {
+                    new Sortable(nestedSortables[i], {
+                        group: \'nested\',
+                        animation: 150,
+                        fallbackOnBody: true,
+                        swapThreshold: 0.5,
+                        ghostClass: \'placeholder\',
+                        onEnd: function (evt) {
+                            render(\'#main_sortable\');
+                        }
                     });
-            }
-            }).disableSelection();
-        });</script>';
+                }
 
-        $style .= '<style>.draggable{cursor: ns-resize;}.ui-sortable-helper{display: table;}</style>';
-        $response->add([
-            'scripts' => $script,
-            'styles'  => $style
-        ]);
+                function render(idMenu) {
+                    var weight = 1;
+                    var id = $(idMenu).parent(\'li\').children(\'input[name^="id"]\').val();
+                    if (id === undefined) {
+                        id = -1;
+                    }
+                    $(idMenu).children(\'li\').each(function () {
+                        $(this).children(\'input[name^="weight"]\').val(weight);
+                        $(this).children(\'input[name^="parent"]\').val(id);
+                        render($(this).children(\'ol\'));
+                        weight++;
+                    });
+                }
+            });
+            </script>';
+
+            $response->view('this', [
+                'scripts' => $script
+            ]);
+        }
     }
 
     /**
@@ -93,10 +126,10 @@ class HookApp
 
                 continue;
             }
-            $menu[ 'link_active' ] = 0 === strpos($route, 'q=' . $menu[ 'link' ]) || ($route === ''  && $menu[ 'link' ] === '/')
+            $menu[ 'link_active' ] = 0 === strpos($route, 'q=' . $menu[ 'link' ]) || ($route === '' && $menu[ 'link' ] === '/')
                 ? 'active'
                 : '';
-            $link = $request->withUri($request->getUri()->withQuery('q=' . $menu[ 'link' ]));
+            $link                  = $request->withUri($request->getUri()->withQuery('q=' . $menu[ 'link' ]));
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
             if (!$this->core->callHook('app.granted.route', [ $link ])) {
                 unset($query[ $key ]);
@@ -105,14 +138,14 @@ class HookApp
             }
             $menu[ 'link' ] = $this->rewiteUri($isRewite, $link);
         }
-        
+
         return $query;
     }
 
     protected function rewiteUri($isRewite, $request)
     {
-        $query    = str_replace('q=/', '', $request->getUri()->getQuery());
-        $uri      = $request->getUri()->withQuery($query);
+        $query = str_replace('q=/', '', $request->getUri()->getQuery());
+        $uri   = $request->getUri()->withQuery($query);
 
         if ($isRewite) {
             $link = $request->getBasePath();
@@ -120,6 +153,7 @@ class HookApp
             $link .= $uri->getQuery() !== ''
                 ? str_replace('q=', '', $uri->getQuery())
                 : '';
+
             return $link . ($uri->getFragment() !== ''
                 ? '#' . $uri->getFragment()
                 : '');

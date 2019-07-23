@@ -21,43 +21,15 @@ class Menu extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $query = self::menu()
-            ->getLinkPerMenu($name)
-            ->orderBy('weight')
-            ->fetchAll();
-
         $action = self::router()->getRoute('menu.show.check', [ ':menu' => $name ]);
-        $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]));
-        foreach ($query as &$link) {
-            $link[ 'link_edit' ]   = self::router()->getRoute('menu.link.edit', [
-                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $link[ 'link_delete' ] = self::router()->getRoute('menu.link.delete', [
-                ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            if ($link[ 'key' ]) {
-                $link_tmp       = $req->withUri($req->getUri()->withQuery('?q=' . $link[ 'link' ]));
-                $link[ 'link' ] = $link_tmp->getUri()->__toString();
-            }
-            $nameLinkWeight = 'weight-' . $link[ 'id' ];
-            $nameLinkActive = 'active-' . $link[ 'id' ];
-            $form->number($nameLinkWeight, $nameLinkWeight, [
-                    'class' => 'form-control',
-                    'max'   => 50,
-                    'min'   => 1,
-                    'value' => $link[ 'weight' ]
-                ])
-                ->checkbox($nameLinkActive, $nameLinkActive, [ 'checked' => $link[ 'active' ] ]);
-        }
-        $form->token('token_menu')
+        $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
+            ->token('token_menu')
             ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -66,10 +38,12 @@ class Menu extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> Menu'
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-show.php', $this->pathViews, [
-                    'menu'     => $query,
+                ->render('page.content', 'page-menu-show.php', $this->pathViews, [
                     'form'     => $form,
-                    'linkAdd'  => self::router()->getRoute('menu.link.create', [ ':menu' => $name ]),
+                    'menu'     => $this->renderMenu($name),
+                    'linkAdd'  => self::router()->getRoute('menu.link.create', [
+                        ':menu' => $name
+                    ]),
                     'menuName' => $menu[ 'title' ]
         ]);
     }
@@ -85,16 +59,19 @@ class Menu extends \Soosyze\Controller
         $validator = new Validator();
         foreach ($links as $link) {
             $validator
-                ->addRule('active-' . $link[ 'id' ], 'bool')
-                ->addRule('weight-' . $link[ 'id' ], 'required|int|min:1|max:50');
+                ->addRule("active-{$link[ 'id' ]}", 'bool')
+                ->addRule("parent-{$link[ 'id' ]}", 'required|int')
+                ->addRule("weight-{$link[ 'id' ]}", 'required|int|min:1|max:50');
         }
-        $validator->setInputs($post);
+        $validator->addRule('token_menu', 'token')
+            ->setInputs($post);
 
         if ($validator->isValid()) {
             foreach ($links as $link) {
                 $linkUpdate = [
-                    'weight' => $validator->getInput('weight-' . $link[ 'id' ]),
-                    'active' => (bool) ($validator->getInput('active-' . $link[ 'id' ]) == 'on')
+                    'active' => (bool) ($validator->getInput("active-{$link[ 'id' ]}") == 'on'),
+                    'parent' => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
+                    'weight' => (int) $validator->getInput("weight-{$link[ 'id' ]}")
                 ];
 
                 self::query()
@@ -106,9 +83,31 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
         return new Redirect($route);
+    }
+
+    public function renderMenu($nameMenu, $parent = -1, $level = 1)
+    {
+        $query = self::query()
+            ->from('menu_link')
+            ->where('menu', $nameMenu)
+            ->where('parent', '==', $parent)
+            ->orderBy('weight')
+            ->fetchAll();
+
+        foreach ($query as $key => $link) {
+            $query[ $key ][ 'link_edit' ]   = self::router()
+                ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
+            $query[ $key ][ 'link_delete' ] = self::router()
+                ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
+            $query[ $key ][ 'submenu' ]     = $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1);
+        }
+
+        return self::template()
+                ->createBlock('menu-show.php', $this->pathViews)
+                ->nameOverride("menu-show-$nameMenu.php")
+                ->addVars([ 'menu' => $query, 'level' => $level ]);
     }
 }

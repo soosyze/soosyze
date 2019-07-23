@@ -176,65 +176,6 @@ fieldset[disabled] .btn {
     opacity: .65;
 }
 
-/* NAVIGATION */
-#nav_main ul{
-    font-size: 0;
-    margin: 0;
-    padding: 0;
-}
-#nav_main ul.niv2{
-    background: rgba(255, 255, 255, 0.1);
-}
-#nav_main ul li{
-    display: block;
-    font-size: 1rem;
-    list-style: none;
-}
-#nav_main ul li a{
-    color: #fff;
-    display: block;
-    font-weight: 900;
-    padding: 1em;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-#nav_main ul li a:hover{
-    background-color: rgba(255, 255, 255, .2);
-}
-#nav_main ul li.active a{
-    background-color: #fff;
-    color: #333;
-}
-#nav_main ul li.active a:hover{
-    color: #0086b3;
-}
-#toogle_menu:before {
-    content: "";
-    display: block;
-    background: url("../files/menu.png") no-repeat;
-
-    width: 20px;
-    height: 20px;
-    float: left;
-    margin: 0 6px 0 0;
-}
-#toogle_menu{
-    color: #fff;
-    display: block;
-    padding: 1em;
-    text-transform: uppercase;
-    z-index: 2;
-    cursor: pointer;
-}
-#nav_main li ul.niv2{
-    display: none;
-}
-@media (min-width: 768px){
-    #nav_main li ul.niv2{display:block;}
-    #nav_main li ul.niv2 li{display:inline-block;}
-    #toogle_menu{display:none;}
-}
-
 /* FORM */
 label{
     display: inline-block;
