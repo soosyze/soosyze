@@ -207,7 +207,8 @@ class Install extends \Soosyze\Controller
             );
         }
 
-        self::query()->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
+        self::query()
+            ->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
             ->values([ 'Core', 'System', '1.0' ])
             ->values([ 'Core', 'User', '1.0' ])
             ->execute();
@@ -229,16 +230,19 @@ class Install extends \Soosyze\Controller
             'time_installed' => (string) time(),
             'timezone'       => 'Europe/Paris'
         ];
-        self::query()->insertInto('user', array_keys($data))
+        self::query()
+            ->insertInto('user', array_keys($data))
             ->values($data)
             ->execute();
 
-        self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+        self::query()
+            ->insertInto('user_role', [ 'user_id', 'role_id' ])
             ->values([ 1, 2 ])
             ->values([ 1, 3 ])
             ->execute();
 
-        self::config()->set('settings.email', $data[ 'email' ])
+        self::config()
+            ->set('settings.email', $data[ 'email' ])
             ->set('settings.time_installed', time())
             ->set('settings.local', 'fr_FR')
             ->set('settings.theme', 'QuietBlue')

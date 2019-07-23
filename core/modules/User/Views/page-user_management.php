@@ -9,7 +9,7 @@
         </ul>
         <fieldset class="responsive">
             <legend>Gestion des utilisateurs</legend>
-            <table class="table table-hover">
+            <table class="table table-hover table-user_management">
                 <thead>
                     <tr class="form-head">
                         <th>Id</th>

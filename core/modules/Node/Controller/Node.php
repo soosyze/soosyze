@@ -258,7 +258,7 @@ class Node extends \Soosyze\Controller
                 ])
                 ->render('page.content', 'node-show.php', $this->pathViews, [
                     'fields' => unserialize($node[ 'field' ])
-                ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] ]);
+                ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
 
         if (!$node[ 'published' ]) {
             $tpl->view('page.messages', [

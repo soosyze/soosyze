@@ -46,7 +46,7 @@ class HookConfig
                         $form->checkbox('maintenance', 'maintenance', [
                             'checked' => $data[ 'maintenance' ]
                         ])
-                        ->label('system-maintenance-group', '<span class="ui"></span>Mettre le site en maintenance', [
+                        ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Mettre le site en maintenance', [
                             'for' => 'maintenance'
                         ]);
                     }, [ 'class' => 'form-group' ]);
@@ -55,7 +55,7 @@ class HookConfig
                     $form->checkbox('rewrite_engine', 'rewrite_engine', [
                                     'checked' => $data[ 'rewrite_engine' ]
                                 ])
-                                ->label('system-maintenance-group', '<span class="ui"></span>Rendre les URL propres', [
+                                ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Rendre les URL propres', [
                                     'for' => 'rewrite_engine'
                                 ]);
                 }, [ 'class' => 'form-group' ]);

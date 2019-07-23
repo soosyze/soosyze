@@ -1,12 +1,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">Ajouter du contenu</a>
+        <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Ajouter du contenu
+        </a>
     </div>
     <div class="col-sm-12">
         <fieldset class="responsive">
             <legend>Mes Contenus</legend>
-            <table class="table table-hover">
+            <table class="table table-hover table-node">
                 <thead>
                     <tr class="form-head">
                         <th>Nom</th>

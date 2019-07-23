@@ -191,7 +191,7 @@ class HookMenu
 
     public function getForm($request, &$response)
     {
-        $script = $response->getVar('scripts');
+        $script = $response->getBlock('this')->getVar('scripts');
         $script .= '<script>
                 function toggle (id) {
                     var item             = document.getElementById(id);
@@ -204,7 +204,7 @@ class HookMenu
                         : input_title.value;
                 }
             </script>';
-        $response->add([ 'scripts' => $script ]);
+        $response->view('this', [ 'scripts' => $script ]);
     }
 
     public function hookDeleteValid($validator, $item)

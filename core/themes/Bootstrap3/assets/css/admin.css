@@ -51,7 +51,7 @@
     border-bottom-left-radius: 0;
     border-left: 0;
     font-weight: bold;
-    width: 10%;
+    padding: 0em 1em;
 }
 
 
@@ -82,14 +82,7 @@
 /* --------------------------- */
 .input-file-img {
     max-height: 200px;
-    width: auto;
-}
-input.form-file-name,
-input.form-file-reset{
-    vertical-align: middle;
-}
-input.form-file-reset[disabled] {
-    cursor: not-allowed;
+    max-width: 100%;
 }
 
 
@@ -191,8 +184,8 @@ thead{
     font-weight: bold;
     text-transform: uppercase;
 }
-thead tr th{
-    padding: 1em 0 1em 1em !important;
+.responsive thead tr th{
+    padding: 1em;
 }
 @media (max-width: 768px) {
     .table > tbody > tr > td, 
@@ -293,7 +286,6 @@ label[data-tooltip]:before {
 }
 
 
-
 /* --------------------------- */
 /* -------- MODULES ---------- */
 /* --------------------------- */
@@ -309,13 +301,13 @@ label[data-tooltip]:before {
     padding: 1em;
     border-radius: 4em;
 }
-.table > tbody > tr > th{
-    padding: 0;
-}
 @media (max-width: 768px) {
     .module-icon {
         width: 100%;
         border-radius: 0;
+    }
+    .table-modules > tbody > tr > th{
+        padding: 0;
     }
 }
 

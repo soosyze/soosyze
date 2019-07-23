@@ -31,7 +31,7 @@
 
         <fieldset id="<?php echo $package; ?>" class="responsive package">
             <legend><?php echo $package; ?></legend>
-            <table class="table table-hover ">
+            <table class="table table-hover table-modules">
                 <thead>
                     <tr class="form-head">
                         <th></th>

@@ -159,7 +159,7 @@ class FormUser extends FormBuilder
             $form->password($id, $id, [ 'class' => 'form-control' ]);
             if ($this->config && $this->config->get('settings.password_show', true)) {
                 $form->html('password_show', '<button:css:attr>:_content</button>', [
-                    'class'        => 'btn-toogle-password',
+                    'class'        => 'btn btn-toogle-password',
                     'onclick'      => "togglePassword(this, '$id')",
                     'type'         => 'button',
                     '_content'     => '<i id="eyeIcon" class="fa fa-eye" aria-hidden="true"></i>',
@@ -246,7 +246,8 @@ class FormUser extends FormBuilder
     }
 
     /**
-     * @param  type  $content
+     * @param string $label
+     *
      * @return $this
      */
     public function submitForm($label = 'Enregistrer')

@@ -74,7 +74,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('contact-copy-group', 'div', function ($form) {
             $form->checkbox('copy', 'copy')
-                    ->label('contact-copy-label', 'M\'envoyer une copie du mail', [
+                    ->label('contact-copy-label', '<i class="ui" aria-hidden="true"></i>M\'envoyer une copie du mail', [
                         'for' => 'copy'
                     ]);
         }, [ 'class' => 'form-group' ]);
