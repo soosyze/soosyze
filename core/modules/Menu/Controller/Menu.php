@@ -97,12 +97,12 @@ class Menu extends \Soosyze\Controller
             ->orderBy('weight')
             ->fetchAll();
 
-        foreach ($query as $key => $link) {
-            $query[ $key ][ 'link_edit' ]   = self::router()
+        foreach ($query as &$link) {
+            $link[ 'link_edit' ]   = self::router()
                 ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $query[ $key ][ 'link_delete' ] = self::router()
+            $link[ 'link_delete' ] = self::router()
                 ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $query[ $key ][ 'submenu' ]     = $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1);
+            $link[ 'submenu' ]     = $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1);
         }
 
         return self::template()

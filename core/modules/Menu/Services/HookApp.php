@@ -50,8 +50,8 @@ class HookApp
             return null;
         }
 
-        foreach ($query as $key => $menu) {
-            $query[ $key ][ 'submenu' ] = $this->renderMenu($nameMenu, $request, $response, $menu[ 'id' ], $level + 1);
+        foreach ($query as &$menu) {
+            $menu[ 'submenu' ] = $this->renderMenu($nameMenu, $request, $response, $menu[ 'id' ], $level + 1);
         }
         $menus = $this->getGrantedLink($query, $request);
 
