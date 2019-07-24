@@ -64,8 +64,7 @@ class FormContact extends FormBuilder
                     ->textarea('message', 'message', $this->content[ 'message' ], [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'rows'     => 8,
-                        'style'    => 'resize:vertical'
+                        'rows'     => 8
                 ]);
         }, [ 'class' => 'form-group' ]);
     }

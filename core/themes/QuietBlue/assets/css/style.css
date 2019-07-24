@@ -177,6 +177,9 @@ fieldset[disabled] .btn {
 }
 
 /* FORM */
+textarea{
+    resize:vertical;
+}
 label{
     display: inline-block;
     font-weight: 700;
