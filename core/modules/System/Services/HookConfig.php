@@ -120,35 +120,35 @@ class HookConfig
                 })
                 ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-metadata-legend', 'SEO Metadonnées')
-                    ->group('system-title-group', 'div', function ($form) use ($data) {
-                        $form->label('system-title-label', 'Titre du site', [
+                    ->group('system-meta_title-group', 'div', function ($form) use ($data) {
+                        $form->label('system-meta_title-label', 'Titre du site', [
                             'data-tooltip' => 'Le titre principal de votre site apparait aussi dans le titre de la fenêtre de votre navigateur.'
                         ])
-                        ->text('title', 'title', [
+                        ->text('meta_title', 'meta_title', [
                             'class'       => 'form-control',
                             'maxlength'   => 64,
                             'placeholder' => 'Titre du site',
                             'required'    => 'required',
-                            'value'       => $data[ 'title' ]
+                            'value'       => $data[ 'meta_title' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-description-group', 'div', function ($form) use ($data) {
-                        $form->label('system-description-label', 'Description', [
+                    ->group('system-meta_description-group', 'div', function ($form) use ($data) {
+                        $form->label('system-meta_description-label', 'Description', [
                             'data-tooltip' => 'Aide à votre référencement et s’affiche dans les moteurs de recherche.'
                         ])
-                        ->textarea('description', 'description', $data[ 'description' ], [
+                        ->textarea('meta_description', 'meta_description', $data[ 'meta_description' ], [
                             'class'     => 'form-control',
                             'maxlength' => 256,
                             'required'  => 'required',
                             'rows'      => 5
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-keyboard-group', 'div', function ($form) use ($data) {
-                        $form->label('system-keyboard-label', 'Mots-clés')
-                        ->text('keyboard', 'keyboard', [
+                    ->group('system-meta_keyboard-group', 'div', function ($form) use ($data) {
+                        $form->label('system-meta_keyboard-label', 'Mots-clés')
+                        ->text('meta_keyboard', 'meta_keyboard', [
                             'class'       => 'form-control',
                             'placeholder' => 'Mot1, Mot2, Mot3...',
-                            'value'       => $data[ 'keyboard' ]
+                            'value'       => $data[ 'meta_keyboard' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-group-favicon', 'div', function ($form) use ($data) {
@@ -180,9 +180,9 @@ class HookConfig
             'path_index'          => 'required|string|htmlsc',
             'path_access_denied'  => '!required|string|htmlsc',
             'path_no_found'       => '!required|string|htmlsc',
-            'title'               => 'required|string|max:64|htmlsc',
-            'description'         => 'required|string|max:256|htmlsc',
-            'keyboard'            => '!required|string|htmlsc',
+            'meta_title'          => 'required|string|max:64|htmlsc',
+            'meta_description'    => 'required|string|max:256|htmlsc',
+            'meta_keyboard'       => '!required|string|htmlsc',
             'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
             'logo'                => '!required|image|max:200Kb',
             'token_system_config' => 'required|token'
@@ -200,9 +200,9 @@ class HookConfig
             'path_index'         => $validator->getInput('path_index'),
             'path_access_denied' => $validator->getInput('path_access_denied'),
             'path_no_found'      => $validator->getInput('path_no_found'),
-            'title'              => $validator->getInput('title'),
-            'description'        => $validator->getInput('description'),
-            'keyboard'           => $validator->getInput('keyboard'),
+            'meta_title'         => $validator->getInput('meta_title'),
+            'meta_description'   => $validator->getInput('meta_description'),
+            'meta_keyboard'      => $validator->getInput('meta_keyboard'),
         ];
     }
 

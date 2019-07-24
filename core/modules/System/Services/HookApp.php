@@ -112,9 +112,9 @@ class HookApp
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $data = $this->config->get('settings');
             $response->view('this', [
-                'title'       => $data[ 'title' ],
-                'description' => $data[ 'description' ],
-                'keyboard'    => $data[ 'keyboard' ],
+                'title'       => $data[ 'meta_title' ],
+                'description' => $data[ 'meta_description' ],
+                'keyboard'    => $data[ 'meta_keyboard' ],
                 'favicon'     => $data[ 'favicon' ]
             ])->view('page', [
                 'title' => $data[ 'title' ],

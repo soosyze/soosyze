@@ -36,9 +36,9 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.path_no_found', 'node/1')
             ->set('settings.path_index', 'node/2')
             ->set('settings.path_access_denied', 'user/login')
-            ->set('settings.title', 'Soosyze')
-            ->set('settings.description', 'Hello world !')
-            ->set('settings.keyboard', '')
+            ->set('settings.meta_title', 'Soosyze')
+            ->set('settings.meta_description', 'Hello world !')
+            ->set('settings.meta_keyboard', '')
             ->set('settings.favicon', '')
             ->set('settings.timezone', 'Europe/Paris');
     }
