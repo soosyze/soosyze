@@ -61,12 +61,12 @@ class HookMenu
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', 'Menu')
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {
-                            $form->checkbox('active', 'menu', [
+                            $form->checkbox('active', 'active', [
                                 'checked' => $data[ 'active' ],
                                 'onclick' => 'toggle(\'menu_toogle\')'
                             ])
                             ->label('node-menu-active-label', '<span class="ui"></span> Ajouter un lien dans le menu', [
-                                'for' => 'menu'
+                                'for' => 'active'
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('node-menu', 'div', function ($form) use ($data) {
