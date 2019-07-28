@@ -9,10 +9,10 @@
         "path": "news/page/:id",
         "uses": "News@page",
         "with": {
-            ":id": "\\d+"
+            ":id": "[1-9][0-9]*"
         }
     },
-    "news.view.years": {
+    "news.years": {
         "methode": "GET",
         "path": "news/:years",
         "uses": "News@viewYears",
@@ -20,23 +20,53 @@
             ":years": "\\d{4}"
         }
     },
-    "news.view.month": {
+    "news.page.years": {
+        "methode": "GET",
+        "path": "news/:years/page/:id",
+        "uses": "News@viewYearsPage",
+        "with": {
+            ":years": "\\d{4}",
+            ":id": "[1-9][0-9]*"
+        }
+    },
+    "news.month": {
         "methode": "GET",
         "path": "news/:years/:month",
         "uses": "News@viewMonth",
         "with": {
             ":years": "\\d{4}",
-            ":month": "(0[1-9]|1[0-2])"
+            ":month": "0[1-9]|1[0-2]"
         }
     },
-    "news.view.day": {
+    "news.page.month": {
+        "methode": "GET",
+        "path": "news/:years/:month/page/:id",
+        "uses": "News@viewMonthPage",
+        "with": {
+            ":years": "\\d{4}",
+            ":month": "0[1-9]|1[0-2]",
+            ":id": "[1-9][0-9]*"
+        }
+    },
+    "news.day": {
         "methode": "GET",
         "path": "news/:years/:month/:day",
         "uses": "News@viewDay",
         "with": {
             ":years": "\\d{4}",
-            ":month": "(0[1-9]|1[0-2])",
-            ":day": "([0-2][1-9]|3[0-1])"
+            ":month": "0[1-9]|1[0-2]",
+            ":day": "[0-2][1-9]|3[0-1]"
+        }
+    },
+    "news.page.day": {
+        "methode": "GET",
+        "path": "news/:years/:month/:day/page/:id",
+        "uses": "News@viewDayPage",
+        "with": {
+            ":years": "\\d{4}",
+            ":month": "0[1-9]|1[0-2]",
+            ":day": "[0-2][1-9]|3[0-1]",
+            ":id": "[1-9][0-9]*"
         }
     },
     "news.view.rss": {
