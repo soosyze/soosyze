@@ -103,7 +103,7 @@ class User extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'menu-user.php', $this->pathViews, [
+                ])->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
                 'menu' => []
         ]);
     }
@@ -405,7 +405,7 @@ class User extends \Soosyze\Controller
                 ])
                 ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'menu-user.php', $this->pathViews, [
+                ])->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
                 'menu' => $this->getMenuUser($id)
         ]);
     }
