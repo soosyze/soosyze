@@ -15,5 +15,17 @@
             "route.news.view.day": "hookRouteNodeSow",
             "route.news.view.rss": "hookRouteNodeSow"
         }
+    },
+    "news.hook.config": {
+        "class": "SoosyzeCore\\News\\Services\\HookConfig",
+        "arguments": [
+            "@template"
+        ],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.news.form.generate": "form",
+            "config.update.news.validator": "validator",
+            "config.update.news.before": "before"
+        }
     }
 }

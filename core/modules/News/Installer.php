@@ -33,6 +33,9 @@ class Installer implements \SoosyzeCore\System\Migration
             ->values([ 'article', $idSummary, 2, 'Résumé' ])
             ->values([ 'article', $idBody, 3, 'Corps' ])
             ->execute();
+
+        $ci->config()
+            ->set('settings.news_pagination', 6);
     }
 
     public function seeders(ContainerInterface $ci)

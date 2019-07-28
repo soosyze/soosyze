@@ -6,7 +6,7 @@ use Soosyze\Components\Paginate\Paginator;
 
 class NewsController extends \Soosyze\Controller
 {
-    public static $limit = 6;
+    public static $limit;
 
     protected $dateCurrent;
 
@@ -30,6 +30,7 @@ class NewsController extends \Soosyze\Controller
 
     public function page($page, $req)
     {
+        self::$limit = self::config()->get('settings.news_pagination', 6);
         $offset = self::$limit * ($page - 1);
 
         $query = self::query()
@@ -131,6 +132,7 @@ class NewsController extends \Soosyze\Controller
 
     public function viewRss($req)
     {
+        self::$limit = self::config()->get('settings.news_pagination', 6);
         $query = self::query()
             ->from('node')
             ->where('published', '==', 1)
@@ -169,6 +171,7 @@ class NewsController extends \Soosyze\Controller
 
     protected function renderNews($page, $req)
     {
+        self::$limit = self::config()->get('settings.news_pagination', 6);
         $offset = self::$limit * ($page - 1);
         $news   = $this->getNews($this->dateCurrent, $this->dateNext, $offset);
 
