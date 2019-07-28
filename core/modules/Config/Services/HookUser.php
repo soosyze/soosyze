@@ -11,10 +11,21 @@ class HookUser
         $this->core = $core;
     }
 
+    public function hookPermission(&$permission)
+    {
+        $menu = [];
+        $this->core->callHook('config.edit.menu', [ &$menu ]);
+        $permission[ 'Config' ]['config.manage'] = 'Administrer toutes les configurations';
+        foreach ($menu as $link) {
+            $permission[ 'Config' ][$link[ 'key' ] . '.config.manage'] = 'Administrer les configurations ' . $link[ 'title_link' ];
+        }
+    }
+
     public function hookConfigIndex()
     {
-        $menu = $out = [];
+        $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
+        $out[] = 'config.manage';
         foreach ($menu as $link) {
             $out[] = $link[ 'key' ] . '.config.manage';
         }
@@ -24,6 +35,6 @@ class HookUser
 
     public function hookConfigManage($id)
     {
-        return "$id.config.manage";
+        return ['config.manage', "$id.config.manage"];
     }
 }

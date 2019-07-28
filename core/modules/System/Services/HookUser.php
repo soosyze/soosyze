@@ -7,7 +7,6 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'System' ] = [
-            'system.config.manage'      => 'Administrer les configurations',
             'system.module.manage'      => 'Administrer les modules',
             'system.config.maintenance' => 'Accéder au site en mode maintenance'
         ];

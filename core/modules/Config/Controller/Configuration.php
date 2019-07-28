@@ -128,13 +128,15 @@ class Configuration extends \Soosyze\Controller
         $menu = [];
         $this->container->callHook('config.edit.menu', [ &$menu ]);
         sort($menu);
+        $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
         foreach ($menu as $key => &$link) {
-            if (!$this->container->callHook('app.granted', [ $link[ 'key' ] . '.config.manage' ])) {
-                unset($menu[ $key ]);
+            $manage = $this->container->callHook('app.granted', [ $link[ 'key' ] . '.config.manage' ]);
+            if ($all || $manage) {
+                $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $link[ 'key' ] ]);
 
                 continue;
             }
-            $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $link[ 'key' ] ]);
+            unset($menu[$key]);
         }
 
         return array_values($menu);

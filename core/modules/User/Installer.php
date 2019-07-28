@@ -72,7 +72,6 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'user.config.manage' ])
             ->values([ 3, 'user.permission.manage' ])
             ->values([ 3, 'user.people.manage' ])
             ->values([ 3, 'user.showed' ])

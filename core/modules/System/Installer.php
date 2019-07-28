@@ -58,7 +58,6 @@ class Installer implements \SoosyzeCore\System\Migration
         if ($ci->module()->has('User')) {
             $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'system.config.manage' ])
                 ->values([ 3, 'system.module.manage' ])
                 ->values([ 3, 'system.config.maintenance' ])
                 ->execute();
