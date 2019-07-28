@@ -25,6 +25,9 @@
     <div class="col-md-12">
         <?php echo $paginate; ?>
     </div>
+    <div class="col-md-12">
+        <a type="application/rss+xml" href="<?php echo $link_rss; ?>"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
+    </div>
 <?php else: ?>
 
     <div class="col-md-12">

@@ -70,6 +70,7 @@ class NewsController extends \Soosyze\Controller
                     'news'     => $query,
                     'default'  => $default,
                     'paginate' => $paginate,
+                    'link_rss' => self::router()->getRoute('news.rss')
         ]);
     }
 
@@ -128,8 +129,42 @@ class NewsController extends \Soosyze\Controller
         return $this->renderNews($page, $req);
     }
 
+    public function viewRss($req)
+    {
+        $query = self::query()
+            ->from('node')
+            ->where('published', '==', 1)
+            ->where('type', 'article')
+            ->orderBy('created', 'desc')
+            ->limit(self::$limit)
+            ->fetchAll();
+        $xml   = '<?xml version="1.0" encoding="iso-8859-1"?><rss version="2.0">' . PHP_EOL
+            . '<channel>' . PHP_EOL
+            . '<title>News</title>' . PHP_EOL
+            . '<link>'
+            . self::router()->getRoute('news.rss')
+            . '</link>' . PHP_EOL
+            . '<description></description>' . PHP_EOL
+            . '<language>fr</language>' . PHP_EOL;
+        foreach ($query as $new) {
+            $new[ 'field' ] = unserialize($new[ 'field' ]);
+            $xml            .= '<item>' . PHP_EOL
+                . '<title>' . htmlspecialchars($new[ 'title' ]) . '</title>' . PHP_EOL
+                . '<link>'
+                . self::router()->getRoute('node.show', [ ':id' => $new[ 'id' ] ])
+                . '</link>' . PHP_EOL
+                . '<pubDate>' . date('D, d M Y H:i:s O', $new[ 'created' ]) . '</pubDate>' . PHP_EOL
+                . '<description>' . htmlspecialchars($new[ 'field' ][ 'summary' ]) . '</description>' . PHP_EOL
+                . '</item>' . PHP_EOL;
         }
+        $xml .= '</channel>' . PHP_EOL . '</rss>' . PHP_EOL;
 
+        $stream = new \Soosyze\Components\Http\Stream($xml);
+
+        return (new \Soosyze\Components\Http\Response(200, $stream))
+                ->withHeader('content-Type', 'application/rss+xml; charset=utf-8')
+                ->withHeader('content-length', $stream->getSize())
+                ->withHeader('content-disposition', 'attachment; filename=rss.xml');
     }
 
     protected function renderNews($page, $req)
@@ -157,12 +192,8 @@ class NewsController extends \Soosyze\Controller
                 ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'news'     => $news,
                     'paginate' => $paginate,
+                    'link_rss' => self::router()->getRoute('news.rss')
         ]);
-    }
-
-    public function viewRss($req)
-    {
-        return $this->get404($req);
     }
 
     protected function getNews($dateCurrent, $dateNext, $offset = 0)

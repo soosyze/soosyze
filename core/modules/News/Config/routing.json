@@ -69,9 +69,9 @@
             ":id": "[1-9][0-9]*"
         }
     },
-    "news.view.rss": {
+    "news.rss": {
         "methode": "GET",
-        "path": "news/rss",
+        "path": "news/rss.xml",
         "uses": "News@viewRss"
     }
 }
