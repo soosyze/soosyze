@@ -117,7 +117,7 @@ class HookApp
                 'keyboard'    => $data[ 'meta_keyboard' ],
                 'favicon'     => $data[ 'favicon' ]
             ])->view('page', [
-                'title' => $data[ 'title' ],
+                'title' => $data[ 'meta_title' ],
                 'logo'  => $data[ 'logo' ]
             ]);
             $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
