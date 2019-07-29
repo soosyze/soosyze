@@ -6,6 +6,6 @@ class HookUser
 {
     public function hookRouteNodeSow()
     {
-        return [ 'node.show.published', 'node.administer', 'node.show.article'];
+        return [ 'node.show.published', 'node.administer', 'node.show.article' ];
     }
 }

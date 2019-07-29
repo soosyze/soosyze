@@ -1,6 +1,8 @@
 <div class="row">
     <div class="col-sm-12">
-        <a class="btn btn-primary" href="<?php echo $link_add; ?>">Ajouter un nouveau role</a>
+        <a class="btn btn-primary" href="<?php echo $link_add; ?>">
+            <i class="fa fa-plus"></i> Ajouter un nouveau role
+        </a>
         <fieldset class="responsive">
             <legend>Rôles utilisateurs</legend>
             <table class="table table-hover">

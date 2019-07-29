@@ -77,11 +77,11 @@ class HookConfig
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('system-logo-group', 'div', function ($form) use ($data) {
-                            $form->label('label-logo', 'Logo', [ 'class' => 'control-label' ]);
-                            $this->file->inputFile('logo', $form, $data[ 'logo' ]);
-                            $form->html('system-logo-info-size', '<p:css:attr>:_content</p>', [
-                                '_content' => 'Le fichier doit peser moins de <b>200 Ko</b>.'
+                            $form->label('label-logo', 'Logo', [
+                                'class' => 'control-label',
+                                'data-tooltip' => '200ko maximum.'
                             ]);
+                            $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                         }, [ 'class' => 'form-group' ]);
         })
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {

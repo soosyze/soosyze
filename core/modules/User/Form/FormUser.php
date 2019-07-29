@@ -70,7 +70,7 @@ class FormUser extends FormBuilder
         $form->group('user-picture-group', 'div', function ($form) {
             $form->label('user-picture-label', 'Image', [
                 'for' => 'file-name-picture',
-                'data-tooltip' => '200ko maximum. Extensions autorisées : jpeg, jpg, png, gif.'
+                'data-tooltip' => '200ko maximum. Extensions autorisées : jpeg, jpg, png.'
             ]);
             $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
         }, self::$attrGrp);

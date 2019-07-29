@@ -461,6 +461,14 @@ th{
 .table .table{
     background-color: #fff;
 }
+tbody tr:hover {
+    background-color: #e1e4e8;
+    -webkit-transition: background-color .2s;
+    -moz-transition: background-color .2s;
+    -ms-transition: background-color .2s;
+    -o-transition: background-color .2s;
+    transition: background-color .2s;
+}
 
 /* BLOG */
 .card{
