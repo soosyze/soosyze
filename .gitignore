@@ -10,6 +10,7 @@
 /node_modules/
 
 # Files
+/app/config/settings.json
 /*.lock
 /*.phar
 /*.cache

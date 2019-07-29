@@ -79,12 +79,13 @@ Le thème de base et d'administration sont réalisés avec le framework Bootstra
 
 ## Connexion à internet
 
-Le thème de base et d'administration se décharge d'une partie des bibliothèques d'affichages (front-end) en fesant appel à des CND (Content delivery network) :
+Les thèmes de base se décharge d'une partie des bibliothèques d'affichages (front-end) en fesant appel à des CND (Content delivery network) :
 
-* Bootstrap 3.3.7
+* Bootstrap 3.4.1,
 * JQuery 3.2.1,
 * JQuery UI 1.12.0,
-* Font Awesome 5.4
+* Sortable 1.8.3,
+* Font Awesome 5.8.1
 
 Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexion réseau pour que ces bibliothèques soient utilisées.
 
