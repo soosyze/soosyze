@@ -316,40 +316,6 @@ img, .img-responsive {
     height: auto;
 }
 
-/* NODE */
-.icon-publish,
-.icon-notPublish{
-    border: 2px solid;
-    border-radius: 32px;
-    height: 32px;
-    width: 32px;
-}
-.icon-notPublish{
-    border-color: #d14;
-}
-.icon-publish{
-    border-color: #2ecc71;
-}
-.icon-publish span,
-.icon-notPublish span{
-    display: block;
-    font-weight: bold;
-    left: 24px;
-    position: absolute;
-}
-.icon-notPublish span{
-    color: #d14;
-}
-.icon-publish span{
-    color: #2ecc71;
-}
-.icon-publish .glyphicon-ok:before{
-    content: '✔';
-}
-.icon-notPublish .glyphicon-remove:before{
-    content: '✗';
-}
-
 /* MODULES */
 .module-is_required,
 .module-is_required_for_module{

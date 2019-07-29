@@ -13,8 +13,7 @@
                     <tr class="form-head">
                         <th>Nom</th>
                         <th>Date de création</th>
-                        <th>Date de modification</th>
-                        <th>Actions</th>
+                        <th class="text-right">Actions</th>
                         <th>Publié</th>
                     </tr>
                 </thead>
@@ -24,12 +23,14 @@
 
                     <tr>
                         <th>
-                            <a href="<?php echo $node[ 'link_view' ]; ?>"><?php echo $node[ 'title' ]; ?></a> <small><?php echo $node[ 'type' ]; ?></small>
+                            <a href="<?php echo $node[ 'link_edit' ]; ?>"><?php echo $node[ 'title' ]; ?></a> <small><?php echo $node[ 'type' ]; ?></small>
                         </th>
                         <td data-title="Date de création"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></td>
-                        <td data-title="Date de modification"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'changed' ]); ?></td>
-                        <td data-title="Actions">
+                        <td data-title="Actions" class="text-right">
                             <div class="btn-group" role="group" aria-label="action">
+                                <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="__blank">
+                                    <span class="fa fa-search"></span> Voir
+                                </a>
                                 <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
                                     <span class="fa fa-edit"></span> Éditer
                                 </a>
@@ -41,14 +42,10 @@
                         <td data-title="Publié">
                         <?php if ($node[ 'published' ] == 'on'): ?>
 
-                            <div class="icon-publish">
-                                <span class="fa fa-ok" aria-hidden="Publish"></span>
-                            </div>
+                            <div class="icon-publish" data-tooltip="Publié"></div>
                         <?php else: ?>
 
-                            <div class="icon-notPublish">
-                                <span class="fa fa-times" aria-hidden="Not publish"></span>
-                            </div>
+                            <div class="icon-notPublish" data-tooltip="Non publié"></div>
                         <?php endif; ?>
 
                         </td>
