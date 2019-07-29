@@ -118,15 +118,27 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
+        $this->hookUninstallMenu($ci);
         $this->hookUninstallUser($ci);
     }
     
-    public function hookUninstallUser(ContainerInterface $ci)
+    public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
             $ci->query()->from('menu_link')
                 ->delete()
                 ->where('link', 'like', 'news%')
+                ->execute();
+        }
+    }
+    
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'news.%')
                 ->execute();
         }
     }

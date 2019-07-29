@@ -10,10 +10,13 @@
         "hooks": {
             "route.news.index": "hookRouteNodeSow",
             "route.news.page": "hookRouteNodeSow",
-            "route.news.view.years": "hookRouteNodeSow",
-            "route.news.view.month": "hookRouteNodeSow",
-            "route.news.view.day": "hookRouteNodeSow",
-            "route.news.view.rss": "hookRouteNodeSow"
+            "route.news.page.years": "hookRouteNodeSow",
+            "route.news.page.month": "hookRouteNodeSow",
+            "route.news.page.day": "hookRouteNodeSow",            
+            "route.news.years": "hookRouteNodeSow",
+            "route.news.month": "hookRouteNodeSow",
+            "route.news.day": "hookRouteNodeSow",
+            "route.news.rss": "hookRouteNodeSow"
         }
     },
     "news.hook.config": {
