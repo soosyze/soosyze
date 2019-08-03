@@ -35,7 +35,7 @@ class HookConfig
                         $form->label('system-email-label', 'E-mail du site', [
                             'data-tooltip' => 'E-mail utilisé pour la configuration générale, pour vos contacts (pour la récupération de votre mot de passe...).'
                         ])
-                        ->email('email', 'email', [
+                        ->email('email', [
                             'class'       => 'form-control',
                             'required'    => 1,
                             'placeholder' => 'E-mail',
@@ -43,7 +43,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-maintenance-group', 'div', function ($form) use ($data) {
-                        $form->checkbox('maintenance', 'maintenance', [
+                        $form->checkbox('maintenance', [
                             'checked' => $data[ 'maintenance' ]
                         ])
                         ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Mettre le site en maintenance', [
@@ -52,7 +52,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ]);
             if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
                 $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
-                    $form->checkbox('rewrite_engine', 'rewrite_engine', [
+                    $form->checkbox('rewrite_engine', [
                                     'checked' => $data[ 'rewrite_engine' ]
                                 ])
                                 ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Rendre les URL propres', [
@@ -62,7 +62,7 @@ class HookConfig
             }
             $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
                 $form->label('system-theme-label', 'Theme du site')
-                            ->select('theme', 'theme', $optionThemes, [
+                            ->select('theme', $optionThemes, [
                                 'class'    => 'form-control',
                                 'required' => 1,
                                 'selected' => $data[ 'theme' ]
@@ -70,7 +70,7 @@ class HookConfig
             }, [ 'class' => 'form-group' ])
                         ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
                             $form->label('system-theme_admin-label', 'Theme d\'administration du site')
-                            ->select('theme_admin', 'theme_admin', $optionThemes, [
+                            ->select('theme_admin', $optionThemes, [
                                 'class'    => 'form-control',
                                 'required' => 1,
                                 'selected' => $data[ 'theme_admin' ]
@@ -90,7 +90,7 @@ class HookConfig
                         $form->label('system-path_index-label', 'Page d’accueil par défaut', [
                             'data-tooltip' => 'Lien du contenu affiché en page d’accueil de votre site.'
                         ])
-                        ->text('path_index', 'path_index', [
+                        ->text('path_index', [
                             'class'       => 'form-control',
                             'required'    => 1,
                             'placeholder' => 'Path page index',
@@ -101,7 +101,7 @@ class HookConfig
                         $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)', [
                             'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui lui est interdite.'
                         ])
-                        ->text('path_access_denied', 'path_access_denied', [
+                        ->text('path_access_denied', [
                             'class'       => 'form-control',
                             'placeholder' => 'Path page access denied',
                             'value'       => $data[ 'path_access_denied' ]
@@ -111,7 +111,7 @@ class HookConfig
                         $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)', [
                             'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui n’existe pas.'
                         ])
-                        ->text('path_no_found', 'path_no_found', [
+                        ->text('path_no_found', [
                             'class'       => 'form-control',
                             'placeholder' => 'Path page not found',
                             'value'       => $data[ 'path_no_found' ]
@@ -124,7 +124,7 @@ class HookConfig
                         $form->label('system-meta_title-label', 'Titre du site', [
                             'data-tooltip' => 'Le titre principal de votre site apparait aussi dans le titre de la fenêtre de votre navigateur.'
                         ])
-                        ->text('meta_title', 'meta_title', [
+                        ->text('meta_title', [
                             'class'       => 'form-control',
                             'maxlength'   => 64,
                             'placeholder' => 'Titre du site',
@@ -136,7 +136,7 @@ class HookConfig
                         $form->label('system-meta_description-label', 'Description', [
                             'data-tooltip' => 'Aide à votre référencement et s’affiche dans les moteurs de recherche.'
                         ])
-                        ->textarea('meta_description', 'meta_description', $data[ 'meta_description' ], [
+                        ->textarea('meta_description', $data[ 'meta_description' ], [
                             'class'     => 'form-control',
                             'maxlength' => 256,
                             'required'  => 'required',
@@ -145,7 +145,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                     ->group('system-meta_keyboard-group', 'div', function ($form) use ($data) {
                         $form->label('system-meta_keyboard-label', 'Mots-clés')
-                        ->text('meta_keyboard', 'meta_keyboard', [
+                        ->text('meta_keyboard', [
                             'class'       => 'form-control',
                             'placeholder' => 'Mot1, Mot2, Mot3...',
                             'value'       => $data[ 'meta_keyboard' ]

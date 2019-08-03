@@ -21,7 +21,7 @@ class File
         $attr = [
             'class'    => 'btn btn-danger form-file-reset',
             'onclick'  => "document.getElementById('file-image-$name').style.display='none';"
-            . "document.getElementById('file-$name').value='';"
+            . "document.getElementById('$name').value='';"
             . "document.getElementById('file-name-$name').value='';"
             . "document.getElementById('file-reset-$name').disabled = true;",
             '_content' => '✗',
@@ -32,7 +32,6 @@ class File
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $content) {
                 $form->html("file-image-$name", '<img:css:attr/>', [
                     'src'   => $content,
-                    'id'    => "file-image-$name",
                     'class' => 'input-file-img img-thumbnail'
                 ]);
             }, [ 'class' => 'form-group' ]);
@@ -41,14 +40,14 @@ class File
         }
 
         $form->group("file-input-$name-group", 'div', function ($form) use ($name, $content, $attr) {
-            $form->file($name, "file-$name", [
+            $form->file($name, [
                     'style'    => 'display:none',
                     'onchange' => "document.getElementById('file-name-$name').value = this.files[0].name;"
                     . "document.getElementById('file-reset-$name').disabled = false;"
                 ])
-                ->text("file-name-$name", "file-name-$name", [
+                ->text("file-name-$name", [
                     'class'   => 'form-control form-file-name',
-                    'onclick' => "document.getElementById('file-$name').click();",
+                    'onclick' => "document.getElementById('$name').click();",
                     'value'   => $content
                 ])
                 ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr);

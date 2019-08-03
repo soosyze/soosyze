@@ -26,7 +26,7 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role-label-group', 'div', function ($form) {
             $form->label('role-label-label', 'Label')
-                ->text('role_label', 'role_label', [
+                ->text('role_label', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
                     'placeholder' => 'Nom du nouveau rôle',
@@ -42,7 +42,7 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role-description-group', 'div', function ($form) {
             $form->label('role-description-label', 'Description')
-                ->text('role_description', 'role_description', [
+                ->text('role_description', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'value'     => $this->content[ 'role_description' ]
@@ -56,7 +56,7 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role-weight-group', 'div', function ($form) {
             $form->label('role-weight-label', 'Poids')
-                ->number('role_weight', 'role_weight', [
+                ->number('role_weight', [
                     'class' => 'form-control',
                     'max'   => 50,
                     'min'   => 1,
@@ -72,7 +72,7 @@ class FormUserRole extends FormBuilder
         $form->group('role-color-group', 'div', function ($form) {
             $form->label('role-color-label', 'Color')
                 ->group('role-color-group', 'div', function ($form) {
-                    $form->text('role_color', 'role_color', [
+                    $form->text('role_color', [
                         'class'   => 'form-control',
                         'pattern' => '#([a-fA-F0-9]{6})',
                         'value'   => $this->content[ 'role_color' ]

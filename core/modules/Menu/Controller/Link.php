@@ -39,7 +39,7 @@ class Link extends \Soosyze\Controller
                 ->group('menu-link-title-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-title-label', 'Titre du lien', [
                         'for' => 'title_link' ])
-                    ->text('title_link', 'title_link', [
+                    ->text('title_link', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'Exemple: Ma page 1',
@@ -49,7 +49,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-link-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-link-label', 'Lien')
-                    ->text('link', 'link', [
+                    ->text('link', [
                         'class'       => 'form-control',
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
@@ -60,7 +60,7 @@ class Link extends \Soosyze\Controller
                     $form->label('menu-link-icon-label', 'Icon', [
                         'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
                     ])
-                    ->text('icon', 'icon', [
+                    ->text('icon', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
@@ -69,7 +69,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-target-label', 'Cîble')
-                    ->select('target_link', 'target_link', self::$optionTarget, [
+                    ->select('target_link', self::$optionTarget, [
                         'class'    => 'form-control',
                         'required' => 1,
                         'selected' => $content[ 'target_link' ]
@@ -188,7 +188,7 @@ class Link extends \Soosyze\Controller
                 $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
                 ->group('menu-link-title-group', 'div', function ($form) use ($query) {
                     $form->label('menu-link-title-label', 'Titre du lien')
-                    ->text('title_link', 'title_link', [
+                    ->text('title_link', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'Exemple: Ma page 1',
@@ -198,7 +198,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-link-group', 'div', function ($form) use ($query) {
                     $form->label('menu-link-link-label', 'Lien')
-                    ->text('link', 'link', [
+                    ->text('link', [
                         'class'       => 'form-control',
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
@@ -209,7 +209,7 @@ class Link extends \Soosyze\Controller
                     $form->label('menu-link-icon-label', 'Icon', [
                         'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
                     ])
-                    ->text('icon', 'icon', [
+                    ->text('icon', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
@@ -218,7 +218,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($query) {
                     $form->label('menu-link-target-label', 'Cîble')
-                    ->select('target_link', 'target_link', self::$optionTarget, [
+                    ->select('target_link', self::$optionTarget, [
                         'class'    => 'form-control',
                         'required' => 1,
                         'selected' => $query[ 'target_link' ]

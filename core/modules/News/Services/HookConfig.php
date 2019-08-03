@@ -25,7 +25,7 @@ class HookConfig
             $form->legend('news-legend', 'Paramètres')
                     ->group('news-news_pagination-group', 'div', function ($form) use ($data) {
                         $form->label('news-news_pagination-group', 'Nombre d\'articles par page')
-                        ->number('news_pagination', 'news_pagination', [
+                        ->number('news_pagination', [
                             'class'    => 'form-control',
                             'max'      => 50,
                             'min'      => 1,

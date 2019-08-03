@@ -71,7 +71,7 @@ class Install extends \Soosyze\Controller
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('install-username-group', 'div', function ($form) use ($content) {
                 $form->label('install-username-label', 'Nom utilisateur')
-                ->text('username', 'username', [
+                ->text('username', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'required'  => 1,
@@ -80,7 +80,7 @@ class Install extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('install-email-group', 'div', function ($form) use ($content) {
                 $form->label('install-email-label', 'E-mail')
-                ->email('email', 'email', [
+                ->email('email', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
                     'placeholder' => 'email@exemple.com',
@@ -90,7 +90,7 @@ class Install extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('install-name-group', 'div', function ($form) use ($content) {
                 $form->label('install-name-label', 'Nom')
-                ->text('name', 'name', [
+                ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'value'     => $content[ 'name' ]
@@ -98,7 +98,7 @@ class Install extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('install-firstname-group', 'div', function ($form) use ($content) {
                 $form->label('install-firstname-label', 'Prénom')
-                ->text('firstname', 'firstname', [
+                ->text('firstname', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'value'     => $content[ 'firstname' ]
@@ -106,7 +106,7 @@ class Install extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('install-password-group', 'div', function ($form) use ($content) {
                 $form->label('install-password-label', 'Mot de passe')
-                ->password('password', 'password', [
+                ->password('password', [
                     'class'    => 'form-control',
                     'required' => 1,
                     'value'    => $content[ 'password' ]
@@ -114,7 +114,7 @@ class Install extends \Soosyze\Controller
             }, [ 'class' => 'form-group' ])
             ->group('install-password-confirm-group', 'div', function ($form) use ($content) {
                 $form->label('install-password-confirm-label', 'Confirmation du mot de passe')
-                ->password('password-confirm', 'password-confirm', [
+                ->password('password-confirm', [
                     'class'    => 'form-control',
                     'required' => 1,
                     'value'    => $content[ 'password-confirm' ]

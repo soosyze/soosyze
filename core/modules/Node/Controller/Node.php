@@ -100,7 +100,7 @@ class Node extends \Soosyze\Controller
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
                 ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', 'Titre du contenu')
-                    ->text('title', 'title', [
+                    ->text('title', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'required'    => 1,
@@ -123,7 +123,7 @@ class Node extends \Soosyze\Controller
                         $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
-                                $form->textarea($key, $key, $content[ $key ], [
+                                $form->textarea($key, $content[ $key ], [
                                     'class'       => 'form-control',
                                     'required'    => $require,
                                     'rows'        => 8,
@@ -133,7 +133,7 @@ class Node extends \Soosyze\Controller
                                 break;
                             default:
                                 $type = $value[ 'field_type' ];
-                                $form->$type($key, $key, [
+                                $form->$type($key, [
                                     'class'    => 'form-control',
                                     'required' => $require,
                                 ]);
@@ -144,7 +144,7 @@ class Node extends \Soosyze\Controller
                 }
             })
             ->group('node-publish-group', 'div', function ($form) {
-                $form->checkbox('published', 'published')
+                $form->checkbox('published')
                 ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
                     'for' => 'published'
                 ]);
@@ -309,7 +309,7 @@ class Node extends \Soosyze\Controller
                 $form->legend('node-title-legend', 'Remplissiez les champs suivants')
                 ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', 'Titre du contenu')
-                    ->text('title', 'title', [
+                    ->text('title', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
                         'required'  => 1,
@@ -332,7 +332,7 @@ class Node extends \Soosyze\Controller
                         $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
-                                $form->textarea($key, $key, $content[ $key ], [
+                                $form->textarea($key, $content[ $key ], [
                                     'class'       => 'form-control',
                                     'required'    => $require,
                                     'rows'        => 8,
@@ -342,7 +342,7 @@ class Node extends \Soosyze\Controller
                                 break;
                             default:
                                 $type = $value[ 'field_type' ];
-                                $form->$type($key, 'node-' . $key, [
+                                $form->$type($key, [
                                     'class'    => 'form-control',
                                     'required' => $require,
                                 ]);
@@ -353,7 +353,7 @@ class Node extends \Soosyze\Controller
                 }
             })
             ->group('node-publish-group', 'div', function ($form) use ($content) {
-                $form->checkbox('published', 'published', [ 'checked' => $content[ 'published' ] ])
+                $form->checkbox('published', [ 'checked' => $content[ 'published' ] ])
                 ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
                     'for' => 'published'
                 ]);

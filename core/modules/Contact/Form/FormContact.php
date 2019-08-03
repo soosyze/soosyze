@@ -25,7 +25,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('contact-name-group', 'div', function ($form) {
             $form->label('contact-name-label', 'Votre nom')
-                    ->text('name', 'name', [
+                    ->text('name', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->content[ 'name' ]
@@ -37,7 +37,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('contact-email-group', 'div', function ($form) {
             $form->label('contact-email-label', 'Votre adresse de courriel')
-                    ->email('email', 'email', [
+                    ->email('email', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->content[ 'email' ]
@@ -49,7 +49,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('contact-object-group', 'div', function ($form) {
             $form->label('contact-object-label', 'Objet')
-                    ->text('object', 'object', [
+                    ->text('object', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->content[ 'object' ]
@@ -61,7 +61,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('contact-message-group', 'div', function ($form) {
             $form->label('contact-message-label', 'Message')
-                    ->textarea('message', 'message', $this->content[ 'message' ], [
+                    ->textarea('message', $this->content[ 'message' ], [
                         'class'    => 'form-control',
                         'required' => 1,
                         'rows'     => 8
@@ -72,7 +72,7 @@ class FormContact extends FormBuilder
     protected function copy()
     {
         return $this->group('contact-copy-group', 'div', function ($form) {
-            $form->checkbox('copy', 'copy')
+            $form->checkbox('copy')
                     ->label('contact-copy-label', '<i class="ui" aria-hidden="true"></i>M\'envoyer une copie du mail', [
                         'for' => 'copy'
                     ]);

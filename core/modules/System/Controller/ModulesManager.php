@@ -55,7 +55,7 @@ class ModulesManager extends \Soosyze\Controller
                 }
             }
 
-            $form->checkbox("modules[$title]", "modules[$title]", $attr)
+            $form->checkbox("modules[$title]", $attr)
                 ->label($title, '<span class="ui"></span> ' . $title, [
                     'for' => "modules[$title]"
             ]);

@@ -38,7 +38,7 @@ class FormUser extends FormBuilder
     {
         $form->group('user-username-group', 'div', function ($form) {
             $form->label('user-username-label', 'Nom utilisateur')
-                ->text('username', 'username', [
+                ->text('username', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'required'  => 1,
@@ -53,7 +53,7 @@ class FormUser extends FormBuilder
     {
         $form->group('user-email-group', 'div', function ($form) {
             $form->label('user-email-label', 'E-mail')
-                ->email('email', 'email', [
+                ->email('email', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
                     'placeholder' => 'exemple@mail.com',
@@ -84,7 +84,7 @@ class FormUser extends FormBuilder
             $form->label('system-bio-label', 'Biographie', [
                     'data-tooltip' => 'Décrivez-vous en 255 caractères maximum.'
                 ])
-                ->textarea('bio', 'bio', $this->content[ 'bio' ], [
+                ->textarea('bio', $this->content[ 'bio' ], [
                     'class'       => 'form-control',
                     'maxlength'   => 255,
                     'placeholder' => 'Décrivez-vous en 255 caractères maximum.',
@@ -99,7 +99,7 @@ class FormUser extends FormBuilder
     {
         $form->group('user-name-group', 'div', function ($form) {
             $form->label('user-name-label', 'Nom')
-                ->text('name', 'name', [
+                ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'value'     => $this->content[ 'name' ]
@@ -113,7 +113,7 @@ class FormUser extends FormBuilder
     {
         $form->group('user-firstname-group', 'div', function ($form) {
             $form->label('user-firstname-label', 'Prénom')
-                ->text('firstname', 'firstname', [
+                ->text('firstname', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'value'     => $this->content[ 'firstname' ]
@@ -156,7 +156,7 @@ class FormUser extends FormBuilder
     public function password(&$form, $id)
     {
         $form->group("user-$id-group", 'div', function ($form) use ($id) {
-            $form->password($id, $id, [ 'class' => 'form-control' ]);
+            $form->password($id, [ 'class' => 'form-control' ]);
             if ($this->config && $this->config->get('settings.password_show', true)) {
                 $form->html('password_show', '<button:css:attr>:_content</button>', [
                     'class'        => 'btn btn-toogle-password',
@@ -213,7 +213,7 @@ class FormUser extends FormBuilder
         return $this->group('user-actived-fieldset', 'fieldset', function ($form) {
             $form->legend('user-actived-legend', 'Statut')
                     ->group('user-actived-fieldset', 'div', function ($form) {
-                        $form->checkbox('actived', 'actived', [ 'checked' => $this->content[ 'actived' ] ])
+                        $form->checkbox('actived', [ 'checked' => $this->content[ 'actived' ] ])
                         ->label('user-actived-label', '<span class="ui"></span> Actif', [
                             'for' => 'actived' ]);
                     }, self::$attrGrp);
@@ -231,7 +231,7 @@ class FormUser extends FormBuilder
                         'disabled' => $role[ 'role_id' ] <= 2
                     ];
                 $form->group('user-role-' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
-                    $form->checkbox('role[' . $role[ 'role_id' ] . ']', 'role-' . $role[ 'role_id' ], $attrRole)
+                    $form->checkbox('role[' . $role[ 'role_id' ] . ']', $attrRole)
                             ->label(
                                 'user-role-' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
