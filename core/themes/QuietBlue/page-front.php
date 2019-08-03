@@ -2,7 +2,7 @@
 <header id="wrapper_header">
     <?php if ($logo): ?>
 
-        <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
+    <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
     <?php endif; ?>
 
     <h1><?php echo $title; ?></h1>
@@ -21,11 +21,32 @@
         <h2><?php echo $title_main; ?></h2>
     </header>
     <div class="container">
-        <?php if (!empty($section[ 'messages' ])): ?>
-            <?php echo $section[ 'messages' ]; ?>
-        <?php endif; ?>
+        <div class="row">
+            <?php if( !empty($section[ 'messages' ]) ): ?>
 
-        <?php echo $section[ 'content' ]; ?>
+            <div class="col-md-12">
+                <?php echo $section[ 'messages' ]; ?>
+
+            </div>
+            <?php endif; ?>
+            <?php if( $section[ 'sidebar' ] ): ?>
+
+            <div class="col-md-4">
+                <?php echo $section[ 'sidebar' ]; ?>
+
+            </div>
+            <?php endif; ?>
+
+            <?php if( $section[ 'sidebar' ] ): ?>
+                <?php echo '<div class="col-md-8">'; ?>
+            <?php else: ?>
+                <?php echo '<div class="col-sm-12">'; ?>
+            <?php endif; ?>
+
+            <?php echo $section[ 'content' ]; ?>
+            <?php echo '</div>'; ?>
+
+        </div>
     </div>
 </div>
 <footer id="wrapper_footer">

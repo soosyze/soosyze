@@ -23,13 +23,30 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="col-md-12" >
-            <?php if (!empty($section[ 'messages' ])): ?>
-                <?php echo $section[ 'messages' ]; ?>
-            <?php endif; ?>
-            <?php echo $section[ 'content' ]; ?>
+        <?php if( !empty($section[ 'messages' ]) ): ?>
+
+        <div class="col-md-12">
+            <?php echo $section[ 'messages' ]; ?>
 
         </div>
+        <?php endif; ?>
+        <?php if( $section[ 'sidebar' ] ): ?>
+
+        <div class="col-md-4">
+            <?php echo $section[ 'sidebar' ]; ?>
+
+        </div>
+        <?php endif; ?>
+
+        <?php if( $section[ 'sidebar' ] ): ?>
+            <?php echo '<div class="col-md-8">'; ?>
+        <?php else: ?>
+            <?php echo '<div class="col-sm-12">'; ?>
+        <?php endif; ?>
+
+        <?php echo $section[ 'content' ]; ?>
+        <?php echo '</div>'; ?>
+
     </div>
     <div class="row">
         <div class="col-md-6">

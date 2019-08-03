@@ -55,6 +55,7 @@
                             <div class="form-group">
                             <?php echo $form->form_input("modules[{$module[ 'title' ]}]"); ?>
                             <?php echo $form->form_label($module[ 'title' ]); ?>
+
                             </div>
                             
                             <?php echo $module[ 'description' ]; ?>
@@ -100,5 +101,6 @@
         <?php echo $form->form_token('token_module_edit'); ?>
         <?php echo $form->form_input('submit', [ 'class' => 'btn btn-success' ]); ?>
         <?php echo $form->form_close(); ?>
+
     </div>
 </div> <!-- /.row -->

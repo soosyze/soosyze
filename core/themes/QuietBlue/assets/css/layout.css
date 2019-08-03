@@ -12,6 +12,10 @@
   content: " ";
   clear: both;
 }
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
 @media (min-width: 768px) {
     .container {
         width: 750px;

@@ -8,6 +8,7 @@
             <i class="fa fa-plus"></i> Ajouter un lien
         </a>
         <?php echo $form->form_open(); ?>
+
         <fieldset class="responsive">
             <legend><?php echo $menuName; ?></legend>
             <?php if ($menu): ?>
@@ -22,5 +23,6 @@
         <?php echo $form->form_token('token_menu'); ?>
         <?php echo $form->form_input('submit'); ?>
         <?php echo $form->form_close(); ?>
+
     </div>
 </div> <!-- /.row -->

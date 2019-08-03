@@ -1,25 +1,21 @@
 
-<div class="row">
-    <div class="col-md-12">
-        <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Ajouter du contenu
-        </a>
-    </div>
-    <div class="col-sm-12">
-        <fieldset class="responsive">
-            <legend>Mes Contenus</legend>
-            <table class="table table-hover table-node">
-                <thead>
-                    <tr class="form-head">
-                        <th>Nom</th>
-                        <th>Date de création</th>
-                        <th class="text-right">Actions</th>
-                        <th>Publié</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php if ($nodes): ?>
-                    <?php foreach ($nodes as $node): ?>
+<a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
+    <i class="fa fa-plus"></i> Ajouter du contenu
+</a>
+<fieldset class="responsive">
+    <legend>Mes Contenus</legend>
+    <table class="table table-hover table-node">
+        <thead>
+            <tr class="form-head">
+                <th>Nom</th>
+                <th>Date de création</th>
+                <th class="text-right">Actions</th>
+                <th>Publié</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($nodes): ?>
+                <?php foreach ($nodes as $node): ?>
 
                     <tr>
                         <th>
@@ -40,28 +36,26 @@
                             </div>
                         </td>
                         <td data-title="Publié">
-                        <?php if ($node[ 'published' ] == 'on'): ?>
+                            <?php if ($node[ 'published' ] == 'on'): ?>
 
-                            <div class="icon-publish" data-tooltip="Publié"></div>
-                        <?php else: ?>
+                                <div class="icon-publish" data-tooltip="Publié"></div>
+                            <?php else: ?>
 
-                            <div class="icon-notPublish" data-tooltip="Non publié"></div>
-                        <?php endif; ?>
+                                <div class="icon-notPublish" data-tooltip="Non publié"></div>
+                            <?php endif; ?>
 
                         </td>
                     </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+                <?php endforeach; ?>
+            <?php else: ?>
 
-                    <tr>
-                        <td colspan="5">
-                            Votre site ne possède aucun contenu pour le moment.
-                        </td>
-                    </tr>
-                <?php endif; ?>
+                <tr>
+                    <td colspan="5">
+                        Votre site ne possède aucun contenu pour le moment.
+                    </td>
+                </tr>
+            <?php endif; ?>
 
-                </tbody>
-            </table>
-        </fieldset>
-    </div>
-</div> <!-- /.row -->
+        </tbody>
+    </table>
+</fieldset>

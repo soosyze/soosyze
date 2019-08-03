@@ -8,6 +8,7 @@
             <i class="fa fa-arrows-alt" aria-hidden="true"></i> 
             <a href="<?php echo $link[ 'link' ]; ?>" target="<?php echo $link[ 'target_link' ]; ?>" <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>
                 <?php echo !empty($link['icon']) ? "<i class='{$link['icon']}' aria-hidden='true'></i> {$link[ 'title_link' ]}" : $link[ 'title_link' ]; ?>
+
             </a>
         </div>
         <div class="link-actions">
@@ -30,4 +31,5 @@
     </li>
     <?php endforeach; ?>
 <?php endif; ?>
+
 </ol>

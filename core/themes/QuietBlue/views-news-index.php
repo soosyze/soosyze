@@ -1,6 +1,6 @@
 
 <div class="row">
-<?php if ($news): ?>
+    <?php if ($news): ?>
     <?php foreach ($news as $new): ?>
 
     <article class="col-md-6">
@@ -21,18 +21,20 @@
             </div>
         </div>
     </article>
+
     <?php endforeach; ?>
     <div class="col-md-12">
+
         <?php echo $paginate; ?>
     </div>
     <div class="col-md-12">
         <a type="application/rss+xml" href="<?php echo $link_rss; ?>"><i class="fa fa-rss-square" aria-hidden="true"></i></a>
     </div>
-<?php else: ?>
+    <?php else: ?>
 
     <div class="col-md-12">
         <p><?php echo $default; ?></p>
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 
 </div>

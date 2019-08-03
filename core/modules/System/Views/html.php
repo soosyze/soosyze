@@ -68,6 +68,7 @@
     <body>
         <div class="container">
             <?php echo $section[ 'page' ] ?>
+
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <br>
