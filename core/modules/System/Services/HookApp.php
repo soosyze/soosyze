@@ -120,7 +120,7 @@ class HookApp
                 'title' => $data[ 'meta_title' ],
                 'logo'  => $data[ 'logo' ]
             ]);
-            $vendor = $this->router->getBasePath() . $this->core->getSetting('modules', 'modules/core') . 'System/Assets/js/script.js';
+            $vendor = $this->core->getPath('modules', 'core/modules') . '/System/Assets/js/script.js';
             $script = $response->getBlock('this')->getVar('scripts');
             $script .= '<script src="' . $vendor . '"></script>';
             $response->view('this', [ 'scripts' => $script ]);

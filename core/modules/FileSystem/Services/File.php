@@ -86,7 +86,7 @@ class File
     {
         $this->name = Util::strSlug($name);
         $this->path = $path === null
-            ? $this->core->getSetting('files_public', 'app/files')
+            ? $this->core->getDir('files_public', 'app/files')
             : $path;
 
         return $this;

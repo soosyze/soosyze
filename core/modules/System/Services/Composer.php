@@ -111,8 +111,8 @@ class Composer
         if (!empty($this->composer) || $reload) {
             return $this->composer;
         }
-        $module            = $this->core->getSetting('modules', 'core/modules');
-        $module_contribued = $this->core->getSetting('modules_contributed', 'app/modules');
+        $module            = $this->core->getDir('modules', 'core/modules');
+        $module_contribued = $this->core->getDir('modules_contributed', 'app/modules');
 
         $this->composer = $this->getComposerModules($module_contribued) + $this->getComposerModules($module) + $this->getComposerInstalledModules();
 

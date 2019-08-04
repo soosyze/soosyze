@@ -221,14 +221,17 @@ class Templating extends \Soosyze\Components\Http\Response
         return (new Block($tpl, $tplPath))
                 ->addVars([
                     'base_path'  => $this->base_path,
-                    'base_theme' => $this->base_path . $this->default_theme_path . DS
+                    'base_theme' => $this->base_path . $this->default_theme_path . '/'
                 ])
                 ->pathOverride($this->getPathTheme());
     }
 
     public function addBlock($parent, $template, array $vars = [])
     {
-        $template->addVars($vars);
+        if( $template !== null )
+        {
+            $template->addVars($vars);
+        }
 
         if ($block = strstr($parent, '.', true)) {
             $this->getBlock($block)

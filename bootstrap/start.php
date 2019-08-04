@@ -13,17 +13,18 @@ $req = Soosyze\Components\Http\ServerRequest::create();
 $app = \Core::getInstance($req);
 
 $app->setSettings([
+    'root'                => ROOT,
     'config'              => 'app/config',
-    /* Chemin des fichiers */
+    /* Chemin des fichiers. */
     'files'               => 'app/files',
-    /* Chemin des fichiers public */
+    /* Chemin des fichiers public. */
     'files_public'        => 'app/files/public',
     /* Chemin des modules du core. */
-    'modules'             => 'core/modules/',
+    'modules'             => 'core/modules',
     /* Chemin des modules contributeur. */
-    'modules_contributed' => 'app/modules/',
-    /* Chemins des themes par odre de prioritée d'appel. */
-    'themes_path'         => ['app/themes', 'core/themes']
+    'modules_contributed' => 'app/modules',
+    /* Chemins des thèmes par ordre de priorité d'appel. */
+    'themes_path'         => [ 'app/themes', 'core/themes' ]
 ]);
 
 $app->init();
