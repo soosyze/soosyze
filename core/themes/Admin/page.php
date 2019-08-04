@@ -27,7 +27,7 @@
 
             </div>
             <?php endif; ?>
-            <?php if( $section[ 'sidebar' ] ): ?>
+            <?php if( !empty($section[ 'sidebar' ]) ): ?>
 
             <div class="col-md-4">
                 <?php echo $section[ 'sidebar' ]; ?>
@@ -35,7 +35,7 @@
             </div>
             <?php endif; ?>
 
-            <?php if( $section[ 'sidebar' ] ): ?>
+            <?php if( !empty($section[ 'sidebar' ]) ): ?>
                 <?php echo '<div class="col-md-8">'; ?>
             <?php else: ?>
                 <?php echo '<div class="col-sm-12">'; ?>
