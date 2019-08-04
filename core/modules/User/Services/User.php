@@ -93,6 +93,13 @@ class User
                 ->fetchAll();
     }
 
+    public function getRoles()
+    {
+        return $this->query
+            ->from('role')
+            ->fetchAll();
+    }
+    
     public function getIdRolesUser($idUser)
     {
         return $this->query->from('user_role')
