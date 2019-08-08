@@ -55,6 +55,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.user_register', '')
             ->set('settings.user_relogin', 'on')
             ->set('settings.connect_url', '')
+            ->set('settings.connect_redirect', '')
             ->set('settings.password_show', 'on')
             ->set('settings.password_length', 8)
             ->set('settings.password_upper', 1)

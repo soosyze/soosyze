@@ -91,7 +91,7 @@ class Login extends \Soosyze\Controller
                 ->update('user', [ 'time_access' => time() ])
                 ->where('user_id', '==', $user[ 'user_id' ])
                 ->execute();
-            $route = self::router()->getRoute('user.account');
+            $route = $this->getRedirectLogin($req);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = [ 'Désolé, e-mail ou mot de passe non reconnu.' ];
@@ -241,5 +241,15 @@ copiant dans votre navigateur : $url";
         $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         return new Redirect($route);
+    }
+    
+    protected function getRedirectLogin($req)
+    {
+        $redirect = self::config()->get('settings.connect_redirect', '');
+        if ($redirect) {
+            return (string) $req->getUri()->withQuery('?q=' . $redirect);
+        }
+
+        return self::router()->getRoute('user.account');
     }
 }

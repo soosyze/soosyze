@@ -39,6 +39,17 @@ class HookConfig
                             'placeholder' => 'Ajouter un token à vos routes de connexions (minimum 10 caractères)',
                             'value'       => $data[ 'connect_url' ]
                         ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('config-register-group', 'div', function ($form) use ($data) {
+                        $form->label('config-connect_redirect-label', 'Page de redirection après connexion', [
+                            'data-'
+                        ])
+                        ->text('connect_redirect', [
+                            'class'       => 'form-control',
+                            'max'         => 255,
+                            'placeholder' => '',
+                            'value'       => $data[ 'connect_redirect' ]
+                        ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
@@ -104,26 +115,28 @@ class HookConfig
     public function validator(&$validator)
     {
         $validator->setRules([
-            'user_register'   => 'bool',
-            'user_relogin'    => 'bool',
-            'connect_url'     => '!required|string|min:10|slug',
-            'password_show'   => 'bool',
-            'password_length' => 'int|min:8',
-            'password_upper'  => 'int|min:1',
-            'password_digit'  => 'int|min:1'
+            'user_register'    => 'bool',
+            'user_relogin'     => 'bool',
+            'connect_url'      => '!required|string|min:10|slug',
+            'connect_redirect' => '!required|string|max:255',
+            'password_show'    => 'bool',
+            'password_length'  => 'int|min:8',
+            'password_upper'   => 'int|min:1',
+            'password_digit'   => 'int|min:1'
         ]);
     }
 
     public function before(&$validator, &$data)
     {
         $data = [
-            'user_register'   => $validator->getInput('user_register'),
-            'user_relogin'    => $validator->getInput('user_relogin'),
-            'connect_url'     => $validator->getInput('connect_url'),
-            'password_show'   => $validator->getInput('password_show'),
-            'password_length' => $validator->getInput('password_length'),
-            'password_upper'  => $validator->getInput('password_upper'),
-            'password_digit'  => $validator->getInput('password_digit')
+            'user_register'    => $validator->getInput('user_register'),
+            'user_relogin'     => $validator->getInput('user_relogin'),
+            'connect_url'      => $validator->getInput('connect_url'),
+            'connect_redirect' => $validator->getInput('connect_redirect'),
+            'password_show'    => $validator->getInput('password_show'),
+            'password_length'  => $validator->getInput('password_length'),
+            'password_upper'   => $validator->getInput('password_upper'),
+            'password_digit'   => $validator->getInput('password_digit')
         ];
     }
 }
