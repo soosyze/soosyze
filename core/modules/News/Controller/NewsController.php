@@ -75,34 +75,26 @@ class NewsController extends \Soosyze\Controller
         ]);
     }
 
-    public function viewYears($years, $req)
+    public function viewYears($years, $page, $req)
     {
-        return $this->viewYearsPage($years, 1, $req);
-    }
-
-    public function viewYearsPage($years, $page, $req)
-    {
+        $page = !empty($page) ? substr(strrchr($page, '/'), 1) : 1;
         $date              = '01/01/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
         $this->title_main  = 'Articles de ' . $years;
-        $this->link        = self::router()->getRoute('news.page.years', [ ':years' => $years ], false);
+        $this->link        = self::router()->getRoute('news.years', [ ':years' => $years ], false);
 
         return $this->renderNews($page, $req);
     }
 
-    public function viewMonth($years, $month, $req)
+    public function viewMonth($years, $month, $page, $req)
     {
-        return $this->viewMonthPage($years, $month, 1, $req);
-    }
-
-    public function viewMonthPage($years, $month, $page, $req)
-    {
+        $page = !empty($page) ? substr(strrchr($page, '/'), 1) : 1;
         $date              = $month . '/01/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
         $this->title_main  = 'Articles de ' . date('M Y', $this->dateCurrent);
-        $this->link        = self::router()->getRoute('news.page.month', [
+        $this->link        = self::router()->getRoute('news.month', [
             ':years' => $years,
             ':month' => $month
             ], false);
@@ -110,18 +102,14 @@ class NewsController extends \Soosyze\Controller
         return $this->renderNews($page, $req);
     }
 
-    public function viewDay($years, $month, $day, $req)
+    public function viewDay($years, $month, $day, $page, $req)
     {
-        return $this->viewDayPage($years, $month, $day, 1, $req);
-    }
-
-    public function viewDayPage($years, $month, $day, $page, $req)
-    {
+        $page = !empty($page) ? substr(strrchr($page, '/'), 1) : 1;
         $date              = $month . '/' . $day . '/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
         $this->title_main  = 'Articles du ' . date('d M Y', $this->dateCurrent);
-        $this->link        = self::router()->getRoute('news.page.day', [
+        $this->link        = self::router()->getRoute('news.day', [
             ':years' => $years,
             ':month' => $month,
             ':day'   => $day
@@ -174,14 +162,23 @@ class NewsController extends \Soosyze\Controller
         self::$limit = self::config()->get('settings.news_pagination', 6);
         $offset = self::$limit * ($page - 1);
         $news   = $this->getNews($this->dateCurrent, $this->dateNext, $offset);
-
-        if (!$news) {
+        
+        $isCurrent = (time() >= $this->dateCurrent && time() <= $this->dateNext);
+        
+        $default = '';
+        var_dump(!$isCurrent, $page != 1, !$news);
+        if ($isCurrent && $page != 1 && !$news) {
             return $this->get404($req);
+        }
+        if (!$news) {
+            $default = 'Aucun articles pour le moment !';
         }
         foreach ($news as &$new) {
             $new[ 'link_view' ] = self::router()->getRoute('node.show', [
                 ':id' => $new[ 'id' ] ]);
             $new[ 'field' ]     = unserialize($new[ 'field' ]);
+            $o = strtotime(date('m/d/Y', $new['created']) . ' +1 day');
+            var_dump($o);
         }
 
         $nodes_all = $this->getNewsAll($this->dateCurrent, $this->dateNext);
@@ -195,6 +192,7 @@ class NewsController extends \Soosyze\Controller
                 ->render('page.content', 'views-news-index.php', $this->pathViews, [
                     'news'     => $news,
                     'paginate' => $paginate,
+                    'default'  => $default,
                     'link_rss' => self::router()->getRoute('news.rss')
         ]);
     }
