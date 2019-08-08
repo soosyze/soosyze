@@ -17,7 +17,8 @@ class Login extends \Soosyze\Controller
 
     public function formLogin($url, $req)
     {
-        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+        $connect_url = self::config()->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return $this->get404($req);
         }
         if ($user = self::user()->isConnected()) {
@@ -68,7 +69,8 @@ class Login extends \Soosyze\Controller
 
     public function loginCheck($url, $req)
     {
-        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+        $connect_url = self::config()->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return $this->get404($req);
         }
 
@@ -111,7 +113,8 @@ class Login extends \Soosyze\Controller
 
     public function relogin($url, $req)
     {
-        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+        $connect_url = self::config()->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return $this->get404($req);
         }
 

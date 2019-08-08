@@ -82,7 +82,8 @@ class HookUser
 
     public function hookLogin($url, $req, $user)
     {
-        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+        $connect_url = $this->config->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return false;
         }
 
@@ -91,7 +92,8 @@ class HookUser
 
     public function hookLoginCheck($url, $req, $user)
     {
-        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+        $connect_url = $this->config->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return false;
         }
         /* Si le site est en maintenance. */
@@ -117,7 +119,8 @@ class HookUser
 
     public function hookRelogin($url, $req, $user)
     {
-        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+        $connect_url = $this->config->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return false;
         }
 
