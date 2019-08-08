@@ -15,8 +15,11 @@ class Login extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function formLogin()
+    public function formLogin($url, $req)
     {
+        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+            return $this->get404($req);
+        }
         if ($user = self::user()->isConnected()) {
             $route = self::router()->getRoute('user.account');
 
@@ -33,7 +36,7 @@ class Login extends \Soosyze\Controller
 
         $form = (new FormUser([
             'method' => 'post',
-            'action' => self::router()->getRoute('user.login.check')
+            'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
             ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', 'Connexion utilisateur');
@@ -56,15 +59,19 @@ class Login extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-login.php', $this->pathViews, [
                     'form'             => $form,
-                    'url_relogin'      => self::router()->getRoute('user.relogin'),
+                    'url_relogin'      => self::router()->getRoute('user.relogin', [ ':url' => $url ]),
                     'url_register'     => self::router()->getRoute('user.register.create'),
                     'granted_relogin'  => empty($user) && self::config()->get('settings.user_relogin'),
                     'granted_register' => empty($user) && self::config()->get('settings.user_register')
         ]);
     }
 
-    public function loginCheck($req)
+    public function loginCheck($url, $req)
     {
+        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+            return $this->get404($req);
+        }
+
         $post = $req->getParsedBody();
 
         $validator = (new Validator())
@@ -88,7 +95,7 @@ class Login extends \Soosyze\Controller
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = [ 'Désolé, e-mail ou mot de passe non reconnu.' ];
-            $route                              = self::router()->getRoute('user.login');
+            $route                              = self::router()->getRoute('user.login', [ ':url' => $url ]);
         }
 
         return new Redirect($route);
@@ -102,8 +109,12 @@ class Login extends \Soosyze\Controller
         return new Redirect(self::router()->getBasePath());
     }
 
-    public function relogin()
+    public function relogin($url, $req)
     {
+        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+            return $this->get404($req);
+        }
+
         $data = [];
         $this->container->callHook('relogin.form.data', [ &$data ]);
 
@@ -114,7 +125,7 @@ class Login extends \Soosyze\Controller
 
         $form = (new FormUser([
             'method' => 'post',
-            'action' => self::router()->getRoute('user.relogin.check')
+            'action' => self::router()->getRoute('user.relogin.check', [ ':url' => $url ])
             ]))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $form->email($formbuilder);
@@ -135,12 +146,16 @@ class Login extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-relogin.php', $this->pathViews, [
                     'form'      => $form,
-                    'url_login' => self::router()->getRoute('user.login')
+                    'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])
         ]);
     }
 
-    public function reloginCheck($req)
+    public function reloginCheck($url, $req)
     {
+        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+            return $this->get404($req);
+        }
+
         $post = $req->getParsedBody();
 
         $validator = (new Validator())
@@ -185,7 +200,7 @@ copiant dans votre navigateur : $url";
                         Attention ! Il peut être dans vos courriers indésirables.'
                     ];
 
-                    $route = self::router()->getRoute('user.login');
+                    $route = self::router()->getRoute('user.login', [ ':url' => $url ]);
 
                     return new Redirect($route);
                 } else {
@@ -199,7 +214,7 @@ copiant dans votre navigateur : $url";
         }
 
         $_SESSION[ 'inputs' ] = $validator->getInputs();
-        $route                = self::router()->getRoute('user.relogin');
+        $route                = self::router()->getRoute('user.relogin', [ ':url' => $url ]);
 
         return new Redirect($route);
     }

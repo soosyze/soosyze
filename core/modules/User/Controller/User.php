@@ -22,9 +22,7 @@ class User extends \Soosyze\Controller
             return $this->show($user[ 'user_id' ], $req);
         }
 
-        $route = self::router()->getRoute('user.login');
-
-        return new Redirect($route);
+        return new \Soosyze\Components\Http\Response(403);
     }
 
     public function show($id, $req)

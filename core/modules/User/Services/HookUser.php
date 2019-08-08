@@ -80,13 +80,20 @@ class HookUser
         return empty($user) && $this->config->get('settings.user_register');
     }
 
-    public function hookLogin($req, $user)
+    public function hookLogin($url, $req, $user)
     {
+        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+            return false;
+        }
+
         return empty($user);
     }
 
-    public function hookLoginCheck($req, $user)
+    public function hookLoginCheck($url, $req, $user)
     {
+        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+            return false;
+        }
         /* Si le site est en maintenance. */
         if (!$this->config->get('settings.maintenance')) {
             return empty($user);
@@ -108,8 +115,12 @@ class HookUser
         return !empty($user);
     }
 
-    public function hookRelogin($req, $user)
+    public function hookRelogin($url, $req, $user)
     {
+        if ($this->config->has('settings.connect_url') && $url !== '/' . $this->config->get('settings.connect_url', '')) {
+            return false;
+        }
+
         return empty($user) && $this->config->get('settings.user_relogin');
     }
 }

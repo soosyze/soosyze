@@ -24,28 +24,46 @@ class HookConfig
 
     public function form(&$form, $data)
     {
-        return $form->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('config-inscription-legend', 'Inscription')
+        return $form
+                ->group('config-login-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('config-login-legend', 'Connexion')
+                    ->group('config-relogin-group', 'div', function ($form) use ($data) {
+                        $form->label('config-connect_url-label', 'Protection des routes de connexion', [
+                            'data-tooltip' => 'Dans le cas ou le site est gérré par une équipe restreinte, '
+                            . 'pour mieux protéger vos formulaire de connexion vous pouvez choisir un suffix à l\'URL. '
+                            . 'Exemple : "Ab1P-9eM_s8Y" = user/login/Ab1P-9eM_s8Y'
+                        ])
+                        ->text('connect_url', [
+                            'class'       => 'form-control',
+                            'min'         => 10,
+                            'placeholder' => 'Ajouter un token à vos routes de connexions (minimum 10 caractères)',
+                            'value'       => $data[ 'connect_url' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ]);
+                })
+                ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('config-inscription-legend', 'Inscription')
                     ->group('config-register-group', 'div', function ($form) use ($data) {
                         $form->checkbox('user_register', [ 'checked' => $data[ 'user_register' ] ])
                         ->label('config-register-label', '<span class="ui"></span> Ouvrir l\'inscription', [
                             'for' => 'user_register'
                         ]);
                     }, [ 'class' => 'form-group' ]);
-        })->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('config-password-legend', 'Politique des mots de passe')
+                })
+                ->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('config-password-legend', 'Politique des mots de passe')
                     ->group('config-relogin-group', 'div', function ($form) use ($data) {
                         $form->checkbox('user_relogin', [ 'checked' => $data[ 'user_relogin' ] ])
                         ->label('config-relogin-label', '<span class="ui"></span> Ouvrir la récupération de mot de passe', [
                             'for' => 'user_relogin'
                         ]);
                     }, [ 'class' => 'form-group' ])
-                        ->group('config-password_show-group', 'div', function ($form) use ($data) {
-                            $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
+                    ->group('config-password_show-group', 'div', function ($form) use ($data) {
+                        $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
                         ->label('config-password_show-label', '<span class="ui"></span> Ajout d\'un bouton <i class="fa fa-eye" aria-hidden="true"></i> pour visualiser les mots de passe', [
                             'for' => 'password_show'
                         ]);
-                        }, [ 'class' => 'form-group' ])
+                    }, [ 'class' => 'form-group' ])
                     ->group('config-password_length-group', 'div', function ($form) use ($data) {
                         $form->label('config-password_length-label', 'Longueur minimum')
                         ->number('password_length', [
@@ -78,7 +96,7 @@ class HookConfig
                             'value' => $data[ 'password_special' ]
                         ]);
                     }, [ 'class' => 'form-group' ]);
-        })
+                })
                 ->token('token_user_config')
                 ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
     }
@@ -88,6 +106,7 @@ class HookConfig
         $validator->setRules([
             'user_register'   => 'bool',
             'user_relogin'    => 'bool',
+            'connect_url'     => '!required|string|min:10|slug',
             'password_show'   => 'bool',
             'password_length' => 'int|min:8',
             'password_upper'  => 'int|min:1',
@@ -100,6 +119,7 @@ class HookConfig
         $data = [
             'user_register'   => $validator->getInput('user_register'),
             'user_relogin'    => $validator->getInput('user_relogin'),
+            'connect_url'     => $validator->getInput('connect_url'),
             'password_show'   => $validator->getInput('password_show'),
             'password_length' => $validator->getInput('password_length'),
             'password_upper'  => $validator->getInput('password_upper'),

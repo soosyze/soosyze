@@ -1,23 +1,35 @@
 {
     "user.login": {
         "methode": "GET",
-        "path": "user/login",
-        "uses": "Login@formLogin"
+        "path": "user/login:url",
+        "uses": "Login@formLogin",
+        "with": {
+            ":url": "(/\\w+)?"
+        }
     },
     "user.login.check": {
         "methode": "POST",
-        "path": "user/login",
-        "uses": "Login@loginCheck"
+        "path": "user/login:url",
+        "uses": "Login@loginCheck",
+        "with": {
+            ":url": "(/\\w+)?"
+        }
     },
     "user.relogin": {
         "methode": "GET",
-        "path": "user/relogin",
-        "uses": "Login@relogin"
+        "path": "user/relogin:url",
+        "uses": "Login@relogin",
+        "with": {
+            ":url": "(/\\w+)?"
+        }
     },
     "user.relogin.check": {
         "methode": "POST",
-        "path": "user/relogin",
-        "uses": "Login@reloginCheck"
+        "path": "user/relogin:url",
+        "uses": "Login@reloginCheck",
+        "with": {
+            ":url": "(/\\w+)?"
+        }
     },
     "user.reset": {
         "methode": "GET",
