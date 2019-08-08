@@ -19,7 +19,7 @@
     },
     "node.create": {
         "methode": "GET",
-        "path": "node/add/:type",
+        "path": "admin/node/add/:type",
         "uses": "Node@create",
         "with": {
             ":type": "[a-z]+"
@@ -27,7 +27,7 @@
     },
     "node.store": {
         "methode": "POST",
-        "path": "node/add/:type",
+        "path": "admin/node/add/:type",
         "uses": "Node@store",
         "with": {
             ":type": "[a-z]+"
@@ -35,7 +35,7 @@
     },
     "node.edit": {
         "methode": "GET",
-        "path": "node/:id/edit",
+        "path": "admin/node/:id/edit",
         "uses": "Node@edit",
         "with": {
             ":id": "\\d+"
@@ -43,7 +43,7 @@
     },
     "node.update": {
         "methode": "POST",
-        "path": "node/:id/edit",
+        "path": "admin/node/:id/edit",
         "uses": "Node@update",
         "with": {
             ":id": "\\d+"
@@ -51,7 +51,7 @@
     },
     "node.delete": {
         "methode": "GET",
-        "path": "node/:id/delete",
+        "path": "admin/node/:id/delete",
         "uses": "Node@delete",
         "with": {
             ":id": "\\d+"

@@ -1,7 +1,7 @@
 {
     "menu.show": {
         "methode": "GET",
-        "path": "menu/:menu",
+        "path": "admin/menu/:menu",
         "uses": "Menu@show",
         "with": {
             ":menu": "[a-z-]+"
@@ -9,7 +9,7 @@
     },
     "menu.show.check": {
         "methode": "POST",
-        "path": "menu/:menu",
+        "path": "admin/menu/:menu",
         "uses": "Menu@showCheck",
         "with": {
             ":menu": "[a-z-]+"
@@ -17,7 +17,7 @@
     },
     "menu.link.create": {
         "methode": "GET",
-        "path": "menu/:menu/link",
+        "path": "admin/menu/:menu/link",
         "uses": "Link@create",
         "with": {
             ":menu": "[a-z-]+"
@@ -25,7 +25,7 @@
     },
     "menu.link.store": {
         "methode": "POST",
-        "path": "menu/:menu/link",
+        "path": "admin/menu/:menu/link",
         "uses": "Link@store",
         "with": {
             ":menu": "[a-z-]+"
@@ -33,7 +33,7 @@
     },
     "menu.link.edit": {
         "methode": "GET",
-        "path": "menu/:menu/link/:item/edit",
+        "path": "admin/menu/:menu/link/:item/edit",
         "uses": "Link@edit",
         "with": {
             ":menu": "[a-z-]+",
@@ -42,7 +42,7 @@
     },
     "menu.link.update": {
         "methode": "POST",
-        "path": "menu/:menu/link/:item/edit",
+        "path": "admin/menu/:menu/link/:item/edit",
         "uses": "Link@update",
         "with": {
             ":menu": "[a-z-]+",
@@ -51,7 +51,7 @@
     },
     "menu.link.delete": {
         "methode": "GET",
-        "path": "menu/:menu/link/:item/delete",
+        "path": "admin/menu/:menu/link/:item/delete",
         "uses": "Link@delete",
         "with": {
             ":menu": "[a-z-]+",

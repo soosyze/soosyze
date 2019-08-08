@@ -6,7 +6,7 @@
     },
     "user.role.create": {
         "methode": "GET",
-        "path": "user/role",
+        "path": "admin/user/role",
         "uses": "Role@create"
     },
     "user.role.store": {
@@ -16,7 +16,7 @@
     },
     "user.role.edit": {
         "methode": "GET",
-        "path": "user/role/:id/edit",
+        "path": "admin/user/role/:id/edit",
         "uses": "Role@edit",
         "with": {
             ":id": "\\d+"
@@ -24,7 +24,7 @@
     },
     "user.role.update": {
         "methode": "POST",
-        "path": "user/role/:id/edit",
+        "path": "admin/user/role/:id/edit",
         "uses": "Role@udpate",
         "with": {
             ":id": "\\d+"
@@ -32,7 +32,7 @@
     },
     "user.role.remove": {
         "methode": "GET",
-        "path": "user/role/:id/delete",
+        "path": "admin/user/role/:id/delete",
         "uses": "Role@remove",
         "with": {
             ":id": "\\d+"
@@ -40,7 +40,7 @@
     },
     "user.role.delete": {
         "methode": "POST",
-        "path": "user/role/:id/delete",
+        "path": "admin/user/role/:id/delete",
         "uses": "Role@delete",
         "with": {
             ":id": "\\d+"

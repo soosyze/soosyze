@@ -51,7 +51,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 null, null, 'Site de Soosyze', 'https:\\soosyze.com', 'menu-main', 10, -1
             ])
             ->values([
-                'menu.show', 'fa fa-bars', 'Menu', 'menu/menu-main', 'menu-admin', 3, -1
+                'menu.show', 'fa fa-bars', 'Menu', 'admin/menu/menu-main', 'menu-admin', 3, -1
             ])
             ->execute();
     }
