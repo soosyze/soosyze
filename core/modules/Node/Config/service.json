@@ -35,13 +35,13 @@
         ],
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.node.show": "hookRouteNodeSow",
-            "route.node.create": "hookRouteNodeCreated",
-            "route.node.store": "hookRouteNodeCreated",
-            "route.node.edit": "hookRouteNodeEdited",
-            "route.node.update": "hookRouteNodeEdited",
-            "route.node.delete": "hookRouteNodeDeleted",
-            "route.node.add": "hookRouteNodeAdd"
+            "route.node.show": "hookNodeSow",
+            "route.node.create": "hookNodeCreated",
+            "route.node.store": "hookNodeCreated",
+            "route.node.edit": "hookNodeEdited",
+            "route.node.update": "hookNodeEdited",
+            "route.node.delete": "hookNodeDeleted",
+            "route.node.add": "hookNodeAdd"
         }
     }
 }

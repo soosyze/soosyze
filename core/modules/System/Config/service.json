@@ -40,8 +40,6 @@
         "class": "SoosyzeCore\\System\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.system.config.edit": "hookConfigManage",
-            "route.system.config.update": "hookConfigManage",
             "route.system.module.edit": "hookModuleManage",
             "route.system.module.update": "hookModuleManage"
         }

@@ -12,11 +12,6 @@ class HookUser
         ];
     }
 
-    public function hookConfigManage()
-    {
-        return 'system.config.manage';
-    }
-
     public function hookModuleManage()
     {
         return 'system.module.manage';

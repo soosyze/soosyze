@@ -11,7 +11,7 @@ class HookUser
         ];
     }
 
-    public function hookRouteContact()
+    public function hookContact()
     {
         return 'contact.main';
     }

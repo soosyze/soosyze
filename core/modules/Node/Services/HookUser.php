@@ -33,7 +33,7 @@ class HookUser
         }
     }
 
-    public function hookRouteNodeSow($id)
+    public function hookNodeSow($id)
     {
         $node = $this->query->from('node')
             ->where('id', '==', $id)
@@ -47,18 +47,18 @@ class HookUser
                 'node.administer' ]
             : '';
     }
-    
-    public function hookRouteNodeAdd($req, $user)
+
+    public function hookNodeAdd($req, $user)
     {
         return !empty($user);
     }
 
-    public function hookRouteNodeCreated($type)
+    public function hookNodeCreated($type)
     {
         return [ 'node.administer', 'node.created.' . $type ];
     }
 
-    public function hookRouteNodeEdited($id)
+    public function hookNodeEdited($id)
     {
         $node = $this->query->from('node')
             ->where('id', '==', $id)
@@ -67,7 +67,7 @@ class HookUser
         return [ 'node.administer', 'node.edited.' . $node[ 'type' ] ];
     }
 
-    public function hookRouteNodeDeleted($id)
+    public function hookNodeDeleted($id)
     {
         $node = $this->query->from('node')
             ->where('id', '==', $id)

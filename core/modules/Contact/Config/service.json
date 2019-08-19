@@ -10,8 +10,8 @@
         "class": "SoosyzeCore\\Contact\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.contact": "hookRouteContact",
-            "route.contact.check": "hookRouteContact"
+            "route.contact": "hookContact",
+            "route.contact.check": "hookContact"
         }
     }
 }

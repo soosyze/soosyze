@@ -8,15 +8,15 @@
     "news.hook.user": {
         "class": "SoosyzeCore\\News\\Services\\HookUser",
         "hooks": {
-            "route.news.index": "hookRouteNodeSow",
-            "route.news.page": "hookRouteNodeSow",
-            "route.news.page.years": "hookRouteNodeSow",
-            "route.news.page.month": "hookRouteNodeSow",
-            "route.news.page.day": "hookRouteNodeSow",            
-            "route.news.years": "hookRouteNodeSow",
-            "route.news.month": "hookRouteNodeSow",
-            "route.news.day": "hookRouteNodeSow",
-            "route.news.rss": "hookRouteNodeSow"
+            "route.news.index": "hookNewShow",
+            "route.news.page": "hookNewShow",
+            "route.news.page.years": "hookNewShow",
+            "route.news.page.month": "hookNewShow",
+            "route.news.page.day": "hookNewShow",            
+            "route.news.years": "hookNewShow",
+            "route.news.month": "hookNewShow",
+            "route.news.day": "hookNewShow",
+            "route.news.rss": "hookNewShow"
         }
     },
     "news.hook.config": {

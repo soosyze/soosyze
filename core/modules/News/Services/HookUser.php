@@ -4,7 +4,7 @@ namespace SoosyzeCore\News\Services;
 
 class HookUser
 {
-    public function hookRouteNodeSow()
+    public function hookNewShow()
     {
         return [ 'node.show.published', 'node.administer', 'node.show.article' ];
     }
