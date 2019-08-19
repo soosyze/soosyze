@@ -65,7 +65,6 @@ class HookApp
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $script  = $response->getBlock('this')->getVar('scripts');
-            $script .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js"></script>';
             $script .= '<script>
             $().ready(function () {
                 var nestedSortables = [].slice.call($(\'.nested-sortable\'));
