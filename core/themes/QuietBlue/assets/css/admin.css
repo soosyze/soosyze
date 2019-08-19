@@ -344,3 +344,81 @@ label[data-tooltip]:before {
 .icon-publish{
     background-color: #2ecc71;
 }
+
+
+/* --------------------------- */
+/* --------- MODALE----------- */
+/* --------------------------- */
+/* The Modal (background) */
+.modal-open{
+    overflow: hidden;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.modal-dialog {
+    background-color: #fefefe;
+    margin: 30px auto;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    outline: 0;
+}
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal-header {
+    padding: 1em;
+    background-color: #20222d;
+    color: white;
+}
+.modal-header h2, 
+.modal-header h3, 
+.modal-header h4 {
+    padding: 0;
+    margin: 0;
+}
+.modal-body {
+    padding: 2px 16px;
+}
