@@ -6,7 +6,7 @@
     },
     "user.role.create": {
         "methode": "GET",
-        "path": "admin/user/role",
+        "path": "admin/user/role/create",
         "uses": "Role@create"
     },
     "user.role.store": {
