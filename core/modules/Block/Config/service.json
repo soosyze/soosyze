@@ -1,0 +1,34 @@
+{
+    "block.hook.app": {
+        "class": "SoosyzeCore\\Block\\Services\\HookApp",
+        "arguments": [
+            "@template",
+            "@core",
+            "@query",
+            "@user"
+        ],
+        "hooks": {
+            "app.response.after": "hookResponseAfter"
+        }
+    },
+    "block.hook.user": {
+        "class": "SoosyzeCore\\Block\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.section.admin": "hookBlockAdmin",
+            "route.section.update": "hookBlockAdmin",
+            "route.block.create": "hookBlockCreated",
+            "route.block.store": "hookBlockCreated",
+            "route.block.edit": "hookBlockEdited",
+            "route.block.update": "hookBlockEdited",
+            "route.block.delete": "hookBlockDeleted"
+        }
+    },
+    "block.install": {
+        "class": "SoosyzeCore\\Block\\Installer",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
+        }
+    }
+}

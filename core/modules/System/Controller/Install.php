@@ -22,7 +22,8 @@ class Install extends \Soosyze\Controller
         'News'        => 'SoosyzeCore\\News\\',
         'Menu'        => 'SoosyzeCore\\Menu\\',
         'System'      => 'SoosyzeCore\\System\\',
-        'User'        => 'SoosyzeCore\\User\\'
+        'User'        => 'SoosyzeCore\\User\\',
+        'Block'       => 'SoosyzeCore\\Block\\'
     ];
 
     public function __construct()

@@ -1,0 +1,66 @@
+{
+    "section.admin": {
+        "methode": "GET",
+        "path": "admin/section/:theme",
+        "uses": "Section@admin",
+        "with": {
+            ":theme": "theme_admin|theme"
+        }
+    },
+    "section.update": {
+        "methode": "POST",
+        "path": "admin/section/:id/edit",
+        "uses": "Section@update",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "block.show": {
+        "methode": "GET",
+        "path": "block/:id",
+        "uses": "Block@show",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "block.create": {
+        "methode": "GET",
+        "path": "block/:section",
+        "uses": "Block@create",
+        "with": {
+            ":section": "\\w+"
+        }
+    },
+    "block.store": {
+        "methode": "POST",
+        "path": "block/:section",
+        "uses": "Block@store",
+        "with": {
+            ":section": "\\w+"
+        }
+    },
+    "block.edit": {
+        "methode": "GET",
+        "path": "block/:id/edit",
+        "uses": "Block@edit",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "block.update": {
+        "methode": "POST",
+        "path": "block/:id/edit",
+        "uses": "Block@update",
+        "with": {
+            ":id": "\\d+"
+        }
+    },
+    "block.delete": {
+        "methode": "DELETE",
+        "path": "menu/:id/delete",
+        "uses": "Block@delete",
+        "with": {
+            ":id": "\\d+"
+        }
+    }
+}
