@@ -1,0 +1,19 @@
+{
+    "name": "soosyze-core/quietblue",
+    "type": "soosyze-theme",
+    "description": "Thème léger avec un menu horizontal sur plusieurs niveaux.",
+    "version": "1.0",
+    "extra": {
+        "soosyze-theme": {
+            "sections": [
+                "header",
+                "sidebar",
+                "content_header",
+                "content_footer",
+                "footer",
+                "footer_column_first",
+                "footer_column_second"
+            ]
+        }
+    }
+}

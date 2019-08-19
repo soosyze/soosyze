@@ -7,6 +7,11 @@
     <?php endif; ?>
 
     <h2><a href="<?php echo $base_path; ?>"><?php echo $title; ?></a></h2>
+    <?php if (!empty($section[ 'header' ])): ?>
+
+        <?php echo $section[ 'header' ]; ?>
+    <?php endif; ?>
+
 </header>
 <nav id="nav_main">
     <ul>
@@ -23,30 +28,41 @@
     </header>
     <div class="container">
         <div class="row">
-            <?php if( !empty($section[ 'messages' ]) ): ?>
+            <?php if (!empty($section[ 'messages' ])): ?>
 
             <div class="col-md-12">
+
                 <?php echo $section[ 'messages' ]; ?>
 
             </div>
             <?php endif; ?>
-            <?php if( !empty($section[ 'sidebar' ]) ): ?>
+            <?php if (!empty($section[ 'sidebar' ])): ?>
 
             <div class="col-md-4">
+
                 <?php echo $section[ 'sidebar' ]; ?>
 
             </div>
             <?php endif; ?>
+            <?php if (!empty($section[ 'sidebar' ])): ?>
 
-            <?php if( !empty($section[ 'sidebar' ]) ): ?>
-                <?php echo '<div class="col-md-8">'; ?>
+            <div class="col-md-8">
             <?php else: ?>
-                <?php echo '<div class="col-sm-12">'; ?>
+
+            <div class="col-sm-12">
+            <?php endif; ?>
+            <?php if (!empty($section[ 'content_header' ])): ?>
+
+                <?php echo $section[ 'content_header' ]; ?>
             <?php endif; ?>
 
             <?php echo $section[ 'content' ]; ?>
-            <?php echo '</div>'; ?>
+            <?php if (!empty($section[ 'content_footer' ])): ?>
 
+                <?php echo $section[ 'content_footer' ]; ?>
+            <?php endif; ?>
+
+            </div>
         </div>
     </div>
 </div>
@@ -54,7 +70,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
+                <?php if (!empty($section[ 'footer' ])): ?>
+
+                    <?php echo $section[ 'footer' ]; ?>
+                <?php endif; ?>
+
                 <?php echo $section[ 'second_menu' ]; ?>
 
             </div>

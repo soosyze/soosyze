@@ -19,53 +19,61 @@
         <?php endif; ?>
 
         <h1><?php echo $title_main; ?></h1>
+        <?php if (!empty($section[ 'header' ])): ?>
+            <?php echo $section[ 'header' ]; ?>
+        <?php endif; ?>
     </div>
 </div>
 <div class="container">
     <div class="row">
-        <?php if( !empty($section[ 'messages' ]) ): ?>
+        <?php if (!empty($section[ 'messages' ])): ?>
 
-        <div class="col-md-12">
-            <?php echo $section[ 'messages' ]; ?>
+            <div class="col-md-12">
+                <?php echo $section[ 'messages' ]; ?>
 
-        </div>
+            </div>
         <?php endif; ?>
-        <?php if( !empty($section[ 'sidebar' ]) ): ?>
+        <?php if (!empty($section[ 'sidebar' ])): ?>
 
-        <div class="col-md-4">
-            <?php echo $section[ 'sidebar' ]; ?>
+            <div class="col-md-4">
+                <?php echo $section[ 'sidebar' ]; ?>
 
-        </div>
+            </div>
         <?php endif; ?>
 
-        <?php if( !empty($section[ 'sidebar' ]) ): ?>
+        <?php if (!empty($section[ 'sidebar' ])): ?>
             <?php echo '<div class="col-md-8">'; ?>
         <?php else: ?>
             <?php echo '<div class="col-sm-12">'; ?>
         <?php endif; ?>
 
+        <?php if (!empty($section[ 'content_header' ])): ?>
+            <?php echo $section[ 'content_header' ]; ?>
+        <?php endif; ?>
         <?php echo $section[ 'content' ]; ?>
+        <?php if (!empty($section[ 'content_footer' ])): ?>
+            <?php echo $section[ 'content_footer' ]; ?>
+        <?php endif; ?>
         <?php echo '</div>'; ?>
 
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <h2>Titre Block</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet ipsum dolor. 
-                Nulla nec porttitor augue. Sed pretium laoreet fringilla. Morbi maximus turpis magna,
-                convallis faucibus justo fermentum at. Nulla ultrices dignissim metus in varius.</p>
-        </div>
-        <div class="col-md-6">
-            <h2>Titre Block</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet ipsum dolor. 
-                Nulla nec porttitor augue. Sed pretium laoreet fringilla. Morbi maximus turpis magna,
-                convallis faucibus justo fermentum at. Nulla ultrices dignissim metus in varius.</p>
-        </div>
+        <?php if (!empty($section[ 'footer_column_first' ])): ?>
+            <div class="col-md-6">
+                <?php echo $section[ 'footer_column_first' ]; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($section[ 'footer_column_second' ])): ?>
+            <div class="col-md-6">
+                <?php echo $section[ 'footer_column_second' ]; ?>
+            </div>
+        <?php endif; ?>
     </div>
     <hr>
     <footer>
-        <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
+        <?php if (!empty($section[ 'footer' ])): ?>
+            <?php echo $section[ 'footer' ]; ?>
+        <?php endif; ?>
         <?php echo $section[ 'second_menu' ]; ?>
-
     </footer>
 </div>

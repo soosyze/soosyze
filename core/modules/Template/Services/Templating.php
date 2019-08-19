@@ -249,6 +249,17 @@ class Templating extends \Soosyze\Components\Http\Response
             ? ROOT . $this->default_theme_path . '/'
             : $this->default_theme_path;
     }
+    
+    public function getSections()
+    {
+        if (!$this->composer) {
+            $this->loadComposer();
+        }
+
+        return !empty($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'sections' ])
+            ? $this->composer[ 'extra' ][ 'soosyze-theme' ][ 'sections' ]
+            : [];
+    }
 
     public function loadComposer()
     {

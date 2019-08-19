@@ -20,28 +20,34 @@
 <div class="main-wrapper">
     <div class="container">
         <div class="row">
-            <?php if( !empty($section[ 'messages' ]) ): ?>
+            <?php if (!empty($section[ 'messages' ])): ?>
 
-            <div class="col-md-12">
-                <?php echo $section[ 'messages' ]; ?>
+                <div class="col-md-12">
+                    <?php echo $section[ 'messages' ]; ?>
 
-            </div>
+                </div>
             <?php endif; ?>
-            <?php if( !empty($section[ 'sidebar' ]) ): ?>
+            <?php if (!empty($section[ 'sidebar' ])): ?>
 
-            <div class="col-md-4">
-                <?php echo $section[ 'sidebar' ]; ?>
+                <div class="col-md-4">
+                    <?php echo $section[ 'sidebar' ]; ?>
 
-            </div>
+                </div>
             <?php endif; ?>
 
-            <?php if( !empty($section[ 'sidebar' ]) ): ?>
+            <?php if (!empty($section[ 'sidebar' ])): ?>
                 <?php echo '<div class="col-md-8">'; ?>
             <?php else: ?>
                 <?php echo '<div class="col-sm-12">'; ?>
             <?php endif; ?>
 
+            <?php if (!empty($section[ 'content_header' ])): ?>
+                <?php echo $section[ 'content_header' ]; ?>
+            <?php endif; ?>
             <?php echo $section[ 'content' ]; ?>
+            <?php if (!empty($section[ 'content_footer' ])): ?>
+                <?php echo $section[ 'content_footer' ]; ?>
+            <?php endif; ?>
             <?php echo '</div>'; ?>
 
         </div>
@@ -50,9 +56,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <footer>
-                <hr>
-                <p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>
+            <footer>             
+                <?php if (!empty($section[ 'footer' ])): ?>
+                    <hr>   
+                    <?php echo $section[ 'footer' ]; ?>
+
+                <?php endif; ?>
             </footer>
         </div>
     </div>
