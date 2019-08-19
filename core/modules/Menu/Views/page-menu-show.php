@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-9">
         <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Ajouter un lien
+            <i class="fa fa-plus" aria-hidden="true"></i> Ajouter un lien
         </a>
         <?php echo $form->form_open(); ?>
 

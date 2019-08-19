@@ -69,7 +69,7 @@ class FormUser extends FormBuilder
     {
         $form->group('user-picture-group', 'div', function ($form) {
             $form->label('user-picture-label', 'Image', [
-                'for' => 'file-name-picture',
+                'for'          => 'picture',
                 'data-tooltip' => '200ko maximum. Extensions autorisées : jpeg, jpg, png.'
             ]);
             $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
@@ -125,48 +125,43 @@ class FormUser extends FormBuilder
 
     public function passwordCurrent(&$form)
     {
-        $form->group('user-password-group', 'div', function ($form) {
-            $form->label('user-password-label', 'Mot de passe');
-            $this->password($form, 'password');
-        }, self::$attrGrp);
+        $this->password($form, 'password', 'Mot de passe');
 
         return $this;
     }
 
     public function passwordNew(&$form)
     {
-        $form->group('user-password_new-group', 'div', function ($form) {
-            $form->label('user-password_new-label', 'Nouveau mot de passe');
-            $this->password($form, 'password_new');
-        }, self::$attrGrp);
+        $this->password($form, 'password_new', 'Nouveau mot de passe');
 
         return $this;
     }
 
     public function passwordConfirm(&$form)
     {
-        $form->group('user-password_confirm-group', 'div', function ($form) {
-            $form->label('user-password_confirm-label', 'Confirmation du nouveau mot de passe');
-            $this->password($form, 'password_confirm');
-        }, self::$attrGrp);
+        $this->password($form, 'password_confirm', 'Confirmation du nouveau mot de passe');
 
         return $this;
     }
-    
-    public function password(&$form, $id)
+
+    public function password(&$form, $id, $label)
     {
-        $form->group("user-$id-group", 'div', function ($form) use ($id) {
-            $form->password($id, [ 'class' => 'form-control' ]);
-            if ($this->config && $this->config->get('settings.password_show', true)) {
-                $form->html('password_show', '<button:css:attr>:_content</button>', [
-                    'class'        => 'btn btn-toogle-password',
-                    'onclick'      => "togglePassword(this, '$id')",
-                    'type'         => 'button',
-                    '_content'     => '<i id="eyeIcon" class="fa fa-eye" aria-hidden="true"></i>',
-                    'data-tooltip' => 'Afficher/Cacher le mot de passe'
-                ]);
-            }
-        }, [ 'class' => 'form-group-flex' ]);
+        $form->group("user-$id-group", 'div', function ($form) use ($id, $label) {
+            $form->label("$id-label", $label, [ 'for' => $id ])
+                ->group("user-$id-group", 'div', function ($form) use ($id) {
+                    $form->password($id, [ 'class' => 'form-control' ]);
+                    if ($this->config && $this->config->get('settings.password_show', true)) {
+                        $form->html('password_show', '<button:css:attr>:_content</button>', [
+                            'class'        => 'btn btn-toogle-password',
+                            'onclick'      => "togglePassword(this, '$id')",
+                            'type'         => 'button',
+                            '_content'     => '<i id="eyeIcon" class="fa fa-eye" aria-hidden="true"></i>',
+                            'data-tooltip' => 'Afficher/Cacher le mot de passe',
+                            'aria-label'   => 'Afficher/Cacher le mot de passe'
+                        ]);
+                    }
+                }, [ 'class' => 'form-group-flex' ]);
+        }, self::$attrGrp);
     }
 
     public function fieldsetInformationsCreate()
@@ -237,8 +232,7 @@ class FormUser extends FormBuilder
                                 '<span class="ui"></span>'
                                 . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '"></span> '
                                 . $role[ 'role_label' ],
-                                [ 'for' => 'role-' . $role[ 'role_id' ]
-                                ]
+                                [ 'for' => 'role[' . $role[ 'role_id' ] . ']' ]
                         );
                 }, self::$attrGrp);
             }

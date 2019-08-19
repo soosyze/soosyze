@@ -44,10 +44,10 @@
                 </td>
                 <td data-title="Actions">
                     <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
-                        <i class="fa fa-edit"></i> Éditer
+                        <i class="fa fa-edit" aria-hidden="true"></i> Éditer
                     </a>
                     <a class="btn btn-action" href="<?php echo $user[ 'link_remove' ] ?>">
-                        <i class="fa fa-times"></i> Supprimer
+                        <i class="fa fa-times" aria-hidden="true"></i> Supprimer
                     </a>
                 </td>
             </tr>

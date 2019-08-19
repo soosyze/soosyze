@@ -1,6 +1,12 @@
 
 <div class="form-group">
-    <input type="text" id="search" class="form-control" placeholder="Rechercher des permissions (exemple: voir, éditer, supprimer...)" onkeyup="searchPermission();" autofocus>
+    <input type="text" 
+           id="search" 
+           class="form-control" 
+           placeholder="Rechercher des permissions (exemple: voir, éditer, supprimer...)" 
+           aria-label="Rechercher des permissions" 
+           onkeyup="searchPermission();" 
+           autofocus>
 </div>
 <form method="post" action="<?php echo $link_update ?>">
     <fieldset class="responsive">
@@ -9,9 +15,9 @@
             <thead>
                 <tr class="form-head">
                     <th>Droit</th>
-                    <?php foreach ($roles as $role): ?>
+                    <?php foreach ($roles as $key => $role): ?>
 
-                        <th>
+                        <th id="role-<?php echo $role['role_id']; ?>">
                             <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span>
                             <?php echo $role[ 'role_label' ]; ?>
                         </th>
@@ -31,7 +37,11 @@
                     <?php $name = $role . '[' . $key . ']' ?>
 
                     <td data-title="<?php echo $roles[ $role - 1 ][ 'role_label' ]; ?>">
-                        <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?>>
+                        <input type="checkbox" 
+                               name="<?php echo $name ?>" 
+                               id="<?php echo $name ?>" 
+                               value="<?php echo $key ?>" <?php echo $checked ?> 
+                               aria-labelledby="role-<?php echo $role; ?>">
                         <label for="<?php echo $name ?>"><i class="ui" aria-hidden="true"></i></label>
                     </td>
                     <?php endforeach; ?>

@@ -1,6 +1,7 @@
 
-<header id="wrapper_header_page">
-    <?php if( $logo ): ?>
+<header id="wrapper_header_page" role="banner">
+    <?php if ($logo): ?>
+
         <a href="<?php echo $base_path; ?>">
             <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
         </a>
@@ -13,10 +14,10 @@
     <?php endif; ?>
 
 </header>
-<nav id="nav_main">
+<nav id="nav_main" role="navigation">
     <ul>
         <li>
-            <span id="toogle_menu"><i class="fa fa-ellipsis-v"></i> Menu</span>
+            <span id="toogle_menu"><i class="fa fa-ellipsis-v" aria-hidden="true"></i> Menu</span>
             <?php echo $section[ 'main_menu' ]; ?>
 
         </li>
@@ -66,7 +67,7 @@
         </div>
     </div>
 </div>
-<footer id="wrapper_footer">
+<footer id="wrapper_footer" role="contentinfo">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

@@ -302,8 +302,9 @@ label[data-tooltip]:before {
         width: 100%;
         border-radius: 0;
     }
-    .table-modules > tbody > tr > th {
-        padding: 0;
+    .table-modules > tbody > tr > td.th,
+    .table-modules > tbody > tr > th{
+        padding: 0 !important;
     }
 }
 

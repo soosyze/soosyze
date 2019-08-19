@@ -5,7 +5,7 @@
     <a href="<?php echo $link_theme; ?>" class="btn btn-primary">Thème du site</a>
 </div>
 
-<div id="modal_block" class="modal" role="dialog" aria-labelledby="Fenêtre de création de bloc.">
+<div id="modal_block" class="modal" role="dialog" aria-label="Fenêtre de création de bloc.">
     <div class="modal-dialog modal-lg" role="document">
         <!-- Modal content -->
         <div class="modal-content">

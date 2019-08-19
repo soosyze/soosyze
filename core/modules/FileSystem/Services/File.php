@@ -19,18 +19,20 @@ class File
     public function inputFile($name, FormBuilder &$form, $content = '')
     {
         $attr = [
-            'class'    => 'btn btn-danger form-file-reset',
-            'onclick'  => "document.getElementById('file-image-$name').style.display='none';"
+            'class'      => 'btn btn-danger form-file-reset',
+            'onclick'    => "document.getElementById('file-image-$name').style.display='none';"
             . "document.getElementById('$name').value='';"
             . "document.getElementById('file-name-$name').value='';"
             . "document.getElementById('file-reset-$name').disabled = true;",
-            '_content' => '✗',
-            'id'       => "file-reset-$name",
-            'type'     => 'button'
+            '_content'   => '✗',
+            'id'         => "file-reset-$name",
+            'type'       => 'button',
+            'aria-label' => 'Supprimer le fichier'
         ];
         if (!empty($content)) {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $content) {
                 $form->html("file-image-$name", '<img:css:attr/>', [
+                    'alt'   => 'Picture user',
                     'src'   => $content,
                     'class' => 'input-file-img img-thumbnail'
                 ]);
@@ -46,9 +48,10 @@ class File
                     . "document.getElementById('file-reset-$name').disabled = false;"
                 ])
                 ->text("file-name-$name", [
-                    'class'   => 'form-control form-file-name',
-                    'onclick' => "document.getElementById('$name').click();",
-                    'value'   => $content
+                    'aria-label' => 'visualisation du chemin du fichier',
+                    'class'      => 'form-control form-file-name',
+                    'onclick'    => "document.getElementById('$name').click();",
+                    'value'      => $content
                 ])
                 ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr);
         }, [ 'class' => 'form-group-flex' ]);

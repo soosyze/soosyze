@@ -25,7 +25,7 @@ class FormUserRole extends FormBuilder
     public function labelRole(&$form)
     {
         $form->group('role-label-group', 'div', function ($form) {
-            $form->label('role-label-label', 'Label')
+            $form->label('role-label-label', 'Nom')
                 ->text('role_label', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
@@ -70,7 +70,7 @@ class FormUserRole extends FormBuilder
     public function colorRole(&$form)
     {
         $form->group('role-color-group', 'div', function ($form) {
-            $form->label('role-color-label', 'Color')
+            $form->label('role-color-label', 'Color', ['for' => 'role_color'])
                 ->group('role-color-group', 'div', function ($form) {
                     $form->text('role_color', [
                         'class'   => 'form-control',
@@ -79,6 +79,7 @@ class FormUserRole extends FormBuilder
                     ])
                     ->html('btn-color', '<button:css:attr>:_content</button>', [
                         '_content' => '<i class="fa fa-sync"></i>',
+                        'aria-label' => 'Couleur aléatoire',
                         'class'    => 'btn',
                         'id'       => 'role_color_btn',
                         'style'    => 'background-color:' . $this->content[ 'role_color' ],

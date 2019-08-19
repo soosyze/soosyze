@@ -1,6 +1,6 @@
 
 <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-    <i class="fa fa-plus"></i> Ajouter du contenu
+    <i class="fa fa-plus" aria-hidden="true"></i> Ajouter du contenu
 </a>
 <fieldset class="responsive">
     <legend>Mes Contenus</legend>

@@ -13,7 +13,7 @@
     padding: 0;
 }
 #menu ul {
-    background: #0086b3;
+    background: #20222d;
     border-top: 5px solid #fff;
     display: none;
     left: 0;
@@ -54,7 +54,7 @@
     width: auto;
 }
 #menu li:hover > a {
-    background-color: rgba(255, 255, 255, .3);
+    background-color: rgba(255, 255, 255, .1);
 }
 #menu ul ul {
     left: 180px;
@@ -78,8 +78,15 @@
     transition: linear .3s;
 }
 #menu li.active > a{
-    background-color: rgba(255, 255, 255, .2);
+    background-color: #fff;
+    color: #007ea8;
+}
+#menu ul li.active > a{
+    background-color: rgba(255, 255, 255, .1);
     color: #fff;
+}
+#menu li.active.parent > a:after {
+    background-color: #007ea8;
 }
 @media (min-width: 768px){
     #menu {

@@ -14,7 +14,7 @@ html {
     color: #20222d;
 }
 body{
-    background: #0086b3 url("../files/overlay.svg") no-repeat center center fixed;
+    background: #007ea8 url("../files/overlay.svg") no-repeat center center fixed;
     background-size: cover;
     font-family: Roboto,"Source Sans Pro",sans-serif;
     font-size: 1.1em;
@@ -24,6 +24,7 @@ footer{
     color: #FFF;
     float: left;
     width: 100%;
+    background-color: #20222d;
 }
 fieldset{
     border: 0;
@@ -35,9 +36,9 @@ fieldset{
 fieldset legend{
     background: #FFF;
     border: 0;
-    color: #1a92bb;
+    color: #007ea8;
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 500;
     padding-right: 6px;
     width: auto;
 }
@@ -49,9 +50,12 @@ h1, h2, h3, h4, h5, h6{
     text-transform: uppercase;
 }
 a{
-    color: #0086b3;
+    color: #007ea8;
     position: relative;
     text-decoration: none;
+}
+#wrapper_footer a{
+    color: #009ed2;
 }
 a:after{
     background: #20222d;
@@ -125,10 +129,6 @@ header h2{
 #wrapper_main{
     background-color: #fff;
     padding: 3em 0;
-}
-#wrapper_main header,
-#wrapper_main .container{
-    padding: 0 3em;
 }
 #wrapper_footer ul li{
     margin-bottom: 5px;
@@ -258,12 +258,13 @@ select[size]{
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 .form-required{
-    color: #d9534f;
+    color: #c12f2a;
+    font-size: 1.3em;
 }
 
 /* BUTTONS */
 .btn{
-    background-color: #0086b3;
+    background-color: #20222d;
     border: 0;
     border-radius: 0;
     cursor: pointer;
@@ -283,6 +284,9 @@ a.btn:hover,
 .btn:hover{
     background-color: #1a92bb;
     color: #FFF;
+}
+.btn-primary{
+    background-color: #0086b3;
 }
 .btn-success{
     background-color: #009926;
@@ -352,7 +356,7 @@ img, .img-responsive {
     margin-top: 5px;
 }
 .alert-info{
-    background-color: #1a92bb;
+    background-color: #007ea8;
     border-color: #0386b3;
 }
 .alert-success{
@@ -459,8 +463,8 @@ tbody tr:hover {
     display: inline-block;
     padding-left: 0;
     margin: 20px 0;
-        margin-top: 20px;
-        margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     border-radius: 4px;
 }
 .pagination > li {
@@ -477,10 +481,10 @@ tbody tr:hover {
     text-decoration: none;
     background-color: #fff;
     border: 1px solid #ddd;
-        border-top-color: rgb(221, 221, 221);
-        border-right-color: rgb(221, 221, 221);
-        border-bottom-color: rgb(221, 221, 221);
-        border-left-color: rgb(221, 221, 221);
+    border-top-color: rgb(221, 221, 221);
+    border-right-color: rgb(221, 221, 221);
+    border-bottom-color: rgb(221, 221, 221);
+    border-left-color: rgb(221, 221, 221);
 }
 .pagination > .active > a, 
 .pagination > .active > a:focus, 
@@ -494,3 +498,23 @@ tbody tr:hover {
     background-color: #337ab7;
     border-color: #337ab7;
 }
+
+pre{
+    background-color: #3F3F3F;
+    color: #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    overflow: auto;
+    padding: 5px;
+    word-wrap: break-word;
+}
+code{
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: monospace;
+}
+
+/* Social menu */

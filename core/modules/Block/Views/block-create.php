@@ -8,8 +8,8 @@
 
         <div class="col-md-4">
             <div class="block-item">
-                <label class="block-body">
                     <h3><?php echo $block[ 'title' ]; ?></h3>
+                <label class="block-body" for="<?php echo "type_block-$key"; ?>">
                     <?php echo $form->form_group('radio-' . $key); ?>
 
                 </label>

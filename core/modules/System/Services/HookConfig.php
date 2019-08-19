@@ -79,7 +79,8 @@ class HookConfig
                         ->group('system-logo-group', 'div', function ($form) use ($data) {
                             $form->label('label-logo', 'Logo', [
                                 'class' => 'control-label',
-                                'data-tooltip' => '200ko maximum.'
+                                'data-tooltip' => '200ko maximum.',
+                                'for'=> 'logo'
                             ]);
                             $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                         }, [ 'class' => 'form-group' ]);
@@ -154,7 +155,8 @@ class HookConfig
                     ->group('system-group-favicon', 'div', function ($form) use ($data) {
                         $form->label('system-favicon-label', 'Favicon', [
                             'class'        => 'control-label',
-                            'data-tooltip' => 'Image à gauche du titre de la fenêtre de votre navigateur.'
+                            'data-tooltip' => 'Image à gauche du titre de la fenêtre de votre navigateur.',
+                            'for'=> 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
                         $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [

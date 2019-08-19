@@ -50,7 +50,10 @@ class Block extends \Soosyze\Controller
         ]);
         foreach ($this->blocks as $key => &$block) {
             $form->group('radio-' . $key, 'div', function ($form) use ($key, $block) {
-                $form->radio('type_block', [ 'value' => $key ])
+                $form->radio('type_block', [
+                        'id' => "type_block-$key",
+                        'value' => $key
+                    ])
                     ->html($key, '<div:attr:css>:_content</div>', [
                         'class'    => 'block-content',
                         '_content' => (string) self::template()

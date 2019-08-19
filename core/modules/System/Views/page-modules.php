@@ -3,7 +3,7 @@
     <div class="col-md-3 sticky">
         <div class="form-group">
             <div id="result-search" style="height: 2em;"><?php echo $count; ?> module(s)</div>
-            <input type="text" id="search" class="form-control" placeholder="Rechercher des modules..." onkeyup="search();" autofocus>
+            <input type="text" id="search" class="form-control" placeholder="Rechercher des modules..." aria-label="Rechercher des modules" onkeyup="search();" autofocus>
         </div>
         <div class="form-group">
             <input type="checkbox" id="active" onclick="search();" checked>
@@ -34,7 +34,7 @@
             <table class="table table-hover table-modules">
                 <thead>
                     <tr class="form-head">
-                        <th></th>
+                        <td>&nbsp;</td>
                         <th>(Activé) Module</th>
                         <th>Version</th>
                         <th>Actions</th>
@@ -44,13 +44,13 @@
                     <?php foreach ($modules as $module): ?>
 
                     <tr id="<?php echo $module[ 'title' ]; ?>" class="module" data-title="<?php echo $module[ 'title' ]; ?>">
-                        <th>
+                        <td class="th">
                             <div class="module-icon" style="background-color:<?php echo $module['icon']['background-color']; ?>">
                                 <i class="<?php echo $module['icon']['name']; ?>" 
                                    style="color:<?php echo $module['icon']['color']; ?>" 
                                    aria-hidden="true"></i>
                             </div>
-                        </th>
+                        </td>
                         <td data-title="Module">
                             <div class="form-group">
                             <?php echo $form->form_input("modules[{$module[ 'title' ]}]"); ?>
