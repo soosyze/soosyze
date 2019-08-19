@@ -64,7 +64,6 @@ class HookConfig
                 $form->label('system-theme-label', 'Theme du site')
                             ->select('theme', $optionThemes, [
                                 'class'    => 'form-control',
-                                'required' => 1,
                                 'selected' => $data[ 'theme' ]
                             ]);
             }, [ 'class' => 'form-group' ])
@@ -72,7 +71,6 @@ class HookConfig
                             $form->label('system-theme_admin-label', 'Theme d\'administration du site')
                             ->select('theme_admin', $optionThemes, [
                                 'class'    => 'form-control',
-                                'required' => 1,
                                 'selected' => $data[ 'theme_admin' ]
                             ]);
                         }, [ 'class' => 'form-group' ])

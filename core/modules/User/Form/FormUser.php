@@ -151,11 +151,11 @@ class FormUser extends FormBuilder
                 ->group("user-$id-group", 'div', function ($form) use ($id) {
                     $form->password($id, [ 'class' => 'form-control' ]);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
-                        $form->html('password_show', '<button:css:attr>:_content</button>', [
+                        $form->html("{$id}_show", '<button:css:attr>:_content</button>', [
                             'class'        => 'btn btn-toogle-password',
                             'onclick'      => "togglePassword(this, '$id')",
                             'type'         => 'button',
-                            '_content'     => '<i id="eyeIcon" class="fa fa-eye" aria-hidden="true"></i>',
+                            '_content'     => '<i class="fa fa-eye eyeIcon" aria-hidden="true"></i>',
                             'data-tooltip' => 'Afficher/Cacher le mot de passe',
                             'aria-label'   => 'Afficher/Cacher le mot de passe'
                         ]);

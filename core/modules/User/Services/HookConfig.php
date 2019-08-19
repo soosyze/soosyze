@@ -35,7 +35,7 @@ class HookConfig
                         ])
                         ->text('connect_url', [
                             'class'       => 'form-control',
-                            'min'         => 10,
+                            'minlength'   => 10,
                             'placeholder' => 'Ajouter un token à vos routes de connexions (minimum 10 caractères)',
                             'value'       => $data[ 'connect_url' ]
                         ]);
@@ -46,7 +46,7 @@ class HookConfig
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
-                            'max'         => 255,
+                            'maxlength'   => 255,
                             'placeholder' => '',
                             'value'       => $data[ 'connect_redirect' ]
                         ]);

@@ -24,7 +24,7 @@
                         <td data-title="Date de création"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></td>
                         <td data-title="Actions" class="text-right">
                             <div class="btn-group" role="group" aria-label="action">
-                                <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="__blank">
+                                <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
                                     <span class="fa fa-search"></span> Voir
                                 </a>
                                 <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
