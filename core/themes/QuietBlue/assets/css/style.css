@@ -95,6 +95,10 @@ nav a:focus::after{
     color: #fff;
     padding: 2em 0em 1em;
 }
+#wrapper_header .learn_more{
+    text-align: center;
+    margin-bottom: 3em;
+}
 header h1,
 header h2{
     line-height: 1.1;
@@ -135,6 +139,11 @@ header h2{
 }
 #wrapper_footer a:after{
     background: #fff;
+}
+#pre_footer {
+    background-color: #2d313f;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 @media (min-width: 768px){
     header h1{
@@ -253,6 +262,11 @@ select[size]{
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 .form-control:focus{
+    border-color: #0086b3;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form-control:focus + button{
     border-color: #0086b3;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
@@ -453,8 +467,8 @@ tbody tr:hover {
     text-align: justify;
 }
 .card__content img{
-    width: auto;
-    height: 200px;
+    width: 100%;
+    height: auto;
 }
 .card__date_tags{
     margin: 0 0 1em 0;
@@ -518,3 +532,24 @@ code{
 }
 
 /* Social menu */
+
+ul.icons {
+    cursor: default;
+    list-style: none;
+    padding-left: 0;
+}
+ul.icons li {
+    display: inline-block;
+    vertical-align: middle;
+}
+ul.icons li a::before {
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5em;
+}
+ul.icons li a i {
+    display: none;
+}

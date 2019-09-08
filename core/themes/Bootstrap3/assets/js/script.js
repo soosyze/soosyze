@@ -1,4 +1,5 @@
 $(function () {
+    /* SCROLL TOP */
     $('#btn_up').click(function () {
         $('html,body').animate({scrollTop: 0}, 'slow');
     });
@@ -22,5 +23,15 @@ $(function () {
             $(target).hide();
             $('body').toggleClass('modal-open');
         }
+    });
+
+    /* SCROLL TO */
+    $('a').click(function () {
+        var page = $(this).attr('href');
+        if ($(page)[0] !== undefined) {
+            var speed = 750;
+            $('html, body').animate({scrollTop: $(page).offset().top - 80}, speed); // Go
+        }
+        return false;
     });
 });

@@ -1,34 +1,42 @@
 
 <header id="wrapper_header" role="banner">
-    <?php if ($logo): ?>
-
-        <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
-    <?php endif; ?>
-
-    <h1><?php echo $title; ?></h1>
-</header>
-<nav id="nav_main" role="navigation">
-    <ul>
-        <li>
-            <span id="toogle_menu"><i class="fa fa-ellipsis-v" aria-hidden="true"></i> Menu</span>
-            <?php echo $section[ 'main_menu' ]; ?>
-
-        </li>
-    </ul>
-</nav>
-<div id="wrapper_main">
-    <header>
-        <h2><?php echo $title_main; ?></h2>
-    </header>
     <div class="container">
         <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+            <?php if ($logo): ?>
+
+                <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
+            <?php endif; ?>
+
+            <h1><?php echo $title; ?></h1>
             <?php if (!empty($section[ 'header' ])): ?>
 
-            <div class="col-md-12">
-                <?php echo $section[ 'header' ]; ?>
+                <div class="col-md-12">
+                    <?php echo $section[ 'header' ]; ?>
+
+                </div>
+            <?php endif; ?>
 
             </div>
-            <?php endif; ?>
+        </div>
+    </div>
+</header>
+<nav id="nav_main" role="navigation">
+    <div class="container">
+        <div class="row">
+            <ul>
+                <li>
+                    <span id="toogle_menu"><i class="fa fa-ellipsis-v" aria-hidden="true"></i> Menu</span>
+                    <?php echo $section[ 'main_menu' ]; ?>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div id="wrapper_main">
+    <div class="container">
+        <div class="row">
             <?php if (!empty($section[ 'messages' ])): ?>
 
             <div class="col-md-12">
@@ -65,6 +73,30 @@
     </div>
 </div>
 <footer id="wrapper_footer" role="contentinfo">
+    <?php if (!empty($section[ 'footer_first' ]) || !empty($section[ 'footer_second' ])): ?>
+
+    <div id="pre_footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <?php if (!empty($section[ 'footer_first' ])): ?>
+
+                        <?php echo $section[ 'footer_first' ]; ?>
+                    <?php endif; ?>
+
+                </div>
+                <div class="col-md-6">
+                    <?php if (!empty($section[ 'footer_second' ])): ?>
+
+                        <?php echo $section[ 'footer_second' ]; ?>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">

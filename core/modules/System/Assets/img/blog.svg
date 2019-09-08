@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="430.389008" height="300" viewBox="0 0 430.389 300">
+    <style><![CDATA[.B{stroke:#fff}.C{stroke-miterlimit:10}.D{fill:none}.E{stroke-linecap:round}.F{stroke-width:8}.G{stroke-linejoin:round}]]></style>
+    <g stroke-width="3" class="B C D">
+        <path d="M1.5 1.5h427.389008v297H1.5z"/>
+        <path d="M1.5 1.5h427.389008v77.023003H1.5z"/>
+        <path d="M127.194 43.104h176"/>
+    </g>
+    <g class="F B C">
+        <path fill="#fff" d="M63.067 115.638h91.275002v60H63.067z" class="G"/>
+        <path d="M176.746 115.638h74.858" class="D E"/>
+    </g>
+    <path d="M176.746 142.557h22.247m18.033 0h10.52m20.738 0H367.32m-190.574-10.174h101.597m21.043 0h12.02m24.647 0h31.268m-190.575 20.352h60.245m26.93 0h14.424m18.64 0h70.337m-190.575 10.173H367.32m-190.574 10.178h40.28m19.964 0h11.293" stroke-width="4" class="B C D E"/>
+    <path stroke-width="10" d="M167.4 25.77h95.57" class="B C D E"/>
+    <path d="M176.747 204.436h74.856" class="B C D E F"/>
+    <path d="M176.747 231.356h22.246m18.033 0h10.52m20.737 0H367.32m-190.573-10.174h101.596m21.043 0h12.02m24.646 0h31.268m-190.573 20.352H237m26.92 0h14.424m18.64 0h70.336m-190.573 10.172H367.32m-190.573 10.18h40.28m19.973 0h11.293" stroke-width="4" class="B C D E"/>
+    <path fill="#fff" d="M63.067 204.436005h91.275002v60H63.067z" class="B C F G"/>
+</svg>

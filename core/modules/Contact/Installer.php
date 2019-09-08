@@ -32,7 +32,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->insertInto('menu_link', [
                     'key', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
-                ->values([ 'contact', 'Contact', 'contact', 'menu-main', 4, -1 ])
+                ->values([ 'contact', 'Contact', 'contact', 'menu-main', 50, -1 ])
                 ->execute();
         }
     }

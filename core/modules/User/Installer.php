@@ -51,20 +51,6 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('permission_id');
             });
 
-        $ci->config()
-            ->set('settings.user_register', '')
-            ->set('settings.user_relogin', 'on')
-            ->set('settings.connect_url', '')
-            ->set('settings.connect_redirect', '')
-            ->set('settings.password_show', 'on')
-            ->set('settings.password_length', 8)
-            ->set('settings.password_upper', 1)
-            ->set('settings.password_digit', 1)
-            ->set('settings.password_special', 1);
-    }
-    
-    public function seeders(ContainerInterface $ci)
-    {
         $ci->query()
             ->insertInto('role', [ 'role_label', 'role_description', 'role_weight' ])
             ->values([ 'Utilisateur non connecté', 'Rôle requis par le système', 1 ])
@@ -82,6 +68,22 @@ class Installer implements \SoosyzeCore\System\Migration
             ->values([ 2, 'user.showed' ])
             ->values([ 2, 'user.edited' ])
             ->execute();
+
+        $ci->config()
+            ->set('settings.user_register', '')
+            ->set('settings.user_relogin', 'on')
+            ->set('settings.connect_url', '')
+            ->set('settings.connect_redirect', '')
+            ->set('settings.connect_https', 'on')
+            ->set('settings.password_show', 'on')
+            ->set('settings.password_length', 8)
+            ->set('settings.password_upper', 1)
+            ->set('settings.password_digit', 1)
+            ->set('settings.password_special', 1);
+    }
+    
+    public function seeders(ContainerInterface $ci)
+    {
     }
 
     public function hookInstall(ContainerInterface $ci)

@@ -33,4 +33,15 @@ $(function () {
             $('body').toggleClass('modal-open');
         }
     });
+    /* SCROLL TO */
+    $('a').click(function () {
+        var page = $(this).attr('href');
+        var fragment = page.substring(page.lastIndexOf('#'));
+
+        if (fragment !== undefined) {
+            var speed = 750;
+            $('html, body').animate({scrollTop: $(fragment).offset().top - 20}, speed); // Go
+        }
+        return false;
+    });
 });

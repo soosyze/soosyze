@@ -9,7 +9,7 @@
         "path": "install/step/:id",
         "uses": "Install@step",
         "with": {
-            ":id": "\\d+"
+            ":id": "\\w+"
         }
     },
     "install.step.check": {
@@ -17,7 +17,7 @@
         "path": "install/step/:id",
         "uses": "Install@stepCheck",
         "with": {
-            ":id": "\\d+"
+            ":id": "\\w+"
         }
     }
 }

@@ -2,11 +2,9 @@
 
 namespace SoosyzeCore\System\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
-use Soosyze\Components\Validator\Validator;
 
 class Install extends \Soosyze\Controller
 {
@@ -16,196 +14,129 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        'Config'      => 'SoosyzeCore\\Config\\',
-        'Contact'     => 'SoosyzeCore\\Contact\\',
-        'Node'        => 'SoosyzeCore\\Node\\',
-        'News'        => 'SoosyzeCore\\News\\',
-        'Menu'        => 'SoosyzeCore\\Menu\\',
-        'System'      => 'SoosyzeCore\\System\\',
-        'User'        => 'SoosyzeCore\\User\\',
-        'Block'       => 'SoosyzeCore\\Block\\'
+        'Config'  => 'SoosyzeCore\\Config\\',
+        'Contact' => 'SoosyzeCore\\Contact\\',
+        'Node'    => 'SoosyzeCore\\Node\\',
+        'Menu'    => 'SoosyzeCore\\Menu\\',
+        'System'  => 'SoosyzeCore\\System\\',
+        'User'    => 'SoosyzeCore\\User\\',
+        'Block'   => 'SoosyzeCore\\Block\\'
     ];
 
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-install.json';
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews    = dirname(__DIR__) . '/Views/Install/';
     }
 
-    public function step($id)
+    public function index($req)
     {
-        switch ($id) {
-            case 2:
-                $this->installModule();
-
-                return $this->installFinish();
+        if (!($steps = $this->getSteps())) {
+            return $this->get404($req);
         }
+        $keys = array_keys($steps);
+        if (!empty($steps[ $keys[ 0 ] ][ 'key' ])) {
+            return $this->step($steps[ $keys[ 0 ] ][ 'key' ], $req);
+        }
+
+        return $this->get404($req);
+    }
+
+    public function step($id, $req)
+    {
+        if (!($steps = $this->getSteps()) || !isset($steps[ $id ])) {
+            return $this->get404($req);
+        }
+
+        $messages = [
+            'errors'   => [], 'warnings' => [],
+            'infos'    => [], 'success'  => []
+        ];
+        if (isset($_SESSION[ 'messages' ][ $id ])) {
+            $messages = array_merge($messages, $_SESSION[ 'messages' ][ $id ]);
+            unset($_SESSION[ 'messages' ][ $id ]);
+        }
+
+        $block_page     = self::core()->callHook("step.$id", [ $id ]);
+        $block_messages = (new Template('messages.php', $this->pathViews))
+            ->addVars($messages);
+
+        return (new Template('html.php', $this->pathViews))
+                ->addBlock('page', $block_page)
+                ->addBlock('messages', $block_messages)
+                ->addVars([ 'steps' => $steps, 'step_active' => $id ])
+                ->render();
     }
 
     public function stepCheck($id, $req)
     {
-        switch ($id) {
-            case 1:
-                return $this->installUserCheck($req);
-        }
-    }
-
-    public function index()
-    {
-        $content = [
-            'username'         => '',
-            'email'            => '',
-            'name'             => '',
-            'firstname'        => '',
-            'password'         => '',
-            'password-confirm' => ''
-        ];
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
+        if (!($steps = $this->getSteps()) || !isset($steps[ $id ])) {
+            return $this->get404($req);
         }
 
-        $action = self::router()->getRoute('install.step.check', [ ':id' => 1 ]);
+        /* Validation de l'étape. */
+        self::core()->callHook("step.$id.check", [ $id, $req ]);
 
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('install-username-group', 'div', function ($form) use ($content) {
-                $form->label('install-username-label', 'Nom utilisateur')
-                ->text('username', [
-                    'class'     => 'form-control',
-                    'maxlength' => 255,
-                    'required'  => 1,
-                    'value'     => $content[ 'username' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('install-email-group', 'div', function ($form) use ($content) {
-                $form->label('install-email-label', 'E-mail')
-                ->email('email', [
-                    'class'       => 'form-control',
-                    'maxlength'   => 254,
-                    'placeholder' => 'email@exemple.com',
-                    'required'    => 1,
-                    'value'       => $content[ 'email' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('install-name-group', 'div', function ($form) use ($content) {
-                $form->label('install-name-label', 'Nom')
-                ->text('name', [
-                    'class'     => 'form-control',
-                    'maxlength' => 255,
-                    'value'     => $content[ 'name' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('install-firstname-group', 'div', function ($form) use ($content) {
-                $form->label('install-firstname-label', 'Prénom')
-                ->text('firstname', [
-                    'class'     => 'form-control',
-                    'maxlength' => 255,
-                    'value'     => $content[ 'firstname' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('install-password-group', 'div', function ($form) use ($content) {
-                $form->label('install-password-label', 'Mot de passe')
-                ->password('password', [
-                    'class'    => 'form-control',
-                    'required' => 1,
-                    'value'    => $content[ 'password' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('install-password-confirm-group', 'div', function ($form) use ($content) {
-                $form->label('install-password-confirm-label', 'Confirmation du mot de passe')
-                ->password('password-confirm', [
-                    'class'    => 'form-control',
-                    'required' => 1,
-                    'value'    => $content[ 'password-confirm' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->token('token_install')
-            ->submit('submit', 'Installer', [ 'class' => 'btn btn-success' ]);
+        $route = self::router()->getRoute('install.step', [ ':id' => $id ]);
+        if (!empty($_SESSION[ 'inputs' ][ $id ]) && empty($_SESSION[ 'messages' ][ $id ])) {
+            $this->position($steps, $id);
+            if (($next = next($steps)) === false && key($steps) === null) {
+                $this->installModule();
 
-        if (isset($_SESSION[ 'errors' ])) {
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+                return $this->installFinish();
+            } else {
+                $route = self::router()->getRoute('install.step', [ ':id' => $next[ 'key' ] ]);
+            }
         }
-
-        $block = (new Template('page-install.php', $this->pathViews))
-            ->addVar('form', $form);
-
-        return (new Template('html.php', $this->pathViews))
-                ->addBlock('page', $block)
-                ->render();
-    }
-
-    private function installUserCheck($req)
-    {
-        $post = $req->getParsedBody();
-
-        $validator = (new Validator())
-            ->setRules([
-                'username'         => 'required|string|max:255|htmlsc',
-                /* max:254 RFC5321 - 4.5.3.1.3. */
-                'email'            => 'required|email|max:254|htmlsc',
-                'name'             => '!required|string|max:255|htmlsc',
-                'firstname'        => '!required|string|max:255|htmlsc',
-                'password'         => 'required|string',
-                'password-confirm' => 'required|string|equal:@password'
-            ])
-            ->setInputs($post);
-
-        if ($validator->isValid()) {
-            $_SESSION[ 'save' ] = [
-                'username'  => $validator->getInput('username'),
-                'email'     => $validator->getInput('email'),
-                'name'      => $validator->getInput('name'),
-                'firstname' => $validator->getInput('firstname'),
-                'password'  => $validator->getInput('password'),
-            ];
-
-            $route = self::router()->getRoute('install.step', [ ':id' => 2 ]);
-
-            return new Redirect($route);
-        }
-
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
-
-        $route = self::router()->getRoute('install.index');
 
         return new Redirect($route);
+    }
+
+    protected function getSteps()
+    {
+        $step = [];
+        self::core()->callHook('step', [ &$step ]);
+        uasort($step, function ($a, $b) {
+            if ($a[ 'weight' ] === $b[ 'weight' ]) {
+                return 0;
+            }
+
+            return ($a[ 'weight' ] < $b[ 'weight' ])
+                ? -1
+                : 1;
+        });
+
+        return $step;
     }
 
     private function installModule()
     {
         /* Installation */
         $instances = [];
+        $profil    = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
+        $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
         foreach ($this->modules as $title => $namespace) {
             $migration = $namespace . 'Installer';
-            $installer   = new $migration();
+            $installer = new $migration();
+
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
             $installer->seeders($this->container);
             $composer = Util::getJson($installer->getComposer());
+
             /* Charge le container de nouveaux services. */
             $this->loadContainer($composer);
-            $instances[$title] = ['obj' => $installer, 'composer'=> $composer];
+            $instances[ $title ] = $composer;
         }
 
-        foreach ($instances as $title => $installer) {
-            self::module()->create($installer['composer']);
+        foreach ($instances as $title => $composer) {
+            self::module()->create($composer);
             /* Hook d'installation pour les autres modules utilise le module actuel. */
-            $this->container->callHook(
-                strtolower('install.' . self::composer()->getTitle($title)),
-                [
+            $this->container->callHook(strtolower('install.' . self::composer()->getTitle($title)), [
                 $this->container
-            ]
-            );
+            ]);
         }
 
         self::query()
@@ -217,7 +148,7 @@ class Install extends \Soosyze\Controller
 
     private function installFinish()
     {
-        $save = $_SESSION[ 'save' ];
+        $save = $_SESSION[ 'inputs' ][ 'user' ];
         $salt = base64_encode(random_bytes(32));
         $data = [
             'username'       => $save[ 'username' ],
@@ -251,11 +182,14 @@ class Install extends \Soosyze\Controller
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
             ->set('settings.rewrite_engine', false);
-        
+
+        $profil = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
+        $this->container->callHook("step.install.finish.$profil", [ $this->container ]);
+
         $path = self::config()->getPath();
         chmod($path . 'database.json', 0444);
 
-        unset($_SESSION[ 'save' ]);
+        session_destroy();
         $route = self::router()->getBasePath();
 
         return new Redirect($route);
@@ -271,5 +205,15 @@ class Install extends \Soosyze\Controller
 
             $this->container->addServices(Util::getJson($path));
         }
+    }
+
+    private function position(array &$array, $position)
+    {
+        reset($array);
+        do {
+            if (key($array) === $position) {
+                break;
+            }
+        } while (next($array));
     }
 }

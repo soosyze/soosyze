@@ -68,6 +68,30 @@
     </div>
 </div>
 <footer id="wrapper_footer" role="contentinfo">
+    <?php if (!empty($section[ 'footer_first' ]) || !empty($section[ 'footer_second' ])): ?>
+
+    <div id="pre_footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <?php if (!empty($section[ 'footer_first' ])): ?>
+
+                        <?php echo $section[ 'footer_first' ]; ?>
+                    <?php endif; ?>
+
+                </div>
+                <div class="col-md-6">
+                    <?php if (!empty($section[ 'footer_second' ])): ?>
+
+                        <?php echo $section[ 'footer_second' ]; ?>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">

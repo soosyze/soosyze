@@ -32,13 +32,9 @@ class Installer implements \SoosyzeCore\System\Migration
     public function seeders(ContainerInterface $ci)
     {
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'content', 'weight' ])
-            ->values([ 'sidebar', 'Lorem ipsum dolor', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce mattis ornare libero, nec faucibus ex pharetra vel. In porta pretium congue. Phasellus mattis arcu vehicula purus sodales, lacinia eleifend risus sagittis. ',
-                1 ])
-            ->values([ 'sidebar', 'Pellentesque eget', 'Pellentesque eget consectetur libero. Morbi viverra non dolor ac tincidunt. Quisque et enim ut felis dignissim facilisis a vel orci.',
-                1 ])
+            ->insertInto('block', [ 'section', 'title', 'content', 'weight', 'pages' ])
             ->values([ 'footer', '', '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
-                1 ])
+                1, '' ])
             ->execute();
     }
 
