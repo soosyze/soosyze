@@ -51,10 +51,10 @@ class Menu
             ->isValid();
 
         if (!$output) {
-            $query = $link === '/'
+            $query = $link === '/' || strpos($link, '/#') === 0
                 ? $this->config->get('settings.path_index', '/')
                 : $link;
-            
+
             $parse = parse_url("?q=$query");
             $uri = $request->getUri();
             if (!empty($parse['query'])) {

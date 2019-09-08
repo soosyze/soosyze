@@ -22,7 +22,7 @@ class Link extends \Soosyze\Controller
 
     public function create($nameMenu)
     {
-        $content = [ 'title_link' => '', 'icon' => '', 'link' => '', 'target_link' => '_self' ];
+        $content = [ 'title_link' => '', 'icon' => '', 'link' => '', 'fragment' => '', 'target_link' => '_self' ];
 
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
 
@@ -53,7 +53,7 @@ class Link extends \Soosyze\Controller
                         'class'       => 'form-control',
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
-                        'value'       => $content[ 'link' ],
+                        'value'       => $content[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
@@ -124,10 +124,12 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && $isUrlOrRoute) {
+            $url = parse_url($validator->getInput('link'));
             $data = [
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $validator->getInput('link'),
+                'link'        => $url['path'],
+                'fragment'    => !empty($url['fragment']) ? $url['fragment'] : null,
                 'target_link' => $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
@@ -202,7 +204,7 @@ class Link extends \Soosyze\Controller
                         'class'       => 'form-control',
                         'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
                         'required'    => 1,
-                        'value'       => $query[ 'link' ]
+                        'value'       => $query[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
@@ -277,10 +279,12 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.update.validator', [ &$validator ]);
 
         if ($validator->isValid() && $isUrlOrRoute) {
+            $url = parse_url($validator->getInput('link'));
             $data = [
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $validator->getInput('link'),
+                'link'        => $url['path'],
+                'fragment'    => !empty($url['fragment']) ? $url['fragment'] : null,
                 'target_link' => $validator->getInput('target_link')
             ];
             if (isset($isUrlOrRoute[ 'key' ])) {

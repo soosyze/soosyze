@@ -105,6 +105,26 @@ class HookApp
         }
     }
 
+    public function rewiteUri($isRewite, $request)
+    {
+        $query = str_replace('q=/', '', $request->getUri()->getQuery());
+        $uri   = $request->getUri()->withQuery($query);
+
+        if ($isRewite) {
+            $link = $request->getBasePath();
+
+            $link .= $uri->getQuery() !== ''
+                ? str_replace('q=', '', $uri->getQuery())
+                : '';
+
+            return $link . ($uri->getFragment() !== ''
+                ? '#' . $uri->getFragment()
+                : '');
+        }
+
+        return $uri->__toString();
+    }
+
     /**
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
@@ -129,7 +149,11 @@ class HookApp
             $menu[ 'link_active' ] = 0 === strpos($route, 'q=' . $menu[ 'link' ]) || ($route === '' && $menu[ 'link' ] === '/')
                 ? 'active'
                 : '';
-            $link                  = $request->withUri($request->getUri()->withQuery('q=' . $menu[ 'link' ]));
+            $link                  = $request->withUri(
+                $request->getUri()
+                ->withQuery('q=' . $menu[ 'link' ])
+                ->withFragment($menu[ 'fragment' ])
+            );
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
             if (!$this->core->callHook('app.granted.route', [ $link ])) {
                 unset($query[ $key ]);
@@ -140,25 +164,5 @@ class HookApp
         }
 
         return $query;
-    }
-
-    protected function rewiteUri($isRewite, $request)
-    {
-        $query = str_replace('q=/', '', $request->getUri()->getQuery());
-        $uri   = $request->getUri()->withQuery($query);
-
-        if ($isRewite) {
-            $link = $request->getBasePath();
-
-            $link .= $uri->getQuery() !== ''
-                ? str_replace('q=', '', $uri->getQuery())
-                : '';
-
-            return $link . ($uri->getFragment() !== ''
-                ? '#' . $uri->getFragment()
-                : '');
-        }
-
-        return $uri->__toString();
     }
 }

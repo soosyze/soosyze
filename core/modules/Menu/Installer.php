@@ -25,6 +25,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('key')->nullable()
                 ->string('icon')->nullable()
                 ->string('link')
+                ->string('fragment')->nullable()
                 ->string('title_link')
                 ->string('target_link')->valueDefault('_self')
                 ->string('menu')
@@ -32,26 +33,32 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->integer('parent')
                 ->boolean('active')->valueDefault(true);
             });
-    }
-
-    public function seeders(ContainerInterface $ci)
-    {
+            
         $ci->query()
             ->insertInto('menu', [ 'name', 'title', 'description' ])
             ->values([ 'menu-admin', 'Menu d’administration', 'Le menu pour la gestion du site.' ])
             ->values([ 'menu-main', 'Menu principal', 'Le menu principal du site utilisable pour les internautes.' ])
             ->values([ 'menu-user', 'Menu utilisateur', 'Le menu des liens utilisateurs (compte, connexion...).' ])
             ->execute();
-
+        
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent', 'target_link'
             ])
             ->values([
-                null, null, 'Site de Soosyze', 'https:\\soosyze.com', 'menu-main', 10, -1
+                'menu.show', 'fa fa-bars', 'Menu', 'admin/menu/menu-main', 'menu-admin', 3, -1, '_self'
+            ])
+            ->execute();
+    }
+
+    public function seeders(ContainerInterface $ci)
+    {
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent', 'target_link'
             ])
             ->values([
-                'menu.show', 'fa fa-bars', 'Menu', 'admin/menu/menu-main', 'menu-admin', 3, -1
+                null, null, 'Site de Soosyze', 'https://soosyze.com', 'menu-main', 50, -1, '_blank'
             ])
             ->execute();
     }

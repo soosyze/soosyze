@@ -40,7 +40,7 @@ class Menu extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-menu-show.php', $this->pathViews, [
                     'form'     => $form,
-                    'menu'     => $this->renderMenu($name),
+                    'menu'     => $this->renderMenu($req, $name),
                     'linkAdd'  => self::router()->getRoute('menu.link.create', [
                         ':menu' => $name
                     ]),
@@ -73,7 +73,7 @@ class Menu extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($links as $link) {
                 $linkUpdate = [
-                    'active' => (bool) ($validator->getInput("active-{$link[ 'id' ]}") == 'on'),
+                    'active' => (bool) ($validator->getInput("active-{$link[ 'id' ]}") === 'on'),
                     'parent' => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
                     'weight' => (int) $validator->getInput("weight-{$link[ 'id' ]}")
                 ];
@@ -92,7 +92,7 @@ class Menu extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    public function renderMenu($nameMenu, $parent = -1, $level = 1)
+    public function renderMenu($req, $nameMenu, $parent = -1, $level = 1)
     {
         $query = self::query()
             ->from('menu_link')
@@ -101,12 +101,19 @@ class Menu extends \Soosyze\Controller
             ->orderBy('weight')
             ->fetchAll();
 
+        $isRewite = self::core()->get('config')->get('settings.rewrite_engine');
         foreach ($query as &$link) {
+            $req_link        = $req->withUri(
+                $req->getUri()
+                ->withQuery('q=' . $link[ 'link' ])
+                ->withFragment($link[ 'fragment' ])
+            );
+            $link[ 'link' ]        = $this->get('menu.hook.app')->rewiteUri($isRewite, $req_link);
             $link[ 'link_edit' ]   = self::router()
                 ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
             $link[ 'link_delete' ] = self::router()
                 ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $link[ 'submenu' ]     = $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1);
+            $link[ 'submenu' ]     = $this->renderMenu($req, $nameMenu, $link[ 'id' ], $level + 1);
         }
 
         return self::template()
