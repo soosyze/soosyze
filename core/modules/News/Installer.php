@@ -142,7 +142,7 @@ class Installer implements \SoosyzeCore\System\Migration
         $this->hookUninstallMenu($ci);
         $this->hookUninstallUser($ci);
     }
-    
+
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
@@ -152,7 +152,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->execute();
         }
     }
-    
+
     public function hookUninstallUser(ContainerInterface $ci)
     {
         if ($ci->module()->has('User')) {

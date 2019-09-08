@@ -24,7 +24,7 @@ class HookUser
     {
         $permission[ 'User' ] = [
             'user.people.manage'     => 'Administrer les utilisateurs',
-            'user.permission.manage' => 'Administrer les droits',
+            'user.permission.manage' => 'Administrer les permissions',
             'user.showed'            => 'Voir les profils utilisateurs',
             'user.edited'            => 'Modifier son compte utilisateur',
             'user.deleted'           => 'Supprimer son compte utilisateur',

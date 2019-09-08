@@ -36,7 +36,7 @@
                             </div>
                         </td>
                         <td data-title="Publié">
-                            <?php if ($node[ 'published' ] == 'on'): ?>
+                            <?php if ($node[ 'published' ]): ?>
 
                                 <div class="icon-publish" data-tooltip="Publié"></div>
                             <?php else: ?>

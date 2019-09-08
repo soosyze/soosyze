@@ -1,6 +1,6 @@
 
 <a class="btn btn-primary" href="<?php echo $link_add; ?>">
-    <i class="fa fa-plus" aria-hidden="true"></i> Ajouter un nouveau role
+    <i class="fa fa-plus" aria-hidden="true"></i> Ajouter un nouveau rôle
 </a>
 <fieldset class="responsive">
     <legend>Rôles utilisateurs</legend>

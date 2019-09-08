@@ -64,7 +64,7 @@ class Block extends \Soosyze\Controller
                             'src_image' => self::core()->getPath('modules') . '/Block/Assets/static.svg'
                         ])
                 ]);
-            }, []);
+            });
         }
         $form->token($section)
             ->submit('submit', 'Ajouter', [ 'class' => 'btn btn-success' ]);

@@ -4,7 +4,7 @@
 <div class="block-list">
     <?php $i = 0; ?>
     <?php foreach ($blocks as $key => $block): ?>
-        <?php echo ($i % 3 == 0) ? '<div class="row">' : '' ?>
+        <?php echo ($i % 3 === 0) ? '<div class="row">' : '' ?>
 
         <div class="col-md-4">
             <div class="block-item">
@@ -15,7 +15,7 @@
                 </label>
             </div>
         </div>
-        <?php echo ($i % 3 == 2) ? '</div>'  : '' ?>
+        <?php echo ($i % 3 === 2) ? '</div>'  : '' ?>
         <?php ++$i; ?>
     <?php endforeach; ?>
 

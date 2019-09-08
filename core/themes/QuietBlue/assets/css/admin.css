@@ -319,7 +319,7 @@ label[data-tooltip]:before {
 .nested-sortable .link-item:hover {
     border: 1px dashed rgba(0,0,0,.5);
 }
-.nested-sortable .link-item.placeholder {
+.placeholder {
     background: #e1e4e8;
     opacity: .5;
 }

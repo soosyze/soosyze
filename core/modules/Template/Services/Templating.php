@@ -228,8 +228,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function addBlock($parent, $template, array $vars = [])
     {
-        if( $template !== null )
-        {
+        if ($template !== null) {
             $template->addVars($vars);
         }
 

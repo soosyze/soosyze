@@ -71,28 +71,28 @@ class HookApp
 
                 for (var i = 0; i < nestedSortables.length; i++) {
                     new Sortable(nestedSortables[i], {
-                        group: \'nested\',
+                        group: "nested",
                         animation: 150,
                         fallbackOnBody: true,
                         swapThreshold: 0.1,
-                        ghostClass: \'placeholder\',
+                        ghostClass: "placeholder",
                         dragoverBubble: true,
                         onEnd: function (evt) {
-                            render(\'#main_sortable\');
+                            render("#main_sortable");
                         }
                     });
                 }
 
                 function render(idMenu) {
                     var weight = 1;
-                    var id = $(idMenu).parent(\'li\').children(\'input[name^="id"]\').val();
+                    var id = $(idMenu).parent("li").children(\'input[name^="id"]\').val();
                     if (id === undefined) {
                         id = -1;
                     }
-                    $(idMenu).children(\'li\').each(function () {
+                    $(idMenu).children("li").each(function () {
                         $(this).children(\'input[name^="weight"]\').val(weight);
                         $(this).children(\'input[name^="parent"]\').val(id);
-                        render($(this).children(\'ol\'));
+                        render($(this).children("ol"));
                         weight++;
                     });
                 }

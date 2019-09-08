@@ -25,7 +25,7 @@ class HookApp
     {
         $uri = $request->getUri();
 
-        if ($uri->getQuery() == '' || $uri->getQuery() == 'q=/') {
+        if ($uri->getQuery() === '' || $uri->getQuery() === 'q=/') {
             $path_index = $this->config->get('settings.path_index')
                 ? 'q=' . $this->config->get('settings.path_index')
                 : '404';
@@ -44,7 +44,7 @@ class HookApp
 
     public function hooks404($request, &$response)
     {
-        if (($path = $this->config->get('settings.path_no_found')) != '') {
+        if (($path = $this->config->get('settings.path_no_found', '')) !== '') {
             $requestNoFound = $request
                 ->withUri($request->getUri()->withQuery('q=' . $path))
                 ->withMethod('GET');
