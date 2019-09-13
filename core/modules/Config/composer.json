@@ -1,7 +1,7 @@
 {
     "name": "soosyze-core/config",
     "type": "soosyze-module",
-    "description": "Panneau des configurations",
+    "description": "Configuration Panel",
     "version": "1.0",
     "autoload": {
         "psr-4": {

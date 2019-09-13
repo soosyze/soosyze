@@ -1,6 +1,6 @@
 
 <div class="row">
     <div class="col-md-12">
-        <p>Le site est actuellement en maintenance. Merci de votre compréhension</p>
+        <p><?php echo t('The site is currently under maintenance. Thank you for your understanding.'); ?></p>
     </div>
-</div> <!-- /.row -->
+</div>

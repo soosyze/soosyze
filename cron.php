@@ -6,6 +6,7 @@ define('ROOT', __DIR__ . DS);
 require_once ROOT . 'bootstrap/autoload.php';
 require_once ROOT . 'app/app_core.php';
 require_once ROOT . 'bootstrap/start_cli.php';
+require_once ROOT . 'bootstrap/facade.php';
 
 $get         = filter_input(INPUT_GET, 'q');
 $key_cron    = $app->get('config')->get('settings.key_cron');

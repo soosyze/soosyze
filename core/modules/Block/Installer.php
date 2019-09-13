@@ -52,7 +52,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'section.admin', 'fa fa-columns', 'Bloc', 'admin/section/theme',
+                    'section.admin', 'fa fa-columns', 'Block', 'admin/section/theme',
                     'menu-admin', 7, -1
                 ])
                 ->execute();

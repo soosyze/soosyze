@@ -25,11 +25,10 @@ class FormUserRole extends FormBuilder
     public function labelRole(&$form)
     {
         $form->group('role-label-group', 'div', function ($form) {
-            $form->label('role-label-label', 'Nom')
+            $form->label('role-label-label', t('Name'))
                 ->text('role_label', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
-                    'placeholder' => 'Nom du nouveau rôle',
                     'required'    => 1,
                     'value'       => $this->content[ 'role_label' ]
             ]);
@@ -41,7 +40,7 @@ class FormUserRole extends FormBuilder
     public function description(&$form)
     {
         $form->group('role-description-group', 'div', function ($form) {
-            $form->label('role-description-label', 'Description')
+            $form->label('role-description-label', t('Description'))
                 ->text('role_description', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -55,7 +54,7 @@ class FormUserRole extends FormBuilder
     public function weight(&$form)
     {
         $form->group('role-weight-group', 'div', function ($form) {
-            $form->label('role-weight-label', 'Poids')
+            $form->label('role-weight-label', t('Weight'))
                 ->number('role_weight', [
                     'class' => 'form-control',
                     'max'   => 50,
@@ -70,7 +69,7 @@ class FormUserRole extends FormBuilder
     public function colorRole(&$form)
     {
         $form->group('role-color-group', 'div', function ($form) {
-            $form->label('role-color-label', 'Color', ['for' => 'role_color'])
+            $form->label('role-color-label', t('Color'), ['for' => 'role_color'])
                 ->group('role-color-group', 'div', function ($form) {
                     $form->text('role_color', [
                         'class'   => 'form-control',
@@ -79,7 +78,7 @@ class FormUserRole extends FormBuilder
                     ])
                     ->html('btn-color', '<button:css:attr>:_content</button>', [
                         '_content' => '<i class="fa fa-sync"></i>',
-                        'aria-label' => 'Couleur aléatoire',
+                        'aria-label' => t('Random color'),
                         'class'    => 'btn',
                         'id'       => 'role_color_btn',
                         'style'    => 'background-color:' . $this->content[ 'role_color' ],
@@ -87,7 +86,7 @@ class FormUserRole extends FormBuilder
                         . 'document.getElementById(\'role_color\').value = randomColor;'
                         . 'document.getElementById(\'role_color_btn\').style.background = randomColor;',
                         'type'     => 'button',
-                        'data-tooltip' => 'Couleur aléatoire'
+                        'data-tooltip' => t('Random color')
                     ]);
                 }, [ 'class' => 'form-group-flex' ]);
         }, self::$attrGrp);
@@ -98,7 +97,7 @@ class FormUserRole extends FormBuilder
     public function generate()
     {
         return $this->group('role-fieldset', 'fieldset', function ($form) {
-            $form->legend('role-legend', 'Aperçu du rôle');
+            $form->legend('role-legend', t('Role overview'));
             $this->labelRole($form)
                     ->description($form)
                     ->weight($form)
@@ -109,24 +108,24 @@ class FormUserRole extends FormBuilder
     public function submitForm()
     {
         return $this->html('cancel', '<button:css:attr>:_content</button>', [
-                    '_content' => 'Annuler',
+                    '_content' => t('Cancel'),
                     'class'    => 'btn btn-danger',
                     'onclick'  => 'javascript:history.back();',
                     'type'     => 'button'
                 ])
                 ->token('token_role_submit')
-                ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
     
     public function generateDelete()
     {
         return $this->group('user-edit-information-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-edit-information-legend', 'Suppression de rôle')
+            $form->legend('user-edit-information-legend', t('Delete role'))
                     ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
-                        '_content' => 'Attention ! La suppression du rôle est définitif.'
+                        '_content' => t('Warning ! The deletion of the role is final.')
                     ]);
         })
                 ->token('token_role_delete')
-                ->submit('sumbit', 'Supprimer le rôle', [ 'class' => 'btn btn-danger' ]);
+                ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
     }
 }

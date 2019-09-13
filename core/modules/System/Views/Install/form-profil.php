@@ -2,7 +2,7 @@
 <?php echo $form->form_open(); ?>
 
 <fieldset>
-    <legend>Profil d'installation</legend>
+    <legend><?php echo t('Installation profile'); ?></legend>
     <?php $i = 0; ?>
     <?php foreach ($profils as $key => $profil): ?>
         <?php

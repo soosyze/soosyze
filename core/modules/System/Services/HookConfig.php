@@ -18,7 +18,7 @@ class HookConfig
     {
         $menu[] = [
             'key'        => 'system',
-            'title_link' => 'Système'
+            'title_link' => 'System'
         ];
     }
 
@@ -30,15 +30,15 @@ class HookConfig
         }
 
         return $form->group('system-information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
-            $form->legend('system-information-legend', 'Information')
+            $form->legend('system-information-legend', t('Information'))
                     ->group('system-email-group', 'div', function ($form) use ($data) {
-                        $form->label('system-email-label', 'E-mail du site', [
-                            'data-tooltip' => 'E-mail utilisé pour la configuration générale, pour vos contacts (pour la récupération de votre mot de passe...).'
+                        $form->label('system-email-label', t('E-mail of the site'), [
+                            'data-tooltip' => t('E-mail used for the general configuration, for your contacts, the recovery of your password ...')
                         ])
                         ->email('email', [
                             'class'       => 'form-control',
                             'required'    => 1,
-                            'placeholder' => 'E-mail',
+                            'placeholder' => t('E-mail'),
                             'value'       => $data[ 'email' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
@@ -46,7 +46,7 @@ class HookConfig
                         $form->checkbox('maintenance', [
                             'checked' => $data[ 'maintenance' ]
                         ])
-                        ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Mettre le site en maintenance', [
+                        ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Put the site in maintenance'), [
                             'for' => 'maintenance'
                         ]);
                     }, [ 'class' => 'form-group' ]);
@@ -55,27 +55,27 @@ class HookConfig
                     $form->checkbox('rewrite_engine', [
                                     'checked' => $data[ 'rewrite_engine' ]
                                 ])
-                                ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i>Rendre les URL propres', [
+                                ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
                                     'for' => 'rewrite_engine'
                                 ]);
                 }, [ 'class' => 'form-group' ]);
             }
             $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                $form->label('system-theme-label', 'Theme du site')
+                $form->label('system-theme-label', t('Website theme'))
                             ->select('theme', $optionThemes, [
                                 'class'    => 'form-control',
                                 'selected' => $data[ 'theme' ]
                             ]);
             }, [ 'class' => 'form-group' ])
                         ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
-                            $form->label('system-theme_admin-label', 'Theme d\'administration du site')
+                            $form->label('system-theme_admin-label', t('Website administration theme'))
                             ->select('theme_admin', $optionThemes, [
                                 'class'    => 'form-control',
                                 'selected' => $data[ 'theme_admin' ]
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('system-logo-group', 'div', function ($form) use ($data) {
-                            $form->label('label-logo', 'Logo', [
+                            $form->label('label-logo', t('Logo'), [
                                 'class' => 'control-label',
                                 'data-tooltip' => '200ko maximum.',
                                 'for'=> 'logo'
@@ -84,56 +84,55 @@ class HookConfig
                         }, [ 'class' => 'form-group' ]);
         })
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('system-path-legend', 'Page par défaut')
+                    $form->legend('system-path-legend', t('Default page'))
                     ->group('system-path_index-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_index-label', 'Page d’accueil par défaut', [
-                            'data-tooltip' => 'Lien du contenu affiché en page d’accueil de votre site.'
+                        $form->label('system-path_index-label', t('Default homepage'), [
+                            'data-tooltip' => t('Content link displayed on your site\'s homepage.')
                         ])
                         ->text('path_index', [
                             'class'       => 'form-control',
                             'required'    => 1,
-                            'placeholder' => 'Path page index',
+                            'placeholder' => t('Example: node/1'),
                             'value'       => $data[ 'path_index' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_access_denied-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_access_denied-label', 'Page 403 par défaut (accès refusé)', [
-                            'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui lui est interdite.'
+                        $form->label('system-path_access_denied-label', t('Page 403 by default (access denied)'), [
+                            'data-tooltip' => t('The content of the link is displayed if a user accesses a forbidden page.')
                         ])
                         ->text('path_access_denied', [
                             'class'       => 'form-control',
-                            'placeholder' => 'Path page access denied',
+                            'placeholder' => t('Example: user/login'),
                             'value'       => $data[ 'path_access_denied' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_no_found-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_no_found-label', 'Page 404 par défaut (page non trouvée)', [
-                            'data-tooltip' => 'Lien du contenu affiché si un utilisateur accède à une page qui n’existe pas.'
+                        $form->label('system-path_no_found-label', t('Page 404 by default (page not found)'), [
+                            'data-tooltip' => t('The content of the link is displayed if a user accesses a non-existent page.')
                         ])
                         ->text('path_no_found', [
                             'class'       => 'form-control',
-                            'placeholder' => 'Path page not found',
+                            'placeholder' => t('Example: node/1'),
                             'value'       => $data[ 'path_no_found' ]
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('system-metadata-legend', 'SEO Metadonnées')
+                    $form->legend('system-metadata-legend', t('SEO'))
                     ->group('system-meta_title-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_title-label', 'Titre du site', [
-                            'data-tooltip' => 'Le titre principal de votre site apparait aussi dans le titre de la fenêtre de votre navigateur.'
+                        $form->label('system-meta_title-label', t('Website title'), [
+                            'data-tooltip' => t('The main title of your site also appears in the title of your browser window.')
                         ])
                         ->text('meta_title', [
                             'class'       => 'form-control',
                             'maxlength'   => 64,
-                            'placeholder' => 'Titre du site',
                             'required'    => 'required',
                             'value'       => $data[ 'meta_title' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-meta_description-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_description-label', 'Description', [
-                            'data-tooltip' => 'Aide à votre référencement et s’affiche dans les moteurs de recherche.'
+                        $form->label('system-meta_description-label', t('Description'), [
+                            'data-tooltip' => t('Help your SEO and appears in the search engines.')
                         ])
                         ->textarea('meta_description', $data[ 'meta_description' ], [
                             'class'     => 'form-control',
@@ -143,29 +142,29 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-meta_keyboard-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_keyboard-label', 'Mots-clés')
+                        $form->label('system-meta_keyboard-label', t('Keywords'))
                         ->text('meta_keyboard', [
                             'class'       => 'form-control',
-                            'placeholder' => 'Mot1, Mot2, Mot3...',
+                            'placeholder' => t('Word1, Word2, Word3 ...'),
                             'value'       => $data[ 'meta_keyboard' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-group-favicon', 'div', function ($form) use ($data) {
-                        $form->label('system-favicon-label', 'Favicon', [
+                        $form->label('system-favicon-label', t('Favicon'), [
                             'class'        => 'control-label',
-                            'data-tooltip' => 'Image à gauche du titre de la fenêtre de votre navigateur.',
+                            'data-tooltip' => t('Image to the left of the title of your browser window.'),
                             'for'=> 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
                         $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
-                            '_content' => 'Le fichier doit peser moins de <b>100 Ko</b>.'
+                            '_content' => t('The file must weigh less than 100 KB.')
                         ])->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
-                            '_content' => 'La largeur et hauteur min et max : <b>16px et 310px</b>.'
+                            '_content' => t('The width and height min and max: 16px and 310px.')
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->token('token_system_config')
-                ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
 
     public function validator(&$validator)

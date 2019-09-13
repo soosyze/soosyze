@@ -39,7 +39,7 @@ class Role extends \Soosyze\Controller
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->view('page', [ 'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Administrer les rôles' ])
+                ->view('page', [ 'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer roles')])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-role.php', $this->pathViews, [
                     'roles'    => $roles,
@@ -77,7 +77,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Création d\'un role'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [
@@ -116,7 +116,7 @@ class Role extends \Soosyze\Controller
             self::query()->insertInto('role', array_keys($value))->values($value)->execute();
             $this->container->callHook('role.store.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                               = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
@@ -161,7 +161,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Création d\'un role'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [
@@ -198,7 +198,7 @@ class Role extends \Soosyze\Controller
             self::query()->update('role', $value)->where('role_id', '==', $id)->execute();
             $this->container->callHook('role.udpate.after', [ $validator, $value, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
@@ -243,7 +243,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Supression du role <i>' . $data[ 'role_label' ] . '</i>'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Deleting the :name role', [':name' => $data[ 'role_label' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-role.php', $this->pathViews, [
@@ -273,7 +273,7 @@ class Role extends \Soosyze\Controller
             self::query()->from('role')->where('role_id', '==', $id)->delete()->execute();
             $this->container->callHook('role.delete.after', [ $validator, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Le rôle est supprimé' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();

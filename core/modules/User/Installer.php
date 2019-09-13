@@ -53,9 +53,9 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('role', [ 'role_label', 'role_description', 'role_weight' ])
-            ->values([ 'Utilisateur non connecté', 'Rôle requis par le système', 1 ])
-            ->values([ 'Utilisateur connecté', 'Rôle requis par le système', 2 ])
-            ->values([ 'Administrateur', 'Rôle requis par le système', 3 ])
+            ->values([ 'User not logged in', 'Role required by the system', 1 ])
+            ->values([ 'User logged in', 'Role required by the system', 2 ])
+            ->values([ 'Administrator', 'Role required by the system', 3 ])
             ->execute();
 
         $ci->query()
@@ -99,16 +99,16 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'user.management.admin', 'fa fa-user', 'Utilisateur', 'admin/user', 'menu-admin', 4, -1
+                    'user.management.admin', 'fa fa-user', 'User', 'admin/user', 'menu-admin', 4, -1
                 ])
                 ->values([
-                    'user.account', null, 'Mon compte', 'user/account', 'menu-user', 1, -1
+                    'user.account', null, 'My account', 'user/account', 'menu-user', 1, -1
                 ])
                 ->values([
-                    'user.login', null, 'Connexion', 'user/login', 'menu-user', 2, -1
+                    'user.login', null, 'Log in', 'user/login', 'menu-user', 2, -1
                 ])
                 ->values([
-                    'user.logout', 'fa fa-power-off', 'Déconnexion', 'user/logout', 'menu-user', 3, -1
+                    'user.logout', 'fa fa-power-off', 'Log out', 'user/logout', 'menu-user', 3, -1
                 ])
                 ->execute();
         }

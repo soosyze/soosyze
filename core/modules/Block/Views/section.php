@@ -7,9 +7,9 @@
             <?php if ($edit) : ?>
 
             <span class="block-actions">
-                <i title="éditer" class="fa fa-edit" data-link_edit="<?php echo $block[ 'link_edit' ]; ?>"></i>
-                <i title="supprimer" class="fa fa-trash-alt" data-link_delete="<?php echo $block[ 'link_delete' ]; ?>"></i>
-                <i title="déplacer" class="fa fa-arrows-alt" data-link_update="<?php echo $block[ 'link_update' ]; ?>"></i>
+                <i title="<?php echo t('Edit'); ?>" class="fa fa-edit" data-link_edit="<?php echo $block[ 'link_edit' ]; ?>"></i>
+                <i title="<?php echo t('Delete'); ?>" class="fa fa-trash-alt" data-link_delete="<?php echo $block[ 'link_delete' ]; ?>"></i>
+                <i title="<?php echo t('Move'); ?>" class="fa fa-arrows-alt" data-link_update="<?php echo $block[ 'link_update' ]; ?>"></i>
             </span>
             <?php endif; ?>
             <?php if ($block[ 'title' ]): ?>
@@ -31,7 +31,7 @@
             data-target="#modal_block" 
             data-link_create="<?php echo $link_create; ?>" 
             data-id="<?php echo $section_id; ?>">
-        <i class="fa fa-plus" aria-hidden="true"></i> Ajouter un bloc
+        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a block'); ?>
     </button>
     <?php endif; ?>
 

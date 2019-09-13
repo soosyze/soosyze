@@ -52,13 +52,13 @@ class Composer
         if (!$validator->isValid()) {
             $errors += $validator->getErrors();
         } elseif (empty($data[ 'autoload' ][ 'psr-4' ]) || !is_array($data[ 'autoload' ][ 'psr-4' ])) {
-            $errors[] = 'Les informations sur ne namespace du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
+            $errors[] = t('The namespace information for the :name module does not exist.', [':name' => $title]);
         } else {
             $migration = array_keys($data[ 'autoload' ][ 'psr-4' ])[ 0 ] . 'Installer';
             if (!class_exists($migration)) {
-                $errors[] = 'Les scripts d\'installation du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
+                $errors[] = t('The installation scripts for the :name module do not exist.', [':name' => $title ]);
             } elseif (!(new $migration() instanceof Migration)) {
-                $errors[] = 'La classe d\'installation <b>' . htmlspecialchars($migration) . '</b> n\'implemente pas l\'interface Migration.';
+                $errors[] = t('The :name install class does not implement the migration interface.', [':name' => $migration]);
             }
         }
 
@@ -75,24 +75,29 @@ class Composer
         foreach ($composer[ $title ][ 'extra' ][ 'soosyze-module' ][ 'require' ] as $module => $version) {
             /* Si les sources du module requis n'existe pas. */
             if (!isset($composer[ $module ])) {
-                $errors[] = 'Les fichiers sources de module'
-                    . ' <b>' . htmlspecialchars($module) . '</b>'
-                    . ' (v<b>' . htmlspecialchars($version) . '</b>) n\'existe pas.';
+                $errors[] = t('The :name module source files (v:version) do not exist.', [
+                    ':name'    => $module,
+                    ':version' => $version
+                ]);
 
                 continue;
             }
             /* Si le module requis n'est pas installé. */
             if (!($require = $this->module->has($module))) {
-                $errors[] = 'Le module <b>' . htmlspecialchars($module) . '</b>'
-                    . ' (v<b>' . htmlspecialchars($version) . '</b>)'
-                    . ' requis par <b>' . htmlspecialchars($title) . '</b> n\'est pas installé.';
+                $errors[] = t('The :name1 (v:version) module required by :name2 is not installed.', [
+                    ':name1'   => $module,
+                    ':version' => $version,
+                    ':name2'   => $title
+                ]);
             }
             /* Si le module requis n'est pas dans la version attendue. */
             elseif (!$this->validVersion($version, $require[ 'version' ])) {
-                $errors[] = 'Le module <b>' . htmlspecialchars($title) . '</b>'
-                    . ' require le module <b>' . htmlspecialchars($module) . '</b>'
-                    . ' (v<b>' . htmlspecialchars($version) . '</b>, actuellement'
-                    . ' v<b>' . htmlspecialchars($require[ 'version' ]) . '</b>).';
+                $errors[] = t('The :name1 module require the :name2 (v:version) module, currently (v:version_current).', [
+                    ':name1'           => $title,
+                    ':name2'           => $module,
+                    ':version'         => $version,
+                    ':version_current' => $require[ 'version' ]
+                ]);
             }
         }
 
@@ -192,7 +197,7 @@ class Composer
     {
         $errors = [];
         if (!isset($composer[ 'extra' ][ 'soosyze-module' ]) && !is_array($composer[ 'extra' ][ 'soosyze-module' ])) {
-            $errors[] = 'Les informations du module <b>' . htmlspecialchars($title) . '</b> d\'existes pas.';
+            $errors[] = t('The :name module information does not exist.', [':name' => $title]);
 
             return $errors;
         }
@@ -209,12 +214,14 @@ class Composer
         if (!$validator->isValid()) {
             $errors += $validator->getErrors();
         } elseif (empty($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ]) || !is_array($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ])) {
-            $errors[] = 'Les informations sur les contôleurs du module <b>' . htmlspecialchars($title) . '</b> n\'existe pas.';
+            $errors[] = t('The information on the controllers of the :name module does not exist.', [':name' => $title]);
         } else {
             $controller = array_shift($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ]);
             if (!class_exists($controller)) {
-                $errors[] = 'Le contrôleur <b>' . htmlspecialchars($controller) . '</b>'
-                    . ' du module <b>' . htmlspecialchars($title) . '</b> n\'est pas trouvé par l\'autoloader.';
+                $errors[] = t('The :controller controller of the :name module is not found by the autoloader.', [
+                    ':controller' => $controller,
+                    ':name'       => $title
+                ]);
             }
         }
 

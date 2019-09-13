@@ -61,7 +61,7 @@ class HookApp
         $response = empty($responseNoFound) || $responseNoFound->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
-                    'title_main' => 'Page Not Found'
+                    'title_main' => t('Not Found')
                 ])
                 ->render('page.content', 'page-404.php', $this->views, [
                     'uri' => $request->getUri()
@@ -87,7 +87,7 @@ class HookApp
         $response = empty($responseDenied) || $responseDenied->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
-                    'title_main' => 'Page Forbidden'
+                    'title_main' => t('Page Forbidden')
                 ])
                 ->render('page.content', 'page-403.php', $this->views, [
                     'uri' => $request->getUri()
@@ -102,7 +102,7 @@ class HookApp
     public function hooks503($request, &$response)
     {
         $response = $this->tpl->render('page', 'page-maintenance.php', $this->views, [
-                'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> Site en maintenance'
+                'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Site under maintenance')
             ])
             ->withStatus(503);
     }
@@ -127,7 +127,7 @@ class HookApp
 
             $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
             if ($data[ 'maintenance' ] && $granted) {
-                $response->view('page.messages', [ 'infos' => [ 'Le site est en maintenance.' ] ]);
+                $response->view('page.messages', [ 'infos' => [ t('Site under maintenance') ] ]);
             }
             if (!in_array($request->getUri()->getQuery(), [ '', '/' ])) {
                 return;

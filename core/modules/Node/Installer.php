@@ -47,7 +47,7 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->query()->insertInto('node_type', [
                 'node_type', 'node_type_name', 'node_type_description'
             ])
-            ->values([ 'page', 'Page', 'Utilisez les pages pour votre contenu statique.' ])
+            ->values([ 'page', 'Page', 'Use the pages for your static content.' ])
             ->execute();
 
         $ci->query()->insertInto('field', [
@@ -61,7 +61,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->insertInto('node_type_field', [
                 'node_type', 'field_id', 'field_label'
             ])
-            ->values([ 'page', 1, 'Corps' ])
+            ->values([ 'page', 1, 'Body' ])
             ->execute();
     }
 
@@ -98,14 +98,14 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'node.index', 'fa fa-file', 'Contenu', 'admin/node', 'menu-admin',
+                    'node.index', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
                     2, -1
                 ])
                 ->values([
-                    'node.show', null, 'Accueil', '/', 'menu-main', 1, -1
+                    'node.show', null, 'Home', '/', 'menu-main', 1, -1
                 ])
                 ->values([
-                    'node.show', 'fa fa-home', 'Accueil', '/', 'menu-admin', 1, -1
+                    'node.show', 'fa fa-home', 'Home', '/', 'menu-admin', 1, -1
                 ])
                 ->execute();
 

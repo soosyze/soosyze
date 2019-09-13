@@ -3,23 +3,23 @@
     <input type="text" 
            id="search" 
            class="form-control" 
-           placeholder="Rechercher des permissions (exemple: voir, éditer, supprimer...)" 
-           aria-label="Rechercher des permissions" 
+           placeholder="<?php echo t('Search permissions'); ?>" 
+           aria-label="<?php echo t('Search permissions'); ?>" 
            onkeyup="searchPermission();" 
            autofocus>
 </div>
 <form method="post" action="<?php echo $link_update ?>">
     <fieldset class="responsive">
-        <legend>Permissions utilisateurs</legend>
+        <legend><?php echo t('User permissions'); ?></legend>
         <table class="table table-hover">
             <thead>
                 <tr class="form-head">
-                    <th>Droit</th>
+                    <th><?php echo t('Name'); ?></th>
                     <?php foreach ($roles as $key => $role): ?>
 
                         <th id="role-<?php echo $role['role_id']; ?>">
                             <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span>
-                            <?php echo $role[ 'role_label' ]; ?>
+                            <?php echo t($role[ 'role_label' ]); ?>
                         </th>
                     <?php endforeach; ?>
 
@@ -28,7 +28,7 @@
             <tbody id="table-permission">
                 <?php foreach ($modules as $key => $module): ?>
 
-                <tr><td id="<?php echo $key; ?>" colspan="<?php echo $colspan; ?>" class="permission-module"><?php echo $key; ?></td></tr>
+                <tr><td id="<?php echo $key; ?>" colspan="<?php echo $colspan; ?>" class="permission-module"><?php echo t($key); ?></td></tr>
                 <?php foreach ($module as $key => $permission): ?>
 
                 <tr id="<?php echo $key ?>">
@@ -36,7 +36,7 @@
                     <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
                     <?php $name = $role . '[' . $key . ']' ?>
 
-                    <td data-title="<?php echo $roles[ $role - 1 ][ 'role_label' ]; ?>">
+                    <td data-title="<?php echo t($roles[ $role - 1 ][ 'role_label' ]); ?>">
                         <input type="checkbox" 
                                name="<?php echo $name ?>" 
                                id="<?php echo $name ?>" 
@@ -53,7 +53,7 @@
             </tbody>
         </table>
     </fieldset>
-    <input type="submit" name="submit" class="btn btn-success" value="Enregistrer">
+    <input type="submit" name="submit" class="btn btn-success" value="<?php echo t('Save'); ?>">
 </form>
 <script>
     var modules = <?php echo json_encode($modules) ?>;

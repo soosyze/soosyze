@@ -18,7 +18,7 @@ class HookConfig
     {
         $menu[] = [
             'key'        => 'user',
-            'title_link' => 'Utilisateur'
+            'title_link' => 'User'
         ];
     }
 
@@ -26,24 +26,21 @@ class HookConfig
     {
         return $form
                 ->group('config-login-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('config-login-legend', 'Connexion')
+                    $form->legend('config-login-legend', t('Log in'))
                     ->group('config-relogin-group', 'div', function ($form) use ($data) {
-                        $form->label('config-connect_url-label', 'Protection des routes de connexion', [
-                            'data-tooltip' => 'Dans le cas ou le site est gérré par une équipe restreinte, '
-                            . 'pour mieux protéger vos formulaire de connexion vous pouvez choisir un suffix à l\'URL. '
-                            . 'Exemple : "Ab1P-9eM_s8Y" = user/login/Ab1P-9eM_s8Y'
+                        $form->label('config-connect_url-label', t('Protection of connection paths'), [
+                            'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
+                            . t('Example: Ab1P-9eM_s8Y = user / login / Ab1P-9eM_s8Y')
                         ])
                         ->text('connect_url', [
                             'class'       => 'form-control',
                             'minlength'   => 10,
-                            'placeholder' => 'Ajouter un token à vos routes de connexions (minimum 10 caractères)',
+                            'placeholder' => t('Add a token to your connection routes (10 characters minimum)'),
                             'value'       => $data[ 'connect_url' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-register-group', 'div', function ($form) use ($data) {
-                        $form->label('config-connect_redirect-label', 'Page de redirection après connexion', [
-                            'data-'
-                        ])
+                        $form->label('config-connect_redirect-label', t('Redirect page after connection'))
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
                             'maxlength'   => 255,
@@ -53,30 +50,30 @@ class HookConfig
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('config-inscription-legend', 'Inscription')
+                    $form->legend('config-inscription-legend', t('Registration'))
                     ->group('config-register-group', 'div', function ($form) use ($data) {
                         $form->checkbox('user_register', [ 'checked' => $data[ 'user_register' ] ])
-                        ->label('config-register-label', '<span class="ui"></span> Ouvrir l\'inscription', [
+                        ->label('config-register-label', '<span class="ui"></span> ' . t('Open registration'), [
                             'for' => 'user_register'
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('config-password-legend', 'Politique des mots de passe')
+                    $form->legend('config-password-legend', t('Password policy'))
                     ->group('config-relogin-group', 'div', function ($form) use ($data) {
                         $form->checkbox('user_relogin', [ 'checked' => $data[ 'user_relogin' ] ])
-                        ->label('config-relogin-label', '<span class="ui"></span> Ouvrir la récupération de mot de passe', [
+                        ->label('config-relogin-label', '<span class="ui"></span> ' . t('Open password recovery'), [
                             'for' => 'user_relogin'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_show-group', 'div', function ($form) use ($data) {
                         $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
-                        ->label('config-password_show-label', '<span class="ui"></span> Ajout d\'un bouton <i class="fa fa-eye" aria-hidden="true"></i> pour visualiser les mots de passe', [
+                        ->label('config-password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
                             'for' => 'password_show'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_length-group', 'div', function ($form) use ($data) {
-                        $form->label('config-password_length-label', 'Longueur minimum')
+                        $form->label('config-password_length-label', t('Minimum length'))
                         ->number('password_length', [
                             'class' => 'form-control',
                             'min'   => 8,
@@ -84,7 +81,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_upper-group', 'div', function ($form) use ($data) {
-                        $form->label('config-upper-label', 'Nombre de caractères majuscule')
+                        $form->label('config-upper-label', t('Number of uppercase characters'))
                         ->number('password_upper', [
                             'class' => 'form-control',
                             'min'   => 1,
@@ -92,7 +89,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_digit-group', 'div', function ($form) use ($data) {
-                        $form->label('config-password_digit-label', 'Nombre de caractères numérique')
+                        $form->label('config-password_digit-label', t('Number of numeric characters'))
                         ->number('password_digit', [
                             'class' => 'form-control',
                             'min'   => 1,
@@ -100,7 +97,7 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_special-group', 'div', function ($form) use ($data) {
-                        $form->label('config-password_special-label', 'Nombre de caractères spéciaux')
+                        $form->label('config-password_special-label', t('Number of special characters'))
                         ->number('password_special', [
                             'class' => 'form-control',
                             'min'   => 1,
@@ -109,7 +106,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->token('token_user_config')
-                ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
 
     public function validator(&$validator)

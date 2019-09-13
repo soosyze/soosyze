@@ -1,7 +1,7 @@
 {
     "name": "soosyze-core/user",
     "type": "soosyze-module",
-    "description": "Gestion de l'autentification et des comptes utilisateur",
+    "description": "Management of authentication and user accounts",
     "version": "1.0",
     "autoload": {
         "psr-4": {

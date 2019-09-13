@@ -19,7 +19,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->values([
                 'node_type'             => 'article',
                 'node_type_name'        => 'Article',
-                'node_type_description' => 'Utilisez les articles pour vos actualités et des billets de blog.'
+                'node_type_description' => 'Use articles for your news and blog posts.'
             ])
             ->execute();
 
@@ -30,8 +30,8 @@ class Installer implements \SoosyzeCore\System\Migration
             ->insertInto('node_type_field', [
                 'node_type', 'field_id', 'field_weight', 'field_label'
             ])
-            ->values([ 'article', $idSummary, 2, 'Résumé' ])
-            ->values([ 'article', $idBody, 3, 'Corps' ])
+            ->values([ 'article', $idSummary, 2, 'Summary' ])
+            ->values([ 'article', $idBody, 3, 'Body' ])
             ->execute();
 
         $ci->config()

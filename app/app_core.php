@@ -34,6 +34,14 @@ class Core extends App
                 'arguments' => [
                     '@core'
                 ]
+            ],
+            'translate'     => [
+                'class'     => 'SoosyzeCore\\Translate\\Services\\Translation',
+                'arguments' => [
+                    '@core',
+                   __DIR__ . '/lang',
+                    'fr_FR'
+                ]
             ]
         ];
     }

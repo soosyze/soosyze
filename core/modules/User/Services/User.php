@@ -310,7 +310,7 @@ class User
     public function hookResponseBefore(&$request, &$response)
     {
         if (!$this->isGrantedRoute($request)) {
-            $response = new Response(403, new Stream('Erreur HTTP 403 Forbidden'));
+            $response = new Response(403, new Stream('Error HTTP 403 Forbidden'));
         }
     }
 

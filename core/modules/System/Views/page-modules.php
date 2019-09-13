@@ -3,15 +3,15 @@
     <div class="col-md-3 sticky">
         <div class="form-group">
             <div id="result-search" style="height: 2em;"><?php echo $count; ?> module(s)</div>
-            <input type="text" id="search" class="form-control" placeholder="Rechercher des modules..." aria-label="Rechercher des modules" onkeyup="search();" autofocus>
+            <input type="text" id="search" class="form-control" placeholder="<?php echo t('Search modules'); ?>" aria-label="<?php echo t('Search modules'); ?>" onkeyup="search();" autofocus>
         </div>
         <div class="form-group">
             <input type="checkbox" id="active" onclick="search();" checked>
-            <label for="active"><span class="ui"></span> Activé</label>
+            <label for="active"><span class="ui"></span> <?php echo t('Activated'); ?></label>
             </div>
         <div class="form-group">
             <input type="checkbox" id="disabled" onclick="search();" checked>
-            <label for="disabled"><span class="ui"></span> Désactivé</label>
+            <label for="disabled"><span class="ui"></span> <?php echo t('Disabled'); ?></label>
         </div>
         <nav id="nav_config">
             <ul id="top-menu" class="nav nav-pills nav-stacked">
@@ -35,9 +35,9 @@
                 <thead>
                     <tr class="form-head">
                         <td>&nbsp;</td>
-                        <th>(Activé) Module</th>
-                        <th>Version</th>
-                        <th>Actions</th>
+                        <th><?php echo t('Module'); ?></th>
+                        <th><?php echo t('Version'); ?></th>
+                        <th><?php echo t('Actions'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,17 +51,17 @@
                                    aria-hidden="true"></i>
                             </div>
                         </td>
-                        <td data-title="Module">
+                        <td data-title="<?php echo t('Module'); ?>">
                             <div class="form-group">
                             <?php echo $form->form_input("modules[{$module[ 'title' ]}]"); ?>
                             <?php echo $form->form_label($module[ 'title' ]); ?>
 
                             </div>
                             
-                            <?php echo $module[ 'description' ]; ?>
+                            <?php echo t($module[ 'description' ]); ?>
                             <?php if (!empty($module[ 'isRequired' ])): ?>
 
-                            <br>Requiert 
+                            <br><?php echo t('Requires'); ?> 
                             <span class="module-is_required">
                                 <?php echo implode(',', $module[ 'isRequired' ]); ?>
 
@@ -69,7 +69,7 @@
                             <?php endif; ?>
                             <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
 
-                            <br>Est requis par 
+                            <br><?php echo t('Is required by'); ?> 
                             <span class="module-is_required_for_module">
                                 <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
 
@@ -77,12 +77,12 @@
                             <?php endif; ?>
 
                         </td>
-                        <td data-title="Version"><?php echo $module[ 'version' ]; ?></td>
+                        <td data-title="<?php echo t('Version'); ?>"><?php echo $module[ 'version' ]; ?></td>
                         <?php if (!empty($module['support'])): ?>
 
-                        <td data-title="Actions">
+                        <td data-title="<?php echo t('Actions'); ?>">
                             <a class="btn btn-action" href="<?php echo $module['support']; ?>" target="_blank">
-                                <i class="fas fa-question" aria-hidden="true"></i> Aide
+                                <i class="fas fa-question" aria-hidden="true"></i> <?php echo t('Help'); ?>
                             </a>
                         </td>
                         <?php else: ?>
@@ -103,4 +103,4 @@
         <?php echo $form->form_close(); ?>
 
     </div>
-</div> <!-- /.row -->
+</div>

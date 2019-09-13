@@ -96,7 +96,7 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i>  Création de l’utilisateur'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('User creation')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-user.php', $this->pathViews, [
@@ -113,9 +113,9 @@ class User extends \Soosyze\Controller
         $server = $req->getServerParams();
 
         if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
-                . 'dépasse la valeur maximale autorisée par la directive post_max_size '
-                . 'de votre fichier php.ini' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
             $_SESSION[ 'errors_keys' ]          = [];
 
             return new Redirect(self::router()->getRoute('user.create'));
@@ -193,11 +193,11 @@ class User extends \Soosyze\Controller
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'L\'email <i>' . $validator->getInput('email') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
             $_SESSION[ 'errors_keys' ][]          = 'email';
         }
         if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
             $_SESSION[ 'errors_keys' ][]          = 'username';
         }
 
@@ -249,7 +249,7 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Édition de l’utilisateur'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a user')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'form-user.php', $this->pathViews, [
@@ -271,9 +271,9 @@ class User extends \Soosyze\Controller
         $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
-                . 'dépasse la valeur maximale autorisée par la directive post_max_size '
-                . 'de votre fichier php.ini' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
             $_SESSION[ 'errors_keys' ]          = [];
 
             return new Redirect($route);
@@ -352,7 +352,7 @@ class User extends \Soosyze\Controller
                 $user = self::user()->find($id);
                 self::user()->login($user[ 'email' ], $validator->getInput('password_new'));
             }
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
             return new Redirect($route);
         }
@@ -362,11 +362,11 @@ class User extends \Soosyze\Controller
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'L\'email <i>' . $validator->getInput('email') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
             $_SESSION[ 'errors_keys' ][]          = 'email';
         }
         if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
             $_SESSION[ 'errors_keys' ][]          = 'username';
         }
 
@@ -386,20 +386,20 @@ class User extends \Soosyze\Controller
             'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
             ]))
             ->group('user-edit-information-fieldset', 'fieldset', function ($form) {
-                $form->legend('user-edit-information-legend', 'Suppression de compte')
+                $form->legend('user-edit-information-legend', t('Account deletion'))
                 ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
-                    '_content' => 'Attention ! La suppression du compte utilisateur est définitif.'
+                    '_content' => t('Warning ! The deletion of the user account is final.')
                 ]);
             })
             ->token('token_user_remove')
-            ->submit('sumbit', 'Supprimer le compte', [ 'class' => 'btn btn-danger' ]);
+            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         $this->container->callHook('user.remove.form', [ &$form, $data, $id ]);
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Supprimer du compte de <i>' . $data[ 'username' ] . '</i>'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Delete :name account', [':name'=> $data[ 'username' ]])
                 ])
                 ->render('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
@@ -473,18 +473,18 @@ class User extends \Soosyze\Controller
     protected function getMenuUser($id)
     {
         $menu[] = [
-            'title_link' => 'Voir',
+            'title_link' => t('View'),
             'link'       => self::router()->getRoute('user.show', [ ':id' => $id ])
         ];
         if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.edited')) {
             $menu[] = [
-                'title_link' => 'Éditer',
+                'title_link' => t('Edit'),
                 'link'       => self::router()->getRoute('user.edit', [ ':id' => $id ])
             ];
         }
         if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.deleted')) {
             $menu[] = [
-                'title_link' => 'Supprimer',
+                'title_link' => t('Delete'),
                 'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
             ];
         }

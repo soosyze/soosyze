@@ -87,7 +87,7 @@ class ModulesManager extends \Soosyze\Controller
             ];
         }
         $form->token('token_module_edit')
-            ->submit('submit', 'Enregistrer');
+            ->submit('submit', t('Save'));
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -99,7 +99,7 @@ class ModulesManager extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-th-large" aria-hidden="true"></i> Modules'
+                    'title_main' => '<i class="fa fa-th-large" aria-hidden="true"></i> ' . t('Modules')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-modules.php', $this->pathViews, [
@@ -137,7 +137,7 @@ class ModulesManager extends \Soosyze\Controller
         if (!empty($outInstall) || !empty($outUninstall)) {
             $_SESSION[ 'messages' ][ 'errors' ] = $outInstall + $outUninstall;
         } else {
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         }
 
         return new Redirect($route);
@@ -158,7 +158,7 @@ class ModulesManager extends \Soosyze\Controller
             /* Vérifie que le module existe. */
             if (!isset($composer[ $title ])) {
                 /* Installation d'un module non existant. */
-                $errors[] = htmlspecialchars("Le module $title n'existe pas.");
+                $errors[] = t('The :title module does not exist.', [':title' => $title ]);
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
             elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {
@@ -218,7 +218,7 @@ class ModulesManager extends \Soosyze\Controller
             /* Vérifie que le module existe. */
             if (!isset($composer[ $title ])) {
                 /* Dé-installation d'un module non existant. */
-                $errors[] = htmlspecialchars("Le module $title n'existe pas.");
+                $errors[] = t('The :title module does not exist.', [':title' => $title ]);
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
             elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {

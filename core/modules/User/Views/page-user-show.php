@@ -26,11 +26,11 @@
     <div class="col-sm-9">
         <?php echo $section[ 'menu_user' ]; ?>
         <fieldset>
-            <legend>Utilisateur</legend>
+            <legend><?php echo t('User'); ?></legend>
 
             <?php foreach ($roles as $role): ?>
 
-            <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span> <?php echo $role[ 'role_label' ]; ?>
+            <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span> <?php echo t($role[ 'role_label' ]); ?>
             <?php endforeach; ?>
 
         </fieldset>

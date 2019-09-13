@@ -1,16 +1,16 @@
 
 <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-    <i class="fa fa-plus" aria-hidden="true"></i> Ajouter du contenu
+    <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
 </a>
 <fieldset class="responsive">
-    <legend>Mes Contenus</legend>
+    <legend><?php echo t('My contents'); ?></legend>
     <table class="table table-hover table-node">
         <thead>
             <tr class="form-head">
-                <th>Nom</th>
-                <th>Date de création</th>
-                <th class="text-right">Actions</th>
-                <th>Publié</th>
+                <th><?php echo t('Name'); ?></th>
+                <th><?php echo t('Creation date'); ?></th>
+                <th class="text-right"><?php echo t('Actions'); ?></th>
+                <th><?php echo t('Status'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -21,27 +21,27 @@
                         <th>
                             <a href="<?php echo $node[ 'link_edit' ]; ?>"><?php echo $node[ 'title' ]; ?></a> <small><?php echo $node[ 'type' ]; ?></small>
                         </th>
-                        <td data-title="Date de création"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></td>
-                        <td data-title="Actions" class="text-right">
+                        <td data-title="<?php echo t('Creation date'); ?>"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></td>
+                        <td data-title="<?php echo t('Actions'); ?>" class="text-right">
                             <div class="btn-group" role="group" aria-label="action">
                                 <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
-                                    <span class="fa fa-search"></span> Voir
+                                    <span class="fa fa-search"></span> <?php echo t('View'); ?>
                                 </a>
                                 <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
-                                    <span class="fa fa-edit"></span> Éditer
+                                    <span class="fa fa-edit"></span> <?php echo t('Edit'); ?>
                                 </a>
-                                <a href="<?php echo $node[ 'link_delet' ]; ?>" class="btn btn-action" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
-                                    <span class="fa fa-times"></span> Supprimer
+                                <a href="<?php echo $node[ 'link_delete' ]; ?>" class="btn btn-action" onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
+                                    <span class="fa fa-times"></span> <?php echo t('Delete'); ?>
                                 </a>
                             </div>
                         </td>
-                        <td data-title="Publié">
+                        <td data-title="<?php echo t('Status'); ?>">
                             <?php if ($node[ 'published' ]): ?>
 
-                                <div class="icon-publish" data-tooltip="Publié"></div>
+                                <div class="icon-publish" data-tooltip="<?php echo t('Published'); ?>"></div>
                             <?php else: ?>
 
-                                <div class="icon-notPublish" data-tooltip="Non publié"></div>
+                                <div class="icon-notPublish" data-tooltip="<?php echo t('Not published'); ?>"></div>
                             <?php endif; ?>
 
                         </td>
@@ -51,7 +51,7 @@
 
                 <tr>
                     <td colspan="5">
-                        Votre site ne possède aucun contenu pour le moment.
+                        <?php echo t('Your site has no content at the moment.'); ?>
                     </td>
                 </tr>
             <?php endif; ?>

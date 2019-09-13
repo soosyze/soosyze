@@ -18,17 +18,17 @@ class HookUser
     {
         $node_types           = $this->query->from('node_type')->fetchAll();
         $permission[ 'Node' ] = [
-            'node.index'              => 'Accéder à la page de vue d\'ensemble du contenu',
-            'node.administer'         => 'Outrepasser le contrôle d\'accès au contenu',
-            'node.show.published'     => 'Voir le contenu publié',
-            'node.show.not_published' => 'Voir le contenu non publié',
+            'node.index'              => t('Go to the content overview page'),
+            'node.administer'         => t('Override access control to content'),
+            'node.show.published'     => t('View published content'),
+            'node.show.not_published' => t('View unpublished content'),
         ];
         foreach ($node_types as $node_type) {
             $permission[ 'Node' ] += [
-                'node.show.' . $node_type[ 'node_type' ]    => '<i>' . $node_type[ 'node_type_name' ] . '</i> : Voir le contenu',
-                'node.created.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : Créer un nouveau contenu',
-                'node.edited.' . $node_type[ 'node_type' ]  => '<i>' . $node_type[ 'node_type_name' ] . '</i> : Modifier n\'importe quel contenu ',
-                'node.deleted.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : Supprimer n\'importe quel contenu'
+                'node.show.' . $node_type[ 'node_type' ]    => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('View content'),
+                'node.created.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
+                'node.edited.' . $node_type[ 'node_type' ]  => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
+                'node.deleted.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
             ];
         }
     }

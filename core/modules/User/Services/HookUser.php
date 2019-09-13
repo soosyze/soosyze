@@ -23,11 +23,11 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'User' ] = [
-            'user.people.manage'     => 'Administrer les utilisateurs',
-            'user.permission.manage' => 'Administrer les permissions',
-            'user.showed'            => 'Voir les profils utilisateurs',
-            'user.edited'            => 'Modifier son compte utilisateur',
-            'user.deleted'           => 'Supprimer son compte utilisateur',
+            'user.people.manage'     => t('Administer users'),
+            'user.permission.manage' => t('Administer permissions'),
+            'user.showed'            => t('View user profiles'),
+            'user.edited'            => t('Edit your user account'),
+            'user.deleted'           => t('Delete your user account'),
         ];
     }
 

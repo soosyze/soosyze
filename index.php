@@ -10,5 +10,6 @@ require_once 'bootstrap/autoload.php';
 
 require_once 'app/app_core.php';
 require_once 'bootstrap/start.php';
+require_once 'bootstrap/facade.php';
 
 echo $app->run();

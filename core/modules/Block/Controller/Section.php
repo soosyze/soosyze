@@ -21,14 +21,14 @@ class Section extends \Soosyze\Controller
         return self::template()
                 ->getTheme($theme)
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-columns" aria-hidden="true"></i> Édition des blocs'
+                    'title_main' => '<i class="fa fa-columns" aria-hidden="true"></i> ' . t('Editing blocks')
                 ])
                 ->view('this', [
                     'styles'  => $styles,
                     'scripts' => $scripts
                 ])
                 ->render('page.content', 'page-block-admin.php', $this->pathViews, [
-                    'content'          => 'Visualiser et éditer l\'affichage de votre site sur les thèmes suivants :',
+                    'content'          => t('View and edit your site\'s display on the following topics.'),
                     'link_theme'       => self::router()->getRoute('section.admin', [
                         ':theme' => 'theme' ]),
                     'link_theme_admin' => self::router()->getRoute('section.admin', [

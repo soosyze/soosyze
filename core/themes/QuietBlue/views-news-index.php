@@ -7,7 +7,7 @@
         <div class="card">
             <header class="card__header">
                 <div class="card__date_tags">
-                    <span class="card__date"><?php echo date('F d, Y', $new[ 'created' ]); ?></span>
+                    <span class="card__date"><?php echo date(t('Y/m/d'), $new[ 'created' ]); ?></span>
                 </div>
                 <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo $new[ 'title' ]; ?></a></h3>
             </header>

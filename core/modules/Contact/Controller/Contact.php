@@ -86,9 +86,9 @@ class Contact extends \Soosyze\Controller
             $this->container->callHook('contact.after', [ &$validator ]);
             
             if ($mail->send()) {
-                $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre message a bien été envoyé.' ];
+                $_SESSION[ 'messages' ][ 'success' ] = [ t('Your message has been sent.') ];
             } else {
-                $_SESSION[ 'messages' ][ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
+                $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
             }
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();

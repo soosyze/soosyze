@@ -46,7 +46,7 @@ class NewsController extends \Soosyze\Controller
             return $this->get404($req);
         }
         if (!$query) {
-            $default = 'Aucun articles pour le moment !';
+            $default = t('No articles for the moment');
         }
         foreach ($query as &$new) {
             $new[ 'link_view' ] = self::router()->getRoute('node.show', [
@@ -81,7 +81,7 @@ class NewsController extends \Soosyze\Controller
         $date              = '01/01/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
-        $this->title_main  = 'Articles de ' . $years;
+        $this->title_main  = t('Articles from :date', [':date' => $years]);
         $this->link        = self::router()->getRoute('news.years', [ ':years' => $years ], false);
 
         return $this->renderNews($page, $req);
@@ -93,7 +93,7 @@ class NewsController extends \Soosyze\Controller
         $date              = $month . '/01/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
-        $this->title_main  = 'Articles de ' . date('M Y', $this->dateCurrent);
+        $this->title_main  = t('Articles from :date', [':date' => date('M Y', $this->dateCurrent)]);
         $this->link        = self::router()->getRoute('news.month', [
             ':years' => $years,
             ':month' => $month
@@ -108,7 +108,7 @@ class NewsController extends \Soosyze\Controller
         $date              = $month . '/' . $day . '/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
-        $this->title_main  = 'Articles du ' . date('d M Y', $this->dateCurrent);
+        $this->title_main  = t('Articles from :date', [':date' => date('d M Y', $this->dateCurrent)]);
         $this->link        = self::router()->getRoute('news.day', [
             ':years' => $years,
             ':month' => $month,
@@ -166,19 +166,16 @@ class NewsController extends \Soosyze\Controller
         $isCurrent = (time() >= $this->dateCurrent && time() <= $this->dateNext);
         
         $default = '';
-        var_dump(!$isCurrent, $page != 1, !$news);
-        if ($isCurrent && $page != 1 && !$news) {
+        if ($isCurrent && !$news) {
+            $default = t('No articles for the moment');
+        } elseif (!$news) {
             return $this->get404($req);
-        }
-        if (!$news) {
-            $default = 'Aucun articles pour le moment !';
         }
         foreach ($news as &$new) {
             $new[ 'link_view' ] = self::router()->getRoute('node.show', [
                 ':id' => $new[ 'id' ] ]);
             $new[ 'field' ]     = unserialize($new[ 'field' ]);
             $o = strtotime(date('m/d/Y', $new['created']) . ' +1 day');
-            var_dump($o);
         }
 
         $nodes_all = $this->getNewsAll($this->dateCurrent, $this->dateNext);

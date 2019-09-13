@@ -7,7 +7,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Menu' ] = [
-            'menu.administer' => 'Administrer les menus et les éléments de menus'
+            'menu.administer' => t('Administer menus and menu items')
         ];
     }
     

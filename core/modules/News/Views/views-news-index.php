@@ -10,13 +10,13 @@
             </div>
             <div class="card__main">
                 <div class="card__date_tags">
-                    <span class="card__date">Le <?php echo date('Y/m/d', $new[ 'created' ]); ?></span>
+                    <span class="card__date">Le <?php echo date(t('Y/m/d'), $new[ 'created' ]); ?></span>
                 </div>
                 <div class="card__content"><?php echo $new[ 'field' ][ 'summary' ]; ?></div>
                 <div class="card__footer">
                     <div class="card__more">
                         <a href=" <?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">
-                            En savoir plus...
+                            <?php echo t('Learn more'); ?>
                         </a>
                     </div>
                 </div>

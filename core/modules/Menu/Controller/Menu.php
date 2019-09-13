@@ -24,7 +24,7 @@ class Menu extends \Soosyze\Controller
         $action = self::router()->getRoute('menu.show.check', [ ':menu' => $name ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->token('token_menu')
-            ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -35,7 +35,7 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> Menu'
+                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Menu')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-menu-show.php', $this->pathViews, [
@@ -84,7 +84,7 @@ class Menu extends \Soosyze\Controller
                     ->execute();
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         }

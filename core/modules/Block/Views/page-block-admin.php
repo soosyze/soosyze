@@ -1,11 +1,11 @@
 
 <div class="block-content-disabled">
     <p><?php echo $content; ?></p>
-    <a href="<?php echo $link_theme_admin; ?>" class="btn btn-primary">Thème d'administration</a>
-    <a href="<?php echo $link_theme; ?>" class="btn btn-primary">Thème du site</a>
+    <a href="<?php echo $link_theme_admin; ?>" class="btn btn-primary"><?php echo t('Website administration theme'); ?></a>
+    <a href="<?php echo $link_theme; ?>" class="btn btn-primary"><?php echo t('Website theme'); ?></a>
 </div>
 
-<div id="modal_block" class="modal" role="dialog" aria-label="Fenêtre de création de bloc.">
+<div id="modal_block" class="modal" role="dialog" aria-label="<?php echo t('Block creation window.'); ?>">
     <div class="modal-dialog modal-lg" role="document">
         <!-- Modal content -->
         <div class="modal-content">

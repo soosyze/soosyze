@@ -14,13 +14,13 @@
         <div class="link-actions">
             <span>
                 <input type="checkbox" name="active-<?php echo $link[ 'id' ]; ?>" id="active-<?php echo $link[ 'id' ]; ?>" <?php echo $link[ 'active' ] ? 'checked' : ''; ?>>
-                <label for="active-<?php echo $link[ 'id' ]; ?>"><span class="ui"></span> Activé </label>
+                <label for="active-<?php echo $link[ 'id' ]; ?>"><span class="ui"></span> <?php echo t('Active'); ?></label>
             </span>
             <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ]; ?>">
-                <i class="fa fa-edit" aria-hidden="true"></i> Éditer
+                <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
             </a>
-            <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ]; ?>" onclick="return confirm('Voulez vous supprimer définitivement le contenu ?')">
-                <i class="fa fa-times" aria-hidden="true"></i> Supprimer
+            <a class="btn btn-action" href="<?php echo $link[ 'link_delete' ]; ?>" onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
+                <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
             </a>
         </div>
         <input type="hidden" name="id-<?php echo $link[ 'id' ]; ?>" value="<?php echo $link[ 'id' ]; ?>">

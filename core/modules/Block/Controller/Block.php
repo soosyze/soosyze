@@ -7,20 +7,7 @@ use Soosyze\Components\Validator\Validator;
 
 class Block extends \Soosyze\Controller
 {
-    protected $blocks = [
-        'button'  => [ 'title' => 'Text avec boutton', 'path' => 'block-button.php' ],
-        'card_ui' => [ 'title' => 'Card UI simple', 'path' => 'block-card_ui.php' ],
-        'code'    => [ 'title' => 'Code', 'path' => 'block-code.php' ],
-        'contact' => [ 'title' => 'Contact', 'path' => 'block-contact.php' ],
-        'gallery' => [ 'title' => 'Gallerie d\'image', 'path' => 'block-gallery.php' ],
-        'img'     => [ 'title' => 'Image et texte', 'path' => 'block-img.php' ],
-        'map'     => [ 'title' => 'Carte', 'path' => 'block-map.php' ],
-        'video'   => [ 'title' => 'Vidéo', 'path' => 'block-peertube.php'],
-        'social'  => [ 'title' => 'Réseaux sociaux', 'path' => 'block-social.php' ],
-        'table'   => [ 'title' => 'Table', 'path' => 'block-table.php' ],
-        'text'    => [ 'title' => 'Text simple', 'path' => 'block-text.php' ],
-        'three'   => [ 'title' => '3 colonnes', 'path' => 'block-three.php' ],
-    ];
+    protected $blocks = [];
 
     public function __construct()
     {
@@ -46,6 +33,7 @@ class Block extends \Soosyze\Controller
 
     public function create($section)
     {
+        $this->blocks = $this->getBlocks();
         $form = new FormBuilder([
             'method' => 'POST',
             'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
@@ -80,6 +68,7 @@ class Block extends \Soosyze\Controller
 
     public function store($section, $req)
     {
+        $this->blocks = $this->getBlocks();
         $validator = (new Validator())
             ->setRules([
                 'type_block' => 'required|string|max:255',
@@ -119,7 +108,7 @@ class Block extends \Soosyze\Controller
         $action = self::router()->getRoute('block.update', [ ':id' => $data[ 'block_id' ] ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('menu-link-legend', 'Éditer le bloc')
+                $form->legend('menu-link-legend', t('Edit block'))
                 ->group('title-group', 'div', function ($form) use ($data) {
                     $form->text('title', [
                         'class'       => 'form-control',
@@ -139,14 +128,14 @@ class Block extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('page-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('page-legend', 'Visibilité par pages')
+                $form->legend('page-legend', t('Visibility by pages'))
                 ->group('visibility-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_pages', [
                         'checked'  => !$data[ 'visibility_pages' ],
                         'id'       => 'visibility1',
                         'required' => 1,
                         'value'    => 0
-                    ])->label('visibility_pages-label', 'Cacher le bloc aux pages listées', [
+                    ])->label('visibility_pages-label', t('Hide the block on the pages listed'), [
                         'for' => 'visibility1'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -156,13 +145,13 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility2',
                         'required' => 1,
                         'value'    => 1
-                    ])->label('visibility_pages-label', 'Afficher le bloc aux pages listées', [
+                    ])->label('visibility_pages-label', t('Display the block on the pages listed'), [
                         'for' => 'visibility2'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('url-group', 'div', function ($form) use ($data) {
-                    $form->label('url-label', 'Liste des pages', [
-                        'data-tooltip' => 'Saisir un chemin par ligne. Le caractère «%» est un caractère de remplacement spécifiant tous les caractères.'
+                    $form->label('url-label', t('List of pages'), [
+                        'data-tooltip' => t('Enter a path by line. The "%" character is a wildcard character that specifies all characters.')
                     ])
                     ->textarea('pages', $data[ 'pages' ], [
                         'class'       => 'form-control',
@@ -172,14 +161,14 @@ class Block extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('roles-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('role-legend', 'Visibilité par rôles')
+                $form->legend('role-legend', t('Visibility by roles'))
                 ->group('visibility-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_roles', [
                         'checked'  => !$data[ 'visibility_roles' ],
                         'id'       => 'visibility3',
                         'required' => 1,
                         'value'    => 0
-                    ])->label('visibility_roles-label', 'Cacher le bloc aux rôles sélectionnés', [
+                    ])->label('visibility_roles-label', t('Hide block to selected roles'), [
                         'for' => 'visibility3'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -189,7 +178,7 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility4',
                         'required' => 1,
                         'value'    => 1
-                    ])->label('visibility_roles-label', 'Afficher le bloc aux rôles sélectionnés', [
+                    ])->label('visibility_roles-label', t('Show block with selected roles'), [
                         'for' => 'visibility4'
                     ]);
                 }, [ 'class' => 'form-group' ]);
@@ -200,15 +189,15 @@ class Block extends \Soosyze\Controller
                             'value'   => $role[ 'role_id' ],
                             'checked' => \in_array($role[ 'role_id' ], $data[ 'roles' ])
                         ])
-                        ->label('roles-label', '<i class="ui" aria-hidden="true"></i>' . $role[ 'role_label' ], [
+                        ->label('roles-label', '<i class="ui" aria-hidden="true"></i>' . t($role[ 'role_label' ]), [
                             'for' => "roles-{$role[ 'role_id' ]}"
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 }
             })
             ->token('token_link_create')
-            ->submit('submit_save', 'Enregistrer', [ 'class' => 'btn btn-success' ])
-            ->submit('submit_cancel', 'Cancel', [ 'class' => 'btn btn-default' ]);
+            ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success' ])
+            ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
         return self::template()
                 ->createBlock('block-form.php', $this->pathViews)
@@ -271,5 +260,23 @@ class Block extends \Soosyze\Controller
         }
 
         self::query()->from('block')->where('block_id', '==', $id)->delete()->execute();
+    }
+    
+    protected function getBlocks()
+    {
+        return [
+            'button'  => [ 'title' => t('Text with button'), 'path' => 'block-button.php' ],
+            'card_ui' => [ 'title' => t('Simple UI card'), 'path' => 'block-card_ui.php' ],
+            'code'    => [ 'title' => t('Code'), 'path' => 'block-code.php' ],
+            'contact' => [ 'title' => t('Contact'), 'path' => 'block-contact.php' ],
+            'gallery' => [ 'title' => t('Picture Gallery'), 'path' => 'block-gallery.php' ],
+            'img'     => [ 'title' => t('Image and text'), 'path' => 'block-img.php' ],
+            'map'     => [ 'title' => t('Map'), 'path' => 'block-map.php' ],
+            'video'   => [ 'title' => t('Video'), 'path' => 'block-peertube.php' ],
+            'social'  => [ 'title' => t('Social networks'), 'path' => 'block-social.php' ],
+            'table'   => [ 'title' => t('Table'), 'path' => 'block-table.php' ],
+            'text'    => [ 'title' => t('Simple text'), 'path' => 'block-text.php' ],
+            'three'   => [ 'title' => t('3 columns'), 'path' => 'block-three.php' ],
+        ];
     }
 }

@@ -27,7 +27,7 @@ class Node extends \Soosyze\Controller
                 ':id' => $node[ 'id' ] ]);
             $node[ 'link_edit' ]  = self::router()->getRoute('node.edit', [
                 ':id' => $node[ 'id' ] ]);
-            $node[ 'link_delet' ] = self::router()->getRoute('node.delete', [
+            $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
                 ':id' => $node[ 'id' ] ]);
         }
 
@@ -36,7 +36,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i>  Mes contenus'
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('My contents')
                 ])
                 ->render('page.content', 'node-admin.php', $this->pathViews, [
                     'linkAdd' => $linkAdd,
@@ -62,7 +62,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Ajouter du contenu'
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content')
                 ])
                 ->render('page.content', 'node-add.php', $this->pathViews, [
                     'node_type' => $query
@@ -97,14 +97,14 @@ class Node extends \Soosyze\Controller
             'action'  => self::router()->getRoute('node.store', [ ':type' => $type ]),
             'enctype' => 'multipart/form-data' ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $type) {
-                $form->legend('node-title-legend', 'Remplissiez les champs suivants')
+                $form->legend('node-title-legend', t('Fill in the following fields'))
                 ->group('node-title-group', 'div', function ($form) use ($content) {
-                    $form->label('node-title-label', 'Titre du contenu')
+                    $form->label('node-title-label', t('Title of the content'))
                     ->text('title', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'required'    => 1,
-                        'placeholder' => 'Titre du contenu',
+                        'placeholder' => t('Title of the content'),
                         'value'       => $content[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
@@ -120,14 +120,14 @@ class Node extends \Soosyze\Controller
                         : '';
 
                     $form->group('node-' . $type . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
-                        $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
+                        $form->label('node-' . $key . '-label', t($value[ 'field_label' ]));
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->textarea($key, $content[ $key ], [
                                     'class'       => 'form-control',
                                     'required'    => $require,
                                     'rows'        => 8,
-                                    'placeholder' => 'Entrer votre contenu içi...'
+                                    'placeholder' => t('Enter your content here')
                                 ]);
 
                                 break;
@@ -145,12 +145,12 @@ class Node extends \Soosyze\Controller
             })
             ->group('node-publish-group', 'div', function ($form) {
                 $form->checkbox('published')
-                ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
                     'for' => 'published'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token('token_node_create')
-            ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
 
@@ -167,7 +167,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Ajouter du contenu de type ' . $type
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [':name' => $type])
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-create.php', $this->pathViews, [
@@ -227,7 +227,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre contenu a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
             $route                               = self::router()->getRoute('node.index');
 
             return new Redirect($route);
@@ -262,7 +262,7 @@ class Node extends \Soosyze\Controller
 
         if (!$node[ 'published' ]) {
             $tpl->view('page.messages', [
-                'infos' => [ 'Ce contenu n\'est pas publié !' ]
+                'infos' => [ t('This content is not published') ]
             ]);
         }
 
@@ -306,9 +306,9 @@ class Node extends \Soosyze\Controller
             'action'  => self::router()->getRoute('node.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ]))
             ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id, $node) {
-                $form->legend('node-title-legend', 'Remplissiez les champs suivants')
+                $form->legend('node-title-legend', t('Fill in the following fields'))
                 ->group('node-title-group', 'div', function ($form) use ($content) {
-                    $form->label('node-title-label', 'Titre du contenu')
+                    $form->label('node-title-label', t('Title of the content'))
                     ->text('title', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -336,7 +336,7 @@ class Node extends \Soosyze\Controller
                                     'class'       => 'form-control',
                                     'required'    => $require,
                                     'rows'        => 8,
-                                    'placeholder' => 'Entrer votre contenu içi...'
+                                    'placeholder' => t('Enter your content here')
                                 ]);
 
                                 break;
@@ -354,12 +354,12 @@ class Node extends \Soosyze\Controller
             })
             ->group('node-publish-group', 'div', function ($form) use ($content) {
                 $form->checkbox('published', [ 'checked' => $content[ 'published' ] ])
-                ->label('node-publish-label', '<span class="ui"></span> Publier le contenu', [
+                ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
                     'for' => 'published'
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token('token_node_edit')
-            ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
@@ -376,7 +376,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> Modifier le contenu ' . $node[ 'title' ]
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $node[ 'title' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
@@ -437,7 +437,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();

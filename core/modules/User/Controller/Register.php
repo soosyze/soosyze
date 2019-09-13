@@ -29,7 +29,7 @@ class Register extends \Soosyze\Controller
             'action' => self::router()->getRoute('user.register.store')
             ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
-            $formbuilder->legend('register-legend', 'Inscription utilisateur');
+            $formbuilder->legend('register-legend', t('User registration'));
             $form->username($formbuilder)
                 ->email($formbuilder)
                 ->passwordCurrent($formbuilder)
@@ -50,7 +50,7 @@ class Register extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => 'Inscription'
+                    'title_main' => t('Registration')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-register.php', $this->pathViews, [
@@ -105,11 +105,11 @@ class Register extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'L\'email <i>' . $validator->getInput('email') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
             $_SESSION[ 'errors_keys' ][]          = 'email';
         }
         if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = 'Le nom d\'utilisateur <i>' . $validator->getInput('username') . '</i> est indisponible.';
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
             $_SESSION[ 'errors_keys' ][]          = 'username';
         }
 
@@ -131,7 +131,7 @@ class Register extends \Soosyze\Controller
         $this->container->callHook('register.activate.after', [ $id ]);
 
         $_SESSION[ 'messages' ][ 'success' ] = [
-            'Votre compte utilisateur vient d\'être activé, vous pouvez désormais vous connecter.'
+            t('Your user account has just been activated, you can now login.')
         ];
         $route = self::router()->getRoute('user.login');
 
@@ -145,27 +145,24 @@ class Register extends \Soosyze\Controller
             ':id'    => $user[ 'user_id' ],
             ':token' => $user[ 'token_actived' ]
         ]);
-        $message = "
-Une demande d'inscription utilisateur a été faite.
-
-Vous pouvez désormais valider la création de votre compte utilisateur en cliquant sur ce lien ou en le
-copiant dans votre navigateur : $url
-    
-Ce lien ne peut être utilisé qu'une seule fois.";
+        $message = t('A user registration request has been made.')
+            . t('You can now validate the creation of your user account by clicking on this link or by copying it to your browser: :url', [
+                ':url' => $url
+            ])
+            . t('This link can only be used once.');
 
         $mail = (new Email())
             ->to(self::config()->get('settings.email'))
             ->from($from)
-            ->subject('Inscription utilisateur')
+            ->subject(t('User registration'))
             ->message($message);
 
         if ($mail->send()) {
             $_SESSION[ 'messages' ][ 'success' ] = [
-                'Un email avec les instructions pour accéder à votre compte vient de vous être envoyé. '
-                . 'Attention ! Il peut être dans vos courriers indésirables.'
+                t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
             ];
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
         }
     }
 }

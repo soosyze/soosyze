@@ -37,7 +37,7 @@ class FormUser extends FormBuilder
     public function username(&$form)
     {
         $form->group('user-username-group', 'div', function ($form) {
-            $form->label('user-username-label', 'Nom utilisateur')
+            $form->label('user-username-label', t('User name'))
                 ->text('username', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -52,11 +52,11 @@ class FormUser extends FormBuilder
     public function email(&$form)
     {
         $form->group('user-email-group', 'div', function ($form) {
-            $form->label('user-email-label', 'E-mail')
+            $form->label('user-email-label', t('E-mail'))
                 ->email('email', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
-                    'placeholder' => 'exemple@mail.com',
+                    'placeholder' => t('example@mail.com'),
                     'required'    => 1,
                     'value'       => $this->content[ 'email' ]
             ]);
@@ -68,9 +68,9 @@ class FormUser extends FormBuilder
     public function picture(&$form)
     {
         $form->group('user-picture-group', 'div', function ($form) {
-            $form->label('user-picture-label', 'Image', [
+            $form->label('user-picture-label', t('Picture'), [
                 'for'          => 'picture',
-                'data-tooltip' => '200ko maximum. Extensions autorisées : jpeg, jpg, png.'
+                'data-tooltip' => t('200ko maximum. Allowed extensions: jpeg, jpg, png.')
             ]);
             $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
         }, self::$attrGrp);
@@ -81,13 +81,13 @@ class FormUser extends FormBuilder
     public function bio(&$form)
     {
         $form->group('system-description-group', 'div', function ($form) {
-            $form->label('system-bio-label', 'Biographie', [
-                    'data-tooltip' => 'Décrivez-vous en 255 caractères maximum.'
+            $form->label('system-bio-label', t('Biography'), [
+                    'data-tooltip' => t('Describe yourself in 255 characters maximum.')
                 ])
                 ->textarea('bio', $this->content[ 'bio' ], [
                     'class'       => 'form-control',
                     'maxlength'   => 255,
-                    'placeholder' => 'Décrivez-vous en 255 caractères maximum.',
+                    'placeholder' => t('Describe yourself in 255 characters maximum.'),
                     'rows'        => 3
             ]);
         }, self::$attrGrp);
@@ -98,7 +98,7 @@ class FormUser extends FormBuilder
     public function name(&$form)
     {
         $form->group('user-name-group', 'div', function ($form) {
-            $form->label('user-name-label', 'Nom')
+            $form->label('user-name-label', t('Name'))
                 ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -112,7 +112,7 @@ class FormUser extends FormBuilder
     public function firstname(&$form)
     {
         $form->group('user-firstname-group', 'div', function ($form) {
-            $form->label('user-firstname-label', 'Prénom')
+            $form->label('user-firstname-label', t('First name'))
                 ->text('firstname', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -125,21 +125,21 @@ class FormUser extends FormBuilder
 
     public function passwordCurrent(&$form)
     {
-        $this->password($form, 'password', 'Mot de passe');
+        $this->password($form, 'password', t('Password'));
 
         return $this;
     }
 
     public function passwordNew(&$form)
     {
-        $this->password($form, 'password_new', 'Nouveau mot de passe');
+        $this->password($form, 'password_new', t('New Password'));
 
         return $this;
     }
 
     public function passwordConfirm(&$form)
     {
-        $this->password($form, 'password_confirm', 'Confirmation du nouveau mot de passe');
+        $this->password($form, 'password_confirm', t('Confirmation of the new password'));
 
         return $this;
     }
@@ -156,8 +156,8 @@ class FormUser extends FormBuilder
                             'onclick'      => "togglePassword(this, '$id')",
                             'type'         => 'button',
                             '_content'     => '<i class="fa fa-eye eyeIcon" aria-hidden="true"></i>',
-                            'data-tooltip' => 'Afficher/Cacher le mot de passe',
-                            'aria-label'   => 'Afficher/Cacher le mot de passe'
+                            'data-tooltip' => t('Show/Hide password'),
+                            'aria-label'   => t('Show/Hide password')
                         ]);
                     }
                 }, [ 'class' => 'form-group-flex' ]);
@@ -167,7 +167,7 @@ class FormUser extends FormBuilder
     public function fieldsetInformationsCreate()
     {
         return $this->group('user-informations-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', 'Informations');
+            $form->legend('user-informations-legend', t('Information'));
             $this->username($form)
                     ->email($form);
         });
@@ -176,7 +176,7 @@ class FormUser extends FormBuilder
     public function fieldsetInformations()
     {
         return $this->group('user-informations-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', 'Informations');
+            $form->legend('user-informations-legend', t('Information'));
             $this->username($form)
                     ->email($form)
                     ->passwordCurrent($form);
@@ -186,7 +186,7 @@ class FormUser extends FormBuilder
     public function fieldsetProfil()
     {
         return $this->group('user-profil-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', 'Profil');
+            $form->legend('user-informations-legend', t('Profile'));
             $this->picture($form)
                     ->bio($form)
                     ->name($form)
@@ -197,7 +197,7 @@ class FormUser extends FormBuilder
     public function fieldsetPassword()
     {
         return $this->group('user-password-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-password-legend', 'Mot de passe');
+            $form->legend('user-password-legend', t('Password'));
             $this->passwordNew($form)
                     ->passwordConfirm($form);
         });
@@ -206,10 +206,10 @@ class FormUser extends FormBuilder
     public function fieldsetActived()
     {
         return $this->group('user-actived-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-actived-legend', 'Statut')
+            $form->legend('user-actived-legend', t('Status'))
                     ->group('user-actived-fieldset', 'div', function ($form) {
                         $form->checkbox('actived', [ 'checked' => $this->content[ 'actived' ] ])
-                        ->label('user-actived-label', '<span class="ui"></span> Actif', [
+                        ->label('user-actived-label', '<span class="ui"></span> ' . t('Active'), [
                             'for' => 'actived' ]);
                     }, self::$attrGrp);
         });
@@ -218,7 +218,7 @@ class FormUser extends FormBuilder
     public function fieldsetRoles($roles, $roles_user = [])
     {
         return $this->group('user-role-fieldset', 'fieldset', function ($form) use ($roles, $roles_user) {
-            $form->legend('user-role-legend', 'Role utilisateur');
+            $form->legend('user-role-legend', t('User Roles'));
             foreach ($roles as $role) {
                 $attrRole = [
                         'checked'  => in_array($role[ 'role_id' ], $roles_user),
@@ -231,7 +231,7 @@ class FormUser extends FormBuilder
                                 'user-role-' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
                                 . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '"></span> '
-                                . $role[ 'role_label' ],
+                                . t($role[ 'role_label' ]),
                                 [ 'for' => 'role[' . $role[ 'role_id' ] . ']' ]
                         );
                 }, self::$attrGrp);
@@ -244,9 +244,9 @@ class FormUser extends FormBuilder
      *
      * @return $this
      */
-    public function submitForm($label = 'Enregistrer')
+    public function submitForm($label = 'Save')
     {
         return $this->token('token_user_form')
-                ->submit('sumbit', $label, [ 'class' => 'btn btn-success' ]);
+                ->submit('sumbit', t($label), [ 'class' => 'btn btn-success' ]);
     }
 }

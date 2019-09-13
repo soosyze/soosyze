@@ -59,23 +59,23 @@ class HookMenu
         if ($this->is_menu) {
             $form->addBefore('node-publish-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('node-menu-legend', 'Menu')
+                    $form->legend('node-menu-legend', t('Menu'))
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {
                             $form->checkbox('active', [
                                 'checked' => $data[ 'active' ],
                                 'onclick' => 'toggle("menu_toogle")'
                             ])
-                            ->label('node-menu-active-label', '<span class="ui"></span> Ajouter un lien dans le menu', [
+                            ->label('node-menu-active-label', '<span class="ui"></span> ' . t('Add a link in the menu'), [
                                 'for' => 'active'
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('node-menu', 'div', function ($form) use ($data) {
                             $form->group('node-menu-title-group', 'div', function ($form) use ($data) {
-                                $form->label('node-menu-title-label', 'Titre du lien', [
+                                $form->label('node-menu-title-label', t('Link title'), [
                                     'for' => 'title_link' ])
                                 ->text('title_link', [
                                     'class'       => 'form-control',
-                                    'placeholder' => 'Exemple: Ma page 1',
+                                    'placeholder' => t('Example: Home'),
                                     'value'       => $data[ 'title_link' ]
                                 ]);
                             }, [ 'class' => 'form-group' ]);

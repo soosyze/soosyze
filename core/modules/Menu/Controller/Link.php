@@ -8,13 +8,6 @@ use Soosyze\Components\Validator\Validator;
 
 class Link extends \Soosyze\Controller
 {
-    private static $optionTarget = [
-        [ 'value' => '_blank', 'label' => '(_blank) Charger dans une nouvelle fenêtre' ],
-        [ 'value' => '_self', 'label' => '(_self) Charger dans le même cadre que celui sur lequel vous avez cliqué' ],
-        [ 'value' => '_parent', 'label' => '(_parent) Charger dans le frameset parent' ],
-        [ 'value' => '_top', 'label' => '(_top) Charge dans le corps entier de la fenêtre' ]
-    ];
-
     public function __construct()
     {
         $this->pathViews    = dirname(__DIR__) . '/Views/';
@@ -35,41 +28,41 @@ class Link extends \Soosyze\Controller
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($content) {
-                $form->legend('menu-link-legend', 'Ajouter un lien dans le menu')
+                $form->legend('menu-link-legend', t('Add a link in the menu'))
                 ->group('menu-link-title-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-title-label', 'Titre du lien', [
+                    $form->label('menu-link-title-label', t('Link title'), [
                         'for' => 'title_link' ])
                     ->text('title_link', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
-                        'placeholder' => 'Exemple: Ma page 1',
+                        'placeholder' => t('Example: Home'),
                         'required'    => 1,
                         'value'       => $content[ 'title_link' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-link-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-link-label', 'Lien')
+                    $form->label('menu-link-link-label', t('Link'))
                     ->text('link', [
                         'class'       => 'form-control',
-                        'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
+                        'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
                         'value'       => $content[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-icon-label', 'Icon', [
-                        'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
+                    $form->label('menu-link-icon-label', t('Icon'), [
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
                     ])
                     ->text('icon', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
-                        'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
+                        'placeholder' => 'fa fa-bars, fa fa-home...',
                         'value'       => $content[ 'icon' ],
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-target-label', 'Cîble')
-                    ->select('target_link', self::$optionTarget, [
+                    $form->label('menu-link-target-label', t('Target'))
+                    ->select('target_link', self::getTarget(), [
                         'class'    => 'form-control',
                         'required' => 1,
                         'selected' => $content[ 'target_link' ]
@@ -77,7 +70,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_link_create')
-            ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
@@ -94,7 +87,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> Ajouter un lien'
+                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Add a link')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-add.php', $this->pathViews, [
@@ -147,7 +140,7 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.store.after', [ &$validator ]);
 
-            $_SESSION[ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                 = self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ]);
 
             return new Redirect($route);
@@ -158,7 +151,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
@@ -187,40 +180,40 @@ class Link extends \Soosyze\Controller
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
             ->group('menu-link-fieldset', 'fieldset', function ($form) use ($query) {
-                $form->legend('menu-link-legend', 'Éditer un lien dans le menu')
+                $form->legend('menu-link-legend', t('Edit a link in the menu'))
                 ->group('menu-link-title-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-title-label', 'Titre du lien')
+                    $form->label('menu-link-title-label', t('Link title'))
                     ->text('title_link', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
-                        'placeholder' => 'Exemple: Ma page 1',
+                        'placeholder' => t('Example: Home'),
                         'required'    => 1,
                         'value'       => $query[ 'title_link' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-link-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-link-label', 'Lien')
+                    $form->label('menu-link-link-label', t('Link'))
                     ->text('link', [
                         'class'       => 'form-control',
-                        'placeholder' => 'Exemple: node/1 ou http://site-externe.fr/',
+                        'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
                         'value'       => $query[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-icon-label', 'Icon', [
-                        'data-tooltip' => 'Les icônes sont créées à partir des class CSS de FontAwesome'
+                    $form->label('menu-link-icon-label', t('Icon'), [
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
                     ])
                     ->text('icon', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
-                        'placeholder' => 'CSS fontAwesome : fa fa-bars, fa fa-home...',
+                        'placeholder' => 'fa fa-bars, fa fa-home...',
                         'value'       => $query[ 'icon' ],
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-target-label', 'Cîble')
-                    ->select('target_link', self::$optionTarget, [
+                    $form->label('menu-link-target-label', t('Target'))
+                    ->select('target_link', self::getTarget(), [
                         'class'    => 'form-control',
                         'required' => 1,
                         'selected' => $query[ 'target_link' ]
@@ -228,7 +221,7 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_link_edit')
-            ->submit('submit', 'Enregistrer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
@@ -245,7 +238,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> Éditer un lien'
+                    'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'menu-link-edit.php', $this->pathViews, [
@@ -298,7 +291,7 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ &$validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Votre configuration a été enregistrée.' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                               = self::router()->getRoute('menu.show', [
                 ':menu' => $nameMenu ]);
 
@@ -310,7 +303,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if (!$isUrlOrRoute) {
-            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = 'La valeur de link n\'est pas une URL ou une route';
+            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
@@ -351,5 +344,15 @@ class Link extends \Soosyze\Controller
         $route = self::router()->getRoute('menu.show', [ ':menu' => $name ]);
 
         return new Redirect($route);
+    }
+    
+    protected static function getTarget()
+    {
+        return [
+            [ 'value' => '_blank', 'label' => '(_blank) ' . t('Load in a new window') ],
+            [ 'value' => '_self', 'label' => '(_self) ' . t('Load in the same window') ],
+            [ 'value' => '_parent', 'label' => '(_parent) ' . t('Load into the parent frameset') ],
+            [ 'value' => '_top', 'label' => '(_top) ' . t('Load in the whole body of the window') ]
+        ];
     }
 }

@@ -24,9 +24,9 @@ class Configuration extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> Configuration'
+                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
                 ])
-                ->view('page.messages', [ 'infos' => [ 'Aucune configuration disponible' ] ])
+                ->view('page.messages', [ 'infos' => [ t('No configuration available') ] ])
                 ->render('page.content', 'page-config.php', $this->pathViews, [
                     'form' => null
         ]);
@@ -67,7 +67,7 @@ class Configuration extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> Configuration'
+                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-config.php', $this->pathViews, [
@@ -101,7 +101,7 @@ class Configuration extends \Soosyze\Controller
             }
             self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Configuration Enregistrée' ];
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
 
             return new Redirect($route);
@@ -109,9 +109,9 @@ class Configuration extends \Soosyze\Controller
 
         $server = $req->getServerParams();
         if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'La quantité totales des données reçues '
-                . 'dépasse la valeur maximale autorisée par la directive post_max_size '
-                . 'de votre fichier php.ini' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
             $_SESSION[ 'errors_keys' ]          = [];
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);

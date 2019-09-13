@@ -40,10 +40,10 @@ class Login extends \Soosyze\Controller
             'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
             ], null, self::config()))->content($data);
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
-            $formbuilder->legend('login-legend', 'Connexion utilisateur');
+            $formbuilder->legend('login-legend', t('User login'));
             $form->email($formbuilder)
                 ->passwordCurrent($formbuilder);
-        })->submitForm('Se connecter');
+        })->submitForm(t('Log in'));
 
         $this->container->callHook('login.form', [ &$form, $data ]);
 
@@ -55,7 +55,7 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Connexion'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Log in')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-login.php', $this->pathViews, [
@@ -96,7 +96,7 @@ class Login extends \Soosyze\Controller
             $route = $this->getRedirectLogin($req);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Désolé, e-mail ou mot de passe non reconnu.' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [ t('E-mail or password not recognized.') ];
             $route                              = self::router()->getRoute('user.login', [ ':url' => $url ]);
         }
 
@@ -144,7 +144,7 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> Demander un nouveau mot de passe'
+                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Request a new password')
                 ])
                 ->view('page.messages', $messages)
                 ->render('page.content', 'page-relogin.php', $this->pathViews, [
@@ -184,33 +184,28 @@ class Login extends \Soosyze\Controller
                     ':token' => $token
                 ]);
 
-                $message = "
-Une demande de renouvellement de mot de passe a été faite.
-
-Vous pouvez désormais vous identifier en cliquant sur ce lien ou en le
-copiant dans votre navigateur : $url";
+                $message = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser :url', [':url' => $url]);
 
                 $adress = self::config()->get('settings.email', $query[ 'email' ]);
                 $email  = (new Email())
                     ->to($adress)
                     ->from($query[ 'email' ])
-                    ->subject('Remplacement de mot de passe')
+                    ->subject(t('New Password'))
                     ->message($message);
 
                 if ($email->send()) {
                     $_SESSION[ 'messages' ][ 'success' ] = [
-                        'Un email avec les instructions pour accéder à votre compte vient de vous être envoyé. 
-                        Attention ! Il peut être dans vos courriers indésirables.'
+                        t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
                     ];
 
                     $route = self::router()->getRoute('user.login', [ ':url' => $url ]);
 
                     return new Redirect($route);
                 } else {
-                    $_SESSION[ 'messages' ][ 'errors' ] = [ 'Une erreur a empêché votre email d\'être envoyé.' ];
+                    $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
                 }
             } else {
-                $_SESSION[ 'messages' ][ 'errors' ] = [ 'Désolé, cette e-mail n’est pas reconnu par le site.' ];
+                $_SESSION[ 'messages' ][ 'errors' ] = [ t('Sorry, this email is not recognized.') ];
             }
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();

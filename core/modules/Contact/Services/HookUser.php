@@ -7,7 +7,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Contact' ] = [
-            'contact.main' => 'Utiliser le formulaire de contact général'
+            'contact.main' => t('Use the general contact form')
         ];
     }
 

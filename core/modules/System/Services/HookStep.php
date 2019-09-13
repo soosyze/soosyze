@@ -40,12 +40,12 @@ class HookStep
     {
         $step[ 'profil' ] = [
             'weight' => 1,
-            'title'  => 'Profil d\'installation',
+            'title'  => t('Installation profile'),
             'key'    => 'profil'
         ];
         $step[ 'user' ]   = [
             'weight' => 1,
-            'title'  => 'Profil utilisateur',
+            'title'  => t('User profile'),
             'key'    => 'user'
         ];
     }
@@ -56,27 +56,27 @@ class HookStep
         $profil = [
             'site'      => [
                 'key'         => 'site',
-                'title'       => 'Site web',
+                'title'       => t('Website'),
                 'img'         => $assets . 'site.svg',
-                'description' => 'Créer un site standard avec toutes les fonctionnalitées de bases.'
+                'description' => t('Create a standard site with all the basic features.')
             ],
             'blog'      => [
                 'key'         => 'blog',
-                'title'       => 'Blog',
+                'title'       => t('Blog'),
                 'img'         => $assets . 'blog.svg',
-                'description' => 'Publier périodiquement vos billets, articles, actualités...'
+                'description' => t('Periodically publish your tickets, articles, news...')
             ],
             'portfolio' => [
                 'key'         => 'portfolio',
-                'title'       => 'Portfolio',
+                'title'       => t('Portfolio'),
                 'img'         => $assets . 'portfolio.svg',
-                'description' => 'Mettez en avant vos compétences, expériences et formations.'
+                'description' => t('Highlight your skills, experiences and training.')
             ],
             'one_page'  => [
                 'key'         => 'one_page',
-                'title'       => 'One page',
+                'title'       => t('One page'),
                 'img'         => $assets . 'one_page.svg',
-                'description' => 'Présenter votre activité sur une seule page web.'
+                'description' => t('Present your activity on a single webpage.')
             ]
         ];
         $this->core->callHook('app.step.profil', [ &$profil ]);
@@ -111,7 +111,7 @@ class HookStep
             }, [ 'class' => 'form-group' ]);
         }
         $form->token('token_install')
-            ->submit('submit', 'Suivant', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
 
         return (new Template('form-profil.php', $this->pathViews))->addVars([
                 'form'    => $form,
@@ -159,9 +159,9 @@ class HookStep
             'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ])
             ]))
             ->group('fieldset', 'fieldset', function ($form) use ($content) {
-                $form->legend('legend', 'Profil utilisateur')
+                $form->legend('legend', t('User profile'))
                 ->group('install-username-group', 'div', function ($form) use ($content) {
-                    $form->label('install-username-label', 'Nom utilisateur')
+                    $form->label('install-username-label', t('User name'))
                     ->text('username', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -170,17 +170,17 @@ class HookStep
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-email-group', 'div', function ($form) use ($content) {
-                    $form->label('install-email-label', 'E-mail')
+                    $form->label('install-email-label', t('E-mail'))
                     ->email('email', [
                         'class'       => 'form-control',
                         'maxlength'   => 254,
-                        'placeholder' => 'email@exemple.com',
+                        'placeholder' => t('example@mail.com'),
                         'required'    => 1,
                         'value'       => $content[ 'email' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-name-group', 'div', function ($form) use ($content) {
-                    $form->label('install-name-label', 'Nom')
+                    $form->label('install-name-label', t('Name'))
                     ->text('name', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -188,7 +188,7 @@ class HookStep
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-firstname-group', 'div', function ($form) use ($content) {
-                    $form->label('install-firstname-label', 'Prénom')
+                    $form->label('install-firstname-label', t('First name'))
                     ->text('firstname', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -196,7 +196,7 @@ class HookStep
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-password-group', 'div', function ($form) use ($content) {
-                    $form->label('install-password-label', 'Mot de passe')
+                    $form->label('install-password-label', t('Password'))
                     ->password('password', [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -204,7 +204,7 @@ class HookStep
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-password-confirm-group', 'div', function ($form) use ($content) {
-                    $form->label('install-password-confirm-label', 'Confirmation du mot de passe')
+                    $form->label('install-password-confirm-label', t('Confirmation of the new password'))
                     ->password('password-confirm', [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -213,7 +213,7 @@ class HookStep
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_install')
-            ->submit('submit', 'Installer', [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Install'), [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors_keys' ][ $id ])) {
             $form->addAttrs($_SESSION[ 'errors_keys' ][ $id ], [ 'style' => 'border-color:#a94442;' ]);
@@ -272,7 +272,7 @@ class HookStep
                 'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                'Accueil', 'page', (string) time(), (string) time(), true,
+                t('Home'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('features.php', $this->pathContent))->render()
                 ])
@@ -296,15 +296,15 @@ class HookStep
                 ])
             ])
             ->values([
-                'À propos', 'page', (string) time(), (string) time(), true,
+                t('About'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                '404 Not Found', 'page', (string) time(), (string) time(), true,
+                t('Not Found'), 'page', (string) time(), (string) time(), true,
                 serialize([
-                    'body' => '<p>Page non trouvée :\'(</p>'
+                    'body' => t('Not Found')
                 ])
             ])
             ->execute();
@@ -317,7 +317,7 @@ class HookStep
                 (new Template('learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">Introduction</span>', 1, true, '/',
+                'content_header', '<span id="text">' . t('Introduction') . '</span>', 1, true, '/',
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->execute();
@@ -329,15 +329,15 @@ class HookStep
                 (new Template('card_ui.php', $this->pathContent))->render()
             ])
             ->values([
-                'sidebar', 'Retrouvez-nous', 1,
+                'sidebar', t('Follow us'), 1,
                 (new Template('social.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_first', 'Pour nous joindre', 1,
+                'footer_first', t('To join us'), 1,
                 (new Template('contact.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_second', 'Plan d\'accès', 1,
+                'footer_second', t('Access map'), 1,
                 (new Template('map.php', $this->pathContent))->render()
             ])
             ->execute();
@@ -350,7 +350,7 @@ class HookStep
                 'node.show', 'Blog', 'news', 'menu-main', 2, -1
             ])
             ->values([
-                'node.show', 'A propos', 'node/7', 'menu-main', 3, -1
+                'node.show', 'About', 'node/7', 'menu-main', 3, -1
             ])
             ->values([
                 'node.show', 'Basic', 'node/4', 'menu-main', 3, 6
@@ -375,7 +375,7 @@ class HookStep
         $ci->query()
             ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
             ->values([
-                'footer_first', 'Retrouvez-nous', 1,
+                'footer_first', t('Follow us'), 1,
                 (new Template('social.php', $this->pathContent))->render()
             ])
             ->values([
@@ -389,7 +389,7 @@ class HookStep
                 'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                'À propos', 'page', (string) time(), (string) time(), true,
+                t('About'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
@@ -401,7 +401,7 @@ class HookStep
                 'key', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'node.show', 'À propos', 'node/3', 'menu-main', 3, -1
+                'node.show', 'About', 'node/3', 'menu-main', 3, -1
             ])
             ->execute();
     }
@@ -419,43 +419,43 @@ class HookStep
                 'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                'Accueil', 'page', (string) time(), (string) time(), true,
+                t('Home'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Parcours', 'page', (string) time(), (string) time(), true,
+                t('Education'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('education.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Projets', 'page', (string) time(), (string) time(), true,
+                t('Projects'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('project.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Projet 1', 'page', (string) time(), (string) time(), true,
+                t('Project') . ' 1', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Projet 2', 'page', (string) time(), (string) time(), true,
+                t('Project') . ' 2', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Projet 3', 'page', (string) time(), (string) time(), true,
+                t('Project') . ' 3', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
             ])
             ->values([
-                'Projet 4', 'page', (string) time(), (string) time(), true,
+                t('Project') . ' 4', 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])
@@ -467,33 +467,33 @@ class HookStep
                 'key', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'node.show', 'Parcours', 'node/2', 'menu-main', 3, -1
+                'node.show', 'Education', 'node/2', 'menu-main', 3, -1
             ])
             ->values([
-                'node.show', 'Projets', 'node/3', 'menu-main', 3, -1
+                'node.show', 'Projects', 'node/3', 'menu-main', 3, -1
             ])
             ->values([
-                'node.show', 'Projet 1', 'node/4', 'menu-main', 4, 15
+                'node.show', 'Project' . ' 1', 'node/4', 'menu-main', 4, 15
             ])
             ->values([
-                'node.show', 'Projet 2', 'node/5', 'menu-main', 5, 15
+                'node.show', 'Project' . ' 2', 'node/5', 'menu-main', 5, 15
             ])
             ->values([
-                'node.show', 'Projet 3', 'node/6', 'menu-main', 6, 15
+                'node.show', 'Project' . ' 3', 'node/6', 'menu-main', 6, 15
             ])
             ->values([
-                'node.show', 'Projet 4', 'node/7', 'menu-main', 7, 15
+                'node.show', 'Project' . ' 4', 'node/7', 'menu-main', 7, 15
             ])
             ->execute();
 
         $ci->query()
             ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
             ->values([
-                'sidebar', 'À propos de moi', 1,
+                'sidebar', t('About'), 1,
                 (new Template('card_ui.php', $this->pathContent))->render()
             ])
             ->values([
-                'sidebar', 'Retrouvez-nous', 1,
+                'sidebar', t('Follow us'), 1,
                 (new Template('social.php', $this->pathContent))->render()
             ])
             ->execute();
@@ -550,12 +550,12 @@ class HookStep
                 (new Template('learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">Introduction</span>', 1, true,
+                'content_header', '<span id="text">' . t('Introduction') . '</span>', 1, true,
                 '/',
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_footer', '<span id="img">About</span>', 1, true, '/',
+                'content_footer', '<span id="img">' . t('About') . '</span>', 1, true, '/',
                 (new Template('img.php', $this->pathContent))->render()
             ])
             ->values([
@@ -563,7 +563,7 @@ class HookStep
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_second', '<span id="social">Retrouvez-nous</span>', 2, true,
+                'footer_second', '<span id="social">' . t('Follow us') . '</span>', 2, true,
                 '/',
                 (new Template('social.php', $this->pathContent))->render()
             ])

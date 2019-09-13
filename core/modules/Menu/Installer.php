@@ -36,9 +36,9 @@ class Installer implements \SoosyzeCore\System\Migration
             
         $ci->query()
             ->insertInto('menu', [ 'name', 'title', 'description' ])
-            ->values([ 'menu-admin', 'Menu d’administration', 'Le menu pour la gestion du site.' ])
-            ->values([ 'menu-main', 'Menu principal', 'Le menu principal du site utilisable pour les internautes.' ])
-            ->values([ 'menu-user', 'Menu utilisateur', 'Le menu des liens utilisateurs (compte, connexion...).' ])
+            ->values([ 'menu-admin', 'Administration menu', 'Le menu pour la gestion du site.' ])
+            ->values([ 'menu-main', 'Main Menu', 'Main menu of the site.' ])
+            ->values([ 'menu-user', 'User Menu', 'User links menu.' ])
             ->execute();
         
         $ci->query()
@@ -58,7 +58,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent', 'target_link'
             ])
             ->values([
-                null, null, 'Site de Soosyze', 'https://soosyze.com', 'menu-main', 50, -1, '_blank'
+                null, null, 'Soosyze website', 'https://soosyze.com', 'menu-main', 50, -1, '_blank'
             ])
             ->execute();
     }

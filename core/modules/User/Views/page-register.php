@@ -1,4 +1,4 @@
 
 <?php echo $form->renderForm() ?>
 
-<p><a href="<?php echo $url_relogin ?>">Revenir à la connexion utilisateur</a></p>
+<p><a href="<?php echo $url_relogin ?>"><?php echo t('Return'); ?></a></p>
