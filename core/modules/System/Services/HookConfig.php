@@ -8,10 +8,13 @@ class HookConfig
 
     protected $file;
 
-    public function __construct($template, $file)
+    protected $translate;
+
+    public function __construct($template, $file, $translate)
     {
-        $this->template = $template;
-        $this->file     = $file;
+        $this->template  = $template;
+        $this->file      = $file;
+        $this->translate = $translate;
     }
 
     public function menu(&$menu)
@@ -28,8 +31,21 @@ class HookConfig
             $optionThemes[] = [ 'value' => $theme, 'label' => $theme ];
         }
 
-        return $form->group('system-information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
-            $form->legend('system-information-legend', t('Information'))
+        $optionLang   = $this->translate->getLang();
+        $optionLang[] = [ 'value' => 'en', 'label' => 'English' ];
+
+        return $form->group('system-translate-fieldset', 'fieldset', function ($form) use ($data, $optionLang) {
+            $form->legend('system-translate-legend', t('Translation'))
+                    ->group('system-translate-group', 'div', function ($form) use ($data, $optionLang) {
+                        $form->label('system-translate-label', t('Language'))
+                        ->select('lang', $optionLang, [
+                            'class'    => 'form-control',
+                            'selected' => $data[ 'lang' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ]);
+        })
+                ->group('system-information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
+                    $form->legend('system-information-legend', t('Information'))
                     ->group('system-email-group', 'div', function ($form) use ($data) {
                         $form->label('system-email-label', t('E-mail of the site'), [
                             'data-tooltip' => t('E-mail used for the general configuration, for your contacts, the recovery of your password ...')
@@ -49,39 +65,39 @@ class HookConfig
                             'for' => 'maintenance'
                         ]);
                     }, [ 'class' => 'form-group' ]);
-            if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
-                $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
-                    $form->checkbox('rewrite_engine', [
-                                    'checked' => $data[ 'rewrite_engine' ]
-                                ])
-                                ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
-                                    'for' => 'rewrite_engine'
-                                ]);
-                }, [ 'class' => 'form-group' ]);
-            }
-            $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                $form->label('system-theme-label', t('Website theme'))
-                            ->select('theme', $optionThemes, [
-                                'class'    => 'form-control',
-                                'selected' => $data[ 'theme' ]
+                    if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
+                        $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
+                            $form->checkbox('rewrite_engine', [
+                                'checked' => $data[ 'rewrite_engine' ]
+                            ])
+                            ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
+                                'for' => 'rewrite_engine'
                             ]);
-            }, [ 'class' => 'form-group' ])
-                        ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
-                            $form->label('system-theme_admin-label', t('Website administration theme'))
-                            ->select('theme_admin', $optionThemes, [
-                                'class'    => 'form-control',
-                                'selected' => $data[ 'theme_admin' ]
-                            ]);
-                        }, [ 'class' => 'form-group' ])
-                        ->group('system-logo-group', 'div', function ($form) use ($data) {
-                            $form->label('label-logo', t('Logo'), [
-                                'class' => 'control-label',
-                                'data-tooltip' => '200ko maximum.',
-                                'for'=> 'logo'
-                            ]);
-                            $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                         }, [ 'class' => 'form-group' ]);
-        })
+                    }
+                    $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
+                        $form->label('system-theme-label', t('Website theme'))
+                        ->select('theme', $optionThemes, [
+                            'class'    => 'form-control',
+                            'selected' => $data[ 'theme' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
+                        $form->label('system-theme_admin-label', t('Website administration theme'))
+                        ->select('theme_admin', $optionThemes, [
+                            'class'    => 'form-control',
+                            'selected' => $data[ 'theme_admin' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('system-logo-group', 'div', function ($form) use ($data) {
+                        $form->label('label-logo', t('Logo'), [
+                            'class'        => 'control-label',
+                            'data-tooltip' => '200ko maximum.',
+                            'for'          => 'logo'
+                        ]);
+                        $this->file->inputFile('logo', $form, $data[ 'logo' ]);
+                    }, [ 'class' => 'form-group' ]);
+                })
                 ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('system-path-legend', t('Default page'))
                     ->group('system-path_index-group', 'div', function ($form) use ($data) {
@@ -123,10 +139,10 @@ class HookConfig
                             'data-tooltip' => t('The main title of your site also appears in the title of your browser window.')
                         ])
                         ->text('meta_title', [
-                            'class'       => 'form-control',
-                            'maxlength'   => 64,
-                            'required'    => 'required',
-                            'value'       => $data[ 'meta_title' ]
+                            'class'     => 'form-control',
+                            'maxlength' => 64,
+                            'required'  => 'required',
+                            'value'     => $data[ 'meta_title' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-meta_description-group', 'div', function ($form) use ($data) {
@@ -152,7 +168,7 @@ class HookConfig
                         $form->label('system-favicon-label', t('Favicon'), [
                             'class'        => 'control-label',
                             'data-tooltip' => t('Image to the left of the title of your browser window.'),
-                            'for'=> 'favicon'
+                            'for'          => 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
                         $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
@@ -169,7 +185,9 @@ class HookConfig
     public function validator(&$validator)
     {
         $themes = implode(',', $this->template->getThemes());
+        $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
+            'lang'                => 'required|inarray:' . $langs,
             'email'               => 'required|email|max:254|htmlsc',
             'maintenance'         => '!required|bool',
             'rewrite_engine'      => 'bool',
@@ -190,6 +208,7 @@ class HookConfig
     public function before(&$validator, &$data)
     {
         $data = [
+            'lang'               => $validator->getInput('lang'),
             'email'              => $validator->getInput('email'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
             'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),

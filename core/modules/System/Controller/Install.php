@@ -176,7 +176,7 @@ class Install extends \Soosyze\Controller
         self::config()
             ->set('settings.email', $data[ 'email' ])
             ->set('settings.time_installed', time())
-            ->set('settings.local', 'fr_FR')
+            ->set('settings.lang', 'en')
             ->set('settings.theme', 'QuietBlue')
             ->set('settings.theme_admin', 'Admin')
             ->set('settings.logo', '')

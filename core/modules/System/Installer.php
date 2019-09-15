@@ -40,6 +40,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.meta_description', 'Hello world !')
             ->set('settings.meta_keyboard', '')
             ->set('settings.favicon', '')
+            ->set('settings.lang', 'en')
             ->set('settings.timezone', 'Europe/Paris');
     }
 

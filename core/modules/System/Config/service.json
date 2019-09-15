@@ -48,7 +48,8 @@
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
         "arguments": [
             "@template",
-            "@file"
+            "@file",
+            "@translate"
         ],
         "hooks": {
             "config.edit.menu": "menu",
