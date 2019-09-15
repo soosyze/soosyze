@@ -40,7 +40,7 @@ class Core extends App
                 'arguments' => [
                     '@core',
                    __DIR__ . '/lang',
-                    'fr_FR'
+                    'en'
                 ]
             ]
         ];
