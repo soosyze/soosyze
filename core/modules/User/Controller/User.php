@@ -48,11 +48,11 @@ class User extends \Soosyze\Controller
                     'title_main' => $user[ 'username' ]
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-user-show.php', $this->pathViews, [
+                ->make('page.content', 'page-user-show.php', $this->pathViews, [
                     'user'  => $user,
                     'roles' => $roles
                 ])
-                ->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
                     'menu' => $this->getMenuUser($id)
         ]);
     }
@@ -99,9 +99,9 @@ class User extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('User creation')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
                 'menu' => []
         ]);
     }
@@ -252,9 +252,9 @@ class User extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a user')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
                 'menu' => $this->getMenuUser($id)
         ]);
     }
@@ -401,9 +401,9 @@ class User extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Delete :name account', [':name'=> $data[ 'username' ]])
                 ])
-                ->render('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->render('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
                 'menu' => $this->getMenuUser($id)
         ]);
     }

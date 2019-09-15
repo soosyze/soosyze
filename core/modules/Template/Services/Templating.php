@@ -157,7 +157,7 @@ class Templating extends \Soosyze\Components\Http\Response
      *
      * @return $this
      */
-    public function render($parent, $tpl, $tplPath, array $vars = [])
+    public function make($parent, $tpl, $tplPath, array $vars = [])
     {
         $template = $this->createBlock($tpl, $tplPath)
             ->addVars($vars);

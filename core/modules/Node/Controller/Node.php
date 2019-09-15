@@ -38,7 +38,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('My contents')
                 ])
-                ->render('page.content', 'node-admin.php', $this->pathViews, [
+                ->make('page.content', 'node-admin.php', $this->pathViews, [
                     'linkAdd' => $linkAdd,
                     'nodes'   => $nodes
         ]);
@@ -64,7 +64,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content')
                 ])
-                ->render('page.content', 'node-add.php', $this->pathViews, [
+                ->make('page.content', 'node-add.php', $this->pathViews, [
                     'node_type' => $query
         ]);
     }
@@ -170,7 +170,7 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [':name' => $type])
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'node-create.php', $this->pathViews, [
+                ->make('page.content', 'node-create.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -256,7 +256,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
-                ->render('page.content', 'node-show.php', $this->pathViews, [
+                ->make('page.content', 'node-show.php', $this->pathViews, [
                     'fields' => unserialize($node[ 'field' ])
                 ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
 
@@ -379,7 +379,7 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $node[ 'title' ]])
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
+                ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
     }
 
     public function update($id, $req)

@@ -58,7 +58,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Log in')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-login.php', $this->pathViews, [
+                ->make('page.content', 'page-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin', [ ':url' => $url ]),
                     'url_register'     => self::router()->getRoute('user.register.create'),
@@ -147,7 +147,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Request a new password')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-relogin.php', $this->pathViews, [
+                ->make('page.content', 'page-relogin.php', $this->pathViews, [
                     'form'      => $form,
                     'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])
         ]);

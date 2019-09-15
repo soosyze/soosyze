@@ -41,7 +41,7 @@ class Role extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [ 'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer roles')])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-role.php', $this->pathViews, [
+                ->make('page.content', 'page-role.php', $this->pathViews, [
                     'roles'    => $roles,
                     'link_add' => self::router()->getRoute('user.role.create')
         ]);
@@ -80,7 +80,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -164,7 +164,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -246,7 +246,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Deleting the :name role', [':name' => $data[ 'role_label' ]])
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'form-role.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

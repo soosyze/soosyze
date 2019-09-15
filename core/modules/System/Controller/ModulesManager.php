@@ -102,7 +102,7 @@ class ModulesManager extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-th-large" aria-hidden="true"></i> ' . t('Modules')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-modules.php', $this->pathViews, [
+                ->make('page.content', 'page-modules.php', $this->pathViews, [
                     'count'    => count($composer),
                     'form'     => $form,
                     'packages' => $packages

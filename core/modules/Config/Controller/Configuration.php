@@ -29,7 +29,7 @@ class Configuration extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
                 ])
                 ->view('page.messages', [ 'infos' => [ t('No configuration available') ] ])
-                ->render('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'page-config.php', $this->pathViews, [
                     'form' => null
         ]);
     }
@@ -72,10 +72,10 @@ class Configuration extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'page-config.php', $this->pathViews, [
                     'form' => $form
                 ])
-                ->render('content.menu_config', 'submenu-config.php', $this->pathViews, [
+                ->make('content.menu_config', 'submenu-config.php', $this->pathViews, [
                     'menu' => $menu,
                     'id'   => $id
         ]);

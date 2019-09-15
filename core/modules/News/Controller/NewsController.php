@@ -67,7 +67,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
-                ->render('page.content', 'views-news-index.php', $this->pathViews, [
+                ->make('page.content', 'views-news-index.php', $this->pathViews, [
                     'news'     => $query,
                     'default'  => $default,
                     'paginate' => $paginate,
@@ -186,7 +186,7 @@ class NewsController extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $this->title_main
                 ])
-                ->render('page.content', 'views-news-index.php', $this->pathViews, [
+                ->make('page.content', 'views-news-index.php', $this->pathViews, [
                     'news'     => $news,
                     'paginate' => $paginate,
                     'default'  => $default,

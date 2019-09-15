@@ -63,7 +63,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => t('Not Found')
                 ])
-                ->render('page.content', 'page-404.php', $this->views, [
+                ->make('page.content', 'page-404.php', $this->views, [
                     'uri' => $request->getUri()
                 ])
             : $responseNoFound;
@@ -89,7 +89,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => t('Page Forbidden')
                 ])
-                ->render('page.content', 'page-403.php', $this->views, [
+                ->make('page.content', 'page-403.php', $this->views, [
                     'uri' => $request->getUri()
                 ])
             : $responseDenied;
@@ -101,7 +101,7 @@ class HookApp
 
     public function hooks503($request, &$response)
     {
-        $response = $this->tpl->render('page', 'page-maintenance.php', $this->views, [
+        $response = $this->tpl->make('page', 'page-maintenance.php', $this->views, [
                 'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Site under maintenance')
             ])
             ->withStatus(503);

@@ -38,7 +38,7 @@ class UsersManagement extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer users')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-user_management.php', $this->pathViews, [
+                ->make('page.content', 'page-user_management.php', $this->pathViews, [
                     'users'              => $users,
                     'link_add'           => self::router()->getRoute('user.create'),
                     'link_role'          => self::router()->getRoute('user.role.admin'),

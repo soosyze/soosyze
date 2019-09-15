@@ -38,7 +38,7 @@ class Menu extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Menu')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'page-menu-show.php', $this->pathViews, [
+                ->make('page.content', 'page-menu-show.php', $this->pathViews, [
                     'form'     => $form,
                     'menu'     => $this->renderMenu($req, $name),
                     'linkAdd'  => self::router()->getRoute('menu.link.create', [
@@ -46,7 +46,7 @@ class Menu extends \Soosyze\Controller
                     ]),
                     'menuName' => $menu[ 'title' ]
                 ])
-                ->render('content.submenu', 'submenu-menu.php', $this->pathViews, [
+                ->make('content.submenu', 'submenu-menu.php', $this->pathViews, [
                     'menu' => $this->renderSubMenu(),
                     'id' =>$name
         ]);

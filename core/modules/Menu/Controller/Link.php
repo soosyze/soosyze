@@ -90,7 +90,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Add a link')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-link-add.php', $this->pathViews, [
+                ->make('page.content', 'menu-link-add.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -241,7 +241,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-bars" aria-hidden="true"></i> ' . t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
-                ->render('page.content', 'menu-link-edit.php', $this->pathViews, [
+                ->make('page.content', 'menu-link-edit.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

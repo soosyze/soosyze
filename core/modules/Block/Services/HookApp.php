@@ -36,7 +36,7 @@ class HookApp
 
         $sections = $this->tpl->getSections();
         foreach ($sections as $section) {
-            $response->render('page.' . $section, 'section.php', $this->pathViews, [
+            $response->make('page.' . $section, 'section.php', $this->pathViews, [
                 'section_id'  => $section,
                 'content'     => !empty($blocks[ $section ])
                     ? $blocks[ $section ]
