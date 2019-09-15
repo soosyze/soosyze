@@ -9,7 +9,13 @@ use Soosyze\Components\Validator\Validator;
 
 class File
 {
+    /**
+     *
+     * @var \Soosyze\App
+     */
     protected $core;
+    
+    protected $dir = null;
 
     public function __construct($core)
     {
@@ -88,8 +94,8 @@ class File
     public function moveTo($name, $path = null)
     {
         $this->name = Util::strSlug($name);
-        $this->path = $path === null
-            ? $this->core->getDir('files_public', 'app/files')
+        $this->dir = $path === null
+            ? $this->core->getSetting('files_public', 'app/files')
             : $path;
 
         return $this;
@@ -125,7 +131,8 @@ class File
             $filename = $this->file->getClientFilename();
             $ext      = Util::getFileExtension($filename);
 
-            $move = "$this->path/$this->name.$ext";
+            $move = "$this->dir/$this->name.$ext";
+
             $this->file->moveTo($move);
             call_user_func_array($this->call_move, [ $this->name, $move ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
@@ -148,7 +155,7 @@ class File
             $filename       = pathinfo($ClientFilename, PATHINFO_FILENAME);
             $name           = Util::strSlug($filename);
 
-            $move = "$this->path/$name.$ext";
+            $move = "$this->dir/$name.$ext";
             $this->file->moveTo($move);
         }
     }
