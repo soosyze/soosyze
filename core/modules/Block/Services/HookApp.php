@@ -81,11 +81,11 @@ class HookApp
         $path = empty($query[ 'q' ])
             ? '/'
             : $query[ 'q' ];
-
+        
         $visibility = $block[ 'visibility_pages' ];
         $pages      = $block[ 'pages' ];
 
-        foreach (explode("\n", $pages) as $page) {
+        foreach (explode(PHP_EOL, $pages) as $page) {
             if ($page === $path) {
                 return $visibility;
             }
