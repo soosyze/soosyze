@@ -47,11 +47,18 @@ class Permission extends \Soosyze\Controller
             }
         }
 
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer permissions')
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'page-permission.php', $this->pathViews, [
                     'link_update' => self::router()->getRoute('user.permission.update'),
                     'roles'       => $roles,
@@ -78,7 +85,7 @@ class Permission extends \Soosyze\Controller
             $this->storePermission($id, $perm[ $id ], $post[ $id ]);
             $this->deletePermission($id, $perm[ $id ], $post[ $id ]);
         }
-
+        $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         $route = self::router()->getRoute('user.permission.admin');
 
         return new Redirect($route);
