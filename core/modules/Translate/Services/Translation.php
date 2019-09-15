@@ -212,6 +212,9 @@ class Translation extends \Soosyze\Config
 
     public function t($str, array $vars = [])
     {
+        if (empty($str) || !\is_string($str)) {
+            return '';
+        }
         $subject = $this->get($str, $str);
         $out     = str_replace(array_keys($vars), $vars, $subject);
 
