@@ -13,9 +13,8 @@ class HookConfig
 
     public function menu(&$menu)
     {
-        $menu[] = [
-            'key'        => 'news',
-            'title_link' => 'Blog'
+        $menu['news'] = [
+            'title_link' => 'News'
         ];
     }
 

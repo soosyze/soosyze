@@ -16,8 +16,8 @@ class HookUser
         $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
         $permission[ 'Configuration' ]['config.manage'] = t('Administer all configurations');
-        foreach ($menu as $link) {
-            $permission[ 'Configuration' ][$link[ 'key' ] . '.config.manage'] = t('Administer :name configurations', [':name' => $link[ 'title_link' ]]);
+        foreach ($menu as $key => $link) {
+            $permission[ 'Configuration' ][$key . '.config.manage'] = t('Administer :name configurations', [':name' => $link[ 'title_link' ]]);
         }
     }
 
@@ -26,8 +26,8 @@ class HookUser
         $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
         $out[] = 'config.manage';
-        foreach ($menu as $link) {
-            $out[] = $link[ 'key' ] . '.config.manage';
+        foreach (array_keys($menu) as $key) {
+            $out[] = $key . '.config.manage';
         }
 
         return $out;

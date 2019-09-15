@@ -18,7 +18,9 @@ class Configuration extends \Soosyze\Controller
     public function index($req)
     {
         if ($menu = $this->getMenuConfig()) {
-            return $this->edit($menu[ 0 ][ 'key' ], $req);
+            $key = count($menu) ? array_keys($menu)[0] : null;
+
+            return $this->edit($key, $req);
         }
 
         return self::template()
@@ -127,19 +129,19 @@ class Configuration extends \Soosyze\Controller
     {
         $menu = [];
         $this->container->callHook('config.edit.menu', [ &$menu ]);
-        sort($menu);
+        ksort($menu);
         $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
         foreach ($menu as $key => &$link) {
-            $manage = $this->container->callHook('app.granted', [ $link[ 'key' ] . '.config.manage' ]);
+            $manage = $this->container->callHook('app.granted', [ $key . '.config.manage' ]);
             if ($all || $manage) {
-                $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $link[ 'key' ] ]);
+                $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $key ]);
 
                 continue;
             }
             unset($menu[$key]);
         }
 
-        return array_values($menu);
+        return $menu;
     }
 
     private function saveFile($key, $validator)
