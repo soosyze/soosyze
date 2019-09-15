@@ -139,11 +139,13 @@ class File
             $file = call_user_func_array($this->call_get, [ $this->name ]);
             if (empty($this->file_hidden) && $file) {
                 call_user_func_array($this->call_delete, [ $this->name, $file ]);
-                unlink($file);
+                if (file_exists($file)) {
+                    unlink($file);
+                }
             }
         }
     }
-    
+
     public function saveOne()
     {
         if (!($this->file instanceof UploadedFileInterface)) {
