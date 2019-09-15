@@ -124,7 +124,7 @@ class Node extends \Soosyze\Controller
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->textarea($key, $content[ $key ], [
-                                    'class'       => 'form-control',
+                                    'class'       => 'form-control editor',
                                     'required'    => $require,
                                     'rows'        => 8,
                                     'placeholder' => t('Enter your content here')
@@ -191,7 +191,7 @@ class Node extends \Soosyze\Controller
 
         $post = $req->getParsedBody();
 
-        /* Ttest les champs par defauts de la node. */
+        /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
                 'title'             => 'required|string|max:255|htmlsc',
@@ -333,7 +333,7 @@ class Node extends \Soosyze\Controller
                         switch ($value[ 'field_type' ]) {
                             case 'textarea':
                                 $form->textarea($key, $content[ $key ], [
-                                    'class'       => 'form-control',
+                                    'class'       => 'form-control editor',
                                     'required'    => $require,
                                     'rows'        => 8,
                                     'placeholder' => t('Enter your content here')

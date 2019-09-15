@@ -46,7 +46,8 @@ class Register extends \Soosyze\Controller
             unset($_SESSION[ 'errors_keys' ]);
         }
 
-        $url = self::router()->getRoute('user.login');
+        $connect_url = self::config()->get('settings.connect_url', '');
+        $url = self::router()->getRoute('user.login', [ ':url' => '/' . $connect_url ]);
 
         return self::template()
                 ->view('page', [

@@ -46,7 +46,7 @@ class Link extends \Soosyze\Controller
                         'class'       => 'form-control',
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
-                        'value'       => $content[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
+                        'value'       => $content[ 'link' ] . (!empty($content['fragment']) ? '#' . $content['fragment'] : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
