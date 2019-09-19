@@ -1,21 +1,26 @@
 <p align="center"><a href="https://soosyze.com/" rel="noopener" target="_blank"><img src="https://soosyze.com/assets/files/logo/soosyze-name.png"></a></p>
 
-[![GitHub](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
+[![License](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
 [![Download Soosyze CMS](https://img.shields.io/badge/download-releases%20latest-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Download Soosyze CMS")
 
-# À propos de Soosyze CMS
+* :gb: [README en Anglais](README.md)
+* :fr: [README en Français](README_fr.md)
 
-SoosyzeCMS est un micro système de gestion de contenu sans base de données. Il permet de créer et gérer votre site web facilement avec peu ou aucune connaissance technique. Il est basé sur un micro framework MVC en PHP orienté objet et une bibliothèque noSQL pour assurer sa stabilité et son évolution.
+# About
+
+Soosyze CMS is a micro content management system without a database. It's easy to create and manage your website easily with little or no technical knowledge. It is based on an MVC micro-framework in object-oriented PHP and on a noSQL library to ensure its stability and evolution.
+
+To encourage us to continue the development of Soosyze CMS do not hesitate to put a star :star: Github. Thank you :heart:
 
 * :globe_with_meridians: [Site](https://soosyze.com)
-* :eyes: [Démo](https://demo.soosyze.com)
-* :dizzy: [Extensions et thèmes](https://github.com/soosyze-extension)
+* :eyes: [Demo](https://demo.soosyze.com)
+* :dizzy: [Extensions and themes](https://github.com/soosyze-extension)
 * :speech_balloon: [Forum](https://community.soosyze.com)
-* :mortar_board: [Docuementations](https://github.com/soosyze/documentations)
+* :mortar_board: [Documentations](https://github.com/soosyze/documentations)
 * :green_book: [PHP Doc](https://api.soosyze.com)
 
-Vous pouvez également nous trouver sur les réseaux :
+Find us on the networks :
 
 * :busts_in_silhouette: [Mastodon](https://mamot.fr/@soosyze)
 * :telephone_receiver: [Discord](https://discordapp.com/invite/parFfTt)
@@ -23,63 +28,63 @@ Vous pouvez également nous trouver sur les réseaux :
 
 # Sommaire
 
-* [Captures d'écrans](#captures-décrans)
-* [Exigences d'installation](#exigences-dinstallation)
+* [Screenshots](#screenshots)
+* [Installation requirements](#installation-requirements)
 * [Installation](#installation)
 * [Configuration](#configuration)
 * [License](#license)
 
-# Captures d'écrans
+# Screenshots
 
-[![GitHub](https://soosyze.com/assets/files/screen/devices-accueil.png)](https://soosyze.com/#screenshot)
+[![Screenshot of Soosyze CMS](https://soosyze.com/assets/files/screen/devices-accueil.png)](https://soosyze.com/#screenshot)
 
-# Exigences d'installation
+# Installation requirements
 
 ## Serveur Web
 
-| Serveur Web                | Soosyze 1.x    |
-|----------------------------|----------------|
-| Apache HTTP Server 2.2+    | ✓ Supporté     |
-| Ngnix 1+                   | ✓ Supporté*    |
-| IIS                        | Need test      |
+| Web server              | Soosyze 1.x  |
+|-------------------------|--------------|
+| Apache HTTP Server 2.2+ | ✓ Supported  |
+| Ngnix 1+                | ✓ Supported* |
+| IIS                     | Need test    |
 
-*Pour Ngnix voir la [recommandation d'intallation](#ngnix)
+*For Nginx, see the [installation recommendation](#ngnix)
 
-## Version PHP
+## PHP version
 
-| Version PHP                | Soosyze 1.x    |
-|----------------------------|----------------|
-| <= 5.3                     | ✗ Non supporté |
-| 5.4 / 5.5 / 5.6            | ✓ Supporté     |
-| 7.0 / 7.1 / 7.2 / 7.3      | ✓ Supporté     |
+| PHP version           | Soosyze 1.x   |
+|-----------------------|---------------|
+| <= 5.3                | ✗ Unsupported |
+| 5.4 / 5.5 / 5.6       | ✓ Supported   |
+| 7.0 / 7.1 / 7.2 / 7.3 | ✓ Supported   |
 
-En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mémoire et le temps d'exécution de 30% à 45%. Votre site en sera plus rapide et mieux référencé.
+With PHP 7.x, your performance in terms of memory and performance will increase by 30% to 45%. Your site will be faster and better referenced.
 
-## Extensions requises
+## Required extensions
 
-* `date` pour le format des dates,
-* `fileinfo` pour la validation de fichier,
-* `filter` pour valider vos données,
-* `gd` pour la maniplation d'image,
-* `json` pour l'enregistrement des données et des configurations,
-* `mbstring` pour vos emails,
-* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre.
+* `date` for the dates format,
+* `fileinfo` for file validation,
+* `filter` to validate your data,
+* `gd` for image processing,
+* `json` to save data and configurations,
+* `mbstring` for your emails,
+* `session` to store your data (server side) from one page to another.
 
-Ces extensions sont généralement actives par défaut. Mais si l'une venait à manquer un message d'erreur viendrait vous en informer.
+These extensions are usually active by default. But if he missed an error message, he would come to inform you.
 
-## Mémoire requise
+## Required memory
 
-Soosyze (hors modules contributeurs) nécessite 16MB de mémoire.
+Soosyze (excluding contributor modules) requires 8MB of memory.
 
-## Navigateurs supportés
+## Supported browsers
 
-Le thème de base et d'administration sont réalisés avec le framework Bootstrap 3 :
-* [Navigateurs supportés](https://getbootstrap.com/docs/3.3/getting-started/#desktop-browsers)
-* [Navigateurs mobiles supportés](https://getbootstrap.com/docs/3.3/getting-started/#mobile-devices)
+The administration theme is realized with the Bootstrap 3 framework :
+* [Supported browsers](https://getbootstrap.com/docs/3.3/getting-started/#desktop-browsers)
+* [Supported mobile browsers](https://getbootstrap.com/docs/3.3/getting-started/#mobile-devices)
 
-## Connexion à internet
+## Internet connection
 
-Les thèmes de base se décharge d'une partie des bibliothèques d'affichages (front-end) en fesant appel à des CND (Content delivery network) :
+The basic themes use the following CNDs:
 
 * Bootstrap 3.4.1,
 * JQuery 3.2.1,
@@ -87,84 +92,79 @@ Les thèmes de base se décharge d'une partie des bibliothèques d'affichages (f
 * Sortable 1.8.3,
 * Font Awesome 5.8.1
 
-Pour l'affichage complet des thèmes de bases vous devez donc avoir une connexion réseau pour que ces bibliothèques soient utilisées.
-
 # Installation
 
-### :bike: Téléchargement simple
+### :bike: Simple download
 
-Pour installer **la version de production de SoosyzeCMS**, télécharger et décompresser l’archive de la [dernière version du CMS](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip) dans le répertoire qui hébergera votre site.
+To install **the production version of the Soosyze CMS**, download and uncompress the archive of the [latest version of the CMS](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip) in the directory that will host your site.
 
-### :car: Téléchargement via Composer
+### :car: Download via Composer
 
-Pour installer **la version de production de SoosyzeCMS** via Composer il est primordial d’avoir :
+To install the production version of Soosyze CMS via Composer it is necessary to have:
 
-* L’installateur ou le fichier binaire [Composer](https://getcomposer.org/download/),
-* Et la commande `php` dans vos variables d’environnement.
+* The installer or the binary file [Composer](https://getcomposer.org/download/),
+* And the `php` command in your environment variables.
 
-Rendez-vous dans le répertoire de votre serveur, ouvrer une invite de commandes et lancer la commande suivante :
-(*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
+Go to the directory of your server, open a command prompt and run the command:
 
 ```sh
 php composer.phar create-project soosyze/soosyze [my-directory] --stability=alpha --no-dev
 ```
 
-### :airplane: Téléchargement via Git & Composer
+### :airplane: Download via Git & Composer
 
-Pour installer **la version de développement de SoosyzeCMS** via Git & Composer il est primordial d’avoir :
+To install the production version of Soosyze CMS via Git and Composer it is necessary to have:
 
-* L'outil de versionning Git pour :
+* Git :
   * [Windows](https://gitforwindows.org/),
   * [Mac](http://sourceforge.net/projects/git-osx-installer/)
-  * Debian, Ubuntu et autres dérivées `sudo apt install git`,
-  * Red Hat, Fedora, CentOS et autres dérivées `sudo yum install git`,
-* L’installateur ou le fichier binaire [Composer](https://getcomposer.org/download/),
-* Et la commande `php` dans vos variables d’environnement.
+  * Debian, Ubuntu... `sudo apt install git`,
+  * Red Hat, Fedora, CentOS... `sudo yum install git`,
+* The installer or the binary file [Composer](https://getcomposer.org/download/),
+* And the `php` command in your environment variables.
 
-Rendez-vous dans le répertoire de votre serveur, ouvrer une invite de commandes et lancer les commandes suivantes :
-(*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
+Go to the directory of your server, open a command prompt and run the command:
 
-Cloner le repo avec Git sur votre serveur,
+Clone the repo with Git on your server,
 ```sh
 git clone https://github.com/soosyze/soosyze.git [my-directory]
 cd [my-directory]
 ```
 
-Installer les dépendances avec Composer (assurez-vous que l'exécutable php.exe est dans votre PATH),
+Install dependencies with Composer,
 ```sh
 composer install --no-dev
 ```
 
-Ou, si vous utilisez le fichier PHAR,
+Or, if you use the binary file,
 ```sh
 php composer.phar install --no-dev
 ```
 
-Pour suivre les tutoriels, je vous invite à installer le CMS à la racine de votre serveur local et à conserver le répertoire par défaut `soosyze`.
+To follow the tutorials, install the CMS at the root of your server and keep the `soosyze` default directory.
 
-### Installation du CMS
+### CMS installation
 
-Maintenant que les fichiers sources sont au bon endroit, ouvrez un navigateur web (Firefox, Chrome, Opéra, Safarie, Edge…) et dans la barre d’adresse, entrer la valeur suivante :
+Now that the source files are in the right place, open a web browser (Firefox, Chrome, Opera, Safari, Edge ...) and in the address bar, enter the following value :
 
-*   en local, [127.0.0.1/soosyze](http://127.0.0.1/soosyze),
-*   en ligne, votre nom de domaine.
+* Local, [127.0.0.1/soosyze](http://127.0.0.1/soosyze),
+* Online, your domain name.
 
-La page suivante se présentera à vous, remplissez tous les champs et cliquez sur **Installer**.
+The next page will come to you. Follow the instructions to install the CMS.
 
-![Screenshot de la page d’instalaltion de SoosyzeCMS](https://soosyze.com/assets/files/screen/install-desktop.png)
+![Screenshot of Soosyze CMS installation page](https://soosyze.com/assets/files/screen/install-desktop.png)
 
-Et voilà, le CMS est installé.
+That's it, the CMS is installed.
 
 ## Configuration
 
 ### Ngnix
 
-En supposant que vous ayez un site PHP configuré dans Nginx, ajoutez ce qui suit au bloc de configuration de votre serveur pour vous assurer de la sécurité de Soosyze CMS :
-
+If you use Nginx, add the following items to your server's configuration block to ensure the security of CMS Soosyze:
 ```
 include path\soosyze\.nginx.conf;
 ```
 
 # License
 
-Soosyze CMS est sous licence MIT. Voir le [fichier de licence](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE") pour plus d'informations.
+Soosyze CMS is under MIT license. See the [license file](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE") for more information.
