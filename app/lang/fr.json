@@ -303,5 +303,13 @@
     "Projects": "Projets",
     "Project": "Projet",    
     "Features": "Caractéristiques",
-    "Social media": "Réseaux sociaux"
+    "Social media": "Réseaux sociaux",
+    "____________": "Matomo Module",
+    "Exclude tracking of listed pages": "Exclure le suivi des pages listées",
+    "Enable tracking of listed pages": "Activer le suivi des pages listées",
+    "List of pages":"Liste des pages",
+    "Entrez un chemin par ligne. Le caractère \"%\" est un caractère générique qui spécifie tous les caractères.": "Enter a path by line. The \"%\" character is a wildcard character that specifies all characters.",
+    "Enable tracking on selected roles": "Activer le suivi aux rôles sélectionnés",
+    "Enable tracking for unselected roles": "Activer le suivi aux rôles non sélectionnés",
+    "Measure your audience by adding the Matomo (Piwik) javascript tracking code to your site.": "Mesure votre audience en ajoutant le code de suivi javascript Matomo(Piwik) à votre site."
 }
