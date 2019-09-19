@@ -96,6 +96,8 @@
                             <?php endforeach; ?>
                         </ul>
                     </nav>
+                    <hr>
+                    <?php echo $form->renderForm(); ?>
                 </div>
                 <div class="col-md-6">
                     <div class="cadre">
@@ -113,5 +115,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById('form_lang').addEventListener('change', function(){
+                console.log(this.submit());
+            });
+        </script>
     </body>
 </html>

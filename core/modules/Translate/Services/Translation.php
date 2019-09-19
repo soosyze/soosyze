@@ -207,6 +207,9 @@ class Translation extends \Soosyze\Config
     {
         $this->core = $core;
         $this->lang = $core->get('config')->get('settings.lang', $langDefault);
+        if (isset($_SESSION['lang']) && !in_array($_SESSION['lang'], $this->iso639_1)) {
+            $this->lang = $_SESSION['lang'];
+        }
         parent::__construct($dir);
     }
 

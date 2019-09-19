@@ -2,9 +2,11 @@
 
 namespace SoosyzeCore\System\Controller;
 
+use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
+use Soosyze\Components\Validator\Validator;
 
 class Install extends \Soosyze\Controller
 {
@@ -43,11 +45,32 @@ class Install extends \Soosyze\Controller
         return $this->get404($req);
     }
 
-    public function step($id, $req)
+    public function step($id, \Soosyze\Components\Http\ServerRequest $req)
     {
         if (!($steps = $this->getSteps()) || !isset($steps[ $id ])) {
             return $this->get404($req);
         }
+
+        $optionLang   = self::translate()->getLang();
+        $optionLang['en'] = [ 'value' => 'en', 'label' => 'English' ];
+
+        $data['lang'] = 'en';
+        if (isset($_SESSION['lang'])) {
+            $data['lang'] = $_SESSION['lang'];
+        }
+        
+        $form = (new FormBuilder([
+            'method' => 'post',
+            'action' => self::router()->getRoute('install.language', [ ':id' => $id ]),
+            'id'     => 'form_lang' ]))
+            ->group('system-translate-group', 'div', function ($form) use ($data, $optionLang) {
+                $form->label('system-translate-label', t('Language'))
+                ->select('lang', $optionLang, [
+                    'class'    => 'form-control',
+                    'selected' => $data[ 'lang' ]
+                ]);
+            }, [ 'class' => 'form-group' ])
+            ->token('install_language');
 
         $messages = [
             'errors'   => [], 'warnings' => [],
@@ -65,8 +88,29 @@ class Install extends \Soosyze\Controller
         return (new Template('html.php', $this->pathViews))
                 ->addBlock('page', $block_page)
                 ->addBlock('messages', $block_messages)
-                ->addVars([ 'steps' => $steps, 'step_active' => $id ])
+                ->addVars([
+                    'form'        => $form,
+                    'steps'       => $steps,
+                    'step_active' => $id
+                ])
                 ->render();
+    }
+    
+    public function language($id, $req)
+    {
+        $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
+        $validator = (new Validator())->setRules([
+                'lang'             => 'required|inarray:' . $langs,
+                'install_language' => 'required|token'
+            ])->setInputs($req->getParsedBody());
+
+        if ($validator->isValid()) {
+            $_SESSION[ 'lang' ] = $validator->getInput('lang');
+        } else {
+            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getErrors();
+        }
+
+        return new Redirect(self::router()->getRoute('install.step', [ ':id' => $id ]));
     }
 
     public function stepCheck($id, $req)
@@ -181,7 +225,8 @@ class Install extends \Soosyze\Controller
             ->set('settings.theme_admin', 'Admin')
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
-            ->set('settings.rewrite_engine', false);
+            ->set('settings.rewrite_engine', false)
+            ->set('settings.lang', $_SESSION['lang']);
 
         $profil = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
         $this->container->callHook("step.install.finish.$profil", [ $this->container ]);

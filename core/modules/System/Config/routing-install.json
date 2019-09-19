@@ -12,6 +12,14 @@
             ":id": "\\w+"
         }
     },
+    "install.language": {
+        "methode": "POST",
+        "path": "install/language/:id",
+        "uses": "Install@language",
+        "with": {
+            ":id": "\\w+"
+        }
+    },
     "install.step.check": {
         "methode": "POST",
         "path": "install/step/:id",
