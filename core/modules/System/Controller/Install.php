@@ -217,6 +217,7 @@ class Install extends \Soosyze\Controller
             ->values([ 1, 3 ])
             ->execute();
 
+        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
         self::config()
             ->set('settings.email', $data[ 'email' ])
             ->set('settings.time_installed', time())
@@ -226,7 +227,7 @@ class Install extends \Soosyze\Controller
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
             ->set('settings.rewrite_engine', false)
-            ->set('settings.lang', $_SESSION['lang']);
+            ->set('settings.lang', $lang);
 
         $profil = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
         $this->container->callHook("step.install.finish.$profil", [ $this->container ]);
