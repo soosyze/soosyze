@@ -20,6 +20,6 @@
     <?php endforeach; ?>
 
 </div>
-<?php echo $form->form_input($section); ?>
+<?php echo $form->form_input("token_$section"); ?>
 <?php echo $form->form_input('submit'); ?>
 <?php echo $form->form_close(); ?>

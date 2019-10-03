@@ -54,8 +54,8 @@ class Block extends \Soosyze\Controller
                 ]);
             });
         }
-        $form->token($section)
-            ->submit('submit', 'Ajouter', [ 'class' => 'btn btn-success' ]);
+        $form->token("token_$section")
+            ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
                 ->createBlock('block-create.php', $this->pathViews)
@@ -71,8 +71,8 @@ class Block extends \Soosyze\Controller
         $this->blocks = $this->getBlocks();
         $validator = (new Validator())
             ->setRules([
-                'type_block' => 'required|string|max:255',
-                $section     => 'token'
+                'type_block'     => 'required|string|max:255',
+                "token_$section" => 'token'
             ])
             ->setInputs($req->getParsedBody());
 
@@ -195,7 +195,7 @@ class Block extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
             })
-            ->token('token_link_create')
+            ->token("token_block_$id")
             ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success' ])
             ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
@@ -219,7 +219,8 @@ class Block extends \Soosyze\Controller
                 'content'          => '!required|string|max:5000',
                 'visibility_pages' => 'bool',
                 'pages'            => '!required|string|htmlsc',
-                'visibility_roles' => 'bool'
+                'visibility_roles' => 'bool',
+                "token_block_$id"  => 'token'
             ])
             ->setInputs($req->getParsedBody());
         foreach (self::user()->getRoles() as $role) {
