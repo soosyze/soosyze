@@ -130,9 +130,12 @@ class FormUser extends FormBuilder
         return $this;
     }
 
-    public function passwordNew(&$form)
+    public function passwordNew( &$form )
     {
-        $this->password($form, 'password_new', t('New Password'));
+        $this->password($form, 'password_new', t('New Password'), $this->config->get('settings.password_show', true)
+                ? [ 'onkeyup' => 'passwordPolicy(this)' ]
+                : []
+        );
 
         return $this;
     }
@@ -144,12 +147,14 @@ class FormUser extends FormBuilder
         return $this;
     }
 
-    public function password(&$form, $id, $label)
+    public function password(&$form, $id, $label, array $attr = [])
     {
-        $form->group("user-$id-group", 'div', function ($form) use ($id, $label) {
+        $form->group("user-$id-group", 'div', function ($form) use ($id, $label, $attr) {
             $form->label("$id-label", $label, [ 'for' => $id ])
-                ->group("user-$id-group", 'div', function ($form) use ($id) {
-                    $form->password($id, [ 'class' => 'form-control' ]);
+                ->group("user-$id-group", 'div', function ($form) use ($id, $attr) {
+                    $form->password($id, [
+                        'class'    => 'form-control'
+                    ] + $attr);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
                         $form->html("{$id}_show", '<button:css:attr>:_content</button>', [
                             'class'        => 'btn btn-toogle-password',
@@ -196,11 +201,39 @@ class FormUser extends FormBuilder
 
     public function fieldsetPassword()
     {
-        return $this->group('user-password-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-password-legend', t('Password'));
-            $this->passwordNew($form)
-                    ->passwordConfirm($form);
-        });
+        return $this->group('user-password-fieldset', 'fieldset', function ($form)
+            {
+                $form->legend('user-password-legend', t('Password'));
+                $this->passwordNew($form)
+                    ->passwordConfirm($form)
+                    ->passwordPolicy($form);
+            });
+    }
+
+    public function passwordPolicy(&$form)
+    {
+        if ($this->config && $this->config->get('settings.password_policy', true)) {
+            if (($length = (int) $this->config->get('settings.password_length', 8)) < 8) {
+                $length = 8;
+            }
+            if (($upper = (int) $this->config->get('settings.password_upper', 1)) < 1) {
+                $upper = 1;
+            }
+            if (($digit = (int) $this->config->get('settings.password_digit', 1)) < 1) {
+                $digit = 1;
+            }
+            if (($special = (int) $this->config->get('settings.password_special', 1)) < 1) {
+                $special = 1;
+            }
+
+            $content = '<li data-pattern=".{' . $length . ',}">' . t('Minimum length') . " : $length</li>"
+                . '<li data-pattern="(?=.*[A-Z]){' . $upper . ',}">' . t('Number of uppercase characters') . " : $upper</li>"
+                . '<li data-pattern="(?=.*\d){' . $digit . ',}">' . t('Number of numeric characters') . " : $digit</li>"
+                . '<li data-pattern="(?=.*\W){' . $special . ',}">' . t('Number of special characters') . " : $special</li>";
+            $form->html('password_policy', '<ul:css:attr>:_content</ul>', [
+                '_content' => $content,
+            ]);
+        }
     }
 
     public function fieldsetActived()

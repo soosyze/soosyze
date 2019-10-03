@@ -71,12 +71,18 @@ class HookConfig
                             'for' => 'password_show'
                         ]);
                     }, [ 'class' => 'form-group' ])
+                    ->group('config-password_policy-group', 'div', function ($form) use ($data) {
+                        $form->checkbox('password_policy', [ 'checked' => $data[ 'password_policy' ] ])
+                        ->label('config-password_policy-label', '<span class="ui"></span> ' . t('Add visualization of the password policy'), [
+                            'for' => 'password_policy'
+                        ]);
+                    }, [ 'class' => 'form-group' ])
                     ->group('config-password_length-group', 'div', function ($form) use ($data) {
                         $form->label('config-password_length-label', t('Minimum length'))
                         ->number('password_length', [
                             'class' => 'form-control',
                             'min'   => 8,
-                            'value' => $data[ 'password_length' ]
+                            'value' => $data[ 'password_length' ] > 8 ? $data[ 'password_length' ]  : 8
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_upper-group', 'div', function ($form) use ($data) {
@@ -84,7 +90,7 @@ class HookConfig
                         ->number('password_upper', [
                             'class' => 'form-control',
                             'min'   => 1,
-                            'value' => $data[ 'password_upper' ]
+                            'value' => $data[ 'password_upper' ] > 1 ? $data[ 'password_upper' ]  : 1
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_digit-group', 'div', function ($form) use ($data) {
@@ -92,7 +98,7 @@ class HookConfig
                         ->number('password_digit', [
                             'class' => 'form-control',
                             'min'   => 1,
-                            'value' => $data[ 'password_digit' ]
+                            'value' => $data[ 'password_digit' ] > 1 ? $data[ 'password_digit' ]  : 1
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-password_special-group', 'div', function ($form) use ($data) {
@@ -100,7 +106,7 @@ class HookConfig
                         ->number('password_special', [
                             'class' => 'form-control',
                             'min'   => 1,
-                            'value' => $data[ 'password_special' ]
+                            'value' => $data[ 'password_special' ] > 1 ? $data[ 'password_special' ]  : 1
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
@@ -116,23 +122,27 @@ class HookConfig
             'connect_url'      => '!required|string|min:10|slug',
             'connect_redirect' => '!required|string|max:255',
             'password_show'    => 'bool',
+            'password_policy'  => 'bool',
             'password_length'  => 'int|min:8',
             'password_upper'   => 'int|min:1',
-            'password_digit'   => 'int|min:1'
+            'password_digit'   => 'int|min:1',
+            'password_special' => 'int|min:1'
         ]);
     }
 
     public function before(&$validator, &$data)
     {
         $data = [
-            'user_register'    => $validator->getInput('user_register'),
-            'user_relogin'     => $validator->getInput('user_relogin'),
+            'user_register'    => (bool) $validator->getInput('user_register'),
+            'user_relogin'     => (bool) $validator->getInput('user_relogin'),
             'connect_url'      => $validator->getInput('connect_url'),
             'connect_redirect' => $validator->getInput('connect_redirect'),
-            'password_show'    => $validator->getInput('password_show'),
-            'password_length'  => $validator->getInput('password_length'),
-            'password_upper'   => $validator->getInput('password_upper'),
-            'password_digit'   => $validator->getInput('password_digit')
+            'password_show'    => (bool) $validator->getInput('password_show'),
+            'password_policy'  => (bool) $validator->getInput('password_policy'),
+            'password_length'  => (int) $validator->getInput('password_length'),
+            'password_upper'   => (int) $validator->getInput('password_upper'),
+            'password_digit'   => (int) $validator->getInput('password_digit'),
+            'password_special' => (int) $validator->getInput('password_special')
         ];
     }
 }

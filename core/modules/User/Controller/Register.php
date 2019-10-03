@@ -32,8 +32,9 @@ class Register extends \Soosyze\Controller
             $formbuilder->legend('register-legend', t('User registration'));
             $form->username($formbuilder)
                 ->email($formbuilder)
-                ->passwordCurrent($formbuilder)
-                ->passwordConfirm($formbuilder);
+                ->passwordNew($formbuilder)
+                ->passwordConfirm($formbuilder)
+                ->passwordPolicy($formbuilder);
         })->submitForm();
 
         $messages = [];

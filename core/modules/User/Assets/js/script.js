@@ -18,3 +18,19 @@ function getRandomColor() {
     }
     return color;
 }
+
+function passwordPolicy(idPasswordInput)
+{
+    var
+        value = idPasswordInput.value,
+        elements = document.querySelectorAll('#password_policy li');
+
+    Array.prototype.forEach.call(elements, function (el, i) {
+        reg = new RegExp(el.dataset.pattern);
+        if(reg.test(value) ){
+            el.style.color = 'green';
+        } else {
+            el.style.color = 'rgba(17, 17, 17, 0.6)';
+        }
+    });
+}

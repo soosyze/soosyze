@@ -76,6 +76,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.connect_redirect', '')
             ->set('settings.connect_https', 'on')
             ->set('settings.password_show', 'on')
+            ->set('settings.password_policy', 'on')
             ->set('settings.password_length', 8)
             ->set('settings.password_upper', 1)
             ->set('settings.password_digit', 1)

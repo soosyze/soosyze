@@ -226,10 +226,18 @@ class User
 
     public function passwordPolicy()
     {
-        $length  = $this->core->get('config')->get('password_length', 8);
-        $upper   = $this->core->get('config')->get('password_upper', 1);
-        $digit   = $this->core->get('config')->get('password_digit', 1);
-        $special = $this->core->get('config')->get('password_special', 1);
+        if (($length  = (int) $this->core->get('config')->get('settings.password_length', 8)) < 8) {
+            $length = 8;
+        }
+        if (($upper  = (int) $this->core->get('config')->get('settings.password_upper', 1)) < 1) {
+            $upper = 1;
+        }
+        if (($digit  = (int) $this->core->get('config')->get('settings.password_digit', 1)) < 1) {
+            $digit = 1;
+        }
+        if (($special  = (int) $this->core->get('config')->get('settings.password_special', 1)) < 1) {
+            $special = 1;
+        }
 
         return '/(?=.*\d){' . $digit . ',}(?=.*[a-z])(?=.*\W){' . $special . ',}(?=.*[A-Z]){' . $upper . ',}.{' . $length . ',}/';
     }
