@@ -7,8 +7,6 @@ use Soosyze\Components\Validator\Validator;
 
 class Block extends \Soosyze\Controller
 {
-    protected $blocks = [];
-
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
@@ -33,12 +31,14 @@ class Block extends \Soosyze\Controller
 
     public function create($section)
     {
-        $this->blocks = $this->getBlocks();
+        $data = $this->getBlocks();
+        $this->container->callHook('block.create.form.data', [&$data]);
+
         $form = new FormBuilder([
             'method' => 'POST',
             'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
         ]);
-        foreach ($this->blocks as $key => &$block) {
+        foreach ($data as $key => &$block) {
             $form->group('radio-' . $key, 'div', function ($form) use ($key, $block) {
                 $form->radio('type_block', [
                         'id' => "type_block-$key",
@@ -47,7 +47,7 @@ class Block extends \Soosyze\Controller
                     ->html($key, '<div:attr:css>:_content</div>', [
                         'class'    => 'block-content',
                         '_content' => (string) self::template()
-                        ->createBlock($block[ 'path' ], $this->pathViews . 'blocks/')
+                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                         ->addVars([
                             'src_image' => self::core()->getPath('modules') . '/Block/Assets/static.svg'
                         ])
@@ -57,18 +57,22 @@ class Block extends \Soosyze\Controller
         $form->token("token_$section")
             ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
 
+        $this->container->callHook('block.create.form', [&$form, $data]);
+        
         return self::template()
                 ->createBlock('block-create.php', $this->pathViews)
                 ->addVars([
                     'section' => $section,
-                    'blocks'  => $this->blocks,
+                    'blocks'  => $data,
                     'form'    => $form
         ]);
     }
 
     public function store($section, $req)
     {
-        $this->blocks = $this->getBlocks();
+        $blocks = $this->getBlocks();
+        $this->container->callHook('block.create.form.data', [&$blocks]);
+        
         $validator = (new Validator())
             ->setRules([
                 'type_block'     => 'required|string|max:255',
@@ -76,14 +80,16 @@ class Block extends \Soosyze\Controller
             ])
             ->setInputs($req->getParsedBody());
 
+        $this->container->callHook('block.store.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             $type    = $validator->getInput('type_block');
             $content = (string) self::template()
-                    ->createBlock($this->blocks[ $type ][ 'path' ], $this->pathViews . 'blocks/')
+                    ->createBlock($blocks[ $type ][ 'tpl' ], $blocks[ $type ][ 'path' ])
                     ->addVars([
                         'src_image' => self::core()->getPath('modules') . '/Block/Assets/static.svg'
             ]);
-            $value   = [
+            $values   = [
                 'section'          => $section,
                 'title'            => 'Titre bloc',
                 'content'          => $content,
@@ -91,10 +97,12 @@ class Block extends \Soosyze\Controller
                 'visibility_roles' => true,
                 'roles'            => '1,2'
             ];
+            $this->container->callHook('block.store.before', [ $validator, &$values ]);
             self::query()
-                ->insertInto('block', array_keys($value))
-                ->values($value)
+                ->insertInto('block', array_keys($values))
+                ->values($values)
                 ->execute();
+            $this->container->callHook('block.store.after', [ $validator, $values ]);
         }
         $route = self::router()->getRoute('section.admin', [ ':theme' => 'theme' ]);
 
@@ -104,6 +112,8 @@ class Block extends \Soosyze\Controller
     public function edit($id, $req)
     {
         $data = self::query()->from('block')->where('block_id', '==', $id)->fetch();
+
+        $this->container->callHook('block.edit.form.data', [ &$data ]);
 
         $action = self::router()->getRoute('block.update', [ ':id' => $data[ 'block_id' ] ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
@@ -199,6 +209,8 @@ class Block extends \Soosyze\Controller
             ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success' ])
             ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
+        $this->container->callHook('block.edit.form', [ &$form, $data ]);
+
         return self::template()
                 ->createBlock('block-form.php', $this->pathViews)
                 ->addVars([
@@ -227,6 +239,8 @@ class Block extends \Soosyze\Controller
             $validator->addRule("roles-{$role[ 'role_id' ]}", 'string');
         }
 
+        $this->container->callHook('block.update.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             $roles = [];
             foreach (self::user()->getRoles() as $role) {
@@ -234,7 +248,7 @@ class Block extends \Soosyze\Controller
                     $roles[] = $role[ 'role_id' ];
                 }
             }
-            $value = [
+            $values = [
                 'title'            => $validator->getInput('title'),
                 'content'          => $validator->getInput('content'),
                 'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
@@ -243,10 +257,12 @@ class Block extends \Soosyze\Controller
                 'roles'            => implode(',', $roles)
             ];
 
+            $this->container->callHook('block.update.before', [ $validator, &$values ]);
             self::query()
-                ->update('block', $value)
+                ->update('block', $values)
                 ->where('block_id', '==', $id)
                 ->execute();
+            $this->container->callHook('block.update.after', [ $validator ]);
         } else {
             return $this->edit($id, $req);
         }
@@ -260,24 +276,74 @@ class Block extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $this->container->callHook('block.delete.before', [ $id ]);
         self::query()->from('block')->where('block_id', '==', $id)->delete()->execute();
+        $this->container->callHook('block.delete.after', [ $id ]);
     }
-    
+
     protected function getBlocks()
     {
         return [
-            'button'  => [ 'title' => t('Text with button'), 'path' => 'block-button.php' ],
-            'card_ui' => [ 'title' => t('Simple UI card'), 'path' => 'block-card_ui.php' ],
-            'code'    => [ 'title' => t('Code'), 'path' => 'block-code.php' ],
-            'contact' => [ 'title' => t('Contact'), 'path' => 'block-contact.php' ],
-            'gallery' => [ 'title' => t('Picture Gallery'), 'path' => 'block-gallery.php' ],
-            'img'     => [ 'title' => t('Image and text'), 'path' => 'block-img.php' ],
-            'map'     => [ 'title' => t('Map'), 'path' => 'block-map.php' ],
-            'video'   => [ 'title' => t('Video'), 'path' => 'block-peertube.php' ],
-            'social'  => [ 'title' => t('Social networks'), 'path' => 'block-social.php' ],
-            'table'   => [ 'title' => t('Table'), 'path' => 'block-table.php' ],
-            'text'    => [ 'title' => t('Simple text'), 'path' => 'block-text.php' ],
-            'three'   => [ 'title' => t('3 columns'), 'path' => 'block-three.php' ],
+            'button'  => [
+                'title' => t('Text with button'),
+                'tpl'   => 'block-button.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'card_ui' => [
+                'title' => t('Simple UI card'),
+                'tpl'   => 'block-card_ui.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'code'    => [
+                'title' => t('Code'),
+                'tpl'   => 'block-code.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'contact' => [
+                'title' => t('Contact'),
+                'tpl'   => 'block-contact.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'gallery' => [
+                'title' => t('Picture Gallery'),
+                'tpl'   => 'block-gallery.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'img'     => [
+                'title' => t('Image and text'),
+                'tpl'   => 'block-img.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'map'     => [
+                'title' => t('Map'),
+                'tpl'   => 'block-map.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'video'   => [
+                'title' => t('Video'),
+                'tpl'   => 'block-peertube.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'social'  => [
+                'title' => t('Social networks'),
+                'tpl'   => 'block-social.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'table'   => [
+                'title' => t('Table'),
+                'tpl'   => 'block-table.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'text'    => [
+                'title' => t('Simple text'),
+                'tpl'   => 'block-text.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ],
+            'three'   => [
+                'title' => t('3 columns'),
+                'tpl'   => 'block-three.php',
+                'path'  => $this->pathViews . 'blocks/'
+            ]
         ];
     }
 }
