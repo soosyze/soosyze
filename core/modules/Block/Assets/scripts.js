@@ -91,3 +91,15 @@ $(function () {
         });
     });
 });
+
+function search_blocks() {
+    var search = document.getElementById('search').value,
+            reg = new RegExp(search, 'i'),
+            elements = document.querySelectorAll('.search_item');
+    Array.prototype.forEach.call(elements, function (el) {
+        el.style.display = '';
+        if (!reg.test(el.querySelector('.search_text').textContent)) {
+            el.style.display = 'none';
+        }
+    });
+}
