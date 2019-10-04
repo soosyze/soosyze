@@ -111,9 +111,13 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getTheme($theme = 'theme')
     {
-        $this->default_theme_name = $theme;
+        $granted                  = $this->core->callHook('app.granted', [ 'template.admin' ]);
+        $this->default_theme_name = $theme === 'theme_admin' && !$granted
+            ? 'theme'
+            : $theme;
+
         foreach ($this->themes_path as $path) {
-            $dir = $path . '/' . $this->config->get('settings.' . $theme, '');
+            $dir = $path . '/' . $this->config->get('settings.' . $this->default_theme_name, '');
             if (is_dir($dir)) {
                 $this->default_theme_path = $dir;
 

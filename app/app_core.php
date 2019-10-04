@@ -29,6 +29,13 @@ class Core extends App
                     '@config'
                 ]
             ],
+            'template.hook.user' => [
+                'class'     => 'SoosyzeCore\\Template\\Services\\HookUser',
+                'hooks'     => [
+                    'user.permission.module' => 'hookPermission',
+                    'template.admin' => 'hookBlockEdited'
+                ]
+            ],
             'file'     => [
                 'class'     => 'SoosyzeCore\\FileSystem\\Services\\File',
                 'arguments' => [
