@@ -56,12 +56,11 @@ class Templating extends \Soosyze\Components\Http\Response
         $this->themes_path = $core->getSetting('themes_path');
         $this->base_path   = $core->getRequest()->getBasePath();
         $this->pathViews   = dirname(__DIR__) . '/Views/';
-        $this->getTheme();
     }
 
     public function __toString()
     {
-        $content    = $this->template->render();
+        $content    = $this->getThemplate()->render();
         $this->body = new \Soosyze\Components\Http\Stream($content);
 
         return parent::__toString();
@@ -165,7 +164,7 @@ class Templating extends \Soosyze\Components\Http\Response
         if ($block = strstr($parent, '.', true)) {
             $this->getBlock($block)->addBlock(substr(strstr($parent, '.'), 1), $template);
         } else {
-            $this->template->addBlock($parent, $template);
+            $this->getThemplate()->addBlock($parent, $template);
         }
 
         return $this;
@@ -201,7 +200,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getBlock($parent)
     {
-        return $this->template->getBlockWithParent($parent);
+        return $this->getThemplate()->getBlockWithParent($parent);
     }
 
     public function getThemes()
@@ -236,7 +235,7 @@ class Templating extends \Soosyze\Components\Http\Response
             $this->getBlock($block)
                 ->addBlock(substr(strstr($parent, '.'), 1), $template);
         } else {
-            $this->template->addBlock($parent, $template);
+            $this->getThemplate()->addBlock($parent, $template);
         }
 
         return $this;
@@ -266,5 +265,15 @@ class Templating extends \Soosyze\Components\Http\Response
         if (is_file($pathTheme . 'composer.json')) {
             $this->composer = Util::getJson($pathTheme . 'composer.json');
         }
+    }
+
+    private function getThemplate()
+    {
+        if ($this->template) {
+            return $this->template;
+        }
+        $this->getTheme();
+
+        return $this->template;
     }
 }
