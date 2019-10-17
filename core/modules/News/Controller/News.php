@@ -4,7 +4,7 @@ namespace SoosyzeCore\News\Controller;
 
 use Soosyze\Components\Paginate\Paginator;
 
-class NewsController extends \Soosyze\Controller
+class News extends \Soosyze\Controller
 {
     public static $limit;
 
@@ -19,7 +19,7 @@ class NewsController extends \Soosyze\Controller
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
-        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
+        $this->dirRoutes    = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
@@ -82,7 +82,7 @@ class NewsController extends \Soosyze\Controller
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
         $this->title_main  = t('Articles from :date', [':date' => $years]);
-        $this->link        = self::router()->getRoute('news.years', [ ':years' => $years ], false);
+        $this->link        = self::router()->getRoute('news.years', [ ':year' => $years ], false);
 
         return $this->renderNews($page, $req);
     }
@@ -95,7 +95,7 @@ class NewsController extends \Soosyze\Controller
         $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
         $this->title_main  = t('Articles from :date', [':date' => date('M Y', $this->dateCurrent)]);
         $this->link        = self::router()->getRoute('news.month', [
-            ':years' => $years,
+            ':year' => $years,
             ':month' => $month
             ], false);
 
@@ -110,7 +110,7 @@ class NewsController extends \Soosyze\Controller
         $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
         $this->title_main  = t('Articles from :date', [':date' => date('d M Y', $this->dateCurrent)]);
         $this->link        = self::router()->getRoute('news.day', [
-            ':years' => $years,
+            ':year' => $years,
             ':month' => $month,
             ':day'   => $day
             ], false);

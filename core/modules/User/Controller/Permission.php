@@ -8,7 +8,6 @@ class Permission extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-permission.json';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 

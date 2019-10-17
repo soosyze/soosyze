@@ -11,7 +11,6 @@ class Login extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-login.json';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 

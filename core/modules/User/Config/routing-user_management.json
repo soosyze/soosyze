@@ -1,7 +1,0 @@
-{
-    "user.management.admin": {
-        "methode": "GET",
-        "path": "admin/user",
-        "uses": "UsersManagement@admin"
-    }
-}

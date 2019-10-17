@@ -6,13 +6,13 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
-class Configuration extends \Soosyze\Controller
+class Config extends \Soosyze\Controller
 {
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
-        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing.json';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->dirRoutes    = dirname(__DIR__) . '/Config/routes.php';
     }
 
     public function index($req)

@@ -10,7 +10,6 @@ class Role extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes = dirname(__DIR__) . '/Config/routing-role.json';
         $this->pathViews  = dirname(__DIR__) . '/Views/';
     }
 

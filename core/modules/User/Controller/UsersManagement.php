@@ -6,7 +6,6 @@ class UsersManagement extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathRoutes   = dirname(__DIR__) . '/Config/routing-user_management.json';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
