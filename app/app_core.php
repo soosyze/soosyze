@@ -30,10 +30,10 @@ class Core extends App
                 ]
             ],
             'template.hook.user' => [
-                'class'     => 'SoosyzeCore\\Template\\Services\\HookUser',
-                'hooks'     => [
+                'class' => 'SoosyzeCore\\Template\\Services\\HookUser',
+                'hooks' => [
                     'user.permission.module' => 'hookPermission',
-                    'template.admin' => 'hookBlockEdited'
+                    'install.user'           => 'hookInstallUser'
                 ]
             ],
             'file'     => [

@@ -8,4 +8,12 @@ class HookUser
     {
         $permission[ 'Template' ][ 'template.admin' ] = t('Use the admin theme');
     }
+    
+    public function hookInstallUser($ci)
+    {
+        $ci->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'template.admin' ])
+            ->execute();
+    }
 }
