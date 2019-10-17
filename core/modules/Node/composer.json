@@ -9,12 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "Node",
             "package": "Core",
-            "controllers": {
-                "Node": "SoosyzeCore\\Node\\Controller\\Node"
-            },
+            "controller": "SoosyzeCore\\Node\\Controller\\Node",
             "icon": {
                 "name": "fa fa-file",
                 "background-color": "#267a2c",

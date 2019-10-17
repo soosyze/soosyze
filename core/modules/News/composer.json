@@ -9,12 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "News",
             "package": "Core",
-            "controllers": {
-                "News": "SoosyzeCore\\News\\Controller\\NewsController"
-            },
+            "controller": "SoosyzeCore\\News\\Controller\\News",
             "require": {
                 "Node": "1.0"
             },

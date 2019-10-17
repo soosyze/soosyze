@@ -67,12 +67,12 @@ class Composer
 
     public function validRequireModule($title, array $composer)
     {
-        if (!isset($composer[ $title ][ 'extra' ][ 'soosyze-module' ][ 'require' ])) {
+        if (!isset($composer[ $title ][ 'extra' ][ 'soosyze' ][ 'require' ])) {
             return [];
         }
         $errors = [];
 
-        foreach ($composer[ $title ][ 'extra' ][ 'soosyze-module' ][ 'require' ] as $module => $version) {
+        foreach ($composer[ $title ][ 'extra' ][ 'soosyze' ][ 'require' ] as $module => $version) {
             /* Si les sources du module requis n'existe pas. */
             if (!isset($composer[ $module ])) {
                 $errors[] = t('The :name module source files (v:version) do not exist.', [
@@ -126,7 +126,7 @@ class Composer
 
     public function getTitle($key)
     {
-        return $this->getComposerModule($key)[ 'extra' ][ 'soosyze-module' ][ 'title' ];
+        return $this->getComposerModule($key)[ 'extra' ][ 'soosyze' ][ 'title' ];
     }
 
     public function getNamespace($key)
@@ -159,11 +159,11 @@ class Composer
                 continue;
             }
             $composer = Util::getJson($file);
-            if (!isset($composer[ 'type' ]) || $composer[ 'type' ] !== 'soosyze-module' || !isset($composer[ 'extra' ][ 'soosyze-module' ][ 'title' ])) {
+            if (!isset($composer[ 'type' ]) || $composer[ 'type' ] !== 'soosyze-module' || !isset($composer[ 'extra' ][ 'soosyze' ][ 'title' ])) {
                 continue;
             }
 
-            $config[ $composer[ 'extra' ][ 'soosyze-module' ][ 'title' ] ] = $composer;
+            $config[ $composer[ 'extra' ][ 'soosyze' ][ 'title' ] ] = $composer;
         }
 
         return $config;
@@ -176,11 +176,11 @@ class Composer
             ? Util::getJson('vendor/composer/installed.json')
             : [];
         foreach ($modules as $composer) {
-            if (!isset($composer[ 'type' ]) || $composer[ 'type' ] !== 'soosyze-module' || !isset($composer[ 'extra' ][ 'soosyze-module' ][ 'title' ])) {
+            if (!isset($composer[ 'type' ]) || $composer[ 'type' ] !== 'soosyze-module' || !isset($composer[ 'extra' ][ 'soosyze' ][ 'title' ])) {
                 continue;
             }
 
-            $config[ $composer[ 'extra' ][ 'soosyze-module' ][ 'title' ] ] = $composer;
+            $config[ $composer[ 'extra' ][ 'soosyze' ][ 'title' ] ] = $composer;
         }
 
         return $config;
@@ -196,7 +196,7 @@ class Composer
     protected function validComposerModule($title, array $composer)
     {
         $errors = [];
-        if (!isset($composer[ 'extra' ][ 'soosyze-module' ]) && !is_array($composer[ 'extra' ][ 'soosyze-module' ])) {
+        if (!isset($composer[ 'extra' ][ 'soosyze' ]) && !is_array($composer[ 'extra' ][ 'soosyze' ])) {
             $errors[] = t('The :name module information does not exist.', [':name' => $title]);
 
             return $errors;
@@ -204,19 +204,19 @@ class Composer
 
         $validator = (new Validator())
                 ->setRules([
-                    'title'       => 'required|string|max:128',
-                    'package'     => 'required|string|max:128',
-                    'controllers' => 'required|array',
-                    'icon'        => '!required|array',
-                    'require'     => '!required|array'
-                ])->setInputs($composer[ 'extra' ][ 'soosyze-module' ]);
+                    'title'      => 'required|string|max:128',
+                    'package'    => 'required|string|max:128',
+                    'controller' => 'required|string',
+                    'icon'       => '!required|array',
+                    'require'    => '!required|array'
+                ])->setInputs($composer[ 'extra' ][ 'soosyze' ]);
 
         if (!$validator->isValid()) {
             $errors += $validator->getErrors();
-        } elseif (empty($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ]) || !is_array($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ])) {
+        } elseif (empty($composer[ 'extra' ][ 'soosyze' ][ 'controller' ])) {
             $errors[] = t('The information on the controllers of the :name module does not exist.', [':name' => $title]);
         } else {
-            $controller = array_shift($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ]);
+            $controller = $composer[ 'extra' ][ 'soosyze' ][ 'controller' ];
             if (!class_exists($controller)) {
                 $errors[] = t('The :controller controller of the :name module is not found by the autoloader.', [
                     ':controller' => $controller,

@@ -243,14 +243,12 @@ class Install extends \Soosyze\Controller
 
     private function loadContainer($composer)
     {
-        foreach ($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ] as $controller) {
-            $obj  = new $controller();
-            if (!($path = $obj->getPathServices())) {
-                continue;
-            }
-
-            $this->container->addServices(Util::getJson($path));
+        $obj  = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
+        if (!($path = $obj->getPathServices())) {
+            return;
         }
+
+        $this->container->addServices(Util::getJson($path));
     }
 
     private function position(array &$array, $position)

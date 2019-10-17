@@ -120,7 +120,7 @@ class Modules
      */
     public function create(array $composer)
     {
-        $module = $composer[ 'extra' ][ 'soosyze-module' ];
+        $module = $composer[ 'extra' ][ 'soosyze' ];
         /* Enregistrement du module. */
         $this->query
             ->insertInto('module_active', [ 'title', 'version' ])
@@ -128,13 +128,10 @@ class Modules
             ->execute();
 
         /* Enregistrement des contrôleurs. */
-        $this->query->insertInto('module_controller', [
-            'title', 'key_controller', 'controller'
-        ]);
-        foreach ($module[ 'controllers' ] as $key => $controller) {
-            $this->query->values([ $module[ 'title' ], $key, $controller ]);
-        }
-        $this->query->execute();
+        $this->query
+            ->insertInto('module_controller', [ 'title', 'controller' ])
+            ->values([ $module[ 'title' ], $module[ 'controller' ] ])
+            ->execute();
 
         if (isset($module[ 'require' ])) {
             /* Enregistrement des dépendances. */

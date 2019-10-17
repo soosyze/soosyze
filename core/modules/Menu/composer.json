@@ -9,13 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "Menu",
             "package": "Core",
-            "controllers": {
-                "Menu": "SoosyzeCore\\Menu\\Controller\\Menu",
-                "Link": "SoosyzeCore\\Menu\\Controller\\Link"
-            },
+            "controller": "SoosyzeCore\\Menu\\Controller\\Menu",
             "icon": {
                 "name": "fas fa-bars",
                 "background-color": "#275dba",

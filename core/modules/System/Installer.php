@@ -21,7 +21,6 @@ class Installer implements \SoosyzeCore\System\Migration
             })
             ->createTableIfNotExists('module_controller', function (TableBuilder $table) {
                 $table->string('title')
-                ->string('key_controller')
                 ->string('controller');
             })
             ->createTableIfNotExists('module_require', function (TableBuilder $table) {

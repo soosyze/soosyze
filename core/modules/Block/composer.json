@@ -9,13 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "Block",
             "package": "Core",
-            "controllers": {
-                "Block": "SoosyzeCore\\Block\\Controller\\Block",
-                "Section": "SoosyzeCore\\Block\\Controller\\Section"
-            },
+            "controller":  "SoosyzeCore\\Block\\Controller\\Block",
             "icon": {
                 "name": "fas fa-columns",
                 "background-color": "#5cb85c",

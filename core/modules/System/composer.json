@@ -12,12 +12,10 @@
         "docs": "https://soosyze.com/documentation/utilisateur"
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "System",
             "package": "Core",
-            "controllers": {
-                "ModulesManager": "SoosyzeCore\\System\\Controller\\ModulesManager"
-            },
+            "controller": "SoosyzeCore\\System\\Controller\\ModulesManager",
             "icon": {
                 "name": "fa fa-th-large",
                 "background-color": "#6e42e5",

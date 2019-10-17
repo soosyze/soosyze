@@ -28,7 +28,7 @@ class ModulesManager extends \Soosyze\Controller
         $form   = new FormBuilder([ 'method' => 'post', 'action' => $action ]);
 
         foreach ($composer as $values) {
-            $module = $values[ 'extra' ][ 'soosyze-module' ];
+            $module = $values[ 'extra' ][ 'soosyze' ];
             $title  = htmlspecialchars($module[ 'title' ]);
 
             $attr              = [];
@@ -279,13 +279,11 @@ class ModulesManager extends \Soosyze\Controller
 
     private function loadContainer($composer)
     {
-        foreach ($composer[ 'extra' ][ 'soosyze-module' ][ 'controllers' ] as $controller) {
-            $obj  = new $controller();
-            if (!($path = $obj->getPathServices())) {
-                continue;
-            }
-
-            $this->container->addServices(Util::getJson($path));
+        $obj  = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
+        if (!($path = $obj->getPathServices())) {
+            return;
         }
+
+        $this->container->addServices(Util::getJson($path));
     }
 }

@@ -56,14 +56,14 @@ class Core extends App
     public function loadModules()
     {
         if (!$this->get('config')->get('settings.time_installed')) {
-            $modules[ 'Install' ] = new SoosyzeCore\System\Controller\Install();
+            $modules[] = new SoosyzeCore\System\Controller\Install();
 
             return $modules;
         }
 
-        $data = $this->get('query')->select('key_controller', 'controller')->from('module_controller')->fetchAll();
+        $data = $this->get('query')->from('module_controller')->fetchAll();
         foreach ($data as $value) {
-            $modules[ $value[ 'key_controller' ] ] = new $value[ 'controller' ]();
+            $modules[] = new $value[ 'controller' ]();
         }
 
         return $modules;

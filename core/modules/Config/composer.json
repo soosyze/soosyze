@@ -9,12 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "Config",
             "package": "Core",
-            "controllers": {
-                "Config": "SoosyzeCore\\Config\\Controller\\Configuration"
-            },
+            "controller": "SoosyzeCore\\Config\\Controller\\Config",
             "icon": {
                 "name": "fas fa-cog",
                 "background-color": "#e5a342",

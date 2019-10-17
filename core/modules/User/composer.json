@@ -9,17 +9,10 @@
         }
     },
     "extra": {
-        "soosyze-module": {
+        "soosyze": {
             "title": "User",
             "package": "Core",
-            "controllers": {
-                "Login": "SoosyzeCore\\User\\Controller\\Login",
-                "Permission": "SoosyzeCore\\User\\Controller\\Permission",
-                "Register": "SoosyzeCore\\User\\Controller\\Register",
-                "Role": "SoosyzeCore\\User\\Controller\\Role",
-                "User": "SoosyzeCore\\User\\Controller\\User",
-                "UsersManagement": "SoosyzeCore\\User\\Controller\\UsersManagement"
-            },
+            "controller": "SoosyzeCore\\User\\Controller\\User",
             "icon": {
                 "name": "fas fa-user",
                 "background-color": "#c13056",
