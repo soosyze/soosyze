@@ -136,12 +136,14 @@ function printException($exp)
         $class = $key % 2
             ? 'two'
             : 'one';
-
+        $args = isset($stackPoint[ 'args' ])
+            ? parseArg($stackPoint[ 'args' ])
+            : '';
         $html .= "<tr class='$class'><th>#$key</th><td>";
         $html .= isset($stackPoint[ 'class' ])
             ? "<span class='exp-class'>{$stackPoint[ 'class' ]}-></span>"
             : '';
-        $html .= "<span class='exp-function'>{$stackPoint[ 'function' ]}(" . parseArg($stackPoint[ 'args' ]) . ')</span></td>';
+        $html .= "<span class='exp-function'>{$stackPoint[ 'function' ]}({$args})</span></td>";
         if (!isset($stackPoint[ 'file' ])) {
             $stackPoint[ 'file' ] = isset($trace[ $key - 1 ][ 'file' ])
                 ? $trace[ $key - 1 ][ 'file' ]
