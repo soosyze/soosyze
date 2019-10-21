@@ -109,29 +109,23 @@ class Link extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
-        $isUrlOrRoute = self::menu()->isUrlOrRoute(
-            $post[ 'link' ],
-            $req->withMethod('GET')
-        );
+        $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
 
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
-        if ($validator->isValid() && $isUrlOrRoute) {
-            $url = parse_url($validator->getInput('link'));
+        if ($validator->isValid() && $isUrlOrRoute !== false) {
             $data = [
+                'key'         => $isUrlOrRoute['key'],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $url['path'],
-                'fragment'    => !empty($url['fragment']) ? $url['fragment'] : null,
+                'link'        => $isUrlOrRoute['link'],
+                'fragment'    => $isUrlOrRoute['fragment'],
                 'target_link' => $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
                 'parent'      => -1,
                 'active'      => true
             ];
-            if (isset($isUrlOrRoute[ 'key' ])) {
-                $data[ 'key' ] = $isUrlOrRoute[ 'key' ];
-            }
 
             $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
             self::query()
@@ -150,7 +144,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute) {
+        if (!$isUrlOrRoute['is_valid']) {
             $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
@@ -264,25 +258,19 @@ class Link extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
-        $isUrlOrRoute = self::menu()->isUrlOrRoute(
-            $post[ 'link' ],
-            $req->withMethod('GET')
-        );
+        $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
 
         $this->container->callHook('menu.link.update.validator', [ &$validator ]);
 
-        if ($validator->isValid() && $isUrlOrRoute) {
-            $url = parse_url($validator->getInput('link'));
+        if ($validator->isValid() && $isUrlOrRoute !== false) {
             $data = [
+                'key'         => $isUrlOrRoute['key'],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $url['path'],
-                'fragment'    => !empty($url['fragment']) ? $url['fragment'] : null,
+                'link'        => $isUrlOrRoute['link'],
+                'fragment'    => $isUrlOrRoute['fragment'],
                 'target_link' => $validator->getInput('target_link')
             ];
-            if (isset($isUrlOrRoute[ 'key' ])) {
-                $data[ 'key' ] = $isUrlOrRoute[ 'key' ];
-            }
 
             $this->container->callHook('menu.link.update.before', [ &$validator, &$data ]);
             self::query()
@@ -302,7 +290,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute) {
+        if (!$isUrlOrRoute['is_valid']) {
             $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }

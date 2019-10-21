@@ -103,17 +103,20 @@ class Menu extends \Soosyze\Controller
 
         $isRewite = self::core()->get('config')->get('settings.rewrite_engine');
         foreach ($query as &$link) {
+            $link[ 'link_edit' ]   = self::router()
+                ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+            $link[ 'link_delete' ] = self::router()
+                ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+            $link[ 'submenu' ]     = $this->renderMenu($req, $nameMenu, $link[ 'id' ], $level + 1);
+            if (!$link[ 'key' ]) {
+                continue;
+            }
             $req_link        = $req->withUri(
                 $req->getUri()
                 ->withQuery('q=' . $link[ 'link' ])
                 ->withFragment($link[ 'fragment' ])
             );
             $link[ 'link' ]        = $this->get('menu.hook.app')->rewiteUri($isRewite, $req_link);
-            $link[ 'link_edit' ]   = self::router()
-                ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $link[ 'link_delete' ] = self::router()
-                ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':item' => $link[ 'id' ] ]);
-            $link[ 'submenu' ]     = $this->renderMenu($req, $nameMenu, $link[ 'id' ], $level + 1);
         }
 
         return self::template()
