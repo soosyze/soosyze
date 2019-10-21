@@ -92,6 +92,7 @@ class Role extends \Soosyze\Controller
                 'role_description'  => '!required|string|max:255|htmlsc',
                 'role_weight'       => '!required|int|max:50',
                 'role_color'        => '!required|colorhex',
+                'icon'              => '!required|string|max:255|htmlsc',
                 'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
@@ -100,6 +101,7 @@ class Role extends \Soosyze\Controller
         if ($validator->isValid()) {
             $role_weight = $validator->getInput('role_weight');
             $role_color  = $validator->getInput('role_color');
+            $role_icon   = $validator->getInput('role_icon');
             $value = [
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
@@ -108,7 +110,10 @@ class Role extends \Soosyze\Controller
                 : 1,
                 'role_color'       => !empty($role_color)
                 ? strtolower($role_color)
-                : '#e6e7f4'
+                : '#e6e7f4',
+                'role_icon'        => !empty($role_icon)
+                    ? strtolower($role_icon)
+                    : 'fa fa-user',
             ];
 
             $this->container->callHook('role.store.before', [ &$validator, &$value ]);
@@ -180,6 +185,7 @@ class Role extends \Soosyze\Controller
                 'role_description'  => '!required|string|max:255|htmlsc',
                 'role_weight'       => '!required|int|max:50',
                 'role_color'        => '!required|colorhex',
+                'icon'              => '!required|string|max:255|htmlsc',
                 'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
@@ -190,7 +196,8 @@ class Role extends \Soosyze\Controller
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
                 'role_weight'      => $validator->getInput('role_weight'),
-                'role_color'       => $validator->getInput('role_color')
+                'role_color'       => $validator->getInput('role_color'),
+                'role_icon'        => $validator->getInput('role_icon')
             ];
 
             $this->container->callHook('role.udpate.before', [ &$validator, &$value, $id ]);

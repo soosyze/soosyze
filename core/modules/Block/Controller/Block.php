@@ -199,7 +199,12 @@ class Block extends \Soosyze\Controller
                             'value'   => $role[ 'role_id' ],
                             'checked' => \in_array($role[ 'role_id' ], $data[ 'roles' ])
                         ])
-                        ->label('roles-label', '<i class="ui" aria-hidden="true"></i>' . t($role[ 'role_label' ]), [
+                        ->label('roles-label',
+                                '<span class="ui"></span>'
+                                . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
+                                . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
+                                . '</span> '
+                                . t($role[ 'role_label' ]), [
                             'for' => "roles-{$role[ 'role_id' ]}"
                         ]);
                     }, [ 'class' => 'form-group' ]);

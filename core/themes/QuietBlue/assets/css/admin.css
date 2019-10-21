@@ -150,10 +150,18 @@
 /* ---------- ROLE ----------- */
 /* --------------------------- */
 .badge-role {
-    height: 1em;
-    width: 1em;
+    border-radius: 1em;
+    box-shadow: 0 2px 2px rgba(0,0,0,.2);
+    color: #fff;
     display: inline-block;
-    border-radius: 10px;
+    height: 1.5em;
+    line-height: 1.3em;
+    text-align: center;
+    vertical-align: middle;
+    width: 1.5em;
+}
+.badge-role i {
+    font-size: .8em;
 }
 #role_color_btn{
     color: #FFF;

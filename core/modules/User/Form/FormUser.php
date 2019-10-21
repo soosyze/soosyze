@@ -263,7 +263,9 @@ class FormUser extends FormBuilder
                             ->label(
                                 'user-role-' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
-                                . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '"></span> '
+                                . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
+                                . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
+                                . '</span> '
                                 . t($role[ 'role_label' ]),
                                 [ 'for' => 'role[' . $role[ 'role_id' ] . ']' ]
                         );

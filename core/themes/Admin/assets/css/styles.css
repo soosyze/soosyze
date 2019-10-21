@@ -250,9 +250,3 @@ textarea{
 .permission-module {
     border-bottom: #9769ac 3px solid;
 }
-.badge-role {
-    height: 1em;
-    width: 1em;
-    display: inline-block;
-    border-radius: 10px;
-}

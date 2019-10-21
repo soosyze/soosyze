@@ -18,7 +18,8 @@
                     <?php foreach ($roles as $key => $role): ?>
 
                         <th id="role-<?php echo $role['role_id']; ?>">
-                            <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>"></span>
+                            <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
+                                <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i></span>
                             <?php echo t($role[ 'role_label' ]); ?>
                         </th>
                     <?php endforeach; ?>

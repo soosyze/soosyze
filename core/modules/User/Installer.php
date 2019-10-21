@@ -40,6 +40,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('role_description')->nullable()
                 ->string('role_label')
                 ->string('role_color', 7)->valueDefault('#e6e7f4')
+                ->string('role_icon')->nullable()
                 ->integer('role_weight')->valueDefault(1);
             })
             ->createTableIfNotExists('user_role', function (TableBuilder $table) {
@@ -52,10 +53,10 @@ class Installer implements \SoosyzeCore\System\Migration
             });
 
         $ci->query()
-            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight' ])
-            ->values([ 'User not logged in', 'Role required by the system', 1 ])
-            ->values([ 'User logged in', 'Role required by the system', 2 ])
-            ->values([ 'Administrator', 'Role required by the system', 3 ])
+            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight', 'role_icon' ])
+            ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane' ])
+            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt' ])
+            ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-wrench' ])
             ->execute();
 
         $ci->query()

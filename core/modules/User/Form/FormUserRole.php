@@ -10,7 +10,8 @@ class FormUserRole extends FormBuilder
         'role_label'       => '',
         'role_description' => '',
         'role_weight'      => 1,
-        'role_color'       => '#e6e7f4'
+        'role_color'       => '#e6e7f4',
+        'role_icon'        => 'fa fa-user'
     ];
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
@@ -93,6 +94,31 @@ class FormUserRole extends FormBuilder
 
         return $this;
     }
+    
+    public function icon(&$form)
+    {
+        $form->group('role-icon-group', 'div', function ($form) {
+            $form->label('menu-icon-label', t('Icon'), [
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
+                    ])
+                ->group('role-color-group', 'div', function ($form) {
+                    $form->text('role_icon', [
+                        'class'       => 'form-control text_icon',
+                        'maxlength'   => 255,
+                        'placeholder' => 'fa fa-home',
+                        'value'       => $this->content[ 'role_icon' ],
+                    ])->html('btn-color', '<button:css:attr>:_content</button>', [
+                        '_content'     => '<i class="' . $this->content[ 'role_icon' ] . '" aria-hidden="true"></i>',
+                        'aria-label'   => t('Rendering'),
+                        'class'        => 'btn render_icon',
+                        'type'         => 'button',
+                        'data-tooltip' => t('Rendering')
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
+        }, self::$attrGrp);
+
+        return $this;
+    }
 
     public function generate()
     {
@@ -101,7 +127,8 @@ class FormUserRole extends FormBuilder
             $this->labelRole($form)
                     ->description($form)
                     ->weight($form)
-                    ->colorRole($form);
+                    ->colorRole($form)
+                    ->icon($form);
         })->submitForm();
     }
     
