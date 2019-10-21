@@ -103,7 +103,7 @@ class Link extends \Soosyze\Controller
             ->setRules([
                 'title_link'        => 'required|string|max:255|striptags',
                 'link'              => 'required',
-                'icon'              => '!required|string|max:255|striptags',
+                'icon'              => '!required|max:255|fontawesome:solid,brands',
                 'target_link'       => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_create' => 'required|token'
             ])
@@ -251,7 +251,7 @@ class Link extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'title_link'      => 'required|string|max:255|htmlsc',
-                'icon'            => '!required|string|max:255|htmlsc',
+                'icon'            => '!required|max:255|fontawesome:solid,brands',
                 'link'            => 'required',
                 'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_edit' => 'required|token'

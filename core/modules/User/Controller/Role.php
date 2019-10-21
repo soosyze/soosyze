@@ -92,7 +92,7 @@ class Role extends \Soosyze\Controller
                 'role_description'  => '!required|string|max:255|htmlsc',
                 'role_weight'       => '!required|int|max:50',
                 'role_color'        => '!required|colorhex',
-                'icon'              => '!required|string|max:255|htmlsc',
+                'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
@@ -185,7 +185,7 @@ class Role extends \Soosyze\Controller
                 'role_description'  => '!required|string|max:255|htmlsc',
                 'role_weight'       => '!required|int|max:50',
                 'role_color'        => '!required|colorhex',
-                'icon'              => '!required|string|max:255|htmlsc',
+                'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
             ])
             ->setInputs($req->getParsedBody());
