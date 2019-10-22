@@ -33,6 +33,8 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('time_reset')->nullable()
                 ->string('time_installed')
                 ->string('time_access')->nullable()
+                ->boolean('rgpd')->valueDefault(false)
+                ->boolean('terms_of_service')->valueDefault(false)
                 ->text('timezone');
             })
             ->createTableIfNotExists('role', function (TableBuilder $table) {
@@ -78,6 +80,10 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.connect_https', 'on')
             ->set('settings.password_show', 'on')
             ->set('settings.password_policy', 'on')
+            ->set('settings.terms_of_service_show', false)
+            ->set('settings.terms_of_service_page', '')
+            ->set('settings.rgpd_show', false)
+            ->set('settings.rgpd_page', '')
             ->set('settings.password_length', 8)
             ->set('settings.password_upper', 1)
             ->set('settings.password_digit', 1)

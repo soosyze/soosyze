@@ -57,6 +57,40 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 })
+                ->group('config-eula-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('config-eula-legend', t('CGU et RGPD'))
+                    ->group('config-terms_of_service_show-group', 'div', function ($form) use ($data) {
+                        $form->checkbox('terms_of_service_show', [ 'checked' => $data[ 'terms_of_service_show' ] ])
+                        ->label('config-terms_of_service_show-label', '<span class="ui"></span> ' . t('Activer les CGU'), [
+                            'for' => 'terms_of_service_show'
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('config-terms_of_service-group', 'div', function ($form) use ($data) {
+                        $form->label('config-terms_of_service_page-label', t('Page des CGU'))
+                        ->text('terms_of_service_page', [
+                            'class'       => 'form-control',
+                            'maxlength'   => 255,
+                            'placeholder' => 'Exemple : node/1',
+                            'value'       => $data[ 'terms_of_service_page' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                        /* RGPD */
+                    ->group('config-rgpd_show-group', 'div', function ($form) use ($data) {
+                        $form->checkbox('rgpd_show', [ 'checked' => $data[ 'rgpd_show' ] ])
+                        ->label('config-rgpd_show-label', '<span class="ui"></span> ' . t('Activer la politique de confidentialité des données'), [
+                            'for' => 'rgpd_show'
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('config-rgpd_page-group', 'div', function ($form) use ($data) {
+                        $form->label('config-rgpd_page-label', t('Page RGPD'))
+                        ->text('rgpd_page', [
+                            'class'       => 'form-control',
+                            'maxlength'   => 255,
+                            'placeholder' => 'Exemple : node/1',
+                            'value'       => $data[ 'rgpd_page' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ]);
+                })
                 ->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('config-password-legend', t('Password policy'))
                     ->group('config-relogin-group', 'div', function ($form) use ($data) {
@@ -119,6 +153,10 @@ class HookConfig
         $validator->setRules([
             'user_register'    => 'bool',
             'user_relogin'     => 'bool',
+            'terms_of_service_show' => 'bool',
+            'terms_of_service_page' => 'required_with:terms_of_service_show|route',
+            'rgpd_show'        => 'bool',
+            'rgpd_page'        => 'required_with:rgpd_show|route',
             'connect_url'      => '!required|string|min:10|slug',
             'connect_redirect' => '!required|string|max:255',
             'password_show'    => 'bool',
@@ -135,6 +173,10 @@ class HookConfig
         $data = [
             'user_register'    => (bool) $validator->getInput('user_register'),
             'user_relogin'     => (bool) $validator->getInput('user_relogin'),
+            'terms_of_service_show' => (bool) $validator->getInput('terms_of_service_show'),
+            'terms_of_service_page' => $validator->getInput('terms_of_service_page'),
+            'rgpd_show'        => (bool) $validator->getInput('rgpd_show'),
+            'rgpd_page'        => $validator->getInput('rgpd_page'),
             'connect_url'      => $validator->getInput('connect_url'),
             'connect_redirect' => $validator->getInput('connect_redirect'),
             'password_show'    => (bool) $validator->getInput('password_show'),

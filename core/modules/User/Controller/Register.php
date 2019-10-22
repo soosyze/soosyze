@@ -16,7 +16,7 @@ class Register extends \Soosyze\Controller
 
     public function create()
     {
-        $data = [ 'username' => '', 'email' => '', 'password' => '', 'password_confirm' => '' ];
+        $data = [ 'username' => '', 'email' => '', 'password' => '', 'password_confirm' => '', 'terms_of_service' => false, 'rgpd' => false ];
 
         if (isset($_SESSION[ 'inputs' ])) {
             $data = array_merge($data, $_SESSION[ 'inputs' ]);
@@ -33,8 +33,9 @@ class Register extends \Soosyze\Controller
                 ->email($formbuilder)
                 ->passwordNew($formbuilder)
                 ->passwordConfirm($formbuilder)
-                ->passwordPolicy($formbuilder);
-        })->submitForm();
+                ->passwordPolicy($formbuilder)
+                ->eula($formbuilder, self::router());
+        })->submitForm(t('Registration'));
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -69,6 +70,8 @@ class Register extends \Soosyze\Controller
                 'email'            => 'required|email|htmlsc',
                 'password'         => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password',
+                'terms_of_service' => 'accepted',
+                'rgpd'             => 'accepted',
                 'token_user_form'  => 'required|token'
             ])
             ->setInputs($post);
@@ -83,13 +86,15 @@ class Register extends \Soosyze\Controller
             $salt        = base64_encode(random_bytes(32));
             $passworHash = self::user()->hashSession($validator->getInput('password'), $salt);
             $data        = [
-                'username'       => $validator->getInput('username'),
-                'email'          => $validator->getInput('email'),
-                'password'       => self::user()->hash($passworHash),
-                'salt'           => $salt,
-                'token_actived'  => Util::strRandom(30),
-                'time_installed' => (string) time(),
-                'timezone'       => 'Europe/Paris'
+                'username'         => $validator->getInput('username'),
+                'email'            => $validator->getInput('email'),
+                'password'         => self::user()->hash($passworHash),
+                'salt'             => $salt,
+                'token_actived'    => Util::strRandom(30),
+                'time_installed'   => (string) time(),
+                'timezone'         => 'Europe/Paris',
+                'terms_of_service' => (bool) $validator->getInput('terms_of_service'),
+                'rgpd'             => (bool) $validator->getInput('rgpd'),
             ];
 
             $this->container->callHook('register.store.before', [ &$validator, &$data ]);

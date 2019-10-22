@@ -14,6 +14,8 @@ class FormUser extends FormBuilder
         'name'      => '',
         'firstname' => '',
         'actived'   => '',
+        'rgpd' => '',
+        'terms_of_service' => ''
     ];
 
     protected $file;
@@ -119,6 +121,41 @@ class FormUser extends FormBuilder
                     'value'     => $this->content[ 'firstname' ]
             ]);
         }, self::$attrGrp);
+
+        return $this;
+    }
+
+    public function eula(&$form, $router)
+    {
+        if (!$this->config) {
+            return $this;
+        }
+        if ($this->config->get('settings.terms_of_service_show', true)) {
+            $form->group('user-terms_of_service-group', 'div', function ($form) {
+                $form->checkbox('terms_of_service', [ 'checked' => $this->content[ 'terms_of_service' ] ])
+                    ->label('config-terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
+                        'for' => 'terms_of_service'
+                    ]);
+            }, [ 'class' => 'form-group' ])
+                ->html('terms_of_service_page', '<p><a :attr:css>:_content</a></p>', [
+                    '_content' => t('Read the terms of service'),
+                    'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
+                    'target'   => '_blank'
+            ]);
+        }
+        if ($this->config->get('settings.rgpd_show', true)) {
+            $form->group('user-rgpd-group', 'div', function ($form) {
+                $form->checkbox('rgpd', [ 'checked' => $this->content[ 'rgpd' ] ])
+                    ->label('config-rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
+                        'for' => 'rgpd'
+                    ]);
+            }, [ 'class' => 'form-group' ])
+                ->html('rgpd_page', '<p><a :attr:css>:_content</a></p>', [
+                    '_content' => t('Read the privacy policy'),
+                    'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
+                    'target'   => '_blank'
+            ]);
+        }
 
         return $this;
     }
