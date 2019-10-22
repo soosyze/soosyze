@@ -44,4 +44,8 @@ $(function () {
         }
         return false;
     });
+    /* INPUT ICON RENDER */
+    $('.text_icon').keyup(function () {
+        $(this).parent().find('.render_icon i').attr('class', this.value);
+    });
 });

@@ -53,12 +53,21 @@ class Link extends \Soosyze\Controller
                     $form->label('menu-link-icon-label', t('Icon'), [
                         'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
                     ])
-                    ->text('icon', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'placeholder' => 'fa fa-bars, fa fa-home...',
-                        'value'       => $content[ 'icon' ],
-                    ]);
+                    ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
+                        $form->text('icon', [
+                            'class'       => 'form-control text_icon',
+                            'maxlength'   => 255,
+                            'placeholder' => 'fa fa-bars, fa fa-home...',
+                            'value'       => $content[ 'icon' ],
+                        ])
+                        ->html('btn-icon', '<button:css:attr>:_content</button>', [
+                            '_content'     => '<i class="' . $content[ 'icon' ] . '" aria-hidden="true"></i>',
+                            'aria-label'   => t('Rendering'),
+                            'class'        => 'btn render_icon',
+                            'type'         => 'button',
+                            'data-tooltip' => t('Rendering')
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-target-label', t('Target'))
@@ -198,12 +207,21 @@ class Link extends \Soosyze\Controller
                     $form->label('menu-link-icon-label', t('Icon'), [
                         'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
                     ])
-                    ->text('icon', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'placeholder' => 'fa fa-bars, fa fa-home...',
-                        'value'       => $query[ 'icon' ],
-                    ]);
+                    ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
+                        $form->text('icon', [
+                            'class'       => 'form-control text_icon',
+                            'maxlength'   => 255,
+                            'placeholder' => 'fa fa-bars, fa fa-home...',
+                            'value'       => $query[ 'icon' ],
+                        ])
+                        ->html('btn-icon', '<button:css:attr>:_content</button>', [
+                            '_content'     => '<i class="' . $query[ 'icon' ] . '" aria-hidden="true"></i>',
+                            'aria-label'   => t('Rendering'),
+                            'class'        => 'btn render_icon',
+                            'type'         => 'button',
+                            'data-tooltip' => t('Rendering')
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-target-group', 'div', function ($form) use ($query) {
                     $form->label('menu-link-target-label', t('Target'))
