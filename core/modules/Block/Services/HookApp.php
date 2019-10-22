@@ -86,6 +86,7 @@ class HookApp
         $pages      = $block[ 'pages' ];
 
         foreach (explode(PHP_EOL, $pages) as $page) {
+            $page = trim($page);
             if ($page === $path) {
                 return $visibility;
             }
