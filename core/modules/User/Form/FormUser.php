@@ -316,9 +316,18 @@ class FormUser extends FormBuilder
      *
      * @return $this
      */
-    public function submitForm($label = 'Save')
+    public function submitForm($label = 'Save', $cancel = false)
     {
-        return $this->token('token_user_form')
-                ->submit('sumbit', t($label), [ 'class' => 'btn btn-success' ]);
+        $this->token('token_user_form');
+        if ($cancel) {
+            $this->html('cancel', '<button:css:attr>:_content</button>', [
+                '_content' => t('Cancel'),
+                'class'    => 'btn btn-danger',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ]);
+        }
+
+        return $this->submit('sumbit', t($label), [ 'class' => 'btn btn-success' ]);
     }
 }

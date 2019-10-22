@@ -79,7 +79,7 @@ class User extends \Soosyze\Controller
             ->fieldsetPassword()
             ->fieldsetActived()
             ->fieldsetRoles($roles)
-            ->submitForm();
+            ->submitForm('Save', true);
 
         $this->container->callHook('user.create.form', [ &$form, $data ]);
 

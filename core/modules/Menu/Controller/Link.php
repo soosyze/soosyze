@@ -79,6 +79,12 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_link_create')
+            ->html('cancel', '<button:css:attr>:_content</button>', [
+                '_content' => t('Cancel'),
+                'class'    => 'btn btn-danger',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ])
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
@@ -233,6 +239,12 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_link_edit')
+            ->html('cancel', '<button:css:attr>:_content</button>', [
+                '_content' => t('Cancel'),
+                'class'    => 'btn btn-danger',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ])
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
@@ -273,6 +285,12 @@ class Link extends \Soosyze\Controller
                 'link'            => 'required',
                 'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_edit' => 'required|token'
+            ])
+            ->setLabel([
+                'title_link'        => t('Link title'),
+                'link'              => t('Link'),
+                'icon'              => t('Icon'),
+                'target_link'       => t('Target'),
             ])
             ->setInputs($post);
 
