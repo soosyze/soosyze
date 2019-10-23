@@ -57,7 +57,8 @@
     "user.hook.config": {
         "class": "SoosyzeCore\\User\\Services\\HookConfig",
         "arguments": [
-            "@config"
+            "@config",
+            "@router"
         ],
         "hooks": {
             "config.edit.menu": "menu",

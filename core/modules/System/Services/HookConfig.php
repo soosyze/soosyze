@@ -9,9 +9,12 @@ class HookConfig
     protected $file;
 
     protected $translate;
+    
+    protected $router;
 
-    public function __construct($template, $file, $translate)
+    public function __construct($router, $template, $file, $translate)
     {
+        $this->router    = $router;
         $this->template  = $template;
         $this->file      = $file;
         $this->translate = $translate;
@@ -102,34 +105,55 @@ class HookConfig
                     $form->legend('system-path-legend', t('Default page'))
                     ->group('system-path_index-group', 'div', function ($form) use ($data) {
                         $form->label('system-path_index-label', t('Default homepage'), [
-                            'data-tooltip' => t('Content link displayed on your site\'s homepage.')
+                            'data-tooltip' => t('Content link displayed on your site\'s homepage.'),
+                            'for'          => 'path_index'
                         ])
-                        ->text('path_index', [
-                            'class'       => 'form-control',
-                            'required'    => 1,
-                            'placeholder' => t('Example: node/1'),
-                            'value'       => $data[ 'path_index' ]
-                        ]);
+                        ->group('system-path_index-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
+                            ->text('path_index', [
+                                'class'       => 'form-control',
+                                'required'    => 1,
+                                'placeholder' => t('Example: node/1'),
+                                'value'       => $data[ 'path_index' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_access_denied-group', 'div', function ($form) use ($data) {
                         $form->label('system-path_access_denied-label', t('Page 403 by default (access denied)'), [
-                            'data-tooltip' => t('The content of the link is displayed if a user accesses a forbidden page.')
+                            'data-tooltip' => t('The content of the link is displayed if a user accesses a forbidden page.'),
+                            'for'          => 'path_access_denied'
                         ])
-                        ->text('path_access_denied', [
-                            'class'       => 'form-control',
-                            'placeholder' => t('Example: user/login'),
-                            'value'       => $data[ 'path_access_denied' ]
-                        ]);
+                        ->group('system-path_access_denied-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
+                            ->text('path_access_denied', [
+                                'class'       => 'form-control',
+                                'placeholder' => t('Example: user/login'),
+                                'value'       => $data[ 'path_access_denied' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('system-path_no_found-group', 'div', function ($form) use ($data) {
                         $form->label('system-path_no_found-label', t('Page 404 by default (page not found)'), [
-                            'data-tooltip' => t('The content of the link is displayed if a user accesses a non-existent page.')
+                            'data-tooltip' => t('The content of the link is displayed if a user accesses a non-existent page.'),
+                            'for'          => 'path_no_found'
                         ])
-                        ->text('path_no_found', [
-                            'class'       => 'form-control',
-                            'placeholder' => t('Example: node/1'),
-                            'value'       => $data[ 'path_no_found' ]
-                        ]);
+                        ->group('system-path_no_found-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
+                            ->text('path_no_found', [
+                                'class'       => 'form-control',
+                                'placeholder' => t('Example: node/1'),
+                                'value'       => $data[ 'path_no_found' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($data) {

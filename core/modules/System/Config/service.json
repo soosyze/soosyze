@@ -47,6 +47,7 @@
     "system.hook.config": {
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
         "arguments": [
+            "@router",
             "@template",
             "@file",
             "@translate"

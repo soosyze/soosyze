@@ -8,10 +8,13 @@ class HookConfig
      * @var \Soosyze\Config
      */
     protected $config;
+    
+    protected $router;
 
-    public function __construct($config)
+    public function __construct($config, $router)
     {
         $this->config = $config;
+        $this->router = $router;
     }
 
     public function menu(&$menu)
@@ -29,23 +32,39 @@ class HookConfig
                     ->group('config-relogin-group', 'div', function ($form) use ($data) {
                         $form->label('config-connect_url-label', t('Protection of connection paths'), [
                             'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
-                            . t('Example: Ab1P-9eM_s8Y = user / login / Ab1P-9eM_s8Y')
+                            . t('Example: Ab1P-9eM_s8Y = user / login / Ab1P-9eM_s8Y'),
+                            'for'          => 'connect_url'
                         ])
-                        ->text('connect_url', [
-                            'class'       => 'form-control',
-                            'minlength'   => 10,
-                            'placeholder' => t('Add a token to your connection routes (10 characters minimum)'),
-                            'value'       => $data[ 'connect_url' ]
-                        ]);
+                            ->group('config-connect_url-flex', 'div', function ($form) use ($data) {
+                                $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->getRoute('user.login', [':url' => '']),
+                                'id'       => ''
+                            ])
+                            ->text('connect_url', [
+                                'class'       => 'form-control',
+                                'minlength'   => 10,
+                                'placeholder' => t('Add a token to your connection routes (10 characters minimum)'),
+                                'value'       => $data[ 'connect_url' ]
+                            ]);
+                            }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('config-register-group', 'div', function ($form) use ($data) {
-                        $form->label('config-connect_redirect-label', t('Redirect page after connection'))
-                        ->text('connect_redirect', [
-                            'class'       => 'form-control',
-                            'maxlength'   => 255,
-                            'placeholder' => '',
-                            'value'       => $data[ 'connect_redirect' ]
-                        ]);
+                    ->group('config-connect_redirect-group', 'div', function ($form) use ($data) {
+                        $form->label('config-connect_redirect-label', t('Redirect page after connection'), [
+                            'for' => 'connect_redirect'
+                        ])
+                        ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
+                            ->text('connect_redirect', [
+                                'class'       => 'form-control',
+                                'maxlength'   => 255,
+                                'placeholder' => '',
+                                'required'    => 1,
+                                'value'       => $data[ 'connect_redirect' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
@@ -67,14 +86,20 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                     ->group('config-terms_of_service-group', 'div', function ($form) use ($data) {
                         $form->label('config-terms_of_service_page-label', t('Page des CGU'))
-                        ->text('terms_of_service_page', [
-                            'class'       => 'form-control',
-                            'maxlength'   => 255,
-                            'placeholder' => 'Exemple : node/1',
-                            'value'       => $data[ 'terms_of_service_page' ]
-                        ]);
+                        ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
+                            ->text('terms_of_service_page', [
+                                'class'       => 'form-control',
+                                'maxlength'   => 255,
+                                'placeholder' => 'Exemple : node/1',
+                                'value'       => $data[ 'terms_of_service_page' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
-                        /* RGPD */
+                    /* RGPD */
                     ->group('config-rgpd_show-group', 'div', function ($form) use ($data) {
                         $form->checkbox('rgpd_show', [ 'checked' => $data[ 'rgpd_show' ] ])
                         ->label('config-rgpd_show-label', '<span class="ui"></span> ' . t('Activer la politique de confidentialité des données'), [
@@ -83,12 +108,18 @@ class HookConfig
                     }, [ 'class' => 'form-group' ])
                     ->group('config-rgpd_page-group', 'div', function ($form) use ($data) {
                         $form->label('config-rgpd_page-label', t('Page RGPD'))
+                        ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                                'id'       => ''
+                            ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'rgpd_page' ]
                         ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
