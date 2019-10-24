@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\User\Controller;
 
+use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
@@ -70,19 +71,26 @@ class Register extends \Soosyze\Controller
                 'email'            => 'required|email|htmlsc',
                 'password'         => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password',
-                'terms_of_service' => 'accepted',
-                'rgpd'             => 'accepted',
                 'token_user_form'  => 'required|token'
             ])
             ->setLabel([
                 'username'         => t('User name'),
                 'email'            => t('E-mail'),
                 'password_new'     => t('New Password'),
-                'password_confirm' => t('Confirmation of the new password'),
-                'terms_of_service' => t('Accepter les conditions générale d\'utilisation'),
-                'rgpd'             => t('Accepter la politique de confidentialité')
+                'password_confirm' => t('Confirmation of the new password')
             ])
             ->setInputs($post);
+
+        if(self::config()->get('settings.rgpd_show', false)) {
+            $validator
+                ->addRule('rgpd', 'accepted')
+                ->addLabel('rgpd', t('Accepter la politique de confidentialité'));
+        }
+        if(self::config()->get('settings.terms_of_service_show', false)) {
+            $validator
+                ->addRule('terms_of_service', 'accepted')
+                ->addLabel('terms_of_service', t('Accepter les conditions générale d\'utilisation'));
+        }
 
         $is_email    = self::user()->getUser($validator->getInput('email'));
         $is_username = self::query()->from('user')
@@ -101,8 +109,8 @@ class Register extends \Soosyze\Controller
                 'token_actived'    => Util::strRandom(30),
                 'time_installed'   => (string) time(),
                 'timezone'         => 'Europe/Paris',
-                'terms_of_service' => (bool) $validator->getInput('terms_of_service'),
-                'rgpd'             => (bool) $validator->getInput('rgpd'),
+                'terms_of_service' => (bool) $validator->hasInput('terms_of_service'),
+                'rgpd'             => (bool) $validator->hasInput('rgpd'),
             ];
 
             $this->container->callHook('register.store.before', [ &$validator, &$data ]);

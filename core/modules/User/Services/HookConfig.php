@@ -80,12 +80,12 @@ class HookConfig
                     $form->legend('config-eula-legend', t('CGU et RGPD'))
                     ->group('config-terms_of_service_show-group', 'div', function ($form) use ($data) {
                         $form->checkbox('terms_of_service_show', [ 'checked' => $data[ 'terms_of_service_show' ] ])
-                        ->label('config-terms_of_service_show-label', '<span class="ui"></span> ' . t('Activer les CGU'), [
+                        ->label('config-terms_of_service_show-label', '<span class="ui"></span> ' . t('Activate the Terms'), [
                             'for' => 'terms_of_service_show'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-terms_of_service-group', 'div', function ($form) use ($data) {
-                        $form->label('config-terms_of_service_page-label', t('Page des CGU'))
+                        $form->label('config-terms_of_service_page-label', t('CGU page'))
                         ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:css:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
@@ -102,12 +102,12 @@ class HookConfig
                     /* RGPD */
                     ->group('config-rgpd_show-group', 'div', function ($form) use ($data) {
                         $form->checkbox('rgpd_show', [ 'checked' => $data[ 'rgpd_show' ] ])
-                        ->label('config-rgpd_show-label', '<span class="ui"></span> ' . t('Activer la politique de confidentialité des données'), [
+                        ->label('config-rgpd_show-label', '<span class="ui"></span> ' . t('Enable Data Privacy Policy'), [
                             'for' => 'rgpd_show'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('config-rgpd_page-group', 'div', function ($form) use ($data) {
-                        $form->label('config-rgpd_page-label', t('Page RGPD'))
+                        $form->label('config-rgpd_page-label', t('RGPD Page'))
                         ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:css:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),

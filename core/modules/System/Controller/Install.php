@@ -204,7 +204,9 @@ class Install extends \Soosyze\Controller
             'actived'        => true,
             'time_reset'     => '',
             'time_installed' => (string) time(),
-            'timezone'       => 'Europe/Paris'
+            'timezone'       => 'Europe/Paris',
+            'rgpd'           => true,
+            'terms_of_service' => true
         ];
         self::query()
             ->insertInto('user', array_keys($data))

@@ -16,7 +16,7 @@ R::post('user.permission.update', 'admin/user/permission', 'Permission@udpate');
 
 R::get('user.register.create', 'user/register', 'Register@create');
 R::post('user.register.store', 'user/register', 'Register@store');
-R::get('user.activate', 'user/:id/activate/:token', 'Register@activate', [ ':id' => "\d+", ':token' => "\w+"]);
+R::get('user.activate', 'user/:id/activate/:token', 'Register@activate', [ ':id' => '\d+', ':token' => '[0-9a-zA-Z_-]+']);
 
 R::get('user.role.admin', 'admin/user/role', 'Role@admin');
 R::get('user.role.create', 'admin/user/role/create', 'Role@create');
