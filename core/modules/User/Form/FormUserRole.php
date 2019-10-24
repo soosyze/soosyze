@@ -78,7 +78,7 @@ class FormUserRole extends FormBuilder
                         'value'   => $this->content[ 'role_color' ]
                     ])
                     ->html('btn-color', '<button:css:attr>:_content</button>', [
-                        '_content' => '<i class="fa fa-sync"></i>',
+                        '_content' => '<i class="fa fa-sync" aria-hidden="true"></i>',
                         'aria-label' => t('Random color'),
                         'class'    => 'btn',
                         'id'       => 'role_color_btn',
@@ -99,7 +99,8 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role-icon-group', 'div', function ($form) {
             $form->label('menu-icon-label', t('Icon'), [
-                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
+                        'for'          => 'role_icon'
                     ])
                 ->group('role-color-group', 'div', function ($form) {
                     $form->text('role_icon', [

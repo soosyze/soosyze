@@ -65,21 +65,21 @@
         </thead>
         <tbody>
             <tr>
-                <th><i class="fa fa-bolt"></i> Basic</th>
+                <th><i class="fa fa-bolt" aria-hidden="true"></i> Basic</th>
                 <td data-title="Support">24/7 live support</td>
                 <td data-title="Discount">20% discount</td>
                 <td data-title="Test">30 day free trial</td>
                 <td data-title="Unlimited">Unlimited option 1</td>
             </tr>
             <tr>
-                <th><i class="fa fa-anchor"></i> Standard</th>
+                <th><i class="fa fa-anchor" aria-hidden="true"></i> Standard</th>
                 <td data-title="Support">24/7 live support</td>
                 <td data-title="Discount">30% discount</td>
                 <td data-title="Test">45 day free trial</td>
                 <td data-title="Unlimited">Unlimited option 2</td>
             </tr>
             <tr>
-                <th><i class="fa fa-gem"></i> Premium</th>
+                <th><i class="fa fa-gem" aria-hidden="true"></i> Premium</th>
                 <td data-title="Support">24/7 live support</td>
                 <td data-title="Discount">40% discount</td>
                 <td data-title="Test">60 day free trial</td>

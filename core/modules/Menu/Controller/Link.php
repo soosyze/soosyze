@@ -51,7 +51,8 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
                     $form->label('menu-link-icon-label', t('Icon'), [
-                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
+                        'for'          => 'icon'
                     ])
                     ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
                         $form->text('icon', [
@@ -217,7 +218,8 @@ class Link extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ])
                 ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
                     $form->label('menu-link-icon-label', t('Icon'), [
-                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome')
+                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
+                        'for'          => 'icon'
                     ])
                     ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
                         $form->text('icon', [
