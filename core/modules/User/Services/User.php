@@ -102,10 +102,16 @@ class User
     
     public function getIdRolesUser($idUser)
     {
-        return $this->query->from('user_role')
+        $data = $this->query->from('user_role')
                 ->leftJoin('role', 'role_id', 'role.role_id')
                 ->where('user_id', '==', $idUser)
-                ->lists('role_id');
+                ->fetchAll();
+        $out = [];
+        foreach ($data as $value) {
+            $out[$value['role_id']] = $value['role_label'];
+        }
+
+        return $out;
     }
 
     public function hasPermission($idPermission)

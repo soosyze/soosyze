@@ -15,7 +15,8 @@ class FormUser extends FormBuilder
         'firstname' => '',
         'actived'   => '',
         'rgpd' => '',
-        'terms_of_service' => ''
+        'terms_of_service' => '',
+        'roles' => []
     ];
 
     protected $file;
@@ -285,26 +286,27 @@ class FormUser extends FormBuilder
         });
     }
 
-    public function fieldsetRoles($roles, $roles_user = [])
+    public function fieldsetRoles($roles)
     {
-        return $this->group('user-role-fieldset', 'fieldset', function ($form) use ($roles, $roles_user) {
+        return $this->group('user-role-fieldset', 'fieldset', function ($form) use ($roles) {
             $form->legend('user-role-legend', t('User Roles'));
             foreach ($roles as $role) {
                 $attrRole = [
-                        'checked'  => in_array($role[ 'role_id' ], $roles_user),
-                        'value'    => $role[ 'role_id' ],
-                        'disabled' => $role[ 'role_id' ] <= 2
+                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->content['roles']),
+                        'disabled' => $role[ 'role_id' ] <= 2,
+                        'id'       => "role-{$role[ 'role_id' ]}",
+                        'value'    => $role[ 'role_label' ]
                     ];
                 $form->group('user-role-' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
-                    $form->checkbox('role[' . $role[ 'role_id' ] . ']', $attrRole)
+                    $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
                             ->label(
-                                'user-role-' . $role[ 'role_id' ] . '-label',
+                                'role-' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
                                 . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
                                 . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
                                 . '</span> '
                                 . t($role[ 'role_label' ]),
-                                [ 'for' => 'role[' . $role[ 'role_id' ] . ']' ]
+                                [ 'for' => "role-{$role[ 'role_id' ]}" ]
                         );
                 }, self::$attrGrp);
             }

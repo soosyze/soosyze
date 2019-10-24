@@ -112,8 +112,14 @@ class Block extends \Soosyze\Controller
     public function edit($id, $req)
     {
         $data = self::query()->from('block')->where('block_id', '==', $id)->fetch();
+        $data[ 'roles' ] = explode(',', $data[ 'roles' ]);
 
         $this->container->callHook('block.edit.form.data', [ &$data ]);
+
+        if (isset($_SESSION[ 'inputs' ])) {
+            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            unset($_SESSION[ 'inputs' ]);
+        }
 
         $action = self::router()->getRoute('block.update', [ ':id' => $data[ 'block_id' ] ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
@@ -192,21 +198,22 @@ class Block extends \Soosyze\Controller
                         'for' => 'visibility4'
                     ]);
                 }, [ 'class' => 'form-group' ]);
-                $data[ 'roles' ] = explode(',', $data[ 'roles' ]);
                 foreach (self::user()->getRoles() as $role) {
-                    $form->group("roles-{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
-                        $form->checkbox("roles-{$role[ 'role_id' ]}", [
-                            'value'   => $role[ 'role_id' ],
-                            'checked' => \in_array($role[ 'role_id' ], $data[ 'roles' ])
+                    $form->group("role-{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
+                        $form->checkbox("roles[{$role[ 'role_id' ]}]", [
+                            'checked' => isset($data[ 'roles' ][$role[ 'role_id' ]]),
+                            'id'      => "role-{$role[ 'role_id' ]}",
+                            'value'   => $role[ 'role_label' ]
                         ])
-                        ->label('roles-label',
-                                '<span class="ui"></span>'
-                                . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
-                                . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
-                                . '</span> '
-                                . t($role[ 'role_label' ]), [
-                            'for' => "roles-{$role[ 'role_id' ]}"
-                        ]);
+                        ->label(
+                            'role-' . $role[ 'role_id' ] . '-label',
+                            '<span class="ui"></span>'
+                            . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
+                            . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
+                            . '</span> '
+                            . t($role[ 'role_label' ]),
+                            [  'for' => "role-{$role[ 'role_id' ]}" ]
+                        );
                     }, [ 'class' => 'form-group' ]);
                 }
             })
@@ -215,6 +222,16 @@ class Block extends \Soosyze\Controller
             ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
         $this->container->callHook('block.edit.form', [ &$form, $data ]);
+
+        if (isset($_SESSION[ 'errors' ])) {
+            unset($_SESSION['errors_keys']['roles']);
+            $form->addErrors($_SESSION[ 'errors' ])
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
+        } elseif (isset($_SESSION[ 'success' ])) {
+            $form->setSuccess($_SESSION[ 'success' ]);
+            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
+        }
 
         return self::template()
                 ->createBlock('block-form.php', $this->pathViews)
@@ -238,6 +255,7 @@ class Block extends \Soosyze\Controller
                 'visibility_pages' => 'bool',
                 'pages'            => '!required|string|htmlsc',
                 'visibility_roles' => 'bool',
+                'roles'            => '!required|array',
                 "token_block_$id"  => 'token'
             ])
             ->setLabel([
@@ -250,20 +268,26 @@ class Block extends \Soosyze\Controller
 
         $this->container->callHook('block.update.validator', [ &$validator ]);
 
-        if ($validator->isValid()) {
-            $roles = [];
-            foreach (self::user()->getRoles() as $role) {
-                if ($validator->getInput("roles-{$role[ 'role_id' ]}")) {
-                    $roles[] = $role[ 'role_id' ];
-                }
+        $validatorRoles = new Validator();
+        if ($isValid = $validator->isValid()) {
+            $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
+            foreach ($validator->getInput('roles') as $key => $role) {
+                $validatorRoles
+                    ->addRule($key, 'int|inarray:' . $listRoles)
+                    ->addLabel($key, t($role))
+                    ->addInput($key, $key);
             }
+        }
+        $isValid &= $validatorRoles->isValid();
+
+        if ($isValid) {
             $values = [
                 'title'            => $validator->getInput('title'),
                 'content'          => $validator->getInput('content'),
                 'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
                 'pages'            => $validator->getInput('pages'),
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
-                'roles'            => implode(',', $roles)
+                'roles'            => implode(',', $validator->getInput('roles'))
             ];
 
             $this->container->callHook('block.update.before', [ $validator, &$values ]);
@@ -273,6 +297,10 @@ class Block extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('block.update.after', [ $validator ]);
         } else {
+            $_SESSION[ 'inputs' ]      = $validator->getInputs();
+            $_SESSION[ 'errors' ]      = $validator->getErrors() + $validatorRoles->getErrors();
+            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+
             return $this->edit($id, $req);
         }
 

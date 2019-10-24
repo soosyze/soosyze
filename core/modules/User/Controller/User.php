@@ -132,7 +132,7 @@ class User extends \Soosyze\Controller
                 'actived'          => 'bool',
                 'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
-                'role'             => '!required|array',
+                'roles'            => '!required|array',
                 'token_user_form'  => 'token'
             ])
             ->setLabel([
@@ -145,25 +145,29 @@ class User extends \Soosyze\Controller
                 'actived'          => t('Active'),
                 'password_new'     => t('New Password'),
                 'password_confirm' => t('Confirmation of the new password'),
-                'role'             => t('User Roles')
+                'roles'            => t('User Roles')
             ])
             ->setInputs($post + $files);
 
-        if (isset($post[ 'role' ])) {
-            $roles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
-            foreach ($post[ 'role' ] as $role) {
-                $validator->addInput('role-' . $role, $role)
-                    ->addRule('role-' . $role, 'int|inarray:' . $roles);
+        $this->container->callHook('user.store.validator', [ &$validator ]);
+
+        $validatorRoles = new Validator();
+        if ($isValid        = $validator->isValid()) {
+            $listRoles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
+            foreach ($validator->getInput('roles') as $key => $role) {
+                $validatorRoles
+                    ->addRule($key, 'int|inarray:' . $listRoles)
+                    ->addLabel($key, t($role))
+                    ->addInput($key, $key);
             }
         }
+        $isValid &= $validatorRoles->isValid();
 
         $is_email    = self::user()->getUser($validator->getInput('email'));
         $is_username = self::query()->from('user')
                 ->where('username', $validator->getInput('username'))->fetch();
 
-        $this->container->callHook('user.store.validator', [ &$validator ]);
-
-        if ($validator->isValid() && !$is_email && !$is_username) {
+        if ($isValid && !$is_email && !$is_username) {
             $salt        = base64_encode(random_bytes(32));
             $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
             $data        = [
@@ -187,8 +191,8 @@ class User extends \Soosyze\Controller
             $user = self::user()->getUser($validator->getInput('email'));
             self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $user[ 'user_id' ], 2 ]);
-            if (isset($post[ 'role' ])) {
-                foreach ($post[ 'role' ] as $role) {
+            if (isset($post[ 'roles' ])) {
+                foreach ($post[ 'roles' ] as $role) {
                     self::query()->values([ $user[ 'user_id' ], $role ]);
                 }
             }
@@ -201,7 +205,7 @@ class User extends \Soosyze\Controller
             return new Redirect($route);
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors() + $validatorRoles->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if ($is_email) {
@@ -242,7 +246,10 @@ class User extends \Soosyze\Controller
         if (self::user()->isGranted('user.permission.manage')) {
             $roles      = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
             $roles_user = self::user()->getIdRolesUser($id);
-            $form->fieldsetActived()->fieldsetRoles($roles, $roles_user);
+            $form
+                ->content($data + [ 'roles' => $roles_user ])
+                ->fieldsetActived()
+                ->fieldsetRoles($roles);
         }
         $form->submitForm();
 
@@ -336,7 +343,22 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
-        if ($validator->isValid() && !$is_email && !$is_username) {
+        $grantedRole = self::user()->isGranted('user.people.manage');
+        /* Ajoute la règle pour le tableau de roles si l'utilisateur à le droit de les modifier. */
+        if ($grantedRole) {
+            $validator->addRule('roles', '!required|array')
+                ->addLabel('roles', t('User Roles'));
+        }
+        $isValid = $validator->isValid();
+
+        if ($grantedRole) {
+            /* Valide les données du tableau de rôles */
+            $validatorRole = $this->validRole($validator);
+            /* Ajoute à la validation générale la validation des rôles. */
+            $isValid       &= $validatorRole->isValid();
+        }
+
+        if ($isValid && !$is_email && !$is_username) {
             /* Prépare les donnée à mettre à jour. */
             $value = [
                 'username'  => $validator->getInput('username'),
@@ -360,8 +382,8 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.update.before', [ &$validator, &$value,
                 $id ]);
             self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
-            if (self::user()->isGranted('user.people.manage')) {
-                $this->updateRole($id, $req);
+            if ($grantedRole) {
+                $this->updateRole($validator, $id);
             }
             $this->savePicture($id, $validator);
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
@@ -383,6 +405,10 @@ class User extends \Soosyze\Controller
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        if ($grantedRole) {
+            $_SESSION[ 'messages' ][ 'errors' ] += $validatorRole->getErrors();
+        }
 
         if ($is_email) {
             $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
@@ -459,38 +485,34 @@ class User extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('user.management.admin'));
     }
 
-    protected function updateRole($idUser, $req)
+    protected function validRole(Validator $validator)
     {
-        $roles          = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
-        $post           = $req->getParsedBody();
-        $data[ 'role' ] = isset($post[ 'role' ])
-            ? $post[ 'role' ]
-            : [];
-        $validator      = new Validator();
-
-        foreach ($data[ 'role' ] as $idRole) {
-            $validator->addInput('role-' . $idRole, $idRole)
-                ->addRule('role-' . $idRole, 'int|inarray:' . $roles);
-        }
-
-        if ($validator->isValid()) {
-            $this->container->callHook('user.update.role.before', [ &$validator,
-                &$data, $idUser ]);
-            self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
-            self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
-                ->values([ $idUser, 2 ]);
-            foreach ($data[ 'role' ] as $idRole) {
-                self::query()->values([ $idUser, $idRole ]);
+        $validatorRoles = new Validator();
+        if ($validator->hasError('roles')) {
+            $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
+            foreach ($validator->getInput('roles') as $key => $role) {
+                $validatorRoles
+                    ->addRule($key, 'int|inarray:' . $listRoles)
+                    ->addLabel($key, t($role))
+                    ->addInput($key, $key);
             }
-            self::query()->execute();
-            $this->container->callHook('user.update.role.after', [ &$validator, &$data,
-                $idUser ]);
-
-            return true;
         }
-        $_SESSION[ 'messages' ][ 'errors' ] += $validator->getErrors();
+        $this->container->callHook('user.update.validator', [ &$validatorRoles ]);
 
-        return false;
+        return $validatorRoles;
+    }
+
+    protected function updateRole($validator, $idUser)
+    {
+        $this->container->callHook('user.update.role.before', [ $validator, $idUser ]);
+        self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
+        self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+            ->values([ $idUser, 2 ]);
+        foreach (array_keys($validator->getInput('roles')) as $idRole) {
+            self::query()->values([ $idUser, $idRole ]);
+        }
+        self::query()->execute();
+        $this->container->callHook('user.update.role.after', [ $validator, $idUser ]);
     }
 
     protected function getMenuUser($id)
