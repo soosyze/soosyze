@@ -149,12 +149,12 @@ class Link extends \Soosyze\Controller
                 'active'      => true
             ];
 
-            $this->container->callHook('menu.link.store.before', [ &$validator, &$data ]);
+            $this->container->callHook('menu.link.store.before', [ $validator, &$data ]);
             self::query()
                 ->insertInto('menu_link', array_keys($data))
                 ->values($data)
                 ->execute();
-            $this->container->callHook('menu.link.store.after', [ &$validator ]);
+            $this->container->callHook('menu.link.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                 = self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ]);
@@ -191,7 +191,7 @@ class Link extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.link.update', [
             ':menu' => $name,
-            ':item' => $id
+            ':id' => $id
         ]);
 
         $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
@@ -316,12 +316,12 @@ class Link extends \Soosyze\Controller
                 'target_link' => $validator->getInput('target_link')
             ];
 
-            $this->container->callHook('menu.link.update.before', [ &$validator, &$data ]);
+            $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
             self::query()
                 ->update('menu_link', $data)
                 ->where('id', '==', $id)
                 ->execute();
-            $this->container->callHook('menu.link.update.after', [ &$validator ]);
+            $this->container->callHook('menu.link.update.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                               = self::router()->getRoute('menu.show', [
@@ -341,7 +341,7 @@ class Link extends \Soosyze\Controller
 
         $route = self::router()->getRoute('menu.link.edit', [
             ':menu' => $nameMenu,
-            ':item' => $id
+            ':id' => $id
         ]);
 
         return new Redirect($route);
@@ -369,7 +369,6 @@ class Link extends \Soosyze\Controller
                 ->delete()
                 ->where('id', '==', $id)
                 ->execute();
-
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 
