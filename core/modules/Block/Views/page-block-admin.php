@@ -11,7 +11,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-                <h2>Ajouter un bloc</h2>
+                <h2><?php echo t('Add a block'); ?></h2>
             </div>
             <div class="modal-body"></div>
         </div>

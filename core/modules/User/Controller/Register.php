@@ -48,8 +48,10 @@ class Register extends \Soosyze\Controller
             unset($_SESSION[ 'errors_keys' ]);
         }
 
-        $connect_url = self::config()->get('settings.connect_url', '');
-        $url = self::router()->getRoute('user.login', [ ':url' => '/' . $connect_url ]);
+        if (($connect_url = self::config()->get('settings.connect_url', ''))) {
+            $connect_url = '/' . $connect_url;
+        }
+        $url = self::router()->getRoute('user.login', [ ':url' => $connect_url ]);
 
         return self::template()
                 ->view('page', [
@@ -69,8 +71,8 @@ class Register extends \Soosyze\Controller
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
                 'email'            => 'required|email|htmlsc',
-                'password'         => 'required|string|regex:' . self::user()->passwordPolicy(),
-                'password_confirm' => 'required|string|equal:@password',
+                'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
+                'password_confirm' => 'required|string|equal:@password_new',
                 'token_user_form'  => 'required|token'
             ])
             ->setLabel([
@@ -100,7 +102,7 @@ class Register extends \Soosyze\Controller
 
         if ($validator->isValid() && !$is_email && !$is_username) {
             $salt        = base64_encode(random_bytes(32));
-            $passworHash = self::user()->hashSession($validator->getInput('password'), $salt);
+            $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
             $data        = [
                 'username'         => $validator->getInput('username'),
                 'email'            => $validator->getInput('email'),
@@ -113,19 +115,20 @@ class Register extends \Soosyze\Controller
                 'rgpd'             => (bool) $validator->hasInput('rgpd'),
             ];
 
-            $this->container->callHook('register.store.before', [ &$validator, &$data ]);
+            $this->container->callHook('register.store.before', [ $validator, &$data ]);
             self::query()->insertInto('user', array_keys($data))->values($data)->execute();
             $user = self::user()->getUserActived($data[ 'email' ], false);
             self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $user[ 'user_id' ], 2 ])->execute();
             $this->sendMailRegister($data[ 'email' ]);
-            $this->container->callHook('register.store.after', [ &$validator ]);
+            $this->container->callHook('register.store.after', [ $validator ]);
 
             return new Redirect($route);
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        
         if ($is_email) {
             $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
             $_SESSION[ 'errors_keys' ][]          = 'email';

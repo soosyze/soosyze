@@ -251,7 +251,7 @@ class Templating extends \Soosyze\Components\Http\Response
             ? ROOT . $this->default_theme_path . '/'
             : $this->default_theme_path;
     }
-    
+
     public function getSections()
     {
         if (!$this->composer) {

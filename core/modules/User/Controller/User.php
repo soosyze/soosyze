@@ -278,7 +278,7 @@ class User extends \Soosyze\Controller
         ]);
     }
 
-    public function udpate($id, $req)
+    public function update($id, $req)
     {
         if (!($user = self::user()->find($id))) {
             return $this->get404($req);

@@ -4,13 +4,6 @@ namespace SoosyzeCore\News\Services;
 
 class HookConfig
 {
-    protected $template;
-
-    public function __construct($template)
-    {
-        $this->template = $template;
-    }
-
     public function menu(&$menu)
     {
         $menu['news'] = [

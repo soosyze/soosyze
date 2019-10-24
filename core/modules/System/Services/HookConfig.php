@@ -217,6 +217,7 @@ class HookConfig
             'rewrite_engine'      => 'bool',
             'theme'               => 'required|inarray:' . $themes,
             'theme_admin'         => 'required|inarray:' . $themes,
+            'logo'                => '!required|image|max:200Kb',
             'path_index'          => 'route',
             'path_access_denied'  => '!required|route',
             'path_no_found'       => '!required|route',
@@ -224,7 +225,6 @@ class HookConfig
             'meta_description'    => 'required|string|max:256|htmlsc',
             'meta_keyboard'       => '!required|string|htmlsc',
             'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
-            'logo'                => '!required|image|max:200Kb',
             'token_system_config' => 'required|token'
         ])->setLabel([
             'lang'               => t('Language'),

@@ -22,10 +22,10 @@ function getRandomColor() {
 function passwordPolicy(idPasswordInput)
 {
     var
-        value = idPasswordInput.value,
+        value    = idPasswordInput.value,
         elements = document.querySelectorAll('#password_policy li');
 
-    Array.prototype.forEach.call(elements, function (el, i) {
+    Array.prototype.forEach.call(elements, function (el) {
         reg = new RegExp(el.dataset.pattern);
         if(reg.test(value) ){
             el.style.color = 'green';

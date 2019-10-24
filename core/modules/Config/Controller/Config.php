@@ -52,9 +52,9 @@ class Config extends \Soosyze\Controller
             'method'  => 'post',
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ]);
-        $this->container->callHook("config.edit.$id.form.generate", [ &$form, $data ]);
+        $this->container->callHook("config.edit.$id.form.generate", [ &$form, $data, $req ]);
 
-        $this->container->callHook("config.edit.$id.form", [ &$form, $data ]);
+        $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

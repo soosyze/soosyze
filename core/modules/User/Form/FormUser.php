@@ -131,7 +131,7 @@ class FormUser extends FormBuilder
         if (!$this->config) {
             return $this;
         }
-        if ($this->config->get('settings.terms_of_service_show', true)) {
+        if ($this->config->get('settings.terms_of_service_show', false)) {
             $form->group('user-terms_of_service-group', 'div', function ($form) {
                 $form->checkbox('terms_of_service', [ 'checked' => $this->content[ 'terms_of_service' ] ])
                     ->label('config-terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
@@ -144,7 +144,7 @@ class FormUser extends FormBuilder
                     'target'   => '_blank'
             ]);
         }
-        if ($this->config->get('settings.rgpd_show', true)) {
+        if ($this->config->get('settings.rgpd_show', false)) {
             $form->group('user-rgpd-group', 'div', function ($form) {
                 $form->checkbox('rgpd', [ 'checked' => $this->content[ 'rgpd' ] ])
                     ->label('config-rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
@@ -168,9 +168,10 @@ class FormUser extends FormBuilder
         return $this;
     }
 
-    public function passwordNew( &$form )
+    public function passwordNew(&$form)
     {
-        $this->password($form, 'password_new', t('New Password'), $this->config->get('settings.password_show', true)
+        $this->password( $form, 'password_new', t('New Password'),
+            $this->config->get('settings.password_show', true)
                 ? [ 'onkeyup' => 'passwordPolicy(this)' ]
                 : []
         );
@@ -190,9 +191,7 @@ class FormUser extends FormBuilder
         $form->group("user-$id-group", 'div', function ($form) use ($id, $label, $attr) {
             $form->label("$id-label", $label, [ 'for' => $id ])
                 ->group("user-$id-group", 'div', function ($form) use ($id, $attr) {
-                    $form->password($id, [
-                        'class'    => 'form-control'
-                    ] + $attr);
+                    $form->password($id, [ 'class' => 'form-control' ] + $attr);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
                         $form->html("{$id}_show", '<button:css:attr>:_content</button>', [
                             'class'        => 'btn btn-toogle-password',
@@ -239,13 +238,12 @@ class FormUser extends FormBuilder
 
     public function fieldsetPassword()
     {
-        return $this->group('user-password-fieldset', 'fieldset', function ($form)
-            {
-                $form->legend('user-password-legend', t('Password'));
-                $this->passwordNew($form)
+        return $this->group('user-password-fieldset', 'fieldset', function ($form) {
+            $form->legend('user-password-legend', t('Password'));
+            $this->passwordNew($form)
                     ->passwordConfirm($form)
                     ->passwordPolicy($form);
-            });
+        });
     }
 
     public function passwordPolicy(&$form)
@@ -272,6 +270,8 @@ class FormUser extends FormBuilder
                 '_content' => $content,
             ]);
         }
+
+        return $this;
     }
 
     public function fieldsetActived()

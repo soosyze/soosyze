@@ -70,7 +70,7 @@ class Install extends \Soosyze\Controller
                     'selected' => $data[ 'lang' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->token('install_language');
+            ->token('token_language');
 
         $messages = [
             'errors'   => [], 'warnings' => [],
@@ -100,8 +100,8 @@ class Install extends \Soosyze\Controller
     {
         $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
         $validator = (new Validator())->setRules([
-                'lang'             => 'required|inarray:' . $langs,
-                'install_language' => 'required|token'
+                'lang'           => 'inarray:' . $langs,
+                'token_language' => 'token'
             ])->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {

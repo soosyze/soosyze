@@ -189,13 +189,14 @@ class HookConfig
             'rgpd_show'        => 'bool',
             'rgpd_page'        => 'required_with:rgpd_show|route',
             'connect_url'      => '!required|string|min:10|slug',
-            'connect_redirect' => '!required|string|max:255',
+            'connect_redirect' => 'required|route',
             'password_show'    => 'bool',
             'password_policy'  => 'bool',
             'password_length'  => 'int|min:8',
             'password_upper'   => 'int|min:1',
             'password_digit'   => 'int|min:1',
-            'password_special' => 'int|min:1'
+            'password_special' => 'int|min:1',
+            'token_user_config' => 'token'
         ])->setLabel([
             'user_register'         => t('Registration'),
             'user_relogin'          => t('Open password recovery'),
