@@ -95,6 +95,13 @@ class Role extends \Soosyze\Controller
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
             ])
+            ->setLabel([
+                'role_label'       => t('Name'),
+                'role_description' => t('Description'),
+                'role_weight'      => t('Weight'),
+                'role_color'       => t('Color'),
+                'role_icon'        => t('Icon')
+            ])
             ->setInputs($req->getParsedBody());
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
@@ -187,6 +194,13 @@ class Role extends \Soosyze\Controller
                 'role_color'        => '!required|colorhex',
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
+            ])
+            ->setLabel([
+                'role_label'       => t('Name'),
+                'role_description' => t('Description'),
+                'role_weight'      => t('Weight'),
+                'role_color'       => t('Color'),
+                'role_icon'        => t('Icon')
             ])
             ->setInputs($req->getParsedBody());
 

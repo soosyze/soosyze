@@ -230,6 +230,7 @@ class Block extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $post      = $req->getParsedBody();
         $validator = (new Validator())
             ->setRules([
                 'title'            => '!required|string|max:255',
@@ -239,10 +240,13 @@ class Block extends \Soosyze\Controller
                 'visibility_roles' => 'bool',
                 "token_block_$id"  => 'token'
             ])
-            ->setInputs($req->getParsedBody());
-        foreach (self::user()->getRoles() as $role) {
-            $validator->addRule("roles-{$role[ 'role_id' ]}", 'string');
-        }
+            ->setLabel([
+                'title'            => t('Title'),
+                'content'          => t('Content'),
+                'pages'            => t('List of pages'),
+                'roles'            => t('User Roles')
+            ])
+            ->setInputs($post);
 
         $this->container->callHook('block.update.validator', [ &$validator ]);
 

@@ -196,6 +196,21 @@ class HookConfig
             'password_upper'   => 'int|min:1',
             'password_digit'   => 'int|min:1',
             'password_special' => 'int|min:1'
+        ])->setLabel([
+            'user_register'         => t('Registration'),
+            'user_relogin'          => t('Open password recovery'),
+            'terms_of_service_show' => t('Activate the Terms'),
+            'terms_of_service_page' => t('CGU page'),
+            'rgpd_show'             => t('Enable Data Privacy Policy'),
+            'rgpd_page'             => t('RGPD Page'),
+            'connect_url'           => t('Protection of connection paths'),
+            'connect_redirect'      => t('Redirect page after connection'),
+            'password_show'         => t('Add a button to view passwords'),
+            'password_policy'       => t('Add visualization of the password policy'),
+            'password_length'       => t('Minimum length'),
+            'password_upper'        => t('Number of uppercase characters'),
+            'password_digit'        => t('Number of numeric characters'),
+            'password_special'      => t('Number of special characters'),
         ]);
     }
 

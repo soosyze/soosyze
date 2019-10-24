@@ -74,6 +74,14 @@ class Register extends \Soosyze\Controller
                 'rgpd'             => 'accepted',
                 'token_user_form'  => 'required|token'
             ])
+            ->setLabel([
+                'username'         => t('User name'),
+                'email'            => t('E-mail'),
+                'password_new'     => t('New Password'),
+                'password_confirm' => t('Confirmation of the new password'),
+                'terms_of_service' => t('Accepter les conditions générale d\'utilisation'),
+                'rgpd'             => t('Accepter la politique de confidentialité')
+            ])
             ->setInputs($post);
 
         $is_email    = self::user()->getUser($validator->getInput('email'));

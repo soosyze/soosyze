@@ -135,6 +135,18 @@ class User extends \Soosyze\Controller
                 'role'             => '!required|array',
                 'token_user_form'  => 'token'
             ])
+            ->setLabel([
+                'username'         => t('User name'),
+                'email'            => t('E-mail'),
+                'picture'          => t('Picture'),
+                'bio'              => t('Biography'),
+                'name'             => t('Name'),
+                'firstname'        => t('First name'),
+                'actived'          => t('Active'),
+                'password_new'     => t('New Password'),
+                'password_confirm' => t('Confirmation of the new password'),
+                'role'             => t('User Roles')
+            ])
             ->setInputs($post + $files);
 
         if (isset($post[ 'role' ])) {
@@ -292,6 +304,17 @@ class User extends \Soosyze\Controller
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'actived'          => 'bool',
                 'token_user_form'  => 'required|token'
+            ])
+            ->setLabel([
+                'username'         => t('User name'),
+                'email'            => t('E-mail'),
+                'picture'          => t('Picture'),
+                'bio'              => t('Biography'),
+                'name'             => t('Name'),
+                'firstname'        => t('First name'),
+                'password_new'     => t('New Password'),
+                'password_confirm' => t('Confirmation of the new password'),
+                'actived'          => t('Active'),
             ])
             ->setInputs($post + $files);
 

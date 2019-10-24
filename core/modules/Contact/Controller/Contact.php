@@ -66,6 +66,13 @@ class Contact extends \Soosyze\Controller
                 'copy'          => 'bool',
                 'token_contact' => 'required|token'
             ])
+            ->setLabel([
+                'name'          => t('Name'),
+                'email'         => t('E-mail'),
+                'object'        => t('Object'),
+                'message'       => t('Message'),
+                'copy'          => t('Send me a copy of the mail'),
+            ])
             ->setInputs($post);
 
         $this->container->callHook('contact.validator', [ &$validator ]);

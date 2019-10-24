@@ -41,6 +41,8 @@ class HookConfig
     {
         $validator->setRules([
             'news_pagination' => 'required|int|between:1,50'
+        ])->setLabel([
+            'news_pagination' => t('Number of articles per page')
         ]);
     }
 

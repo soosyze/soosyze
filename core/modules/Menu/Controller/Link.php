@@ -122,6 +122,12 @@ class Link extends \Soosyze\Controller
                 'target_link'       => 'required|inArray:_blank,_self,_parent,_top',
                 'token_link_create' => 'required|token'
             ])
+            ->setLabel([
+                'title_link'        => t('Link title'),
+                'link'              => t('Link'),
+                'icon'              => t('Icon'),
+                'target_link'       => t('Target'),
+            ])
             ->setInputs($post);
 
         $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));

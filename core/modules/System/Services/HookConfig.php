@@ -226,6 +226,21 @@ class HookConfig
             'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
             'logo'                => '!required|image|max:200Kb',
             'token_system_config' => 'required|token'
+        ])->setLabel([
+            'lang'               => t('Language'),
+            'email'              => t('E-mail of the site'),
+            'maintenance'        => t('Put the site in maintenance'),
+            'rewrite_engine'     => t('Make the URLs clean'),
+            'theme'              => t('Website theme'),
+            'theme_admin'        => t('Website administration theme'),
+            'logo'               => t('Logo'),
+            'path_index'         => t('Default page'),
+            'path_access_denied' => t('Page 403 by default (access denied)'),
+            'path_no_found'      => t('Page 404 by default (page not found)'),
+            'meta_title'         => t('Website title'),
+            'meta_description'   => t('Description'),
+            'meta_keyboard'      => t('Keywords'),
+            'favicon'            => t('Favicon')
         ]);
     }
 
