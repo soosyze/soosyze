@@ -1,11 +1,8 @@
 
 <ul class="nav nav-tabs">
-    <li><a href="<?php echo $link_add ?>"><?php echo t('Add a user'); ?></a></li>
-
-    <?php if ($granted_permission): ?>
-    <li><a href="<?php echo $link_role ?>"><?php echo t('Administer roles'); ?></a></li>
-    <li><a href="<?php echo $link_permission ?>"><?php echo t('Administer permissions'); ?></a></li>
-    <?php endif; ?>
+    <?php foreach ($menu as $link): ?>
+        <li><a href="<?php echo $link['link'] ?>"><?php echo $link['title_link']; ?></a></li>
+    <?php endforeach; ?>
 </ul>
 <fieldset class="responsive">
     <legend><?php echo t('User Management'); ?></legend>
