@@ -38,11 +38,30 @@ class UsersManagement extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-user_management.php', $this->pathViews, [
-                    'users'              => $users,
-                    'link_add'           => self::router()->getRoute('user.create'),
-                    'link_role'          => self::router()->getRoute('user.role.admin'),
-                    'link_permission'    => self::router()->getRoute('user.permission.admin'),
-                    'granted_permission' => self::user()->isGranted('user.permission.manage'),
+                    'users' => $users,
+                    'menu'  => $this->getMenu()
         ]);
+    }
+    
+    public function getMenu()
+    {
+        $menu[] = [
+            'title_link' => t('Add a user'),
+            'link'       => self::router()->getRoute('user.create')
+        ];
+        if (self::user()->isGranted('user.permission.manage')) {
+            $menu[] = [
+                'title_link' => t('Administer roles'),
+                'link'       => self::router()->getRoute('user.role.admin')
+            ];
+            $menu[] = [
+                'title_link' => t('Administer permissions'),
+                'link'       => self::router()->getRoute('user.permission.admin')
+            ];
+        }
+        
+        self::core()->callHook('user.manage.menu', [&$menu, self::user()]);
+
+        return $menu;
     }
 }

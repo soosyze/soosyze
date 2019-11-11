@@ -533,6 +533,8 @@ class User extends \Soosyze\Controller
                 'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
             ];
         }
+        
+        self::core()->callHook('user.menu', [&$menu, $id]);
 
         return $menu;
     }
