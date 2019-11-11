@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 
 interface Migration
 {
-    public function getComposer();
+    public function getDir();
 
     public function install(ContainerInterface $ci);
     

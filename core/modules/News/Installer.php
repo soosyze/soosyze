@@ -6,9 +6,9 @@ use Psr\Container\ContainerInterface;
 
 class Installer implements \SoosyzeCore\System\Migration
 {
-    public function getComposer()
+    public function getDir()
     {
-        return __DIR__ . '/composer.json';
+        return __DIR__;
     }
 
     public function install(ContainerInterface $ci)

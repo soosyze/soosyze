@@ -168,7 +168,7 @@ class Install extends \Soosyze\Controller
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
             $installer->seeders($this->container);
-            $composer = Util::getJson($installer->getComposer());
+            $composer = Util::getJson($installer->getDir() . '/composer.json');
 
             /* Charge le container de nouveaux services. */
             $this->loadContainer($composer);
