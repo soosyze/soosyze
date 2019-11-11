@@ -154,7 +154,7 @@ class User extends \Soosyze\Controller
         $validatorRoles = new Validator();
         if ($isValid        = $validator->isValid()) {
             $listRoles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
-            foreach ($validator->getInput('roles') as $key => $role) {
+            foreach ($validator->getInput('roles', []) as $key => $role) {
                 $validatorRoles
                     ->addRule($key, 'int|inarray:' . $listRoles)
                     ->addLabel($key, t($role))
@@ -490,7 +490,7 @@ class User extends \Soosyze\Controller
         $validatorRoles = new Validator();
         if ($validator->hasError('roles')) {
             $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
-            foreach ($validator->getInput('roles') as $key => $role) {
+            foreach ($validator->getInput('roles', []) as $key => $role) {
                 $validatorRoles
                     ->addRule($key, 'int|inarray:' . $listRoles)
                     ->addLabel($key, t($role))
@@ -508,7 +508,7 @@ class User extends \Soosyze\Controller
         self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
         self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
             ->values([ $idUser, 2 ]);
-        foreach (array_keys($validator->getInput('roles')) as $idRole) {
+        foreach (array_keys($validator->getInput('roles', [])) as $idRole) {
             self::query()->values([ $idUser, $idRole ]);
         }
         self::query()->execute();

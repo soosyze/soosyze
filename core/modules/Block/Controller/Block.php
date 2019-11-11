@@ -222,7 +222,7 @@ class Block extends \Soosyze\Controller
                 foreach (self::user()->getRoles() as $role) {
                     $form->group("role-{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
                         $form->checkbox("roles[{$role[ 'role_id' ]}]", [
-                            'checked' => isset($data[ 'roles' ][$role[ 'role_id' ]]),
+                            'checked' => in_array($role[ 'role_id' ], $data[ 'roles' ]),
                             'id'      => "role-{$role[ 'role_id' ]}",
                             'value'   => $role[ 'role_label' ]
                         ])
@@ -233,7 +233,7 @@ class Block extends \Soosyze\Controller
                             . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
                             . '</span> '
                             . t($role[ 'role_label' ]),
-                            [  'for' => "role-{$role[ 'role_id' ]}" ]
+                            [ 'for' => "role-{$role[ 'role_id' ]}" ]
                         );
                     }, [ 'class' => 'form-group' ]);
                 }
@@ -245,7 +245,7 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.edit.form', [ &$form, $data ]);
 
         if (isset($_SESSION[ 'errors' ])) {
-            unset($_SESSION['errors_keys']['roles']);
+            unset($_SESSION[ 'errors_keys' ][ 'roles' ]);
             $form->addErrors($_SESSION[ 'errors' ])
                 ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
@@ -292,7 +292,7 @@ class Block extends \Soosyze\Controller
         $validatorRoles = new Validator();
         if ($isValid = $validator->isValid()) {
             $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
-            foreach ($validator->getInput('roles') as $key => $role) {
+            foreach ($validator->getInput('roles', []) as $key => $role) {
                 $validatorRoles
                     ->addRule($key, 'int|inarray:' . $listRoles)
                     ->addLabel($key, t($role))
@@ -302,13 +302,14 @@ class Block extends \Soosyze\Controller
         $isValid &= $validatorRoles->isValid();
 
         if ($isValid) {
+            $idRoles = array_keys($validator->getInput('roles', []));
             $values = [
                 'title'            => $validator->getInput('title'),
                 'content'          => $validator->getInput('content'),
                 'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
                 'pages'            => $validator->getInput('pages'),
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
-                'roles'            => implode(',', $validator->getInput('roles'))
+                'roles'            => implode(',', $idRoles)
             ];
 
             $this->container->callHook('block.update.before', [ $validator, &$values ]);
