@@ -15,7 +15,9 @@ class Link extends \Soosyze\Controller
 
     public function create($nameMenu, $req)
     {
-
+        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+            return $this->get404($req);
+        }
         $content = [];
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
 
@@ -73,6 +75,9 @@ class Link extends \Soosyze\Controller
             ])
             ->setInputs($post);
 
+        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+            return $this->get404($req);
+        }
         $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
 
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
