@@ -24,6 +24,15 @@ class Block extends \Soosyze\Controller
         $block[ 'link_delete' ] = self::router()->getRoute('block.delete', [ ':id' => $id ]);
         $block[ 'link_update' ] = self::router()->getRoute('block.update', [ ':id' => $id ]);
 
+        if (!empty($block[ 'hook' ])) {
+            $data               = self::block()->getBlocks();
+            $tpl                = self::template()->createBlock($data[ $block[ 'hook' ] ][ 'tpl' ], $data[ $block[ 'hook' ] ][ 'path' ]);
+            $block[ 'content' ] .= (string) self::core()->callHook(
+                'block.' . $block[ 'hook' ],
+                [ $tpl ]
+            );
+        }
+
         return self::template()
                 ->createBlock('block-show.php', $this->pathViews)
                 ->addVars([ 'block' => $block ]);
@@ -31,8 +40,7 @@ class Block extends \Soosyze\Controller
 
     public function create($section)
     {
-        $data = $this->getBlocks();
-        $this->container->callHook('block.create.form.data', [&$data]);
+        $data = self::block()->getBlocks();
 
         $form = new FormBuilder([
             'method' => 'POST',
@@ -40,25 +48,32 @@ class Block extends \Soosyze\Controller
         ]);
         foreach ($data as $key => &$block) {
             $form->group('radio-' . $key, 'div', function ($form) use ($key, $block) {
+                if (empty($block[ 'hook' ])) {
+                    $content = (string) self::template()
+                            ->createBlock($block[ 'tpl' ], $block[ 'path' ])
+                            ->addVars([
+                                'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
+                    ]);
+                } else {
+                    $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
+                    $content = (string) self::core()->callHook('block.' . $block[ 'hook' ], [
+                            $tpl ]);
+                }
                 $form->radio('type_block', [
-                        'id' => "type_block-$key",
+                        'id'    => "type_block-$key",
                         'value' => $key
                     ])
                     ->html($key, '<div:attr:css>:_content</div>', [
                         'class'    => 'block-content',
-                        '_content' => (string) self::template()
-                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                        ->addVars([
-                            'src_image' => self::core()->getPath('modules') . '/Block/Assets/static.svg'
-                        ])
+                        '_content' => $content
                 ]);
             });
         }
         $form->token("token_$section")
             ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
 
-        $this->container->callHook('block.create.form', [&$form, $data]);
-        
+        $this->container->callHook('block.create.form', [ &$form, $data ]);
+
         return self::template()
                 ->createBlock('block-create.php', $this->pathViews)
                 ->addVars([
@@ -70,9 +85,8 @@ class Block extends \Soosyze\Controller
 
     public function store($section, $req)
     {
-        $blocks = $this->getBlocks();
-        $this->container->callHook('block.create.form.data', [&$blocks]);
-        
+        $blocks = self::block()->getBlocks();
+
         $validator = (new Validator())
             ->setRules([
                 'type_block'     => 'required|string|max:255',
@@ -84,18 +98,25 @@ class Block extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $type    = $validator->getInput('type_block');
-            $content = (string) self::template()
-                    ->createBlock($blocks[ $type ][ 'tpl' ], $blocks[ $type ][ 'path' ])
-                    ->addVars([
-                        'src_image' => self::core()->getPath('modules') . '/Block/Assets/static.svg'
-            ]);
-            $values   = [
+            $hook    = null;
+            $content = '';
+            if (empty($blocks[ $type ][ 'hook' ])) {
+                $content = (string) self::template()
+                        ->createBlock($blocks[ $type ][ 'tpl' ], $blocks[ $type ][ 'path' ])
+                        ->addVars([
+                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
+                ]);
+            } else {
+                $hook = $blocks[ $type ][ 'hook' ];
+            }
+            $values = [
                 'section'          => $section,
-                'title'            => 'Titre bloc',
+                'title'            => $blocks[ $type ][ 'title' ],
                 'content'          => $content,
                 'weight'           => 1,
                 'visibility_roles' => true,
-                'roles'            => '1,2'
+                'roles'            => '1,2',
+                'hook'             => $hook
             ];
             $this->container->callHook('block.store.before', [ $validator, &$values ]);
             self::query()
@@ -316,71 +337,5 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.delete.before', [ $id ]);
         self::query()->from('block')->where('block_id', '==', $id)->delete()->execute();
         $this->container->callHook('block.delete.after', [ $id ]);
-    }
-
-    protected function getBlocks()
-    {
-        return [
-            'button'  => [
-                'title' => t('Text with button'),
-                'tpl'   => 'block-button.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'card_ui' => [
-                'title' => t('Simple UI card'),
-                'tpl'   => 'block-card_ui.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'code'    => [
-                'title' => t('Code'),
-                'tpl'   => 'block-code.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'contact' => [
-                'title' => t('Contact'),
-                'tpl'   => 'block-contact.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'gallery' => [
-                'title' => t('Picture Gallery'),
-                'tpl'   => 'block-gallery.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'img'     => [
-                'title' => t('Image and text'),
-                'tpl'   => 'block-img.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'map'     => [
-                'title' => t('Map'),
-                'tpl'   => 'block-map.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'video'   => [
-                'title' => t('Video'),
-                'tpl'   => 'block-peertube.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'social'  => [
-                'title' => t('Social networks'),
-                'tpl'   => 'block-social.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'table'   => [
-                'title' => t('Table'),
-                'tpl'   => 'block-table.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'text'    => [
-                'title' => t('Simple text'),
-                'tpl'   => 'block-text.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ],
-            'three'   => [
-                'title' => t('3 columns'),
-                'tpl'   => 'block-three.php',
-                'path'  => $this->pathViews . 'blocks/'
-            ]
-        ];
     }
 }

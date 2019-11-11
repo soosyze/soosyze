@@ -54,10 +54,15 @@ class HookApp
             ->from('block')
             ->orderBy('weight')
             ->fetchAll();
+        $listBlock = $this->core->get('block')->getBlocks();
         $out    = [];
         foreach ($blocks as $block) {
             if (!$isAdmin && (!$this->isVisibilityPages($block, $request) || !$this->isVisibilityRoles($block))) {
                 continue;
+            }
+            if (!empty($block[ 'hook' ])) {
+                $tpl = $this->tpl->createBlock($listBlock[$block['hook']][ 'tpl' ], $listBlock[$block['hook']][ 'path' ]);
+                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [$tpl]);
             }
             if ($isAdmin) {
                 $block[ 'link_edit' ]   = $this->core->get('router')->getRoute('block.edit', [

@@ -1,4 +1,8 @@
 {
+    "block": {
+        "class": "SoosyzeCore\\Block\\Services\\Block",
+        "arguments": ["@core"]
+    },
     "block.hook.app": {
         "class": "SoosyzeCore\\Block\\Services\\HookApp",
         "arguments": [

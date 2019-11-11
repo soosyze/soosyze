@@ -12,7 +12,7 @@
             "route.news.page": "hookNewShow",
             "route.news.page.years": "hookNewShow",
             "route.news.page.month": "hookNewShow",
-            "route.news.page.day": "hookNewShow",            
+            "route.news.page.day": "hookNewShow",
             "route.news.years": "hookNewShow",
             "route.news.month": "hookNewShow",
             "route.news.day": "hookNewShow",
@@ -26,6 +26,15 @@
             "config.edit.news.form.generate": "form",
             "config.update.news.validator": "validator",
             "config.update.news.before": "before"
+        }
+    },
+    "news.hook.block": {
+        "class": "SoosyzeCore\\News\\Services\\HookBlock",
+        "arguments": ["@query", "@router"],
+        "hooks": {
+            "block.create.form.data": "hookNewShow",
+            "block.news.year": "hookBlockNewsYear",
+            "block.news.month": "hookBlockNewsMonth"
         }
     }
 }
