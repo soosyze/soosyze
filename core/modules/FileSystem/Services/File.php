@@ -87,6 +87,8 @@ class File
     {
         $this->file        = $file;
         $this->file_hidden = $fileHidden;
+        $ClientFilename    = $file->getClientFilename();
+        $this->ext         = Util::getFileExtension($ClientFilename);
 
         return $this;
     }
@@ -128,11 +130,7 @@ class File
             return;
         }
         if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $filename = $this->file->getClientFilename();
-            $ext      = Util::getFileExtension($filename);
-
-            $move = "$this->dir/$this->name.$ext";
-
+            $move = "$this->dir/$this->name.$this->ext";
             $this->file->moveTo($move);
             call_user_func_array($this->call_move, [ $this->name, $move ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
@@ -152,13 +150,7 @@ class File
             return;
         }
         if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $ClientFilename = $this->file->getClientFilename();
-            $ext            = Util::getFileExtension($ClientFilename);
-            $filename       = pathinfo($ClientFilename, PATHINFO_FILENAME);
-            $name           = Util::strSlug($filename);
-
-            $move = "$this->dir/$name.$ext";
-            $this->file->moveTo($move);
+            $this->file->moveTo("$this->dir/$this->name.$this->ext");
         }
     }
 }
