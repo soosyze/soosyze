@@ -2,9 +2,9 @@
 
 namespace SoosyzeCore\Menu\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Menu\Form\FormLink;
 
 class Link extends \Soosyze\Controller
 {
@@ -13,10 +13,10 @@ class Link extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function create($nameMenu)
+    public function create($nameMenu, $req)
     {
-        $content = [ 'title_link' => '', 'icon' => '', 'link' => '', 'fragment' => '', 'target_link' => '_self' ];
 
+        $content = [];
         $this->container->callHook('menu.link.create.form.data', [ &$content ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
@@ -26,67 +26,9 @@ class Link extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('menu-link-fieldset', 'fieldset', function ($form) use ($content) {
-                $form->legend('menu-link-legend', t('Add a link in the menu'))
-                ->group('menu-link-title-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-title-label', t('Link title'), [
-                        'for' => 'title_link' ])
-                    ->text('title_link', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'placeholder' => t('Example: Home'),
-                        'required'    => 1,
-                        'value'       => $content[ 'title_link' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-link-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-link-label', t('Link'))
-                    ->text('link', [
-                        'class'       => 'form-control',
-                        'placeholder' => t('Example: node/1 or http://foo.com'),
-                        'required'    => 1,
-                        'value'       => $content[ 'link' ] . (!empty($content['fragment']) ? '#' . $content['fragment'] : '')
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-icon-label', t('Icon'), [
-                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
-                        'for'          => 'icon'
-                    ])
-                    ->group('menu-link-icon-group', 'div', function ($form) use ($content) {
-                        $form->text('icon', [
-                            'class'       => 'form-control text_icon',
-                            'maxlength'   => 255,
-                            'placeholder' => 'fa fa-bars, fa fa-home...',
-                            'value'       => $content[ 'icon' ],
-                        ])
-                        ->html('btn-icon', '<button:css:attr>:_content</button>', [
-                            '_content'     => '<i class="' . $content[ 'icon' ] . '" aria-hidden="true"></i>',
-                            'aria-label'   => t('Rendering'),
-                            'class'        => 'btn render_icon',
-                            'type'         => 'button',
-                            'data-tooltip' => t('Rendering')
-                        ]);
-                    }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-target-group', 'div', function ($form) use ($content) {
-                    $form->label('menu-link-target-label', t('Target'))
-                    ->select('target_link', self::getTarget(), [
-                        'class'    => 'form-control',
-                        'required' => 1,
-                        'selected' => $content[ 'target_link' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token('token_link_create')
-            ->html('cancel', '<button:css:attr>:_content</button>', [
-                '_content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ])
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
+            ->content($content)
+            ->make();
 
         $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
 
@@ -194,66 +136,9 @@ class Link extends \Soosyze\Controller
             ':id' => $id
         ]);
 
-        $form = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('menu-link-fieldset', 'fieldset', function ($form) use ($query) {
-                $form->legend('menu-link-legend', t('Edit a link in the menu'))
-                ->group('menu-link-title-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-title-label', t('Link title'))
-                    ->text('title_link', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'placeholder' => t('Example: Home'),
-                        'required'    => 1,
-                        'value'       => $query[ 'title_link' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-link-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-link-label', t('Link'))
-                    ->text('link', [
-                        'class'       => 'form-control',
-                        'placeholder' => t('Example: node/1 or http://foo.com'),
-                        'required'    => 1,
-                        'value'       => $query[ 'link' ] . (!empty($query['fragment']) ? '#' . $query['fragment'] : '')
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-icon-label', t('Icon'), [
-                        'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
-                        'for'          => 'icon'
-                    ])
-                    ->group('menu-link-icon-group', 'div', function ($form) use ($query) {
-                        $form->text('icon', [
-                            'class'       => 'form-control text_icon',
-                            'maxlength'   => 255,
-                            'placeholder' => 'fa fa-bars, fa fa-home...',
-                            'value'       => $query[ 'icon' ],
-                        ])
-                        ->html('btn-icon', '<button:css:attr>:_content</button>', [
-                            '_content'     => '<i class="' . $query[ 'icon' ] . '" aria-hidden="true"></i>',
-                            'aria-label'   => t('Rendering'),
-                            'class'        => 'btn render_icon',
-                            'type'         => 'button',
-                            'data-tooltip' => t('Rendering')
-                        ]);
-                    }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('menu-link-target-group', 'div', function ($form) use ($query) {
-                    $form->label('menu-link-target-label', t('Target'))
-                    ->select('target_link', self::getTarget(), [
-                        'class'    => 'form-control',
-                        'required' => 1,
-                        'selected' => $query[ 'target_link' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token('token_link_edit')
-            ->html('cancel', '<button:css:attr>:_content</button>', [
-                '_content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ])
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
+            ->content($query)
+            ->make();
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
 
