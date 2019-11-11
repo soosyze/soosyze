@@ -1,19 +1,14 @@
 {
     "install": {
         "class": "SoosyzeCore\\System\\Services\\Install",
-        "arguments": [
-            "@router"
-        ],
+        "arguments": ["@router"],
         "hooks": {
             "app.404": "hook404"
         }
     },
     "install.hook.install": {
         "class": "SoosyzeCore\\System\\Services\\HookStep",
-        "arguments": [
-            "@core",
-            "@router"
-        ],
+        "arguments": ["@core", "@router"],
         "hooks": {
             "step": "hookStep",
             "step.profil": "hookProfil",

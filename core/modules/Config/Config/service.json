@@ -1,9 +1,7 @@
 {
     "config.hook.user": {
         "class": "SoosyzeCore\\Config\\Services\\HookUser",
-        "arguments": [
-            "@core"
-        ],
+        "arguments": ["@core"],
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.config.index" : "hookConfigIndex",

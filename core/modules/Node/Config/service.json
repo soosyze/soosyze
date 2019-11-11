@@ -9,10 +9,7 @@
     },
     "node.hook.menu": {
         "class": "SoosyzeCore\\Node\\Services\\HookMenu",
-        "arguments": [
-            "@schema",
-            "@query"
-        ],
+        "arguments": ["@schema", "@query"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
@@ -30,9 +27,7 @@
     },
     "node.hook.user": {
         "class": "SoosyzeCore\\Node\\Services\\HookUser",
-        "arguments": [
-            "@query"
-        ],
+        "arguments": ["@query"],
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.node.show": "hookNodeSow",

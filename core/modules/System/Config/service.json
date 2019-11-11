@@ -15,12 +15,7 @@
     },
     "system.hook.app": {
         "class": "SoosyzeCore\\System\\Services\\HookApp",
-        "arguments": [
-            "@router",
-            "@config",
-            "@template",
-            "@core"
-        ],
+        "arguments": ["@router", "@config", "@template", "@core"],
         "hooks": {
             "app.response.before": "hookSys",
             "app.403": "hooks403",
@@ -46,12 +41,7 @@
     },
     "system.hook.config": {
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
-        "arguments": [
-            "@router",
-            "@template",
-            "@file",
-            "@translate"
-        ],
+        "arguments": ["@router", "@template", "@file", "@translate"],
         "hooks": {
             "config.edit.menu": "menu",
             "config.edit.system.form.generate": "form",
