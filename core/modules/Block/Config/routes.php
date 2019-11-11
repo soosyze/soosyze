@@ -1,6 +1,6 @@
 <?php
 
-use Soosyze\Route as R;
+use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Block\Controller');
 
@@ -12,4 +12,4 @@ R::get('block.create', 'block/:section', 'Block@create', [ ':section' => '[a-z-_
 R::post('block.store', 'block/:section', 'Block@store', [ ':section' => '[a-z-_]+' ]);
 R::get('block.edit', 'block/:id/edit', 'Block@edit', [ ':id' => '\d+' ]);
 R::post('block.update', 'block/:id', 'Block@update', [ ':id' => '\d+' ]);
-R::post('block.delete', 'block/:id/delete', 'Block@delete', [ ':id' => '\d+' ]);
+R::delete('block.delete', 'block/:id/delete', 'Block@delete', [ ':id' => '\d+' ]);

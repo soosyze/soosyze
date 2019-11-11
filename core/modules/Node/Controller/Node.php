@@ -11,7 +11,7 @@ class Node extends \Soosyze\Controller
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
-        $this->dirRoutes    = dirname(__DIR__) . '/Config/routes.php';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 

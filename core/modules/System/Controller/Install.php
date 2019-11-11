@@ -28,7 +28,7 @@ class Install extends \Soosyze\Controller
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
-        $this->dirRoutes    = dirname(__DIR__) . '/Config/routes-install.php';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routes-install.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/Install/';
     }
 

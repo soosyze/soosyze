@@ -12,7 +12,7 @@ class Config extends \Soosyze\Controller
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
-        $this->dirRoutes    = dirname(__DIR__) . '/Config/routes.php';
+        $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
     }
 
     public function index($req)

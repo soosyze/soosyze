@@ -1,6 +1,6 @@
 <?php
 
-use Soosyze\Route as R;
+use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\System\Controller');
 
