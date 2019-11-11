@@ -15,8 +15,8 @@ class Section extends \Soosyze\Controller
     {
         $styles  = self::template()->getBlock('this')->getVar('styles');
         $scripts = self::template()->getBlock('this')->getVar('scripts');
-        $styles  .= '<link rel="stylesheet" href="' . self::core()->getPath('modules', 'modules/core') . '/Block/Assets/styles.css">';
-        $scripts .= '<script src="' . self::core()->getPath('modules', 'modules/core') . '/Block/Assets/scripts.js"></script>';
+        $styles  .= '<link rel="stylesheet" href="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/styles.css">';
+        $scripts .= '<script src="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/scripts.js"></script>';
 
         return self::template()
                 ->getTheme($theme)

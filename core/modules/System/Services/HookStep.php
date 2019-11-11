@@ -52,7 +52,7 @@ class HookStep
 
     public function getProfils()
     {
-        $assets = $this->core->getPath('modules') . '/System/Assets/img/';
+        $assets = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/img/';
         $profil = [
             'site'      => [
                 'key'         => 'site',
