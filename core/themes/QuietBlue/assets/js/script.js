@@ -21,11 +21,11 @@ $(function () {
     });
     /* MODAL */
     var target = '';
-    $('[data-toogle="modal"]').click(function (evt) {
+    $(document).delegate('[data-toogle="modal"]', 'click', function (evt) {
         evt.preventDefault();
         target = $(this).data('target');
-        $(target).show();
         $('body').toggleClass('modal-open');
+        $(target).show();
     });
     $(window).click(function (evt) {
         if (evt.target.className === 'modal' || evt.target.className === 'close') {
