@@ -57,27 +57,11 @@ class Link extends \Soosyze\Controller
 
     public function store($nameMenu, $req)
     {
-        $post = $req->getParsedBody();
-
-        $validator = (new Validator())
-            ->setRules([
-                'title_link'        => 'required|string|max:255|striptags',
-                'link'              => 'required',
-                'icon'              => '!required|max:255|fontawesome:solid,brands',
-                'target_link'       => 'required|inArray:_blank,_self,_parent,_top',
-                'token_link_create' => 'required|token'
-            ])
-            ->setLabel([
-                'title_link'        => t('Link title'),
-                'link'              => t('Link'),
-                'icon'              => t('Icon'),
-                'target_link'       => t('Target'),
-            ])
-            ->setInputs($post);
-
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->get404($req);
         }
+        $post         = $req->getParsedBody();
+        $validator    = $this->getValidator($req);
         $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
 
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
@@ -173,25 +157,8 @@ class Link extends \Soosyze\Controller
         if (!self::menu()->find($id)) {
             return $this->get404($req);
         }
-
-        $post = $req->getParsedBody();
-
-        $validator = (new Validator())
-            ->setRules([
-                'title_link'      => 'required|string|max:255|htmlsc',
-                'icon'            => '!required|max:255|fontawesome:solid,brands',
-                'link'            => 'required',
-                'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
-                'token_link_edit' => 'required|token'
-            ])
-            ->setLabel([
-                'title_link'        => t('Link title'),
-                'link'              => t('Link'),
-                'icon'              => t('Icon'),
-                'target_link'       => t('Target'),
-            ])
-            ->setInputs($post);
-
+        $post         = $req->getParsedBody();
+        $validator    = $this->getValidator($req);
         $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
 
         $this->container->callHook('menu.link.update.validator', [ &$validator ]);
@@ -266,14 +233,23 @@ class Link extends \Soosyze\Controller
 
         return new Redirect($route);
     }
-    
-    protected static function getTarget()
+
+    protected function getValidator($req)
     {
-        return [
-            [ 'value' => '_blank', 'label' => '(_blank) ' . t('Load in a new window') ],
-            [ 'value' => '_self', 'label' => '(_self) ' . t('Load in the same window') ],
-            [ 'value' => '_parent', 'label' => '(_parent) ' . t('Load into the parent frameset') ],
-            [ 'value' => '_top', 'label' => '(_top) ' . t('Load in the whole body of the window') ]
-        ];
+        return (new Validator())
+                ->setRules([
+                    'title_link'      => 'required|string|max:255|htmlsc',
+                    'icon'            => '!required|max:255|fontawesome:solid,brands',
+                    'link'            => 'required',
+                    'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
+                    'token_link_form' => 'required|token'
+                ])
+                ->setLabel([
+                    'title_link'  => t('Link title'),
+                    'link'        => t('Link'),
+                    'icon'        => t('Icon'),
+                    'target_link' => t('Target'),
+                ])
+                ->setInputs($req->getParsedBody());
     }
 }
