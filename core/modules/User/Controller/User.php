@@ -110,9 +110,8 @@ class User extends \Soosyze\Controller
     {
         $post   = $req->getParsedBody();
         $files  = $req->getUploadedFiles();
-        $server = $req->getServerParams();
 
-        if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
+        if ($req->isMaxSize()) {
             $_SESSION[ 'messages' ][ 'errors' ] = [
                 t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
             ];
@@ -286,10 +285,9 @@ class User extends \Soosyze\Controller
 
         $post   = $req->getParsedBody();
         $files  = $req->getUploadedFiles();
-        $server = $req->getServerParams();
         $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
-        if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
+        if ($req->isMaxSize()) {
             $_SESSION[ 'messages' ][ 'errors' ] = [
                 t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
             ];

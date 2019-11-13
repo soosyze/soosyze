@@ -108,12 +108,9 @@ class Config extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $server = $req->getServerParams();
-        if (empty($post) && empty($files) && isset($server[ 'CONTENT_LENGTH' ]) && $server[ 'CONTENT_LENGTH' ] > 0) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-            $_SESSION[ 'errors_keys' ]          = [];
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
+            $_SESSION[ 'errors_keys' ]            = [];
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
