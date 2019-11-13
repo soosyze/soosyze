@@ -1,7 +1,10 @@
 
-<a class="btn btn-primary" href="<?php echo $link_add; ?>">
-    <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a new role'); ?>
-</a>
+<div class="action_bar">
+    <a class="btn btn-primary" href="<?php echo $link_add; ?>">
+        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a new role'); ?>
+    </a>
+</div>
+
 <fieldset class="responsive">
     <legend><?php echo t('User Roles'); ?></legend>
     <table class="table table-hover">

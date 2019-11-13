@@ -1,7 +1,9 @@
 
-<a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-    <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
-</a>
+<div class="action_bar">
+    <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
+        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
+    </a>
+</div>
 <fieldset class="responsive">
     <legend><?php echo t('My contents'); ?></legend>
     <table class="table table-hover table-node">

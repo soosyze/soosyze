@@ -4,9 +4,11 @@
         <?php echo $section['submenu']; ?>
     </div>
     <div class="col-md-9">
-        <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
-            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a link'); ?>
-        </a>
+        <div class="action_bar">
+            <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
+                <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a link'); ?>
+            </a>
+        </div>
         <?php echo $form->form_open(); ?>
 
         <fieldset class="responsive">

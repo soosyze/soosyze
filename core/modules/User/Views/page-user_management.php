@@ -1,9 +1,12 @@
 
-<ul class="nav nav-tabs">
+<div class="action_bar">
+    <ul class="nav nav-tabs">
     <?php foreach ($menu as $link): ?>
         <li><a href="<?php echo $link['link'] ?>"><?php echo $link['title_link']; ?></a></li>
     <?php endforeach; ?>
-</ul>
+
+    </ul>
+</div>
 <fieldset class="responsive">
     <legend><?php echo t('User Management'); ?></legend>
     <table class="table table-hover table-user_management">

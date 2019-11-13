@@ -25,6 +25,9 @@
         position: sticky;
     }
 }
+.action_bar {
+    margin-bottom: 1em;
+}
 
 
 /* --------------------------- */
