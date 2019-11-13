@@ -34,27 +34,39 @@
 /* -------- FORM FLEX-- ------ */
 /* --------------------------- */
 .form-group-flex{
+    align-items: stretch;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-align: stretch;
+    position: relative;
+    width: 100%;
+}
+.form-group-flex > input{
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin-bottom: 0;
+    position: relative;
+    width: 1%;
+}
+.form-flex-prepend{
+    display: -ms-flexbox;
     display: flex;
 }
-.form-group-flex input {
-    -webkit-border-top-right-radius: 0;
-    -webkit-border-bottom-right-radius: 0;
-    -moz-border-radius-topright: 0;
-    -moz-border-radius-bottomright: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: 0;
+.form-group-flex span{
+    background-color: #eee;
+    padding: .5em;
 }
-.form-group-flex button{
-    -webkit-border-top-left-radius: 0;
-    -webkit-border-bottom-left-radius: 0;
-    -moz-border-radius-topleft: 0;
-    -moz-border-radius-bottomleft: 0;
+.form-group-flex > button,
+.form-group-flex > .form-control:not(:first-child){
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left: 0;
-    font-weight: bold;
-    padding: 0em 1em;
+}
+.form-group-flex > button,
+.form-group-flex > .form-control:not(:last-child){
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 
