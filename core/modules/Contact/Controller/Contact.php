@@ -55,8 +55,6 @@ class Contact extends \Soosyze\Controller
 
     public function formCheck($req)
     {
-        $post = $req->getParsedBody();
-
         $validator = (new Validator())
             ->setRules([
                 'name'          => 'required|string|max:255',
@@ -73,7 +71,7 @@ class Contact extends \Soosyze\Controller
                 'message'       => t('Message'),
                 'copy'          => t('Send me a copy of the mail'),
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         $this->container->callHook('contact.validator', [ &$validator ]);
 

@@ -73,15 +73,13 @@ class Login extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post = $req->getParsedBody();
-
         $validator = (new Validator())
             ->setRules([
                 'email'           => 'required|email|max:254',
                 'password'        => 'required|string',
                 'token_user_form' => 'required|token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             self::user()->login($validator->getInput('email'), $validator->getInput('password'));
@@ -158,14 +156,12 @@ class Login extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post = $req->getParsedBody();
-
         $validator = (new Validator())
             ->setRules([
                 'email'           => 'required|email|max:254',
                 'token_user_form' => 'required|token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             $query = self::user()->getUserActived($validator->getInput('email'));

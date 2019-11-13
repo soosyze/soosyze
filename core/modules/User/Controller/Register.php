@@ -66,7 +66,6 @@ class Register extends \Soosyze\Controller
     public function store($req)
     {
         $route     = self::router()->getRoute('user.register.create');
-        $post      = $req->getParsedBody();
         $validator = (new Validator())
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
@@ -81,7 +80,7 @@ class Register extends \Soosyze\Controller
                 'password_new'     => t('New Password'),
                 'password_confirm' => t('Confirmation of the new password')
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if(self::config()->get('settings.rgpd_show', false)) {
             $validator

@@ -99,10 +99,12 @@ class Install extends \Soosyze\Controller
     public function language($id, $req)
     {
         $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
-        $validator = (new Validator())->setRules([
+        $validator = (new Validator())
+            ->setRules([
                 'lang'           => 'inarray:' . $langs,
                 'token_language' => 'token'
-            ])->setInputs($req->getParsedBody());
+            ])
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'lang' ] = $validator->getInput('lang');

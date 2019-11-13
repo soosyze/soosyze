@@ -83,9 +83,8 @@ class Config extends \Soosyze\Controller
 
     public function update($id, $req)
     {
-        $post      = $req->getParsedBody();
-        $files     = $req->getUploadedFiles();
-        $validator = (new Validator())->setInputs($post + $files);
+        $validator = (new Validator())
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
         $dataFiles = [];
         self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
 

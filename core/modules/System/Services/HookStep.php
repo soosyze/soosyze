@@ -121,14 +121,13 @@ class HookStep
 
     public function hookProfilCheck($id, $req)
     {
-        $post      = $req->getParsedBody();
         $profils   = array_keys($this->getProfils());
         $validator = (new Validator())
             ->setRules([
                 'profil'        => 'required|inarray:' . implode(',', $profils),
                 'token_install' => 'token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'inputs' ][ $id ] = [ 'profil' => $validator->getInput('profil') ];
@@ -226,7 +225,6 @@ class HookStep
 
     public function hookUserCheck($id, $req)
     {
-        $post      = $req->getParsedBody();
         $validator = (new Validator())
             ->setRules([
                 'username'         => 'required|string|max:255|htmlsc',
@@ -237,7 +235,7 @@ class HookStep
                 'password'         => 'required|string',
                 'password-confirm' => 'required|string|equal:@password'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'inputs' ][ $id ] = [

@@ -189,8 +189,6 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post = $req->getParsedBody();
-
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
@@ -198,7 +196,7 @@ class Node extends \Soosyze\Controller
                 'published'         => 'bool',
                 'token_node_create' => 'token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
         /* Test des champs personnalisé de la node. */
         foreach ($query as $value) {
             $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
@@ -393,8 +391,6 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post = $req->getParsedBody();
-
         $node_type = self::query()
             ->from('node_type')
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
@@ -410,7 +406,7 @@ class Node extends \Soosyze\Controller
                 'published'       => 'bool',
                 'token_node_edit' => 'token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
         /* Test des champs personnalisé de la node. */
         foreach ($node_type as $value) {
             $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);

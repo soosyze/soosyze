@@ -268,7 +268,6 @@ class Block extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post      = $req->getParsedBody();
         $validator = (new Validator())
             ->setRules([
                 'title'            => '!required|string|max:255',
@@ -280,12 +279,12 @@ class Block extends \Soosyze\Controller
                 "token_block_$id"  => 'token'
             ])
             ->setLabel([
-                'title'            => t('Title'),
-                'content'          => t('Content'),
-                'pages'            => t('List of pages'),
-                'roles'            => t('User Roles')
+                'title'   => t('Title'),
+                'content' => t('Content'),
+                'pages'   => t('List of pages'),
+                'roles'   => t('User Roles')
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         $this->container->callHook('block.update.validator', [ &$validator ]);
 

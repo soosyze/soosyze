@@ -111,14 +111,13 @@ class ModulesManager extends \Soosyze\Controller
 
     public function update($req)
     {
-        $post      = $req->getParsedBody();
         $route     = self::router()->getRoute('system.module.edit');
         $validator = (new Validator())
             ->setRules([
                 'modules'           => '!required|array',
                 'token_module_edit' => 'token'
             ])
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if (!$validator->isValid()) {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();

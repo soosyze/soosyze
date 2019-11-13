@@ -59,7 +59,6 @@ class Menu extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $post      = $req->getParsedBody();
         $validator = new Validator();
         foreach ($links as $link) {
             $validator
@@ -68,7 +67,7 @@ class Menu extends \Soosyze\Controller
                 ->addRule("weight-{$link[ 'id' ]}", 'required|int|min:1|max:50');
         }
         $validator->addRule('token_menu', 'token')
-            ->setInputs($post);
+            ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             foreach ($links as $link) {
