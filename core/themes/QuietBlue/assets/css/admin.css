@@ -73,6 +73,7 @@
 /* --------------------------- */
 #nav_config ul{
     padding: 0;
+    margin: 0;
 }
 #nav_config ul li{
     list-style: none;
@@ -179,8 +180,8 @@
     font-size: .8em;
 }
 #role_color_btn{
-    color: #FFF;
-    text-shadow: rgba(0, 0, 0, 0.75) 0px 0px 1px;
+    color: #fff;
+    text-shadow: rgba(0,0,0,.75) 0 0 1px;
 }
 
 
@@ -444,5 +445,5 @@ label[data-tooltip]:before {
     margin: 0;
 }
 .modal-body {
-    padding: 2px 16px;
+    padding: 16px 16px;
 }

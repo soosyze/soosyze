@@ -12,7 +12,7 @@
         "soosyze": {
             "title": "Block",
             "package": "Core",
-            "controller":  "SoosyzeCore\\Block\\Controller\\Block",
+            "controller": "SoosyzeCore\\Block\\Controller\\Block",
             "icon": {
                 "name": "fas fa-columns",
                 "background-color": "#5cb85c",

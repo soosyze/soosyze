@@ -132,7 +132,7 @@ class Block extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        $data = self::query()->from('block')->where('block_id', '==', $id)->fetch();
+        $data            = self::query()->from('block')->where('block_id', '==', $id)->fetch();
         $data[ 'roles' ] = explode(',', $data[ 'roles' ]);
 
         $this->container->callHook('block.edit.form.data', [ &$data ]);

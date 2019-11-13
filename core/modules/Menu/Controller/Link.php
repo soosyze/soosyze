@@ -10,7 +10,7 @@ class Link extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function create($nameMenu, $req)
@@ -68,11 +68,11 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid() && $isUrlOrRoute !== false) {
             $data = [
-                'key'         => $isUrlOrRoute['key'],
+                'key'         => $isUrlOrRoute[ 'key' ],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $isUrlOrRoute['link'],
-                'fragment'    => $isUrlOrRoute['fragment'],
+                'link'        => $isUrlOrRoute[ 'link' ],
+                'fragment'    => $isUrlOrRoute[ 'fragment' ],
                 'target_link' => $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
@@ -97,7 +97,7 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute['is_valid']) {
+        if (!$isUrlOrRoute[ 'is_valid' ]) {
             $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
@@ -122,7 +122,7 @@ class Link extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.link.update', [
             ':menu' => $name,
-            ':id' => $id
+            ':id'   => $id
         ]);
 
         $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
@@ -165,11 +165,11 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid() && $isUrlOrRoute !== false) {
             $data = [
-                'key'         => $isUrlOrRoute['key'],
+                'key'         => $isUrlOrRoute[ 'key' ],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $isUrlOrRoute['link'],
-                'fragment'    => $isUrlOrRoute['fragment'],
+                'link'        => $isUrlOrRoute[ 'link' ],
+                'fragment'    => $isUrlOrRoute[ 'fragment' ],
                 'target_link' => $validator->getInput('target_link')
             ];
 
@@ -191,14 +191,14 @@ class Link extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute['is_valid']) {
+        if (!$isUrlOrRoute[ 'is_valid' ]) {
             $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
             $_SESSION[ 'errors_keys' ][]                        = 'link';
         }
 
         $route = self::router()->getRoute('menu.link.edit', [
             ':menu' => $nameMenu,
-            ':id' => $id
+            ':id'   => $id
         ]);
 
         return new Redirect($route);

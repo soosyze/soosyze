@@ -11,4 +11,4 @@ R::get('menu.link.create', 'admin/menu/:menu/link', 'Link@create', [ ':menu' => 
 R::post('menu.link.store', 'admin/menu/:menu/link', 'Link@store', [ ':menu' => '[a-z-]+' ]);
 R::get('menu.link.edit', 'admin/menu/:menu/link/:id/edit', 'Link@edit', [ ':menu' => '[a-z-]+', ':id' => '\d+' ]);
 R::post('menu.link.update', 'admin/menu/:menu/link/:id/edit', 'Link@update', [ ':menu' => '[a-z-]+', ':id' => '\d+' ]);
-R::post('menu.link.delete', 'admin/menu/:menu/link/:id/delete', 'Link@delete', [ ':menu' => '[a-z-]+', ':id' => '\d+' ]);
+R::get('menu.link.delete', 'admin/menu/:menu/link/:id/delete', 'Link@delete', [ ':menu' => '[a-z-]+', ':id' => '\d+' ]);

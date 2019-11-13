@@ -4,7 +4,7 @@
         "arguments": ["@core"],
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.config.index" : "hookConfigIndex",
+            "route.config.index": "hookConfigIndex",
             "route.config.edit": "hookConfigManage",
             "route.config.update": "hookConfigManage"
         }

@@ -82,12 +82,12 @@ class Register extends \Soosyze\Controller
             ])
             ->setInputs($req->getParsedBody());
 
-        if(self::config()->get('settings.rgpd_show', false)) {
+        if (self::config()->get('settings.rgpd_show', false)) {
             $validator
                 ->addRule('rgpd', 'accepted')
                 ->addLabel('rgpd', t('Accepter la politique de confidentialité'));
         }
-        if(self::config()->get('settings.terms_of_service_show', false)) {
+        if (self::config()->get('settings.terms_of_service_show', false)) {
             $validator
                 ->addRule('terms_of_service', 'accepted')
                 ->addLabel('terms_of_service', t('Accepter les conditions générale d\'utilisation'));
