@@ -250,3 +250,6 @@ textarea{
 .permission-module {
     border-bottom: #9769ac 3px solid;
 }
+#breadcrumb{
+    margin-bottom: 1em;
+}

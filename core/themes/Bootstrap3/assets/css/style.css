@@ -34,3 +34,6 @@ h3{
 textarea{
     resize:vertical;
 }
+#breadcrumb{
+    margin-bottom: 1em;
+}

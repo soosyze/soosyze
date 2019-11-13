@@ -1,0 +1,80 @@
+{
+    "filemanager": {
+        "class": "SoosyzeCore\\FileManager\\Services\\FileManager",
+        "arguments": ["@core", "@router", "@filemanager.hook.user"]
+    },
+    "fileprofil": {
+        "class": "SoosyzeCore\\FileManager\\Services\\FileProfil",
+        "arguments": [
+            "@query"
+        ] 
+    },
+    "filemanager.filter.iterator": {
+        "class": "SoosyzeCore\\FileManager\\Services\\FilterManagerIterator",
+        "arguments": ["@filemanager.hook.user"]
+    },
+    "filemanager.install": {
+        "class": "SoosyzeCore\\FileManager\\Installer",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
+        }
+    },
+    "filemanager.hook.app": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookApp",
+        "arguments": ["@core"],
+        "hooks": {
+            "app.response.after": "hookReponseAfter"
+        }
+    },
+    "filemanager.hook.config": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookConfig",
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.filemanager.form.generate": "form",
+            "config.update.filemanager.validator": "validator",
+            "config.update.filemanager.before": "before"
+        }
+    },
+    "filemanager.hook.menu": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
+        "arguments": [
+            "@router",
+            "@fileprofil"
+        ],
+        "hooks": {
+            "user.menu": "hookUsersMenu",
+            "user.manage.menu": "hookUsersManagementMenu"
+        }
+    },
+    "filemanager.hook.user": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookUser",
+        "arguments": ["@user", "@fileprofil"],
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.filemanager.profil.admin": "hookFileAdmin",
+            "route.filemanager.profil.create": "hookFileAdmin",
+            "route.filemanager.profil.store": "hookFileAdmin",
+            "route.filemanager.profil.edit": "hookFileAdmin",
+            "route.filemanager.profil.update": "hookFileAdmin",
+            "route.filemanager.profil.remove": "hookFileAdmin",
+            "route.filemanager.profil.delete": "hookFileAdmin",
+            "route.filemanager.file.show": "hookFileShow",
+            "route.filemanager.file.create": "hookFileStore",
+            "route.filemanager.file.store": "hookFileStore",
+            "route.filemanager.file.edit": "hookFileUpdate",
+            "route.filemanager.file.update": "hookFileUpdate",
+            "route.filemanager.file.remove": "hookFileDelete",
+            "route.filemanager.file.delete": "hookFileDelete",
+            "route.filemanager.file.download": "hookFileDownlod",
+            "route.filemanager.admin": "hookFolderAdmin",
+            "route.filemanager.show": "hookFolderShow",
+            "route.filemanager.folder.create": "hookFolderStore",
+            "route.filemanager.folder.store": "hookFolderStore",
+            "route.filemanager.folder.edit": "hookFolderUpdate",
+            "route.filemanager.folder.update": "hookFolderUpdate",
+            "route.filemanager.folder.remove": "hookFolderDelete",
+            "route.filemanager.folder.delete": "hookFolderDelete"
+        }
+    }
+}

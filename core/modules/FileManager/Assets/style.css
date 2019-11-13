@@ -1,0 +1,75 @@
+#table-file {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+.dropfile{
+    font-size: 1.25rem;
+    background-color: #eee;
+    padding: 3em;
+    outline: 2px dashed #ccc;
+    outline-offset: -10px;
+    margin-bottom: 1em;
+    text-align: center;
+    -webkit-transition: background-color .2s, outline-offset .2s; /* Safari */
+    transition: background-color .2s, outline-offset .2s;
+}
+.dropfile .choose{
+    color: #0086b3;
+    cursor: pointer;
+}
+.file{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto 5em;
+    background-image: url(/core/Modules/FileManager/Assets/icon/file.svg);
+    display:inline-block;
+    width: 5em;
+    height: 6em;
+    cursor:pointer;
+    text-align: center;
+}
+.ext-name{
+    position: relative;
+    bottom: -5.1em;
+    color: #fff;
+    font-size: .8em;
+}
+.ext{
+    color: #bbb;
+}
+.ai, .eps{ background-image: url(/core/Modules/FileManager/Assets/icon/ai.svg); }
+.dir{ background-image: url(/core/Modules/FileManager/Assets/icon/dir.svg); }
+.gif, .ico, .jpg, .jpeg, .png, .svg{ background-image: url(/core/Modules/FileManager/Assets/icon/jpg.svg); }
+.json, .css{ background-image: url(/core/Modules/FileManager/Assets/icon/json.svg); }
+.mp3{ background-image: url(/core/Modules/FileManager/Assets/icon/mp3.svg); }
+.mp4, .avi, .mpeg, .webm{ background-image: url(/core/Modules/FileManager/Assets/icon/mp4.svg); }
+.pdf{ background-image: url(/core/Modules/FileManager/Assets/icon/pdf.svg); }
+.odp, .pptx, .ppt{ background-image: url(/core/Modules/FileManager/Assets/icon/ppt.svg); }
+.txt, .odt, .docx, .doc{ background-image: url(/core/Modules/FileManager/Assets/icon/txt.svg); }
+.xml, .xhtml, .html{ background-image: url(/core/Modules/FileManager/Assets/icon/xhtml.svg); }
+.ods, .xlsx, .xls, csv{ background-image: url(/core/Modules/FileManager/Assets/icon/xls.svg); }
+.zip, .gzip, .tar, .rar{ background-image: url(/core/Modules/FileManager/Assets/icon/zip.svg); }
+
+.modal-info{
+    word-wrap: break-word;
+}
+.actions-file a,
+.actions-file button{
+    margin-bottom: .5em;
+}
+.actions-file i {
+    width: 1em;
+}
+.modal-visulaize {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    padding: 6px;;
+    text-align: center;
+    vertical-align: middle;
+    min-height: 300px;
+}
+.modal-visulaize .file {
+    width: 100%;
+    height: 300px;
+    background-size:  auto 300px;
+}

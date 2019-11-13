@@ -16,13 +16,14 @@ class Install extends \Soosyze\Controller
      * @var array
      */
     private $modules = [
-        'Config'  => 'SoosyzeCore\\Config\\',
-        'Contact' => 'SoosyzeCore\\Contact\\',
-        'Node'    => 'SoosyzeCore\\Node\\',
-        'Menu'    => 'SoosyzeCore\\Menu\\',
-        'System'  => 'SoosyzeCore\\System\\',
-        'User'    => 'SoosyzeCore\\User\\',
-        'Block'   => 'SoosyzeCore\\Block\\'
+        'Config'      => 'SoosyzeCore\\Config\\',
+        'Contact'     => 'SoosyzeCore\\Contact\\',
+        'Node'        => 'SoosyzeCore\\Node\\',
+        'Menu'        => 'SoosyzeCore\\Menu\\',
+        'System'      => 'SoosyzeCore\\System\\',
+        'User'        => 'SoosyzeCore\\User\\',
+        'Block'       => 'SoosyzeCore\\Block\\',
+        'FileManager' => 'SoosyzeCore\\FileManager\\'
     ];
 
     public function __construct()

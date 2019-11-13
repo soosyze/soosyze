@@ -554,3 +554,10 @@ ul.icons li a::before {
 ul.icons li a i {
     display: none;
 }
+#breadcrumb{
+    margin-bottom: 1em;
+    padding-left: 0;
+}
+#breadcrumb li {
+    display: inline-block;
+}
