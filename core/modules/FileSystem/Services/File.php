@@ -10,11 +10,57 @@ use Soosyze\Components\Validator\Validator;
 class File
 {
     /**
-     *
      * @var \Soosyze\App
      */
     protected $core;
-    
+
+    /**
+     * Le fichier à déplacer.
+     *
+     * @var UploadedFileInterface
+     */
+    protected $file;
+
+    /**
+     * Le champ de fichier caché.
+     *
+     * @var string
+     */
+    protected $file_hidden;
+
+    /**
+     * Le nom du fichier à déplacer.
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * L'extension du fichier a déplacer.
+     *
+     * @var string
+     */
+    protected $ext;
+
+    /**
+     * Si le répertoire doit-être corrigé.
+     *
+     * @var bool
+     */
+    protected $resolve_dir = false;
+
+    /**
+     * Si le nom de fichier doit-être corrigé.
+     *
+     * @var string
+     */
+    protected $resolve_name = false;
+
+    /**
+     * Le répertoire d'envoie.
+     *
+     * @var string
+     */
     protected $dir = null;
 
     public function __construct($core)
@@ -48,18 +94,19 @@ class File
         }
 
         $form->group("file-input-$name-group", 'div', function ($form) use ($name, $content, $attr) {
-            $form->file($name, [
-                    'style'    => 'display:none',
-                    'onchange' => "document.getElementById('file-name-$name').value = this.files[0].name;"
-                    . "document.getElementById('file-reset-$name').disabled = false;"
-                ])
+            $form
                 ->text("file-name-$name", [
                     'aria-label' => 'visualisation du chemin du fichier',
                     'class'      => 'form-control form-file-name',
                     'onclick'    => "document.getElementById('$name').click();",
                     'value'      => $content
                 ])
-                ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr);
+                ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr)
+                ->file($name, [
+                    'style'    => 'display:none',
+                    'onchange' => "document.getElementById('file-name-$name').value = this.files[0].name;"
+                    . "document.getElementById('file-reset-$name').disabled = false;"
+            ]);
         }, [ 'class' => 'form-group-flex' ]);
     }
 
@@ -68,60 +115,76 @@ class File
         $validator->addIntput("file-reset-$name", '');
     }
 
-    public function cleanPath($path, UploadedFileInterface $file)
+    public function add(UploadedFileInterface $file, $fileHidden = '')
     {
-        $name = $file->getClientFilename();
+        $clone              = clone $this;
+        $clone->file        = $file;
+        $clone->file_hidden = $fileHidden;
+        $ClientFilename     = $file->getClientFilename();
+        $clone->ext         = Util::getFileExtension($ClientFilename);
+        $name               = pathinfo($ClientFilename, PATHINFO_FILENAME);
+        $clone->name        = Util::strSlug($name);
+        $clone->dir = $this->core->getSettingEnv('files_public', 'app/files');
 
-        return $path . Util::DS . Util::strSlug($name);
+        return $clone;
     }
 
-    public function cleanPathAndMoveTo($path, UploadedFileInterface $file)
+    public function setName($name)
     {
-        $targetPath = $this->cleanPath($path, $file);
-        $file->moveTo($targetPath);
+        $clone       = clone $this;
+        $clone->name = Util::strSlug($name);
 
-        return $targetPath;
+        return $clone;
     }
 
-    public function add($file, $fileHidden = '')
+    public function setPath($path = null)
     {
-        $this->file        = $file;
-        $this->file_hidden = $fileHidden;
-        $ClientFilename    = $file->getClientFilename();
-        $this->ext         = Util::getFileExtension($ClientFilename);
-
-        return $this;
-    }
-
-    public function moveTo($name, $path = null)
-    {
-        $this->name = Util::strSlug($name);
-        $this->dir = $path === null
+        $clone      = clone $this;
+        $clone->dir = $path === null
             ? $this->core->getSettingEnv('files_public', 'app/files')
             : $path;
 
-        return $this;
+        return $clone;
+    }
+
+    public function setResolvePath($resolve = true)
+    {
+        $clone              = clone $this;
+        $clone->resolve_dir = $resolve;
+
+        return $clone;
+    }
+
+    public function setResolveName($resolve = true)
+    {
+        $clone               = clone $this;
+        $clone->resolve_name = $resolve;
+
+        return $clone;
     }
 
     public function callGet(callable $callback)
     {
-        $this->call_get = $callback;
+        $clone           = clone $this;
+        $clone->call_get = $callback;
 
-        return $this;
+        return $clone;
     }
 
     public function callMove(callable $callback)
     {
-        $this->call_move = $callback;
+        $clone            = clone $this;
+        $clone->call_move = $callback;
 
-        return $this;
+        return $clone;
     }
 
     public function callDelete(callable $callback)
     {
-        $this->call_delete = $callback;
+        $clone              = clone $this;
+        $clone->call_delete = $callback;
 
-        return $this;
+        return $clone;
     }
 
     public function save()
@@ -130,7 +193,9 @@ class File
             return;
         }
         if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $move = "$this->dir/$this->name.$this->ext";
+            $this->resolveDir();
+            $move = $this->resolveName();
+
             $this->file->moveTo($move);
             call_user_func_array($this->call_move, [ $this->name, $move ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
@@ -147,10 +212,35 @@ class File
     public function saveOne()
     {
         if (!($this->file instanceof UploadedFileInterface)) {
-            return;
+            return '';
         }
         if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $this->file->moveTo("$this->dir/$this->name.$this->ext");
+            $this->resolveDir();
+            $move = $this->resolveName();
+            $this->file->moveTo($move);
+
+            return $move;
         }
+    }
+
+    protected function resolveDir()
+    {
+        if ($this->resolve_dir && !is_dir($this->dir)) {
+            mkdir($this->dir, 0755, true);
+        }
+    }
+
+    protected function resolveName()
+    {
+        $file = "{$this->dir}/{$this->name}.{$this->ext}";
+        if (!$this->resolve_name || !is_file($file)) {
+            return $file;
+        }
+        $i = 1;
+        while (is_file("{$this->dir}/{$this->name}_{$i}.{$this->ext}")) {
+            $i++;
+        }
+
+        return "{$this->dir}/{$this->name}_{$i}.{$this->ext}";
     }
 }

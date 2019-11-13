@@ -548,7 +548,9 @@ class User extends \Soosyze\Controller
         $key = 'picture';
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
-            ->moveTo($key, $dir)
+            ->setName($key)
+            ->setPath($dir)
+            ->setResolvePath()
             ->callGet(function ($key) use ($id) {
                 return self::user()->find($id)[ $key ];
             })

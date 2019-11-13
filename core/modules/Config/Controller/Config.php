@@ -148,7 +148,7 @@ class Config extends \Soosyze\Controller
     {
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
-            ->moveTo($key)
+            ->setName($key)
             ->callGet(function ($key) {
                 return self::config()->get("settings.$key");
             })
