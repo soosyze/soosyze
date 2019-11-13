@@ -15,10 +15,8 @@ $app = \Core::getInstance($req);
 $app->setSettings([
     'root'                => ROOT,
     'config'              => 'app/config',
-    /* Chemin des fichiers. */
-    'files'               => 'app/files',
     /* Chemin des fichiers public. */
-    'files_public'        => 'app/files/public',
+    'files_public'        => 'app/files',
     /* Chemin des modules du core. */
     'modules'             => 'core/modules',
     /* Chemin des modules contributeur. */
