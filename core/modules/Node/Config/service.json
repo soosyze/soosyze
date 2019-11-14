@@ -7,6 +7,12 @@
             "uninstall.menu": "hookUninstallMenu"
         }
     },
+    "node.hook.app": {
+        "class": "SoosyzeCore\\Node\\Services\\HookApp",
+        "hooks": {
+            "node.show.tpl": "hookResponseAfter"
+        }
+    },
     "node.hook.menu": {
         "class": "SoosyzeCore\\Node\\Services\\HookMenu",
         "arguments": ["@schema", "@query"],

@@ -83,7 +83,7 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $content = [ 'title' => '', 'published' => '' ];
+        $content = [ 'title' => '', 'published' => '', 'noindex' => '', 'nofollow' => '', 'noarchive' => '' ];
 
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
@@ -143,6 +143,31 @@ class Node extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
             })
+            ->group('node-seo-group', 'fieldset', function ($form) use ($content)
+            {
+                $form->legend('node-title-legend', t('SEO'))
+                ->group('node-noindex-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('noindex', ['checked' => $content['noindex']])
+                    ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
+                        'for' => 'noindex'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('node-nofollow-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('nofollow', ['checked' => $content['nofollow']])
+                    ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
+                        'for' => 'nofollow'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('node-noarchive-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('noarchive', ['checked' => $content['noarchive']])
+                    ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
+                        'for' => 'noarchive'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+            }, [ 'class' => 'form-group' ])
             ->group('node-publish-group', 'div', function ($form) {
                 $form->checkbox('published')
                 ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
@@ -193,6 +218,9 @@ class Node extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'title'             => 'required|string|max:255|htmlsc',
+                'noindex'           => 'bool',
+                'nofollow'          => 'bool',
+                'noarchive'         => 'bool',
                 'published'         => 'bool',
                 'token_node_create' => 'token'
             ])
@@ -214,6 +242,9 @@ class Node extends \Soosyze\Controller
                 'type'      => $type,
                 'created'   => (string) time(),
                 'changed'   => (string) time(),
+                'noindex'   => (bool) $validator->getInput('noindex'),
+                'nofollow'  => (bool) $validator->getInput('nofollow'),
+                'noarchive' => (bool) $validator->getInput('noarchive'),
                 'published' => (bool) $validator->getInput('published'),
                 'field'     => serialize($fields)
             ];
@@ -257,6 +288,8 @@ class Node extends \Soosyze\Controller
                 ->make('page.content', 'node-show.php', $this->pathViews, [
                     'fields' => unserialize($node[ 'field' ])
                 ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
+        
+        self::core()->callHook('node.show.tpl', [&$tpl, $node, $id]);
 
         if (!$node[ 'published' ]) {
             $tpl->view('page.messages', [
@@ -269,12 +302,12 @@ class Node extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        $node = self::query()
+        $content = self::query()
             ->from('node')
             ->where('id', '==', $id)
             ->fetch();
 
-        if (!$node) {
+        if (!$content) {
             return $this->get404($req);
         }
 
@@ -282,15 +315,13 @@ class Node extends \Soosyze\Controller
             ->from('node_type')
             ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
             ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $node[ 'type' ])
+            ->where('node_type', $content[ 'type' ])
             ->orderBy('field_weight', 'asc')
             ->fetchAll();
 
         if (!$query) {
             return $this->get404($req);
         }
-
-        $content = [ 'title' => $node[ 'title' ], 'published' => $node[ 'published' ] ];
 
         $this->container->callHook('node.edit.form.data', [ &$content, $id ]);
 
@@ -303,7 +334,7 @@ class Node extends \Soosyze\Controller
             'method'  => 'post',
             'action'  => self::router()->getRoute('node.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ]))
-            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id, $node) {
+            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id) {
                 $form->legend('node-title-legend', t('Fill in the following fields'))
                 ->group('node-title-group', 'div', function ($form) use ($content) {
                     $form->label('node-title-label', t('Title of the content'))
@@ -324,7 +355,7 @@ class Node extends \Soosyze\Controller
                     /* Si le contenu du champs n'existe pas alors il est déclaré vide. */
                     $content[ $key ] = isset($content[ $key ])
                         ? $content[ $key ]
-                        : unserialize($node[ 'field' ])[ $key ];
+                        : unserialize($content[ 'field' ])[ $key ];
 
                     $form->group('node-' . $id . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
                         $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
@@ -350,6 +381,31 @@ class Node extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
             })
+            ->group('node-seo-group', 'fieldset', function ($form) use ($content)
+            {
+                $form->legend('node-title-legend', t('SEO'))
+                ->group('node-noindex-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('noindex', ['checked' => $content['noindex']])
+                    ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
+                        'for' => 'noindex'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('node-nofollow-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('nofollow', ['checked' => $content['nofollow']])
+                    ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
+                        'for' => 'nofollow'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('node-noarchive-group', 'div', function ($form) use ($content)
+                {
+                    $form->checkbox('noarchive', ['checked' => $content['noarchive']])
+                    ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
+                        'for' => 'noarchive'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+            }, [ 'class' => 'form-group' ])
             ->group('node-publish-group', 'div', function ($form) use ($content) {
                 $form->checkbox('published', [ 'checked' => $content[ 'published' ] ])
                 ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
@@ -374,7 +430,7 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $node[ 'title' ]])
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $content[ 'title' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
@@ -403,6 +459,9 @@ class Node extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'title'           => 'required|string|max:255|htmlsc',
+                'noindex'         => 'bool',
+                'nofollow'        => 'bool',
+                'noarchive'       => 'bool',
                 'published'       => 'bool',
                 'token_node_edit' => 'token'
             ])
@@ -421,6 +480,9 @@ class Node extends \Soosyze\Controller
             $value = [
                 'title'     => $validator->getInput('title'),
                 'changed'   => (string) time(),
+                'noindex'   => (bool) $validator->getInput('noindex'),
+                'nofollow'  => (bool) $validator->getInput('nofollow'),
+                'noarchive' => (bool) $validator->getInput('noarchive'),
                 'published' => (bool) $validator->getInput('published'),
                 'field'     => serialize($fields)
             ];

@@ -22,6 +22,9 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('created')
                 ->string('changed')
                 ->boolean('published')
+                ->boolean('noindex')->valueDefault(false)
+                ->boolean('nofollow')->valueDefault(false)
+                ->boolean('noarchive')->valueDefault(false)
                 ->text('field');
             })
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
