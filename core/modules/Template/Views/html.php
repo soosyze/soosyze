@@ -6,6 +6,7 @@
         <title><?php echo $title; ?></title>
         <meta name="description" content="<?php echo $description; ?>"/>
         <meta name="keywords" content="<?php echo $keyboard; ?>"/>
+        <?php echo $meta; ?>
         <?php echo $styles; ?>
         <?php echo $scripts; ?>
     </head>

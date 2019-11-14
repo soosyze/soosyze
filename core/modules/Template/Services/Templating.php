@@ -103,6 +103,7 @@ class Templating extends \Soosyze\Components\Http\Response
                 'favicon'     => '',
                 'description' => '',
                 'keyboard'    => '',
+                'meta'        => '',
                 'styles'      => '',
                 'scripts'     => ''
             ])
