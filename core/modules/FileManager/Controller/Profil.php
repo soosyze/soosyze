@@ -48,12 +48,15 @@ class Profil extends \Soosyze\Controller
             $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
+        $this->container->callHook('filemanager.profil.create.form.data', [ &$content ]);
 
         $action = self::router()->getRoute('filemanager.profil.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->content($content)
             ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), [])
             ->createForm();
+
+        $this->container->callHook('filemanager.profil.create.form', [ &$form, $content ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -79,6 +82,8 @@ class Profil extends \Soosyze\Controller
     {
         $validator = $this->getValidator($req);
 
+        $this->container->callHook('filemanager.profil.store.validator', [ &$validator ]);
+        
         $validatorExtension = new Validator();
         $isValid            = $validator->isValid();
         $listExtension      = implode(',', FileManager::getWhiteList());
@@ -92,12 +97,14 @@ class Profil extends \Soosyze\Controller
 
         if ($isValid) {
             $data               = $this->getData($validator);
+            $this->container->callHook('filemanager.profil.store.before', [ $validator, &$data ]);
             self::query()
                 ->insertInto('profil_file', array_keys($data))
                 ->values($data)
                 ->execute();
             $id_permission_file = self::schema()->getIncrement('profil_file');
             $this->storeProfilRole($validator, $id_permission_file);
+            $this->container->callHook('filemanager.profil.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                               = self::router()->getRoute('filemanager.profil.admin');
@@ -121,6 +128,8 @@ class Profil extends \Soosyze\Controller
         }
         $content[ 'file_extensions' ] = explode(',', $content[ 'file_extensions' ]);
 
+        $this->container->callHook('filemanager.profil.edit.form.data', [ &$content ]);
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -132,6 +141,8 @@ class Profil extends \Soosyze\Controller
             ->content($content)
             ->createForm();
 
+        $this->container->callHook('filemanager.profil.edit.form', [ &$form, $content ]);
+        
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
@@ -160,6 +171,8 @@ class Profil extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
+        $this->container->callHook('filemanager.profil.update.validator', [ &$validator, $id ]);
+
         $validatorExtension = new Validator();
         $isValid            = $validator->isValid();
         $listExtension      = implode(',', FileManager::getWhiteList());
@@ -173,11 +186,13 @@ class Profil extends \Soosyze\Controller
 
         if ($isValid) {
             $data = $this->getData($validator);
+            $this->container->callHook('filemanager.profil.update.before', [ $validator, &$data, $id ]);
             self::query()
                 ->update('profil_file', $data)
                 ->where('profil_file_id', '==', $id)
                 ->execute();
             $this->updateProfilRole($validator, $id);
+            $this->container->callHook('filemanager.profil.update.after', [ $validator, $id ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
             $route                               = self::router()->getRoute('filemanager.profil.admin');
@@ -197,7 +212,7 @@ class Profil extends \Soosyze\Controller
     public function remove($id, $req)
     {
         if (!self::fileprofil()->find($id)) {
-            $this->get404();
+            $this->get404($req);
         }
 
         $form = (new FormBuilder([
@@ -215,29 +230,54 @@ class Profil extends \Soosyze\Controller
             ->token('token_file_permission')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Delete file profile')
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
 
-    public function delete($id, $req)
+    public function delete( $id, $req )
     {
-        if (!self::fileprofil()->find($id)) {
-            $this->get404();
+        if( !self::fileprofil()->find($id) )
+        {
+            $this->get404($req);
         }
+        $validator = (new Validator())
+            ->addRule('token_file_permission', 'token')
+            ->setInputs($req->getParsedBody());
+        $this->container->callHook('filemanager.profil.delete.validator', [ &$validator,
+            $id ]);
 
-        self::query()
-            ->from('profil_file')
-            ->delete()
-            ->where('profil_file_id', '==', $id)
-            ->execute();
+        if( $validator->isValid() )
+        {
+            $this->container->callHook('filemanager.profil.delete.before', [ $validator,
+                $id ]);
+            self::query()
+                ->from('profil_file')
+                ->delete()
+                ->where('profil_file_id', '==', $id)
+                ->execute();
+            $this->container->callHook('filemanager.profil.delete.after', [ $validator,
+                $id ]);
+            $route = self::router()->getRoute('filemanager.profil.admin');
 
-        $route = self::router()->getRoute('filemanager.profil.admin', [ ':id' => $id ]);
+            return new Redirect($route);
+        }
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $route                              = self::router()->getRoute('filemanager.profil.remove', [
+            ':id' => $id ]);
 
         return new Redirect($route);
     }
@@ -306,7 +346,7 @@ class Profil extends \Soosyze\Controller
         if (!$validator->getInput('file_extensions')) {
             $validator->addInput('file_extensions', []);
         }
-
+        
         return $validator;
     }
 
