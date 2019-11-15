@@ -64,13 +64,13 @@ class File extends \Soosyze\Controller
 
             return $this->json(400, $output);
         }
-        $dir    = self::core()->getSettingEnv('files_public', 'app/files') . $path;
+        $dir    = self::core()->getDir('files_public', 'app/files') . $path;
         $profil = $this->get('filemanager.hook.user')->getRight($path);
         $rules  = [
             'file'   => 'required',
             'folder' => '!required',
         ];
-        
+
         if (!empty($profil[ 'file_extensions_all' ])) {
             $rules[ 'file' ] .= '|file_extensions:' . implode(',', FileManager::getWhiteList());
         } else {
@@ -85,9 +85,14 @@ class File extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules($rules)
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
-            ->addInput('folder', self::filemanager()->parseRecursive($dir)[ 'size' ]);
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
 
+        if (is_dir($dir)) {
+            $validator->addInput('folder', self::filemanager()->parseRecursive($dir)[ 'size' ]);
+        } else {
+            $validator->addInput('folder', 0);
+        }
+        
         if (!$validator->isValid()) {
             $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
 

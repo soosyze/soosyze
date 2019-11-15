@@ -24,7 +24,6 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
         $spl  = new \SplFileInfo($dir);
-//        $data = self::filemanager()->parseDir($spl, $path);
 
         $content[ 'name' ] = '';
         if (isset($_SESSION[ 'inputs' ])) {

@@ -220,12 +220,18 @@ class FileManager
     public function parseRecursive($dir)
     {
         $dir_iterator = new \RecursiveDirectoryIterator($dir);
-        $iterator     = new \RecursiveIteratorIterator($dir_iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+        $iterator     = new \RecursiveIteratorIterator($dir_iterator);
         $size         = 0;
         $time         = 0;
+        
+        $iterator->rewind();
         foreach ($iterator as $file) {
+            if ($iterator->isDot() || $iterator->isLink()) {
+                continue;
+            }
             /* Fichier instance de SplFileInfo */
             $size += $file->getSize();
+            var_dump($file->getSize(), $file->isDot(), $file->getBasename());
             if ($file->getMTime() > $time) {
                 $time = $file->getMTime();
             }

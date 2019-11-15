@@ -247,10 +247,9 @@ class Profil extends \Soosyze\Controller
         ]);
     }
 
-    public function delete( $id, $req )
+    public function delete($id, $req)
     {
-        if( !self::fileprofil()->find($id) )
-        {
+        if (!self::fileprofil()->find($id)) {
             $this->get404($req);
         }
         $validator = (new Validator())
@@ -259,8 +258,7 @@ class Profil extends \Soosyze\Controller
         $this->container->callHook('filemanager.profil.delete.validator', [ &$validator,
             $id ]);
 
-        if( $validator->isValid() )
-        {
+        if ($validator->isValid()) {
             $this->container->callHook('filemanager.profil.delete.before', [ $validator,
                 $id ]);
             self::query()
@@ -346,7 +344,7 @@ class Profil extends \Soosyze\Controller
         if (!$validator->getInput('file_extensions')) {
             $validator->addInput('file_extensions', []);
         }
-        
+
         return $validator;
     }
 
