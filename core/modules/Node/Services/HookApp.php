@@ -9,26 +9,21 @@ namespace SoosyzeCore\Node\Services;
  */
 class HookApp
 {
-
-    public function hookResponseAfter( &$tpl, $node )
+    public function hookResponseAfter(&$tpl, $node)
     {
         $robots = '';
-        if( $node[ 'noindex' ] )
-        {
+        if ($node[ 'noindex' ]) {
             $robots .= 'noindex,';
         }
-        if( $node[ 'nofollow' ] )
-        {
+        if ($node[ 'nofollow' ]) {
             $robots .= 'nofollow,';
         }
-        if( $node[ 'noarchive' ] )
-        {
+        if ($node[ 'noarchive' ]) {
             $robots .= 'noarchive,';
         }
-        if( $robots )
-        {
+        if ($robots) {
             $tpl->view('this', [
-                'meta' => '<meta name="robots" content="' .  substr($robots, 0, -1) . '">' . PHP_EOL
+                'meta' => '<meta name="robots" content="' . substr($robots, 0, -1) . '">' . PHP_EOL
             ]);
         }
     }

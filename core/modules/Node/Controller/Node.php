@@ -143,25 +143,21 @@ class Node extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
             })
-            ->group('node-seo-group', 'fieldset', function ($form) use ($content)
-            {
+            ->group('node-seo-group', 'fieldset', function ($form) use ($content) {
                 $form->legend('node-title-legend', t('SEO'))
-                ->group('node-noindex-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-noindex-group', 'div', function ($form) use ($content) {
                     $form->checkbox('noindex', ['checked' => $content['noindex']])
                     ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
                         'for' => 'noindex'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('node-nofollow-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-nofollow-group', 'div', function ($form) use ($content) {
                     $form->checkbox('nofollow', ['checked' => $content['nofollow']])
                     ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
                         'for' => 'nofollow'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('node-noarchive-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-noarchive-group', 'div', function ($form) use ($content) {
                     $form->checkbox('noarchive', ['checked' => $content['noarchive']])
                     ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
                         'for' => 'noarchive'
@@ -381,25 +377,21 @@ class Node extends \Soosyze\Controller
                     }, [ 'class' => 'form-group' ]);
                 }
             })
-            ->group('node-seo-group', 'fieldset', function ($form) use ($content)
-            {
+            ->group('node-seo-group', 'fieldset', function ($form) use ($content) {
                 $form->legend('node-title-legend', t('SEO'))
-                ->group('node-noindex-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-noindex-group', 'div', function ($form) use ($content) {
                     $form->checkbox('noindex', ['checked' => $content['noindex']])
                     ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
                         'for' => 'noindex'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('node-nofollow-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-nofollow-group', 'div', function ($form) use ($content) {
                     $form->checkbox('nofollow', ['checked' => $content['nofollow']])
                     ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
                         'for' => 'nofollow'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('node-noarchive-group', 'div', function ($form) use ($content)
-                {
+                ->group('node-noarchive-group', 'div', function ($form) use ($content) {
                     $form->checkbox('noarchive', ['checked' => $content['noarchive']])
                     ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
                         'for' => 'noarchive'

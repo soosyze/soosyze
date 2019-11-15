@@ -477,16 +477,16 @@ class HookStep
                 'node.show', 'Projects', 'node/3', 'menu-main', 3, -1
             ])
             ->values([
-                'node.show', 'Project' . ' 1', 'node/4', 'menu-main', 4, 15
+                'node.show', 'Project' . ' 1', 'node/4', 'menu-main', 4, 16
             ])
             ->values([
-                'node.show', 'Project' . ' 2', 'node/5', 'menu-main', 5, 15
+                'node.show', 'Project' . ' 2', 'node/5', 'menu-main', 5, 16
             ])
             ->values([
-                'node.show', 'Project' . ' 3', 'node/6', 'menu-main', 6, 15
+                'node.show', 'Project' . ' 3', 'node/6', 'menu-main', 6, 16
             ])
             ->values([
-                'node.show', 'Project' . ' 4', 'node/7', 'menu-main', 7, 15
+                'node.show', 'Project' . ' 4', 'node/7', 'menu-main', 7, 16
             ])
             ->execute();
 
