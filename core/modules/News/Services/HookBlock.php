@@ -21,13 +21,13 @@ class HookBlock
     public function hookNewShow(array &$blocks)
     {
         $blocks[ 'news.year' ]  = [
-            'title' => t('Archives par année'),
+            'title' => t('Archives by years'),
             'tpl'   => 'block-news-year.php',
             'path'  => $this->pathViews,
             'hook'  => 'news.year'
         ];
         $blocks[ 'news.month' ] = [
-            'title' => t('Archives par mois'),
+            'title' => t('Archives by months'),
             'tpl'   => 'block-news-month.php',
             'path'  => $this->pathViews,
             'hook'  => 'news.month'
