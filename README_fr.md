@@ -4,7 +4,7 @@
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
 [![Télécharger Soosyze CMS](https://img.shields.io/badge/download-releases%20latest-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Télécharger Soosyze CMS")
 
-* :gb: [README en Anglais](README.md)
+* :gb: [README in English](README.md)
 * :fr: [README en Français](README_fr.md)
 
 # À propos
@@ -13,18 +13,18 @@ Soosyze CMS est un micro système de gestion de contenu sans base de données. I
 
 Pour nous encourager à poursuivre le développement de Soosyze CMS n'hésitez pas à mettre une étoile :star: Github. Merci :heart:
 
-* :globe_with_meridians: [Site](https://soosyze.com)
+* :point_right: [Site](https://soosyze.com)
 * :eyes: [Démo](https://demo.soosyze.com)
 * :dizzy: [Extensions et thèmes](https://github.com/soosyze-extension)
 * :speech_balloon: [Forum](https://community.soosyze.com)
 * :mortar_board: [Documentations](https://github.com/soosyze/documentations)
 * :green_book: [PHP Doc](https://api.soosyze.com)
+* :globe_with_meridians: [Traduction](https://trad.framasoft.org/project/view/soosyze?dswid=-5497)
 
 Vous pouvez également nous trouver sur les réseaux :
 
 * :busts_in_silhouette: [Mastodon](https://mamot.fr/@soosyze)
 * :telephone_receiver: [Discord](https://discordapp.com/invite/parFfTt)
-* :newspaper: [Diaspora](https://framasphere.org/people/10978ab0dd6301362e322a0000053625)
 
 # Sommaire
 
@@ -170,4 +170,4 @@ include path\soosyze\.nginx.conf;
 
 # Licence
 
-Soosyze CMS est sous licence MIT. Voir le [fichier de licence])(https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENCE") pour plus d'informations.
+Soosyze CMS est sous licence MIT. Voir le [fichier de licence](https://github.com/soosyze/soosyze/blob/master/LICENSE) pour plus d'informations.
