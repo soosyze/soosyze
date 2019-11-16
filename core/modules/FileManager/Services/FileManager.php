@@ -231,7 +231,6 @@ class FileManager
             }
             /* Fichier instance de SplFileInfo */
             $size += $file->getSize();
-            var_dump($file->getSize(), $file->isDot(), $file->getBasename());
             if ($file->getMTime() > $time) {
                 $time = $file->getMTime();
             }

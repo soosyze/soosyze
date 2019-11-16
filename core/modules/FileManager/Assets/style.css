@@ -21,7 +21,6 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto 5em;
-    background-image: url(/core/modules/FileManager/Assets/icon/file.svg);
     display:inline-block;
     width: 5em;
     height: 6em;
@@ -37,19 +36,6 @@
 .ext{
     color: #bbb;
 }
-.ai, .eps{ background-image: url(/core/modules/FileManager/Assets/icon/ai.svg); }
-.dir{ background-image: url(/core/modules/FileManager/Assets/icon/dir.svg); }
-.gif, .ico, .jpg, .jpeg, .png, .svg{ background-image: url(/core/modules/FileManager/Assets/icon/jpg.svg); }
-.json, .css{ background-image: url(/core/modules/FileManager/Assets/icon/json.svg); }
-.mp3{ background-image: url(/core/modules/FileManager/Assets/icon/mp3.svg); }
-.mp4, .avi, .mpeg, .webm{ background-image: url(/core/modules/FileManager/Assets/icon/mp4.svg); }
-.pdf{ background-image: url(/core/modules/FileManager/Assets/icon/pdf.svg); }
-.odp, .pptx, .ppt{ background-image: url(/core/modules/FileManager/Assets/icon/ppt.svg); }
-.txt, .odt, .docx, .doc{ background-image: url(/core/modules/FileManager/Assets/icon/txt.svg); }
-.xml, .xhtml, .html{ background-image: url(/core/modules/FileManager/Assets/icon/xhtml.svg); }
-.ods, .xlsx, .xls, csv{ background-image: url(/core/modules/FileManager/Assets/icon/xls.svg); }
-.zip, .gzip, .tar, .rar{ background-image: url(/core/modules/FileManager/Assets/icon/zip.svg); }
-
 .modal-info{
     word-wrap: break-word;
 }
