@@ -62,10 +62,13 @@ class File
      * @var string
      */
     protected $dir = null;
+    
+    protected $base_path = '';
 
     public function __construct($core)
     {
         $this->core = $core;
+        $this->base_path = $this->core->getRequest()->getBasePath();
     }
 
     public function inputFile($name, FormBuilder &$form, $content = '')
@@ -81,6 +84,9 @@ class File
             'type'       => 'button',
             'aria-label' => 'Supprimer le fichier'
         ];
+        if(is_file($this->base_path . $content)) {
+            $content = $this->base_path . $content;
+        }
         if (!empty($content)) {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $content) {
                 $form->html("file-image-$name", '<img:css:attr/>', [
@@ -124,7 +130,7 @@ class File
         $clone->ext         = Util::getFileExtension($ClientFilename);
         $name               = pathinfo($ClientFilename, PATHINFO_FILENAME);
         $clone->name        = Util::strSlug($name);
-        $clone->dir = $this->core->getSettingEnv('files_public', 'app/files');
+        $clone->dir         = $this->core->getSettingEnv('files_public', 'app/files');
 
         return $clone;
     }
@@ -143,6 +149,15 @@ class File
         $clone->dir = $path === null
             ? $this->core->getSettingEnv('files_public', 'app/files')
             : $path;
+
+        return $clone;
+    }
+    
+    public function setBasePath($basePath = null) {
+        $clone      = clone $this;
+        $clone->base_path = $basePath === null
+            ? $this->core->getRequest()->getBasePath()
+            : $basePath;
 
         return $clone;
     }
