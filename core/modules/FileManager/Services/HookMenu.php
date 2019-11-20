@@ -37,7 +37,7 @@ class HookMenu
             return;
         }
         $path   = Util::cleanPath($profils[ 0 ][ 'folder_show' ]);
-        $path   = str_replace('%uid', $id_user, $path);
+        $path   = str_replace('{{user_id}}', $id_user, $path);
         $menu[] = [
             'link'       => $this->router->getRoute('filemanager.admin', [
                 ':path' => $path

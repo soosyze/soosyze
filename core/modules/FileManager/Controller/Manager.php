@@ -22,7 +22,7 @@ class Manager extends \Soosyze\Controller
             return $this->get404();
         } else {
             $path = $profils[ 0 ][ 'folder_show' ];
-            $path = str_replace('%uid', $user[ 'user_id' ], $path);
+            $path = str_replace('{{user_id}}', $user[ 'user_id' ], $path);
         }
 
         return self::template()

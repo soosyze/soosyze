@@ -23,7 +23,7 @@ class HookUser
 
         foreach ($profils as $profil) {
             $pattern = '/' . Util::cleanPath($profil[ 'folder_show' ]);
-            $pattern = str_replace('%uid', $user_id, $pattern);
+            $pattern = str_replace('{{user_id}}', $user_id, $pattern);
             $pattern .= $profil[ 'folder_show_sub' ]
                 ? '.*'
                 : '';
