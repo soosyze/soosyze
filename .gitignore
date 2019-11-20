@@ -1,16 +1,21 @@
 # Repertory
+/app/config/
+/app/data/
+/app/files/
+/app/modules/
+/app/themes/
+
+# Dependency
+/node_modules/
+/vendor/
+
+# Tools
 /.scannerwork/
 /build/
 /nbproject/
-/vendor/
-/app/data/
-/app/files/public/
-/app/modules/
-/app/themes/
-/node_modules/
 
 # Files
-/app/config/settings.json
+!/app/config/default/database.json
 /*.lock
 /*.phar
 /*.cache
