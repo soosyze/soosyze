@@ -45,4 +45,12 @@ $app->setSettings([
     'themes_path'         => [ 'app/themes', 'core/themes' ]
 ]);
 
+$app->setEnvironmentDefault('default');
+
+/* Définition des environnements par domaine ou nom de machine. */
+/* $app->setEnvironnement([
+        'local' => [ '127.0.0.1' ],
+        'prod'  => [ 'https://foo.com' ]
+    ]);
+*/
 $app->init();
