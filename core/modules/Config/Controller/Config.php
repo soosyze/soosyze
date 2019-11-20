@@ -145,13 +145,14 @@ class Config extends \Soosyze\Controller
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
             ->setName($key)
-            ->callGet(function ($key) {
+            ->callGet(function ($key, $name) {
                 return self::config()->get("settings.$key");
             })
-            ->callMove(function ($key, $move) {
-                self::config()->set("settings.$key", $move);
+            ->callMove(function ($key, $name, $move) {
+                $file_public = self::core()->getSettingEnv('files_public', 'app/files');
+                self::config()->set("settings.$key", "$file_public/$name");
             })
-            ->callDelete(function ($key) {
+            ->callDelete(function ($key, $name) {
                 self::config()->set("settings.$key", '');
             })
             ->save();

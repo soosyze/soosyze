@@ -549,13 +549,13 @@ class User extends \Soosyze\Controller
             ->setName($key)
             ->setPath($dir)
             ->setResolvePath()
-            ->callGet(function ($key) use ($id) {
+            ->callGet(function ($key, $name) use ($id) {
                 return self::user()->find($id)[ $key ];
             })
-            ->callMove(function ($key, $move) use ($id) {
-                self::query()->update('user', [ $key => $move ])->where('user_id', '==', $id)->execute();
+            ->callMove(function ($key, $name, $move) use ($id, $dir) {
+                self::query()->update('user', [ $key => "$dir/$name" ])->where('user_id', '==', $id)->execute();
             })
-            ->callDelete(function ($key) use ($id) {
+            ->callDelete(function ($key, $name) use ($id) {
                 self::query()->update('user', [ $key => '' ])->where('user_id', '==', $id)->execute();
             })
             ->save();

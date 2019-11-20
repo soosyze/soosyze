@@ -69,6 +69,7 @@ class File
     {
         $this->core = $core;
         $this->base_path = $this->core->getRequest()->getBasePath();
+        $this->dir       = $this->core->getDir('files_public', 'app/files');
     }
 
     public function inputFile($name, FormBuilder &$form, $content = '')
@@ -84,14 +85,15 @@ class File
             'type'       => 'button',
             'aria-label' => 'Supprimer le fichier'
         ];
-        if(is_file($this->base_path . $content)) {
-            $content = $this->base_path . $content;
+        $src = '';
+        if (is_file(ROOT . $content)) {
+            $src = $this->base_path . $content;
         }
-        if (!empty($content)) {
-            $form->group("file-image-$name-group", 'div', function ($form) use ($name, $content) {
+        if (!empty($src)) {
+            $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<img:css:attr/>', [
                     'alt'   => 'Picture user',
-                    'src'   => $content,
+                    'src'   => $src,
                     'class' => 'input-file-img img-thumbnail'
                 ]);
             }, [ 'class' => 'form-group' ]);
@@ -130,7 +132,6 @@ class File
         $clone->ext         = Util::getFileExtension($ClientFilename);
         $name               = pathinfo($ClientFilename, PATHINFO_FILENAME);
         $clone->name        = Util::strSlug($name);
-        $clone->dir         = $this->core->getSettingEnv('files_public', 'app/files');
 
         return $clone;
     }
@@ -153,7 +154,8 @@ class File
         return $clone;
     }
     
-    public function setBasePath($basePath = null) {
+    public function setBasePath($basePath = null)
+    {
         $clone      = clone $this;
         $clone->base_path = $basePath === null
             ? $this->core->getRequest()->getBasePath()
@@ -212,11 +214,11 @@ class File
             $move = $this->resolveName();
 
             $this->file->moveTo($move);
-            call_user_func_array($this->call_move, [ $this->name, $move ]);
+            call_user_func_array($this->call_move, [ $this->name, "{$this->name}.{$this->ext}", $move ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
-            $file = call_user_func_array($this->call_get, [ $this->name ]);
+            $file = call_user_func_array($this->call_get, [ $this->name, "{$this->name}.{$this->ext}" ]);
             if (empty($this->file_hidden) && $file) {
-                call_user_func_array($this->call_delete, [ $this->name, $file ]);
+                call_user_func_array($this->call_delete, [ $this->name, "{$this->name}.{$this->ext}", $file ]);
                 if (file_exists($file)) {
                     unlink($file);
                 }
