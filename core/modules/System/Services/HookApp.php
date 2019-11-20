@@ -111,6 +111,10 @@ class HookApp
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $data = $this->config->get('settings');
+            $src_logo = $data[ 'logo' ];
+            if (is_file(ROOT . $data[ 'logo' ])) {
+                $src_logo = $request->getBasePath() . $data[ 'logo' ];
+            }
             $response->view('this', [
                 'title'       => $data[ 'meta_title' ],
                 'description' => $data[ 'meta_description' ],
@@ -118,7 +122,7 @@ class HookApp
                 'favicon'     => $data[ 'favicon' ]
             ])->view('page', [
                 'title' => $data[ 'meta_title' ],
-                'logo'  => $data[ 'logo' ]
+                'logo'  => $src_logo
             ]);
             $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/js/script.js';
             $script = $response->getBlock('this')->getVar('scripts');
