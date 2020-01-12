@@ -1,0 +1,23 @@
+{
+    "name": "soosyze-core/backupmanager",
+    "type": "soosyze-module",
+    "description": "Sauvegarde du CMS.",
+    "version": "1.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\BackupManager\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "BackupManager",
+            "package": "Core",
+            "controller": "SoosyzeCore\\BackupManager\\Controller\\BackupController",
+            "icon": {
+                "name": "fa fa-book",
+                "background-color": "#b54b1c",
+                "color": "#fff"
+            }
+        }
+    }
+}
