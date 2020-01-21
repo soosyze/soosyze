@@ -6,11 +6,14 @@ class BackupService
 {
     protected $core;
     
+    protected $router;
+
     private $repository;
     
-    public function __construct(\Soosyze\App $core)
+    public function __construct(\Soosyze\App $core, \Soosyze\Components\Router\Router $router)
     {
         $this->core = $core;
+        $this->router = $router;
       
         $this->repository = $this->core->getSetting('backup_dir');
         if (!file_exists($this->repository)) {
@@ -21,14 +24,14 @@ class BackupService
     public function listBackups()
     {
         foreach (new \DirectoryIterator($this->repository) as $file) {
-            if ($file->isDot()) {
+            if ($file->isDot() || $file->getExtension() !== 'zip') {
                 continue;
             }
             $backups[] = [
                 'date' => \date_create_from_format('Ymd-His', str_replace('soosyzecms.zip', '', $file->getFilename())),
                 'size' => $file->getSize(),
-                'restore_link' => '/?q=admin/backupmanager/restore/' . str_replace('soosyzecms.zip', '', $file->getFilename()),
-                'delete_link' => '/?q=admin/backupmanager/delete/' . str_replace('soosyzecms.zip', '', $file->getFilename())
+                'restore_link' => $this->router->getRoute('backupmanager.restore', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())]),
+                'delete_link' => $this->router->getRoute('backupmanager.delete', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())])
             ];
         }
         \array_multisort($backups, \SORT_DESC);

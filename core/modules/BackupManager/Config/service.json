@@ -7,6 +7,6 @@
     },
     "backupservice": {
         "class": "SoosyzeCore\\BackupManager\\Services\\BackupService",
-        "arguments": ["@core"]
+        "arguments": ["@core", "@router"]
     }
 }
