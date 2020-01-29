@@ -240,7 +240,7 @@ class Login extends \Soosyze\Controller
     {
         $redirect = self::config()->get('settings.connect_redirect', '');
         if ($redirect) {
-            return (string) $req->getUri()->withQuery('?q=' . $redirect);
+            return (string) self::router()->makeRoute($redirect);
         }
 
         return self::router()->getRoute('user.account');

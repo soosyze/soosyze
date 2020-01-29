@@ -128,11 +128,9 @@ function dropFile() {
         e.preventDefault();
         e.stopPropagation();
     }).on('dragover', function () {
-        $form.css('background-color', '#fff');
-        $form.css('outline-offset', '-20px');
-    }).on('dragleave', function () {
-        $form.css('background-color', '#eee');
         $form.css('outline-offset', '-10px');
+    }).on('dragleave', function () {
+        $form.css('outline-offset', '0px');
     }).on('drop', function (evt) {
         var droppedFiles = evt.originalEvent.dataTransfer.files;
         $form.find('input[type="file"]').prop('files', droppedFiles);
@@ -148,8 +146,7 @@ function dropFile() {
             contentType: false,
             processData: false,
             complete: function () {
-                $form.css('background-color', '#eee');
-                $form.css('outline-offset', '-10px');
+                $form.css('outline-offset', '0px');
             },
             success: function () {
                 $form.css('outline', '2px dashed green');

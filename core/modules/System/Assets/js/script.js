@@ -42,7 +42,7 @@ function highlight(elemId) {
     elem.css("backgroundColor", "#fff"); // hack for Safari
     elem.animate({backgroundColor: '#e1e4e8'}, 0);
     setTimeout(function () {
-        $(elemId).animate({backgroundColor: "#fff"}, 500)
+        $(elemId).animate({backgroundColor: "transparent"}, 500)
     }, 300);
 }
 

@@ -34,7 +34,7 @@
             <table class="table table-hover table-modules">
                 <thead>
                     <tr class="form-head">
-                        <td>&nbsp;</td>
+                        <th>&nbsp;</th>
                         <th><?php echo t('Module'); ?></th>
                         <th><?php echo t('Version'); ?></th>
                         <th><?php echo t('Actions'); ?></th>

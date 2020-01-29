@@ -22,7 +22,7 @@ class HookApp
     }
 
     public function hookResponseAfter(
-    \Soosyze\Components\Http\ServerRequest $request,
+        \Soosyze\Components\Http\ServerRequest $request,
         &$response
     ) {
         if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {

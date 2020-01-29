@@ -101,7 +101,7 @@ class FormUser extends FormBuilder
     public function name(&$form)
     {
         $form->group('user-name-group', 'div', function ($form) {
-            $form->label('user-name-label', t('Name'))
+            $form->label('user-name-label', t('Last name'))
                 ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -170,7 +170,10 @@ class FormUser extends FormBuilder
 
     public function passwordNew(&$form)
     {
-        $this->password( $form, 'password_new', t('New Password'),
+        $this->password(
+            $form,
+            'password_new',
+            t('New Password'),
             $this->config->get('settings.password_show', true)
                 ? [ 'onkeyup' => 'passwordPolicy(this)' ]
                 : []

@@ -249,7 +249,7 @@ class Folder extends \Soosyze\Controller
 
             /* Supprime tous les dossiers et fichiers */
             foreach ($iterator as $file) {
-                if (in_array($file->getBasename(), [ '..', '.' ])) {
+                if ($file->isDot()) {
                     continue;
                 }
                 $file->isDir()

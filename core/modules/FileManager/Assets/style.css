@@ -4,10 +4,8 @@
 }
 .dropfile{
     font-size: 1.25rem;
-    background-color: #eee;
     padding: 3em;
     outline: 2px dashed #ccc;
-    outline-offset: -10px;
     margin-bottom: 1em;
     text-align: center;
     -webkit-transition: background-color .2s, outline-offset .2s; /* Safari */
@@ -59,3 +57,16 @@
     height: 300px;
     background-size:  auto 300px;
 }
+.file { background-image: url(./icon/file.svg); }
+.ai, .eps{ background-image: url(./icon/ai.svg); }
+.dir{ background-image: url(./icon/dir.svg); }
+.gif, .ico, .jpg, .jpeg, .png, .svg{ background-image: url(./icon/jpg.svg); }
+.json, .css{ background-image: url(./icon/json.svg); }
+.mp3{ background-image: url(./icon/mp3.svg); }
+.mp4, .avi, .mpeg, .webm{ background-image: url(./icon/mp4.svg); }
+.pdf{ background-image: url(./icon/pdf.svg); }
+.odp, .pptx, .ppt{ background-image: url(./icon/ppt.svg); }
+.txt, .odt, .docx, .doc{ background-image: url(./icon/txt.svg); }
+.xml, .xhtml, .html{ background-image: url(./icon/xhtml.svg); }
+.ods, .xlsx, .xls, csv{ background-image: url(./icon/xls.svg); }
+.zip, .gzip, .tar, .rar{ background-image: url(./icon/zip.svg); }

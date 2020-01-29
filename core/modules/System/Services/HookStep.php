@@ -179,7 +179,7 @@ class HookStep
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('install-name-group', 'div', function ($form) use ($content) {
-                    $form->label('install-name-label', t('Name'))
+                    $form->label('install-name-label', t('Last name'))
                     ->text('name', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -270,7 +270,7 @@ class HookStep
                 'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                t('Home'), 'page', (string) time(), (string) time(), true,
+                t('Site'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('features.php', $this->pathContent))->render()
                 ])
@@ -423,7 +423,7 @@ class HookStep
                 'title', 'type', 'created', 'changed', 'published', 'field'
             ])
             ->values([
-                t('Home'), 'page', (string) time(), (string) time(), true,
+                t('Site'), 'page', (string) time(), (string) time(), true,
                 serialize([
                     'body' => (new Template('about.php', $this->pathContent))->render()
                 ])

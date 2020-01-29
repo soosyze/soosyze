@@ -234,7 +234,7 @@ class Translation extends \Soosyze\Config
         $output = [];
         foreach ($dir_iterator as $file) {
             /* Fichier instance de SplFileInfo */
-            if (in_array($file->getBasename(), [ '..', '.' ]) || $file->isDir()) {
+            if ($file->isDot() || $file->isDir()) {
                 continue;
             }
             $name = $file->getBasename('.' . $file->getExtension());

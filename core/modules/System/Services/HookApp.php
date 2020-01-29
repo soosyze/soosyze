@@ -101,7 +101,9 @@ class HookApp
 
     public function hooks503($request, &$response)
     {
-        $response = $this->tpl->make('page', 'page-maintenance.php', $this->views, [
+        $response = $this->tpl
+            ->getTheme()
+            ->make('page', 'page-maintenance.php', $this->views, [
                 'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Site under maintenance')
             ])
             ->withStatus(503);
