@@ -7,29 +7,34 @@ class BackupService
     protected $core;
     
     protected $router;
+    
+    protected $config;
 
     private $repository;
     
-    public function __construct(\Soosyze\App $core, \Soosyze\Components\Router\Router $router)
+    /* ISO8601 adapté. */
+    private $date_format = 'Y-m-d\TH-i-s';
+    
+    public function __construct(\Soosyze\App $core, \Soosyze\Components\Router\Router $router, $config)
     {
         $this->core = $core;
         $this->router = $router;
+        $this->config = $config;
       
         $this->repository = $this->core->getSetting('backup_dir');
-        if (!file_exists($this->repository)) {
-            \mkdir($this->repository);
-        }
     }
     
     public function listBackups()
     {
+        $backups = array();
         foreach (new \DirectoryIterator($this->repository) as $file) {
-            if ($file->isDot() || $file->getExtension() !== 'zip') {
+            if ($file->isDot() || $file->getExtension() !== 'zip' || !preg_match("#^[0-9|\-|T|\+]+soosyzecms#", $file->getFilename())) {
                 continue;
             }
             $backups[] = [
-                'date' => \date_create_from_format('Ymd-His', str_replace('soosyzecms.zip', '', $file->getFilename())),
+                'date' => \date_create_from_format($this->date_format, str_replace('soosyzecms.zip', '', $file->getFilename())),
                 'size' => $file->getSize(),
+                'download_link' => $this->router->getRoute('backupmanager.download', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())]),
                 'restore_link' => $this->router->getRoute('backupmanager.restore', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())]),
                 'delete_link' => $this->router->getRoute('backupmanager.delete', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())])
             ];
@@ -41,8 +46,8 @@ class BackupService
     
     public function doBackup()
     {
-        $backup = new \ZipArchive();
-        if (!$backup->open($this->repository . DS . $this->generateBackupName(), \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+        $backup = $this->getFreshZip();
+        if (!$backup) {
             return false;
         }
         
@@ -75,9 +80,49 @@ class BackupService
         return false;
     }
     
+    public function deleteAll()
+    {
+        foreach(new \DirectoryIterator($this->repository) as $file)
+        {
+            if($file->isDot() || $file->isDir() || $file->getExtension() != "zip") {
+                continue;
+            }
+            \unlink($file->getPathname());
+        }
+        
+        return true;
+    }
+    
+    public function getBackup($date)
+    {
+        $file = $this->repository . DS . $date . 'soosyzecms.zip';
+        if (file_exists($file)) {
+            return \file_get_contents($file);
+        }
+        
+        return false;
+    }
+    
+    private function getFreshZip()
+    {
+        $max_backups = $this->config->get('settings.max_backups');
+        $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
+        if($max_backups && count($dir)-2 >= $max_backups) {
+            if(preg_match("#^[0-9|\-|T|\+]+soosyzecms#", $dir[2])) {
+                \unlink($this->repository . DS . $dir[2]);
+            }
+        }
+        $backup = new \ZipArchive();
+        if($backup->open($this->repository . DS . $this->generateBackupName(), \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+            return $backup;
+        }
+        
+        return false;
+    }
+    
     private function generateBackupName()
     {
-        return date('Ymd-His') . 'soosyzecms.zip';
+        return \date($this->date_format) . 'soosyzecms.zip';
     }
     
     private function zipRecursivly($dir, \ZipArchive $zip)
@@ -88,7 +133,7 @@ class BackupService
                 continue;
             }
             if ($file->isDir()) {
-                //ne prend pas en compte les dossiers comme .git
+                /* Ne prend pas en compte les dossiers comme .git */
                 if (empty($file->getExtension())) {
                     $zip = $this->zipRecursivly($file->getPathname(), $zip);
                 }

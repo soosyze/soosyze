@@ -7,6 +7,16 @@
     },
     "backupservice": {
         "class": "SoosyzeCore\\BackupManager\\Services\\BackupService",
-        "arguments": ["@core", "@router"]
+        "arguments": ["@core", "@router", "@config"]
+    },
+    "backup.hook.config": {
+        "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
+        "arguments": ["@config", "@router"],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.backupmanager.form.generate": "form",
+            "config.update.backupmanager.validator": "validator",
+            "config.update.backupmanager.before": "before"
+        }
     }
 }

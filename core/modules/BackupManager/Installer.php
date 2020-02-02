@@ -14,6 +14,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function install(ContainerInterface $ci)
     {
+        $ci->config()
+            ->set('settings.max_backups', 0);
     }
 
     public function seeders(ContainerInterface $ci)
@@ -22,6 +24,10 @@ class Installer implements \SoosyzeCore\System\Migration
     
     public function hookInstall(ContainerInterface $ci)
     {
+        $dir = $ci->core()->getSetting('backup_dir');
+        if (!file_exists($dir)) {
+            \mkdir($dir, 644, true);
+        }
         $this->hookInstallMenu($ci);
     }
 

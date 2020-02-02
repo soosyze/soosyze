@@ -14,8 +14,8 @@
             "package": "Core",
             "controller": "SoosyzeCore\\BackupManager\\Controller\\BackupController",
             "icon": {
-                "name": "fa fa-book",
-                "background-color": "#b54b1c",
+                "name": "fa fa-file-archive",
+                "background-color": "#b51c1c",
                 "color": "#fff"
             }
         }
