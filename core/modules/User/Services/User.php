@@ -80,6 +80,14 @@ class User
                 ->fetch();
     }
 
+    public function getUserActivedToken($token, $actived = true)
+    {
+        return $this->query->from('user')
+                ->where('token_connected', $token)
+                ->where('actived', $actived)
+                ->fetch();
+    }
+
     public function getUsers()
     {
         return $this->query->from('user')->fetchAll();
@@ -158,53 +166,6 @@ class User
     }
 
     /**
-     * Créer la session et les token d'identification.
-     *
-     * @param string $email
-     * @param string $password
-     *
-     * @return bool
-     */
-    public function login($email, $password)
-    {
-        if ('' == session_id()) {
-            session_start([
-                'cookie_httponly' => true,
-                'cookie_secure'   => true,
-            ]);
-        }
-
-        if ($user = $this->getUserActived($email)) {
-            $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
-            if (password_verify($passwordHash, $user[ 'password' ])) {
-                $_SESSION[ 'token_user' ]     = $email;
-                $_SESSION[ 'token_password' ] = $passwordHash;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function hashVerify($password, array $user)
-    {
-        $passwordHash = $this->hashSession($password, $user[ 'salt' ]);
-
-        return password_verify($passwordHash, $user[ 'password' ]);
-    }
-
-    public function hash($password)
-    {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    public function hashSession($password, $salt = '')
-    {
-        return hash('sha256', $password . $salt);
-    }
-
-    /**
      * Si la session existe renvoie l'utilisateur,
      * sinon s'il y a correspondance dans les autres cas renvoie faux.
      *
@@ -215,12 +176,12 @@ class User
         if ($this->connect) {
             return $this->connect;
         }
-        if (!empty($_SESSION[ 'token_user' ]) && !empty($_SESSION[ 'token_password' ])) {
-            if (!($user = $this->getUserActived($_SESSION[ 'token_user' ]))) {
+        if (!empty($_SESSION[ 'token_connected' ])) {
+            if (!($user = $this->getUserActivedToken($_SESSION[ 'token_connected' ]))) {
                 return false;
             }
 
-            $this->connect = password_verify($_SESSION[ 'token_password' ], $user[ 'password' ])
+            $this->connect = $_SESSION[ 'token_connected' ] == $user['token_connected']
                 ? $user
                 : false;
 

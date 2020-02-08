@@ -82,14 +82,10 @@ class Login extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
-            self::user()->login($validator->getInput('email'), $validator->getInput('password'));
+            self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
         }
 
         if ($user = self::user()->isConnected()) {
-            self::query()
-                ->update('user', [ 'time_access' => time() ])
-                ->where('user_id', '==', $user[ 'user_id' ])
-                ->execute();
             $route = $this->getRedirectLogin($req);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
@@ -223,13 +219,12 @@ class Login extends \Soosyze\Controller
         }
 
         $time         = time();
-        $passwordHash = self::user()->hashSession($time, $user[ 'salt' ]);
-        $mdp          = self::user()->hash($passwordHash);
+        $mdp          = self::auth()->hash($time);
         self::query()
             ->update('user', [ 'password' => $mdp, 'token_forget' => '' ])
             ->where('user_id', '==', $id)
             ->execute();
-        self::user()->login($user[ 'email' ], $time);
+        self::auth()->login($user[ 'email' ], $time);
 
         $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 

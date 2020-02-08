@@ -9,6 +9,10 @@
             "app.response.after": "hookReponseAfter"
         }
     },
+    "auth": {
+        "class": "SoosyzeCore\\User\\Services\\Auth",
+        "arguments": ["@query"]
+    },
     "user.install": {
         "class": "SoosyzeCore\\User\\Installer",
         "hooks": {

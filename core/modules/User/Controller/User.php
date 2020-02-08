@@ -167,16 +167,14 @@ class User extends \Soosyze\Controller
                 ->where('username', $validator->getInput('username'))->fetch();
 
         if ($isValid && !$is_email && !$is_username) {
-            $salt        = base64_encode(random_bytes(32));
-            $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
+        if ($isValid) {
             $data        = [
                 'username'       => $validator->getInput('username'),
                 'email'          => $validator->getInput('email'),
                 'bio'            => $validator->getInput('bio'),
                 'name'           => $validator->getInput('name'),
                 'firstname'      => $validator->getInput('firstname'),
-                'password'       => self::user()->hash($passworHash),
-                'salt'           => $salt,
+                'password'       => self::auth()->hash($validator->getInput('password_new')),
                 'actived'        => (bool) $validator->getInput('actived'),
                 'time_installed' => (string) time(),
                 'timezone'       => 'Europe/Paris'
@@ -328,7 +326,7 @@ class User extends \Soosyze\Controller
         if ($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ]) {
             $is_email = self::user()->getUser($validator->getInput('email'));
             $password = $validator->getInput('password');
-            $verify   = self::user()->hashVerify($password, $user);
+            $verify   = self::auth()->hashVerify($password, $user);
             $validator->addInput('password', '');
             if (!$verify) {
                 $validator->addRule('password', 'required');
@@ -373,8 +371,7 @@ class User extends \Soosyze\Controller
 
             /* En cas de modification du mot de passe. */
             if ($isUpdateMdp = $validator->getInput('password_new') != '') {
-                $passwordHash        = self::user()->hashSession($validator->getInput('password_new'), $user[ 'salt' ]);
-                $value[ 'password' ] = self::user()->hash($passwordHash);
+                $value[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
             }
 
             $this->container->callHook('user.update.before', [ &$validator, &$value,

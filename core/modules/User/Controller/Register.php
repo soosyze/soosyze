@@ -100,13 +100,10 @@ class Register extends \Soosyze\Controller
         $this->container->callHook('register.store.validator', [ &$validator ]);
 
         if ($validator->isValid() && !$is_email && !$is_username) {
-            $salt        = base64_encode(random_bytes(32));
-            $passworHash = self::user()->hashSession($validator->getInput('password_new'), $salt);
             $data        = [
                 'username'         => $validator->getInput('username'),
                 'email'            => $validator->getInput('email'),
-                'password'         => self::user()->hash($passworHash),
-                'salt'             => $salt,
+                'password'         => self::auth()->hash($validator->getInput('password_new')),
                 'token_actived'    => Util::strRandom(30),
                 'time_installed'   => (string) time(),
                 'timezone'         => 'Europe/Paris',
