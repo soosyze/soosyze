@@ -120,10 +120,20 @@ class User extends \Soosyze\Controller
             return new Redirect(self::router()->getRoute('user.create'));
         }
 
-        $validator = (new Validator())
+        $validator = (new Validator())->setInputs($post + $files);
+        $is_email = ($user = self::user()->getUser($validator->getInput('email')))
+            ? $user['email']
+            : '';
+        $is_username = ($user = self::query()->from('user')
+                ->where('username', $validator->getInput('username'))->fetch())
+            ? $user['username']
+            : '';
+        $validator
+            ->addInput('is_email', $is_email)
+            ->addInput('is_username', $is_username)
             ->setRules([
-                'username'         => 'required|string|max:255|htmlsc',
-                'email'            => 'required|email|max:254|htmlsc',
+                'username'         => 'required|string|max:255|!equal:@is_username|htmlsc',
+                'email'            => 'required|email|max:254|!equal:@is_email|htmlsc',
                 'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
                 'bio'              => '!required|string|max:255|htmlsc',
                 'name'             => '!required|string|max:255|htmlsc',
@@ -145,8 +155,7 @@ class User extends \Soosyze\Controller
                 'password_new'     => t('New Password'),
                 'password_confirm' => t('Confirmation of the new password'),
                 'roles'            => t('User Roles')
-            ])
-            ->setInputs($post + $files);
+            ]);
 
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
@@ -162,11 +171,6 @@ class User extends \Soosyze\Controller
         }
         $isValid &= $validatorRoles->isValid();
 
-        $is_email    = self::user()->getUser($validator->getInput('email'));
-        $is_username = self::query()->from('user')
-                ->where('username', $validator->getInput('username'))->fetch();
-
-        if ($isValid && !$is_email && !$is_username) {
         if ($isValid) {
             $data        = [
                 'username'       => $validator->getInput('username'),
@@ -197,26 +201,13 @@ class User extends \Soosyze\Controller
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
-            $route = self::router()->getRoute('user.management.admin');
-
-            return new Redirect($route);
+            return new Redirect(self::router()->getRoute('user.management.admin'));
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors() + $validatorRoles->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
-            $_SESSION[ 'errors_keys' ][]          = 'email';
-        }
-        if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
-            $_SESSION[ 'errors_keys' ][]          = 'username';
-        }
-
-        $route = self::router()->getRoute('user.create');
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('user.create'));
     }
 
     public function edit($id, $req)

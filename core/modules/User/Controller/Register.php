@@ -65,41 +65,41 @@ class Register extends \Soosyze\Controller
 
     public function store($req)
     {
-        $route     = self::router()->getRoute('user.register.create');
-        $validator = (new Validator())
+        $route       = self::router()->getRoute('user.register.create');
+        $validator   = (new Validator())->setInputs($req->getParsedBody());
+        $is_email    = ($user = self::user()->getUser($validator->getInput('email')))
+            ? $user[ 'email' ]
+            : '';
+        $is_username = ($user = self::query()->from('user')
+                ->where('username', $validator->getInput('username'))->fetch())
+            ? $user[ 'username' ]
+            : '';
+        $validator
+            ->addInput('is_email', $is_email)
+            ->addInput('is_username', $is_username)
+            ->addInput('is_rgpd', self::config()->get('settings.rgpd_show', ''))
+            ->addInput('is_terms_of_service', self::config()->get('settings.terms_of_service_show', ''))
             ->setRules([
-                'username'         => 'required|string|max:255|htmlsc',
-                'email'            => 'required|email|htmlsc',
+                'username'         => 'required|string|max:255|!equal:@is_username|htmlsc',
+                'email'            => 'required|string|email|!equal:@is_email|htmlsc',
                 'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password_new',
+                'rgpd'             => 'required_with:is_rgpd',
+                'terms_of_service' => 'required_with:is_terms_of_service',
                 'token_user_form'  => 'required|token'
             ])
             ->setLabel([
                 'username'         => t('User name'),
                 'email'            => t('E-mail'),
                 'password_new'     => t('New Password'),
-                'password_confirm' => t('Confirmation of the new password')
-            ])
-            ->setInputs($req->getParsedBody());
-
-        if (self::config()->get('settings.rgpd_show', false)) {
-            $validator
-                ->addRule('rgpd', 'accepted')
-                ->addLabel('rgpd', t('Accepter la politique de confidentialité'));
-        }
-        if (self::config()->get('settings.terms_of_service_show', false)) {
-            $validator
-                ->addRule('terms_of_service', 'accepted')
-                ->addLabel('terms_of_service', t('Accepter les conditions générale d\'utilisation'));
-        }
-
-        $is_email    = self::user()->getUser($validator->getInput('email'));
-        $is_username = self::query()->from('user')
-                ->where('username', $validator->getInput('username'))->fetch();
+                'password_confirm' => t('Confirmation of the new password'),
+                'rgpd'             => t('Accepter la politique de confidentialité'),
+                'terms_of_service' => t('Accepter les conditions générale d\'utilisation')
+        ]);
 
         $this->container->callHook('register.store.validator', [ &$validator ]);
 
-        if ($validator->isValid() && !$is_email && !$is_username) {
+        if ($validator->isValid()) {
             $data        = [
                 'username'         => $validator->getInput('username'),
                 'email'            => $validator->getInput('email'),
@@ -124,15 +124,6 @@ class Register extends \Soosyze\Controller
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        
-        if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
-            $_SESSION[ 'errors_keys' ][]          = 'email';
-        }
-        if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
-            $_SESSION[ 'errors_keys' ][]          = 'username';
-        }
 
         return new Redirect($route);
     }

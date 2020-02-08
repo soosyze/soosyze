@@ -310,7 +310,7 @@ class FormUser extends FormBuilder
                                 . '</span> '
                                 . t($role[ 'role_label' ]),
                                 [ 'for' => "role-{$role[ 'role_id' ]}" ]
-                        );
+                            );
                 }, self::$attrGrp);
             }
         });
