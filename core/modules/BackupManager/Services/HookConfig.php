@@ -28,10 +28,10 @@ class HookConfig
     {
         return $form
                 ->group('config-backups-fieldset', 'fieldset', function ($form) use ($data) {
-                        $form
-                            ->legend('config-backups-fieldset', t('Backups'))
-                            ->label('config-max_backup-label', t('Max number of backups'), [
-                            'data-tooltip' => t('The max number of backups that will be stored at the same time. Then the older backups will be overide. Set 0 for untilimited.'),
+                    $form->legend('config-backups-fieldset', t('Backups'))
+                        ->group('config-backups-group', 'div', function ($form) use ($data) {
+                            $form->label('config-max_backup-label', t('Maximum number of backups'), [
+                            'data-tooltip' => t('The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited'),
                             'for'          => 'max_backups'
                             ])
                             ->number('max_backups', [
@@ -39,9 +39,19 @@ class HookConfig
                                 'min'         => 0,
                                 'value'       => $data[ 'max_backups' ] > 0 ? $data[ 'max_backups' ] : 0
                             ]);
-
-
-                }, [ 'class' => 'form-group' ])
+                        }, [ 'class' => 'form-group' ])
+                        ->group('config-backup_cron-group', 'div', function ($form) use ($data) {
+                            $form->checkbox('backup_cron', ['checked' => $data[ 'backup_cron' ] ])
+                            ->label('config-backup_cron-label', '<span class="ui"></span> ' . t('Enable CRON backups'), [
+                                'for'          => 'backup_cron'
+                            ]);
+                        }, [ 'class' => 'form-group' ])
+                        ->group('config-info_cron-group', 'div', function ($form) use ($data) {
+                            $form->html('link_to_cron', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:_content</a>', [
+                                '_content' => t('How to set up the CRON service ?')
+                            ]);
+                        }, [ 'class' => 'form-group' ]);
+                })
                 ->token('token_backupmanager_config')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
@@ -49,9 +59,11 @@ class HookConfig
     public function validator(&$validator)
     {
         $validator->setRules([
-            'max_backups'    => 'min:0'
+            'max_backups'    => 'min:0',
+            'backup_cron'    => 'bool'
         ])->setLabel([
-            'max_backups'         => t('Max backup possible')
+            'max_backups'         => t('Max backup possible'),
+            'backup_cron'         => t('Cron backups')
         ]);
     }
 
@@ -59,8 +71,7 @@ class HookConfig
     {
         $data = [
             'max_backups'    => $validator->getInput('max_backups'),
+            'backup_cron'    => (bool) $validator->getInput('backup_cron'),
         ];
     }
 }
-
-

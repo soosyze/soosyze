@@ -2,9 +2,9 @@
 
 namespace SoosyzeCore\BackupManager\Controller;
 
-use \Soosyze\Components\Http\Redirect;
-use \Soosyze\Components\Http\Response;
-use \Soosyze\Components\Http\Stream;
+use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Http\Response;
+use Soosyze\Components\Http\Stream;
 
 class BackupController extends \Soosyze\Controller
 {
@@ -31,7 +31,9 @@ class BackupController extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-index.php', $this->pathViews, [
                     'backups' => self::backupservice()->listBackups(),
-                    'max_backups' => self::config()->get('settings.max_backups')
+                    'max_backups' => self::config()->get('settings.max_backups'),
+                    'do_backup_route' => self::router()->getRoute('backupmanager.dobackup'),
+                    'delete_all_route' => self::router()->getRoute('backupmanager.delete.all')
                 ]);
     }
     
@@ -39,7 +41,7 @@ class BackupController extends \Soosyze\Controller
     {
         $_SESSION['messages'] = self::backupservice()->deleteAll()
             ?   ['success' => [ t('Backups deleted successfuly') ]]
-            :   ['errors' => [t('Backups delete failed !')]] ;
+            :   ['errors' => [t('Backups delete failed')]];
         
         return new Redirect(
             self::router()->getRoute('backupmanager.index')
@@ -49,17 +51,18 @@ class BackupController extends \Soosyze\Controller
     public function download($path)
     {
         $content = self::backupservice()->getBackup($path);
-        if($content)
-            return new Response(200, new Stream($content), ['content-type' => 'application/zip', 'content-disposition' => 'attachement; filename="'.$path.'.zip"']);
-        else
-            return new Response(404);
+        if ($content) {
+            return new Response(200, new Stream($content), ['content-type' => 'application/zip', 'content-disposition' => 'attachement; filename="' . $path . '.zip"']);
+        }
+        
+        return $this->get404();
     }
     
     public function restore($path)
     {
         $_SESSION['messages'] = self::backupservice()->restore($path)
             ?   ['success' => [ t('Backup restored successfuly') ]]
-            :   ['errors' => [t('Backup restore failed !')]] ;
+            :   ['errors' => [t('Backup restore failed')]];
         
         return new Redirect(
             self::router()->getRoute('backupmanager.index')
@@ -70,7 +73,7 @@ class BackupController extends \Soosyze\Controller
     {
         $_SESSION['messages'] = self::backupservice()->delete($path)
             ?   ['success' => [ t('Backup deleted successfuly') ]]
-            :   ['errors' => [t('Backup delete failed !')]] ;
+            :   ['errors' => [t('Backup delete failed')]];
 
         return new Redirect(
             self::router()->getRoute('backupmanager.index')
@@ -81,7 +84,7 @@ class BackupController extends \Soosyze\Controller
     {
         $_SESSION['messages'] = self::backupservice()->doBackup()
             ?   ['success' => [ t('Backup done successfuly') ]]
-            :   ['errors' => [t('Backup failed !')]] ;
+            :   ['errors' => [t('Backup failed')]];
         
         return new Redirect(
             self::router()->getRoute('backupmanager.index')

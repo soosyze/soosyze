@@ -22,7 +22,9 @@ $app->setSettings([
     /* Chemin des modules contributeur. */
     'modules_contributed' => 'app/modules',
     /* Chemins des thèmes par ordre de priorité d'appel. */
-    'themes_path'         => [ 'app/themes', 'core/themes' ]
+    'themes_path'         => [ 'app/themes', 'core/themes' ],
+    /* Chemin des backups, absolu */
+    'backup_dir'          => ROOT . '../soosyze_backups'
 ]);
 
 $app->setEnvironmentDefault('default');
