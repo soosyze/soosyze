@@ -4,9 +4,15 @@ namespace SoosyzeCore\BackupManager\Services;
 
 class BackupService
 {
-    /* ISO8601 adapté. */
+    /**
+     * ISO8601 adapté.
+     */
     const DATE_FORMAT = 'Y-m-d\TH-i-s';
-
+    
+    const DATE_REGEX = '2[\d]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][\d]|3[01])T([01][\d]|2[0-3])-[0-5][\d]-[0-5][\d]';
+    
+    const SUFFIX = 'soosyzecms.zip';
+    
     protected $core;
     
     protected $router;
@@ -21,22 +27,22 @@ class BackupService
         $this->router = $router;
         $this->config = $config;
       
-        $this->repository = $this->core->getSetting('backup_dir', ROOT . '../soosyze_backups');
+        $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups');
     }
     
     public function listBackups()
     {
         $backups = [];
         foreach (new \DirectoryIterator($this->repository) as $file) {
-            if ($file->isDot() || $file->getExtension() !== 'zip' || !preg_match("#^[0-9|\-|T|\+]+soosyzecms#", $file->getFilename())) {
+            if ($file->isDot() || $file->getExtension() !== 'zip' || !preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $file->getFilename())) {
                 continue;
             }
             $backups[] = [
                 'date' => \date_create_from_format(self::DATE_FORMAT, str_replace('soosyzecms.zip', '', $file->getFilename())),
                 'size' => $file->getSize(),
-                'download_link' => $this->router->getRoute('backupmanager.download', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())]),
-                'restore_link' => $this->router->getRoute('backupmanager.restore', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())]),
-                'delete_link' => $this->router->getRoute('backupmanager.delete', [':file' => str_replace('soosyzecms.zip', '', $file->getFilename())])
+                'download_link' => $this->router->getRoute('backupmanager.download', [':file' => str_replace(self::SUFFIX, '', $file->getFilename())]),
+                'restore_link' => $this->router->getRoute('backupmanager.restore', [':file' => str_replace(self::SUFFIX, '', $file->getFilename())]),
+                'delete_link' => $this->router->getRoute('backupmanager.delete', [':file' => str_replace(self::SUFFIX, '', $file->getFilename())])
             ];
         }
         \array_multisort($backups, \SORT_DESC);
@@ -58,7 +64,7 @@ class BackupService
     
     public function restore($date)
     {
-        $file = $this->repository . DS . $date . 'soosyzecms.zip';
+        $file = $this->repository . DS . $date . self::SUFFIX;
         if (file_exists($file)) {
             $zip = new \ZipArchive();
             $zip->open($file);
@@ -72,7 +78,7 @@ class BackupService
     
     public function delete($date)
     {
-        $file = $this->repository . DS . $date . 'soosyzecms.zip';
+        $file = $this->repository . DS . $date . self::SUFFIX;
         if (file_exists($file)) {
             return \unlink($file);
         }
@@ -94,7 +100,7 @@ class BackupService
     
     public function getBackup($date)
     {
-        $file = $this->repository . DS . $date . 'soosyzecms.zip';
+        $file = $this->repository . DS . $date . self::SUFFIX;
         if (file_exists($file)) {
             return \file_get_contents($file);
         }
@@ -107,7 +113,7 @@ class BackupService
         $max_backups = $this->config->get('settings.max_backups');
         $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
         if ($max_backups && count($dir)-2 >= $max_backups) {
-            if (preg_match("#^[0-9|\-|T|\+]+soosyzecms#", $dir[2])) {
+            if (preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[2])) {
                 \unlink($this->repository . DS . $dir[2]);
             }
         }
@@ -121,7 +127,7 @@ class BackupService
     
     private function generateBackupName()
     {
-        return \date(self::DATE_FORMAT) . 'soosyzecms.zip';
+        return \date(self::DATE_FORMAT) . self::SUFFIX;
     }
     
     private function zipRecursivly($dir, \ZipArchive $zip)

@@ -8,7 +8,7 @@ class HookCron
     
     private $config;
     
-    public function __contruct(BackupService $bs, $config)
+    public function __construct(BackupService $bs, $config)
     {
         $this->backupservice = $bs;
         $this->config = $config;

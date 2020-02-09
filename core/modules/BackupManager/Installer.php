@@ -3,7 +3,6 @@
 namespace SoosyzeCore\BackupManager;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 
 class Installer implements \SoosyzeCore\System\Migration
 {
@@ -15,7 +14,7 @@ class Installer implements \SoosyzeCore\System\Migration
     public function install(ContainerInterface $ci)
     {
         /* Création du dossier de backup. */
-        $dir = $ci->core()->getSetting('backup_dir', ROOT . '../soosyze_backups');
+        $dir = $ci->core()->getDir('backup_dir', '../soosyze_backups');
         if (!file_exists($dir)) {
             \mkdir($dir, 644, true);
         }
@@ -87,12 +86,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function uninstall(ContainerInterface $ci)
     {
         /* Suppression du dossier de sauvegarde. */
-        foreach (new \DirectoryIterator($ci->core()->getSetting('backup_dir')) as $file) {
+        foreach (new \DirectoryIterator($ci->core()->getDir('backup_dir')) as $file) {
             if ($file->isDot()) {
                 continue;
             }
             \unlink($file->getPathname());
         }
-        rmdir($ci->core()->getSetting('backup_dir', ROOT . '../soosyze_backups'));
+        rmdir($ci->core()->getDir('backup_dir', '../soosyze_backups'));
     }
 }

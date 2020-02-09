@@ -18,7 +18,7 @@
                 <thead>
                     <tr class="form-head">
                         <th data-tooltip="<?php echo t('The number of backup you did and the maximum number available') ?>">
-                            <?php echo count($backups) . '/' . ($max_backups ? $max_backups : '<i class="fa fa-infinity"></i>') ?>
+                            <i class="fa fa fa-info-circle"></i> <?php echo count($backups) . ' / ' . ($max_backups ? $max_backups : '<i class="fa fa-infinity"></i>') ?>
                         </th>
                         <th><?php echo t('Date'); ?></th>
                         <th><?php echo t('Size'); ?></th>
@@ -29,7 +29,7 @@
                     <?php foreach ($backups as $i => $backup) : ?>
                         <tr>
                             <th>
-                                #<?php echo $i + 1; ?><!--<i class="far fa-2x fa-file-archive"></i>-->
+                                #<?php echo $i + 1; ?>
                             </th>
                             <td data-title="<?php echo t('Date'); ?>">
                                 <span data-tooltip="<?php echo $backup['date']->format('Y-m-d H:i:s') ?>">
@@ -44,7 +44,7 @@
                                 </span> 
                             </td>
                             <td data-title="<?php echo t('Size'); ?>">   
-                                <span data-tooltip="<?php echo $backup['size'] . 'o' ?>">
+                                <span data-tooltip="<?php echo $backup['size'] ?> octets">
                                     <?php echo \Soosyze\Components\Util\Util::strFileSizeFormatted($backup['size']); ?>
                                 </span>
                             </td>
@@ -76,9 +76,9 @@
                                 </a>
                             </td>
                         <tr>
-    <?php endforeach; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
-                    <?php endif; ?>
+            <?php endif; ?>
     </fieldset>
 </div>

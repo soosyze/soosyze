@@ -2,7 +2,8 @@
     "backup.install": {
         "class": "SoosyzeCore\\BackupManager\\Installer",
         "hooks": {
-            "install.menu": "hookInstallMenu"
+            "install.menu": "hookInstallMenu",
+            "install.user": "hookInstallUser"
         }
     },
     "backupservice": {
