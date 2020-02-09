@@ -68,11 +68,26 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 }, [ 'class' => 'form-group' ])
                 ->group('link-target-group', 'div', function ($form) {
                     $form->label('link-target-label', t('Target'))
-                    ->select('target_link', self::getTarget(), [
-                        'class'    => 'form-control',
-                        'required' => 1,
-                        'selected' => $this->content[ 'target_link' ]
-                    ]);
+                        ->group('link-target-radio_1', 'div', function ($form) {
+                            $form->radio('target_link', [
+                                'id'       => 'target_link_1',
+                                'value'    => '_self',
+                                'required' => 1,
+                                'checked' => ($this->content[ 'target_link' ] === '_self')
+                            ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
+                                'for' => 'target_link_1'
+                            ]);
+                        }, [ 'class' => 'form-group' ])
+                        ->group('link-target-radio_2', 'div', function ($form) {
+                            $form->radio('target_link', [
+                                'id'       => 'target_link_2',
+                                'value'    => '_blank',
+                                'required' => 1,
+                                'checked' => ($this->content[ 'target_link' ] === '_blank')
+                            ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
+                                'for' => 'target_link_2'
+                            ]);
+                        }, [ 'class' => 'form-group' ]);
                 }, [ 'class' => 'form-group' ]);
         })
             ->token('token_link_form')
@@ -85,15 +100,5 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return $this;
-    }
-    
-    protected static function getTarget()
-    {
-        return [
-            [ 'value' => '_blank', 'label' => '(_blank) ' . t('Load in a new window') ],
-            [ 'value' => '_self', 'label' => '(_self) ' . t('Load in the same window') ],
-            [ 'value' => '_parent', 'label' => '(_parent) ' . t('Load into the parent frameset') ],
-            [ 'value' => '_top', 'label' => '(_top) ' . t('Load in the whole body of the window') ]
-        ];
     }
 }

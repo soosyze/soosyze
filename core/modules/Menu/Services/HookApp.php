@@ -32,7 +32,7 @@ class HookApp
     }
 
     public function renderMenu(
-    $nameMenu,
+        $nameMenu,
         $request,
         $response,
         $parent = -1,
