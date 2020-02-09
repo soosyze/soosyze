@@ -14,8 +14,15 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function install(ContainerInterface $ci)
     {
+        /* Création du dossier de backup. */
+        $dir = $ci->core()->getSetting('backup_dir', ROOT . '../soosyze_backups');
+        if (!file_exists($dir)) {
+            \mkdir($dir, 644, true);
+        }
+        
         $ci->config()
-            ->set('settings.max_backups', 0);
+            ->set('settings.max_backups', 0)
+            ->set('settings.backup_cron', 0);
     }
 
     public function seeders(ContainerInterface $ci)
@@ -24,11 +31,18 @@ class Installer implements \SoosyzeCore\System\Migration
     
     public function hookInstall(ContainerInterface $ci)
     {
-        $dir = $ci->core()->getSetting('backup_dir');
-        if (!file_exists($dir)) {
-            \mkdir($dir, 644, true);
-        }
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
+    }
+    
+    public function hookInstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 3, 'backups.manage' ])
+                ->execute();
+        }
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
@@ -45,6 +59,12 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
+        $this->hookUninstallMenu($ci);
+        $this->hookUninstallUser($ci);
+    }
+    
+    public function hookUninstallMenu(ContainerInterface $ci)
+    {
         if ($ci->module()->has('Menu')) {
             $ci->query()->from('menu_link')
                 ->delete()
@@ -52,8 +72,27 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->execute();
         }
     }
+    
+    public function hookUninstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->from('role_permission')
+                ->delete()
+                ->where('permission_id', 'like', 'backups.%')
+                ->execute();
+        }
+    }
 
     public function uninstall(ContainerInterface $ci)
     {
+        /* Suppression du dossier de sauvegarde. */
+        foreach (new \DirectoryIterator($ci->core()->getSetting('backup_dir')) as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+            \unlink($file->getPathname());
+        }
+        rmdir($ci->core()->getSetting('backup_dir', ROOT . '../soosyze_backups'));
     }
 }

@@ -9,4 +9,4 @@ R::get('backupmanager.dobackup', 'admin/backupmanager/do', 'BackupController@doB
 R::get('backupmanager.download', 'admin/backupmanager/download/:file', 'BackupController@download', [':file' => '[0-9|\-|T|\+]+']);
 R::get('backupmanager.restore', 'admin/backupmanager/restore/:file', 'BackupController@restore', [':file' => '[0-9|\-|T|\+]+']);
 R::get('backupmanager.delete', 'admin/backupmanager/delete/:file', 'BackupController@delete', [':file' => '[0-9|\-|T|\+]+']);
-R::get('backupmanager.deleteall', 'admin/backupmanager/deleteall', 'BackupController@deleteAll');
+R::get('backupmanager.delete.all', 'admin/backupmanager/delete/all', 'BackupController@deleteAll');

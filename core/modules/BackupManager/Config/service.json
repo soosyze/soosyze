@@ -18,5 +18,24 @@
             "config.update.backupmanager.validator": "validator",
             "config.update.backupmanager.before": "before"
         }
+    },
+    "backup.hook.user": {
+        "class": "SoosyzeCore\\BackupManager\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.backupmanager.index": "hookBackupManage",
+            "route.backupmanager.dobackup": "hookBackupManage",
+            "route.backupmanager.delete": "hookBackupManage",
+            "route.backupmanager.restore": "hookBackupManage",
+            "route.backupmanager.delete.all": "hookBackupManage",
+            "route.backupmanager.download": "hookBackupManage"
+        }
+    },
+    "backup.hook.cron": {
+        "class": "SoosyzeCore\\BackupManager\\Services\\HookCron",
+        "arguments": ["@backupservice", "@config"],
+        "hooks": {
+            "app.cron": "hookCron"
+        }
     }
 }
