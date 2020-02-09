@@ -196,12 +196,10 @@ class Install extends \Soosyze\Controller
     private function installFinish()
     {
         $save = $_SESSION[ 'inputs' ][ 'user' ];
-        $salt = base64_encode(random_bytes(32));
         $data = [
             'username'       => $save[ 'username' ],
             'email'          => $save[ 'email' ],
-            'password'       => password_hash(hash('sha256', $save[ 'password' ] . $salt), PASSWORD_DEFAULT),
-            'salt'           => $salt,
+            'password'       => password_hash($save[ 'password' ], PASSWORD_DEFAULT),
             'firstname'      => $save[ 'firstname' ],
             'name'           => $save[ 'name' ],
             'actived'        => true,
