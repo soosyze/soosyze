@@ -3,7 +3,7 @@
     <div class="block-sortable" data-id="<?php echo $section_id; ?>">
     <?php foreach ($content as $block): ?>
 
-        <div class="block">
+        <div class="block <?php echo $block[ 'class' ]; ?>">
             <?php if ($edit) : ?>
 
             <span class="block-actions">

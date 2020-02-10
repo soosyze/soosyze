@@ -156,11 +156,24 @@ class Block extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('content-group', 'div', function ($form) use ($data) {
-                    $form->textarea('content', $data[ 'content' ], [
+                    $form->label('content-textarea-label', 'Html :', [
+                        'for' => 'content-editor'
+                    ])
+                    ->textarea('content', $data[ 'content' ], [
+                        'id'          => 'content-editor',
                         'class'       => 'form-control editor',
                         'placeholder' => '<p>Hello World!</p>',
                         'required'    => 1,
                         'rows'        => 8
+                    ])
+                    ->label('class-textarea-label', 'Style :', [
+                        'for' => 'class-editor'
+                    ])
+                    ->text('class', [
+                        'id'          => 'class-editor',
+                        'class'       => 'form-control',
+                        'placeholder' => 'text-beautiful',
+                        'value'       => $data[ 'class' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -272,6 +285,7 @@ class Block extends \Soosyze\Controller
             ->setRules([
                 'title'            => '!required|string|max:255',
                 'content'          => '!required|string|max:5000',
+                'class'              => '!required|string|max:255',
                 'visibility_pages' => 'bool',
                 'pages'            => '!required|string|htmlsc',
                 'visibility_roles' => 'bool',
@@ -305,6 +319,7 @@ class Block extends \Soosyze\Controller
             $values = [
                 'title'            => $validator->getInput('title'),
                 'content'          => $validator->getInput('content'),
+                'class'              => $validator->getInput('class'),
                 'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
                 'pages'            => $validator->getInput('pages'),
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
