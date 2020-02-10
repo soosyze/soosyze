@@ -14,7 +14,7 @@ $app = \Core::getInstance($req);
 
 $app->setSettings([
     'root'                => ROOT,
-    'backup_dir'          => '../backup',
+
     'config'              => 'app/config',
     /* Chemin des fichiers public. */
     'files_public'        => 'app/files',

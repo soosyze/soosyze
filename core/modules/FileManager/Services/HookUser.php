@@ -67,7 +67,7 @@ class HookUser
     }
 
     public function hookFileUpdate(
-    $path,
+        $path,
         $name,
         $ext,
         $req = null,
@@ -82,7 +82,7 @@ class HookUser
     }
 
     public function hookFileCopyClipboard(
-    $path,
+        $path,
         $name,
         $ext,
         $user = null
@@ -93,7 +93,7 @@ class HookUser
     }
 
     public function hookFileDelete(
-    $path,
+        $path,
         $name,
         $ext,
         $req = null,
@@ -108,7 +108,7 @@ class HookUser
     }
 
     public function hookFileDownlod(
-    $path,
+        $path,
         $name,
         $ext,
         $req = null,
