@@ -20,6 +20,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('title')
                 ->string('section')
                 ->text('content')->nullable()
+                ->string('class')->valueDefault('')
                 ->text('hook')->nullable()
                 ->integer('weight')
                 ->boolean('visibility_pages')->valueDefault(false)
