@@ -6,28 +6,26 @@ class HookConfig
 {
     public function menu(&$menu)
     {
-        $menu['news'] = [
+        $menu[ 'news' ] = [
             'title_link' => 'News'
         ];
     }
 
     public function form(&$form, $data)
     {
-        return $form->group('news-fieldset', 'fieldset', function ($form) use ($data) {
+        $form->group('news-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news-legend', t('Settings'))
-                    ->group('news-news_pagination-group', 'div', function ($form) use ($data) {
-                        $form->label('news-news_pagination-group', t('Number of articles per page'))
-                        ->number('news_pagination', [
-                            'class'    => 'form-control',
-                            'max'      => 50,
-                            'min'      => 1,
-                            'required' => 1,
-                            'value'    => $data[ 'news_pagination' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ]);
-        })
-                ->token('token_system_config')
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                ->group('news-news_pagination-group', 'div', function ($form) use ($data) {
+                    $form->label('news-news_pagination-group', t('Number of articles per page'))
+                    ->number('news_pagination', [
+                        'class'    => 'form-control',
+                        'max'      => 50,
+                        'min'      => 1,
+                        'required' => 1,
+                        'value'    => $data[ 'news_pagination' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+        });
     }
 
     public function validator(&$validator)

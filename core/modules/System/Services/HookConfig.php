@@ -9,7 +9,7 @@ class HookConfig
     protected $file;
 
     protected $translate;
-    
+
     protected $router;
 
     public function __construct($router, $template, $file, $translate)
@@ -201,9 +201,7 @@ class HookConfig
                             '_content' => t('The width and height min and max: 16px and 310px.')
                         ]);
                     }, [ 'class' => 'form-group' ]);
-                })
-                ->token('token_system_config')
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                });
     }
 
     public function validator(&$validator)
@@ -224,8 +222,7 @@ class HookConfig
             'meta_title'          => 'required|string|max:64|htmlsc',
             'meta_description'    => 'required|string|max:256|htmlsc',
             'meta_keyboard'       => '!required|string|htmlsc',
-            'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb',
-            'token_system_config' => 'required|token'
+            'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
         ])->setLabel([
             'lang'               => t('Language'),
             'email'              => t('E-mail of the site'),
