@@ -1,4 +1,8 @@
 {
+    "node": {
+        "class": "SoosyzeCore\\Node\\Services\\Node",
+        "arguments": ["@query"]
+    },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",
         "hooks": {

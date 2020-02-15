@@ -4,6 +4,7 @@
         <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
     </a>
 </div>
+
 <fieldset class="responsive">
     <legend><?php echo t('My contents'); ?></legend>
     <table class="table table-hover table-node">
@@ -23,27 +24,31 @@
                         <th>
                             <a href="<?php echo $node[ 'link_edit' ]; ?>"><?php echo $node[ 'title' ]; ?></a> <small><?php echo $node[ 'type' ]; ?></small>
                         </th>
-                        <td data-title="<?php echo t('Creation date'); ?>"><?php echo gmdate('d/m/Y - H:m:s', $node[ 'created' ]); ?></td>
+                        <td data-title="<?php echo t('Creation date'); ?>"><?php echo gmdate('D, j M Y, H:i', $node[ 'date_created' ]); ?></td>
                         <td data-title="<?php echo t('Actions'); ?>" class="text-right">
                             <div class="btn-group" role="group" aria-label="action">
                                 <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
-                                    <span class="fa fa-search"></span> <?php echo t('View'); ?>
+                                    <i class="far fa-eye"></i> <?php echo t('View'); ?>
                                 </a>
                                 <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
-                                    <span class="fa fa-edit"></span> <?php echo t('Edit'); ?>
+                                    <i class="fa fa-edit"></i> <?php echo t('Edit'); ?>
                                 </a>
                                 <a href="<?php echo $node[ 'link_delete' ]; ?>" class="btn btn-action" onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
-                                    <span class="fa fa-times"></span> <?php echo t('Delete'); ?>
+                                    <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
                                 </a>
                             </div>
                         </td>
                         <td data-title="<?php echo t('Status'); ?>">
                             <?php if ($node[ 'published' ]): ?>
 
-                                <div class="icon-publish" data-tooltip="<?php echo t('Published'); ?>"></div>
+                            <span class="icon-publish" data-tooltip="<?php echo t('Published'); ?>">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </span>
                             <?php else: ?>
 
-                                <div class="icon-notPublish" data-tooltip="<?php echo t('Not published'); ?>"></div>
+                            <span class="icon-notPublish" data-tooltip="<?php echo t('Not published'); ?>">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </span>
                             <?php endif; ?>
 
                         </td>
