@@ -53,7 +53,8 @@ class Config extends \Soosyze\Controller
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ]);
         $this->container->callHook("config.edit.$id.form.generate", [ &$form, $data, $req ]);
-
+        $form->token('token_' . $id . '_config')
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
 
         $messages = [];
@@ -89,6 +90,7 @@ class Config extends \Soosyze\Controller
         self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
 
         self::core()->callHook("config.update.$id.validator", [ &$validator ]);
+        $validator->addRule('token_' . $id . '_config', 'token');
 
         if ($validator->isValid()) {
             $data = [];
