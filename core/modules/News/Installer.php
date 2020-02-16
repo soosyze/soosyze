@@ -3,9 +3,18 @@
 namespace SoosyzeCore\News;
 
 use Psr\Container\ContainerInterface;
+use Queryflatfile\TableBuilder;
+use Soosyze\Components\Template\Template;
 
 class Installer implements \SoosyzeCore\System\Migration
 {
+    protected $pathContent;
+
+    public function __construct()
+    {
+        $this->pathContent = __DIR__ . '/Views/Content/';
+    }
+
     public function getDir()
     {
         return __DIR__;
@@ -13,6 +22,13 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function install(ContainerInterface $ci)
     {
+        $ci->schema()
+            ->createTableIfNotExists('entity_article', function (TableBuilder $table) {
+                $table->increments('article_id')
+                ->string('image')
+                ->text('summary')
+                ->text('body');
+            });
         $ci->query()->insertInto('node_type', [
                 'node_type', 'node_type_name', 'node_type_description'
             ])
@@ -23,15 +39,17 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->execute();
 
+        $idImage   = $ci->query()->from('field')->where('field_name', 'image')->fetch()[ 'field_id' ];
         $idSummary = $ci->query()->from('field')->where('field_name', 'summary')->fetch()[ 'field_id' ];
         $idBody    = $ci->query()->from('field')->where('field_name', 'body')->fetch()[ 'field_id' ];
 
         $ci->query()
             ->insertInto('node_type_field', [
-                'node_type', 'field_id', 'field_weight', 'field_label'
+                'node_type', 'field_id', 'field_weight', 'field_label', 'field_rules'
             ])
-            ->values([ 'article', $idSummary, 2, 'Summary' ])
-            ->values([ 'article', $idBody, 3, 'Body' ])
+            ->values([ 'article', $idImage, 1, 'Picture', 'required|image|max:800kb' ])
+            ->values([ 'article', $idSummary, 2, 'Summary', 'required|string|max:512' ])
+            ->values([ 'article', $idBody, 3, 'Body', 'string' ])
             ->execute();
 
         $ci->config()
@@ -41,8 +59,24 @@ class Installer implements \SoosyzeCore\System\Migration
     public function seeders(ContainerInterface $ci)
     {
         $ci->query()
+            ->insertInto('entity_article', [ 'image', 'summary', 'body' ])
+            ->values([
+                'https://picsum.photos/id/1/650/300',
+                '<p>Un article se met en valeur par un résumé qui décrit brièvement '
+                . 'son contenu avec un nombre de caractères limité (maximum 255 caractères).</p>',
+                (new Template('article_1.php', $this->pathContent))->render()
+            ])
+            ->values([
+                'https://picsum.photos/id/11/650/300',
+                '<p>Consectetur adipiscing elit. Etiam orci nulla, dignissim eu hendrerit ullamcorper, blandit et arcu. '
+                . 'Vivamus imperdiet, felis eget suscipit pellentesque, est tortor rutrum tortor.</p>',
+                (new Template('article_2.php', $this->pathContent))->render()
+            ])
+            ->execute();
+
+        $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                'title', 'type', 'date_created', 'date_changed', 'published', 'entity_id'
             ])
             ->values([
                 'Bienvenue sur mon site',
@@ -50,41 +84,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 (string) time(),
                 (string) time(),
                 true,
-                serialize([
-                    'summary' => '<img src="https://picsum.photos/id/1/650/300" alt="Illustration">'
-                    . '<p>Un article se met en valeur par un résumé qui décrit brièvement '
-                    . 'son contenu avec un nombre de caractères limité (maximum 255 caractères).</p>',
-                    'body'    => '<p>Quelques conseils pour l\'écriture de vos articles</p>
-<ul>
-    <li>L\'article peut commencer par son résumé.</li>
-    <li>Le résumé ne devrait pas contenir de mise en forme, juste du texte.</li>
-    <li>Le titre principal de votre article (titre 1) doit-être unique pour chaque page. 
-        Cela aide les moteurs de recherche pour indexer votre site. Le titre 1 est géré par le CMS dans un champ `titre du contenu`.
-    </li>
-    <li>Les titres doivent suivre une logique : titre 2 > titre 3 > titre 4</li>
-    <li>Il est déconseillé de dépasser les 3 niveaux de titre au risque de perdre votre lecteur.</li>
-    <li>N\'utiliser pas le gras ou l\'italique juste pour mettre rendre jolie votre article.</li>
-    <li>Comme pour les titre, le gras et l\'italique ont un impact pour le référencement de votre site. 
-    Ces balises doivent être utilisées pour faire ressortir les informations importantes de votre contenu.
-    </li>
-    <li>Trop de mise en forme rends la lecture difficile.</li>
-    <li>Penser à découper votre pensée en plusieurs paragraphes.</li>
-    <li>Justifier votre texte réduit la capacité de vos yeux à retourner à la ligne.</li>
-    <li>Vos phrases commencent par une majuscule et finissent par un point.</li>
-    <li>Éviter l\'utilisation caractère `:`.</li>
-    <li>N\'utiliser pas abusivement les listes à puces. Tout comme les titre éviter de dépasser 3 niveaux.</li>
-</ul>
-
-<p>Il ne s\'agit pas de règles immuables, juste des conseils pour l\'écriture de vos articles.</p>
-<p>Pensez bien à rester sobre, l\'internaute vient avant tout lire le contenu de vos articles.</p>
-<p>Le reste ne dépend que de vous. Bon courage !</p>',
-                    'image'   => ''
-                ])
-            ])
-            ->execute();
-        $ci->query()
-            ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                1
             ])
             ->values([
                 'Lorem ipsum dolor sit amet',
@@ -92,14 +92,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 (string) time(),
                 (string) time(),
                 true,
-                serialize([
-                    'summary' => '<img src="https://picsum.photos/id/11/650/300" alt="Illustration">'
-                    . '<p>Consectetur adipiscing elit. Etiam orci nulla, dignissim eu hendrerit ullamcorper, blandit et arcu. Vivamus imperdiet, felis eget suscipit pellentesque, est tortor rutrum tortor.</p>',
-                    'body'    => '<p>Nam pellentesque ac tellus non porttitor. Pellentesque auctor, dui posuere pellentesque pellentesque, diam purus fringilla arcu, dapibus fermentum orci odio faucibus quam. Proin non neque eros. Mauris vehicula lacus eget fermentum dapibus. Proin luctus orci at sem pellentesque maximus. Cras augue magna, posuere eget euismod at, porta at dolor. Maecenas at mi nec ligula hendrerit malesuada at a diam. Nulla laoreet tincidunt faucibus. Nulla nisl nulla, vehicula sit amet ipsum quis, faucibus aliquam odio. </p>
-<p>Suspendisse nec egestas sapien. Vivamus eros sapien, porta id imperdiet vel, venenatis eu sapien. Nulla non massa nec nunc luctus finibus sit amet vitae nibh. Duis vitae venenatis ante. Mauris maximus ligula sed varius cursus. Aliquam vel ex ipsum. Donec interdum aliquam sapien et cursus. Quisque vel dapibus orci, eu tempor nunc. </p>
-<p>Praesent ut felis pellentesque, tincidunt diam ac, congue diam. Aliquam erat volutpat. Aenean consequat lobortis eros in posuere. Nullam in enim ut leo euismod posuere quis eu magna.</p>',
-                    'image'   => ''
-                ])
+                2
             ])
             ->execute();
     }
@@ -135,6 +128,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->delete()
             ->where('node_type', 'article')
             ->execute();
+        $ci->schema()->dropTable('entity_article');
     }
 
     public function hookUninstall(ContainerInterface $ci)

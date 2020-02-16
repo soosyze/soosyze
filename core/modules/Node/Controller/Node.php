@@ -257,7 +257,7 @@ class Node extends \Soosyze\Controller
         
         $content += self::query()
             ->from('entity_' . $content[ 'type' ])
-            ->where($content[ 'type' ] . '_id', '==', $content[ 'id' ])
+            ->where($content[ 'type' ] . '_id', '==', $content[ 'entity_id' ])
             ->fetch();
 
         $query = self::query()
@@ -278,7 +278,7 @@ class Node extends \Soosyze\Controller
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
-
+        
         $form = (new FormNode([
             'method'  => 'post',
             'action'  => self::router()->getRoute('node.edit', [ ':id' => $id ]),

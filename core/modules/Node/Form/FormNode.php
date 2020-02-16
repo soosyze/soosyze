@@ -29,13 +29,13 @@ class FormNode extends FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function __construct( array $attributes, $file = null )
+    public function __construct(array $attributes, $file = null)
     {
         parent::__construct($attributes);
         $this->file = $file;
     }
 
-    public function content( $content, $type, $query )
+    public function content($content, $type, $query)
     {
         $this->content = array_merge($this->content, $content);
         $this->type    = $type;
@@ -54,33 +54,29 @@ class FormNode extends FormBuilder
 
     public function fields()
     {
-        return $this->group('fields-fieldset', 'fieldset', function ($form)
-            {
-                $form->legend('fields-legend', t('Fill in the following fields'));
-                foreach( $this->query as $value )
-                {
-                    $key                   = $value[ 'field_name' ];
-                    /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
-                    $this->content[ $key ] = isset($this->content[ $key ])
+        return $this->group('fields-fieldset', 'fieldset', function ($form) {
+            $form->legend('fields-legend', t('Fill in the following fields'));
+            foreach ($this->query as $value) {
+                $key                   = $value[ 'field_name' ];
+                /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
+                $this->content[ $key ] = isset($this->content[ $key ])
                         ? $this->content[ $key ]
                         : '';
-                    $this->makeField($form, $value);
-                }
-            });
+                $this->makeField($form, $value);
+            }
+        });
     }
 
-    public function makeField( &$form, $value )
+    public function makeField(&$form, $value)
     {
         $key = $value[ 'field_name' ];
         $this->rules($value);
 
-        return $form->group("$key-group", 'div', function ($form) use ($value, $key)
-            {
-                $options = !empty($value[ 'field_option' ])
+        return $form->group("$key-group", 'div', function ($form) use ($value, $key) {
+            $options = !empty($value[ 'field_option' ])
                     ? json_decode($value[ 'field_option' ])
                     : [];
-                switch( $value[ 'field_type' ] )
-                {
+            switch ($value[ 'field_type' ]) {
                     case 'textarea':
                         $form->label("$key-label", t($value[ 'field_label' ]))
                             ->textarea($key, $this->content[ $key ], [
@@ -119,16 +115,14 @@ class FormNode extends FormBuilder
 
                         break;
                 }
-            }, self::$attrGrp);
+        }, self::$attrGrp);
     }
 
-    public function makeRadio( &$form, $key, $value, $options )
+    public function makeRadio(&$form, $key, $value, $options)
     {
         $form->label("$key-label", t($value[ 'field_label' ]));
-        foreach( $options as $key_radio => $option )
-        {
-            $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $option)
-            {
+        foreach ($options as $key_radio => $option) {
+            $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $option) {
                 $form->radio($key, [
                         'id'      => "$key-$key_radio",
                         'checked' => $this->content[ $key ] == $key_radio,
@@ -141,13 +135,11 @@ class FormNode extends FormBuilder
         }
     }
 
-    public function makeCheckbox( &$form, $key, $value, $options )
+    public function makeCheckbox(&$form, $key, $value, $options)
     {
         $form->label("$key-label", t($value[ 'field_label' ]));
-        foreach( $options as $key_radio => $option )
-        {
-            $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $option)
-            {
+        foreach ($options as $key_radio => $option) {
+            $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $option) {
                 $form->checkbox($key . "[$key_radio]", [
                         'id'      => "$key-$key_radio",
                         'checked' => in_array($key_radio, explode(',', $this->content[ $key ])),
@@ -160,14 +152,12 @@ class FormNode extends FormBuilder
         }
     }
 
-    public function makeSelect( &$form, $key, $value, $options )
+    public function makeSelect(&$form, $key, $value, $options)
     {
         $select_otions = [];
-        foreach( $options as $key_radio => $option )
-        {
+        foreach ($options as $key_radio => $option) {
             $select_otions[ $key_radio ] = [ 'label' => $option, 'value' => $key_radio ];
-            if( $key_radio == $this->content[ $key ] )
-            {
+            if ($key_radio == $this->content[ $key ]) {
                 $select_otions[ $key_radio ][ 'selected' ] = 1;
             }
         }
@@ -178,9 +168,8 @@ class FormNode extends FormBuilder
 
     public function title()
     {
-        return $this->group('title-group', 'div', function ($form)
-            {
-                $form->label('title-label', t('Title of the content'))
+        return $this->group('title-group', 'div', function ($form) {
+            $form->label('title-label', t('Title of the content'))
                     ->text('title', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
@@ -188,77 +177,63 @@ class FormNode extends FormBuilder
                         'placeholder' => t('Title of the content'),
                         'value'       => $this->content[ 'title' ]
                 ]);
-            }, self::$attrGrp);
+        }, self::$attrGrp);
     }
 
     public function seo()
     {
-        return $this->group('seo-group', 'fieldset', function ($form)
-            {
-                $form->legend('seo-legend', t('SEO'))
-                    ->group('meta_noindex-group', 'div', function ($form)
-                    {
+        return $this->group('seo-group', 'fieldset', function ($form) {
+            $form->legend('seo-legend', t('SEO'))
+                    ->group('meta_noindex-group', 'div', function ($form) {
                         $form->checkbox('meta_noindex', [ 'checked' => $this->content[ 'meta_noindex' ] ])
                         ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
                             'for' => 'meta_noindex'
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('meta_nofollow-group', 'div', function ($form)
-                    {
+                    ->group('meta_nofollow-group', 'div', function ($form) {
                         $form->checkbox('meta_nofollow', [ 'checked' => $this->content[ 'meta_nofollow' ] ])
                         ->label('meta_nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
                             'for' => 'meta_nofollow'
                         ]);
                     }, self::$attrGrp)
-                    ->group('meta_noarchive-group', 'div', function ($form)
-                    {
+                    ->group('meta_noarchive-group', 'div', function ($form) {
                         $form->checkbox('meta_noarchive', [ 'checked' => $this->content[ 'meta_noarchive' ] ])
                         ->label('meta_noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
                             'for' => 'meta_nofollow'
                         ]);
                     }, self::$attrGrp);
-            });
+        });
     }
 
     public function actionsSubmit()
     {
-        return $this->group('node-publish-group', 'div', function ($form)
-                {
-                    $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
+        return $this->group('node-publish-group', 'div', function ($form) {
+            $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
                     ->label('publish-label', '<span class="ui"></span> ' . t('Publish content'), [
                         'for' => 'published'
                     ]);
-                }, self::$attrGrp)
+        }, self::$attrGrp)
                 ->token('token_node')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
 
-    public function rules( &$value )
+    public function rules(&$value)
     {
         $value[ 'attr' ] = [];
-        if( preg_match('/^(.*\|)?required(\|.*)?/', $value[ 'field_rules' ]) )
-        {
+        if (preg_match('/^(.*\|)?required(\|.*)?/', $value[ 'field_rules' ])) {
             $value[ 'attr' ][ 'required' ] = 1;
         }
-        if( preg_match('/[\|]?(max|max_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches) )
-        {
-            if( in_array($value[ 'field_type' ], self::$field_rules) )
-            {
+        if (preg_match('/[\|]?(max|max_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches)) {
+            if (in_array($value[ 'field_type' ], self::$field_rules)) {
                 $value[ 'attr' ][ 'maxlength' ] = $matches[ 1 ];
-            }
-            elseif( in_array($value[ 'field_type' ], [ 'number', 'date' ]) )
-            {
+            } elseif (in_array($value[ 'field_type' ], [ 'number', 'date' ])) {
                 $value[ 'attr' ][ 'max' ] = $matches[ 1 ];
             }
         }
-        if( preg_match('/[\|]?(min|min_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches) )
-        {
-            if( in_array($value[ 'field_type' ], self::$field_rules) )
-            {
+        if (preg_match('/[\|]?(min|min_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches)) {
+            if (in_array($value[ 'field_type' ], self::$field_rules)) {
                 $value[ 'attr' ][ 'minlength' ] = $matches[ 1 ];
-            }
-            elseif( in_array($value[ 'field_type' ], [ 'number', 'date' ]) )
-            {
+            } elseif (in_array($value[ 'field_type' ], [ 'number', 'date' ])) {
                 $value[ 'attr' ][ 'min' ] = $matches[ 1 ];
             }
         }

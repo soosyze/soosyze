@@ -1,18 +1,26 @@
 
 <div class="row">
 <?php if ($news): ?>
-    <?php foreach ($news as $new): ?>
 
     <div class="col-md-12">
-        <div class="card">
-            <div class="card__header">
-                <h3 class="card__title"><?php echo $new[ 'title' ]; ?></h3>
-            </div>
+    <?php foreach ($news as $new): ?>
+
+        <article class="card">
+
             <div class="card__main">
-                <div class="card__date_tags">
-                    <span class="card__date">Le <?php echo date(t('Y/m/d'), $new[ 'created' ]); ?></span>
+                <div class="card__header">
+                    <h3 class="card__title">
+                        <a href=" <?php echo $new[ 'link_view' ]; ?>">
+                            <?php echo $new[ 'title' ]; ?>
+                        </a>
+                    </h3>
                 </div>
-                <div class="card__content"><?php echo $new[ 'field' ][ 'summary' ]; ?></div>
+                <div class="card__date_tags">
+                    <span class="card__date"><?php echo date(t('d F, Y'), $new[ 'date_created' ]); ?></span>
+                    <?php echo $new[ 'field' ][ 'image' ]['field_display']; ?>
+
+                </div>
+                <div class="card__content"><?php echo $new[ 'field' ][ 'summary' ]['field_display']; ?></div>
                 <div class="card__footer">
                     <div class="card__more">
                         <a href=" <?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">
@@ -21,9 +29,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </article>
     <?php endforeach; ?>
+
+    </div>
     <div class="col-md-12">
         <?php echo $paginate; ?>
     </div>
