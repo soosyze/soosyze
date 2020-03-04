@@ -1,6 +1,6 @@
 
 <div class="action_bar">
-    <a href="<?php echo $linkAdd; ?>" class="btn btn-primary">
+    <a href="<?php echo $link_add; ?>" class="btn btn-primary">
         <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
     </a>
 </div>

@@ -52,7 +52,7 @@ class News extends \Soosyze\Controller
         foreach ($query as &$value) {
             $value[ 'field' ]       = self::node()->makeFieldsById('article', $value[ 'entity_id' ]);
             $value[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id' => $value[ 'id' ] ]);
+                ':id_node' => $value[ 'id' ] ]);
         }
         $query_all = self::query()
             ->from('node')
@@ -132,7 +132,7 @@ class News extends \Soosyze\Controller
 
         foreach ($query as &$new) {
             $new[ 'field' ]      = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
-            $new[ 'route_show' ] = self::router()->getRoute('node.show', [ ':id' => $new[ 'id' ] ]);
+            $new[ 'route_show' ] = self::router()->getRoute('node.show', [ ':id_node' => $new[ 'id' ] ]);
         }
         $xml = self::template()
             ->createBlock('page-rss.php', $this->pathViews)
@@ -165,7 +165,7 @@ class News extends \Soosyze\Controller
         }
         foreach ($news as &$new) {
             $new[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id' => $new[ 'id' ] ]);
+                ':id_node' => $new[ 'id' ] ]);
             $new[ 'field' ]       = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
             $o = strtotime(date('m/d/Y', $new['date_created']) . ' +1 day');
         }

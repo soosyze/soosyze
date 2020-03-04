@@ -42,13 +42,20 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->string('node_type')
                 ->integer('field_id')
                 ->string('field_label')
-                ->string('field_rules')->valueDefault('')
+                ->string('field_rules')
+                /* Si la donnée doit-être affichée. */
                 ->boolean('field_show')->valueDefault(true)
+                /* Si la donnée doit-être affichée dans le formulaire. */
+                ->boolean('field_show_form')->valueDefault(true)
+                /* Si le label doit-être affiché. */
+                ->boolean('field_show_label')->valueDefault(false)
                 ->text('field_description')->valueDefault('')
                 ->text('field_option')->valueDefault('')
                 ->text('field_default_value')->nullable()
+                /* Poisition du champ. */
                 ->integer('field_weight')->valueDefault(1)
-                ->integer('field_weight_show')->valueDefault(1);
+                /* Poisition de la donnée dans l'affichage. */
+                ->integer('field_weight_form')->valueDefault(1);
             })
             ->createTableIfNotExists('entity_page', function (TableBuilder $table) {
                 $table->increments('page_id')

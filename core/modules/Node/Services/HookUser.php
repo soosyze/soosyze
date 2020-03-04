@@ -33,10 +33,10 @@ class HookUser
         }
     }
 
-    public function hookNodeSow($id)
+    public function hookNodeSow($id_node)
     {
         $node = $this->query->from('node')
-            ->where('id', '==', $id)
+            ->where('id', '==', $id_node)
             ->fetch();
 
         return $node
@@ -58,19 +58,21 @@ class HookUser
         return [ 'node.administer', 'node.created.' . $type ];
     }
 
-    public function hookNodeEdited($id)
+    public function hookNodeEdited($id_node)
     {
         $node = $this->query->from('node')
-            ->where('id', '==', $id)
+            ->where('id', '==', $id_node)
             ->fetch();
-
-        return [ 'node.administer', 'node.edited.' . $node[ 'type' ] ];
+        
+        return $node
+            ? [ 'node.administer', 'node.edited.' . $node[ 'type' ] ]
+            : '';
     }
 
-    public function hookNodeDeleted($id)
+    public function hookNodeDeleted($id_node)
     {
         $node = $this->query->from('node')
-            ->where('id', '==', $id)
+            ->where('id', '==', $id_node)
             ->fetch();
 
         return $node

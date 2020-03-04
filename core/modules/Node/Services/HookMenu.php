@@ -197,10 +197,10 @@ class HookMenu
                     var item             = document.getElementById(id);
                     var input_title      = document.getElementById("title");
                     var input_title_link = document.getElementById("title_link");
-                    
+
                     item.style.display     = item.style.display == "none" ? "" : "none";
-                    input_title_link.value = input_title_link.value 
-                        ? input_title_link.value 
+                    input_title_link.value = input_title_link.value
+                        ? input_title_link.value
                         : input_title.value;
                 }
             </script>';

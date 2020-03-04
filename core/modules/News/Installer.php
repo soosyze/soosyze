@@ -74,25 +74,16 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->execute();
 
+        $time = (string) time();
         $ci->query()
             ->insertInto('node', [
                 'title', 'type', 'date_created', 'date_changed', 'published', 'entity_id'
             ])
             ->values([
-                'Bienvenue sur mon site',
-                'article',
-                (string) time(),
-                (string) time(),
-                true,
-                1
+                'Bienvenue sur mon site', 'article', $time, $time,  true, 1
             ])
             ->values([
-                'Lorem ipsum dolor sit amet',
-                'article',
-                (string) time(),
-                (string) time(),
-                true,
-                2
+                'Lorem ipsum dolor sit amet', 'article', $time, $time, true, 2
             ])
             ->execute();
     }

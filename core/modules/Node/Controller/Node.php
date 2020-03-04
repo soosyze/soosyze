@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\Node\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
@@ -22,14 +21,16 @@ class Node extends \Soosyze\Controller
             ->from('node')
             ->orderBy('date_changed', 'desc')
             ->fetchAll();
-
+        
         foreach ($nodes as &$node) {
             $node[ 'link_view' ]  = self::router()->getRoute('node.show', [
-                ':id' => $node[ 'id' ] ]);
-            $node[ 'link_edit' ]  = self::router()->getRoute('node.edit', [
-                ':id' => $node[ 'id' ] ]);
+                ':id_node' => $node[ 'id' ] ]);
+            $node[ 'link_edit' ]   = self::router()->getRoute('node.edit', [
+                ':id_node' => $node[ 'id' ]
+            ]);
             $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
-                ':id' => $node[ 'id' ] ]);
+                ':id_node' => $node[ 'id' ]
+            ]);
         }
 
         $linkAdd = self::router()->getRoute('node.add');
@@ -40,24 +41,25 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('My contents')
                 ])
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
-                    'linkAdd' => $linkAdd,
-                    'nodes'   => $nodes
+                    'link_add' => $linkAdd,
+                    'nodes'    => $nodes
         ]);
     }
 
     public function add($req)
     {
-        $query = self::query()
+        $nodeType = self::query()
             ->from('node_type')
             ->fetchAll();
 
-        foreach ($query as $key => &$value) {
-            $req_granted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
-            if (!self::core()->callHook('app.granted.route', [ $req_granted ])) {
-                unset($query[ $key ]);
+        foreach ($nodeType as $key => &$value) {
+            $reqGranted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
+            if (!self::core()->callHook('app.granted.route', [ $reqGranted ])) {
+                unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
-                ':type' => $value[ 'node_type' ] ]);
+                ':node' => $value[ 'node_type' ]
+            ]);
         }
 
         return self::template()
@@ -66,25 +68,17 @@ class Node extends \Soosyze\Controller
                     'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content')
                 ])
                 ->make('page.content', 'node-add.php', $this->pathViews, [
-                    'node_type' => $query
-        ]);
+                    'node_type' => $nodeType
+                ]);
     }
 
     public function create($type, $req)
     {
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $type)
-            ->orderBy('field_weight', 'asc')
-            ->fetchAll();
-
-        if (!$query) {
+        if (!$fields = self::node()->getFieldsDisplay($type)) {
             return $this->get404($req);
         }
-
-        $content = [ 'title' => '', 'published' => '', 'noindex' => '', 'nofollow' => '', 'noarchive' => '' ];
+        
+        $content = [];
 
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
@@ -95,9 +89,9 @@ class Node extends \Soosyze\Controller
 
         $form = (new FormNode([
             'method'  => 'post',
-            'action'  => self::router()->getRoute('node.store', [ ':type' => $type ]),
-            'enctype' => 'multipart/form-data' ], self::file()))
-            ->content($content, $type, $query)
+            'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            ->content($content, $type, $fields)
             ->make();
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
@@ -115,7 +109,9 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [':name' => $type])
+                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [
+                        ':name' => $fields[ 0 ][ 'node_type_name' ]
+                    ])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-create.php', $this->pathViews, [
@@ -125,15 +121,7 @@ class Node extends \Soosyze\Controller
 
     public function store($type, $req)
     {
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $type)
-            ->orderBy('field_weight')
-            ->fetchAll();
-
-        if (!$query) {
+        if (!($fields = self::node()->getFieldsForm($type))) {
             return $this->get404($req);
         }
 
@@ -151,40 +139,49 @@ class Node extends \Soosyze\Controller
 
         /* Test des champs personnalisés de la node. */
         $files  = [];
-        foreach ($query as $value) {
-            $key = $value[ 'field_name' ];
-            $validator->addRule($key, $value[ 'field_rules' ]);
-            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                $files[] = $key;
+        $canPublish = true;
+        foreach ($fields as $value) {
+            /* Si une node possède une relation requise, elle ne peut-être publié. */
+            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                if (isset(self::node()->getRules($value)['required'])) {
+                    $canPublish = false;
+                }
+            } else {
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
             }
+            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                $files[] = $value[ 'field_name' ];
+            }
+        }
+        
+        if (!$canPublish) {
+            $validator->addRule('published', '!accepted');
         }
 
         $this->container->callHook('node.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
-            $fields = [];
-            foreach ($query as $value) {
+            $fieldsInsert = [];
+            $fieldsRelation = false;
+            foreach ($fields as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    unset($fields[ $key ]);
+                    $fieldsInsert[ $key ] = '';
+                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                    $fieldsRelation = true;
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fields[ $key ] = implode(',', $validator->getInput($key, []));
+                    $fieldsInsert[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
-                    $fields[ $key ] = $validator->getInput($key, '');
+                    $fieldsInsert[ $key ] = $validator->getInput($key, '');
                 }
             }
+
             self::query()
-                ->insertInto('entity_' . $type, array_keys($fields))
-                ->values($fields)
+                ->insertInto('entity_' . $type, array_keys($fieldsInsert))
+                ->values($fieldsInsert)
                 ->execute();
-            /* Télécharge et enregistre les fichiers. */
-            foreach ($query as $value) {
-                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $id = self::schema()->getIncrement('entity_' . $type);
-                    $this->saveFile($type, $id, $value[ 'field_name' ], $validator);
-                }
-            }
+
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
                 'date_changed'     => (string) time(),
@@ -205,28 +202,35 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
+            /* Télécharge et enregistre les fichiers. */
+            $node['id'] = self::schema()->getIncrement('node');
+            
+            foreach ($fields as $value) {
+                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                    $this->saveFile($node, $value[ 'field_name' ], $validator);
+                }
+            }
+            
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
-            $route                               = self::router()->getRoute('node.index');
 
-            return new Redirect($route);
+            $id_node = self::schema()->getIncrement('node');
+
+            return new Redirect(
+                $fieldsRelation
+                ? self::router()->getRoute('node.edit', [ ':id_node' => $id_node ])
+                : self::router()->getRoute('node.index')
+            );
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        $route = self::router()->getRoute('node.create', [ ':type' => $type ]);
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('node.create', [ ':node' => $type ]));
     }
 
-    public function show($id, $req)
+    public function show($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
         $fields = self::node()->makeFieldsById($node['type'], $node['entity_id']);
@@ -237,42 +241,25 @@ class Node extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'node-show.php', $this->pathViews, [
                     'fields' => $fields
-                ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
+                ])->override('page.content', [ 'node-show-' . $id_node . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
         
-        self::core()->callHook('node.show.tpl', [&$tpl, $node, $id]);
+        self::core()->callHook('node.show.tpl', [&$tpl, $node, $id_node]);
 
         return $tpl;
     }
 
-    public function edit($id, $req)
+    public function edit($id_node, $req)
     {
-        $content = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$content) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
-        
-        $content += self::query()
-            ->from('entity_' . $content[ 'type' ])
-            ->where($content[ 'type' ] . '_id', '==', $content[ 'entity_id' ])
-            ->fetch();
-
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $content[ 'type' ])
-            ->orderBy('field_weight', 'asc')
-            ->fetchAll();
-
-        if (!$query) {
+        if (!($fields = self::node()->getFieldsDisplay($node[ 'type' ]))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('node.edit.form.data', [ &$content, $id ]);
+        $content = $node + self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+
+        $this->container->callHook('node.edit.form.data', [ &$content, $id_node ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
@@ -281,9 +268,9 @@ class Node extends \Soosyze\Controller
         
         $form = (new FormNode([
             'method'  => 'post',
-            'action'  => self::router()->getRoute('node.edit', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data' ], self::file()))
-            ->content($content, $content['type'], $query)
+            'action'  => self::router()->getRoute('node.update', [':id_node' => $id_node ]),
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            ->content($content, $content['type'], $fields)
             ->make();
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
@@ -307,24 +294,14 @@ class Node extends \Soosyze\Controller
                 ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
     }
 
-    public function update($id, $req)
+    public function update($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
-
-        $node_type = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $node[ 'type' ])
-            ->orderBy('field_weight')
-            ->fetchAll();
+        if (!($fields = self::node()->getFieldsForm($node[ 'type' ]))) {
+            return $this->get404($req);
+        }
 
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
@@ -337,27 +314,50 @@ class Node extends \Soosyze\Controller
                 'token_node'       => 'token'
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+
         /* Test des champs personnalisé de la node. */
         $files  = [];
-        foreach ($node_type as $value) {
-            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                $files[] = $value[ 'field_type' ];
+        $canPublish = true;
+        foreach ($fields as $value) {
+            /* Si une node possède une relation requise, elle ne peut-être publié. */
+            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                if ($rules = self::node()->getRules($value)) {
+                    $options = json_decode($value[ 'field_option' ], true);
+                    $entitys = self::query()
+                        ->from($options[ 'relation_table' ])
+                        ->where($options[ 'foreign_key' ], '==', $node['entity_id'])
+                        ->limit(2)
+                        ->fetchAll();
+                    if (!empty($rules[ 'required' ]) && count($entitys) < 1) {
+                        $canPublish = false;
+                    }
+                }
+            } else {
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
             }
-            $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                $files[] = $value[ 'field_name' ];
+            }
         }
-        $this->container->callHook('node.update.validator', [ &$validator, $id ]);
+
+        if (!$canPublish) {
+            $validator->addRule('published', '!accepted');
+        }
+
+        $this->container->callHook('node.update.validator', [ &$validator, $id_node ]);
 
         if ($validator->isValid()) {
-            $fields = [];
-            foreach ($node_type as $value) {
+            $fieldsUpdate = [];
+            foreach ($fields as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    unset($fields[ $key ]);
-                    $this->saveFile($node[ 'type' ], $id, $key, $validator);
+                    $this->saveFile($node, $key, $validator);
+                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                    $this->updateWeightEntity($value, $validator->getInput($key, []));
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fields[ $key ] = implode(',', $validator->getInput($key, []));
+                    $fieldsUpdate[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
-                    $fields[ $key ] = $validator->getInput($key, '');
+                    $fieldsUpdate[ $key ] = $validator->getInput($key, '');
                 }
             }
 
@@ -370,17 +370,18 @@ class Node extends \Soosyze\Controller
                 'title'            => $validator->getInput('title')
             ];
 
-            $this->container->callHook('node.update.before', [ $validator, &$value,
-                $id ]);
+            $this->container->callHook('node.update.before', [
+                $validator, &$value, $id_node
+            ]);
             self::query()
                 ->update('node', $value)
-                ->where('id', '==', $id)
+                ->where('id', '==', $id_node)
                 ->execute();
             self::query()
-                ->update('entity_' . $node[ 'type' ], $fields)
-                ->where($node[ 'type' ] . '_id', '==', $id)
+                ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
+                ->where($node[ 'type' ] . '_id', '==', $id_node)
                 ->execute();
-            $this->container->callHook('node.update.after', [ $validator, $id ]);
+            $this->container->callHook('node.update.after', [ $validator, $id_node ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
@@ -389,48 +390,101 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        $route = self::router()->getRoute('node.edit', [ ':id' => $id ]);
-
-        return new Redirect($route);
+        return new Redirect(
+            self::router()->getRoute('node.edit', [
+                ':id_node' => $id_node
+            ])
+        );
     }
 
-    public function delete($id, $req)
+    public function delete($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
 
         $validator = (new Validator())
-            ->setRules([
-                'id' => 'required',
-            ])
-            ->setInputs([ 'id' => $id ]);
+            ->setRules([ 'id' => 'required' ])
+            ->setInputs([ 'id' => $id_node ]);
 
-        $this->container->callHook('node.delete.validator', [ &$validator, $id ]);
+        $this->container->callHook('node.delete.validator', [ &$validator, $id_node ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('node.delete.before', [ $validator, $id ]);
+            $this->container->callHook('node.delete.before', [ $validator, $id_node ]);
+            $this->deleteRelation($node);
+            
             self::query()
                 ->from('node')
                 ->delete()
-                ->where('id', '==', $id)
+                ->where('id', '==', $id_node)
                 ->execute();
-            $this->container->callHook('node.delete.after', [ $validator, $id ]);
+            
+            $this->deleteFile($id_node);
+            $this->container->callHook('node.delete.after', [ $validator, $id_node ]);
         }
 
-        $route = self::router()->getRoute('node.index');
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('node.index'));
     }
     
-    private function saveFile($table, $id, $name_field, $validator)
+    private function deleteFile($id_node)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$id";
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$id_node}";
+        foreach (new \DirectoryIterator($dir) as $file) {
+            if ($file->isDot() || $file->isDir()) {
+                continue;
+            }
+            \unlink($file->getPathname());
+        }
+        \rmdir($dir);
+    }
+    
+    private function deleteRelation($node)
+    {
+        /* Suppression des relations */
+        $entity = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+
+        $relation_node = self::query()
+            ->from('node_type_field')
+            ->leftJoin('field', 'field_id', 'field.field_id')
+            ->where('node_type', $node[ 'type' ])
+            ->where('field_type', 'one_to_many')
+            ->fetchAll();
+        foreach ($relation_node as $relation) {
+            $options = json_decode($relation[ 'field_option' ], true);
+            self::query()
+                ->from($options[ 'relation_table' ])
+                ->delete()
+                ->where($options[ 'foreign_key' ], $entity[ $options[ 'local_key' ] ])
+                ->execute();
+        }
+
+        /* Supression du contenu. */
+        self::query()
+            ->from('entity_' . $node[ 'type' ])
+            ->delete()
+            ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+            ->execute();
+    }
+
+    private function updateWeightEntity(array $field, array $data)
+    {
+        $options = json_decode($field['field_option'], true);
+        if ($options['sort'] !== 'weight') {
+            return;
+        }
+        foreach ($data as $value) {
+            self::query()
+                ->update('entity_' . $field[ 'field_name' ], [
+                    'weight' => $value[ 'weight' ]
+                ])
+                ->where($field[ 'field_name' ] . '_id', '==', $value[ 'id' ])
+                ->execute();
+        }
+    }
+
+    private function saveFile($node, $name_field, $validator)
+    {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'id' ]}";
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -439,14 +493,23 @@ class Node extends \Soosyze\Controller
             ->setName($name_field)
             ->setPath($dir)
             ->setResolvePath()
-            ->callGet(function ($key, $name) use ($id, $table) {
-                return self::query()->from('entity_' . $table)->where($table . '_id', '==', $id)->fetch()[ $key ];
+            ->callGet(function ($key, $name) use ($node) {
+                return self::query()
+                    ->from('entity_' . $node[ 'type' ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->fetch()[ $key ];
             })
-            ->callMove(function ($key, $name, $move) use ($id, $table) {
-                self::query()->update('entity_' . $table, [ $key => $move ])->where($table . '_id', '==', $id)->execute();
+            ->callMove(function ($key, $name, $move) use ($node) {
+                self::query()
+                    ->update('entity_' . $node[ 'type' ], [ $key => $move ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->execute();
             })
-            ->callDelete(function ($key, $name) use ($id, $table) {
-                self::query()->update('entity_' . $table, [ $key => '' ])->where($table . '_id', '==', $id)->execute();
+            ->callDelete(function ($key, $name) use ($node) {
+                self::query()
+                    ->update('entity_' . $node[ 'type' ], [ $key => '' ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->execute();
             })
             ->save();
     }

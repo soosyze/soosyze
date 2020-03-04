@@ -1,7 +1,7 @@
 {
     "node": {
         "class": "SoosyzeCore\\Node\\Services\\Node",
-        "arguments": ["@query"]
+        "arguments": ["@query", "@template"]
     },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",
@@ -14,7 +14,8 @@
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
         "hooks": {
-            "node.show.tpl": "hookResponseAfter"
+            "node.show.tpl": "hookResponseAfter",
+            "node.edit.response.after": "hookMenuShowResponseAfter"
         }
     },
     "node.hook.menu": {
@@ -46,7 +47,12 @@
             "route.node.edit": "hookNodeEdited",
             "route.node.update": "hookNodeEdited",
             "route.node.delete": "hookNodeDeleted",
-            "route.node.add": "hookNodeAdd"
+            "route.node.add": "hookNodeAdd",
+            "route.entity.create": "hookNodeCreated",
+            "route.entity.store": "hookNodeCreated",
+            "route.entity.edit": "hookNodeEdited",
+            "route.entity.update": "hookNodeEdited",
+            "route.entity.delete": "hookNodeDeleted"
         }
     }
 }
