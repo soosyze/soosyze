@@ -28,7 +28,8 @@ class Manager extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-folder"></i> ' . t('File manager')
+                    'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
+                    'title_main' => t('File manager')
                 ])
                 ->make('page.content', 'page-manager.php', $this->pathViews, [
                     'filemanager' => $this->show($path, $req)

@@ -81,6 +81,7 @@ class Templating extends \Soosyze\Components\Http\Response
             ->addVars([
                 'title'      => '',
                 'title_main' => '',
+                'icon'       => '',
                 'logo'       => ''
             ])
             ->addVars($this->core->getSettings())

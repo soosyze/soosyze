@@ -20,9 +20,11 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('date_changed')
                 ->string('date_created')
                 ->integer('entity_id')->nullable()
+                ->string('meta_description')->valueDefault('')
                 ->boolean('meta_noarchive')->valueDefault(false)
                 ->boolean('meta_nofollow')->valueDefault(false)
                 ->boolean('meta_noindex')->valueDefault(false)
+                ->string('meta_title')->valueDefault('')
                 ->boolean('published')
                 ->string('title')
                 ->string('type');

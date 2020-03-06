@@ -7,11 +7,13 @@ use Soosyze\Components\Form\FormBuilder;
 class FormNode extends FormBuilder
 {
     protected $content = [
-        'title'          => '',
-        'meta_noindex'   => false,
-        'meta_nofollow'  => false,
-        'meta_noarchive' => false,
-        'published'      => false
+        'title'            => '',
+        'meta_description' => ':site_description',
+        'meta_noindex'     => false,
+        'meta_nofollow'    => false,
+        'meta_noarchive'   => false,
+        'meta_title'       => ':page_title | :site_title',
+        'published'        => false
     ];
 
     protected static $field_rules = [
@@ -283,6 +285,27 @@ class FormNode extends FormBuilder
     {
         return $this->group('seo-group', 'fieldset', function ($form) {
             $form->legend('seo-legend', t('SEO'))
+                    ->group('meta_title-group', 'div', function ($form) {
+                        $form->label('meta_title-label', t('Title'))
+                        ->text('meta_title', [
+                            'class'       => 'form-control',
+                            'placeholder' => t('Title'),
+                            'value'       => $this->content[ 'meta_title' ]
+                        ])
+                        ->html('cancel', '<p>:_content</p>', [
+                            '_content' => t('Variables allowed') . '<code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('meta_description-group', 'div', function ($form) {
+                        $form->label('meta_description-label', t('Description'))
+                        ->textarea('meta_description', $this->content[ 'meta_description' ], [
+                            'class' => 'form-control',
+                            'rows'  => 3
+                        ])
+                        ->html('cancel', '<p>:_content</p>', [
+                            '_content' => t('Variables allowed') . '<code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                        ]);
+                    }, [ 'class' => 'form-group' ])
                     ->group('meta_noindex-group', 'div', function ($form) {
                         $form->checkbox('meta_noindex', [ 'checked' => $this->content[ 'meta_noindex' ] ])
                         ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [

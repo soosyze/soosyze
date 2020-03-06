@@ -21,7 +21,8 @@ class Section extends \Soosyze\Controller
         return self::template()
                 ->getTheme($theme)
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-columns" aria-hidden="true"></i> ' . t('Editing blocks')
+                    'icon'       => '<i class="fa fa-columns" aria-hidden="true"></i>',
+                    'title_main' => t('Editing blocks')
                 ])
                 ->view('this', [
                     'styles'  => $styles,

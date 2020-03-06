@@ -55,6 +55,7 @@ class Register extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Registration')
                 ])
                 ->view('page.messages', $messages)

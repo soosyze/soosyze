@@ -38,7 +38,8 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('My contents')
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('My contents')
                 ])
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
                     'link_add' => $linkAdd,
@@ -65,7 +66,8 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content')
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Add content')
                 ])
                 ->make('page.content', 'node-add.php', $this->pathViews, [
                     'node_type' => $nodeType
@@ -109,7 +111,8 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' =>  t('Add content of type :name', [
                         ':name' => $fields[ 0 ][ 'node_type_name' ]
                     ])
                 ])
@@ -128,9 +131,11 @@ class Node extends \Soosyze\Controller
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
+                'meta_description' => '!required|string|max:512',
                 'meta_noarchive'   => 'bool',
                 'meta_nofollow'    => 'bool',
                 'meta_noindex'     => 'bool',
+                'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
                 'title'            => 'required|string|max:255|htmlsc',
                 'token_node'       => 'token'
@@ -187,9 +192,11 @@ class Node extends \Soosyze\Controller
                 'date_changed'     => (string) time(),
                 'date_created'     => (string) time(),
                 'entity_id'        => self::schema()->getIncrement('entity_' . $type),
+                'meta_description' => $validator->getInput('meta_description'),
                 'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
+                'meta_title'       => $validator->getInput('meta_title'),
                 'published'        => (bool) $validator->getInput('published'),
                 'title'            => $validator->getInput('title'),
                 'type'             => $type,
@@ -236,6 +243,10 @@ class Node extends \Soosyze\Controller
         $fields = self::node()->makeFieldsById($node['type'], $node['entity_id']);
 
         $tpl = self::template()
+                ->view('this', [
+                    'title'       => $node['meta_title'],
+                    'description' => $node['meta_description'],
+                ])
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
@@ -288,7 +299,8 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $content[ 'title' ]])
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Edit :title content', [':title' => $content[ 'title' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
@@ -306,9 +318,11 @@ class Node extends \Soosyze\Controller
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
+                'meta_description' => '!required|string|max:512',
                 'meta_noarchive'   => 'bool',
                 'meta_nofollow'    => 'bool',
                 'meta_noindex'     => 'bool',
+                'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
                 'title'            => 'required|string|max:255|htmlsc',
                 'token_node'       => 'token'
@@ -364,8 +378,10 @@ class Node extends \Soosyze\Controller
             $value = [
                 'date_changed'     => (string) time(),
                 'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
+                'meta_description' => $validator->getInput('meta_description'),
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
+                'meta_title'       => $validator->getInput('meta_title'),
                 'published'        => (bool) $validator->getInput('published'),
                 'title'            => $validator->getInput('title')
             ];

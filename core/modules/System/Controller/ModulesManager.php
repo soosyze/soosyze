@@ -99,7 +99,8 @@ class ModulesManager extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-th-large" aria-hidden="true"></i> ' . t('Modules')
+                    'icon'       => '<i class="fa fa-th-large" aria-hidden="true"></i>',
+                    'title_main' => t('Modules')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-modules.php', $this->pathViews, [

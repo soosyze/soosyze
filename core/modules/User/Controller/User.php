@@ -96,7 +96,8 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('User creation')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('User creation')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
@@ -256,7 +257,8 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a user')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Editing a user')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
@@ -434,7 +436,8 @@ class User extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Delete :name account', [':name'=> $data[ 'username' ]])
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Delete :name account', [':name'=> $data[ 'username' ]])
                 ])
                 ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form

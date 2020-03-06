@@ -55,7 +55,8 @@ class Permission extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer permissions')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Administer permissions')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-permission.php', $this->pathViews, [
