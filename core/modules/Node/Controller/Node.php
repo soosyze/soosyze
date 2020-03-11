@@ -86,7 +86,7 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
         
-        $content = [];
+        $content = [ 'date_created' => time() ];
 
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
@@ -144,6 +144,7 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
                 'title'            => 'required|string|max:255|htmlsc',
+                'date_created'     => 'required|date_format:Y-m-d H:i:s',
                 'token_node'       => 'token'
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
@@ -164,7 +165,12 @@ class Node extends \Soosyze\Controller
                 $files[] = $value[ 'field_name' ];
             }
         }
-        
+        if ($validator->getInput('published', false)) {
+            $validator->addRule(
+                'date_created',
+                'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
+            );
+        }
         if (!$canPublish) {
             $validator->addRule('published', '!accepted');
         }
@@ -196,7 +202,7 @@ class Node extends \Soosyze\Controller
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
                 'date_changed'     => (string) time(),
-                'date_created'     => (string) time(),
+                'date_created'     => (string) strtotime($validator->getInput('date_created', date('Y-m-d H:i:s'))),
                 'entity_id'        => self::schema()->getIncrement('entity_' . $type),
                 'meta_description' => $validator->getInput('meta_description'),
                 'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
@@ -331,6 +337,7 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
                 'title'            => 'required|string|max:255|htmlsc',
+                'date_created'     => 'required|date_format:Y-m-d H:i:s',
                 'token_node'       => 'token'
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
@@ -359,7 +366,12 @@ class Node extends \Soosyze\Controller
                 $files[] = $value[ 'field_name' ];
             }
         }
-
+        if ($validator->getInput('published', false)) {
+            $validator->addRule(
+                'date_created',
+                'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
+            );
+        }
         if (!$canPublish) {
             $validator->addRule('published', '!accepted');
         }

@@ -57,7 +57,7 @@ class HookMenu
     public function hookCreateForm($form, $data)
     {
         if ($this->is_menu) {
-            $form->addBefore('node-publish-group', function ($form) use ($data) {
+            $form->addBefore('published-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', t('Menu'))
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {

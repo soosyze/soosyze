@@ -13,7 +13,8 @@ class FormNode extends FormBuilder
         'meta_nofollow'    => false,
         'meta_noarchive'   => false,
         'meta_title'       => ':page_title | :site_title',
-        'published'        => false
+        'published'        => false,
+        'date_created'     => ''
     ];
 
     protected static $field_rules = [
@@ -329,12 +330,31 @@ class FormNode extends FormBuilder
 
     public function actionsSubmit()
     {
-        return $this->group('node-publish-group', 'div', function ($form) {
-            $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
-                    ->label('publish-label', '<span class="ui"></span> ' . t('Publish content'), [
-                        'for' => 'published'
-                    ]);
-        }, self::$attrGrp)
+        return $this
+                ->group('published-group', 'fieldset', function ($form) {
+                    $form
+                    ->legend('published-legend', t('Publication'))
+                    ->group('node-date_created-group', 'div', function ($form) {
+                        $form->label('date_created-label', t('Date de publication'), [
+                            'data-tooltip' => 'La date de publication doit-être inférieur ou égale à la date du jour.'
+                        ])
+                        ->datetime('date_created', [
+                            'class'       => 'form-control',
+                            'maxlength'   => 19,
+                            'required'    => 1,
+                            'placeholder' => t('YYYY-MM-DD Hours:Minutes:Seconds'),
+                            'value'       => is_numeric($this->content[ 'date_created' ])
+                            ? date('Y-m-d H:i:s', (int) $this->content[ 'date_created' ])
+                            : $this->content[ 'date_created' ]
+                        ]);
+                    }, self::$attrGrp)
+                    ->group('node-published-group', 'div', function ($form) {
+                        $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
+                        ->label('publish-label', '<span class="ui"></span> ' . t('Publish content'), [
+                            'for' => 'published'
+                        ]);
+                    }, self::$attrGrp);
+                })
                 ->token('token_node')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
     }
