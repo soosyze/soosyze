@@ -27,12 +27,24 @@ class HookUser
             $permission[ 'Node' ] += [
                 'node.show.' . $node_type[ 'node_type' ]    => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('View content'),
                 'node.created.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
+                'node.cloned.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
                 'node.edited.' . $node_type[ 'node_type' ]  => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
                 'node.deleted.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
             ];
         }
     }
 
+    public function hookNodeClone($id_node)
+    {
+        $node = $this->query->from('node')
+            ->where('id', '==', $id_node)
+            ->fetch();
+        
+        return $node
+            ? [ 'node.administer', 'node.cloned.' . $node[ 'type' ] ]
+            : '';
+    }
+    
     public function hookNodeSow($id_node)
     {
         $node = $this->query->from('node')

@@ -3,6 +3,8 @@
 namespace SoosyzeCore\Node\Controller;
 
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Http\Stream;
+use Soosyze\Components\Http\UploadedFile;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
@@ -23,9 +25,13 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
         
         foreach ($nodes as &$node) {
-            $node[ 'link_view' ]  = self::router()->getRoute('node.show', [
-                ':id_node' => $node[ 'id' ] ]);
+            $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
+                ':id_node' => $node[ 'id' ]
+            ]);
             $node[ 'link_edit' ]   = self::router()->getRoute('node.edit', [
+                ':id_node' => $node[ 'id' ]
+            ]);
+            $node[ 'link_clone' ]  = self::router()->getRoute('node.clone', [
                 ':id_node' => $node[ 'id' ]
             ]);
             $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
@@ -442,6 +448,139 @@ class Node extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('node.index'));
     }
     
+    public function cloneNode($id_node, $req)
+    {
+        if (!($node = self::node()->byId($id_node))) {
+            return $this->get404($req);
+        }
+        $type = $node[ 'type' ];
+        if (!($entity = self::node()->getEntity($type, $node[ 'entity_id' ]))) {
+            return $this->get404($req);
+        }
+        if (!($fields = self::node()->getFieldsform($type))) {
+            return $this->get404($req);
+        }
+        if (mb_strlen($node[ 'title' ] . ' clone') > 255) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Le titre du contenu cloner est trop long.' ];
+
+            return new Redirect(self::router()->getRoute('node.index'));
+        }
+
+        $entityClone = $entity;
+        /* Construit l'entity principale */
+        unset($entityClone[ $type . '_id' ]);
+        self::query()
+            ->insertInto('entity_' . $type, array_keys($entityClone))
+            ->values($entityClone)
+            ->execute();
+        $entity_id   = self::schema()->getIncrement('entity_' . $type);
+
+        /* Construit la node */
+        unset($node[ 'id' ]);
+        $node[ 'entity_id' ]    = $entity_id;
+        $node[ 'title' ]        = $node[ 'title' ] . ' clone';
+        $node[ 'date_created' ] = (string) time();
+        $node[ 'date_changed' ] = (string) time();
+        $node[ 'published' ]    = false;
+
+        self::query()
+            ->insertInto('node', array_keys($node))
+            ->values($node)
+            ->execute();
+        $node_id = self::schema()->getIncrement('node');
+
+        /* Parcours les champs de l'entité principal. */
+        foreach ($fields as $value) {
+            $field_name = $value[ 'field_name' ];
+            /* Copie ses fichiers. */
+            if (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
+                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$node_id";
+                $file = $entity[ $field_name ];
+
+                if (!is_file($file)) {
+                    continue;
+                }
+
+                $upload = new UploadedFile(
+                    new Stream(fopen($file, 'r')),
+                    self::getBasename($file)
+                );
+                self::file()
+                    ->add($upload)
+                    ->setPath($dir)
+                    ->setResolvePath()
+                    ->setResolveName()
+                    ->callMove(function ($key, $name, $move) use ($type, $entity_id, $field_name) {
+                        self::query()
+                        ->update('entity_' . $type, [ $field_name => $move ])
+                        ->where($type . '_id', '==', $entity_id)
+                        ->execute();
+                    })
+                    ->saveOne();
+            }
+            /* Si elle possède des sous entités. */
+            elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                $options      = !empty($value[ 'field_option' ])
+                    ? json_decode($value[ 'field_option' ], true)
+                    : [];
+                $dataRelation = self::query()
+                    ->from($options[ 'relation_table' ])
+                    ->where($options[ 'foreign_key' ], $entity[ $options[ 'foreign_key' ] ])
+                    ->fetchAll();
+
+                $fields_file = self::query()
+                    ->from('node_type_field')
+                    ->leftJoin('field', 'field_id', 'field.field_id')
+                    ->where('node_type', $field_name)
+                    ->in('field_type', [ 'file', 'image' ])
+                    ->fetchAll();
+
+                /* Parcours toutes les sous entités. */
+                foreach ($dataRelation as $data) {
+                    foreach ($fields_file as $file) {
+                        $field_name = $file[ 'field_name' ];
+                        /* Parcours ses fichiers pour les copier. */
+                        if (isset($data[ $field_name ])) {
+                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$node_id";
+                            $pathFile = $data[ $field_name ];
+
+                            if (!is_file($pathFile)) {
+                                continue;
+                            }
+                            $upload = new UploadedFile(
+                                new Stream(fopen($pathFile, 'r')),
+                                self::getBasename($pathFile)
+                            );
+
+                            self::file()
+                                ->add($upload)
+                                ->setPath($dir)
+                                ->setResolvePath()
+                                ->setResolveName()
+                                ->callMove(function ($key, $name, $move) use (&$data, $field_name) {
+                                    $data[ $field_name ] = $move;
+                                })
+                                ->saveOne();
+                        }
+                    }
+                    unset($data[ $value[ 'field_name' ] . '_id' ]);
+                    $data[ $options[ 'foreign_key' ] ] = $entity_id;
+                    self::query()
+                        ->insertInto($options[ 'relation_table' ], array_keys($data))
+                        ->values($data)
+                        ->execute();
+                }
+            }
+        }
+
+        return new Redirect(self::router()->getRoute('node.index'));
+    }
+    
+    public static function getBasename($pathFile)
+    {
+        return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
+    }
+
     private function deleteFile($id_node)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$id_node}";

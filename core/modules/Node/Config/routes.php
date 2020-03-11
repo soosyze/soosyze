@@ -10,6 +10,7 @@ R::get('node.show', 'node/:id_node', 'Node@show', [':id_node' => '\d+']);
 R::get('node.create', 'admin/node/:node/create', 'Node@create', [':node' => '[_a-z]+']);
 R::post('node.store', 'admin/node/:node/create', 'Node@store', [':node' => '[_a-z]+']);
 R::get('node.edit', 'admin/node/:id_node/edit', 'Node@edit', [':id_node' => '\d+']);
+R::get('node.clone', 'admin/node/:id_node/clone', 'Node@cloneNode', [':id_node' => '\d+']);
 R::post('node.update', 'admin/node/:id_node/edit', 'Node@update', [':id_node' => '\d+']);
 R::get('node.delete', 'admin/node/:id_node/delete', 'Node@delete', [':id_node' => '\d+']);
 

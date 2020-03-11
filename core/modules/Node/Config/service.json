@@ -43,6 +43,7 @@
             "user.permission.module": "hookPermission",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",
+            "route.node.clone": "hookNodeClone",
             "route.node.store": "hookNodeCreated",
             "route.node.edit": "hookNodeEdited",
             "route.node.update": "hookNodeEdited",
