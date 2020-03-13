@@ -336,12 +336,11 @@ class FormNode extends FormBuilder
                     ->legend('published-legend', t('Publication'))
                     ->group('node-date_created-group', 'div', function ($form) {
                         $form->label('date_created-label', t('Date de publication'), [
-                            'data-tooltip' => 'La date de publication doit-être inférieur ou égale à la date du jour.'
+                            'data-tooltip' => 'Laisser vide pour utiliser la date de soumission du formulaire. Elle doit-être inférieur ou égale à la date du jour.'
                         ])
                         ->datetime('date_created', [
                             'class'       => 'form-control',
                             'maxlength'   => 19,
-                            'required'    => 1,
                             'placeholder' => t('YYYY-MM-DD Hours:Minutes:Seconds'),
                             'value'       => is_numeric($this->content[ 'date_created' ])
                             ? date('Y-m-d H:i:s', (int) $this->content[ 'date_created' ])

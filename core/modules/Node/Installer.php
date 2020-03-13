@@ -17,8 +17,8 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->schema()
             ->createTableIfNotExists('node', function (TableBuilder $table) {
                 $table->increments('id')
-                ->string('date_changed')
-                ->string('date_created')
+                ->integer('date_changed')
+                ->integer('date_created')
                 ->integer('entity_id')->nullable()
                 ->string('meta_description')->valueDefault('')
                 ->boolean('meta_noarchive')->valueDefault(false)
