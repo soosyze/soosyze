@@ -55,5 +55,12 @@
             "route.entity.update": "hookNodeEdited",
             "route.entity.delete": "hookNodeDeleted"
         }
+    },
+    "node.hook.cron": {
+        "class": "SoosyzeCore\\Node\\Services\\HookCron",
+        "arguments": ["@query"],
+        "hooks": {
+            "app.cron": "hookCron"
+        }
     }
 }
