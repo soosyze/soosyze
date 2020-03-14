@@ -92,9 +92,9 @@ class Role extends \Soosyze\Controller
     {
         $validator = (new Validator())
             ->setRules([
-                'role_label'        => 'required|string|max:255|htmlsc',
-                'role_description'  => '!required|string|max:255|htmlsc',
-                'role_weight'       => '!required|int|between:1,50',
+                'role_label'        => 'required|string|max:255|to_htmlsc',
+                'role_description'  => '!required|string|max:255|to_htmlsc',
+                'role_weight'       => '!required|between_numeric:1,50',
                 'role_color'        => '!required|colorhex',
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
@@ -193,8 +193,8 @@ class Role extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'role_label'        => 'required|string|max:255|htmlsc',
-                'role_description'  => '!required|string|max:255|htmlsc',
+                'role_label'        => 'required|string|max:255|to_htmlsc',
+                'role_description'  => '!required|string|max:255|to_htmlsc',
                 'role_weight'       => 'required|int|between:1,50',
                 'role_color'        => '!required|colorhex',
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',

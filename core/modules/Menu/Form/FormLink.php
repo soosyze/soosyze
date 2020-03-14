@@ -57,7 +57,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             'placeholder' => 'fa fa-bars, fa fa-home...',
                             'value'       => $this->content[ 'icon' ],
                         ])
-                        ->html('btn-icon', '<button:css:attr>:_content</button>', [
+                        ->html('btn-icon', '<button:attr>:_content</button>', [
                             '_content'     => '<i class="' . $this->content[ 'icon' ] . '" aria-hidden="true"></i>',
                             'aria-label'   => t('Rendering'),
                             'class'        => 'btn render_icon',
@@ -91,7 +91,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 }, [ 'class' => 'form-group' ]);
         })
             ->token('token_link_form')
-            ->html('cancel', '<button:css:attr>:_content</button>', [
+            ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',

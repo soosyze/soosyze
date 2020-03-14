@@ -91,7 +91,7 @@ class File
         }
         if (!empty($src) && $type == 'image') {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-image-$name", '<img:css:attr/>', [
+                $form->html("file-image-$name", '<img:attr/>', [
                     'alt'   => 'Picture user',
                     'src'   => $src,
                     'class' => 'input-file-img img-thumbnail'
@@ -99,7 +99,7 @@ class File
             }, [ 'class' => 'form-group' ]);
         } elseif (!empty($src)) {
             $form->group("file-$name-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-image-$name", '<a:css:attr/><i class="fa fa-download"></i> :_content</a>', [
+                $form->html("file-image-$name", '<a:attr/><i class="fa fa-download"></i> :_content</a>', [
                     'href'    => $src,
                     '_content' => $src
                 ]);
@@ -116,7 +116,7 @@ class File
                     'onclick'    => "document.getElementById('$name').click();",
                     'value'      => $content
                 ])
-                ->html("file-reset-$name", '<button:css:attr>:_content</button>', $attr)
+                ->html("file-reset-$name", '<button:attr>:_content</button>', $attr)
                 ->file($name, [
                     'style'    => 'display:none',
                     'onchange' => "document.getElementById('file-name-$name').value = this.files[0].name;"

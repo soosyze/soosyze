@@ -22,6 +22,6 @@
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
-        <?php echo $form->renderForm(); ?>
+        <?php echo $form; ?>
     </div>
 </div>

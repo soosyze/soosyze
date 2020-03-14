@@ -77,7 +77,7 @@ class FormUserRole extends FormBuilder
                         'pattern' => '#([a-fA-F0-9]{6})',
                         'value'   => $this->content[ 'role_color' ]
                     ])
-                    ->html('btn-color', '<button:css:attr>:_content</button>', [
+                    ->html('btn-color', '<button:attr>:_content</button>', [
                         '_content' => '<i class="fa fa-sync" aria-hidden="true"></i>',
                         'aria-label' => t('Random color'),
                         'class'    => 'btn',
@@ -108,7 +108,7 @@ class FormUserRole extends FormBuilder
                         'maxlength'   => 255,
                         'placeholder' => 'fa fa-home',
                         'value'       => $this->content[ 'role_icon' ],
-                    ])->html('btn-color', '<button:css:attr>:_content</button>', [
+                    ])->html('btn-color', '<button:attr>:_content</button>', [
                         '_content'     => '<i class="' . $this->content[ 'role_icon' ] . '" aria-hidden="true"></i>',
                         'aria-label'   => t('Rendering'),
                         'class'        => 'btn render_icon',
@@ -135,7 +135,7 @@ class FormUserRole extends FormBuilder
     
     public function submitForm()
     {
-        return $this->html('cancel', '<button:css:attr>:_content</button>', [
+        return $this->html('cancel', '<button:attr>:_content</button>', [
                     '_content' => t('Cancel'),
                     'class'    => 'btn btn-danger',
                     'onclick'  => 'javascript:history.back();',
@@ -149,7 +149,7 @@ class FormUserRole extends FormBuilder
     {
         return $this->group('user-edit-information-fieldset', 'fieldset', function ($form) {
             $form->legend('user-edit-information-legend', t('Delete role'))
-                    ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                    ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
                         '_content' => t('Warning ! The deletion of the role is final.')
                     ]);
         })

@@ -133,12 +133,12 @@ class User extends \Soosyze\Controller
             ->addInput('is_email', $is_email)
             ->addInput('is_username', $is_username)
             ->setRules([
-                'username'         => 'required|string|max:255|!equal:@is_username|htmlsc',
-                'email'            => 'required|email|max:254|!equal:@is_email|htmlsc',
+                'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
+                'email'            => 'required|email|max:254|!equal:@is_email|to_htmlsc',
                 'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
-                'bio'              => '!required|string|max:255|htmlsc',
-                'name'             => '!required|string|max:255|htmlsc',
-                'firstname'        => '!required|string|max:255|htmlsc',
+                'bio'              => '!required|string|max:255|to_htmlsc',
+                'name'             => '!required|string|max:255|to_htmlsc',
+                'firstname'        => '!required|string|max:255|to_htmlsc',
                 'actived'          => 'bool',
                 'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
@@ -290,12 +290,12 @@ class User extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 /* max:254 RFC5321 - 4.5.3.1.3. */
-                'username'         => 'required|string|max:255|htmlsc',
+                'username'         => 'required|string|max:255|to_htmlsc',
                 'email'            => 'required|email|max:254',
                 'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
-                'bio'              => '!required|string|max:255|htmlsc',
-                'name'             => '!required|string|max:255|htmlsc',
-                'firstname'        => '!required|string|max:255|htmlsc',
+                'bio'              => '!required|string|max:255|to_htmlsc',
+                'name'             => '!required|string|max:255|to_htmlsc',
+                'firstname'        => '!required|string|max:255|to_htmlsc',
                 'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'actived'          => 'bool',
@@ -424,7 +424,7 @@ class User extends \Soosyze\Controller
             ]))
             ->group('user-edit-information-fieldset', 'fieldset', function ($form) {
                 $form->legend('user-edit-information-legend', t('Account deletion'))
-                ->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the user account is final.')
                 ]);
             })

@@ -36,7 +36,7 @@ class HookConfig
                         'for'          => 'connect_url'
                     ])
                     ->group('config-connect_url-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:css:attr>:_content</span>', [
+                        $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->getRoute('user.login', [
                                 ':url' => '' ]),
                             'id'       => ''
@@ -46,15 +46,15 @@ class HookConfig
                             'minlength'   => 10,
                             'placeholder' => t('Add a token to your connection routes (10 characters minimum)'),
                             'value'       => $data[ 'connect_url' ]
-                        ]);
+                            ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-connect_redirect-group', 'div', function ($form) use ($data) {
-                    $form->label('config-connect_redirect-label', t('Redirect page after connection'), [
-                        'for' => 'connect_redirect'
-                    ])
-                    ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:css:attr>:_content</span>', [
+                    ->group('config-connect_redirect-group', 'div', function ($form) use ($data) {
+                        $form->label('config-connect_redirect-label', t('Redirect page after connection'), [
+                            'for' => 'connect_redirect'
+                        ])
+                        ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
                         ])
@@ -65,8 +65,8 @@ class HookConfig
                             'required'    => 1,
                             'value'       => $data[ 'connect_redirect' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ]);
+                        }, [ 'class' => 'form-group-flex' ]);
+                    }, [ 'class' => 'form-group' ]);
             })
             ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('config-inscription-legend', t('Registration'))
@@ -88,7 +88,7 @@ class HookConfig
                 ->group('config-terms_of_service-group', 'div', function ($form) use ($data) {
                     $form->label('config-terms_of_service_page-label', t('CGU page'))
                     ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:css:attr>:_content</span>', [
+                        $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
                         ])
@@ -110,7 +110,7 @@ class HookConfig
                 ->group('config-rgpd_page-group', 'div', function ($form) use ($data) {
                     $form->label('config-rgpd_page-label', t('RGPD Page'))
                     ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:css:attr>:_content</span>', [
+                        $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
                         ])
@@ -199,10 +199,10 @@ class HookConfig
             'connect_redirect'      => 'required|route',
             'password_show'         => 'bool',
             'password_policy'       => 'bool',
-            'password_length'       => 'int|min:8',
-            'password_upper'        => 'int|min:1',
-            'password_digit'        => 'int|min:1',
-            'password_special'      => 'int|min:1'
+            'password_length'       => 'min_numeric:8',
+            'password_upper'        => 'min_numeric:1',
+            'password_digit'        => 'min_numeric:1',
+            'password_special'      => 'min_numeric:1'
         ])->setLabel([
             'user_register'         => t('Registration'),
             'user_relogin'          => t('Open password recovery'),

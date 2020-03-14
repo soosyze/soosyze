@@ -1,6 +1,6 @@
 
 
-<?php echo $form->renderForm() ?>
+<?php echo $form ?>
 <?php if ($granted_register): ?>
 
     <p><a href="<?php echo $url_register ?>">Inscription utilisateur</a></p>

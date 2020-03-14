@@ -7,7 +7,7 @@
 
     </div>
     <div class="col-md-9">
-        <?php echo $form->renderForm() ?>
+        <?php echo $form ?>
 
     </div>
     <?php endif; ?>

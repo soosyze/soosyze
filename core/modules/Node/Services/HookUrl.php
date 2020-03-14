@@ -55,7 +55,7 @@ class HookUrl
     public function hookCreateForm($form, $data)
     {
         if ($this->is_alias) {
-            $form->addBefore('seo-group', function ($form) use ($data) {
+            $form->before('seo-group', function ($form) use ($data) {
                 $form->group('meta_url-group', 'div', function ($form) use ($data) {
                     $form->label('meta_url-label', t('Url'), [
                             'data-tooltip' => t('Laisser vide pour générer automatiquement votre URL')

@@ -148,7 +148,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
-                'title'            => 'required|string|max:255|htmlsc',
+                'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
@@ -347,7 +347,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'published'        => 'bool',
-                'title'            => 'required|string|max:255|htmlsc',
+                'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());

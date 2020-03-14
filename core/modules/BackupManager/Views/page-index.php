@@ -33,14 +33,8 @@
                             </th>
                             <td data-title="<?php echo t('Date'); ?>">
                                 <span data-tooltip="<?php echo $backup['date']->format('Y-m-d H:i:s') ?>">
-                                    <?php
-                                    $diff = $backup['date']->diff(new \DateTime());
-                                    echo $diff->format('%m') == 0 ?
-                                            $diff->format('%d') == 0 ?
-                                                    $diff->format('%h') == 0 ?
-                                                            $diff->format('%i') == 0 ?
-                                                                    $diff->format('%s') . t(' seconds ago') : $diff->format('%i') . t(' minutes ago') : $diff->format('%h') . t(' hours ago') : $diff->format('%d') . t(' days ago') : $diff->format('%m') . t(' months ago');
-                                    ?>
+                                    <?php $date = Soosyze\Components\Util\Util::strHumansTimeDiff($backup['date'])?>
+                                    <?php echo t($date[ 0 ], ['%s' => $date[ 1 ]]) ?>
                                 </span> 
                             </td>
                             <td data-title="<?php echo t('Size'); ?>">   

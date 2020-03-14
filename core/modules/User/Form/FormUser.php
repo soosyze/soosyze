@@ -138,7 +138,7 @@ class FormUser extends FormBuilder
                         'for' => 'terms_of_service'
                     ]);
             }, [ 'class' => 'form-group' ])
-                ->html('terms_of_service_page', '<p><a :attr:css>:_content</a></p>', [
+                ->html('terms_of_service_page', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the terms of service'),
                     'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
                     'target'   => '_blank'
@@ -151,7 +151,7 @@ class FormUser extends FormBuilder
                         'for' => 'rgpd'
                     ]);
             }, [ 'class' => 'form-group' ])
-                ->html('rgpd_page', '<p><a :attr:css>:_content</a></p>', [
+                ->html('rgpd_page', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the privacy policy'),
                     'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
                     'target'   => '_blank'
@@ -196,7 +196,7 @@ class FormUser extends FormBuilder
                 ->group("user-$id-group", 'div', function ($form) use ($id, $attr) {
                     $form->password($id, [ 'class' => 'form-control' ] + $attr);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
-                        $form->html("{$id}_show", '<button:css:attr>:_content</button>', [
+                        $form->html("{$id}_show", '<button:attr>:_content</button>', [
                             'class'        => 'btn btn-toogle-password',
                             'onclick'      => "togglePassword(this, '$id')",
                             'type'         => 'button',
@@ -269,7 +269,7 @@ class FormUser extends FormBuilder
                 . '<li data-pattern="(?=.*[A-Z]){' . $upper . ',}">' . t('Number of uppercase characters') . " : $upper</li>"
                 . '<li data-pattern="(?=.*\d){' . $digit . ',}">' . t('Number of numeric characters') . " : $digit</li>"
                 . '<li data-pattern="(?=.*\W){' . $special . ',}">' . t('Number of special characters') . " : $special</li>";
-            $form->html('password_policy', '<ul:css:attr>:_content</ul>', [
+            $form->html('password_policy', '<ul:attr>:_content</ul>', [
                 '_content' => $content,
             ]);
         }
@@ -325,7 +325,7 @@ class FormUser extends FormBuilder
     {
         $this->token('token_user_form');
         if ($cancel) {
-            $this->html('cancel', '<button:css:attr>:_content</button>', [
+            $this->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',

@@ -57,7 +57,7 @@ class HookMenu
     public function hookCreateForm($form, $data)
     {
         if ($this->is_menu) {
-            $form->addBefore('published-group', function ($form) use ($data) {
+            $form->before('published-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', t('Menu'))
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {
@@ -93,7 +93,7 @@ class HookMenu
     public function hookStoreValidator($validator)
     {
         if ($this->is_menu && $validator->hasInput('active')) {
-            $validator->addRule('title_link', 'required|string|max:255|striptags')
+            $validator->addRule('title_link', 'required|string|max:255|to_striptags')
                 ->addRule('active', 'bool');
         }
     }

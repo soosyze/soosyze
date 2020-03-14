@@ -224,7 +224,7 @@ class Profil extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete file profile'))
-                ->html('folder-message', '<p:css:attr>:_content</p>', [
+                ->html('folder-message', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the file profile is final.')
                 ]);
             })
@@ -312,18 +312,18 @@ class Profil extends \Soosyze\Controller
             ->setRules([
                 'folder_show'           => 'required|string',
                 'folder_show_sub'       => 'bool',
-                'profil_weight'         => 'int|between:0,50',
+                'profil_weight'         => 'required|between_numeric:0,50',
                 'roles'                 => '!required|array',
                 'folder_store'          => 'bool',
                 'folder_update'         => 'bool',
                 'folder_delete'         => 'bool',
-                'folder_size'           => '!required|int|min:0',
+                'folder_size'           => '!required|min_numeric:0',
                 'file_store'            => 'bool',
                 'file_update'           => 'bool',
                 'file_delete'           => 'bool',
                 'file_download'         => 'bool',
                 'file_clipboard'        => 'bool',
-                'file_size'             => '!required|int|min:0',
+                'file_size'             => '!required|min_numeric:0',
                 'file_extensions_all'   => 'bool',
                 'file_extensions'       => '!required|array',
                 'token_file_permission' => 'token'

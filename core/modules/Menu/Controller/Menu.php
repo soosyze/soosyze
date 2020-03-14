@@ -64,8 +64,8 @@ class Menu extends \Soosyze\Controller
         foreach ($links as $link) {
             $validator
                 ->addRule("active-{$link[ 'id' ]}", 'bool')
-                ->addRule("parent-{$link[ 'id' ]}", 'required|int')
-                ->addRule("weight-{$link[ 'id' ]}", 'required|int|min:1|max:50');
+                ->addRule("parent-{$link[ 'id' ]}", 'required|numeric')
+                ->addRule("weight-{$link[ 'id' ]}", 'required|between_numeric:1,50');
         }
         $validator->addRule('token_menu', 'token')
             ->setInputs($req->getParsedBody());

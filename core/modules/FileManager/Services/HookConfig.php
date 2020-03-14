@@ -51,7 +51,7 @@ class HookConfig
     public function validator(&$validator)
     {
         $validator->setRules([
-            'replace_file' => 'required|int|between:1,3'
+            'replace_file' => 'required|between_numeric:1,3'
         ]);
     }
 

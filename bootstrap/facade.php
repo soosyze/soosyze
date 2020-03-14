@@ -48,4 +48,4 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
     }
 }
 
-Soosyze\Components\Validator\Validator::addTest('route', new \RouteValue());
+Soosyze\Components\Validator\Validator::addTestGlobal('route', new \RouteValue());

@@ -97,7 +97,7 @@
                         </ul>
                     </nav>
                     <hr>
-                    <?php echo $form->renderForm(); ?>
+                    <?php echo $form; ?>
                 </div>
                 <div class="col-md-6">
                     <div class="cadre">

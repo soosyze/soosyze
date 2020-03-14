@@ -81,8 +81,8 @@ class Register extends \Soosyze\Controller
             ->addInput('is_rgpd', self::config()->get('settings.rgpd_show', ''))
             ->addInput('is_terms_of_service', self::config()->get('settings.terms_of_service_show', ''))
             ->setRules([
-                'username'         => 'required|string|max:255|!equal:@is_username|htmlsc',
-                'email'            => 'required|string|email|!equal:@is_email|htmlsc',
+                'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
+                'email'            => 'required|string|email|!equal:@is_email|to_htmlsc',
                 'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required|string|equal:@password_new',
                 'rgpd'             => 'required_with:is_rgpd',

@@ -1,5 +1,5 @@
 
-<?php echo $form->renderForm() ?>
+<?php echo $form ?>
 <?php if ($granted_register): ?>
     <p><a href="<?php echo $url_register ?>"><?php echo t('User registration'); ?></a></p>
 <?php endif; ?>

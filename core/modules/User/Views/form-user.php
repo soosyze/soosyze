@@ -1,3 +1,3 @@
 
 <?php echo $section[ 'menu_user' ]; ?>
-<?php echo $form->renderForm() ?>
+<?php echo $form ?>

@@ -63,7 +63,7 @@ class Block extends \Soosyze\Controller
                         'id'    => "type_block-$key",
                         'value' => $key
                     ])
-                    ->html($key, '<div:attr:css>:_content</div>', [
+                    ->html($key, '<div:attr>:_content</div>', [
                         'class'    => 'block-content',
                         '_content' => $content
                 ]);
@@ -287,7 +287,7 @@ class Block extends \Soosyze\Controller
                 'content'          => '!required|string|max:5000',
                 'class'              => '!required|string|max:255',
                 'visibility_pages' => 'bool',
-                'pages'            => '!required|string|htmlsc',
+                'pages'            => '!required|string|to_htmlsc',
                 'visibility_roles' => 'bool',
                 'roles'            => '!required|array',
                 "token_block_$id"  => 'token'

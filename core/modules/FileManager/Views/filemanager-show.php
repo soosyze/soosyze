@@ -2,7 +2,7 @@
 <div class="col-md-12">
     <div class="dropfile-messages"></div>
     <?php if ($granted_file_create): ?>
-    <?php echo $form->renderForm(); ?>
+    <?php echo $form; ?>
     <?php endif; ?>
 
     <div class="responsive">

@@ -130,7 +130,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'class' => 'form-control',
                             'min'   => 0,
                             'value' => $this->content[ 'folder_size' ]
-                        ])->html('folder_size-unit', '<span:css:attr>:_content</span>', [
+                        ])->html('folder_size-unit', '<span:attr>:_content</span>', [
                             '_content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
@@ -173,7 +173,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'class' => 'form-control',
                             'min'   => 0,
                             'value' => $this->content[ 'file_size' ]
-                        ])->html('file_size-unit', '<span:css:attr>:_content</span>', [
+                        ])->html('file_size-unit', '<span:attr>:_content</span>', [
                             '_content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
@@ -203,7 +203,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 }
             })
             ->token('token_file_permission')
-            ->html('cancel', '<button:css:attr>:_content</button>', [
+            ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',

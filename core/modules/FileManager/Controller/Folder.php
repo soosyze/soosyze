@@ -213,7 +213,7 @@ class Folder extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete directory'))
-                ->html('folder-message', '<p:css:attr>:_content</p>', [
+                ->html('folder-message', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the directory and its contents is final.')
                 ]);
             })

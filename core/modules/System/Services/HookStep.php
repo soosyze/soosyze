@@ -105,7 +105,7 @@ class HookStep
                     'required' => 1,
                     'value'    => $key,
                     'style'    => 'display:none;'
-                ])->html($key, '<img:attr:css>', [
+                ])->html($key, '<img:attr>', [
                     'src' => $profil[ 'img' ]
                 ]);
             }, [ 'class' => 'form-group' ]);
@@ -227,11 +227,11 @@ class HookStep
     {
         $validator = (new Validator())
             ->setRules([
-                'username'         => 'required|string|max:255|htmlsc',
+                'username'         => 'required|string|max:255|to_htmlsc',
                 /* max:254 RFC5321 - 4.5.3.1.3. */
-                'email'            => 'required|email|max:254|htmlsc',
-                'name'             => '!required|string|max:255|htmlsc',
-                'firstname'        => '!required|string|max:255|htmlsc',
+                'email'            => 'required|email|max:254|to_htmlsc',
+                'name'             => '!required|string|max:255|to_htmlsc',
+                'firstname'        => '!required|string|max:255|to_htmlsc',
                 'password'         => 'required|string',
                 'password-confirm' => 'required|string|equal:@password'
             ])

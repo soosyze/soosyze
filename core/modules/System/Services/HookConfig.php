@@ -109,7 +109,7 @@ class HookConfig
                             'for'          => 'path_index'
                         ])
                         ->group('system-path_index-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                            $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
                             ])
@@ -127,7 +127,7 @@ class HookConfig
                             'for'          => 'path_access_denied'
                         ])
                         ->group('system-path_access_denied-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                            $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
                             ])
@@ -144,7 +144,7 @@ class HookConfig
                             'for'          => 'path_no_found'
                         ])
                         ->group('system-path_no_found-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:css:attr>:_content</span>', [
+                            $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
                             ])
@@ -195,9 +195,9 @@ class HookConfig
                             'for'          => 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
-                        $form->html('system-favicon-info-size', '<p:css:attr>:_content</p>', [
+                        $form->html('system-favicon-info-size', '<p:attr>:_content</p>', [
                             '_content' => t('The file must weigh less than 100 KB.')
-                        ])->html('system-favicon-info-dimensions', '<p:css:attr>:_content</p>', [
+                        ])->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
                             '_content' => t('The width and height min and max: 16px and 310px.')
                         ]);
                     }, [ 'class' => 'form-group' ]);
@@ -210,7 +210,7 @@ class HookConfig
         $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
             'lang'                => 'required|inarray:' . $langs,
-            'email'               => 'required|email|max:254|htmlsc',
+            'email'               => 'required|email|max:254|to_htmlsc',
             'maintenance'         => '!required|bool',
             'rewrite_engine'      => 'bool',
             'theme'               => 'required|inarray:' . $themes,
@@ -219,9 +219,9 @@ class HookConfig
             'path_index'          => 'route',
             'path_access_denied'  => '!required|route',
             'path_no_found'       => '!required|route',
-            'meta_title'          => 'required|string|max:64|htmlsc',
-            'meta_description'    => 'required|string|max:256|htmlsc',
-            'meta_keyboard'       => '!required|string|htmlsc',
+            'meta_title'          => 'required|string|max:64|to_htmlsc',
+            'meta_description'    => 'required|string|max:256|to_htmlsc',
+            'meta_keyboard'       => '!required|string|to_htmlsc',
             'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
         ])->setLabel([
             'lang'               => t('Language'),
