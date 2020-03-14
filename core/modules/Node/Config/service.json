@@ -18,6 +18,21 @@
             "node.edit.response.after": "hookMenuShowResponseAfter"
         }
     },
+    "node.hook.url": {
+        "class": "SoosyzeCore\\Node\\Services\\HookUrl",
+        "arguments": ["@schema", "@query"],
+        "hooks": {
+            "node.create.form.data": "hookCreateFormData",
+            "node.create.form": "hookCreateForm",
+            "node.store.validator": "hookStoreValidator",
+            "node.store.after": "hookStoreAfter",
+            "node.edit.form.data": "hookEditFormData",
+            "node.edit.form": "hookCreateForm",
+            "node.update.validator": "hookStoreValidator",
+            "node.update.after": "hookUpdateValid",
+            "node.delete.after": "hookDeleteValid"
+        }
+    },
     "node.hook.menu": {
         "class": "SoosyzeCore\\Node\\Services\\HookMenu",
         "arguments": ["@schema", "@query"],

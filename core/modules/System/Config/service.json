@@ -15,7 +15,7 @@
     },
     "system.hook.app": {
         "class": "SoosyzeCore\\System\\Services\\HookApp",
-        "arguments": ["@router", "@config", "@template", "@core"],
+        "arguments": ["@router", "@config", "@template", "@core", "@query"],
         "hooks": {
             "app.response.before": "hookSys",
             "app.403": "hooks403",

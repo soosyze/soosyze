@@ -218,7 +218,7 @@ class Node extends \Soosyze\Controller
                 'type'             => $type,
             ];
 
-            $this->container->callHook('todo.store.before', [ $validator, &$node ]);
+            $this->container->callHook('node.store.before', [ $validator, &$node ]);
             self::query()
                 ->insertInto('node', array_keys($node))
                 ->values($node)

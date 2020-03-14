@@ -12,20 +12,25 @@ class HookApp
 
     protected $core;
 
-    public function __construct($route, $config, $template, $core)
+    public function __construct($route, $config, $template, $core, $query)
     {
-        $this->router  = $route;
+        $this->router = $route;
         $this->config = $config;
         $this->tpl    = $template;
         $this->core   = $core;
+        $this->query  = $query;
         $this->views  = dirname(__DIR__) . '/Views/';
     }
 
     public function hookSys(&$request, &$response)
     {
-        $uri = $request->getUri();
+        $uri   = $request->getUri();
+        parse_str($uri->getQuery(), $parseQuery);
+        $query = isset($parseQuery[ 'q' ])
+            ? $parseQuery[ 'q' ]
+            : '';
 
-        if ($uri->getQuery() === '' || $uri->getQuery() === 'q=/') {
+        if ($query === '' || $query === '/') {
             $path_index = $this->config->get('settings.path_index')
                 ? 'q=' . $this->config->get('settings.path_index')
                 : '404';
@@ -33,11 +38,17 @@ class HookApp
 
             $request = $request->withUri($url)->withMethod('GET');
         }
-
+        $alias = $this->query
+            ->from('system_alias_url')
+            ->where('alias', '==', $query)
+            ->fetch();
+        if ($alias) {
+            $url     = $uri->withQuery('q=' . $alias[ 'source' ]);
+            $request = $request->withUri($url)->withMethod('GET');
+        }
         if (
-            $this->config->get('settings.maintenance')
-            && 'q=user/login' !== $uri->getQuery()
-            && !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
+            $this->config->get('settings.maintenance') && 'user/login' !== $query && !$this->core->callHook('app.granted', [
+                'system.config.maintenance' ])) {
             $response = $response->withStatus(503);
         }
     }
