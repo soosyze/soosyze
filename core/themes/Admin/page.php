@@ -14,7 +14,7 @@
             </div>
         </div>
     </nav>
-    <h1><?php echo $title_main; ?></h1>
+    <h1><?php echo $icon; ?> <?php echo $title_main; ?></h1>
     <div class="souligne" ></div>
 </header>
 <div class="main-wrapper">

@@ -27,6 +27,10 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->string('title_module')
                 ->string('title_required')
                 ->string('version');
+            })
+            ->createTableIfNotExists('system_alias_url', function (TableBuilder $table) {
+                $table->string('source')
+                ->string('alias');
             });
 
         $ci->config()

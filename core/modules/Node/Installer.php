@@ -17,15 +17,17 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->schema()
             ->createTableIfNotExists('node', function (TableBuilder $table) {
                 $table->increments('id')
-                ->string('title')
-                ->string('type')
-                ->string('created')
-                ->string('changed')
+                ->integer('date_changed')
+                ->integer('date_created')
+                ->integer('entity_id')->nullable()
+                ->string('meta_description')->valueDefault('')
+                ->boolean('meta_noarchive')->valueDefault(false)
+                ->boolean('meta_nofollow')->valueDefault(false)
+                ->boolean('meta_noindex')->valueDefault(false)
+                ->string('meta_title')->valueDefault('')
                 ->boolean('published')
-                ->boolean('noindex')->valueDefault(false)
-                ->boolean('nofollow')->valueDefault(false)
-                ->boolean('noarchive')->valueDefault(false)
-                ->text('field');
+                ->string('title')
+                ->string('type', 32);
             })
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
                 $table->string('node_type')
@@ -35,16 +37,31 @@ class Installer implements \SoosyzeCore\System\Migration
             ->createTableIfNotExists('field', function (TableBuilder $table) {
                 $table->increments('field_id')
                 ->string('field_name')
-                ->string('field_type')
-                ->string('field_rules');
+                ->string('field_type');
             })
+            /* Table pivot. */
             ->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
                 $table->string('node_type')
                 ->integer('field_id')
                 ->string('field_label')
+                ->string('field_rules')
+                /* Si la donnée doit-être affichée. */
+                ->boolean('field_show')->valueDefault(true)
+                /* Si la donnée doit-être affichée dans le formulaire. */
+                ->boolean('field_show_form')->valueDefault(true)
+                /* Si le label doit-être affiché. */
+                ->boolean('field_show_label')->valueDefault(false)
                 ->text('field_description')->valueDefault('')
+                ->text('field_option')->valueDefault('')
                 ->text('field_default_value')->nullable()
-                ->integer('field_weight')->valueDefault(1);
+                /* Poisition du champ. */
+                ->integer('field_weight')->valueDefault(1)
+                /* Poisition de la donnée dans l'affichage. */
+                ->integer('field_weight_form')->valueDefault(1);
+            })
+            ->createTableIfNotExists('entity_page', function (TableBuilder $table) {
+                $table->increments('page_id')
+                ->text('body');
             });
 
         $ci->query()->insertInto('node_type', [
@@ -54,17 +71,18 @@ class Installer implements \SoosyzeCore\System\Migration
             ->execute();
 
         $ci->query()->insertInto('field', [
-                'field_name', 'field_type', 'field_rules'
+                'field_name', 'field_type'
             ])
-            ->values([ 'body', 'textarea', 'required|string' ])
-            ->values([ 'summary', 'textarea', '!required|string|max:255' ])
+            ->values([ 'body', 'textarea'])
+            ->values([ 'image', 'image'])
+            ->values([ 'summary', 'textarea' ])
             ->execute();
 
         $ci->query()
             ->insertInto('node_type_field', [
-                'node_type', 'field_id', 'field_label'
+                'node_type', 'field_id', 'field_label', 'field_weight', 'field_rules', 'field_option'
             ])
-            ->values([ 'page', 1, 'Body' ])
+            ->values([ 'page', 1, 'Body', 2, '!required|string', ''])
             ->execute();
     }
 
@@ -122,6 +140,10 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function uninstall(ContainerInterface $ci)
     {
+        $types = $ci->query()->from('node_type')->lists('node_type');
+        foreach ($types as $type) {
+            $ci->schema()->dropTable('entity_' . $type);
+        }
         $ci->schema()->dropTable('node_type_field');
         $ci->schema()->dropTable('field');
         $ci->schema()->dropTable('node_type');

@@ -2,9 +2,11 @@
 
 namespace SoosyzeCore\Node\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Http\Stream;
+use Soosyze\Components\Http\UploadedFile;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Node\Form\FormNode;
 
 class Node extends \Soosyze\Controller
 {
@@ -19,71 +21,77 @@ class Node extends \Soosyze\Controller
     {
         $nodes = self::query()
             ->from('node')
-            ->orderBy('changed', 'desc')
+            ->orderBy('date_changed', 'desc')
             ->fetchAll();
-
+        
         foreach ($nodes as &$node) {
-            $node[ 'link_view' ]  = self::router()->getRoute('node.show', [
-                ':id' => $node[ 'id' ] ]);
-            $node[ 'link_edit' ]  = self::router()->getRoute('node.edit', [
-                ':id' => $node[ 'id' ] ]);
+            $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
+                ':id_node' => $node[ 'id' ]
+            ]);
+            $node[ 'link_edit' ]   = self::router()->getRoute('node.edit', [
+                ':id_node' => $node[ 'id' ]
+            ]);
+            $node[ 'link_clone' ]  = self::router()->getRoute('node.clone', [
+                ':id_node' => $node[ 'id' ]
+            ]);
             $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
-                ':id' => $node[ 'id' ] ]);
+                ':id_node' => $node[ 'id' ]
+            ]);
         }
 
-        $linkAdd = self::router()->getRoute('node.add');
-
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('My contents')
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('My contents')
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
-                    'linkAdd' => $linkAdd,
-                    'nodes'   => $nodes
+                    'link_add' => self::router()->getRoute('node.add'),
+                    'nodes'    => $nodes
         ]);
     }
 
     public function add($req)
     {
-        $query = self::query()
+        $nodeType = self::query()
             ->from('node_type')
             ->fetchAll();
 
-        foreach ($query as $key => &$value) {
-            $req_granted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
-            if (!self::core()->callHook('app.granted.route', [ $req_granted ])) {
-                unset($query[ $key ]);
+        foreach ($nodeType as $key => &$value) {
+            $reqGranted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
+            if (!self::core()->callHook('app.granted.route', [ $reqGranted ])) {
+                unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
-                ':type' => $value[ 'node_type' ] ]);
+                ':node' => $value[ 'node_type' ]
+            ]);
         }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content')
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Add content')
                 ])
                 ->make('page.content', 'node-add.php', $this->pathViews, [
-                    'node_type' => $query
-        ]);
+                    'node_type' => $nodeType
+                ]);
     }
 
     public function create($type, $req)
     {
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $type)
-            ->orderBy('field_weight', 'asc')
-            ->fetchAll();
-
-        if (!$query) {
+        if (!$fields = self::node()->getFieldsDisplay($type)) {
             return $this->get404($req);
         }
-
-        $content = [ 'title' => '', 'published' => '', 'noindex' => '', 'nofollow' => '', 'noarchive' => '' ];
+        
+        $content = [];
 
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
@@ -92,86 +100,12 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormBuilder([
+        $form = (new FormNode([
             'method'  => 'post',
-            'action'  => self::router()->getRoute('node.store', [ ':type' => $type ]),
-            'enctype' => 'multipart/form-data' ]))
-            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $type) {
-                $form->legend('node-title-legend', t('Fill in the following fields'))
-                ->group('node-title-group', 'div', function ($form) use ($content) {
-                    $form->label('node-title-label', t('Title of the content'))
-                    ->text('title', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'required'    => 1,
-                        'placeholder' => t('Title of the content'),
-                        'value'       => $content[ 'title' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-
-                foreach ($query as $value) {
-                    $key     = $value[ 'field_name' ];
-                    $rules   = $value[ 'field_rules' ];
-                    $require = (new Validator())->addRule($key, $rules)->isRequired($key);
-
-                    /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
-                    $content[ $key ] = isset($content[ $key ])
-                        ? $content[ $key ]
-                        : '';
-
-                    $form->group('node-' . $type . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
-                        $form->label('node-' . $key . '-label', t($value[ 'field_label' ]));
-                        switch ($value[ 'field_type' ]) {
-                            case 'textarea':
-                                $form->textarea($key, $content[ $key ], [
-                                    'class'       => 'form-control editor',
-                                    'required'    => $require,
-                                    'rows'        => 8,
-                                    'placeholder' => t('Enter your content here')
-                                ]);
-
-                                break;
-                            default:
-                                $type = $value[ 'field_type' ];
-                                $form->$type($key, [
-                                    'class'    => 'form-control',
-                                    'required' => $require,
-                                ]);
-
-                                break;
-                        }
-                    }, [ 'class' => 'form-group' ]);
-                }
-            })
-            ->group('node-seo-group', 'fieldset', function ($form) use ($content) {
-                $form->legend('node-title-legend', t('SEO'))
-                ->group('node-noindex-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('noindex', ['checked' => $content['noindex']])
-                    ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
-                        'for' => 'noindex'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('node-nofollow-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('nofollow', ['checked' => $content['nofollow']])
-                    ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
-                        'for' => 'nofollow'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('node-noarchive-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('noarchive', ['checked' => $content['noarchive']])
-                    ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
-                        'for' => 'noarchive'
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('node-publish-group', 'div', function ($form) {
-                $form->checkbox('published')
-                ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
-                    'for' => 'published'
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->token('token_node_create')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            ->content($content, $type, $fields)
+            ->make();
 
         $this->container->callHook('node.create.form', [ &$form, $content ]);
 
@@ -188,7 +122,10 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [':name' => $type])
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' =>  t('Add content of type :name', [
+                        ':name' => $fields[ 0 ][ 'node_type_name' ]
+                    ])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-create.php', $this->pathViews, [
@@ -198,214 +135,177 @@ class Node extends \Soosyze\Controller
 
     public function store($type, $req)
     {
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $type)
-            ->orderBy('field_weight')
-            ->fetchAll();
-
-        if (!$query) {
+        if (!($fields = self::node()->getFieldsForm($type))) {
             return $this->get404($req);
         }
 
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
-                'title'             => 'required|string|max:255|htmlsc',
-                'noindex'           => 'bool',
-                'nofollow'          => 'bool',
-                'noarchive'         => 'bool',
-                'published'         => 'bool',
-                'token_node_create' => 'token'
+                'meta_description' => '!required|string|max:512',
+                'meta_noarchive'   => 'bool',
+                'meta_nofollow'    => 'bool',
+                'meta_noindex'     => 'bool',
+                'meta_title'       => '!required|string|max:255',
+                'published'        => 'bool',
+                'title'            => 'required|string|max:255|htmlsc',
+                'token_node'       => 'token'
             ])
-            ->setInputs($req->getParsedBody());
-        /* Test des champs personnalisé de la node. */
-        foreach ($query as $value) {
-            $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
-            $fields[ $value[ 'field_name' ] ] = $validator->hasInput($value[ 'field_name' ])
-                ? $validator->getInput($value[ 'field_name' ])
-                : null;
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+
+        /* Test des champs personnalisés de la node. */
+        $files  = [];
+        $canPublish = true;
+        foreach ($fields as $value) {
+            /* Si une node possède une relation requise, elle ne peut-être publié. */
+            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                $rules = self::node()->getRules($value);
+                if (isset($rules['required'])) {
+                    $canPublish = false;
+                }
+            } else {
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+            }
+            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                $files[] = $value[ 'field_name' ];
+            }
+        }
+
+        if (!$validator->getInput('date_created', false)) {
+            $validator->addInput('date_created', date('Y-m-d H:i:s'));
+        }
+        $validator->addRule(
+            'date_created',
+            $validator->hasInput('published')
+            ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
+            : '!required|date_format:Y-m-d H:i:s'
+        );
+
+        /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
+        if (!$canPublish) {
+            $validator->addRule('published', '!accepted');
         }
 
         $this->container->callHook('node.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
+            /* Prépare les champs de la table enfant. */
+            $fieldsInsert = [];
+            $fieldsRelation = false;
+            foreach ($fields as $value) {
+                $key = $value[ 'field_name' ];
+                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                    $fieldsInsert[ $key ] = '';
+                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                    $fieldsRelation = true;
+                } elseif ($value[ 'field_type' ] === 'checkbox') {
+                    $fieldsInsert[ $key ] = implode(',', $validator->getInput($key, []));
+                } else {
+                    $fieldsInsert[ $key ] = $validator->getInput($key, '');
+                }
+            }
+
+            self::query()
+                ->insertInto('entity_' . $type, array_keys($fieldsInsert))
+                ->values($fieldsInsert)
+                ->execute();
+
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
-                'title'     => $validator->getInput('title'),
-                'type'      => $type,
-                'created'   => (string) time(),
-                'changed'   => (string) time(),
-                'noindex'   => (bool) $validator->getInput('noindex'),
-                'nofollow'  => (bool) $validator->getInput('nofollow'),
-                'noarchive' => (bool) $validator->getInput('noarchive'),
-                'published' => (bool) $validator->getInput('published'),
-                'field'     => serialize($fields)
+                'date_changed'     => time(),
+                'date_created'     => strtotime($validator->getInput('date_created')),
+                'entity_id'        => self::schema()->getIncrement('entity_' . $type),
+                'meta_description' => $validator->getInput('meta_description'),
+                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
+                'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
+                'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
+                'meta_title'       => $validator->getInput('meta_title'),
+                'published'        => (bool) $validator->getInput('published'),
+                'title'            => $validator->getInput('title'),
+                'type'             => $type,
             ];
 
-            $this->container->callHook('todo.store.before', [ $validator, &$node ]);
+            $this->container->callHook('node.store.before', [ $validator, &$node ]);
             self::query()
                 ->insertInto('node', array_keys($node))
                 ->values($node)
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
+            /* Télécharge et enregistre les fichiers. */
+            $node['id'] = self::schema()->getIncrement('node');
+            
+            foreach ($fields as $value) {
+                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                    $this->saveFile($node, $value[ 'field_name' ], $validator);
+                }
+            }
+            
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
-            $route                               = self::router()->getRoute('node.index');
 
-            return new Redirect($route);
+            $id_node = self::schema()->getIncrement('node');
+
+            return new Redirect(
+                $fieldsRelation
+                ? self::router()->getRoute('node.edit', [ ':id_node' => $id_node ])
+                : self::router()->getRoute('node.index')
+            );
         }
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        $route = self::router()->getRoute('node.create', [ ':type' => $type ]);
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('node.create', [ ':node' => $type ]));
     }
 
-    public function show($id, $req)
+    public function show($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
+        $fields = self::node()->makeFieldsById($node['type'], $node['entity_id']);
 
         $tpl = self::template()
+                ->view('this', [
+                    'title'       => $node['meta_title'],
+                    'description' => $node['meta_description'],
+                ])
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
                 ->make('page.content', 'node-show.php', $this->pathViews, [
-                    'fields' => unserialize($node[ 'field' ])
-                ])->override('page.content', [ 'node-show-' . $id . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
+                    'fields' => $fields
+                ])->override('page.content', [ 'node-show-' . $id_node . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
         
-        self::core()->callHook('node.show.tpl', [&$tpl, $node, $id]);
-
-        if (!$node[ 'published' ]) {
-            $tpl->view('page.messages', [
-                'infos' => [ t('This content is not published') ]
-            ]);
-        }
+        self::core()->callHook('node.show.tpl', [&$tpl, $node, $id_node]);
 
         return $tpl;
     }
 
-    public function edit($id, $req)
+    public function edit($id_node, $req)
     {
-        $content = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$content) {
+        if (!($node = self::node()->byId($id_node))) {
+            return $this->get404($req);
+        }
+        if (!($fields = self::node()->getFieldsDisplay($node[ 'type' ]))) {
             return $this->get404($req);
         }
 
-        $query = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $content[ 'type' ])
-            ->orderBy('field_weight', 'asc')
-            ->fetchAll();
+        $content = $node + self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
 
-        if (!$query) {
-            return $this->get404($req);
-        }
-
-        $this->container->callHook('node.edit.form.data', [ &$content, $id ]);
+        $this->container->callHook('node.edit.form.data', [ &$content, $id_node ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
-
-        $form = (new FormBuilder([
+        
+        $form = (new FormNode([
             'method'  => 'post',
-            'action'  => self::router()->getRoute('node.update', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data' ]))
-            ->group('node-fieldset', 'fieldset', function ($form) use ($query, $content, $id) {
-                $form->legend('node-title-legend', t('Fill in the following fields'))
-                ->group('node-title-group', 'div', function ($form) use ($content) {
-                    $form->label('node-title-label', t('Title of the content'))
-                    ->text('title', [
-                        'class'     => 'form-control',
-                        'maxlength' => 255,
-                        'required'  => 1,
-                        'rows'      => 8,
-                        'value'     => $content[ 'title' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-
-                foreach ($query as $value) {
-                    $key     = $value[ 'field_name' ];
-                    $rules   = $value[ 'field_rules' ];
-                    $require = (new Validator())->addRule($key, $rules)->isRequired($key);
-
-                    /* Si le contenu du champs n'existe pas alors il est déclaré vide. */
-                    $content[ $key ] = isset($content[ $key ])
-                        ? $content[ $key ]
-                        : unserialize($content[ 'field' ])[ $key ];
-
-                    $form->group('node-' . $id . '-' . $key, 'div', function ($form) use ($value, $key, $content, $require) {
-                        $form->label('node-' . $key . '-label', $value[ 'field_label' ]);
-                        switch ($value[ 'field_type' ]) {
-                            case 'textarea':
-                                $form->textarea($key, $content[ $key ], [
-                                    'class'       => 'form-control editor',
-                                    'required'    => $require,
-                                    'rows'        => 8,
-                                    'placeholder' => t('Enter your content here')
-                                ]);
-
-                                break;
-                            default:
-                                $type = $value[ 'field_type' ];
-                                $form->$type($key, [
-                                    'class'    => 'form-control',
-                                    'required' => $require,
-                                ]);
-
-                                break;
-                        }
-                    }, [ 'class' => 'form-group' ]);
-                }
-            })
-            ->group('node-seo-group', 'fieldset', function ($form) use ($content) {
-                $form->legend('node-title-legend', t('SEO'))
-                ->group('node-noindex-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('noindex', ['checked' => $content['noindex']])
-                    ->label('node-noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
-                        'for' => 'noindex'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('node-nofollow-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('nofollow', ['checked' => $content['nofollow']])
-                    ->label('node-nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
-                        'for' => 'nofollow'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('node-noarchive-group', 'div', function ($form) use ($content) {
-                    $form->checkbox('noarchive', ['checked' => $content['noarchive']])
-                    ->label('node-noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
-                        'for' => 'noarchive'
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('node-publish-group', 'div', function ($form) use ($content) {
-                $form->checkbox('published', [ 'checked' => $content[ 'published' ] ])
-                ->label('node-publish-label', '<span class="ui"></span> ' . t('Publish content'), [
-                    'for' => 'published'
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->token('token_node_edit')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            'action'  => self::router()->getRoute('node.update', [':id_node' => $id_node ]),
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            ->content($content, $content['type'], $fields)
+            ->make();
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
 
@@ -422,114 +322,382 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [':title' => $content[ 'title' ]])
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Edit :title content', [':title' => $content[ 'title' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
     }
 
-    public function update($id, $req)
+    public function update($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
-
-        $node_type = self::query()
-            ->from('node_type')
-            ->leftJoin('node_type_field', 'node_type', 'node_type_field.node_type')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $node[ 'type' ])
-            ->orderBy('field_weight')
-            ->fetchAll();
+        if (!($fields = self::node()->getFieldsForm($node[ 'type' ]))) {
+            return $this->get404($req);
+        }
 
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
-                'title'           => 'required|string|max:255|htmlsc',
-                'noindex'         => 'bool',
-                'nofollow'        => 'bool',
-                'noarchive'       => 'bool',
-                'published'       => 'bool',
-                'token_node_edit' => 'token'
+                'meta_description' => '!required|string|max:512',
+                'meta_noarchive'   => 'bool',
+                'meta_nofollow'    => 'bool',
+                'meta_noindex'     => 'bool',
+                'meta_title'       => '!required|string|max:255',
+                'published'        => 'bool',
+                'title'            => 'required|string|max:255|htmlsc',
+                'token_node'       => 'token'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+
         /* Test des champs personnalisé de la node. */
-        foreach ($node_type as $value) {
-            $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
-            $fields[ $value[ 'field_name' ] ] = $validator->hasInput($value[ 'field_name' ])
-                ? $validator->getInput($value[ 'field_name' ])
-                : null;
+        $files  = [];
+        $canPublish = true;
+        foreach ($fields as $value) {
+            /* Si une node possède une relation requise, elle ne peut-être publié. */
+            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                if ($rules = self::node()->getRules($value)) {
+                    $options = json_decode($value[ 'field_option' ], true);
+                    $entitys = self::query()
+                        ->from($options[ 'relation_table' ])
+                        ->where($options[ 'foreign_key' ], '==', $node['entity_id'])
+                        ->limit(2)
+                        ->fetchAll();
+                    if (!empty($rules[ 'required' ]) && count($entitys) < 1) {
+                        $canPublish = false;
+                    }
+                }
+            } else {
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+            }
+            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                $files[] = $value[ 'field_name' ];
+            }
         }
 
-        $this->container->callHook('node.update.validator', [ &$validator, $id ]);
+        if (!$validator->getInput('date_created', false)) {
+            $validator->addInput('date_created', date('Y-m-d H:i:s'));
+        }
+        $validator->addRule(
+            'date_created',
+            $validator->hasInput('published')
+            ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
+            : '!required|date_format:Y-m-d H:i:s'
+        );
+
+        /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
+        if (!$canPublish) {
+            $validator->addRule('published', '!accepted');
+        }
+
+        $this->container->callHook('node.update.validator', [ &$validator, $id_node ]);
 
         if ($validator->isValid()) {
+            $fieldsUpdate = [];
+            foreach ($fields as $value) {
+                $key = $value[ 'field_name' ];
+                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
+                    $this->saveFile($node, $key, $validator);
+                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                    $this->updateWeightEntity($value, $validator->getInput($key, []));
+                } elseif ($value[ 'field_type' ] === 'checkbox') {
+                    $fieldsUpdate[ $key ] = implode(',', $validator->getInput($key, []));
+                } else {
+                    $fieldsUpdate[ $key ] = $validator->getInput($key, '');
+                }
+            }
+
             $value = [
-                'title'     => $validator->getInput('title'),
-                'changed'   => (string) time(),
-                'noindex'   => (bool) $validator->getInput('noindex'),
-                'nofollow'  => (bool) $validator->getInput('nofollow'),
-                'noarchive' => (bool) $validator->getInput('noarchive'),
-                'published' => (bool) $validator->getInput('published'),
-                'field'     => serialize($fields)
+                'date_changed'     => time(),
+                'date_created'     => strtotime($validator->getInput('date_created')),
+                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
+                'meta_description' => $validator->getInput('meta_description'),
+                'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
+                'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
+                'meta_title'       => $validator->getInput('meta_title'),
+                'published'        => (bool) $validator->getInput('published'),
+                'title'            => $validator->getInput('title')
             ];
 
-            $this->container->callHook('node.update.before', [ $validator, &$value,
-                $id ]);
+            $this->container->callHook('node.update.before', [
+                $validator, &$value, $id_node
+            ]);
             self::query()
                 ->update('node', $value)
-                ->where('id', '==', $id)
+                ->where('id', '==', $id_node)
                 ->execute();
-            $this->container->callHook('node.update.after', [ $validator, $id ]);
+            self::query()
+                ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
+                ->where($node[ 'type' ] . '_id', '==', $node['entity_id'])
+                ->execute();
+            $this->container->callHook('node.update.after', [ $validator, $id_node ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
+            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        $route = self::router()->getRoute('node.edit', [ ':id' => $id ]);
-
-        return new Redirect($route);
+        return new Redirect(
+            self::router()->getRoute('node.edit', [
+                ':id_node' => $id_node
+            ])
+        );
     }
 
-    public function delete($id, $req)
+    public function delete($id_node, $req)
     {
-        $node = self::query()
-            ->from('node')
-            ->where('id', '==', $id)
-            ->fetch();
-
-        if (!$node) {
+        if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
 
         $validator = (new Validator())
-            ->setRules([
-                'id' => 'required',
-            ])
-            ->setInputs([ 'id' => $id ]);
+            ->setRules([ 'id' => 'required' ])
+            ->setInputs([ 'id' => $id_node ]);
 
-        $this->container->callHook('node.delete.validator', [ &$validator, $id ]);
+        $this->container->callHook('node.delete.validator', [ &$validator, $id_node ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('node.delete.before', [ $validator, $id ]);
+            $this->container->callHook('node.delete.before', [ $validator, $id_node ]);
+            $this->deleteRelation($node);
+            
             self::query()
                 ->from('node')
                 ->delete()
-                ->where('id', '==', $id)
+                ->where('id', '==', $id_node)
                 ->execute();
-            $this->container->callHook('node.delete.after', [ $validator, $id ]);
+            
+            $this->deleteFile($id_node);
+            $this->container->callHook('node.delete.after', [ $validator, $id_node ]);
         }
 
-        $route = self::router()->getRoute('node.index');
+        return new Redirect(self::router()->getRoute('node.index'));
+    }
+    
+    public function cloneNode($id_node, $req)
+    {
+        if (!($node = self::node()->byId($id_node))) {
+            return $this->get404($req);
+        }
+        $type = $node[ 'type' ];
+        if (!($entity = self::node()->getEntity($type, $node[ 'entity_id' ]))) {
+            return $this->get404($req);
+        }
+        if (!($fields = self::node()->getFieldsform($type))) {
+            return $this->get404($req);
+        }
+        if (mb_strlen($node[ 'title' ] . ' clone') > 255) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Le titre du contenu cloner est trop long.' ];
 
-        return new Redirect($route);
+            return new Redirect(self::router()->getRoute('node.index'));
+        }
+
+        $entityClone = $entity;
+        /* Construit l'entity principale */
+        unset($entityClone[ $type . '_id' ]);
+        self::query()
+            ->insertInto('entity_' . $type, array_keys($entityClone))
+            ->values($entityClone)
+            ->execute();
+        $entity_id   = self::schema()->getIncrement('entity_' . $type);
+
+        /* Construit la node */
+        unset($node[ 'id' ]);
+        $node[ 'entity_id' ]    = $entity_id;
+        $node[ 'title' ]        = $node[ 'title' ] . ' clone';
+        $node[ 'date_created' ] = (string) time();
+        $node[ 'date_changed' ] = (string) time();
+        $node[ 'published' ]    = false;
+
+        self::query()
+            ->insertInto('node', array_keys($node))
+            ->values($node)
+            ->execute();
+        $node_id = self::schema()->getIncrement('node');
+
+        /* Parcours les champs de l'entité principal. */
+        foreach ($fields as $value) {
+            $field_name = $value[ 'field_name' ];
+            /* Copie ses fichiers. */
+            if (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
+                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$node_id";
+                $file = $entity[ $field_name ];
+
+                if (!is_file($file)) {
+                    continue;
+                }
+
+                $upload = new UploadedFile(
+                    new Stream(fopen($file, 'r')),
+                    self::getBasename($file)
+                );
+                self::file()
+                    ->add($upload)
+                    ->setPath($dir)
+                    ->setResolvePath()
+                    ->setResolveName()
+                    ->callMove(function ($key, $name, $move) use ($type, $entity_id, $field_name) {
+                        self::query()
+                        ->update('entity_' . $type, [ $field_name => $move ])
+                        ->where($type . '_id', '==', $entity_id)
+                        ->execute();
+                    })
+                    ->saveOne();
+            }
+            /* Si elle possède des sous entités. */
+            elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                $options      = !empty($value[ 'field_option' ])
+                    ? json_decode($value[ 'field_option' ], true)
+                    : [];
+                $dataRelation = self::query()
+                    ->from($options[ 'relation_table' ])
+                    ->where($options[ 'foreign_key' ], $entity[ $options[ 'foreign_key' ] ])
+                    ->fetchAll();
+
+                $fields_file = self::query()
+                    ->from('node_type_field')
+                    ->leftJoin('field', 'field_id', 'field.field_id')
+                    ->where('node_type', $field_name)
+                    ->in('field_type', [ 'file', 'image' ])
+                    ->fetchAll();
+
+                /* Parcours toutes les sous entités. */
+                foreach ($dataRelation as $data) {
+                    foreach ($fields_file as $file) {
+                        $field_name = $file[ 'field_name' ];
+                        /* Parcours ses fichiers pour les copier. */
+                        if (isset($data[ $field_name ])) {
+                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$node_id";
+                            $pathFile = $data[ $field_name ];
+
+                            if (!is_file($pathFile)) {
+                                continue;
+                            }
+                            $upload = new UploadedFile(
+                                new Stream(fopen($pathFile, 'r')),
+                                self::getBasename($pathFile)
+                            );
+
+                            self::file()
+                                ->add($upload)
+                                ->setPath($dir)
+                                ->setResolvePath()
+                                ->setResolveName()
+                                ->callMove(function ($key, $name, $move) use (&$data, $field_name) {
+                                    $data[ $field_name ] = $move;
+                                })
+                                ->saveOne();
+                        }
+                    }
+                    unset($data[ $value[ 'field_name' ] . '_id' ]);
+                    $data[ $options[ 'foreign_key' ] ] = $entity_id;
+                    self::query()
+                        ->insertInto($options[ 'relation_table' ], array_keys($data))
+                        ->values($data)
+                        ->execute();
+                }
+            }
+        }
+
+        return new Redirect(self::router()->getRoute('node.index'));
+    }
+    
+    public static function getBasename($pathFile)
+    {
+        return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
+    }
+
+    private function deleteFile($id_node)
+    {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$id_node}";
+        if (!is_dir($dir)) {
+            return;
+        }
+        foreach (new \DirectoryIterator($dir) as $file) {
+            if ($file->isDot() || $file->isDir()) {
+                continue;
+            }
+            \unlink($file->getPathname());
+        }
+        \rmdir($dir);
+    }
+    
+    private function deleteRelation($node)
+    {
+        /* Suppression des relations */
+        $entity = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+
+        $relation_node = self::query()
+            ->from('node_type_field')
+            ->leftJoin('field', 'field_id', 'field.field_id')
+            ->where('node_type', $node[ 'type' ])
+            ->where('field_type', 'one_to_many')
+            ->fetchAll();
+        foreach ($relation_node as $relation) {
+            $options = json_decode($relation[ 'field_option' ], true);
+            self::query()
+                ->from($options[ 'relation_table' ])
+                ->delete()
+                ->where($options[ 'foreign_key' ], $entity[ $options[ 'local_key' ] ])
+                ->execute();
+        }
+
+        /* Supression du contenu. */
+        self::query()
+            ->from('entity_' . $node[ 'type' ])
+            ->delete()
+            ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+            ->execute();
+    }
+
+    private function updateWeightEntity(array $field, array $data)
+    {
+        $options = json_decode($field['field_option'], true);
+        if ($options['sort'] !== 'weight') {
+            return;
+        }
+        foreach ($data as $value) {
+            self::query()
+                ->update('entity_' . $field[ 'field_name' ], [
+                    'weight' => $value[ 'weight' ]
+                ])
+                ->where($field[ 'field_name' ] . '_id', '==', $value[ 'id' ])
+                ->execute();
+        }
+    }
+
+    private function saveFile($node, $name_field, $validator)
+    {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'id' ]}";
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        self::file()
+            ->add($validator->getInput($name_field), $validator->getInput("file-name-$name_field"))
+            ->setName($name_field)
+            ->setPath($dir)
+            ->setResolvePath()
+            ->callGet(function ($key, $name) use ($node) {
+                return self::query()
+                    ->from('entity_' . $node[ 'type' ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->fetch()[ $key ];
+            })
+            ->callMove(function ($key, $name, $move) use ($node) {
+                self::query()
+                    ->update('entity_' . $node[ 'type' ], [ $key => $move ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->execute();
+            })
+            ->callDelete(function ($key, $name) use ($node) {
+                self::query()
+                    ->update('entity_' . $node[ 'type' ], [ $key => '' ])
+                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->execute();
+            })
+            ->save();
     }
 }

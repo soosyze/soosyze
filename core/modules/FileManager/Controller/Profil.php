@@ -31,7 +31,8 @@ class Profil extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-folder"></i> ' . t('File profile')
+                    'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
+                    'title_main' => t('File profile')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-profil.php', $this->pathViews, [

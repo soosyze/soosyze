@@ -1,4 +1,8 @@
 {
+    "node": {
+        "class": "SoosyzeCore\\Node\\Services\\Node",
+        "arguments": ["@query", "@template", "@core"]
+    },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",
         "hooks": {
@@ -10,7 +14,23 @@
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
         "hooks": {
-            "node.show.tpl": "hookResponseAfter"
+            "node.show.tpl": "hookResponseAfter",
+            "node.edit.response.after": "hookMenuShowResponseAfter"
+        }
+    },
+    "node.hook.url": {
+        "class": "SoosyzeCore\\Node\\Services\\HookUrl",
+        "arguments": ["@schema", "@query"],
+        "hooks": {
+            "node.create.form.data": "hookCreateFormData",
+            "node.create.form": "hookCreateForm",
+            "node.store.validator": "hookStoreValidator",
+            "node.store.after": "hookStoreAfter",
+            "node.edit.form.data": "hookEditFormData",
+            "node.edit.form": "hookCreateForm",
+            "node.update.validator": "hookStoreValidator",
+            "node.update.after": "hookUpdateValid",
+            "node.delete.after": "hookDeleteValid"
         }
     },
     "node.hook.menu": {
@@ -38,11 +58,24 @@
             "user.permission.module": "hookPermission",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",
+            "route.node.clone": "hookNodeClone",
             "route.node.store": "hookNodeCreated",
             "route.node.edit": "hookNodeEdited",
             "route.node.update": "hookNodeEdited",
             "route.node.delete": "hookNodeDeleted",
-            "route.node.add": "hookNodeAdd"
+            "route.node.add": "hookNodeAdd",
+            "route.entity.create": "hookNodeCreated",
+            "route.entity.store": "hookNodeCreated",
+            "route.entity.edit": "hookNodeEdited",
+            "route.entity.update": "hookNodeEdited",
+            "route.entity.delete": "hookNodeDeleted"
+        }
+    },
+    "node.hook.cron": {
+        "class": "SoosyzeCore\\Node\\Services\\HookCron",
+        "arguments": ["@query"],
+        "hooks": {
+            "app.cron": "hookCron"
         }
     }
 }

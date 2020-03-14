@@ -57,7 +57,7 @@ class HookMenu
     public function hookCreateForm($form, $data)
     {
         if ($this->is_menu) {
-            $form->addBefore('node-publish-group', function ($form) use ($data) {
+            $form->addBefore('published-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', t('Menu'))
                         ->group('node-menu-active-group', 'div', function ($form) use ($data) {
@@ -105,37 +105,33 @@ class HookMenu
                 return;
             }
 
-            $nodeLast = $this->query->select('id')
-                ->from('node')
-                ->where('title', $validator->getInput('title'))
-                ->orderBy('created', 'desc')
-                ->fetch();
+            $id    = $this->schema->getIncrement('node');
+            $link  = ($alias = $this->query
+                ->from('system_alias_url')
+                ->where('source', '==', 'node/' . $id)
+                ->fetch())
+                ? $alias[ 'alias' ]
+                : 'node/' . $id;
 
-            if ($nodeLast) {
-                $id = $nodeLast[ 'id' ];
-                $this->query->insertInto('menu_link', [
+            $this->query->insertInto('menu_link', [
                     'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
-                    ])
-                    ->values([
-                        'node.show',
-                        $validator->getInput('title_link'),
-                        'node/' . $id,
-                        'menu-main',
-                        1,
-                        -1,
-                        (bool) $validator->getInput('published'),
-                    ])
-                    ->execute();
+                ])
+                ->values([
+                    'node.show',
+                    $validator->getInput('title_link'),
+                    $link,
+                    'menu-main',
+                    1,
+                    -1,
+                    (bool) $validator->getInput('published'),
+                ])
+                ->execute();
 
-                $linkLast = $this->query->from('menu_link')
-                    ->where('title_link', $validator->getInput('title_link'))
-                    ->where('link', 'node/' . $id)
-                    ->fetch();
+            $linkId = $this->schema->getIncrement('menu_link');
 
-                $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
-                    ->values([ $id, $linkLast[ 'id' ] ])
-                    ->execute();
-            }
+            $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+                ->values([ $id, $linkId ])
+                ->execute();
         }
     }
 
@@ -146,9 +142,17 @@ class HookMenu
                 ->where('node_id', '==', $id)
                 ->fetch();
 
+            $link  = ($alias = $this->query
+                ->from('system_alias_url')
+                ->where('source', '==', 'node/' . $id)
+                ->fetch())
+                ? $alias['alias']
+                : 'node/' . $id;
+
             if ($validator->hasInput('active') && $nodeMenuLink) {
                 $this->query->update('menu_link', [
                         'title_link' => $validator->getInput('title_link'),
+                        'link'       => $link,
                         'active'     => (bool) $validator->getInput('published'),
                     ])
                     ->where('id', $nodeMenuLink[ 'menu_link_id' ])
@@ -159,7 +163,7 @@ class HookMenu
                     ->values([
                         'node.show',
                         $validator->getInput('title_link'),
-                        'node/' . $id,
+                        $link,
                         'menu-main',
                         1,
                         -1,
@@ -167,13 +171,10 @@ class HookMenu
                     ])
                     ->execute();
 
-                $linkLast = $this->query->from('menu_link')
-                    ->where('title_link', $validator->getInput('title_link'))
-                    ->where('link', 'node/' . $id)
-                    ->fetch();
+                $linkId = $this->schema->getIncrement('menu_link');
 
                 $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
-                    ->values([ $id, $linkLast[ 'id' ] ])
+                    ->values([ $id, $linkId ])
                     ->execute();
             } elseif (!$validator->hasInput('active') && $nodeMenuLink) {
                 $this->query->from('node_menu_link')
@@ -197,10 +198,10 @@ class HookMenu
                     var item             = document.getElementById(id);
                     var input_title      = document.getElementById("title");
                     var input_title_link = document.getElementById("title_link");
-                    
+
                     item.style.display     = item.style.display == "none" ? "" : "none";
-                    input_title_link.value = input_title_link.value 
-                        ? input_title_link.value 
+                    input_title_link.value = input_title_link.value
+                        ? input_title_link.value
                         : input_title.value;
                 }
             </script>';

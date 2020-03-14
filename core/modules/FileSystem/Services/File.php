@@ -72,7 +72,7 @@ class File
         $this->dir       = $this->core->getDir('files_public', 'app/files');
     }
 
-    public function inputFile($name, FormBuilder &$form, $content = '')
+    public function inputFile($name, FormBuilder &$form, $content = '', $type = 'image')
     {
         $attr = [
             'class'      => 'btn btn-danger form-file-reset',
@@ -89,12 +89,19 @@ class File
         if (is_file(ROOT . $content)) {
             $src = $this->base_path . $content;
         }
-        if (!empty($src)) {
+        if (!empty($src) && $type == 'image') {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<img:css:attr/>', [
                     'alt'   => 'Picture user',
                     'src'   => $src,
                     'class' => 'input-file-img img-thumbnail'
+                ]);
+            }, [ 'class' => 'form-group' ]);
+        } elseif (!empty($src)) {
+            $form->group("file-$name-group", 'div', function ($form) use ($name, $src) {
+                $form->html("file-image-$name", '<a:css:attr/><i class="fa fa-download"></i> :_content</a>', [
+                    'href'    => $src,
+                    '_content' => $src
                 ]);
             }, [ 'class' => 'form-group' ]);
         } else {

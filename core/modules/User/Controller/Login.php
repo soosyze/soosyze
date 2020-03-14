@@ -54,7 +54,8 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Log in')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' =>  t('Log in')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-login.php', $this->pathViews, [
@@ -137,7 +138,8 @@ class Login extends \Soosyze\Controller
 
         return self::template()
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Request a new password')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Request a new password')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-relogin.php', $this->pathViews, [

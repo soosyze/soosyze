@@ -26,7 +26,8 @@ class BackupController extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fas fa-file-archive"></i> ' . t('Backups manager')
+                    'icon'       => '<i class="fas fa-file-archive"></i>',
+                    'title_main' => t('Backups manager')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-index.php', $this->pathViews, [

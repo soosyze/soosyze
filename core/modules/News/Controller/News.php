@@ -37,7 +37,7 @@ class News extends \Soosyze\Controller
             ->from('node')
             ->where('published', '==', 1)
             ->where('type', 'article')
-            ->orderBy('created', 'desc')
+            ->orderBy('date_created', 'desc')
             ->limit(self::$limit, $offset)
             ->fetchAll();
 
@@ -48,10 +48,11 @@ class News extends \Soosyze\Controller
         if (!$query) {
             $default = t('No articles for the moment');
         }
-        foreach ($query as &$new) {
-            $new[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id' => $new[ 'id' ] ]);
-            $new[ 'field' ]     = unserialize($new[ 'field' ]);
+        
+        foreach ($query as &$value) {
+            $value[ 'field' ]       = self::node()->makeFieldsById('article', $value[ 'entity_id' ]);
+            $value[ 'link_view' ] = self::router()->getRoute('node.show', [
+                ':id_node' => $value[ 'id' ] ]);
         }
         $query_all = self::query()
             ->from('node')
@@ -125,29 +126,20 @@ class News extends \Soosyze\Controller
             ->from('node')
             ->where('published', '==', 1)
             ->where('type', 'article')
-            ->orderBy('created', 'desc')
+            ->orderBy('date_created', 'desc')
             ->limit(self::$limit)
             ->fetchAll();
-        $xml   = '<?xml version="1.0" encoding="iso-8859-1"?><rss version="2.0">' . PHP_EOL
-            . '<channel>' . PHP_EOL
-            . '<title>News</title>' . PHP_EOL
-            . '<link>'
-            . self::router()->getRoute('news.rss')
-            . '</link>' . PHP_EOL
-            . '<description></description>' . PHP_EOL
-            . '<language>fr</language>' . PHP_EOL;
-        foreach ($query as $new) {
-            $new[ 'field' ] = unserialize($new[ 'field' ]);
-            $xml            .= '<item>' . PHP_EOL
-                . '<title>' . htmlspecialchars($new[ 'title' ]) . '</title>' . PHP_EOL
-                . '<link>'
-                . self::router()->getRoute('node.show', [ ':id' => $new[ 'id' ] ])
-                . '</link>' . PHP_EOL
-                . '<pubDate>' . date('D, d M Y H:i:s O', $new[ 'created' ]) . '</pubDate>' . PHP_EOL
-                . '<description>' . htmlspecialchars($new[ 'field' ][ 'summary' ]) . '</description>' . PHP_EOL
-                . '</item>' . PHP_EOL;
+
+        foreach ($query as &$new) {
+            $new[ 'field' ]      = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
+            $new[ 'route_show' ] = self::router()->getRoute('node.show', [ ':id_node' => $new[ 'id' ] ]);
         }
-        $xml .= '</channel>' . PHP_EOL . '</rss>' . PHP_EOL;
+        $xml = self::template()
+            ->createBlock('page-rss.php', $this->pathViews)
+            ->addVars([
+            'routeRss' => self::router()->getRoute('news.rss'),
+            'news'     => $query
+        ]);
 
         $stream = new \Soosyze\Components\Http\Stream($xml);
 
@@ -173,9 +165,9 @@ class News extends \Soosyze\Controller
         }
         foreach ($news as &$new) {
             $new[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id' => $new[ 'id' ] ]);
-            $new[ 'field' ]     = unserialize($new[ 'field' ]);
-            $o = strtotime(date('m/d/Y', $new['created']) . ' +1 day');
+                ':id_node' => $new[ 'id' ] ]);
+            $new[ 'field' ]       = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
+            $o = strtotime(date('m/d/Y', $new['date_created']) . ' +1 day');
         }
 
         $nodes_all = $this->getNewsAll($this->dateCurrent, $this->dateNext);
@@ -199,9 +191,9 @@ class News extends \Soosyze\Controller
         return self::query()
                 ->from('node')
                 ->where('type', 'article')
-                ->between('created', $dateCurrent, $dateNext)
+                ->between('date_created', $dateCurrent, $dateNext)
                 ->where('published', '==', 1)
-                ->orderBy('created', 'desc')
+                ->orderBy('date_created', 'desc')
                 ->limit(self::$limit, $offset)
                 ->fetchAll();
     }
@@ -211,7 +203,7 @@ class News extends \Soosyze\Controller
         return self::query()
                 ->from('node')
                 ->where('type', 'article')
-                ->between('created', $dateCurrent, $dateNext)
+                ->between('date_created', $dateCurrent, $dateNext)
                 ->where('published', '==', 1)
                 ->fetchAll();
     }

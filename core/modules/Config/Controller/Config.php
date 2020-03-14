@@ -26,7 +26,8 @@ class Config extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
+                    'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
+                    'title_main' => t('Configuration')
                 ])
                 ->view('page.messages', [ 'infos' => [ t('No configuration available') ] ])
                 ->make('page.content', 'page-config.php', $this->pathViews, [
@@ -70,7 +71,8 @@ class Config extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Configuration')
+                    'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
+                    'title_main' => t('Configuration')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-config.php', $this->pathViews, [

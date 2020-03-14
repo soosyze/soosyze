@@ -44,7 +44,7 @@ class HookBlock
 
         $output = [];
         foreach ($data as $value) {
-            $year = date('Y', $value[ 'created' ]);
+            $year = date('Y', $value[ 'date_created' ]);
             if (!isset($output[ $year ])) {
                 $output[ $year ] = [
                     'number' => 1,
@@ -72,8 +72,8 @@ class HookBlock
 
         $output = [];
         foreach ($data as $value) {
-            $year  = date('Y', $value[ 'created' ]);
-            $month = date('m', $value[ 'created' ]);
+            $year  = date('Y', $value[ 'date_created' ]);
+            $month = date('m', $value[ 'date_created' ]);
             if (!isset($output[ $year ])) {
                 $output[ $year ] = [
                     'number' => 1,
@@ -88,7 +88,7 @@ class HookBlock
                 $output[ $year ][ 'months' ][ $month ] = [
                     'number' => 1,
                     'year'   => $year,
-                    'month'  => date('M', $value[ 'created' ]),
+                    'month'  => date('M', $value[ 'date_created' ]),
                     'link'   => $this->router->getRoute('news.month', [
                         ':year'  => $year,
                         ':month' => $month,

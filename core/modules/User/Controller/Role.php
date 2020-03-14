@@ -38,7 +38,10 @@ class Role extends \Soosyze\Controller
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->view('page', [ 'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Administer roles')])
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Administer roles')
+                ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-role.php', $this->pathViews, [
                     'roles'    => $roles,
@@ -76,7 +79,8 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Creating a role')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-role.php', $this->pathViews, [
@@ -172,7 +176,8 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Editing a role')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-role.php', $this->pathViews, [
@@ -263,7 +268,8 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Deleting the :name role', [':name' => $data[ 'role_label' ]])
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Deleting the :name role', [':name' => $data[ 'role_label' ]])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-role.php', $this->pathViews, [

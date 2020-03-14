@@ -266,50 +266,32 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
+            ->insertInto('entity_page', [ 'body' ])
+            ->values([ (new Template('features.php', $this->pathContent))->render() ])
+            ->values([ (new Template('text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ t('Not Found') ])
+            ->execute();
+        
+        $time = (string) time();
+        $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
             ])
-            ->values([
-                t('Site'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('features.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                'Basic', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('text.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                'Standard', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('text.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                'Premium', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('text.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('About'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Not Found'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => t('Not Found')
-                ])
-            ])
+            ->values([ 1, 'page', $time, $time, true, t('Site') ])
+            ->values([ 2, 'page', $time, $time, true, t('Basic') ])
+            ->values([ 3, 'page', $time, $time, true, t('Standard') ])
+            ->values([ 4, 'page', $time, $time, true, t('Premium') ])
+            ->values([ 5, 'page', $time, $time, true, t('About') ])
+            ->values([ 6, 'page', $time, $time, true, t('Not Found') ])
             ->execute();
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'visibility_pages',
-                'pages', 'content' ])
+            ->insertInto('block', [
+                'section', 'title', 'weight', 'visibility_pages', 'pages', 'content'
+            ])
             ->values([
                 'header', '', 1, true, '/',
                 (new Template('learn_more.php', $this->pathContent))->render()
@@ -345,23 +327,13 @@ class HookStep
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'menu', 'link', 'weight', 'parent', 'title_link'
             ])
-            ->values([
-                'node.show', 'Blog', 'news', 'menu-main', 2, -1
-            ])
-            ->values([
-                'node.show', 'About', 'node/7', 'menu-main', 3, -1
-            ])
-            ->values([
-                'node.show', 'Basic', 'node/4', 'menu-main', 3, 6
-            ])
-            ->values([
-                'node.show', 'Standard', 'node/5', 'menu-main', 3, 6
-            ])
-            ->values([
-                'node.show', 'Premium', 'node/6', 'menu-main', 3, 6
-            ])
+            ->values([ 'node.show', 'menu-main', 'news', 2, -1, 'Blog'])
+            ->values([ 'node.show', 'menu-main', 'node/7', 3, -1, 'About'])
+            ->values([ 'node.show', 'menu-main', 'node/4', 3, 6, 'Basic' ])
+            ->values([ 'node.show', 'menu-main', 'node/5', 3, 6, 'Standard' ])
+            ->values([ 'node.show', 'menu-main', 'node/6', 3, 6, 'Premium' ])
             ->execute();
     }
 
@@ -389,24 +361,23 @@ class HookStep
             ->execute();
 
         $ci->query()
+            ->insertInto('entity_page', [ 'body' ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->execute();
+        
+        $time = (string) time();
+        $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
             ])
-            ->values([
-                t('About'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
+            ->values([ 1, 'page', $time, $time, true, t('About') ])
             ->execute();
 
         $ci->query()
             ->insertInto('menu_link', [
                 'key', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
-            ->values([
-                'node.show', 'About', 'node/3', 'menu-main', 3, -1
-            ])
+            ->values([ 'node.show', 'About', 'node/3', 'menu-main', 3, -1 ])
             ->execute();
     }
 
@@ -419,75 +390,41 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
+            ->insertInto('entity_page', [ 'body' ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('education.php', $this->pathContent))->render() ])
+            ->values([ (new Template('project.php', $this->pathContent))->render() ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ t('Not Found') ])
+            ->execute();
+        
+        $time = (string) time();
+        $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
             ])
-            ->values([
-                t('Site'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Education'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('education.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Projects'), 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('project.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Project') . ' 1', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Project') . ' 2', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Project') . ' 3', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
-            ->values([
-                t('Project') . ' 4', 'page', (string) time(), (string) time(), true,
-                serialize([
-                    'body' => (new Template('about.php', $this->pathContent))->render()
-                ])
-            ])
+            ->values([ 1, 'page', $time, $time, true, t('Site') ])
+            ->values([ 2, 'page', $time, $time, true, t('Education') ])
+            ->values([ 3, 'page', $time, $time, true, t('Projects') ])
+            ->values([ 4, 'page', $time, $time, true, t('Project 1') ])
+            ->values([ 5, 'page', $time, $time, true, t('Project 2') ])
+            ->values([ 6, 'page', $time, $time, true, t('Project 3') ])
+            ->values([ 7, 'page', $time, $time, true, t('Project 4') ])
             ->execute();
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key',  'menu', 'link', 'weight', 'parent',  'title_link'
             ])
-            ->values([
-                'node.show', 'Education', 'node/2', 'menu-main', 3, -1
-            ])
-            ->values([
-                'node.show', 'Projects', 'node/3', 'menu-main', 3, -1
-            ])
-            ->values([
-                'node.show', 'Project' . ' 1', 'node/4', 'menu-main', 4, 16
-            ])
-            ->values([
-                'node.show', 'Project' . ' 2', 'node/5', 'menu-main', 5, 16
-            ])
-            ->values([
-                'node.show', 'Project' . ' 3', 'node/6', 'menu-main', 6, 16
-            ])
-            ->values([
-                'node.show', 'Project' . ' 4', 'node/7', 'menu-main', 7, 16
-            ])
+            ->values([ 'node.show', 'menu-main', 'node/2', 3, -1, 'Education' ])
+            ->values([ 'node.show', 'menu-main', 'node/3', 3, -1, 'Projects' ])
+            ->values([ 'node.show', 'menu-main', 'node/4', 4, 16, 'Project 1' ])
+            ->values([ 'node.show', 'menu-main', 'node/5', 5, 16, 'Project 2' ])
+            ->values([ 'node.show', 'menu-main', 'node/6', 6, 16, 'Project 3' ])
+            ->values([ 'node.show', 'menu-main', 'node/7', 7, 16, 'Project 4' ])
             ->execute();
 
         $ci->query()
@@ -512,43 +449,32 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
+            ->insertInto('entity_page', [ 'body' ])
+            ->values([ (new Template('features.php', $this->pathContent))->render() ])
+            ->execute();
+
+        $time = (string) time();
+        $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'created', 'changed', 'published', 'field'
+                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
             ])
-            ->values([
-                'Ipsum sed adipiscing', 'page', (string) time(), (string) time(),
-                true,
-                serialize([
-                    'body' => (new Template('features.php', $this->pathContent))->render()
-                ])
-            ])
+            ->values([ 1, 'page', $time, $time, true, 'Ipsum sed adipiscing' ])
             ->execute();
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'fragment', 'menu', 'weight', 'parent'
+                'key', 'menu', 'link', 'weight', 'parent', 'title_link', 'fragment'
             ])
-            ->values([
-                'node.show', 'Introduction', '/', 'text', 'menu-main',
-                2, -1
-            ])
-            ->values([
-                'node.show', 'Features', '/', 'features', 'menu-main',
-                3, -1
-            ])
-            ->values([
-                'node.show', 'About', '/', 'img', 'menu-main',
-                5, -1
-            ])
-            ->values([
-                'node.show', 'Social media', '/', 'social', 'menu-main',
-                6, -1
-            ])
+            ->values([ 'node.show', 'menu-main', '/', 2, -1, 'Introduction', 'text' ])
+            ->values([ 'node.show', 'menu-main', '/', 3, -1, 'Features', 'features' ])
+            ->values([ 'node.show', 'menu-main', '/', 5, -1, 'About', 'img' ])
+            ->values([ 'node.show', 'menu-main', '/', 6, -1, 'Social media', 'social' ])
             ->execute();
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'visibility_pages',
-                'pages', 'content' ])
+            ->insertInto('block', [
+                'section', 'title', 'weight', 'visibility_pages', 'pages', 'content'
+            ])
             ->values([
                 'header', '', 1, true, '/',
                 (new Template('learn_more.php', $this->pathContent))->render()
