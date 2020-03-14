@@ -13,10 +13,11 @@ class Node
 
     protected $core;
 
-    public function __construct($query, $tpl)
+    public function __construct($query, $tpl, $core)
     {
         $this->query     = $query;
         $this->tpl       = $tpl;
+        $this->core      = $core;
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
@@ -99,11 +100,15 @@ class Node
 
                 $out[ $key ][ 'field_value' ]   = '';
                 $out[ $key ][ 'field_display' ] = $this->tpl
+                    ->getTheme()
                     ->createBlock('entity-show.php', $this->pathViews)
                     ->addVars([
                         'entities' => $this->makeFieldsByEntity($key, $data, $option)
                     ])
-                    ->addNamesOverride([ 'entity_' . $value[ 'field_name' ] . '_show' ]);
+                    ->addNamesOverride([ 'entity-' . $value[ 'field_name' ] . '-show.php' ]);
+                $this->core->callHook('node.entity.' . $value[ 'field_name' ] . '.show', [
+                    &$out[ $key ][ 'field_display' ]
+                ]);
             }
         }
 
