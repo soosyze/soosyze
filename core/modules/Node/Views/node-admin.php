@@ -24,7 +24,7 @@
                <th>
                     <a href="<?php echo $node[ 'link_edit' ]; ?>"><?php echo $node[ 'title' ]; ?></a> <small><?php echo $node[ 'type' ]; ?></small>
                 </th>
-                <td data-title="<?php echo t('Creation date'); ?>"><?php echo gmdate('D, j M Y, H:i', $node[ 'date_created' ]); ?></td>
+                <td data-title="<?php echo t('Creation date'); ?>"><?php echo date('D, j M Y, H:i', $node[ 'date_created' ]); ?></td>
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right">
                     <div class="btn-group" role="group" aria-label="action">
                         <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">

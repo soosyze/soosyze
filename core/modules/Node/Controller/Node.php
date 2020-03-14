@@ -39,16 +39,21 @@ class Node extends \Soosyze\Controller
             ]);
         }
 
-        $linkAdd = self::router()->getRoute('node.add');
-
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('My contents')
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
-                    'link_add' => $linkAdd,
+                    'link_add' => self::router()->getRoute('node.add'),
                     'nodes'    => $nodes
         ]);
     }
@@ -154,7 +159,8 @@ class Node extends \Soosyze\Controller
         foreach ($fields as $value) {
             /* Si une node possède une relation requise, elle ne peut-être publié. */
             if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                if (isset(self::node()->getRules($value)['required'])) {
+                $rules = self::node()->getRules($value);
+                if (isset($rules['required'])) {
                     $canPublish = false;
                 }
             } else {
@@ -165,11 +171,12 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        if ($validator->hasInput('date_created')) {
+        if (!$validator->getInput('date_created', false)) {
             $validator->addInput('date_created', date('Y-m-d H:i:s'));
         }
         $validator->addRule(
-            'date_created', $validator->hasInput('published')
+            'date_created',
+            $validator->hasInput('published')
             ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
             : '!required|date_format:Y-m-d H:i:s'
         );
@@ -370,11 +377,12 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        if (!$validator->hasInput('date_created')) {
+        if (!$validator->getInput('date_created', false)) {
             $validator->addInput('date_created', date('Y-m-d H:i:s'));
         }
         $validator->addRule(
-            'date_created', $validator->hasInput('published')
+            'date_created',
+            $validator->hasInput('published')
             ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
             : '!required|date_format:Y-m-d H:i:s'
         );
@@ -422,7 +430,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
             self::query()
                 ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
-                ->where($node[ 'type' ] . '_id', '==', $id_node)
+                ->where($node[ 'type' ] . '_id', '==', $node['entity_id'])
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $id_node ]);
 
@@ -605,6 +613,9 @@ class Node extends \Soosyze\Controller
     private function deleteFile($id_node)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$id_node}";
+        if (!is_dir($dir)) {
+            return;
+        }
         foreach (new \DirectoryIterator($dir) as $file) {
             if ($file->isDot() || $file->isDir()) {
                 continue;

@@ -41,18 +41,19 @@ class Node
 
     public function makeFieldsByEntity($entity, $data, $options)
     {
-        $query = $this->query
+        $this->query
             ->from('entity_' . $entity)
             ->where($options[ 'foreign_key' ], '==', $data[ $options[ 'foreign_key' ] ]);
         if (isset($options[ 'order_by' ])) {
-            $query->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
+            $this->query->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
-        $data = $query->fetchAll();
 
-        $type = $this->getFields($entity);
-        $out  = [];
+        $data   = $this->query->fetchAll();
+        $fields = $this->getFields($entity);
+        $out    = [];
+
         foreach ($data as $value) {
-            $out[] = $this->makeFields($type, $value);
+            $out[] = $this->makeFields($fields, $value);
         }
 
         return $out;
@@ -171,7 +172,7 @@ class Node
                 ->leftJoin('field', 'field_id', 'field.field_id')
                 ->where('node_type', $entity)
                 ->where('field_show_form', true)
-                ->orderBy('field_weight', 'asc')
+                ->orderBy('field_weight')
                 ->fetchAll();
     }
 

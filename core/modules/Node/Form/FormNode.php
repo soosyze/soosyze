@@ -8,11 +8,11 @@ class FormNode extends FormBuilder
 {
     protected $content = [
         'title'            => '',
-        'meta_description' => ':site_description',
+        'meta_description' => '',
         'meta_noindex'     => false,
         'meta_nofollow'    => false,
         'meta_noarchive'   => false,
-        'meta_title'       => ':page_title | :site_title',
+        'meta_title'       => '',
         'published'        => false,
         'date_created'     => ''
     ];
@@ -127,7 +127,6 @@ class FormNode extends FormBuilder
         }, self::$attrGrp);
     }
 
-    //field_default_value
     public function makeInput(&$form, $key, $value, $options)
     {
         $type    = $value[ 'field_type' ];
@@ -287,10 +286,12 @@ class FormNode extends FormBuilder
         return $this->group('seo-group', 'fieldset', function ($form) {
             $form->legend('seo-legend', t('SEO'))
                     ->group('meta_title-group', 'div', function ($form) {
-                        $form->label('meta_title-label', t('Title'))
+                        $form->label('meta_title-label', t('Title'), [
+                            'data-tooltip' => t('Laisser vide pour utiliser le titre par défaut du site')
+                        ])
                         ->text('meta_title', [
                             'class'       => 'form-control',
-                            'placeholder' => t('Title'),
+                            'placeholder' => ':page_title | :site_title',
                             'value'       => $this->content[ 'meta_title' ]
                         ])
                         ->html('cancel', '<p>:_content</p>', [
@@ -298,7 +299,9 @@ class FormNode extends FormBuilder
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('meta_description-group', 'div', function ($form) {
-                        $form->label('meta_description-label', t('Description'))
+                        $form->label('meta_description-label', t('Description'), [
+                            'data-tooltip' => t('Laisser vide pour utiliser la description par défaut du site')
+                        ])
                         ->textarea('meta_description', $this->content[ 'meta_description' ], [
                             'class' => 'form-control',
                             'rows'  => 3

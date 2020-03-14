@@ -27,7 +27,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('meta_title')->valueDefault('')
                 ->boolean('published')
                 ->string('title')
-                ->string('type');
+                ->string('type', 32);
             })
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
                 $table->string('node_type')
