@@ -47,7 +47,7 @@ class Block extends \Soosyze\Controller
             'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
         ]);
         foreach ($data as $key => &$block) {
-            $form->group('radio-' . $key, 'div', function ($form) use ($key, $block) {
+            $form->group('type_block_' . $key . '-group', 'div', function ($form) use ($key, $block) {
                 if (empty($block[ 'hook' ])) {
                     $content = (string) self::template()
                             ->createBlock($block[ 'tpl' ], $block[ 'path' ])
@@ -63,7 +63,7 @@ class Block extends \Soosyze\Controller
                         'id'    => "type_block-$key",
                         'value' => $key
                     ])
-                    ->html($key, '<div:attr>:_content</div>', [
+                    ->html('type_block-label', '<div:attr>:_content</div>', [
                         'class'    => 'block-content',
                         '_content' => $content
                 ]);
@@ -144,10 +144,11 @@ class Block extends \Soosyze\Controller
 
         $action = self::router()->getRoute('block.update', [ ':id' => $data[ 'block_id' ] ]);
         $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('menu-link-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('menu-link-legend', t('Edit block'))
+            ->group('block-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('block-legend', t('Edit block'))
                 ->group('title-group', 'div', function ($form) use ($data) {
-                    $form->text('title', [
+                    $form->label('title-label', t('Title'))
+                    ->text('title', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'Titre',
@@ -156,21 +157,19 @@ class Block extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('content-group', 'div', function ($form) use ($data) {
-                    $form->label('content-textarea-label', 'Html :', [
-                        'for' => 'content-editor'
+                    $form->label('content-label', t('Content'), [
+                        'for' => 'content'
                     ])
                     ->textarea('content', $data[ 'content' ], [
-                        'id'          => 'content-editor',
                         'class'       => 'form-control editor',
                         'placeholder' => '<p>Hello World!</p>',
                         'required'    => 1,
                         'rows'        => 8
-                    ])
-                    ->label('class-textarea-label', 'Style :', [
-                        'for' => 'class-editor'
-                    ])
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('class-group', 'div', function ($form) use ($data) {
+                    $form->label('class-label', t('Class CSS'))
                     ->text('class', [
-                        'id'          => 'class-editor',
                         'class'       => 'form-control',
                         'placeholder' => 'text-beautiful',
                         'value'       => $data[ 'class' ]
@@ -179,28 +178,28 @@ class Block extends \Soosyze\Controller
             })
             ->group('page-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('page-legend', t('Visibility by pages'))
-                ->group('visibility-group', 'div', function ($form) use ($data) {
+                ->group('visibility_pages_1-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_pages', [
                         'checked'  => !$data[ 'visibility_pages' ],
-                        'id'       => 'visibility1',
+                        'id'       => 'visibility_pages_1',
                         'required' => 1,
                         'value'    => 0
                     ])->label('visibility_pages-label', t('Hide the block on the pages listed'), [
-                        'for' => 'visibility1'
+                        'for' => 'visibility_pages_1'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('visibility1-group', 'div', function ($form) use ($data) {
+                ->group('visibility_pages_2-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_pages', [
                         'checked'  => $data[ 'visibility_pages' ],
-                        'id'       => 'visibility2',
+                        'id'       => 'visibility_pages_2',
                         'required' => 1,
                         'value'    => 1
                     ])->label('visibility_pages-label', t('Display the block on the pages listed'), [
-                        'for' => 'visibility2'
+                        'for' => 'visibility_pages_2'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('url-group', 'div', function ($form) use ($data) {
-                    $form->label('url-label', t('List of pages'), [
+                ->group('pages-group', 'div', function ($form) use ($data) {
+                    $form->label('pages-label', t('List of pages'), [
                         'data-tooltip' => t('Enter a path by line. The "%" character is a wildcard character that specifies all characters.')
                     ])
                     ->textarea('pages', $data[ 'pages' ], [
@@ -211,42 +210,42 @@ class Block extends \Soosyze\Controller
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('roles-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('role-legend', t('Visibility by roles'))
-                ->group('visibility-group', 'div', function ($form) use ($data) {
+                $form->legend('roles-legend', t('Visibility by roles'))
+                ->group('visibility_roles_1-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_roles', [
                         'checked'  => !$data[ 'visibility_roles' ],
-                        'id'       => 'visibility3',
+                        'id'       => 'visibility_roles_1',
                         'required' => 1,
                         'value'    => 0
                     ])->label('visibility_roles-label', t('Hide block to selected roles'), [
-                        'for' => 'visibility3'
+                        'for' => 'visibility_roles_1'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('visibility1-group', 'div', function ($form) use ($data) {
+                ->group('visibility_roles_2-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_roles', [
                         'checked'  => $data[ 'visibility_roles' ],
-                        'id'       => 'visibility4',
+                        'id'       => 'visibility_roles_2',
                         'required' => 1,
                         'value'    => 1
                     ])->label('visibility_roles-label', t('Show block with selected roles'), [
-                        'for' => 'visibility4'
+                        'for' => 'visibility_roles_2'
                     ]);
                 }, [ 'class' => 'form-group' ]);
                 foreach (self::user()->getRoles() as $role) {
-                    $form->group("role-{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
+                    $form->group("role_{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
                         $form->checkbox("roles[{$role[ 'role_id' ]}]", [
                             'checked' => in_array($role[ 'role_id' ], $data[ 'roles' ]),
-                            'id'      => "role-{$role[ 'role_id' ]}",
+                            'id'      => "role_{$role[ 'role_id' ]}",
                             'value'   => $role[ 'role_label' ]
                         ])
                         ->label(
-                            'role-' . $role[ 'role_id' ] . '-label',
+                            'role_' . $role[ 'role_id' ] . '-label',
                             '<span class="ui"></span>'
                             . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
                             . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
                             . '</span> '
                             . t($role[ 'role_label' ]),
-                            [ 'for' => "role-{$role[ 'role_id' ]}" ]
+                            [ 'for' => "role_{$role[ 'role_id' ]}" ]
                         );
                     }, [ 'class' => 'form-group' ]);
                 }

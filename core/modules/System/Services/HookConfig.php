@@ -60,10 +60,10 @@ class HookConfig
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
-                ->group('system-information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
-                    $form->legend('system-information-legend', t('Information'))
-                    ->group('system-email-group', 'div', function ($form) use ($data) {
-                        $form->label('system-email-label', t('E-mail of the site'), [
+                ->group('information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
+                    $form->legend('information-legend', t('Information'))
+                    ->group('email-group', 'div', function ($form) use ($data) {
+                        $form->label('email-label', t('E-mail of the site'), [
                             'data-tooltip' => t('E-mail used for the general configuration, for your contacts, the recovery of your password ...')
                         ])
                         ->email('email', [
@@ -73,40 +73,42 @@ class HookConfig
                             'value'       => $data[ 'email' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-maintenance-group', 'div', function ($form) use ($data) {
+                    ->group('maintenance-group', 'div', function ($form) use ($data) {
                         $form->checkbox('maintenance', [
                             'checked' => $data[ 'maintenance' ]
                         ])
-                        ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Put the site in maintenance'), [
+                        ->label('maintenance-label', '<i class="ui" aria-hidden="true"></i> ' . t('Put the site in maintenance'), [
                             'for' => 'maintenance'
                         ]);
                     }, [ 'class' => 'form-group' ]);
                     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
-                        $form->group('system-rewrite_engine-group', 'div', function ($form) use ($data) {
+                        $form->group('rewrite_engine-group', 'div', function ($form) use ($data) {
                             $form->checkbox('rewrite_engine', [
                                 'checked' => $data[ 'rewrite_engine' ]
                             ])
-                            ->label('system-maintenance-group', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
+                            ->label('rewrite_engine-label', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
                                 'for' => 'rewrite_engine'
                             ]);
                         }, [ 'class' => 'form-group' ]);
                     }
-                    $form->group('system-theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                        $form->label('system-theme-label', t('Website theme'))
+                    $form->group('theme-group', 'div', function ($form) use ($data, $optionThemes) {
+                        $form->label('theme-label', t('Website theme'))
                         ->select('theme', $optionThemes, [
                             'class'    => 'form-control',
+                            'required' => 1,
                             'selected' => $data[ 'theme' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
-                        $form->label('system-theme_admin-label', t('Website administration theme'))
+                    ->group('theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
+                        $form->label('theme_admin-label', t('Website administration theme'))
                         ->select('theme_admin', $optionThemes, [
                             'class'    => 'form-control',
+                            'required' => 1,
                             'selected' => $data[ 'theme_admin' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-logo-group', 'div', function ($form) use ($data) {
-                        $form->label('label-logo', t('Logo'), [
+                    ->group('logo-group', 'div', function ($form) use ($data) {
+                        $form->label('logo-label', t('Logo'), [
                             'class'        => 'control-label',
                             'data-tooltip' => '200ko maximum.',
                             'for'          => 'logo'
@@ -114,14 +116,15 @@ class HookConfig
                         $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
-                ->group('system-path-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('system-path-legend', t('Default page'))
-                    ->group('system-path_index-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_index-label', t('Default homepage'), [
+                ->group('path-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('path-legend', t('Default page'))
+                    ->group('path_index-group', 'div', function ($form) use ($data) {
+                        $form->label('path_index-label', t('Default homepage'), [
                             'data-tooltip' => t('Content link displayed on your site\'s homepage.'),
-                            'for'          => 'path_index'
+                            'for'          => 'path_index',
+                            'required'     => true
                         ])
-                        ->group('system-path_index-flex', 'div', function ($form) use ($data) {
+                        ->group('path_index-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
@@ -134,12 +137,12 @@ class HookConfig
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-path_access_denied-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_access_denied-label', t('Page 403 by default (access denied)'), [
+                    ->group('path_access_denied-group', 'div', function ($form) use ($data) {
+                        $form->label('path_access_denied-label', t('Page 403 by default (access denied)'), [
                             'data-tooltip' => t('The content of the link is displayed if a user accesses a forbidden page.'),
                             'for'          => 'path_access_denied'
                         ])
-                        ->group('system-path_access_denied-flex', 'div', function ($form) use ($data) {
+                        ->group('path_access_denied-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
@@ -151,12 +154,12 @@ class HookConfig
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-path_no_found-group', 'div', function ($form) use ($data) {
-                        $form->label('system-path_no_found-label', t('Page 404 by default (page not found)'), [
+                    ->group('path_no_found-group', 'div', function ($form) use ($data) {
+                        $form->label('path_no_found-label', t('Page 404 by default (page not found)'), [
                             'data-tooltip' => t('The content of the link is displayed if a user accesses a non-existent page.'),
                             'for'          => 'path_no_found'
                         ])
-                        ->group('system-path_no_found-flex', 'div', function ($form) use ($data) {
+                        ->group('path_no_found-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:_content</span>', [
                                 '_content' => $this->router->makeRoute(''),
                                 'id'       => ''
@@ -169,10 +172,10 @@ class HookConfig
                         }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
-                ->group('system-metadata-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('system-metadata-legend', t('SEO'))
-                    ->group('system-meta_title-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_title-label', t('Website title'), [
+                ->group('metadata-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('metadata-legend', t('SEO'))
+                    ->group('meta_title-group', 'div', function ($form) use ($data) {
+                        $form->label('meta_title-label', t('Website title'), [
                             'data-tooltip' => t('The main title of your site also appears in the title of your browser window.')
                         ])
                         ->text('meta_title', [
@@ -182,8 +185,8 @@ class HookConfig
                             'value'     => $data[ 'meta_title' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-meta_description-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_description-label', t('Description'), [
+                    ->group('meta_description-group', 'div', function ($form) use ($data) {
+                        $form->label('meta_description-label', t('Description'), [
                             'data-tooltip' => t('Help your SEO and appears in the search engines.')
                         ])
                         ->textarea('meta_description', $data[ 'meta_description' ], [
@@ -193,24 +196,24 @@ class HookConfig
                             'rows'      => 5
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-meta_keyboard-group', 'div', function ($form) use ($data) {
-                        $form->label('system-meta_keyboard-label', t('Keywords'))
+                    ->group('meta_keyboard-group', 'div', function ($form) use ($data) {
+                        $form->label('meta_keyboard-label', t('Keywords'))
                         ->text('meta_keyboard', [
                             'class'       => 'form-control',
                             'placeholder' => t('Word1, Word2, Word3 ...'),
                             'value'       => $data[ 'meta_keyboard' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('system-group-favicon', 'div', function ($form) use ($data) {
-                        $form->label('system-favicon-label', t('Favicon'), [
+                    ->group('group-favicon', 'div', function ($form) use ($data) {
+                        $form->label('favicon-label', t('Favicon'), [
                             'class'        => 'control-label',
                             'data-tooltip' => t('Image to the left of the title of your browser window.'),
                             'for'          => 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
-                        $form->html('system-favicon-info-size', '<p:attr>:_content</p>', [
+                        $form->html('favicon-info-size', '<p:attr>:_content</p>', [
                             '_content' => t('The file must weigh less than 100 KB.')
-                        ])->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+                        ])->html('favicon-info-dimensions', '<p:attr>:_content</p>', [
                             '_content' => t('The width and height min and max: 16px and 310px.')
                         ]);
                     }, [ 'class' => 'form-group' ]);

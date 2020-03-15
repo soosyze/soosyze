@@ -39,8 +39,8 @@ class FormUser extends FormBuilder
 
     public function username(&$form)
     {
-        $form->group('user-username-group', 'div', function ($form) {
-            $form->label('user-username-label', t('User name'))
+        $form->group('username-group', 'div', function ($form) {
+            $form->label('username-label', t('User name'))
                 ->text('username', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -54,8 +54,8 @@ class FormUser extends FormBuilder
 
     public function email(&$form)
     {
-        $form->group('user-email-group', 'div', function ($form) {
-            $form->label('user-email-label', t('E-mail'))
+        $form->group('email-group', 'div', function ($form) {
+            $form->label('email-label', t('E-mail'))
                 ->email('email', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
@@ -70,8 +70,8 @@ class FormUser extends FormBuilder
 
     public function picture(&$form)
     {
-        $form->group('user-picture-group', 'div', function ($form) {
-            $form->label('user-picture-label', t('Picture'), [
+        $form->group('picture-group', 'div', function ($form) {
+            $form->label('picture-label', t('Picture'), [
                 'for'          => 'picture',
                 'data-tooltip' => t('200ko maximum. Allowed extensions: jpeg, jpg, png.')
             ]);
@@ -83,8 +83,8 @@ class FormUser extends FormBuilder
 
     public function bio(&$form)
     {
-        $form->group('system-description-group', 'div', function ($form) {
-            $form->label('system-bio-label', t('Biography'), [
+        $form->group('bio-group', 'div', function ($form) {
+            $form->label('bio-label', t('Biography'), [
                     'data-tooltip' => t('Describe yourself in 255 characters maximum.')
                 ])
                 ->textarea('bio', $this->content[ 'bio' ], [
@@ -100,8 +100,8 @@ class FormUser extends FormBuilder
 
     public function name(&$form)
     {
-        $form->group('user-name-group', 'div', function ($form) {
-            $form->label('user-name-label', t('Last name'))
+        $form->group('name-group', 'div', function ($form) {
+            $form->label('name-label', t('Last name'))
                 ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -114,8 +114,8 @@ class FormUser extends FormBuilder
 
     public function firstname(&$form)
     {
-        $form->group('user-firstname-group', 'div', function ($form) {
-            $form->label('user-firstname-label', t('First name'))
+        $form->group('firstname-group', 'div', function ($form) {
+            $form->label('firstname-label', t('First name'))
                 ->text('firstname', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -132,26 +132,26 @@ class FormUser extends FormBuilder
             return $this;
         }
         if ($this->config->get('settings.terms_of_service_show', false)) {
-            $form->group('user-terms_of_service-group', 'div', function ($form) {
+            $form->group('terms_of_service-group', 'div', function ($form) {
                 $form->checkbox('terms_of_service', [ 'checked' => $this->content[ 'terms_of_service' ] ])
-                    ->label('config-terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
+                    ->label('terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
                         'for' => 'terms_of_service'
                     ]);
             }, [ 'class' => 'form-group' ])
-                ->html('terms_of_service_page', '<p><a :attr>:_content</a></p>', [
+                ->html('terms_of_service-info', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the terms of service'),
                     'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
                     'target'   => '_blank'
             ]);
         }
         if ($this->config->get('settings.rgpd_show', false)) {
-            $form->group('user-rgpd-group', 'div', function ($form) {
+            $form->group('rgpd-group', 'div', function ($form) {
                 $form->checkbox('rgpd', [ 'checked' => $this->content[ 'rgpd' ] ])
-                    ->label('config-rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
+                    ->label('rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
                         'for' => 'rgpd'
                     ]);
             }, [ 'class' => 'form-group' ])
-                ->html('rgpd_page', '<p><a :attr>:_content</a></p>', [
+                ->html('rgpd-info', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the privacy policy'),
                     'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
                     'target'   => '_blank'
@@ -191,9 +191,9 @@ class FormUser extends FormBuilder
 
     public function password(&$form, $id, $label, array $attr = [])
     {
-        $form->group("user-$id-group", 'div', function ($form) use ($id, $label, $attr) {
+        $form->group("$id-group", 'div', function ($form) use ($id, $label, $attr) {
             $form->label("$id-label", $label, [ 'for' => $id ])
-                ->group("user-$id-group", 'div', function ($form) use ($id, $attr) {
+                ->group("$id-flex", 'div', function ($form) use ($id, $attr) {
                     $form->password($id, [ 'class' => 'form-control' ] + $attr);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
                         $form->html("{$id}_show", '<button:attr>:_content</button>', [
@@ -211,8 +211,8 @@ class FormUser extends FormBuilder
 
     public function fieldsetInformationsCreate()
     {
-        return $this->group('user-informations-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', t('Information'));
+        return $this->group('informations-fieldset', 'fieldset', function ($form) {
+            $form->legend('informations-legend', t('Information'));
             $this->username($form)
                     ->email($form);
         });
@@ -220,8 +220,8 @@ class FormUser extends FormBuilder
 
     public function fieldsetInformations()
     {
-        return $this->group('user-informations-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', t('Information'));
+        return $this->group('informations-fieldset', 'fieldset', function ($form) {
+            $form->legend('informations-legend', t('Information'));
             $this->username($form)
                     ->email($form)
                     ->passwordCurrent($form);
@@ -230,8 +230,8 @@ class FormUser extends FormBuilder
 
     public function fieldsetProfil()
     {
-        return $this->group('user-profil-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-informations-legend', t('Profile'));
+        return $this->group('profil-fieldset', 'fieldset', function ($form) {
+            $form->legend('profil-legend', t('Profile'));
             $this->picture($form)
                     ->bio($form)
                     ->name($form)
@@ -241,8 +241,8 @@ class FormUser extends FormBuilder
 
     public function fieldsetPassword()
     {
-        return $this->group('user-password-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-password-legend', t('Password'));
+        return $this->group('password-fieldset', 'fieldset', function ($form) {
+            $form->legend('password-legend', t('Password'));
             $this->passwordNew($form)
                     ->passwordConfirm($form)
                     ->passwordPolicy($form);
@@ -279,11 +279,11 @@ class FormUser extends FormBuilder
 
     public function fieldsetActived()
     {
-        return $this->group('user-actived-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-actived-legend', t('Status'))
-                    ->group('user-actived-fieldset', 'div', function ($form) {
+        return $this->group('actived-fieldset', 'fieldset', function ($form) {
+            $form->legend('actived-legend', t('Status'))
+                    ->group('actived-group', 'div', function ($form) {
                         $form->checkbox('actived', [ 'checked' => $this->content[ 'actived' ] ])
-                        ->label('user-actived-label', '<span class="ui"></span> ' . t('Active'), [
+                        ->label('actived-label', '<span class="ui"></span> ' . t('Active'), [
                             'for' => 'actived' ]);
                     }, self::$attrGrp);
         });
@@ -291,25 +291,25 @@ class FormUser extends FormBuilder
 
     public function fieldsetRoles($roles)
     {
-        return $this->group('user-role-fieldset', 'fieldset', function ($form) use ($roles) {
-            $form->legend('user-role-legend', t('User Roles'));
+        return $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
+            $form->legend('role-legend', t('User Roles'));
             foreach ($roles as $role) {
                 $attrRole = [
                         'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->content['roles']),
                         'disabled' => $role[ 'role_id' ] <= 2,
-                        'id'       => "role-{$role[ 'role_id' ]}",
+                        'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]
                     ];
-                $form->group('user-role-' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
+                $form->group('role_' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
                     $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
                             ->label(
-                                'role-' . $role[ 'role_id' ] . '-label',
+                                'role_' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
                                 . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
                                 . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
                                 . '</span> '
                                 . t($role[ 'role_label' ]),
-                                [ 'for' => "role-{$role[ 'role_id' ]}" ]
+                                [ 'for' => "role_{$role[ 'role_id' ]}" ]
                             );
                 }, self::$attrGrp);
             }

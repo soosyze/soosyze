@@ -37,8 +37,8 @@ class Folder extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) use ($content) {
                 $form->legend('folder-legend', t('Créer un répertoire'))
-                ->group('folder-group', 'div', function ($form) use ($content) {
-                    $form->label('folder-name-label', t('Name'), [
+                ->group('name-group', 'div', function ($form) use ($content) {
+                    $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
                     ])
                     ->text('name', [
@@ -126,8 +126,8 @@ class Folder extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('folder-legend', t('Rename the directory'))
-                ->group('folder-group', 'div', function ($form) use ($data) {
-                    $form->label('folder-name-label', t('Name'), [
+                ->group('name-group', 'div', function ($form) use ($data) {
+                    $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
                     ])
                     ->text('name', [
@@ -213,7 +213,7 @@ class Folder extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete directory'))
-                ->html('folder-message', '<p:attr>:_content</p>', [
+                ->html('folder-info', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the directory and its contents is final.')
                 ]);
             })

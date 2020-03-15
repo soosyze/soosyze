@@ -224,7 +224,7 @@ class Profil extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete file profile'))
-                ->html('folder-message', '<p:attr>:_content</p>', [
+                ->html('folder-info', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the file profile is final.')
                 ]);
             })

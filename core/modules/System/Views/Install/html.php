@@ -50,6 +50,7 @@
             }
             .profil-item {
                 text-align: center;
+                margin-bottom: 15px;
             }
             .profil-item input[type=radio]:checked + img {
                 -webkit-box-shadow: 0 0 10px 1px #fff;

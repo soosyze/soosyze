@@ -27,15 +27,15 @@ class HookConfig
     public function form(&$form, $data)
     {
         $form
-            ->group('config-login-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('config-login-legend', t('Log in'))
-                ->group('config-relogin-group', 'div', function ($form) use ($data) {
-                    $form->label('config-connect_url-label', t('Protection of connection paths'), [
+            ->group('login-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('login-legend', t('Log in'))
+                ->group('connect_url-group', 'div', function ($form) use ($data) {
+                    $form->label('connect_url-label', t('Protection of connection paths'), [
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
                         . t('Example: Ab1P-9eM_s8Y = user / login / Ab1P-9eM_s8Y'),
                         'for'          => 'connect_url'
                     ])
-                    ->group('config-connect_url-flex', 'div', function ($form) use ($data) {
+                    ->group('connect_url-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->getRoute('user.login', [
                                 ':url' => '' ]),
@@ -49,12 +49,12 @@ class HookConfig
                             ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
-                    ->group('config-connect_redirect-group', 'div', function ($form) use ($data) {
-                        $form->label('config-connect_redirect-label', t('Redirect page after connection'), [
-                            'for' => 'connect_redirect'
-                        ])
-                        ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:attr>:_content</span>', [
+                ->group('connect_redirect-group', 'div', function ($form) use ($data) {
+                    $form->label('connect_redirect-label', t('Redirect page after connection'), [
+                        'for' => 'connect_redirect'
+                    ])
+                    ->group('connect_redirect-flex', 'div', function ($form) use ($data) {
+                        $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
                         ])
@@ -65,29 +65,31 @@ class HookConfig
                             'required'    => 1,
                             'value'       => $data[ 'connect_redirect' ]
                         ]);
-                        }, [ 'class' => 'form-group-flex' ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, [ 'class' => 'form-group-flex' ]);
+                }, [ 'class' => 'form-group' ]);
             })
-            ->group('config-inscription-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('config-inscription-legend', t('Registration'))
-                ->group('config-register-group', 'div', function ($form) use ($data) {
+            ->group('user_register-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('user_register-legend', t('Registration'))
+                ->group('user_register-group', 'div', function ($form) use ($data) {
                     $form->checkbox('user_register', [ 'checked' => $data[ 'user_register' ] ])
-                    ->label('config-register-label', '<span class="ui"></span> ' . t('Open registration'), [
+                    ->label('user_register-label', '<span class="ui"></span> ' . t('Open registration'), [
                         'for' => 'user_register'
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->group('config-eula-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('config-eula-legend', t('CGU et RGPD'))
-                ->group('config-terms_of_service_show-group', 'div', function ($form) use ($data) {
+            ->group('eula-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('eula-legend', t('CGU et RGPD'))
+                ->group('terms_of_service_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('terms_of_service_show', [ 'checked' => $data[ 'terms_of_service_show' ] ])
-                    ->label('config-terms_of_service_show-label', '<span class="ui"></span> ' . t('Activate the Terms'), [
+                    ->label('terms_of_service_show-label', '<span class="ui"></span> ' . t('Activate the Terms'), [
                         'for' => 'terms_of_service_show'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-terms_of_service-group', 'div', function ($form) use ($data) {
-                    $form->label('config-terms_of_service_page-label', t('CGU page'))
-                    ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                ->group('terms_of_service_page-group', 'div', function ($form) use ($data) {
+                    $form->label('terms_of_service_page-label', t('CGU page'), [
+                        'data-tooltip' => t('Conditions générales d\'utilisation (CGU)')
+                    ])
+                    ->group('terms_of_service_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
@@ -101,15 +103,17 @@ class HookConfig
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 /* RGPD */
-                ->group('config-rgpd_show-group', 'div', function ($form) use ($data) {
+                ->group('rgpd_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('rgpd_show', [ 'checked' => $data[ 'rgpd_show' ] ])
-                    ->label('config-rgpd_show-label', '<span class="ui"></span> ' . t('Enable Data Privacy Policy'), [
+                    ->label('rgpd_show-label', '<span class="ui"></span> ' . t('Enable Data Privacy Policy'), [
                         'for' => 'rgpd_show'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-rgpd_page-group', 'div', function ($form) use ($data) {
-                    $form->label('config-rgpd_page-label', t('RGPD Page'))
-                    ->group('config-connect_redirect-flex', 'div', function ($form) use ($data) {
+                ->group('rgpd_page-group', 'div', function ($form) use ($data) {
+                    $form->label('rgpd_page-label', t('RGPD Page'), [
+                        'data-tooltip' => t('Règlement général sur la protection des données (RGPD)')
+                    ])
+                    ->group('rgpd_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->makeRoute(''),
                             'id'       => ''
@@ -123,61 +127,65 @@ class HookConfig
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->group('config-password-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('config-password-legend', t('Password policy'))
-                ->group('config-relogin-group', 'div', function ($form) use ($data) {
+            ->group('password-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('password-legend', t('Password policy'))
+                ->group('user_relogin-group', 'div', function ($form) use ($data) {
                     $form->checkbox('user_relogin', [ 'checked' => $data[ 'user_relogin' ] ])
-                    ->label('config-relogin-label', '<span class="ui"></span> ' . t('Open password recovery'), [
+                    ->label('relogin-label', '<span class="ui"></span> ' . t('Open password recovery'), [
                         'for' => 'user_relogin'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_show-group', 'div', function ($form) use ($data) {
+                ->group('password_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
-                    ->label('config-password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
+                    ->label('password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
                         'for' => 'password_show'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_policy-group', 'div', function ($form) use ($data) {
+                ->group('password_policy-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_policy', [ 'checked' => $data[ 'password_policy' ] ])
-                    ->label('config-password_policy-label', '<span class="ui"></span> ' . t('Add visualization of the password policy'), [
+                    ->label('password_policy-label', '<span class="ui"></span> ' . t('Add visualization of the password policy'), [
                         'for' => 'password_policy'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_length-group', 'div', function ($form) use ($data) {
-                    $form->label('config-password_length-label', t('Minimum length'))
+                ->group('password_length-group', 'div', function ($form) use ($data) {
+                    $form->label('password_length-label', t('Minimum length'))
                     ->number('password_length', [
-                        'class' => 'form-control',
-                        'min'   => 8,
-                        'value' => $data[ 'password_length' ] > 8
+                        'class'    => 'form-control',
+                        'min'      => 8,
+                        'required' => 1,
+                        'value'    => $data[ 'password_length' ] > 8
                             ? $data[ 'password_length' ]
                             : 8
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_upper-group', 'div', function ($form) use ($data) {
-                    $form->label('config-upper-label', t('Number of uppercase characters'))
+                ->group('password_upper-group', 'div', function ($form) use ($data) {
+                    $form->label('password_upper-label', t('Number of uppercase characters'))
                     ->number('password_upper', [
-                        'class' => 'form-control',
-                        'min'   => 1,
+                        'class'    => 'form-control',
+                        'min'      => 1,
+                        'required' => 1,
                         'value' => $data[ 'password_upper' ] > 1
                             ? $data[ 'password_upper' ]
                             : 1
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_digit-group', 'div', function ($form) use ($data) {
-                    $form->label('config-password_digit-label', t('Number of numeric characters'))
+                ->group('password_digit-group', 'div', function ($form) use ($data) {
+                    $form->label('password_digit-label', t('Number of numeric characters'))
                     ->number('password_digit', [
-                        'class' => 'form-control',
-                        'min'   => 1,
-                        'value' => $data[ 'password_digit' ] > 1
+                        'class'    => 'form-control',
+                        'min'      => 1,
+                        'required' => 1,
+                        'value'    => $data[ 'password_digit' ] > 1
                             ? $data[ 'password_digit' ]
                             : 1
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('config-password_special-group', 'div', function ($form) use ($data) {
-                    $form->label('config-password_special-label', t('Number of special characters'))
+                ->group('password_special-group', 'div', function ($form) use ($data) {
+                    $form->label('password_special-label', t('Number of special characters'))
                     ->number('password_special', [
-                        'class' => 'form-control',
-                        'min'   => 1,
+                        'class'    => 'form-control',
+                        'min'      => 1,
+                        'required' => 1,
                         'value' => $data[ 'password_special' ] > 1
                             ? $data[ 'password_special' ]
                             : 1

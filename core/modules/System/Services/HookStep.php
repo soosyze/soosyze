@@ -98,19 +98,20 @@ class HookStep
             'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]) ]));
 
         foreach ($profils as $key => $profil) {
-            $form->group("profil-$key", 'div', function ($form) use ($key, $content, $profil) {
+            $form->label("profil-$key", function ($form) use ($key, $content, $profil) {
                 $form->radio('profil', [
                     'id'       => $key,
                     'checked'  => $key === $content[ 'profil' ],
                     'required' => 1,
                     'value'    => $key,
                     'style'    => 'display:none;'
-                ])->html($key, '<img:attr>', [
-                    'src' => $profil[ 'img' ]
+                ])->html("img_$key", '<img:attr>', [
+                    'src' => $profil[ 'img' ],
+                    'alt' => $profil['title']
                 ]);
-            }, [ 'class' => 'form-group' ]);
+            }, ['class' => 'block-body']);
         }
-        $form->token('token_install')
+        $form->token('token_step_install')
             ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
 
         return (new Template('form-profil.php', $this->pathViews))->addVars([
@@ -124,8 +125,8 @@ class HookStep
         $profils   = array_keys($this->getProfils());
         $validator = (new Validator())
             ->setRules([
-                'profil'        => 'required|inarray:' . implode(',', $profils),
-                'token_install' => 'token'
+                'profil'             => 'required|inarray:' . implode(',', $profils),
+                'token_step_install' => 'token'
             ])
             ->setInputs($req->getParsedBody());
 
@@ -133,7 +134,7 @@ class HookStep
             $_SESSION[ 'inputs' ][ $id ] = [ 'profil' => $validator->getInput('profil') ];
         } else {
             $_SESSION[ 'inputs' ][ $id ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ][ $id ]          = $validator->getKeyInputErrors();
         }
     }
@@ -146,7 +147,7 @@ class HookStep
             'name'             => '',
             'firstname'        => '',
             'password'         => '',
-            'password-confirm' => ''
+            'password_confirm' => ''
         ];
 
         if (isset($_SESSION[ 'inputs' ][ $id ])) {
@@ -159,8 +160,8 @@ class HookStep
             ]))
             ->group('fieldset', 'fieldset', function ($form) use ($content) {
                 $form->legend('legend', t('User profile'))
-                ->group('install-username-group', 'div', function ($form) use ($content) {
-                    $form->label('install-username-label', t('User name'))
+                ->group('username-group', 'div', function ($form) use ($content) {
+                    $form->label('username-label', t('User name'))
                     ->text('username', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
@@ -168,8 +169,8 @@ class HookStep
                         'value'     => $content[ 'username' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('install-email-group', 'div', function ($form) use ($content) {
-                    $form->label('install-email-label', t('E-mail'))
+                ->group('email-group', 'div', function ($form) use ($content) {
+                    $form->label('email-label', t('E-mail'))
                     ->email('email', [
                         'class'       => 'form-control',
                         'maxlength'   => 254,
@@ -178,40 +179,40 @@ class HookStep
                         'value'       => $content[ 'email' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('install-name-group', 'div', function ($form) use ($content) {
-                    $form->label('install-name-label', t('Last name'))
+                ->group('name-group', 'div', function ($form) use ($content) {
+                    $form->label('name-label', t('Last name'))
                     ->text('name', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
                         'value'     => $content[ 'name' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('install-firstname-group', 'div', function ($form) use ($content) {
-                    $form->label('install-firstname-label', t('First name'))
+                ->group('firstname-group', 'div', function ($form) use ($content) {
+                    $form->label('firstname-label', t('First name'))
                     ->text('firstname', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
                         'value'     => $content[ 'firstname' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('install-password-group', 'div', function ($form) use ($content) {
-                    $form->label('install-password-label', t('Password'))
+                ->group('password-group', 'div', function ($form) use ($content) {
+                    $form->label('password-label', t('Password'))
                     ->password('password', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $content[ 'password' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('install-password-confirm-group', 'div', function ($form) use ($content) {
-                    $form->label('install-password-confirm-label', t('Confirmation of the new password'))
-                    ->password('password-confirm', [
+                ->group('password_confirm-group', 'div', function ($form) use ($content) {
+                    $form->label('password_confirm-label', t('Confirmation of the new password'))
+                    ->password('password_confirm', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $content[ 'password-confirm' ]
+                        'value'    => $content[ 'password_confirm' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->token('token_install')
+            ->token('token_step_install')
             ->submit('submit', t('Install'), [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors_keys' ][ $id ])) {
@@ -229,11 +230,11 @@ class HookStep
             ->setRules([
                 'username'         => 'required|string|max:255|to_htmlsc',
                 /* max:254 RFC5321 - 4.5.3.1.3. */
-                'email'            => 'required|email|max:254|to_htmlsc',
+                'email'            => 'required|string|email',
                 'name'             => '!required|string|max:255|to_htmlsc',
                 'firstname'        => '!required|string|max:255|to_htmlsc',
                 'password'         => 'required|string',
-                'password-confirm' => 'required|string|equal:@password'
+                'password_confirm' => 'required|string|equal:@password'
             ])
             ->setInputs($req->getParsedBody());
 

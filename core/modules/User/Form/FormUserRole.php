@@ -25,8 +25,8 @@ class FormUserRole extends FormBuilder
 
     public function labelRole(&$form)
     {
-        $form->group('role-label-group', 'div', function ($form) {
-            $form->label('role-label-label', t('Name'))
+        $form->group('role_label-group', 'div', function ($form) {
+            $form->label('role_label-label', t('Name'))
                 ->text('role_label', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
@@ -40,8 +40,8 @@ class FormUserRole extends FormBuilder
 
     public function description(&$form)
     {
-        $form->group('role-description-group', 'div', function ($form) {
-            $form->label('role-description-label', t('Description'))
+        $form->group('role_description-group', 'div', function ($form) {
+            $form->label('role_description-label', t('Description'))
                 ->text('role_description', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
@@ -54,8 +54,8 @@ class FormUserRole extends FormBuilder
 
     public function weight(&$form)
     {
-        $form->group('role-weight-group', 'div', function ($form) {
-            $form->label('role-weight-label', t('Weight'))
+        $form->group('role_weight-group', 'div', function ($form) {
+            $form->label('role_weight-label', t('Weight'))
                 ->number('role_weight', [
                     'class' => 'form-control',
                     'max'   => 50,
@@ -69,15 +69,15 @@ class FormUserRole extends FormBuilder
 
     public function colorRole(&$form)
     {
-        $form->group('role-color-group', 'div', function ($form) {
-            $form->label('role-color-label', t('Color'), ['for' => 'role_color'])
-                ->group('role-color-group', 'div', function ($form) {
+        $form->group('role_color-group', 'div', function ($form) {
+            $form->label('role_color-label', t('Color'), ['for' => 'role_color'])
+                ->group('role_color-flex', 'div', function ($form) {
                     $form->text('role_color', [
                         'class'   => 'form-control',
                         'pattern' => '#([a-fA-F0-9]{6})',
                         'value'   => $this->content[ 'role_color' ]
                     ])
-                    ->html('btn-color', '<button:attr>:_content</button>', [
+                    ->html('role_color-btn', '<button:attr>:_content</button>', [
                         '_content' => '<i class="fa fa-sync" aria-hidden="true"></i>',
                         'aria-label' => t('Random color'),
                         'class'    => 'btn',
@@ -97,18 +97,18 @@ class FormUserRole extends FormBuilder
     
     public function icon(&$form)
     {
-        $form->group('role-icon-group', 'div', function ($form) {
-            $form->label('menu-icon-label', t('Icon'), [
+        $form->group('role_icon-group', 'div', function ($form) {
+            $form->label('role_icon-label', t('Icon'), [
                         'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
                         'for'          => 'role_icon'
                     ])
-                ->group('role-color-group', 'div', function ($form) {
+                ->group('role_icon-flex', 'div', function ($form) {
                     $form->text('role_icon', [
                         'class'       => 'form-control text_icon',
                         'maxlength'   => 255,
                         'placeholder' => 'fa fa-home',
                         'value'       => $this->content[ 'role_icon' ],
-                    ])->html('btn-color', '<button:attr>:_content</button>', [
+                    ])->html('role_icon-btn', '<button:attr>:_content</button>', [
                         '_content'     => '<i class="' . $this->content[ 'role_icon' ] . '" aria-hidden="true"></i>',
                         'aria-label'   => t('Rendering'),
                         'class'        => 'btn render_icon',
@@ -147,9 +147,9 @@ class FormUserRole extends FormBuilder
     
     public function generateDelete()
     {
-        return $this->group('user-edit-information-fieldset', 'fieldset', function ($form) {
-            $form->legend('user-edit-information-legend', t('Delete role'))
-                    ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+        return $this->group('role-fieldset', 'fieldset', function ($form) {
+            $form->legend('role-legend', t('Delete role'))
+                    ->html('role-info', '<p:attr>:_content</p>', [
                         '_content' => t('Warning ! The deletion of the role is final.')
                     ]);
         })

@@ -23,8 +23,8 @@ class FormContact extends FormBuilder
 
     protected function name()
     {
-        return $this->group('contact-name-group', 'div', function ($form) {
-            $form->label('contact-name-label', t('Name'))
+        return $this->group('name-group', 'div', function ($form) {
+            $form->label('name-label', t('Name'))
                     ->text('name', [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -35,8 +35,8 @@ class FormContact extends FormBuilder
 
     protected function email()
     {
-        return $this->group('contact-email-group', 'div', function ($form) {
-            $form->label('contact-email-label', t('E-mail'))
+        return $this->group('email-group', 'div', function ($form) {
+            $form->label('email-label', t('E-mail'))
                     ->email('email', [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -47,8 +47,8 @@ class FormContact extends FormBuilder
 
     protected function object()
     {
-        return $this->group('contact-object-group', 'div', function ($form) {
-            $form->label('contact-object-label', t('Object'))
+        return $this->group('object-group', 'div', function ($form) {
+            $form->label('object-label', t('Object'))
                     ->text('object', [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -59,8 +59,8 @@ class FormContact extends FormBuilder
 
     protected function message()
     {
-        return $this->group('contact-message-group', 'div', function ($form) {
-            $form->label('contact-message-label', t('Message'))
+        return $this->group('message-group', 'div', function ($form) {
+            $form->label('message-label', t('Message'))
                     ->textarea('message', $this->content[ 'message' ], [
                         'class'    => 'form-control',
                         'required' => 1,
@@ -71,9 +71,9 @@ class FormContact extends FormBuilder
 
     protected function copy()
     {
-        return $this->group('contact-copy-group', 'div', function ($form) {
+        return $this->group('copy-group', 'div', function ($form) {
             $form->checkbox('copy')
-                    ->label('contact-copy-label', '<i class="ui" aria-hidden="true"></i> ' . t('Send me a copy of the mail'), [
+                    ->label('copy-label', '<i class="ui" aria-hidden="true"></i> ' . t('Send me a copy of the mail'), [
                         'for' => 'copy'
                     ]);
         }, [ 'class' => 'form-group' ]);

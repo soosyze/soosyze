@@ -23,8 +23,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
     {
         $this->group('link-fieldset', 'fieldset', function ($form) {
             $form->legend('link-legend', t('Add a link in the menu'))
-                ->group('link-title-group', 'div', function ($form) {
-                    $form->label('link-title-label', t('Link title'), [
+                ->group('title_link-group', 'div', function ($form) {
+                    $form->label('title_link-label', t('Link title'), [
                         'for' => 'title_link' ])
                     ->text('title_link', [
                         'class'       => 'form-control',
@@ -34,8 +34,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'value'       => $this->content[ 'title_link' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('link-link-group', 'div', function ($form) {
-                    $form->label('link-link-label', t('Link'))
+                ->group('link-group', 'div', function ($form) {
+                    $form->label('link-label', t('Link'))
                     ->text('link', [
                         'class'       => 'form-control',
                         'placeholder' => t('Example: node/1 or http://foo.com'),
@@ -45,19 +45,19 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('link-icon-group', 'div', function ($form) {
-                    $form->label('link-icon-label', t('Icon'), [
+                ->group('icon-group', 'div', function ($form) {
+                    $form->label('icon-label', t('Icon'), [
                         'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
                         'for'          => 'icon'
                     ])
-                    ->group('link-icon-group', 'div', function ($form) {
+                    ->group('icon-flex', 'div', function ($form) {
                         $form->text('icon', [
                             'class'       => 'form-control text_icon',
                             'maxlength'   => 255,
                             'placeholder' => 'fa fa-bars, fa fa-home...',
                             'value'       => $this->content[ 'icon' ],
                         ])
-                        ->html('btn-icon', '<button:attr>:_content</button>', [
+                        ->html('icon-btn', '<button:attr>:_content</button>', [
                             '_content'     => '<i class="' . $this->content[ 'icon' ] . '" aria-hidden="true"></i>',
                             'aria-label'   => t('Rendering'),
                             'class'        => 'btn render_icon',
@@ -66,9 +66,9 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('link-target-group', 'div', function ($form) {
-                    $form->label('link-target-label', t('Target'))
-                        ->group('link-target-radio_1', 'div', function ($form) {
+                ->group('target_link-group', 'div', function ($form) {
+                    $form->label('target_link-label', t('Target'))
+                        ->group('target_link_1-group', 'div', function ($form) {
                             $form->radio('target_link', [
                                 'id'       => 'target_link_1',
                                 'value'    => '_self',
@@ -78,7 +78,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                                 'for' => 'target_link_1'
                             ]);
                         }, [ 'class' => 'form-group' ])
-                        ->group('link-target-radio_2', 'div', function ($form) {
+                        ->group('target_link_2-group', 'div', function ($form) {
                             $form->radio('target_link', [
                                 'id'       => 'target_link_2',
                                 'value'    => '_blank',

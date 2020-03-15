@@ -325,7 +325,7 @@ class FormNode extends FormBuilder
                     ->group('meta_noarchive-group', 'div', function ($form) {
                         $form->checkbox('meta_noarchive', [ 'checked' => $this->content[ 'meta_noarchive' ] ])
                         ->label('meta_noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
-                            'for' => 'meta_nofollow'
+                            'for' => 'meta_noarchive'
                         ]);
                     }, self::$attrGrp);
         });
@@ -334,10 +334,10 @@ class FormNode extends FormBuilder
     public function actionsSubmit()
     {
         return $this
-                ->group('published-group', 'fieldset', function ($form) {
+                ->group('actions-group', 'fieldset', function ($form) {
                     $form
-                    ->legend('published-legend', t('Publication'))
-                    ->group('node-date_created-group', 'div', function ($form) {
+                    ->legend('actions-legend', t('Publication'))
+                    ->group('date_created-group', 'div', function ($form) {
                         $form->label('date_created-label', t('Date de publication'), [
                             'data-tooltip' => 'Laisser vide pour utiliser la date de soumission du formulaire. Elle doit-être inférieur ou égale à la date du jour.'
                         ])
@@ -350,9 +350,9 @@ class FormNode extends FormBuilder
                             : $this->content[ 'date_created' ]
                         ]);
                     }, self::$attrGrp)
-                    ->group('node-published-group', 'div', function ($form) {
+                    ->group('published-group', 'div', function ($form) {
                         $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
-                        ->label('publish-label', '<span class="ui"></span> ' . t('Publish content'), [
+                        ->label('published-label', '<span class="ui"></span> ' . t('Publish content'), [
                             'for' => 'published'
                         ]);
                     }, self::$attrGrp);

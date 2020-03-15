@@ -148,8 +148,8 @@ class File extends \Soosyze\Controller
             ]))
             ->group('file-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('file-legend', t('Renommer le nom du fichier'))
-                ->group('file-group', 'div', function ($form) use ($data) {
-                    $form->label('file-name-label', t('Name'), [
+                ->group('name-group', 'div', function ($form) use ($data) {
+                    $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
                     ])
                     ->text('name', [
@@ -243,7 +243,7 @@ class File extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) use ($name, $ext) {
                 $form->legend('folder-legend', t('Deleting the file'))
-                ->html('folder-message', '<p:attr>:_content</p>', [
+                ->html('folder-info', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the @name file is final.', [
                         '@name' => "$name$ext"
                     ])

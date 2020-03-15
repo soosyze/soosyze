@@ -125,7 +125,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     $form->label('folder_size-label', t('Size limit by directory'), [
                         'for' => 'folder_size'
                     ])
-                    ->group('folder_size-group-flex', 'div', function ($form) {
+                    ->group('folder_size-flex', 'div', function ($form) {
                         $form->number('folder_size', [
                             'class' => 'form-control',
                             'min'   => 0,
@@ -151,7 +151,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_delete-group', 'div', function ($form) {
                     $form->checkbox('file_delete', [ 'checked' => $this->content[ 'file_delete' ] ])
-                    ->label('folder_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
+                    ->label('file_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
                         'for' => 'file_delete' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_download-group', 'div', function ($form) {
@@ -168,7 +168,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     $form->label('file_size-label', t('Size limit by file'), [
                         'for' => 'file_size'
                     ])
-                    ->group('file_size-group-flex', 'div', function ($form) {
+                    ->group('file_size-flex', 'div', function ($form) {
                         $form->number('file_size', [
                             'class' => 'form-control',
                             'min'   => 0,
@@ -182,7 +182,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
             })
             ->group('extensions-fieldset', 'fieldset', function ($form) {
                 $form->legend('extensions-legend', t('File extensions'))
-                ->group('extensions_all-group', 'div', function ($form) {
+                ->group('file_extensions_all-group', 'div', function ($form) {
                     $form->checkbox('file_extensions_all', [
                         'checked' => $this->content[ 'file_extensions_all' ]
                     ])
@@ -197,7 +197,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'checked' => in_array($extension, $this->content[ 'file_extensions' ]),
                             'value'   => $extension
                         ])
-                        ->label("ext-$extension-label", '<i class="ui"></i>' . $extension, [
+                        ->label("$extension-label", '<i class="ui"></i>' . $extension, [
                             'for' => "file_extensions[$extension]" ]);
                     }, [ 'class' => 'form-group col-sm-3' ]);
                 }

@@ -15,8 +15,8 @@ class HookConfig
     {
         $form->group('news-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news-legend', t('Settings'))
-                ->group('news-news_pagination-group', 'div', function ($form) use ($data) {
-                    $form->label('news-news_pagination-group', t('Number of articles per page'))
+                ->group('news_pagination-group', 'div', function ($form) use ($data) {
+                    $form->label('news_pagination-group', t('Number of articles per page'))
                     ->number('news_pagination', [
                         'class'    => 'form-control',
                         'max'      => 50,
