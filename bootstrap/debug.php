@@ -40,7 +40,6 @@ function handlerException($exp)
     global $config;
 
     if ($config[ 'debug' ]) {
-        
         /* Pour les exceptions PHP <= 5.6 */
         if ($exp instanceof \Exception) {
             header('HTTP/1.0 500 Internal Server Error');
@@ -79,31 +78,28 @@ function printException($exp)
 {
     $trace = array_reverse($exp->getTrace());
     $html  = '<style>
-            table{width: 100%; border-collapse: collapse; margin-bottom: 3px;}
-            thead{background-color: #272822; color:#FFF;}
-            thead th{padding: 10px; border-bottom: 3px solid #FFF;}
-            th{border:0px;}
-            .table-trace, .table-exp {font-family: Roboto,"Source Sans Pro",sans-serif;}
+            .table-trace, .table-exp {width: 100%; border-collapse: collapse; margin-bottom: 3px; font-family: Roboto,"Source Sans Pro",sans-serif;}
+            .table-trace{ background-color: #FFF; }
+            .table-trace thead{background-color: #272822; color:#FFF;}
+            .table-trace thead th{padding: 10px; border-bottom: 3px solid #FFF;}
+            .table-trace th{border:0px;}
             .table-trace td{border-left: #FFF 3px solid;}
-            .table-trace tr:hover td,
-            .table-trace tr:hover th{background-color: #272822; color:#FFF;}
+            .table-trace tr:hover th, .table-exp tr:hover th,
+            .table-trace tr:hover td, .table-exp tr:hover td{background-color: #272822; color:#FFF;}
             .table-exp{background-color: rgb(190, 50, 50); color: #FFF;}
-            .exp-class,
-            .exp-function{font-weight: bold;}
-            .exp-class{color: #BE7132;}
-            .exp-function{color: #1E7272;}
-            .table-exp th, 
-            .table-exp td,
-            .table-trace th, 
-            .table-trace td{padding: 10px;}
-            .two th,
-            .two td{background-color: #E9E9E9;}
+            .table-exp th, .table-trace th,
+            .table-exp td, .table-trace td{padding: 10px;}
+            .two th, .two td{background-color: #E9E9E9;}
             .arg-string{color: #289828;}
             .arg-object{color: #be7132;}
             .arg-numeric,
             .arg-bool,
             .arg-null,
             .arg-resource{color: #d19a66;}
+            .exp-class,
+            .exp-function{font-weight: bold;}
+            .exp-class{color: #BE7132;}
+            .exp-function{color: #1E7272;}
             </style>
 
             <div style=\'width: 80%; margin-left: auto; margin-right: auto; overflow-x:auto\'>
@@ -111,11 +107,11 @@ function printException($exp)
             <table class=\'table-exp\'>
                <tr>
                    <th>Type</th>
-                   <td>' . get_class($exp) . "</td>
+                   <td>' . get_class($exp) . '</td>
                </tr>
                <tr>
                    <th>File</th>
-                   <td>{$exp->getFile()} : {$exp->getLine()}</td>
+                   <td>' . str_replace(ROOT, '', $exp->getFile()) . " : {$exp->getLine()}</td>
                </tr>
                <tr>
                    <th>Message</th>
@@ -143,7 +139,11 @@ function printException($exp)
         $html .= isset($stackPoint[ 'class' ])
             ? "<span class='exp-class'>{$stackPoint[ 'class' ]}-></span>"
             : '';
-        $html .= "<span class='exp-function'>{$stackPoint[ 'function' ]}({$args})</span></td>";
+        if ($closure = strstr($stackPoint[ 'function' ], '{')) {
+            $html .= "<span class='exp-function'>{$closure}({$args})</span></td>";
+        } else {
+            $html .= "<span class='exp-function'>{$stackPoint[ 'function' ]}({$args})</span></td>";
+        }
         if (!isset($stackPoint[ 'file' ])) {
             $stackPoint[ 'file' ] = isset($trace[ $key - 1 ][ 'file' ])
                 ? $trace[ $key - 1 ][ 'file' ]
@@ -152,7 +152,7 @@ function printException($exp)
                 ? $trace[ $key - 1 ][ 'line' ]
                 : '';
         }
-        $html .= "<td>{$stackPoint[ 'file' ]}</td><td>{$stackPoint[ 'line' ]}</td></tr>";
+        $html .= '<td>' . str_replace(ROOT, '', $stackPoint[ 'file' ]) . "</td><td>{$stackPoint[ 'line' ]}</td></tr>";
     }
     $html .= '</tbody>
             </table>
@@ -178,11 +178,12 @@ function parseArg($args)
             $html .= '<span class="arg-string">"' . htmlspecialchars($arg) . '"</span>, ';
         } elseif (is_array($arg)) {
             $html .= '<span class="arg-array">[ ' . parseArg($arg) . ' ]</span>, ';
-        } elseif (is_object($arg) || $arg instanceof \__PHP_Incomplete_Class) {
-            /*
-             * __PHP_Incomplete_Class lorsque vous utilisez des objets en session
-             * si vous déclarez vos classes avant session_start().
-             */
+        }
+        /*
+         * __PHP_Incomplete_Class lorsque vous utilisez des objets en session
+         * si vous déclarez vos classes avant session_start().
+         */
+        elseif (is_object($arg) || $arg instanceof \__PHP_Incomplete_Class) {
             $html .= '<span class="arg-object">' . get_class($arg) . '</span>, ';
         } elseif (is_numeric($arg)) {
             $html .= '<span class="arg-numeric">' . $arg . '</span>, ';
