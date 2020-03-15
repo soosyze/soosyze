@@ -28,7 +28,7 @@ R::post('user.role.delete', 'admin/user/role/:id/delete', 'Role@delete', [ ':id'
 
 R::get('user.account', 'user/account', 'User@account');
 R::get('user.show', 'user/:id', 'User@show', [ ':id' => '\d+' ]);
-R::get('user.create', 'user/create', 'User@create');
+R::get('user.create', 'admin/user/create', 'User@create');
 R::post('user.store', 'user', 'User@store');
 R::get('user.edit', 'user/:id/edit', 'User@edit', [ ':id' => '\d+' ]);
 R::post('user.update', 'user/:id/edit', 'User@update', [ ':id' => '\d+' ]);

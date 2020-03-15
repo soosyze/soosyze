@@ -118,7 +118,7 @@
         </div>
         <script>
             document.getElementById('form_lang').addEventListener('change', function(){
-                console.log(this.submit());
+                this.submit();
             });
         </script>
     </body>

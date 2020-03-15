@@ -53,9 +53,12 @@ class BackupController extends \Soosyze\Controller
     {
         $content = self::backupservice()->getBackup($path);
         if ($content) {
-            return new Response(200, new Stream($content), ['content-type' => 'application/zip', 'content-disposition' => 'attachement; filename="' . $path . '.zip"']);
+            return new Response(200, new Stream($content), [
+                'content-type'        => 'application/zip',
+                'content-disposition' => 'attachement; filename="' . $path . '.zip"'
+            ]);
         }
-        
+
         return $this->get404();
     }
     

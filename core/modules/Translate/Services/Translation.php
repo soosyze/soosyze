@@ -6,11 +6,6 @@ class Translation extends \Soosyze\Config
 {
     protected $lang;
 
-    /**
-     * @var \Soosyze\App
-     */
-    protected $core;
-
     protected $dir;
 
     protected $iso639_1 = [
@@ -203,10 +198,11 @@ class Translation extends \Soosyze\Config
         'zu'  => 'Zulu'
     ];
 
-    public function __construct($core, $dir, $langDefault = 'en')
+    public function __construct(\ArrayAccess $config, $dir, $langDefault = 'en')
     {
-        $this->core = $core;
-        $this->lang = $core->get('config')->get('settings.lang', $langDefault);
+        $this->lang = isset($config[ 'settings.lang' ])
+            ? $config[ 'settings.lang' ]
+            : $langDefault;
         if (isset($_SESSION['lang']) && !in_array($_SESSION['lang'], $this->iso639_1)) {
             $this->lang = $_SESSION['lang'];
         }

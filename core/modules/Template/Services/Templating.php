@@ -164,16 +164,9 @@ class Templating extends \Soosyze\Components\Http\Response
      */
     public function make($parent, $tpl, $tplPath, array $vars = [])
     {
-        $template = $this->createBlock($tpl, $tplPath)
-            ->addVars($vars);
+        $template = $this->createBlock($tpl, $tplPath);
 
-        if ($block = strstr($parent, '.', true)) {
-            $this->getBlock($block)->addBlock(substr(strstr($parent, '.'), 1), $template);
-        } else {
-            $this->getThemplate()->addBlock($parent, $template);
-        }
-
-        return $this;
+        return $this->addBlock($parent, $template, $vars);
     }
 
     public function addFilterVar($parent, $key, callable $function)
@@ -221,6 +214,9 @@ class Templating extends \Soosyze\Components\Http\Response
         return $folders;
     }
 
+    /**
+     * @return Block
+     */
     public function createBlock($tpl, $tplPath)
     {
         return (new Block($tpl, $tplPath))

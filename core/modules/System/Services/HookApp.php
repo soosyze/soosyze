@@ -125,15 +125,16 @@ class HookApp
         if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
             return;
         }
-        $data = $this->config->get('settings');
-
+        $data   = $this->config->get('settings');
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/js/script.js';
-        
-        $script      = $response->getBlock('this')->getVar('scripts');
-        $description = $response->getBlock('this')->getVar('description');
-        $siteTitle   = $response->getBlock('this')->getVar('title');
-        $pageTitle   = $response->getBlock('page')->getVar('title_main');
 
+        $html      = $response->getBlock('this');
+        $scripts   = $html->getVar('scripts');
+        $siteDesc  = $html->getVar('description');
+        $siteTitle = $html->getVar('title');
+        $pageTitle = $response->getBlock('page')->getVar('title_main');
+
+        $title = $data[ 'meta_title' ];
         if ($siteTitle) {
             $title = str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
@@ -141,24 +142,23 @@ class HookApp
                 $siteTitle
             );
         } elseif ($pageTitle) {
-            $title = $pageTitle . ' | ' . $data[ 'meta_title' ];
-        } else {
-            $title = $data[ 'meta_title' ];
+            $title = "$pageTitle | $title";
         }
-        if ($description) {
-            $description = str_replace(
+
+        $description = $siteDesc
+            ? str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
                 [ $data[ 'meta_description' ], $data[ 'meta_title' ], $pageTitle ],
-                $description
-            );
-        }
+                $siteDesc
+            )
+            : $data[ 'meta_description' ];
 
         $response->view('this', [
             'title'       => $title,
             'description' => $description,
             'keyboard'    => $data[ 'meta_keyboard' ],
             'favicon'     => $data[ 'favicon' ],
-            'scripts'     => $script . '<script src="' . $vendor . '"></script>'
+            'scripts'     => $scripts . '<script src="' . $vendor . '"></script>'
         ])->view('page', [
             'title' => $data[ 'meta_title' ],
             'logo'  => is_file(ROOT . $data[ 'logo' ])

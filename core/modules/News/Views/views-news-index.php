@@ -20,7 +20,10 @@
                     <?php echo $new[ 'field' ][ 'image' ]['field_display']; ?>
 
                 </div>
-                <div class="card__content"><?php echo $new[ 'field' ][ 'summary' ]['field_display']; ?></div>
+                <div class="card__content">
+                    <?php echo $new[ 'field' ][ 'image' ]['field_display']; ?>
+                    <?php echo $new[ 'field' ][ 'summary' ]['field_display']; ?>
+                </div>
                 <div class="card__footer">
                     <div class="card__more">
                         <a href=" <?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">
