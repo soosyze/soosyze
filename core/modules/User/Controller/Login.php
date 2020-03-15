@@ -201,7 +201,7 @@ class Login extends \Soosyze\Controller
                 $_SESSION[ 'messages' ][ 'errors' ] = [ t('Sorry, this email is not recognized.') ];
             }
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
 
         $_SESSION[ 'inputs' ] = $validator->getInputs();

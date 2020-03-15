@@ -252,7 +252,7 @@ class Node extends \Soosyze\Controller
             );
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         return new Redirect(self::router()->getRoute('node.create', [ ':node' => $type ]));
@@ -437,7 +437,7 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 

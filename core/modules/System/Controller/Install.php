@@ -130,7 +130,7 @@ class Install extends \Soosyze\Controller
             $_SESSION[ 'lang' ]   = $validator->getInput('lang');
             $_SESSION[ 'inputs' ] = $validator->getInputs();
         } else {
-            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
         }
 
         return new Redirect(self::router()->getRoute('install.step', [ ':id' => $id ]));

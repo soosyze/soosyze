@@ -135,7 +135,7 @@ class Role extends \Soosyze\Controller
             $route                               = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             $route                              = self::router()->getRoute('user.role.create');
         }
@@ -227,7 +227,7 @@ class Role extends \Soosyze\Controller
             $route = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             $route = self::router()->getRoute('user.role.edit', [ ':id' => $id ]);
         }
@@ -303,7 +303,7 @@ class Role extends \Soosyze\Controller
             $route = self::router()->getRoute('user.role.admin');
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             $route = self::router()->getRoute('user.role.remove', [ ':id' => $id ]);
         }

@@ -247,7 +247,7 @@ class HookStep
             ];
         } else {
             $_SESSION[ 'inputs' ][ $id ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ][ $id ]          = $validator->getKeyInputErrors();
         }
     }

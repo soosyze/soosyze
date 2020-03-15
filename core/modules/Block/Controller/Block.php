@@ -334,7 +334,7 @@ class Block extends \Soosyze\Controller
             $this->container->callHook('block.update.after', [ $validator ]);
         } else {
             $_SESSION[ 'inputs' ]      = $validator->getInputs();
-            $_SESSION[ 'errors' ]      = $validator->getErrors() + $validatorRoles->getErrors();
+            $_SESSION[ 'errors' ]      = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
             $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
 
             return $this->edit($id, $req);

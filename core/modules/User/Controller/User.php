@@ -205,7 +205,7 @@ class User extends \Soosyze\Controller
             return new Redirect(self::router()->getRoute('user.management.admin'));
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors() + $validatorRoles->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         return new Redirect(self::router()->getRoute('user.create'));
@@ -391,11 +391,11 @@ class User extends \Soosyze\Controller
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         if ($grantedRole) {
-            $_SESSION[ 'messages' ][ 'errors' ] += $validatorRole->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] += $validatorRole->getKeyErrors();
         }
 
         if ($is_email) {
@@ -468,7 +468,7 @@ class User extends \Soosyze\Controller
             self::query()->from('user')->where('user_id', '==', $id)->delete()->execute();
             $this->container->callHook('user.delete.after', [ $validator, $query, $id ]);
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
 
         return new Redirect(self::router()->getRoute('user.management.admin'));

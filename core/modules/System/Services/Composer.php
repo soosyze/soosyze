@@ -50,7 +50,7 @@ class Composer
             ->setInputs($data);
 
         if (!$validator->isValid()) {
-            $errors += $validator->getErrors();
+            $errors += $validator->getKeyErrors();
         } elseif (empty($data[ 'autoload' ][ 'psr-4' ]) || !is_array($data[ 'autoload' ][ 'psr-4' ])) {
             $errors[] = t('The namespace information for the :name module does not exist.', [':name' => $title]);
         } else {
@@ -212,7 +212,7 @@ class Composer
                 ])->setInputs($composer[ 'extra' ][ 'soosyze' ]);
 
         if (!$validator->isValid()) {
-            $errors += $validator->getErrors();
+            $errors += $validator->getKeyErrors();
         } elseif (empty($composer[ 'extra' ][ 'soosyze' ][ 'controller' ])) {
             $errors[] = t('The information on the controllers of the :name module does not exist.', [':name' => $title]);
         } else {

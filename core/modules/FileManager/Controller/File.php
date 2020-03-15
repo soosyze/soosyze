@@ -94,7 +94,7 @@ class File extends \Soosyze\Controller
         }
         
         if (!$validator->isValid()) {
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
             return $this->json(400, $output);
         }
@@ -195,7 +195,7 @@ class File extends \Soosyze\Controller
         /* Si les valeur attendues sont les bonnes. */
         if (!$validator->isValid() || !is_file($file_old)) {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $statut                           = 400;
 
             return $this->json($statut, $output);
@@ -285,7 +285,7 @@ class File extends \Soosyze\Controller
             $statut                            = 200;
         } else {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $statut                           = 400;
         }
 

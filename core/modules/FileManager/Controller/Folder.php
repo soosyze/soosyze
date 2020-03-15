@@ -79,7 +79,7 @@ class Folder extends \Soosyze\Controller
 
         $output = [];
         if (!$validator->isValid()) {
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $statut                           = 400;
 
             return $this->json($statut, $output);
@@ -169,7 +169,7 @@ class Folder extends \Soosyze\Controller
         $output = [];
         if (!$validator->isValid()) {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $statut                           = 400;
 
             return $this->json($statut, $output);
@@ -263,7 +263,7 @@ class Folder extends \Soosyze\Controller
             $statut                            = 200;
         } else {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $statut                           = 400;
         }
 

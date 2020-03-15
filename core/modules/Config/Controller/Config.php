@@ -117,7 +117,7 @@ class Config extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ]            = [];
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
         $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);

@@ -121,7 +121,7 @@ class ModulesManager extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if (!$validator->isValid()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
             return new Redirect($route);
         }

@@ -114,7 +114,7 @@ class Profil extends \Soosyze\Controller
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         $route = self::router()->getRoute('filemanager.profil.create');
@@ -202,7 +202,7 @@ class Profil extends \Soosyze\Controller
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         $route = self::router()->getRoute('filemanager.profil.edit', [ ':id' => $id ]);
@@ -274,7 +274,7 @@ class Profil extends \Soosyze\Controller
             return new Redirect($route);
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $route                              = self::router()->getRoute('filemanager.profil.remove', [
             ':id' => $id ]);
 

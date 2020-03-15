@@ -86,7 +86,7 @@ class Menu extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
 
         return new Redirect($route);

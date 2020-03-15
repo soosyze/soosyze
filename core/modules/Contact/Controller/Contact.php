@@ -97,7 +97,7 @@ class Contact extends \Soosyze\Controller
             }
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getErrors();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
