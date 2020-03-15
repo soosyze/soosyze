@@ -3,7 +3,7 @@
 namespace SoosyzeCore\FileSystem\Services;
 
 use Psr\Http\Message\UploadedFileInterface;
-use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
@@ -41,6 +41,8 @@ class File
      * @var string
      */
     protected $ext;
+    
+    protected $mode = 0755;
 
     /**
      * Si le répertoire doit-être corrigé.
@@ -72,7 +74,7 @@ class File
         $this->dir       = $this->core->getDir('files_public', 'app/files');
     }
 
-    public function inputFile($name, FormBuilder &$form, $content = '', $type = 'image')
+    public function inputFile($name, &$form, $content = '', $type = 'image')
     {
         $attr = [
             'class'      => 'btn btn-danger form-file-reset',
@@ -171,10 +173,11 @@ class File
         return $clone;
     }
 
-    public function setResolvePath($resolve = true)
+    public function setResolvePath($resolve = true, $mode = 0755)
     {
         $clone              = clone $this;
         $clone->resolve_dir = $resolve;
+        $clone->mode        = $mode;
 
         return $clone;
     }
@@ -242,6 +245,7 @@ class File
             $this->resolveDir();
             $move = $this->resolveName();
             $this->file->moveTo($move);
+            call_user_func_array($this->call_move, [ $this->name, "{$this->name}.{$this->ext}", $move ]);
 
             return $move;
         }
@@ -250,7 +254,7 @@ class File
     protected function resolveDir()
     {
         if ($this->resolve_dir && !is_dir($this->dir)) {
-            mkdir($this->dir, 0755, true);
+            mkdir($this->dir, $this->mode, true);
         }
     }
 
