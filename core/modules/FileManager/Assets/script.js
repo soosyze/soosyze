@@ -1,7 +1,7 @@
 /* COPY CLIPBOARD */
 document.querySelectorAll('.copy-clipboard').forEach(function (el) {
     el.addEventListener('click', function () {
-        var tmp = document.createElement("textarea");
+        const tmp = document.createElement("textarea");
         tmp.value = this.dataset.link;
         tmp.style.height = "0";
         tmp.style.overflow = "hidden";
@@ -18,8 +18,8 @@ document.querySelectorAll('.copy-clipboard').forEach(function (el) {
  */
 if (all = document.getElementById('file_extensions_all')) {
     all.addEventListener('click', function () {
-        var extensions = document.querySelectorAll('.ext');
-        var checked = this.checked;
+        const extensions = document.querySelectorAll('.ext');
+        const checked = this.checked;
         extensions.forEach(function (el) {
             el.checked = checked;
         });
@@ -27,7 +27,7 @@ if (all = document.getElementById('file_extensions_all')) {
 }
 document.querySelectorAll('.ext').forEach(function (el) {
     el.addEventListener('click', function () {
-        var all = document.getElementById('file_extensions_all');
+        const all = document.getElementById('file_extensions_all');
         if (all.checked) {
             all.checked = false;
         }
@@ -38,8 +38,8 @@ document.querySelectorAll('.ext').forEach(function (el) {
  */
 $(document).delegate('#modal_folder input[name="submit"]', 'click', function (evt) {
     evt.preventDefault();
-    var $formModal = $(this).parent('form');
-    var $modal = $(this).closest('.modal');
+    const $formModal = $(this).parent('form');
+    const $modal = $(this).closest('.modal');
     $.ajax({
         url: $formModal.attr('action'),
         type: $formModal.attr('method'),
@@ -62,8 +62,7 @@ $(document).delegate('#modal_folder input[name="submit"]', 'click', function (ev
 $(document).delegate('.actions-file .mod', 'click', function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    var link = $(this).data('link');
-    var target = $(this).data('target');
+    const link = $(this).data('link');
     $.ajax({
         url: link,
         type: 'GET',
@@ -86,8 +85,7 @@ $(document).delegate('.dir-link_show', 'click', function (evt) {
  */
 $(document).delegate('.file-link_show', 'click', function (evt) {
     evt.preventDefault();
-    var link = $(this).data('link_show');
-    var target = $(this).data('target');
+    const link = $(this).data('link_show');
     $.ajax({
         url: link,
         type: 'GET',
@@ -103,8 +101,7 @@ $(document).delegate('.file-link_show', 'click', function (evt) {
  */
 $(document).delegate('#folder_create', 'click', function (evt) {
     evt.preventDefault();
-    var link = $(this).data('link');
-    var target = $(this).data('target');
+    const link = $(this).data('link');
     $.ajax({
         url: link,
         type: 'GET',
@@ -123,7 +120,7 @@ dropFile();
  * Ajoute les événements à la création de fichier.
  */
 function dropFile() {
-    var $form = $('.dropfile');
+    const $form = $('.dropfile');
     $form.on('dragover dragleave drop', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -132,11 +129,11 @@ function dropFile() {
     }).on('dragleave', function () {
         $form.css('outline-offset', '0px');
     }).on('drop', function (evt) {
-        var droppedFiles = evt.originalEvent.dataTransfer.files;
+        const droppedFiles = evt.originalEvent.dataTransfer.files;
         $form.find('input[type="file"]').prop('files', droppedFiles);
         evt.preventDefault();
-        var data = new FormData($form.get(0));
-        var action = $form.attr("action");
+        const data = new FormData($form.get(0));
+        const action = $form.attr("action");
         $.ajax({
             url: action,
             type: 'POST',
@@ -155,7 +152,6 @@ function dropFile() {
             },
             error: function (data) {
                 $form.css('outline', '2px dashed red');
-                console.log(data.responseJSON);
                 renderMessage('.dropfile-messages', data.responseJSON);
             }
         });
@@ -165,16 +161,16 @@ function dropFile() {
 
 function renderMessage(selector, data) {
     $(selector).html('');
-    if (data.messages !== undefined && data.messages.success !== undefined) {
+    if (data.messages != null && data.messages.success != null) {
         $.each(data.messages.success, function (key, val) {
-            $(selector).append('<div class="alert alert-success" role="alert"><p>' + val + '</p></div>');
+            $(selector).append(`<div class="alert alert-success" role="alert"><p>${val}</p></div>`);
         });
     } else if (data.messages !== undefined && data.messages.errors !== undefined) {
         $.each(data.messages.errors, function (key, val) {
-            $(selector).append('<div class="alert alert-danger" role="alert"><p>' + val + '</p></div>');
+            $(selector).append(`<div class="alert alert-danger" role="alert"><p>${val}</p></div>`);
         });
         $.each(data.errors_keys, function (key, val) {
-            $('.modal #' + val).css('border-color', '#f00');
+            $(`.modal #${val}`).css('border-color', '#f00');
         });
     }
 }

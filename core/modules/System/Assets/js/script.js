@@ -1,10 +1,10 @@
 function search()
 {
-    var search = $('#search').val();
-    var active = $('#active').prop('checked');
-    var disabled = $('#disabled').prop('checked');
-    var reg = new RegExp(search, 'i');
-    var number = 0;
+    const search = $('#search').val();
+    const active = $('#active').prop('checked');
+    const disabled = $('#disabled').prop('checked');
+    const reg = new RegExp(search, 'i');
+    let number = 0;
 
     $('.package').each(function () {
         /* Si le package doit être affiché. */
@@ -27,13 +27,13 @@ function search()
         });
         $(this).css('display', package_hide);
         /* Pour l'affichage de la navigation. */
-        $('#nav-' + this.id).css('display', package_hide);
+        $(`#nav-${this.id}`).css('display', package_hide);
     });
-    $('#result-search').text(number + " module(s)");
+    $('#result-search').text(`${number} module(s)`);
 }
 
 $('#nav_config li a').click(function () {
-    var elemId = '#' + $(this).attr('href').split('#')[1];
+    const elemId = $(this).attr('href');
     highlight(elemId);
 });
 
@@ -48,12 +48,12 @@ function highlight(elemId) {
 
 $(function () {
     /* Cache selectors */
-    var topMenu = $("#top-menu");
-    var topMenuHeight = topMenu.outerHeight();
+    const topMenu = $("#top-menu");
+    const topMenuHeight = topMenu.outerHeight();
     /* All list items */
-    var menuItems = topMenu.find("a");
+    const menuItems = topMenu.find("a");
     /* Anchors corresponding to menu items */
-    var scrollItems = menuItems.map(function () {
+    const scrollItems = menuItems.map(function () {
         var item = $($(this).attr("href"));
         if (item.length) {
             return item;
@@ -63,18 +63,21 @@ $(function () {
     /* Bind to scroll */
     $(window).scroll(function () {
         /* Get container scroll position */
-        var fromTop = $(this).scrollTop() + topMenuHeight;
+        const fromTop = $(this).scrollTop() + topMenuHeight;
         /* Get id of current scroll item */
-        var cur = scrollItems.map(function () {
+        let cur = scrollItems.map(function () {
             if ($(this).offset().top < fromTop)
                 return this;
         });
         /* Get the id of the current element */
         cur = cur[cur.length - 1];
-        var id = cur && cur.length ? cur[0].id : "";
+        const id = cur && cur.length ? cur[0].id : "";
         /* Set/remove active class */
-        menuItems
-                .parent().removeClass("active")
-                .end().filter("[href='#" + id + "']").parent().addClass("active");
+        menuItems.parent()
+                .removeClass("active")
+                .end()
+                .filter(`[href='#${id}']`)
+                .parent()
+                .addClass("active");
     });
 });

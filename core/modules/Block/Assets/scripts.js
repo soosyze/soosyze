@@ -18,12 +18,12 @@ $(function () {
 
     function updateSection(evt)
     {
-        var weight = 0;
+        let weight = 0;
         $(evt.to).find('.block').each(function () {
             $.ajax({
                 url: $(this).find('.fa-arrows-alt').data('link_update'),
                 type: 'POST',
-                data: 'weight=' + weight + '&section=' + $(evt.to).data('id')
+                data: `weight=${weight}&section=${$(evt.to).data('id')}`
             });
             weight++;
         });
@@ -31,7 +31,7 @@ $(function () {
 
     $(document).delegate('.block .fa-edit', 'click', function (evt) {
         evt.preventDefault();
-        var $this = $(this).closest('.block');
+        const $this = $(this).closest('.block');
         $.ajax({
             url: $(this).data('link_edit'),
             type: 'GET',
@@ -43,7 +43,7 @@ $(function () {
         });
     }).delegate('.block .fa-trash-alt', 'click', function (evt) {
         evt.preventDefault();
-        var $block = $(this).closest('.block');
+        const $block = $(this).closest('.block');
         if (confirm("Voulez vous supprimer définitivement le contenu ?")) {
             $.ajax({
                 url: $(this).data('link_delete'),
@@ -56,8 +56,8 @@ $(function () {
         }
     }).delegate('.block-edit input[name=submit_save]', 'click', function (evt) {
         evt.preventDefault();
-        var $this = $(this);
-        var $form = $this.parent('form');
+        const $this = $(this);
+        const $form = $this.parent('form');
         $.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
@@ -69,7 +69,7 @@ $(function () {
         });
     }).delegate('.block-edit input[name=submit_cancel]', 'click', function (evt) {
         evt.preventDefault();
-        var $block = $(this).closest('.block-edit');
+        const $block = $(this).closest('.block-edit');
         $.ajax({
             url: $block.data('link_show'),
             type: 'GET',
@@ -93,9 +93,9 @@ $(function () {
 });
 
 function search_blocks() {
-    var search = document.getElementById('search').value,
-            reg = new RegExp(search, 'i'),
-            elements = document.querySelectorAll('.search_item');
+    const search = document.getElementById('search').value;
+    const reg = new RegExp(search, 'i');
+    const elements = document.querySelectorAll('.search_item');
     Array.prototype.forEach.call(elements, function (el) {
         el.style.display = '';
         if (!reg.test(el.querySelector('.search_text').textContent)) {
