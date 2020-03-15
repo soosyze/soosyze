@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $lang; ?>">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta content="IE=edge" http-equiv="X-UA-Compatible">

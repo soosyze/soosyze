@@ -33,17 +33,30 @@ class HookConfig
         foreach ($this->template->getThemes() as $theme) {
             $optionThemes[] = [ 'value' => $theme, 'label' => $theme ];
         }
+        $optionTimezone = [];
+        foreach (timezone_identifiers_list() as $value) {
+            $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
+        }
 
         $optionLang   = $this->translate->getLang();
         $optionLang[] = [ 'value' => 'en', 'label' => 'English' ];
 
-        return $form->group('system-translate-fieldset', 'fieldset', function ($form) use ($data, $optionLang) {
-            $form->legend('system-translate-legend', t('Translation'))
-                    ->group('system-translate-group', 'div', function ($form) use ($data, $optionLang) {
-                        $form->label('system-translate-label', t('Language'))
+        return $form->group('translate-fieldset', 'fieldset', function ($form) use ($data, $optionLang, $optionTimezone) {
+            $form->legend('translate-legend', t('Language'))
+                    ->group('lang-group', 'div', function ($form) use ($data, $optionLang) {
+                        $form->label('lang-label', t('Language'))
                         ->select('lang', $optionLang, [
                             'class'    => 'form-control',
+                            'required' => 1,
                             'selected' => $data[ 'lang' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('timezone-group', 'div', function ($form) use ($data, $optionTimezone) {
+                        $form->label('timezone-label', t('Timezone'))
+                        ->select('timezone', $optionTimezone, [
+                            'class'    => 'form-control',
+                            'required' => 1,
+                            'selected' => $data[ 'timezone' ]
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
@@ -210,6 +223,7 @@ class HookConfig
         $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
             'lang'                => 'required|inarray:' . $langs,
+            'timezone'            => 'required|timezone',
             'email'               => 'required|email|max:254|to_htmlsc',
             'maintenance'         => '!required|bool',
             'rewrite_engine'      => 'bool',
@@ -225,6 +239,7 @@ class HookConfig
             'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
         ])->setLabel([
             'lang'               => t('Language'),
+            'timezone'           => t('Timezone'),
             'email'              => t('E-mail of the site'),
             'maintenance'        => t('Put the site in maintenance'),
             'rewrite_engine'     => t('Make the URLs clean'),
@@ -245,6 +260,7 @@ class HookConfig
     {
         $data = [
             'lang'               => $validator->getInput('lang'),
+            'timezone'           => $validator->getInput('timezone'),
             'email'              => $validator->getInput('email'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
             'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),

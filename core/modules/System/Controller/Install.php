@@ -55,23 +55,40 @@ class Install extends \Soosyze\Controller
         $optionLang   = self::translate()->getLang();
         $optionLang['en'] = [ 'value' => 'en', 'label' => 'English' ];
 
-        $data['lang'] = 'en';
-        if (isset($_SESSION['lang'])) {
-            $data['lang'] = $_SESSION['lang'];
+        $optionTimezone = [];
+        foreach (timezone_identifiers_list() as $value) {
+            $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
         }
-        
+
+        $content = [
+            'lang'     => 'en',
+            'timezone' => date_default_timezone_get()
+                ? date_default_timezone_get()
+                : 'Europe/Paris'
+        ];
+        if (isset($_SESSION[ 'inputs' ])) {
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+        }
+
         $form = (new FormBuilder([
             'method' => 'post',
             'action' => self::router()->getRoute('install.language', [ ':id' => $id ]),
             'id'     => 'form_lang' ]))
-            ->group('system-translate-group', 'div', function ($form) use ($data, $optionLang) {
-                $form->label('system-translate-label', t('Language'))
+            ->group('lang-group', 'div', function ($form) use ($content, $optionLang) {
+                $form->label('lang-label', t('Language'))
                 ->select('lang', $optionLang, [
                     'class'    => 'form-control',
-                    'selected' => $data[ 'lang' ]
+                    'selected' => $content[ 'lang' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->token('token_language');
+            ->group('timezone-group', 'div', function ($form) use ($content, $optionTimezone) {
+                $form->label('timezone-label', t('Timezone'))
+                ->select('timezone', $optionTimezone, [
+                    'class'    => 'form-control',
+                    'selected' => $content[ 'timezone' ]
+                ]);
+            }, [ 'class' => 'form-group' ])
+            ->token('token_install');
 
         $messages = [
             'errors'   => [], 'warnings' => [],
@@ -90,6 +107,7 @@ class Install extends \Soosyze\Controller
                 ->addBlock('page', $block_page)
                 ->addBlock('messages', $block_messages)
                 ->addVars([
+                    'lang'        => $content['lang'],
                     'form'        => $form,
                     'steps'       => $steps,
                     'step_active' => $id
@@ -102,13 +120,15 @@ class Install extends \Soosyze\Controller
         $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
         $validator = (new Validator())
             ->setRules([
-                'lang'           => 'inarray:' . $langs,
-                'token_language' => 'token'
+                'lang'          => 'inarray:' . $langs,
+                'timezone'      => 'required|timezone',
+                'token_install' => 'token'
             ])
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
-            $_SESSION[ 'lang' ] = $validator->getInput('lang');
+            $_SESSION[ 'lang' ]   = $validator->getInput('lang');
+            $_SESSION[ 'inputs' ] = $validator->getInputs();
         } else {
             $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getErrors();
         }
@@ -195,20 +215,23 @@ class Install extends \Soosyze\Controller
 
     private function installFinish()
     {
-        $save = $_SESSION[ 'inputs' ][ 'user' ];
-        $data = [
-            'username'       => $save[ 'username' ],
-            'email'          => $save[ 'email' ],
-            'password'       => password_hash($save[ 'password' ], PASSWORD_DEFAULT),
-            'firstname'      => $save[ 'firstname' ],
-            'name'           => $save[ 'name' ],
-            'actived'        => true,
-            'time_reset'     => '',
-            'time_installed' => (string) time(),
-            'timezone'       => 'Europe/Paris',
-            'rgpd'           => true,
+        $save     = $_SESSION[ 'inputs' ][ 'user' ];
+        $lang     = isset($_SESSION[ 'lang' ]) ? $_SESSION[ 'lang' ] : 'en';
+        $timezone = isset($_SESSION[ 'timezone' ]) ? $_SESSION[ 'lang' ] : 'Europe/Paris';
+        $data     = [
+            'username'         => $save[ 'username' ],
+            'email'            => $save[ 'email' ],
+            'password'         => password_hash($save[ 'password' ], PASSWORD_DEFAULT),
+            'firstname'        => $save[ 'firstname' ],
+            'name'             => $save[ 'name' ],
+            'actived'          => true,
+            'time_reset'       => '',
+            'time_installed'   => ( string ) time(),
+            'timezone'         => $timezone,
+            'rgpd'             => true,
             'terms_of_service' => true
         ];
+
         self::query()
             ->insertInto('user', array_keys($data))
             ->values($data)
@@ -220,11 +243,11 @@ class Install extends \Soosyze\Controller
             ->values([ 1, 3 ])
             ->execute();
 
-        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
         self::config()
             ->set('settings.email', $data[ 'email' ])
             ->set('settings.time_installed', time())
             ->set('settings.lang', 'en')
+            ->set('settings.timezone', $timezone)
             ->set('settings.theme', 'QuietBlue')
             ->set('settings.theme_admin', 'Admin')
             ->set('settings.logo', '')
