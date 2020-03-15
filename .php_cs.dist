@@ -1,8 +1,11 @@
 <?php
 
-/**
- * friendsofphp/php-cs-fixer: 2.13.*
- * @see http://cs.sensiolabs.org/
+/* 
+ * Configurations pour php-cs-fixer
+ *
+ * @version 2.16.*
+ * @see https://cs.symfony.com/
+ * @see https://mlocati.github.io/php-cs-fixer-configurator/#version:2.16
  */
 $finder = PhpCsFixer\Finder::create()
     ->notPath('bootstrap/requirements.php')
@@ -27,6 +30,7 @@ return PhpCsFixer\Config::create()
             'concat_space'                               => [ 'spacing' => 'one' ],
             /* Remplace les commentaires simples # par //. */
             'fully_qualified_strict_types'               => true,
+            /* Les commentaires sur une seule ligne doivent utiliser des doubles barres obliques // et non du hachage #. */
             'hash_to_slash_comment'                      => true,
             /* Retire les parenthèses des include/require. */
             'include'                                    => true,
@@ -42,6 +46,8 @@ return PhpCsFixer\Config::create()
             'magic_constant_casing'                      => true,
             /* Les définitions de méthodes magiques et les appels doivent utiliser la case appropriée. */
             'magic_method_casing'                        => true,
+            /* Les types natifs pour les fonctions doivent utiliser la casse correcte. */
+            'native_function_type_declaration_casing'    => true,
             /* Supprime les commentaires vides. */
             'no_empty_comment'                           => true,
             /* Supprime les blocks PHPDoc vides. */
@@ -56,24 +62,28 @@ return PhpCsFixer\Config::create()
             'no_leading_namespace_whitespace'            => true,
             /* Remplace l'utilisation du print par echo. */
             'no_mixed_echo_print'                        => true,
+            /* Remplace les <?= par des <?php echo. */
+            'no_short_echo_tag'                          => true,
             /* Supprime les espaces d'une seule ligne avant la fermeture du point-virgule. */
             'no_singleline_whitespace_before_semicolons' => true,
             /* Supprimes les espaces autour des accolades des tableaux. */
             'no_spaces_around_offset'                    => [ 'outside' ],
             /* Remplace les éléments elseif superflus par if. */
             'no_superfluous_elseif'                      => true,
+            /* Supprimez les virgules de fin dans les listes. */
+            'no_trailing_comma_in_list_call'             => true,
+            /* Supprimez les virgules de fin dans les array. */
+            'no_trailing_comma_in_singleline_array'      => true,
             /* Supprime les accolades superflus. */
             'no_unneeded_curly_braces'                   => true,
             /* Supprime les parenthèses superflus. */
             'no_unneeded_control_parentheses'            => true,
             /* Une class final ne doit pas avoir de méthodes finales. */
             'no_unneeded_final_method'                   => true,
-            /* Supprimez les virgules de fin dans les listes. */
-            'no_trailing_comma_in_list_call'             => true,
-            /* Supprimez les virgules de fin dans les array. */
-            'no_trailing_comma_in_singleline_array'      => true,
-            /* Remplace les <?= par des <?php echo. */
-            'no_short_echo_tag'                          => true,
+            /* Ordonne les éléments des class. */
+            'ordered_class_elements'                     => true,
+            /* Ordonne les imports (use). */
+            'ordered_imports'                            => true,
             /* Les annotations PHPUnit doivent être un FQCN, y compris un espace de noms racine. */
             'php_unit_fqcn_annotation'                   => true,
             /* Appliquez la camelCase aux méthodes de test PHPUnit, après la configuration. */
@@ -100,11 +110,8 @@ return PhpCsFixer\Config::create()
             'space_after_semicolon'                      => true,
             /* Corrige les opérateurs d’incrémentation et de décrémentation si possible. */
             'standardize_increment'                      => true,
-            /* Ordonne les éléments des class. */
-            'ordered_class_elements'                     => true,
-            /* Ordonne les imports (use). */
-            'ordered_imports'                            => true,
             /* Les opérateurs unaires doivent être placés à côté de leurs opérandes. */
-            'unary_operator_spaces'                      => true,
+            'unary_operator_spaces'                      => true
         ])
         ->setFinder($finder);
+
