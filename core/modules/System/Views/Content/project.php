@@ -5,9 +5,9 @@
     </div>
     <div class="col-md-8">
         <h3>Project 1 <small>Secondary text</small></h3>
-        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit. 
-            Amet architecto assumenda consequuntur esse eum facere, 
-            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint, 
+        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit.
+            Amet architecto assumenda consequuntur esse eum facere,
+            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint,
             vitae voluptates voluptatum.
         </p>
         <a href="?q=node/4" class="btn btn-default">Read more</a>
@@ -17,9 +17,9 @@
 <div class="row">
     <div class="col-md-8">
         <h3>Project 2 <small>Secondary text</small></h3>
-        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit. 
-            Amet architecto assumenda consequuntur esse eum facere, 
-            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint, 
+        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit.
+            Amet architecto assumenda consequuntur esse eum facere,
+            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint,
             vitae voluptates voluptatum.
         </p>
         <a href="?q=node/5" class="btn btn-default">Read more</a>
@@ -35,9 +35,9 @@
     </div>
     <div class="col-md-8">
         <h3>Project 3 <small>Secondary text</small></h3>
-        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit. 
-            Amet architecto assumenda consequuntur esse eum facere, 
-            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint, 
+        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit.
+            Amet architecto assumenda consequuntur esse eum facere,
+            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint,
             vitae voluptates voluptatum.
         </p>
         <a href="?q=node/6" class="btn btn-default">Read more</a>
@@ -47,9 +47,9 @@
 <div class="row">
     <div class="col-md-8">
         <h3>Project 4 <small>Secondary text</small></h3>
-        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit. 
-            Amet architecto assumenda consequuntur esse eum facere, 
-            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint, 
+        <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipisicing elit.
+            Amet architecto assumenda consequuntur esse eum facere,
+            illum libero molestiae (<em>nam nihil nulla pariatur)</em> quo saepe sequi sint,
             vitae voluptates voluptatum.
         </p>
         <a href="?q=node/7" class="btn btn-default">Read more</a>

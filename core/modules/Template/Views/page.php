@@ -17,7 +17,7 @@
             <?php echo $section[ 'content' ]; ?>
 
         </div>
-    </div> <!-- /.main-content -->
+    </div>
 </div>
 <footer>
     <?php echo $section[ 'second_menu' ]; ?>

@@ -14,7 +14,7 @@ class HookCron
         $this->config = $config;
     }
     
-    public function hookCron()
+    public function hookAppCron()
     {
         if ($this->config->get('settings.backup_cron')) {
             $this->backupservice->doBackup();

@@ -68,5 +68,5 @@
 .odp, .pptx, .ppt{ background-image: url(./icon/ppt.svg); }
 .txt, .odt, .docx, .doc{ background-image: url(./icon/txt.svg); }
 .xml, .xhtml, .html{ background-image: url(./icon/xhtml.svg); }
-.ods, .xlsx, .xls, csv{ background-image: url(./icon/xls.svg); }
+.ods, .xlsx, .xls, .csv{ background-image: url(./icon/xls.svg); }
 .zip, .gzip, .tar, .rar{ background-image: url(./icon/zip.svg); }

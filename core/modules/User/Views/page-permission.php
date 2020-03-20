@@ -1,11 +1,11 @@
 
 <div class="form-group">
-    <input type="text" 
-           id="search" 
-           class="form-control" 
-           placeholder="<?php echo t('Search permissions'); ?>" 
-           aria-label="<?php echo t('Search permissions'); ?>" 
-           onkeyup="searchPermission();" 
+    <input type="text"
+           id="search"
+           class="form-control"
+           placeholder="<?php echo t('Search permissions'); ?>"
+           aria-label="<?php echo t('Search permissions'); ?>"
+           onkeyup="searchPermission();"
            autofocus>
 </div>
 <form method="post" action="<?php echo $link_update ?>">
@@ -17,11 +17,10 @@
                     <th><?php echo t('Name'); ?></th>
                     <?php foreach ($roles as $key => $role): ?>
 
-                        <th id="role-<?php echo $role['role_id']; ?>">
-                            <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
-                                <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i></span>
-                            <?php echo t($role[ 'role_label' ]); ?>
-                        </th>
+                    <th id="role-<?php echo $role['role_id']; ?>">
+                        <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
+                            <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i></span>
+                            <?php echo t($role[ 'role_label' ]); ?></th>
                     <?php endforeach; ?>
 
                 </tr>
@@ -38,11 +37,7 @@
                     <?php $name = $role . '[' . $key . ']' ?>
 
                     <td data-title="<?php echo t($roles[ $role - 1 ][ 'role_label' ]); ?>">
-                        <input type="checkbox" 
-                               name="<?php echo $name ?>" 
-                               id="<?php echo $name ?>" 
-                               value="<?php echo $key ?>" <?php echo $checked ?> 
-                               aria-labelledby="role-<?php echo $role; ?>">
+                        <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?> aria-labelledby="role-<?php echo $role; ?>">
                         <label for="<?php echo $name ?>"><i class="ui" aria-hidden="true"></i></label>
                     </td>
                     <?php endforeach; ?>

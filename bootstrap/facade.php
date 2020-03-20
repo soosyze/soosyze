@@ -1,6 +1,6 @@
 <?php
 
-if (($timezone = \Core::getInstance()->get('config')->get('settings.timezone'))) {
+if ($timezone = \Core::getInstance()->get('config')->get('settings.timezone')) {
     date_default_timezone_set($timezone);
 }
 

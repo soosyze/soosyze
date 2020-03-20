@@ -48,7 +48,7 @@ class HookConfig
                         'for' => 'backup_cron'
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('cron_info-group', 'div', function ($form) use ($data) {
+                ->group('cron_info-group', 'div', function ($form) {
                     $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:_content</a>', [
                         '_content' => t('How to set up the CRON service ?')
                     ]);

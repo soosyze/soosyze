@@ -27,4 +27,4 @@
         <?php echo $form->form_close(); ?>
 
     </div>
-</div> <!-- /.row -->
+</div>

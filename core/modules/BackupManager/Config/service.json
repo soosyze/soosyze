@@ -36,7 +36,7 @@
         "class": "SoosyzeCore\\BackupManager\\Services\\HookCron",
         "arguments": ["@backupservice", "@config"],
         "hooks": {
-            "app.cron": "hookCron"
+            "app.cron": "hookAppCron"
         }
     }
 }

@@ -1,5 +1,4 @@
 
-<!-- Text stuff -->
 <h2>Text</h2>
 <p>This is <strong>bold</strong> and this is <strong>strong</strong>. This is <em>italic</em> and this is <em>emphasized</em>.
     This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
@@ -44,7 +43,6 @@
 
 <hr>
 
-<!-- Lists -->
 <h2>Lists</h2>
 <h3>Unordered</h3>
 <ul><li>Dolor pulvinar etiam.</li><li>Sagittis lorem eleifend.</li><li>Felis feugiat dolore viverra.</li><li>Dolor pulvinar etiam.</li></ul>
@@ -67,11 +65,9 @@
     </dd>
 </dl>
 
-<!-- Blockquote -->
 <h2>Blockquote</h2>
 <blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis.</blockquote>
 
-<!-- Table -->
 <h2>Table</h2>
 
 <h3>Default</h3>
@@ -116,7 +112,6 @@
     </tbody>
 </table>
 
-<!-- Preformatted Code -->
 <h2>Preformatted</h2>
 <pre><code>i = 0;
 

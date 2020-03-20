@@ -28,11 +28,11 @@
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right">
                     <div class="btn-group" role="group" aria-label="action">
                         <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
-                            <i class="far fa-eye"></i> <?php echo t('View'); ?></a>
+                            <i class="far fa-eye" aria-hidden="true"></i> <?php echo t('View'); ?></a>
                         <a href=" <?php echo $node[ 'link_clone' ]; ?>" class="btn btn-action">
-                            <i class="fa fa-copy"></i> <?php echo t('Clone'); ?></a>
+                            <i class="fa fa-copy" aria-hidden="true"></i> <?php echo t('Clone'); ?></a>
                         <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
-                            <i class="fa fa-edit"></i> <?php echo t('Edit'); ?></a>
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?></a>
                         <a href="<?php echo $node[ 'link_delete' ]; ?>" class="btn btn-action">
                             <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?></a>
                     </div>

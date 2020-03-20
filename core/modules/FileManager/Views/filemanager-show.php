@@ -7,11 +7,11 @@
 
     <div class="responsive">
         <?php if ($granted_folder_create): ?><div class="action_bar">
-            <button 
+            <button
                 id="folder_create"
-                class="btn btn-primary" 
+                class="btn btn-primary"
                 data-link="<?php echo $link_add; ?>"
-                data-toogle="modal" 
+                data-toogle="modal"
                 data-target="#modal_folder">
                 <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add folder'); ?>
 
@@ -67,11 +67,11 @@
                         class="btn btn-action <?php echo $action[ 'class' ]; ?>" data-link="<?php echo $action[ 'link' ]; ?>" data-tooltip="<?php echo $action[ 'title_link' ]; ?>"
                         <?php if ($action[ 'class' ] === 'mod'): ?>
                         data-toogle="modal" data-target="#modal_folder"<?php endif; ?>>
-                        <i class="<?php echo $action[ 'icon' ]; ?>"></i>
+                        <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i>
                     </button>
                     <?php else: ?><a 
                         class="btn btn-action <?php echo $action[ 'class' ]; ?>" href="<?php echo $action[ 'link' ]; ?>" data-tooltip="<?php echo $action[ 'title_link' ]; ?>">
-                        <i class="<?php echo $action[ 'icon' ]; ?>"></i>
+                        <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i>
                     </a>
                     <?php endif; endforeach; ?>
 
@@ -94,7 +94,6 @@
 
 <div id="modal_folder" class="modal" role="dialog" aria-label="<?php echo t('File action window.'); ?>">
     <div class="modal-dialog modal-lg" role="document">
-        <!-- Modal content -->
         <div class="modal-content"></div>
     </div>
 </div>

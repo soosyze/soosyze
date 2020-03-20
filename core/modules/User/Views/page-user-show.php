@@ -16,7 +16,7 @@
                 <?php echo mb_convert_case($user[ 'name' ], MB_CASE_TITLE, 'UTF-8') ?>
             <?php endif; ?>
             <?php if ($user[ 'firstname' ]): ?>
-                <?php echo mb_convert_case($user[ 'firstname' ], MB_CASE_TITLE, 'UTF-8')  ?>
+                <?php echo mb_convert_case($user[ 'firstname' ], MB_CASE_TITLE, 'UTF-8') ?>
             <?php endif; ?>
             </span>
             <span class="user-username"><?php echo $user[ 'username' ]; ?></span>

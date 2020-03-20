@@ -49,4 +49,4 @@
     </div>
 <?php endif; ?>
 
-</div> <!-- /.row -->
+</div>

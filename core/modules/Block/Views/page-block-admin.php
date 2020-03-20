@@ -7,7 +7,6 @@
 
 <div id="modal_block" class="modal" role="dialog" aria-label="<?php echo t('Block creation window.'); ?>">
     <div class="modal-dialog modal-lg" role="document">
-        <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>

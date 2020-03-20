@@ -8,5 +8,9 @@
             </button>
         </li>
     <?php endforeach; ?>
-    <li><button class="btn end"><i class="fa fa-greater-than"></i></button></li>
+    <li>
+        <button class="btn end">
+            <i class="fa fa-greater-than" aria-hidden="true"></i>
+        </button>
+    </li>
 </ul>

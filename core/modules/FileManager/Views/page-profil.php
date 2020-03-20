@@ -36,39 +36,39 @@
                     </td>
                     <td data-title="<?php echo t('Directory permissions'); ?>">
                         <?php if ($profil[ 'folder_store' ]): ?>
-                            <i class="fa fa-plus"> <?php echo t('Add'); ?></i><br>
+                            <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Add'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'folder_update' ]): ?>
-                            <i class="fa fa-edit"> <?php echo t('Edit'); ?></i><br>
+                            <i class="fa fa-edit" aria-hidden="true"> <?php echo t('Edit'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'folder_delete' ]): ?>
-                            <i class="fa fa-times"> <?php echo t('Delete'); ?></i><br>
+                            <i class="fa fa-times" aria-hidden="true"> <?php echo t('Delete'); ?></i><br>
                         <?php endif; ?>
                     </td>
                     <td data-title="<?php echo t('Files permissions'); ?>">
                         <?php if ($profil[ 'file_store' ]): ?>
-                            <i class="fa fa-plus"> <?php echo t('Add'); ?></i><br>
+                            <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Add'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'file_update' ]): ?>
-                            <i class="fa fa-edit"> <?php echo t('Edit'); ?></i><br>
+                            <i class="fa fa-edit" aria-hidden="true"> <?php echo t('Edit'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'file_delete' ]): ?>
-                            <i class="fa fa-times"> <?php echo t('Delete'); ?></i><br>
+                            <i class="fa fa-times" aria-hidden="true"> <?php echo t('Delete'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'file_download' ]): ?>
-                            <i class="fa fa-download"> <?php echo t('Download'); ?></i><br>
+                            <i class="fa fa-download" aria-hidden="true"> <?php echo t('Download'); ?></i><br>
                         <?php endif; ?>
                         <?php if ($profil[ 'file_clipboard' ]): ?>
-                            <i class="fa fa-copy"> <?php echo t('Copy link'); ?></i><br>
+                            <i class="fa fa-copy" aria-hidden="true"> <?php echo t('Copy link'); ?></i><br>
                         <?php endif; ?> 
                     </td>
                     <td data-title="<?php echo t('Weight'); ?>"><?php echo $profil['profil_weight']; ?></td>
                     <td data-title="<?php echo t('Actions'); ?>">
                         <a class="btn btn-action" href="<?php echo $router->getRoute('filemanager.profil.edit', [ ':id' => $profil[ 'profil_file_id' ] ]); ?>">
-                            <i class="fa fa-edit"></i> <?php echo t('Edit'); ?>
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
                         </a>
                         <a class="btn btn-action" href="<?php echo $router->getRoute('filemanager.profil.remove', [ ':id' => $profil[ 'profil_file_id' ] ]); ?>">
-                            <i class="fa fa-edit"></i> <?php echo t('Delete'); ?>
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Delete'); ?>
                         </a>
                     </td>
                 </tr>

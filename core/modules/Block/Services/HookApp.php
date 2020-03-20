@@ -61,8 +61,11 @@ class HookApp
                 continue;
             }
             if (!empty($block[ 'hook' ])) {
-                $tpl = $this->tpl->createBlock($listBlock[$block['hook']][ 'tpl' ], $listBlock[$block['hook']][ 'path' ]);
-                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [$tpl]);
+                $tplBlock = $this->tpl->createBlock(
+                    $listBlock[$block['hook']][ 'tpl' ],
+                    $listBlock[$block['hook']][ 'path' ]
+                );
+                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [$tplBlock]);
             }
             if ($isAdmin) {
                 $block[ 'link_edit' ]   = $this->core->get('router')->getRoute('block.edit', [
@@ -107,20 +110,20 @@ class HookApp
 
     protected function isVisibilityRoles($block)
     {
-        $user        = $this->user->isConnected();
-        $roles_block = explode(',', $block[ 'roles' ]);
+        $userCurrent = $this->user->isConnected();
+        $rolesBlock  = explode(',', $block[ 'roles' ]);
         $visibility  = $block[ 'visibility_roles' ];
 
         /* S'il n'y a pas d'utilisateur et que l'on demande de suivre les utilisateurs non connectés. */
-        if (!$user && in_array(1, $roles_block)) {
+        if (!$userCurrent && in_array(1, $rolesBlock)) {
             return $visibility;
         }
 
-        $roles = $this->user->getRolesUser($user[ 'user_id' ]);
+        $roles = $this->user->getRolesUser($userCurrent[ 'user_id' ]);
 
-        foreach ($roles_block as $analytics_role) {
+        foreach ($rolesBlock as $analyticsRole) {
             foreach ($roles as $role) {
-                if ($analytics_role == $role[ 'role_id' ]) {
+                if ($analyticsRole == $role[ 'role_id' ]) {
                     return $visibility;
                 }
             }
