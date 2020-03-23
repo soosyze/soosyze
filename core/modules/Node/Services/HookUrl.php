@@ -23,10 +23,12 @@ class HookUrl
      */
     private $is_alias;
 
-    public function __construct($schema, $query)
+    public function __construct($schema, $query, $config)
     {
-        $this->schema   = $schema;
-        $this->query    = $query;
+        $this->schema = $schema;
+        $this->query  = $query;
+        $this->config = $config;
+
         $this->is_alias = $this->schema->hasTable('system_alias_url');
     }
 
@@ -55,15 +57,14 @@ class HookUrl
     public function hookCreateForm($form, $data)
     {
         if ($this->is_alias) {
-            $form->before('seo-group', function ($form) use ($data) {
+            $form->after('seo-legend', function ($form) use ($data) {
                 $form->group('meta_url-group', 'div', function ($form) use ($data) {
                     $form->label('meta_url-label', t('Url'), [
-                            'data-tooltip' => t('Laisser vide pour générer automatiquement votre URL')
-                        ])
-                        ->text('meta_url', [
-                            'class'       => 'form-control',
-                            'placeholder' => 'page/titre-de-mon-contenu',
-                            'value'       => $data[ 'meta_url' ]
+                        'data-tooltip' => t('Laisser vide pour générer automatiquement votre URL')
+                    ])->text('meta_url', [
+                        'class'       => 'form-control',
+                        'placeholder' => 'page/titre-de-mon-contenu',
+                        'value'       => $data[ 'meta_url' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             });
@@ -73,27 +74,24 @@ class HookUrl
     public function hookStoreValidator($validator)
     {
         if ($this->is_alias) {
-            $validator->addRule('meta_url', '!required|string|max:255|regex:/^[a-z0-9-_\/]+$/');
+            $validator->addRule('meta_url', '!required|string|max:255|regex:/^[:a-z0-9-_\/]+$/');
         }
     }
 
     public function hookStoreAfter($validator)
     {
         if ($this->is_alias) {
-            $alias = $validator->getInput('meta_url') !== ''
-                ? $validator->getInput('meta_url')
-                : Util::strSlug($validator->getInput('title'));
-            $id    = $this->schema->getIncrement('node');
+            if (!($alias = $this->makeAlias($validator))) {
+                return;
+            }
+            $id = $this->schema->getIncrement('node');
             $this->query
                 ->insertInto('system_alias_url', [ 'source', 'alias' ])
-                ->values([
-                    'node/' . $id,
-                    $alias
-                ])
+                ->values([ 'node/' . $id, $alias ])
                 ->execute();
         }
     }
-
+    
     public function hookUpdateValid($validator, $id)
     {
         if ($this->is_alias) {
@@ -102,22 +100,19 @@ class HookUrl
                 ->where('source', '==', 'node/' . $id)
                 ->fetch();
 
-            $alias = $validator->getInput('meta_url')
-                ? $validator->getInput('meta_url')
-                : Util::strSlug($validator->getInput('title'));
-            if ($link) {
-                $this->query->update('system_alias_url', [
-                        'alias' => $alias,
-                    ])
+            if (!($alias = $this->makeAlias($validator))) {
+                $this->query->delete()
+                    ->from('system_alias_url')
+                    ->where('alias', '==', 'node/' . $id)
+                    ->execute();
+            } elseif ($link) {
+                $this->query->update('system_alias_url', [ 'alias' => $alias ])
                     ->where('source', '==', 'node/' . $id)
                     ->execute();
             } else {
                 $this->query
                     ->insertInto('system_alias_url', [ 'source', 'alias' ])
-                    ->values([
-                        'node/' . $id,
-                        $alias
-                    ])
+                    ->values([ 'node/' . $id, $alias ])
                     ->execute();
             }
         }
@@ -131,5 +126,35 @@ class HookUrl
                 ->delete()
                 ->execute();
         }
+    }
+    
+    private function makeAlias($validator)
+    {
+        $alias = $validator->getInput('meta_url') !== ''
+            ? $validator->getInput('meta_url')
+            : $this->config->get('settings.node_url_' . $validator->getInput('type'));
+        $alias = $alias === ''
+            ? $this->config->get('settings.node_default_url')
+            : $alias;
+
+        $time = strtotime($validator->getInput('date_created'));
+
+        return str_replace(
+            [
+                ':date_created_year',
+                ':date_created_month',
+                ':date_created_day',
+                ':node_title',
+                ':node_type'
+            ],
+            [
+                date('Y', $time),
+                date('m', $time),
+                date('d', $time),
+                Util::strSlug($validator->getInput('title'), '-'),
+                $validator->getInput('type')
+            ],
+            $alias
+        );
     }
 }

@@ -84,6 +84,8 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->values([ 'page', 1, 'Body', 2, '!required|string', ''])
             ->execute();
+
+        $ci->config()->set('settings.node_default_url', ':node_type/:node_title');
     }
 
     public function seeders(ContainerInterface $ci)

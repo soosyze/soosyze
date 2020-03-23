@@ -11,6 +11,16 @@
             "uninstall.menu": "hookUninstallMenu"
         }
     },
+    "node.hook.config": {
+        "class": "SoosyzeCore\\Node\\Services\\HookConfig",
+        "arguments": ["@query"],
+        "hooks": {
+            "config.edit.menu": "menu",
+            "config.edit.node.form.generate": "form",
+            "config.update.node.validator": "validator",
+            "config.update.node.before": "before"
+        }
+    },
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
         "hooks": {

@@ -151,7 +151,8 @@ class Node extends \Soosyze\Controller
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+            ->addInput('type', $type);
 
         /* Test des champs personnalisés de la node. */
         $files  = [];
@@ -350,7 +351,8 @@ class Node extends \Soosyze\Controller
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+            ->addInput('type', $node['type']);
 
         /* Test des champs personnalisé de la node. */
         $files  = [];
