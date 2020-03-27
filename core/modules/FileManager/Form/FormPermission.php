@@ -54,6 +54,9 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->content[ 'folder_show' ]
+                    ])
+                    ->html('cancel', '<p>:_content</p>', [
+                        '_content' => t('Variables allowed') . '<code>:user_id</code>'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('folder_show_sub-group', 'div', function ($form) {

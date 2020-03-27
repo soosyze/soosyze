@@ -80,7 +80,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ''
             ])
             ->values([
-                '/user/{{user_id}}',
+                '/user/:user_id',
                 true,
                 2,
                 false,
