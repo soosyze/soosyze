@@ -244,14 +244,11 @@ class Folder extends \Soosyze\Controller
 
         $output = [];
         if ($validator->isValid()) {
-            $dir_iterator = new \RecursiveDirectoryIterator($dir);
-            $iterator     = new \RecursiveIteratorIterator($dir_iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+            $dir_iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+            $iterator     = new \RecursiveIteratorIterator($dir_iterator);
 
             /* Supprime tous les dossiers et fichiers */
             foreach ($iterator as $file) {
-                if ($file->isDot()) {
-                    continue;
-                }
                 $file->isDir()
                         ? rmdir($file)
                         : unlink($file);
