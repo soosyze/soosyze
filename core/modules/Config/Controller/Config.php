@@ -37,7 +37,7 @@ class Config extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        if (!($menu = $this->getMenuConfig())) {
+        if (!($menu = $this->getMenuConfig()) || !isset($menu[$id])) {
             return $this->get404($req);
         }
 
@@ -86,6 +86,10 @@ class Config extends \Soosyze\Controller
 
     public function update($id, $req)
     {
+        if (!($menu = $this->getMenuConfig()) || !isset($menu[$id])) {
+            return $this->get404($req);
+        }
+
         $validator = (new Validator())
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
         $dataFiles = [];
