@@ -13,6 +13,10 @@
             "@core"
         ]
     },
+    "migration": {
+        "class": "SoosyzeCore\\System\\Services\\Migration",
+        "arguments": ["@composer", "@query", "@schema"]
+    },
     "system.hook.app": {
         "class": "SoosyzeCore\\System\\Services\\HookApp",
         "arguments": ["@router", "@config", "@template", "@core", "@query"],

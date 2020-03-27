@@ -187,23 +187,25 @@ class Install extends \Soosyze\Controller
             $migration = $namespace . 'Installer';
             $installer = new $migration();
 
+            $dir          = $installer->getDir();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
             $installer->seeders($this->container);
-            $composer = Util::getJson($installer->getDir() . '/composer.json');
+            $composer = Util::getJson($dir . '/composer.json');
 
-            /* Charge le container de nouveaux services. */
+            /* Charge le container des nouveaux services. */
             $this->loadContainer($composer);
+            $composer[ 'dir' ]     = $dir;
             $instances[ $title ] = $composer;
         }
 
         foreach ($instances as $title => $composer) {
             self::module()->create($composer);
+            /* Install les scripts de migrations. */
+            $this->installMigration($composer['dir'] . DS . 'Migrations', $title);
             /* Hook d'installation pour les autres modules utilise le module actuel. */
-            $this->container->callHook(strtolower('install.' . self::composer()->getTitle($title)), [
-                $this->container
-            ]);
+            $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 
         self::query()
@@ -211,6 +213,23 @@ class Install extends \Soosyze\Controller
             ->values([ 'Core', 'System', '1.0' ])
             ->values([ 'Core', 'User', '1.0' ])
             ->execute();
+    }
+    
+    private function installMigration($dir, $title)
+    {
+        if (!\is_dir($dir)) {
+            return;
+        }
+        self::query()->insertInto('migrations', [ 'migration', 'extension' ]);
+        foreach (new \DirectoryIterator($dir) as $fileInfo) {
+            if (!$fileInfo->isFile()) {
+                continue;
+            }
+            self::query()->values([
+                $fileInfo->getBasename('.php'), $title
+            ]);
+        }
+        self::query()->execute();
     }
 
     private function installFinish()

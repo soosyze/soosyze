@@ -104,12 +104,15 @@ class ModulesManager extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-modules.php', $this->pathViews, [
-                    'count'    => count($composer),
-                    'form'     => $form,
-                    'packages' => $packages
+                    'module_update'      => self::config()->get('settings.module_update'),
+                    'count'              => count($composer),
+                    'link_module_check'  => self::router()->getRoute('system.module.check'),
+                    'link_module_update' => self::router()->getRoute('system.module.updater'),
+                    'form'               => $form,
+                    'packages'           => $packages
         ]);
     }
-
+    
     public function update($req)
     {
         $route     = self::router()->getRoute('system.module.edit');
@@ -186,18 +189,16 @@ class ModulesManager extends \Soosyze\Controller
             $installer->hookInstall($this->container);
             /* Charge le container de nouveaux services. */
             $this->loadContainer($composer[ $title ]);
+            $composer[ $title ][ 'dir' ] = $installer->getDir();
         }
 
         /* Lance l'installation des hooks présents dans les modules nouvellement installés. */
         foreach ($modules as $title) {
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
-            $this->container->callHook(
-                strtolower('install.' . self::composer()->getTitle($title)),
-                [
-                $this->container
-            ]
-            );
+            /* Install les scripts de migrations. */
+            self::migration()->installMigration($composer[ $title ]['dir'] . DS . 'Migrations', $title);
+            $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 
         return [];
@@ -243,12 +244,8 @@ class ModulesManager extends \Soosyze\Controller
 
         foreach ($instances as $title => $installer) {
             $installer->hookUninstall($this->container);
-            $this->container->callHook(
-                strtolower('uninstall.' . self::composer()->getTitle($title)),
-                [
-                $this->container
-            ]
-            );
+            self::migration()->uninstallMigration($title);
+            $this->container->callHook('uninstall.' . $title, [ $this->container ]);
         }
 
         return [];
