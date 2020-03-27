@@ -63,3 +63,6 @@
         </tbody>
     </table>
 </fieldset>
+<div class="col-md-12">
+    <?php echo $paginate; ?>
+</div>

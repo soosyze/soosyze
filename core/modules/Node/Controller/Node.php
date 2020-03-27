@@ -5,25 +5,40 @@ namespace SoosyzeCore\Node\Controller;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Http\UploadedFile;
+use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
 class Node extends \Soosyze\Controller
 {
+    public static $limit = 20;
+    
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
-
+    
     public function admin()
     {
+        return $this->adminPage(1);
+    }
+
+    public function adminPage($page, $req)
+    {
+        $offset = self::$limit * ($page - 1);
+        
         $nodes = self::query()
             ->from('node')
             ->orderBy('date_changed', 'desc')
+            ->limit(self::$limit, $offset)
             ->fetchAll();
-        
+
+        if (!$nodes) {
+            return $this->get404($req);
+        }
+
         foreach ($nodes as &$node) {
             $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
                 ':id_node' => $node[ 'id' ]
@@ -44,7 +59,13 @@ class Node extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        
+
+        $query_all = self::query()
+            ->from('node')
+            ->fetchAll();
+        $link     = self::router()->getRoute('node.page', [], false);
+        $paginate = new Paginator(count($query_all), self::$limit, $page, $link);
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -54,7 +75,8 @@ class Node extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
                     'link_add' => self::router()->getRoute('node.add'),
-                    'nodes'    => $nodes
+                    'nodes'    => $nodes,
+                    'paginate' => $paginate
         ]);
     }
 
