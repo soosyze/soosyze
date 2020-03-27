@@ -115,7 +115,8 @@ class HookApp
         $response = $this->tpl
             ->getTheme()
             ->make('page', 'page-maintenance.php', $this->views, [
-                'title_main' => '<i class="fa fa-cog" aria-hidden="true"></i> ' . t('Site under maintenance')
+                'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
+                'title_main' => t('Site under maintenance')
             ])
             ->withStatus(503);
     }

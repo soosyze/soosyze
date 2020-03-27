@@ -55,7 +55,8 @@ class Entity extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Add content of type :name', [
+                    'icon'      => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Add content of type :name', [
                         ':name' => $entity ])
                 ])
                 ->view('page.messages', $messages)
@@ -189,7 +190,8 @@ class Entity extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-file" aria-hidden="true"></i> ' . t('Edit :title content', [
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Edit :title content', [
                         ':title' => $entity
                     ])
                 ])

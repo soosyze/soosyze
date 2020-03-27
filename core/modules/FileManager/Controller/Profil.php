@@ -71,7 +71,8 @@ class Profil extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Add a files profile')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Add a files profile')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
@@ -156,7 +157,8 @@ class Profil extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Edit the file profile')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Edit the file profile')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
@@ -240,7 +242,8 @@ class Profil extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'title_main' => '<i class="fa fa-user" aria-hidden="true"></i> ' . t('Delete file profile')
+                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'title_main' => t('Delete file profile')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
