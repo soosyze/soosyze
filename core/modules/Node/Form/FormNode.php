@@ -99,7 +99,9 @@ class FormNode extends FormBuilder
                         break;
                     case 'file':
                     case 'image':
-                        $form->label("$key-label", t($value[ 'field_label' ]));
+                        $form->label("$key-label", t($value[ 'field_label' ]), [
+                            'data-tooltip' => t($value[ 'field_description' ])
+                        ]);
                         $this->file->inputFile($key, $form, $this->content[ $key ], $value[ 'field_type' ]);
 
                         break;
@@ -133,7 +135,9 @@ class FormNode extends FormBuilder
         $default = empty($this->content[ $key ])
             ? $value[ 'field_default_value' ]
             : $this->content[ $key ];
-        $form->label("$key-label", t($value[ 'field_label' ]))
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+                'data-tooltip' => t($value[ 'field_description' ])
+            ])
             ->$type($key, [
                 'class'       => 'form-control',
                 'placeholder' => t($value[ 'field_label' ]),
@@ -143,7 +147,9 @@ class FormNode extends FormBuilder
 
     public function makeCheckbox(&$form, $key, $value, $options)
     {
-        $form->label("$key-label", t($value[ 'field_label' ]));
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+            'data-tooltip' => t($value[ 'field_description' ])
+        ]);
         foreach ($options as $key_radio => $option) {
             $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $value, $option) {
                 $form->checkbox($key . "[$key_radio]", [
@@ -161,7 +167,8 @@ class FormNode extends FormBuilder
     public function makeOneToMany($form, $key, $value, $options)
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
-            'required' => !empty($value['attr']['required'])
+            'required'     => !empty($value[ 'attr' ][ 'required' ]),
+            'data-tooltip' => t($value[ 'field_description' ])
         ]);
         if (!isset($this->content[ 'entity_id' ])) {
             $form->html('add-' . $key, '<div:attr><p>:_content</p></div>', [
@@ -228,7 +235,9 @@ class FormNode extends FormBuilder
 
     public function makeRadio(&$form, $key, $value, $options)
     {
-        $form->label("$key-label", t($value[ 'field_label' ]));
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+            'data-tooltip' => t($value[ 'field_description' ])
+        ]);
         foreach ($options as $key_radio => $option) {
             $form->group("$key_radio-group", 'div', function ($form) use ($key, $value, $key_radio, $option) {
                 $form->radio($key, [
@@ -253,13 +262,17 @@ class FormNode extends FormBuilder
             }
         }
 
-        $form->label("$key-label", t($value[ 'field_label' ]))
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+                'data-tooltip' => t($value[ 'field_description' ])
+            ])
             ->select($key, $select_options, [ 'class' => 'form-control' ] + $value[ 'attr' ]);
     }
-    
+
     public function makeTextarea(&$form, $key, $value, $options)
     {
-        $form->label("$key-label", t($value[ 'field_label' ]))
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+                'data-tooltip' => t($value[ 'field_description' ])
+            ])
             ->textarea($key, $this->content[ $key ], [
                 'class'       => 'form-control editor',
                 'rows'        => 8,
