@@ -47,8 +47,9 @@ class HookApp
             $request = $request->withUri($url)->withMethod('GET');
         }
         if (
-            $this->config->get('settings.maintenance') && 'user/login' !== $query && !$this->core->callHook('app.granted', [
-                'system.config.maintenance' ])) {
+            $this->config->get('settings.maintenance') &&
+            'user/login' !== $query &&
+            !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
             $response = $response->withStatus(503);
         }
     }
@@ -172,8 +173,8 @@ class HookApp
             $response->view('page.messages', [ 'infos' => [ t('Site under maintenance') ] ]);
         }
         if (in_array($request->getUri()->getQuery(), [ '', '/' ]) &&
-            !$data[ 'maintenance' ] ||
-            ($data[ 'maintenance' ] && $granted)) {
+            (!$data[ 'maintenance' ] ||
+            ($data[ 'maintenance' ] && $granted))) {
             $response->override('page', [ 'page-front.php' ]);
         }
     }
