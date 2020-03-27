@@ -91,7 +91,7 @@ class FileManager
             'path'       => $dir->getPath(),
             'size'       => Util::strFileSizeFormatted($info[ 'size' ]),
             'size_octet' => $info[ 'size' ],
-            'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ]),
+            'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ] ? $info[ 'time' ] : $dir->getMTime()),
             'type'       => 'dir',
             'actions'    => $this->getActionsFolder($dir, $path, $name)
         ];

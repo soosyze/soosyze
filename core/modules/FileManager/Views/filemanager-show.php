@@ -30,11 +30,12 @@
                     <th><?php echo t('Actions'); ?></th>
                 </tr>
                 <tr>
-                    <td colspan="5"><?php
-                        echo t('@nb_dir folders and @nb_file files', [
-                            '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file ]);
+                    <td colspan="5">
+                        Full Size <?php echo $size_all; ?>,
+                        <?php
+                        echo t('@nb_dir folders, @nb_file files', [
+                            '@nb_dir' => $nb_dir, '@nb_file' => $nb_file ]);
                         ?>
-                        <?php echo $size_all; ?>
 
                     </td>
                 </tr>
@@ -80,11 +81,12 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5"><?php
-                        echo t('@nb_dir folders and @nb_file files', [
-                            '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file ]);
+                    <td colspan="5">
+                        Full Size <?php echo $size_all; ?>,
+                        <?php
+                        echo t('@nb_dir folders, @nb_file files', [
+                            '@nb_dir' => $nb_dir, '@nb_file' => $nb_file ]);
                         ?>
-                        <?php echo $size_all; ?>
                     </td>
                 </tr>
             </tfoot>
