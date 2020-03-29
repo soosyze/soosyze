@@ -26,7 +26,9 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->boolean('visibility_pages')->valueDefault(false)
                 ->string('pages')->valueDefault('admin/%' . PHP_EOL . 'user/%')
                 ->boolean('visibility_roles')->valueDefault(true)
-                ->string('roles')->valueDefault('1,2');
+                ->string('roles')->valueDefault('1,2')
+                ->string('key_block')->nullable()
+                ->string('options')->nullable();
             });
     }
 

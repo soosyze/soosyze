@@ -62,10 +62,14 @@ class HookApp
             }
             if (!empty($block[ 'hook' ])) {
                 $tplBlock = $this->tpl->createBlock(
-                    $listBlock[$block['hook']][ 'tpl' ],
-                    $listBlock[$block['hook']][ 'path' ]
+                    $listBlock[$block['key_block']][ 'tpl' ],
+                    $listBlock[$block['key_block']][ 'path' ]
                 );
-                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [$tplBlock]);
+                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [
+                    $tplBlock, empty($block[ 'options' ])
+                        ? []
+                        : json_decode($block[ 'options' ], true)
+                ]);
             }
             if ($isAdmin) {
                 $block[ 'link_edit' ]   = $this->core->get('router')->getRoute('block.edit', [

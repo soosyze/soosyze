@@ -26,10 +26,15 @@ class Block extends \Soosyze\Controller
 
         if (!empty($block[ 'hook' ])) {
             $data               = self::block()->getBlocks();
-            $tpl                = self::template()->createBlock($data[ $block[ 'hook' ] ][ 'tpl' ], $data[ $block[ 'hook' ] ][ 'path' ]);
+            $tpl                = self::template()->createBlock($data[ $block[ 'key_block' ] ][ 'tpl' ], $data[ $block[ 'key_block' ] ][ 'path' ]);
             $block[ 'content' ] .= (string) self::core()->callHook(
                 'block.' . $block[ 'hook' ],
-                [ $tpl ]
+                [
+                    $tpl,
+                    empty($block[ 'options' ])
+                        ? []
+                        : json_decode($block[ 'options' ], true)
+                ]
             );
         }
 
@@ -47,18 +52,22 @@ class Block extends \Soosyze\Controller
             'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
         ]);
         foreach ($data as $key => &$block) {
-            $form->group('type_block_' . $key . '-group', 'div', function ($form) use ($key, $block) {
-                if (empty($block[ 'hook' ])) {
-                    $content = (string) self::template()
-                            ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                            ->addVars([
-                                'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
-                    ]);
-                } else {
-                    $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
-                    $content = (string) self::core()->callHook('block.' . $block[ 'hook' ], [
-                            $tpl ]);
-                }
+            if (!empty($block[ 'hook' ])) {
+                $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
+                $content = self::core()->callHook('block.' . $block[ 'hook' ], [
+                    $tpl, empty($block[ 'options' ])
+                        ? []
+                        : $block[ 'options' ]
+                ]);
+            } else {
+                $content = self::template()
+                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
+                        ->addVars([
+                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
+                ]);
+            }
+
+            $form->group('type_block_' . $key . '-group', 'div', function ($form) use ($key, $content) {
                 $form->radio('type_block', [
                         'id'    => "type_block-$key",
                         'value' => $key
@@ -116,7 +125,11 @@ class Block extends \Soosyze\Controller
                 'weight'           => 1,
                 'visibility_roles' => true,
                 'roles'            => '1,2',
-                'hook'             => $hook
+                'hook'             => $hook,
+                'key_block'        => $type,
+                'options'          => empty($blocks[ $type ][ 'options' ])
+                    ? null
+                    : json_encode($blocks[ $type ][ 'options' ])
             ];
             $this->container->callHook('block.store.before', [ $validator, &$values ]);
             self::query()
