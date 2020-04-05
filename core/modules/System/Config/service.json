@@ -1,4 +1,8 @@
 {
+    "alias": {
+        "class": "SoosyzeCore\\System\\Services\\Alias",
+        "arguments": ["@query"]
+    },
     "composer": {
         "class": "SoosyzeCore\\System\\Services\\Composer",
         "arguments": [
