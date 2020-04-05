@@ -170,6 +170,22 @@ class HookConfig
                                 'value'       => $data[ 'path_no_found' ]
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
+                    }, [ 'class' => 'form-group' ])
+                    ->group('path_maintenance-group', 'div', function ($form) use ($data) {
+                        $form->label('path_maintenance-label', t('Page de maintenance par défaut'), [
+                            'data-tooltip' => t('Laissez vide pour utiliser le template page-maintenance.php par défaut de votre thème'),
+                            'for'          => 'path_maintenance'
+                        ])
+                        ->group('path_maintenance-flex', 'div', function ($form) use ($data) {
+                            $form->html('base_path_maintenance', '<span:attr>:_content</span>', [
+                                '_content' => $this->router->makeRoute(''),
+                            ])
+                            ->text('path_maintenance', [
+                                'class'       => 'form-control',
+                                'placeholder' => t('Example: node/1'),
+                                'value'       => $data[ 'path_maintenance' ]
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('metadata-fieldset', 'fieldset', function ($form) use ($data) {
@@ -236,6 +252,7 @@ class HookConfig
             'path_index'          => 'route',
             'path_access_denied'  => '!required|route',
             'path_no_found'       => '!required|route',
+            'path_maintenance'    => '!required|route',
             'meta_title'          => 'required|string|max:64|to_htmlsc',
             'meta_description'    => 'required|string|max:256|to_htmlsc',
             'meta_keyboard'       => '!required|string|to_htmlsc',
@@ -252,6 +269,7 @@ class HookConfig
             'path_index'         => t('Default page'),
             'path_access_denied' => t('Page 403 by default (access denied)'),
             'path_no_found'      => t('Page 404 by default (page not found)'),
+            'path_maintenance'   => t('Page de maintenance par défaut'),
             'meta_title'         => t('Website title'),
             'meta_description'   => t('Description'),
             'meta_keyboard'      => t('Keywords'),
@@ -272,6 +290,7 @@ class HookConfig
             'path_index'         => $validator->getInput('path_index'),
             'path_access_denied' => $validator->getInput('path_access_denied'),
             'path_no_found'      => $validator->getInput('path_no_found'),
+            'path_maintenance'   => $validator->getInput('path_maintenance'),
             'meta_title'         => $validator->getInput('meta_title'),
             'meta_description'   => $validator->getInput('meta_description'),
             'meta_keyboard'      => $validator->getInput('meta_keyboard'),

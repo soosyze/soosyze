@@ -45,6 +45,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.path_no_found', 'node/1')
             ->set('settings.path_index', 'node/2')
             ->set('settings.path_access_denied', 'user/login')
+            ->set('settings.path_maintenance', '')
             ->set('settings.meta_title', 'Soosyze')
             ->set('settings.meta_description', 'Hello world !')
             ->set('settings.meta_keyboard', '')
