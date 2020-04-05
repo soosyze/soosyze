@@ -32,7 +32,8 @@ class HookConfig
                 ->group('connect_url-group', 'div', function ($form) use ($data) {
                     $form->label('connect_url-label', t('Protection of connection paths'), [
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
-                        . t('Example: Ab1P-9eM_s8Y = user / login / Ab1P-9eM_s8Y'),
+                        . t('Example: Ab1P-9eM_s8Y : ')
+                        . $this->router->getRoute('user.login', [ ':url' => '/Ab1P-9eM_s8Y' ]),
                         'for'          => 'connect_url'
                     ])
                     ->group('connect_url-flex', 'div', function ($form) use ($data) {
@@ -203,7 +204,7 @@ class HookConfig
             'terms_of_service_page' => 'required_with:terms_of_service_show|route',
             'rgpd_show'             => 'bool',
             'rgpd_page'             => 'required_with:rgpd_show|route',
-            'connect_url'           => '!required|string|min:10|slug',
+            'connect_url'           => '!required|string|min:10|regex:/^[\w\d-_]{10,}$/',
             'connect_redirect'      => 'required|route',
             'password_show'         => 'bool',
             'password_policy'       => 'bool',

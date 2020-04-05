@@ -4,10 +4,10 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\User\Controller');
 
-R::get('user.login', 'user/login:url', 'Login@formLogin', [ ':url' => '(/\w+)?' ]);
-R::post('user.login.check', 'user/login:url', 'Login@loginCheck', [ ':url' => '(/\w+)?' ]);
-R::get('user.relogin', 'user/relogin:url', 'Login@relogin', [ ':url' => '(/\w+)?' ]);
-R::post('user.relogin.check', 'user/relogin:url', 'Login@reloginCheck', [ ':url' => '(/\w+)?' ]);
+R::get('user.login', 'user/login:url', 'Login@formLogin', [ ':url' => '(/[\w\d-_]{10,})?' ]);
+R::post('user.login.check', 'user/login:url', 'Login@loginCheck', [ ':url' => '(/[\w\d-_]{10,})?' ]);
+R::get('user.relogin', 'user/relogin:url', 'Login@relogin', [ ':url' => '(/[\w\d-_]{10,})?' ]);
+R::post('user.relogin.check', 'user/relogin:url', 'Login@reloginCheck', [ ':url' => '(/[\w\d-_]{10,})?' ]);
 R::get('user.reset', 'user/:id/reset/:token', 'Login@resetUser', [ ':id' => '(/\w+)?', ':token' => '[0-9a-zA-Z]+' ]);
 R::get('user.logout', 'user/logout', 'Login@logout');
 
