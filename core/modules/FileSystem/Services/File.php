@@ -66,6 +66,8 @@ class File
     protected $dir = null;
     
     protected $base_path = '';
+    
+    protected $call_move = null;
 
     public function __construct($core)
     {
@@ -245,7 +247,11 @@ class File
             $this->resolveDir();
             $move = $this->resolveName();
             $this->file->moveTo($move);
-            call_user_func_array($this->call_move, [ $this->name, "{$this->name}.{$this->ext}", $move ]);
+            if ($this->call_move) {
+                call_user_func_array($this->call_move, [
+                    $this->name, "{$this->name}.{$this->ext}", $move
+                ]);
+            }
 
             return $move;
         }
