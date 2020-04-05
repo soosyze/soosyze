@@ -29,5 +29,13 @@
             "app.response.after": "hookResponseAfter",
             "menu.show.response.after": "hookMenuShowResponseAfter"
         }
+    },
+    "menu.hook.block": {
+        "class": "SoosyzeCore\\Menu\\Services\\HookBlock",
+        "arguments": ["@menu"],
+        "hooks": {
+            "block.create.form.data": "hookCreateFormData",
+            "block.menu": "hookBlockMenu"
+        }
     }
 }
