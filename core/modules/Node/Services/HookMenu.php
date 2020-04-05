@@ -21,8 +21,9 @@ class HookMenu
      */
     private $is_menu;
 
-    public function __construct($schema, $query)
+    public function __construct($alias, $schema, $query)
     {
+        $this->alias   = $alias;
         $this->schema  = $schema;
         $this->query   = $query;
         $this->is_menu = $this->schema->hasTable('menu');
@@ -106,12 +107,10 @@ class HookMenu
             }
 
             $id    = $this->schema->getIncrement('node');
-            $link  = ($alias = $this->query
-                ->from('system_alias_url')
-                ->where('source', '==', 'node/' . $id)
-                ->fetch())
-                ? $alias[ 'alias' ]
-                : 'node/' . $id;
+            $link  = 'node/' . $id;
+            if ($alias = $this->alias->getAlias('node/' . $id)) {
+                $link = $alias;
+            }
 
             $this->query->insertInto('menu_link', [
                     'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
@@ -142,12 +141,10 @@ class HookMenu
                 ->where('node_id', '==', $id)
                 ->fetch();
 
-            $link  = ($alias = $this->query
-                ->from('system_alias_url')
-                ->where('source', '==', 'node/' . $id)
-                ->fetch())
-                ? $alias['alias']
-                : 'node/' . $id;
+            $link  = 'node/' . $id;
+            if ($alias = $this->alias->getAlias('node/' . $id)) {
+                $link = $alias;
+            }
 
             if ($validator->hasInput('active') && $nodeMenuLink) {
                 $this->query->update('menu_link', [

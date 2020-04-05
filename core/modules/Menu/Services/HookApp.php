@@ -4,15 +4,11 @@ namespace SoosyzeCore\Menu\Services;
 
 class HookApp
 {
-    protected $core;
+    protected $menu;
 
-    protected $query;
-
-    public function __construct($core, $query)
+    public function __construct($menu)
     {
-        $this->core      = $core;
-        $this->query     = $query;
-        $this->pathViews = dirname(__DIR__) . '/Views/';
+        $this->menu = $menu;
     }
 
     public function hookResponseAfter($request, &$response)
@@ -22,44 +18,10 @@ class HookApp
                 ? 'menu-main'
                 : 'menu-admin';
 
-            $blockMain = $this->renderMenu($nameMenu, $request, $response);
-            $blockUser = $this->renderMenu('menu-user', $request, $response);
-
             $response
-                ->addBlock('page.main_menu', $blockMain)
-                ->addBlock('page.second_menu', $blockUser);
+                ->addBlock('page.main_menu', $this->menu->renderMenu($nameMenu))
+                ->addBlock('page.second_menu', $this->menu->renderMenu('menu-user'));
         }
-    }
-
-    public function renderMenu(
-        $nameMenu,
-        $request,
-        $response,
-        $parent = -1,
-        $level = 1
-    ) {
-        $query = $this->query
-            ->from('menu_link')
-            ->where('active', '==', 1)
-            ->where('menu', $nameMenu)
-            ->where('parent', '==', $parent)
-            ->orderBy('weight')
-            ->fetchAll();
-
-        if (empty($query)) {
-            return null;
-        }
-
-        foreach ($query as &$menu) {
-            $menu['title_link'] = t($menu['title_link']);
-            $menu[ 'submenu' ] = $this->renderMenu($nameMenu, $request, $response, $menu[ 'id' ], $level + 1);
-        }
-        $menus = $this->getGrantedLink($query, $request);
-
-        return $response
-                ->createBlock('menu.php', $this->pathViews)
-                ->nameOverride($nameMenu . '.php')
-                ->addVars([ 'menu' => $menus, 'level' => $level ]);
     }
 
     public function hookMenuShowResponseAfter($request, &$response)
@@ -104,66 +66,5 @@ class HookApp
                 'scripts' => $script
             ]);
         }
-    }
-
-    public function rewiteUri($isRewite, $request)
-    {
-        $query = str_replace('q=/', '', $request->getUri()->getQuery());
-        $uri   = $request->getUri()->withQuery($query);
-
-        if ($isRewite) {
-            $link = $request->getBasePath();
-
-            $link .= $uri->getQuery() !== ''
-                ? str_replace('q=', '', $uri->getQuery())
-                : '';
-
-            return $link . ($uri->getFragment() !== ''
-                ? '#' . $uri->getFragment()
-                : '');
-        }
-
-        return $uri->__toString();
-    }
-
-    /**
-     * Retire les liens restreins dans un menu et définit le lien courant.
-     *
-     * @param array   $query   liens du menu
-     * @param Request $request
-     *
-     * @return array
-     */
-    protected function getGrantedLink($query, $request)
-    {
-        $route = '' !== $request->getUri()->getQuery()
-            ? $request->getUri()->getQuery()
-            : '';
-
-        $isRewite = $this->core->get('config')->get('settings.rewrite_engine');
-        foreach ($query as $key => &$menu) {
-            if (!$menu[ 'key' ]) {
-                $menu[ 'link_active' ] = '';
-
-                continue;
-            }
-            $menu[ 'link_active' ] = 0 === strpos($route, 'q=' . $menu[ 'link' ]) || ($route === '' && $menu[ 'link' ] === '/')
-                ? 'active'
-                : '';
-            $link                  = $request->withUri(
-                $request->getUri()
-                ->withQuery('q=' . $menu[ 'link' ])
-                ->withFragment($menu[ 'fragment' ])
-            );
-            /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
-            if (!$this->core->callHook('app.granted.route', [ $link ])) {
-                unset($query[ $key ]);
-
-                continue;
-            }
-            $menu[ 'link' ] = $this->rewiteUri($isRewite, $link);
-        }
-
-        return $query;
     }
 }

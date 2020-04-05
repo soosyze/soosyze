@@ -25,6 +25,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('key')->nullable()
                 ->string('icon')->nullable()
                 ->string('link')
+                ->string('query')->nullable()
                 ->string('fragment')->nullable()
                 ->string('title_link')
                 ->string('target_link')->valueDefault('_self')

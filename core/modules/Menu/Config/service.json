@@ -1,7 +1,7 @@
 {
     "menu": {
         "class": "SoosyzeCore\\Menu\\Services\\Menu",
-        "arguments": ["@router", "@config", "@query"]
+        "arguments": [ "@alias", "@core", "@router", "@config", "@query"]
     },
     "menu.install": {
         "class": "SoosyzeCore\\Menu\\Installer",
@@ -24,7 +24,7 @@
     },
     "menu.hook.app": {
         "class": "SoosyzeCore\\Menu\\Services\\HookApp",
-        "arguments": ["@core", "@query"],
+        "arguments": ["@menu"],
         "hooks": {
             "app.response.after": "hookResponseAfter",
             "menu.show.response.after": "hookMenuShowResponseAfter"

@@ -61,19 +61,20 @@ class Link extends \Soosyze\Controller
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->get404($req);
         }
-        $post         = $req->getParsedBody();
-        $validator    = $this->getValidator($req);
-        $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
+
+        $validator = $this->getValidator($req);
 
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
-        if ($validator->isValid() && $isUrlOrRoute !== false) {
+        $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
+
+        if ($validator->isValid()) {
             $data = [
-                'key'         => $isUrlOrRoute[ 'key' ],
+                'key'         => $infoUrlOrRoute[ 'key' ],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $isUrlOrRoute[ 'link' ],
-                'fragment'    => $isUrlOrRoute[ 'fragment' ],
+                'link'        => $infoUrlOrRoute[ 'link' ],
+                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'target_link' => $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
@@ -89,23 +90,21 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route                 = self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ]);
 
-            return new Redirect($route);
+            return new Redirect(self::router()->getRoute('menu.show', [
+                ':menu' => $nameMenu
+            ]));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'inputs' ][ 'link' ]     = $infoUrlOrRoute[ 'link' ];
+        $_SESSION[ 'inputs' ][ 'fragment' ] = $infoUrlOrRoute[ 'fragment' ];
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute[ 'is_valid' ]) {
-            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
-            $_SESSION[ 'errors_keys' ][]                        = 'link';
-        }
-
-        $route = self::router()->getRoute('menu.link.create', [ ':menu' => $nameMenu ]);
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('menu.link.create', [
+            ':menu' => $nameMenu
+        ]));
     }
 
     public function edit($name, $id, $req)
@@ -127,7 +126,7 @@ class Link extends \Soosyze\Controller
         ]);
 
         $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
-            ->content($query)
+            ->content($query, self::router()->isRewrite())
             ->make();
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
@@ -159,19 +158,21 @@ class Link extends \Soosyze\Controller
         if (!self::menu()->find($id)) {
             return $this->get404($req);
         }
-        $post         = $req->getParsedBody();
-        $validator    = $this->getValidator($req);
-        $isUrlOrRoute = self::menu()->isUrlOrRoute($post, $req->withMethod('GET'));
+
+        $validator = $this->getValidator($req);
 
         $this->container->callHook('menu.link.update.validator', [ &$validator ]);
 
-        if ($validator->isValid() && $isUrlOrRoute !== false) {
+        $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
+
+        if ($validator->isValid()) {
             $data = [
-                'key'         => $isUrlOrRoute[ 'key' ],
+                'key'         => $infoUrlOrRoute[ 'key' ],
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
-                'link'        => $isUrlOrRoute[ 'link' ],
-                'fragment'    => $isUrlOrRoute[ 'fragment' ],
+                'link'        => $infoUrlOrRoute[ 'link' ],
+                'query'       => $infoUrlOrRoute[ 'query' ],
+                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'target_link' => $validator->getInput('target_link')
             ];
 
@@ -183,27 +184,23 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.update.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route                               = self::router()->getRoute('menu.show', [
-                ':menu' => $nameMenu ]);
 
-            return new Redirect($route);
+            return new Redirect(self::router()->getRoute('menu.show', [
+                ':menu' => $nameMenu
+            ]));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'inputs' ][ 'link' ]     = $infoUrlOrRoute[ 'link' ];
+        $_SESSION[ 'inputs' ][ 'query' ]    = $infoUrlOrRoute[ 'query' ];
+        $_SESSION[ 'inputs' ][ 'fragment' ] = $infoUrlOrRoute[ 'fragment' ];
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        if (!$isUrlOrRoute[ 'is_valid' ]) {
-            $_SESSION[ 'messages' ][ 'errors' ][ 'link.route' ] = t('Link value is not a URL or a route');
-            $_SESSION[ 'errors_keys' ][]                        = 'link';
-        }
-
-        $route = self::router()->getRoute('menu.link.edit', [
+        return new Redirect(self::router()->getRoute('menu.link.edit', [
             ':menu' => $nameMenu,
             ':id'   => $id
-        ]);
-
-        return new Redirect($route);
+        ]));
     }
 
     public function delete($name, $id, $req)
@@ -242,7 +239,7 @@ class Link extends \Soosyze\Controller
                 ->setRules([
                     'title_link'      => 'required|string|max:255|to_htmlsc',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
-                    'link'            => 'required',
+                    'link'            => 'required|route_or_url',
                     'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
                     'token_link_form' => 'required|token'
                 ])

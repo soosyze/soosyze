@@ -7,13 +7,15 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
     protected $content = [
         'title_link'  => '',
         'link'        => '',
+        'query'       => '',
         'fragment'    => '',
         'icon'        => '',
         'target_link' => ''
     ];
 
-    public function content($content)
+    public function content($content, $isRewrite = false)
     {
+        $this->isRewrite = $isRewrite ? '?' : '&';
         $this->content = array_merge($this->content, $content);
 
         return $this;
@@ -24,8 +26,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         $this->group('link-fieldset', 'fieldset', function ($form) {
             $form->legend('link-legend', t('Add a link in the menu'))
                 ->group('title_link-group', 'div', function ($form) {
-                    $form->label('title_link-label', t('Link title'), [
-                        'for' => 'title_link' ])
+                    $form->label('title_link-label', t('Link title'))
                     ->text('title_link', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
@@ -40,7 +41,10 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'class'       => 'form-control',
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
-                        'value'       => $this->content[ 'link' ] . (!empty($this->content[ 'fragment' ])
+                        'value'       => $this->content[ 'link' ] .
+                        (!empty($this->content[ 'query' ])
+                            ? $this->isRewrite . $this->content[ 'query' ]
+                            : '') . (!empty($this->content[ 'fragment' ])
                             ? '#' . $this->content[ 'fragment' ]
                             : '')
                     ]);

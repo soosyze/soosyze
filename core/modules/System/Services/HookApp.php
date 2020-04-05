@@ -12,8 +12,15 @@ class HookApp
 
     protected $core;
 
-    public function __construct($route, $config, $template, $core, $query)
-    {
+    public function __construct(
+        $alias,
+        $route,
+        $config,
+        $template,
+        $core,
+        $query
+    ) {
+        $this->alias  = $alias;
         $this->router = $route;
         $this->config = $config;
         $this->tpl    = $template;
@@ -24,31 +31,25 @@ class HookApp
 
     public function hookSys(&$request, &$response)
     {
-        $uri   = $request->getUri();
-        parse_str($uri->getQuery(), $parseQuery);
-        $query = isset($parseQuery[ 'q' ])
-            ? $parseQuery[ 'q' ]
-            : '';
+        $path = $this->router->parseQueryFromRequest();
 
-        if ($query === '' || $query === '/') {
-            $path_index = $this->config->get('settings.path_index')
-                ? 'q=' . $this->config->get('settings.path_index')
+        if ($path === '/') {
+            $path = $this->config->get('settings.path_index')
+                ? $this->config->get('settings.path_index')
                 : '404';
-            $url        = $uri->withQuery($path_index);
+        }
+        $path = $this->alias->getSource($path, $path);
 
-            $request = $request->withUri($url)->withMethod('GET');
-        }
-        $alias = $this->query
-            ->from('system_alias_url')
-            ->where('alias', '==', $query)
-            ->fetch();
-        if ($alias) {
-            $url     = $uri->withQuery('q=' . $alias[ 'source' ]);
-            $request = $request->withUri($url)->withMethod('GET');
-        }
+        $request = $request
+            ->withUri(
+                $this->router->isRewrite()
+                ? $request->getUri()->withPath($path)
+                : $request->getUri()->withQuery('q=' . $path)
+            );
+
         if (
             $this->config->get('settings.maintenance') &&
-            'user/login' !== $query &&
+            'user/login' !== $path &&
             !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
             $response = $response->withStatus(503);
         }
@@ -57,10 +58,17 @@ class HookApp
     public function hooks404($request, &$response)
     {
         if (($path = $this->config->get('settings.path_no_found', '')) !== '') {
+            $path = $this->alias->getSource($path, $path);
+
             $requestNoFound = $request
-                ->withUri($request->getUri()->withQuery('q=' . $path))
+                ->withUri(
+                    $this->router->isRewrite()
+                    ? $request->getUri()->withPath($path)
+                    : $request->getUri()->withQuery('q=' . $path)
+                )
                 ->withMethod('GET');
-            if ($route          = $this->router->parse($requestNoFound)) {
+
+            if ($route = $this->router->parse($requestNoFound)) {
                 $responseNoFound = $this->router->execute($route, $requestNoFound);
             }
         }
@@ -88,9 +96,16 @@ class HookApp
     public function hooks403($request, &$response)
     {
         if (($path = $this->config->get('settings.path_access_denied')) != '') {
+            $path = $this->alias->getSource($path, $path);
+
             $requestDenied = $request
-                ->withUri($request->getUri()->withQuery('q=' . $path))
+                ->withUri(
+                    $this->router->isRewrite()
+                    ? $request->getUri()->withPath($path)
+                    : $request->getUri()->withQuery('q=' . $path)
+                )
                 ->withMethod('GET');
+
             if ($route         = $this->router->parse($requestDenied)) {
                 $responseDenied = $this->router->execute($route, $requestDenied);
             }
@@ -113,13 +128,34 @@ class HookApp
 
     public function hooks503($request, &$response)
     {
-        $response = $this->tpl
-            ->getTheme()
-            ->make('page', 'page-maintenance.php', $this->views, [
-                'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
-                'title_main' => t('Site under maintenance')
-            ])
-            ->withStatus(503);
+        if (($path = $this->config->get('settings.path_access_denied')) != '') {
+            $path = $this->alias->getSource($path, $path);
+
+            $requestMaintenance = $request
+                ->withUri(
+                    $this->router->isRewrite()
+                    ? $request->getUri()->withPath($path)
+                    : $request->getUri()->withQuery('q=' . $path)
+                )
+                ->withMethod('GET');
+
+            if ($route = $this->router->parse($requestMaintenance)) {
+                $responseMaintenance = $this->router->execute($route, $requestMaintenance);
+            }
+        }
+
+        $response = empty($responseMaintenance) || $responseMaintenance->getStatusCode() === 404
+            ? $this->tpl
+                ->getTheme()
+                ->make('page', 'page-maintenance.php', $this->views, [
+                    'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
+                    'title_main' => t('Site under maintenance')
+                ])
+            : $responseMaintenance;
+
+        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+            $response = $response->withStatus(503);
+        }
     }
 
     public function hookResponseAfter($request, &$response)
@@ -140,7 +176,8 @@ class HookApp
         if ($siteTitle) {
             $title = str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
-                [ $data[ 'meta_description' ], $data[ 'meta_title' ], $pageTitle ],
+                [ $data[ 'meta_description' ],
+                $data[ 'meta_title' ], $pageTitle ],
                 $siteTitle
             );
         } elseif ($pageTitle) {
@@ -172,7 +209,7 @@ class HookApp
         if ($data[ 'maintenance' ] && $granted) {
             $response->view('page.messages', [ 'infos' => [ t('Site under maintenance') ] ]);
         }
-        if (in_array($request->getUri()->getQuery(), [ '', '/' ]) &&
+        if ($this->router->parseQueryFromRequest() === '/' &&
             (!$data[ 'maintenance' ] ||
             ($data[ 'maintenance' ] && $granted))) {
             $response->override('page', [ 'page-front.php' ]);

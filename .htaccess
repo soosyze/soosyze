@@ -266,7 +266,7 @@ AddDefaultCharset utf-8
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php?q=$1 [L]
+    RewriteRule ^(.*)$ index.php [L]
 </IfModule>
 
 # ----------------------------------------------------------------------

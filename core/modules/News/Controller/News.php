@@ -51,8 +51,13 @@ class News extends \Soosyze\Controller
         
         foreach ($query as &$value) {
             $value[ 'field' ]       = self::node()->makeFieldsById('article', $value[ 'entity_id' ]);
-            $value[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id_node' => $value[ 'id' ] ]);
+            if ($alias            = self::alias()->getAlias('node/' . $value[ 'id' ])) {
+                $value[ 'link_view' ] = self::router()->makeRoute($alias);
+            } else {
+                $value[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id_node' => $value[ 'id' ]
+                ]);
+            }
         }
         $query_all = self::query()
             ->from('node')
