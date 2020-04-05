@@ -12,12 +12,13 @@ class HookApp
 
     protected $user;
 
-    public function __construct($template, $core, $query, $user)
+    public function __construct($template, $core, $query, $user, $router)
     {
         $this->tpl       = $template;
         $this->core      = $core;
         $this->query     = $query;
         $this->user      = $user;
+        $this->router    = $router;
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
@@ -29,8 +30,8 @@ class HookApp
             return;
         }
 
-        $isAdmin = in_array($request->getUri()->getQuery(), [
-            'q=admin/section/theme', 'q=admin/section/theme_admin'
+        $isAdmin = in_array($this->router->parseQueryFromRequest(), [
+            'admin/section/theme', 'admin/section/theme_admin'
         ]);
         $blocks  = $this->getBlocks($request, $isAdmin);
 
@@ -42,7 +43,7 @@ class HookApp
                     ? $blocks[ $section ]
                     : [],
                 'edit'        => $isAdmin,
-                'link_create' => $this->core->get('router')->getRoute('block.create', [
+                'link_create' => $this->router->getRoute('block.create', [
                     ':section' => $section ])
             ]);
         }
@@ -72,11 +73,11 @@ class HookApp
                 ]);
             }
             if ($isAdmin) {
-                $block[ 'link_edit' ]   = $this->core->get('router')->getRoute('block.edit', [
+                $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', [
                     ':id' => $block[ 'block_id' ] ]);
-                $block[ 'link_delete' ] = $this->core->get('router')->getRoute('block.delete', [
+                $block[ 'link_delete' ] = $this->router->getRoute('block.delete', [
                     ':id' => $block[ 'block_id' ] ]);
-                $block[ 'link_update' ] = $this->core->get('router')->getRoute('section.update', [
+                $block[ 'link_update' ] = $this->router->getRoute('section.update', [
                     ':id' => $block[ 'block_id' ] ]);
             }
             $out[ $block[ 'section' ] ][] = $block;
@@ -87,12 +88,7 @@ class HookApp
 
     protected function isVisibilityPages(array $block, $request)
     {
-        $uri = $request->getUri();
-        parse_str($uri->getQuery(), $query);
-
-        $path = empty($query[ 'q' ])
-            ? '/'
-            : $query[ 'q' ];
+        $path = $this->router->parseQueryFromRequest();
         
         $visibility = $block[ 'visibility_pages' ];
         $pages      = $block[ 'pages' ];

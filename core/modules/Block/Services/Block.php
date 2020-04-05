@@ -78,7 +78,7 @@ class Block
         ];
 
         $this->core->callHook('block.create.form.data', [ &$blocks ]);
-
+        
         return $blocks;
     }
 }

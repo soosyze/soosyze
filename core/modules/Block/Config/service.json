@@ -5,7 +5,7 @@
     },
     "block.hook.app": {
         "class": "SoosyzeCore\\Block\\Services\\HookApp",
-        "arguments": ["@template", "@core", "@query", "@user"],
+        "arguments": ["@template", "@core", "@query", "@user", "@router"],
         "hooks": {
             "app.response.after": "hookResponseAfter"
         }

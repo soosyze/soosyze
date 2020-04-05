@@ -304,25 +304,25 @@ class HookStep
             ->execute();
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook' ])
+            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook', 'key_block' ])
             ->values([
                 'sidebar', 'Lorem ipsum dolor', 1,
-                (new Template('card_ui.php', $this->pathContent))->render(), null
+                (new Template('card_ui.php', $this->pathContent))->render(), null, null
             ])
             ->values([
-                'sidebar', t('Archives by months'), 2, '', 'news.month'
+                'sidebar', t('Archives by months'), 2, '', 'news.month', 'news.month'
             ])
             ->values([
                 'sidebar', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null
+                (new Template('social.php', $this->pathContent))->render(), null, null
             ])
             ->values([
                 'footer_first', t('To join us'), 1,
-                (new Template('contact.php', $this->pathContent))->render(), null
+                (new Template('contact.php', $this->pathContent))->render(), null, null
             ])
             ->values([
                 'footer_second', t('Access map'), 1,
-                (new Template('map.php', $this->pathContent))->render(), null
+                (new Template('map.php', $this->pathContent))->render(), null, null
             ])
             ->execute();
 
@@ -347,17 +347,17 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook' ])
+            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook', 'key_block'  ])
             ->values([
-                'sidebar', t('Archives by months'), 1, '', 'news.month'
+                'sidebar', t('Archives by months'), 1, '', 'news.month', 'news.month'
             ])
             ->values([
                 'footer_first', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null
+                (new Template('social.php', $this->pathContent))->render(), null, null
             ])
             ->values([
                 'footer_second', 'Lorem ipsum dolor', 1,
-                (new Template('text.php', $this->pathContent))->render(), null
+                (new Template('text.php', $this->pathContent))->render(), null, null
             ])
             ->execute();
 
