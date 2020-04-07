@@ -157,10 +157,18 @@ class Node extends \Soosyze\Controller
 
     public function store($type, $req)
     {
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect(self::router()->getRoute('node.create', [ ':node' => $type ]));
+        }
         if (!($fields = self::node()->getFieldsForm($type))) {
             return $this->get404($req);
         }
-
+        
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
@@ -354,6 +362,18 @@ class Node extends \Soosyze\Controller
 
     public function update($id_node, $req)
     {
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect(
+                self::router()->getRoute('node.edit', [
+                    ':id_node' => $id_node
+                ])
+            );
+        }
         if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }

@@ -67,6 +67,19 @@ class Entity extends \Soosyze\Controller
 
     public function store($id_node, $entity, $req)
     {
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect(
+                self::router()->getRoute('entity.create', [
+                    ':id_node' => $id_node,
+                    ':entity'  => $entity
+                ])
+            );
+        }
         if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
@@ -201,6 +214,20 @@ class Entity extends \Soosyze\Controller
 
     public function update($id_node, $entity, $id_entity, $req)
     {
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
+            $_SESSION[ 'errors_keys' ]          = [];
+
+            return new Redirect(
+                self::router()->getRoute('entity.update', [
+                    ':id_node'  => $id_node,
+                    ':entity'   => $entity,
+                    'id_entity' => $id_entity
+                ])
+            );
+        }
         if (!($node = self::node()->byId($id_node))) {
             return $this->get404($req);
         }
