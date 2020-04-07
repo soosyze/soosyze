@@ -126,13 +126,15 @@ class Menu
             $menu[ 'title_link' ] = t($menu[ 'title_link' ]);
             $menu[ 'submenu' ]    = $this->renderMenu($nameMenu, $menu[ 'id' ], $level + 1);
         }
-        $menus = $this->getGrantedLink($query, $this->core->getRequest());
 
         return $this->core
                 ->get('template')
                 ->createBlock('menu.php', $this->pathViews)
                 ->nameOverride($nameMenu . '.php')
-                ->addVars([ 'menu' => $menus, 'level' => $level ]);
+                ->addVars([
+                    'menu' => $this->getGrantedLink($query, $this->core->getRequest()),
+                    'level' => $level
+                ]);
     }
 
     public function rewiteUri($link)

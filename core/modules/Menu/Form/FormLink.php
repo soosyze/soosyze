@@ -10,7 +10,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'query'       => '',
         'fragment'    => '',
         'icon'        => '',
-        'target_link' => ''
+        'target_link' => '_self'
     ];
 
     public function content($content, $isRewrite = false)

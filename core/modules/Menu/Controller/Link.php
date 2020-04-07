@@ -47,7 +47,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' => t('Add a link')
                 ])
                 ->view('page.messages', $messages)
@@ -144,7 +144,7 @@ class Link extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' =>  t('Edit a link')
                 ])
                 ->view('page.messages', $messages)

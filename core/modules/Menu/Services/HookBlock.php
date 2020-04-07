@@ -28,9 +28,9 @@ class HookBlock
 
     public function hookBlockMenu($tpl, array $options)
     {
-        return $this->menu
-                ->renderMenu($options[ 'name' ])
-                ->setName('block_menu.php')
-                ->addNamesOverride(['block_menu_' . $options[ 'name' ]]);
+        if ($menu = $this->menu->renderMenu($options[ 'name' ])) {
+            return $menu->setName('block_menu.php')
+                    ->addNamesOverride([ 'block_menu_' . $options[ 'name' ] ]);
+        }
     }
 }

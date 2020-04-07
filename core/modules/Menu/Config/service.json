@@ -13,13 +13,19 @@
         "class": "SoosyzeCore\\Menu\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.menu.show": "hookMenuAdminister",
-            "route.menu.show.check": "hookMenuAdminister",
             "route.menu.link.create": "hookMenuAdminister",
             "route.menu.link.store": "hookMenuAdminister",
             "route.menu.link.edit": "hookMenuAdminister",
             "route.menu.link.update": "hookMenuAdminister",
-            "route.menu.link.delete": "hookMenuAdminister"
+            "route.menu.link.delete": "hookMenuAdminister",
+            "route.menu.index": "hookMenuAdminister",
+            "route.menu.show": "hookMenuAdminister",
+            "route.menu.check": "hookMenuAdminister",
+            "route.menu.create": "hookMenuAdminister",
+            "route.menu.store": "hookMenuAdminister",
+            "route.menu.edit": "hookMenuAdminister",
+            "route.menu.update": "hookMenuAdminister",
+            "route.menu.delete": "hookMenuAdminister"
         }
     },
     "menu.hook.app": {
