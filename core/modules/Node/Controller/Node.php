@@ -236,10 +236,12 @@ class Node extends \Soosyze\Controller
                 }
             }
 
+            $this->container->callHook('node.entity.store.before', [ $validator, &$fieldsInsert, $type ]);
             self::query()
                 ->insertInto('entity_' . $type, array_keys($fieldsInsert))
                 ->values($fieldsInsert)
                 ->execute();
+            $this->container->callHook('node.entity.store.after', [ $validator, $type ]);
 
             /* Rassemble les champs personnalisés dans la node. */
             $node = [
@@ -452,6 +454,17 @@ class Node extends \Soosyze\Controller
                     $fieldsUpdate[ $key ] = $validator->getInput($key, '');
                 }
             }
+            
+            $this->container->callHook('node.entity.update.before', [
+                $validator, &$fieldsUpdate, $node, $id_node
+            ]);
+            self::query()
+                ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
+                ->where($node[ 'type' ] . '_id', '==', $node['entity_id'])
+                ->execute();
+            $this->container->callHook('node.entity.update.after', [
+                $validator, $node, $id_node
+            ]);
 
             $value = [
                 'date_changed'     => time(),
@@ -471,10 +484,6 @@ class Node extends \Soosyze\Controller
             self::query()
                 ->update('node', $value)
                 ->where('id', '==', $id_node)
-                ->execute();
-            self::query()
-                ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
-                ->where($node[ 'type' ] . '_id', '==', $node['entity_id'])
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $id_node ]);
 

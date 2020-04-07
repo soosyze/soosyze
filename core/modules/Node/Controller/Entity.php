@@ -30,6 +30,9 @@ class Entity extends \Soosyze\Controller
         }
 
         $content = [];
+
+        $this->container->callHook('entity.create.form.data', [ &$content ]);
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -45,6 +48,8 @@ class Entity extends \Soosyze\Controller
             ->content($content, $entity, $fields_entity)
             ->fields()
             ->actionsEntitySubmit();
+
+        $this->container->callHook('entity.create.form', [ &$form, $content ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -108,6 +113,8 @@ class Entity extends \Soosyze\Controller
             }
         }
 
+        $this->container->callHook('entity.store.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
             $fields = [];
@@ -126,10 +133,12 @@ class Entity extends \Soosyze\Controller
 
             $fields[ $node[ 'type' ] . '_id' ] = $data[ $node[ 'type' ] . '_id' ];
 
+            $this->container->callHook('entity.store.before', [ $validator, &$fields ]);
             self::query()
                 ->insertInto('entity_' . $entity, array_keys($fields))
                 ->values($fields)
                 ->execute();
+            $this->container->callHook('entity.store.after', [ $validator ]);
 
             /* Télécharge et enregistre les fichiers. */
             $id_entity = self::schema()->getIncrement('entity_' . $entity);
@@ -174,6 +183,10 @@ class Entity extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $this->container->callHook('entity.edit.form.data', [
+            &$content, $id_node, $entity, $id_entity
+        ]);
+
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
@@ -190,6 +203,8 @@ class Entity extends \Soosyze\Controller
             ->content($content, $entity, $fields_entity)
             ->fields()
             ->actionsEntitySubmit();
+
+        $this->container->callHook('entity.edit.form', [ &$form, $content ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -252,6 +267,10 @@ class Entity extends \Soosyze\Controller
             $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
         }
 
+        $this->container->callHook('entity.update.validator', [
+            &$validator, $id_node, $entity, $id_entity
+        ]);
+
         if ($validator->isValid()) {
             $fields = [];
             foreach ($fields_entity as $value) {
@@ -268,10 +287,16 @@ class Entity extends \Soosyze\Controller
                 }
             }
 
+            $this->container->callHook('entity.update.before', [
+                $validator, &$fields, $id_node, $entity, $id_entity
+            ]);
             self::query()
                 ->update('entity_' . $entity, $fields)
                 ->where($entity . '_id', '==', $id_entity)
                 ->execute();
+            $this->container->callHook('entity.update.after', [
+                $validator, $id_node, $entity, $id_entity
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
