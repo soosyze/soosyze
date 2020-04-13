@@ -196,6 +196,7 @@ class HookApp
             'title'       => $title,
             'description' => $description,
             'keyboard'    => $data[ 'meta_keyboard' ],
+            'generator'   => 'Soosyze CMS',
             'favicon'     => $data[ 'favicon' ],
             'scripts'     => $scripts . '<script src="' . $vendor . '"></script>'
         ])->view('page', [

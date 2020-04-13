@@ -8,9 +8,12 @@
         <?php if ($favicon): ?>
             <link rel="shortcut icon" type="image/png" href="<?php echo $favicon; ?>"/>
         <?php endif; ?>
+
         <meta name="description" content="<?php echo $description; ?>"/>
         <meta name="keywords" content="<?php echo $keyboard; ?>"/>
+        <meta name="generator" content="<?php echo $generator; ?>"/>
         <?php echo $meta; ?>
+
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/normalize.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/layout.css">
