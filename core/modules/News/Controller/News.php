@@ -35,7 +35,7 @@ class News extends \Soosyze\Controller
 
         $query = self::query()
             ->from('node')
-            ->where('published', '==', 1)
+            ->where('node_status_id', 1)
             ->where('type', 'article')
             ->orderBy('date_created', 'desc')
             ->limit(self::$limit, $offset)
@@ -61,7 +61,7 @@ class News extends \Soosyze\Controller
         }
         $query_all = self::query()
             ->from('node')
-            ->where('published', '==', 1)
+            ->where('node_status_id', 1)
             ->where('type', 'article')
             ->fetchAll();
 
@@ -129,7 +129,7 @@ class News extends \Soosyze\Controller
         self::$limit = self::config()->get('settings.news_pagination', 6);
         $query = self::query()
             ->from('node')
-            ->where('published', '==', 1)
+            ->where('node_status_id', 1)
             ->where('type', 'article')
             ->orderBy('date_created', 'desc')
             ->limit(self::$limit)
@@ -197,7 +197,7 @@ class News extends \Soosyze\Controller
                 ->from('node')
                 ->where('type', 'article')
                 ->between('date_created', $dateCurrent, $dateNext)
-                ->where('published', '==', 1)
+                ->where('node_status_id', 1)
                 ->orderBy('date_created', 'desc')
                 ->limit(self::$limit, $offset)
                 ->fetchAll();
@@ -209,7 +209,7 @@ class News extends \Soosyze\Controller
                 ->from('node')
                 ->where('type', 'article')
                 ->between('date_created', $dateCurrent, $dateNext)
-                ->where('published', '==', 1)
+                ->where('node_status_id', 1)
                 ->fetchAll();
     }
 }

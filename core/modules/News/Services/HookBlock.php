@@ -38,7 +38,7 @@ class HookBlock
     {
         $data = $this->query
             ->from('node')
-            ->where('published', '==', 1)
+            ->where('node_status_id', '==', 1)
             ->where('type', 'article')
             ->fetchAll();
 
@@ -66,7 +66,7 @@ class HookBlock
     {
         $data = $this->query
             ->from('node')
-            ->where('published', '==', 1)
+            ->where('node_status_id', '==', 1)
             ->where('type', 'article')
             ->fetchAll();
 
