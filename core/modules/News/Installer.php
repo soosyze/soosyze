@@ -27,7 +27,8 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->increments('article_id')
                 ->string('image')
                 ->text('summary')
-                ->text('body');
+                ->text('body')
+                ->integer('reading_time')->comment('In minute');
             });
         $ci->query()->insertInto('node_type', [
                 'node_type', 'node_type_name', 'node_type_description'
@@ -42,48 +43,73 @@ class Installer implements \SoosyzeCore\System\Migration
         $idImage   = $ci->query()->from('field')->where('field_name', 'image')->fetch()[ 'field_id' ];
         $idSummary = $ci->query()->from('field')->where('field_name', 'summary')->fetch()[ 'field_id' ];
         $idBody    = $ci->query()->from('field')->where('field_name', 'body')->fetch()[ 'field_id' ];
+        $idReading = $ci->query()->from('field')->where('field_name', 'reading_time')->fetch()[ 'field_id' ];
 
         $ci->query()
             ->insertInto('node_type_field', [
-                'node_type', 'field_id', 'field_weight', 'field_label', 'field_rules'
+                'node_type', 'field_id', 'field_weight', 'field_label', 'field_rules', 'field_description', 'field_show_form'
             ])
-            ->values([ 'article', $idImage, 1, 'Picture', 'required|image|max:800kb' ])
-            ->values([ 'article', $idSummary, 2, 'Summary', 'required|string|max:512' ])
-            ->values([ 'article', $idBody, 3, 'Body', 'string' ])
+            ->values([
+                'article', $idImage, 1, 'Picture',
+                'required_without:file-name-image|!required|image|max:800kb',
+                'Le poids de l\image doit être inférieur ou égale à 800ko',
+                true
+            ])
+            ->values([
+                'article', $idSummary, 2, 'Summary',
+                'required|string|max:512',
+                'Résumé brièvement votre article en moins de 512 caractères',
+                true
+            ])
+            ->values([
+                'article', $idBody, 3, 'Body',
+                'string',
+                '',
+                true
+            ])
+            ->values([
+                'article', $idReading, 4, 'Temps de lecture',
+                'number|min:1',
+                '',
+                false
+            ])
             ->execute();
 
         $ci->config()
-            ->set('settings.news_pagination', 6);
+            ->set('settings.news_pagination', 6)
+            ->set('settings.node_url_article', 'news/:date_created_year/:date_created_month/:date_created_day/:node_title');
     }
 
     public function seeders(ContainerInterface $ci)
     {
         $ci->query()
-            ->insertInto('entity_article', [ 'image', 'summary', 'body' ])
+            ->insertInto('entity_article', [ 'image', 'summary', 'body', 'reading_time' ])
             ->values([
                 'https://picsum.photos/id/1/650/300',
                 '<p>Un article se met en valeur par un résumé qui décrit brièvement '
                 . 'son contenu avec un nombre de caractères limité (maximum 255 caractères).</p>',
-                (new Template('article_1.php', $this->pathContent))->render()
+                (new Template('article_1.php', $this->pathContent))->render(),
+                1
             ])
             ->values([
                 'https://picsum.photos/id/11/650/300',
                 '<p>Consectetur adipiscing elit. Etiam orci nulla, dignissim eu hendrerit ullamcorper, blandit et arcu. '
                 . 'Vivamus imperdiet, felis eget suscipit pellentesque, est tortor rutrum tortor.</p>',
-                (new Template('article_2.php', $this->pathContent))->render()
+                (new Template('article_2.php', $this->pathContent))->render(),
+                1
             ])
             ->execute();
 
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'date_created', 'date_changed', 'published', 'entity_id'
+                'title', 'type', 'date_created', 'date_changed', 'node_status_id', 'entity_id'
             ])
             ->values([
-                'Bienvenue sur mon site', 'article', $time, $time,  true, 1
+                'Bienvenue sur mon site', 'article', $time, $time,  1, 1
             ])
             ->values([
-                'Lorem ipsum dolor sit amet', 'article', $time, $time, true, 2
+                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2
             ])
             ->execute();
     }

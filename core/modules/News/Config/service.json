@@ -36,5 +36,13 @@
             "block.news.year": "hookBlockNewsYear",
             "block.news.month": "hookBlockNewsMonth"
         }
+    },
+    "news.hook.node": {
+        "class": "SoosyzeCore\\News\\Services\\HookNode",
+        "hooks": {
+            "node.entity.store.before": "hookNodeStoreBefore",
+            "node.entity.update.before": "hookNodeUpdateBefore",
+            "node.entity.news.show": "hookNodeEntityPictureShow"
+        }
     }
 }
