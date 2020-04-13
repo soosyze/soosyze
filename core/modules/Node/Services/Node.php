@@ -82,9 +82,17 @@ class Node
             }
             $out[ $key ] = $value;
             if ($value[ 'field_type' ] === 'image') {
-                $out[ $key ][ 'field_display' ] = '<img src="' . $data[ $key ] . '">';
+                $link = is_file($data[ $key ])
+                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
+                    : $data[ $key ];
+                $out[ $key ][ 'field_value' ]   = $link;
+                $out[ $key ][ 'field_display' ] = '<img src="' . $link . '">';
             } elseif ($value[ 'field_type' ] === 'file') {
-                $out[ $key ][ 'field_display' ] = '<a href="' . $data[ $key ] . '">' . $data[ $key ] . '</a>';
+                $link = is_file($data[ $key ])
+                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
+                    : $data[ $key ];
+                $out[ $key ][ 'field_value' ]   = $link;
+                $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
             } elseif ($value[ 'field_type' ] === 'select') {
                 $options                        = json_decode($value[ 'field_option' ], true);
                 $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
