@@ -20,9 +20,9 @@ class Node extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
     
-    public function admin()
+    public function admin($req)
     {
-        return $this->adminPage(1);
+        return $this->adminPage(1, $req);
     }
 
     public function adminPage($page, $req)
@@ -35,7 +35,7 @@ class Node extends \Soosyze\Controller
             ->limit(self::$limit, $offset)
             ->fetchAll();
 
-        if (!$nodes) {
+        if (!$nodes && $page !== 1) {
             return $this->get404($req);
         }
 
@@ -307,7 +307,8 @@ class Node extends \Soosyze\Controller
                     'title_main' => $node[ 'title' ],
                 ])
                 ->make('page.content', 'node-show.php', $this->pathViews, [
-                    'fields' => $fields
+                    'fields' => $fields,
+                    'node'   => $node
                 ])->override('page.content', [ 'node-show-' . $id_node . '.php', 'node-show-' . $node[ 'type' ] . '.php']);
         
         self::core()->callHook('node.show.tpl', [&$tpl, $node, $id_node]);

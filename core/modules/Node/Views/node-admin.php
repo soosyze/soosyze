@@ -39,8 +39,12 @@
                             <i class="fa fa-copy" aria-hidden="true"></i> <?php echo t('Clone'); ?></a>
                         <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?></a>
-                        <a href="<?php echo $node[ 'link_delete' ]; ?>" class="btn btn-action">
-                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?></a>
+                        <a href="<?php echo $node[ 'link_delete' ]; ?>" 
+                           class="btn btn-action" 
+                           onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')"
+                        >
+                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                        </a>
                     </div>
                 </td>
                 <td data-title="<?php echo t('Status'); ?>">

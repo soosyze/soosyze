@@ -356,7 +356,7 @@ class FormNode extends FormBuilder
                         $form->label('date_created-label', t('Publication date'), [
                             'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')
                         ])
-                        ->datetime('date_created', [
+                        ->text('date_created', [
                             'class'       => 'form-control',
                             'maxlength'   => 19,
                             'placeholder' => t('YYYY-MM-DD Hours:Minutes:Seconds'),

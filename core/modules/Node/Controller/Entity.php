@@ -56,6 +56,10 @@ class Entity extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            unset($_SESSION[ 'errors_keys' ]);
+        }
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -299,15 +303,22 @@ class Entity extends \Soosyze\Controller
             ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            return new Redirect(
+                self::router()->getRoute('node.edit', [
+                    ':id_node' => $id_node
+                ])
+            );
         }
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         return new Redirect(
-            self::router()->getRoute('node.edit', [
-                ':id_node' => $id_node
+            self::router()->getRoute('entity.update', [
+                ':id_node'  => $id_node,
+                ':entity'   => $entity,
+                'id_entity' => $id_entity
             ])
         );
     }
