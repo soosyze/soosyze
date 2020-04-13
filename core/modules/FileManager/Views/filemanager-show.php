@@ -51,8 +51,8 @@
                 </th>
                 <?php else: ?>
 
-                <th class="<?php echo $file[ 'type' ]; ?>-link_show" data-link_show="<?php echo $file[ 'link_show' ]; ?>" data-toogle="modal"  data-target="#modal_folder">
-                    <span class="file <?php echo $file[ 'ext' ]; ?>"><i class="ext-name"><?php echo $file[ 'ext' ]; ?></i></span>
+                <th class="<?php echo $file[ 'type' ]; ?>-link_show" data-link_show="<?php echo $file[ 'link_show' ]; ?>" data-toogle="modal" data-target="#modal_folder">
+                    <span class="file <?php echo $file[ 'ext' ]; ?>"><span class="ext-name"><?php echo $file[ 'ext' ]; ?></span></span>
                 </th>
                 <?php endif; ?>
                 <td class="file-name" data-title="<?php echo t('Name'); ?>">

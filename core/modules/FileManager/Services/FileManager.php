@@ -99,7 +99,7 @@ class FileManager
 
     public function parseFile(\SplFileInfo $file, $path)
     {
-        $path = Util::cleanPath("$path");
+        $path = Util::cleanPath($path);
 
         return [
             'ext'        => $file->getExtension(),

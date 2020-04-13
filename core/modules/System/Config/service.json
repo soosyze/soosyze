@@ -5,17 +5,11 @@
     },
     "composer": {
         "class": "SoosyzeCore\\System\\Services\\Composer",
-        "arguments": [
-            "@module",
-            "@core"
-        ]
+        "arguments": ["@module", "@core"]
     },
     "module": {
         "class": "SoosyzeCore\\System\\Services\\Modules",
-        "arguments": [
-            "@query",
-            "@core"
-        ]
+        "arguments": ["@query", "@core"]
     },
     "migration": {
         "class": "SoosyzeCore\\System\\Services\\Migration",

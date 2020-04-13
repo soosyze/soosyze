@@ -11,7 +11,7 @@ class HookConfig
     protected $translate;
 
     protected $router;
-
+    
     public function __construct($router, $template, $file, $translate)
     {
         $this->router    = $router;
@@ -235,7 +235,7 @@ class HookConfig
                     }, [ 'class' => 'form-group' ]);
                 });
     }
-
+    
     public function validator(&$validator)
     {
         $themes = implode(',', $this->template->getThemes());

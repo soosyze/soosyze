@@ -93,7 +93,7 @@ class Login extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] = [ t('E-mail or password not recognized.') ];
             $route                              = self::router()->getRoute('user.login', [ ':url' => $url ]);
         }
-
+        
         return new Redirect($route);
     }
 
