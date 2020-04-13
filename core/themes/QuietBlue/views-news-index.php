@@ -4,21 +4,29 @@
     <?php foreach ($news as $new): ?>
 
     <article class="col-md-6">
-        <div class="card">
-            <header class="card__header">
-                <div class="card__date_tags">
-                    <span class="card__date"><?php echo date(t('Y/m/d'), $new[ 'date_created' ]); ?></span>
-                </div>
-                <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo $new[ 'title' ]; ?></a></h3>
+        <div class="card_blog">
+            <header style="background-image: url('<?php echo $new[ 'field' ][ 'image' ]['field_value']; ?>');">
             </header>
-            <div class="card__main">
-                <div class="card__content">
-                    <?php echo $new[ 'field' ][ 'image' ]['field_display']; ?>
+            <div class="card_main">
+                <div class="card_content">
+                <div class="card_date_tags">
+                    <span class="card_date">
+                        <i class="fa fa-calendar-alt"></i> 
+                        <?php echo strftime('%d.%B.%Y', $new[ 'date_created' ]); ?>
+                        -
+                        <i class="fa fa-clock"></i> 
+                        ~<?php echo $new[ 'field' ][ 'reading_time' ]['field_value'] . ' ' . t('minute(s)'); ?>
+                    </span>
+                </div>
+                <h3 class="card__title"><?php echo $new[ 'title' ]; ?></h3>
+                
                     <?php echo $new[ 'field' ][ 'summary' ]['field_display']; ?>
                 </div>
-                <div class="card__footer">
-                    <div class="card__more">
-                        <a href="<?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">En savoir plus...</a>
+                <div class="card_footer">
+                    <div class="card_more">
+                        <a href="<?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">
+                            <span class="card_more_txt"><?php echo t('Learn more'); ?></span> <i class="fa fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
