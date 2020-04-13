@@ -567,3 +567,39 @@ ul.icons li a i {
 #breadcrumb li {
     display: inline-block;
 }
+
+.faq {
+    margin-bottom: 1em;
+    box-shadow: 2px 2px 3px 0px rgba(235,235,235,1);
+}
+.faq_head {
+    cursor: pointer;
+    border-left: 3px solid #20222d;
+}
+.faq_head h3 {
+    padding: 1em;
+    background-color: #20222d;
+    color: #fff;
+    margin: 0;
+}
+.faq_head h3:hover {
+    background-color: #2d313f;
+}
+.faq_head .fa-plus {
+    float: right;
+    line-height: 1.5;
+}
+.faq_content {
+    border-left: 5px solid #2d313f;
+    padding: 1em;
+    display:none
+}
+
+.article_date_time{
+    margin-bottom: 1.5em;
+}
+.article_img img{
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 1.5em;
+}
