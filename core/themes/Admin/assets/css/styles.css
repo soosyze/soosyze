@@ -253,3 +253,24 @@ textarea{
 #breadcrumb{
     margin-bottom: 1em;
 }
+
+label.radio-button {
+    display: inline-block;
+    color: #555;
+    padding: 0.5em;
+    cursor: pointer;
+}
+label.radio-button:hover {
+    background-color: #eee;
+}
+input[type="radio"].radio-button {
+    display: none;
+}
+input[type="radio"].radio-button:checked ~ label {
+    background-color: #5cb85c;
+    border: 1px #398439 solid;
+    color: #fff;
+}
+input[type="radio"].radio-button:not(:checked) ~ label {
+    border: 1px #555 solid;
+}

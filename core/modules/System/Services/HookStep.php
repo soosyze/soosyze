@@ -279,14 +279,14 @@ class HookStep
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
             ])
-            ->values([ 1, 'page', $time, $time, true, t('Site') ])
-            ->values([ 2, 'page', $time, $time, true, t('Basic') ])
-            ->values([ 3, 'page', $time, $time, true, t('Standard') ])
-            ->values([ 4, 'page', $time, $time, true, t('Premium') ])
-            ->values([ 5, 'page', $time, $time, true, t('About') ])
-            ->values([ 6, 'page', $time, $time, true, t('Not Found') ])
+            ->values([ 1, 'page', $time, $time, 1, t('Site') ])
+            ->values([ 2, 'page', $time, $time, 1, t('Basic') ])
+            ->values([ 3, 'page', $time, $time, 1, t('Standard') ])
+            ->values([ 4, 'page', $time, $time, 1, t('Premium') ])
+            ->values([ 5, 'page', $time, $time, 1, t('About') ])
+            ->values([ 6, 'page', $time, $time, 1, t('Not Found') ])
             ->execute();
 
         $ci->query()
@@ -369,9 +369,9 @@ class HookStep
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
             ])
-            ->values([ 1, 'page', $time, $time, true, t('About') ])
+            ->values([ 1, 'page', $time, $time, 1, t('About') ])
             ->execute();
 
         $ci->query()
@@ -405,15 +405,15 @@ class HookStep
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
             ])
-            ->values([ 1, 'page', $time, $time, true, t('Site') ])
-            ->values([ 2, 'page', $time, $time, true, t('Education') ])
-            ->values([ 3, 'page', $time, $time, true, t('Projects') ])
-            ->values([ 4, 'page', $time, $time, true, t('Project 1') ])
-            ->values([ 5, 'page', $time, $time, true, t('Project 2') ])
-            ->values([ 6, 'page', $time, $time, true, t('Project 3') ])
-            ->values([ 7, 'page', $time, $time, true, t('Project 4') ])
+            ->values([ 1, 'page', $time, $time, 1, t('Site') ])
+            ->values([ 2, 'page', $time, $time, 1, t('Education') ])
+            ->values([ 3, 'page', $time, $time, 1, t('Projects') ])
+            ->values([ 4, 'page', $time, $time, 1, t('Project 1') ])
+            ->values([ 5, 'page', $time, $time, 1, t('Project 2') ])
+            ->values([ 6, 'page', $time, $time, 1, t('Project 3') ])
+            ->values([ 7, 'page', $time, $time, 1, t('Project 4') ])
             ->execute();
 
         $ci->query()
@@ -457,9 +457,9 @@ class HookStep
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'published', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
             ])
-            ->values([ 1, 'page', $time, $time, true, 'Ipsum sed adipiscing' ])
+            ->values([ 1, 'page', $time, $time, 1, 'Ipsum sed adipiscing' ])
             ->execute();
 
         $ci->query()

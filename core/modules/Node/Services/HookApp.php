@@ -21,13 +21,13 @@ class HookApp
                 'meta' => '<meta name="robots" content="' . substr($robots, 0, -1) . '">' . PHP_EOL
             ]);
         }
-        if (!$node[ 'published' ]) {
+        if ($node[ 'node_status_id' ] != 1) {
             $response->view('page.messages', [
                 'infos' => [ t('This content is not published') ]
             ]);
         }
     }
-    
+
     public function hookMenuShowResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {

@@ -122,7 +122,7 @@ class HookMenu
                     'menu-main',
                     1,
                     -1,
-                    (bool) $validator->getInput('published'),
+                    $validator->getInput('node_status_id') == 1,
                 ])
                 ->execute();
 
@@ -150,7 +150,7 @@ class HookMenu
                 $this->query->update('menu_link', [
                         'title_link' => $validator->getInput('title_link'),
                         'link'       => $link,
-                        'active'     => (bool) $validator->getInput('published'),
+                        'active'     => $validator->getInput('node_status_id') == 1,
                     ])
                     ->where('id', $nodeMenuLink[ 'menu_link_id' ])
                     ->execute();
@@ -164,7 +164,7 @@ class HookMenu
                         'menu-main',
                         1,
                         -1,
-                        (bool) $validator->getInput('published'),
+                        $validator->getInput('node_status_id') == 1,
                     ])
                     ->execute();
 

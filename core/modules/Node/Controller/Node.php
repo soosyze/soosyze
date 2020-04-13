@@ -177,7 +177,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => 'bool',
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
-                'published'        => 'bool',
+                'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
@@ -207,14 +207,14 @@ class Node extends \Soosyze\Controller
         }
         $validator->addRule(
             'date_created',
-            $validator->hasInput('published')
+            $validator->getInput('node_status_id') == 1
             ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
             : '!required|date_format:Y-m-d H:i:s'
         );
 
         /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
         if (!$canPublish) {
-            $validator->addRule('published', '!accepted');
+            $validator->addRule('node_status_id', '!accepted');
         }
 
         $this->container->callHook('node.store.validator', [ &$validator ]);
@@ -253,7 +253,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
-                'published'        => (bool) $validator->getInput('published'),
+                'node_status_id'   => $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title'),
                 'type'             => $type,
             ];
@@ -391,7 +391,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => 'bool',
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
-                'published'        => 'bool',
+                'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
@@ -428,14 +428,14 @@ class Node extends \Soosyze\Controller
         }
         $validator->addRule(
             'date_created',
-            $validator->hasInput('published')
+            $validator->getInput('node_status_id') == 1
             ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
             : '!required|date_format:Y-m-d H:i:s'
         );
 
         /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
         if (!$canPublish) {
-            $validator->addRule('published', '!accepted');
+            $validator->addRule('node_status_id', '!accepted');
         }
 
         $this->container->callHook('node.update.validator', [ &$validator, $id_node ]);
@@ -474,7 +474,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
-                'published'        => (bool) $validator->getInput('published'),
+                'node_status_id'   => $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title')
             ];
 
@@ -558,12 +558,11 @@ class Node extends \Soosyze\Controller
         $entity_id   = self::schema()->getIncrement('entity_' . $type);
 
         /* Construit la node */
-        unset($node[ 'id' ]);
+        unset($node[ 'id' ], $node[ 'node_status_id' ]);
         $node[ 'entity_id' ]    = $entity_id;
         $node[ 'title' ]        = $node[ 'title' ] . ' clone';
         $node[ 'date_created' ] = (string) time();
         $node[ 'date_changed' ] = (string) time();
-        $node[ 'published' ]    = false;
 
         self::query()
             ->insertInto('node', array_keys($node))

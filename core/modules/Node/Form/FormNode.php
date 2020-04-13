@@ -13,7 +13,7 @@ class FormNode extends FormBuilder
         'meta_nofollow'    => false,
         'meta_noarchive'   => false,
         'meta_title'       => '',
-        'published'        => false,
+        'node_status_id'   => 3,
         'date_created'     => ''
     ];
 
@@ -32,6 +32,8 @@ class FormNode extends FormBuilder
     protected $file;
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
+    
+    protected static $attrGrpInline = [ 'class' => 'form-group-inline' ];
 
     protected $query;
 
@@ -363,11 +365,23 @@ class FormNode extends FormBuilder
                             : $this->content[ 'date_created' ]
                         ]);
                     }, self::$attrGrp)
-                    ->group('published-group', 'div', function ($form) {
-                        $form->checkbox('published', [ 'checked' => $this->content[ 'published' ] ])
-                        ->label('published-label', '<span class="ui"></span> ' . t('Publish content'), [
-                            'for' => 'published'
-                        ]);
+                    ->label('date_created-label', t('Publication status'))
+                    ->group('node_status-group', 'div', function ($form) {
+                        $status = $this->query->from('node_status')->fetchAll();
+                        foreach ($status as $value) {
+                            $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
+                                $form->radio('node_status_id', [
+                                    'id'      => "node_status_id-{$value[ 'node_status_id' ]}",
+                                    'checked' => $this->content[ 'node_status_id' ] === $value[ 'node_status_id' ],
+                                    'class'   => 'radio-button',
+                                    'value'   => $value[ 'node_status_id' ]
+                                ])
+                                ->label('node_status_id-label', t($value[ 'node_status_name' ]), [
+                                    'class ' => 'radio-button',
+                                    'for'    => "node_status_id-{$value[ 'node_status_id' ]}"
+                                ]);
+                            }, self::$attrGrpInline);
+                        }
                     }, self::$attrGrp);
                 })
                 ->token('token_node')

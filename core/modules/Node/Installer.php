@@ -25,7 +25,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->boolean('meta_nofollow')->valueDefault(false)
                 ->boolean('meta_noindex')->valueDefault(false)
                 ->string('meta_title')->valueDefault('')
-                ->boolean('published')
+                ->integer('node_status_id')->valueDefault(3)
                 ->string('title')
                 ->string('type', 32);
             })
@@ -33,6 +33,10 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->string('node_type')
                 ->string('node_type_name')
                 ->text('node_type_description');
+            })
+            ->createTableIfNotExists('node_status', function (TableBuilder $table) {
+                $table->increments('node_status_id')
+                ->text('node_status_name');
             })
             ->createTableIfNotExists('field', function (TableBuilder $table) {
                 $table->increments('field_id')
@@ -63,6 +67,15 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->increments('page_id')
                 ->text('body');
             });
+
+        $ci->query()->insertInto('node_status', [
+                'node_status_id', 'node_status_name'
+            ])
+            ->values([ 1, 'Published'])
+            ->values([ 2, 'Pending publication'])
+            ->values([ 3, 'Draft' ])
+            ->values([ 4, 'Archived' ])
+            ->execute();
 
         $ci->query()->insertInto('node_type', [
                 'node_type', 'node_type_name', 'node_type_description'

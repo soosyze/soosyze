@@ -331,15 +331,18 @@ class Entity extends \Soosyze\Controller
             ->setRules([ 'id' => 'required' ])
             ->setInputs([ 'id' => $id_node ]);
         
-        if ($node['published'] && ($rules = self::node()->getRules($field_node))) {
+        /* Si la node est publié. */
+        if ($node['node_status_id'] === 1 && ($rules = self::node()->getRules($field_node))) {
             $entitys = self::query()
                 ->from('entity_' . $entity)
                 ->where($node['type'] . '_id', '==', $node['entity_id'])
                 ->limit(2)
                 ->fetchAll();
+            /* Et que l'entité est requise, la dernière entité ne peut-être supprimé. */
             if (isset($rules['required']) && count($entitys) === 1) {
-                $validator->addRule('published', '!equal:1')
-                    ->addInput('published', (string) count($entitys));
+                $validator
+                    ->addRule('node_status_id', '!equal:1')
+                    ->addInput('node_status_id', 1);
             }
         }
         

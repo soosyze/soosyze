@@ -29,6 +29,9 @@
 /* --------------------------- */
 /* -------- FORM FLEX-- ------ */
 /* --------------------------- */
+.form-group-inline {
+    display: inline-block;
+}
 .form-group-flex{
     align-items: stretch;
     display: -ms-flexbox;
@@ -361,17 +364,25 @@ label[data-tooltip]:before {
 /* --------------------------- */
 /* ---------- NODE ----------- */
 /* --------------------------- */
-.icon-notPublish,
+.icon-archived,
+.icon-draft,
+.icon-pending_publication,
 .icon-publish{
-    border-radius: 32px;
+    display: block;
     width: 16px;
     height: 16px;
     margin-left: auto;
     margin-right: auto;
 }
-.icon-notPublish{
-    background-color: #d14;
+.icon-archived{
+    color: #d14;
+}
+.icon-draft{
+    color: #666;
+}
+.icon-pending_publication{
+   color: #dd9f3a;
 }
 .icon-publish{
-    background-color: #2ecc71;
+   color: #2ecc71;
 }

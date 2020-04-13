@@ -52,7 +52,7 @@ class HookUser
             ->fetch();
 
         return $node
-            ? [ !$node[ 'published' ]
+            ? [ $node[ 'node_status_id' ] !== 1
                     ? 'node.show.not_published'
                     : 'node.show.published',
                 'node.show.' . $node[ 'type' ],

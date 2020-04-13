@@ -12,8 +12,8 @@ class HookCron
     public function hookCron()
     {
         $this->query
-            ->update('node', [ 'published' => true ])
-            ->where('published', false)
+            ->update('node', [ 'node_status_id' => 1 ])
+            ->where('node_status_id', 2)
             ->where('date_created', '<=', time())
             ->execute();
     }
