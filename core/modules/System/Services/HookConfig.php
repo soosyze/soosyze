@@ -172,8 +172,8 @@ class HookConfig
                         }, [ 'class' => 'form-group-flex' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('path_maintenance-group', 'div', function ($form) use ($data) {
-                        $form->label('path_maintenance-label', t('Page de maintenance par défaut'), [
-                            'data-tooltip' => t('Laissez vide pour utiliser le template page-maintenance.php par défaut de votre thème'),
+                        $form->label('path_maintenance-label', t('Default maintenance page'), [
+                            'data-tooltip' => t('Leave blank to use your theme\'s default page-maintenance.php template'),
                             'for'          => 'path_maintenance'
                         ])
                         ->group('path_maintenance-flex', 'div', function ($form) use ($data) {

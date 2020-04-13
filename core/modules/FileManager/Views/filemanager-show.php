@@ -31,12 +31,12 @@
                 </tr>
                 <tr>
                     <td colspan="5">
-                        Full Size <?php echo $size_all; ?>,
+                        <?php echo t('Full Size %d', ['%d' => $size_all]); ?>,
                         <?php
-                        echo t('@nb_dir folders, @nb_file files', [
-                            '@nb_dir' => $nb_dir, '@nb_file' => $nb_file ]);
+                        echo t('@nb_dir folder(s), @nb_file file(s)', [
+                            '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
+                        ]);
                         ?>
-
                     </td>
                 </tr>
             </thead>
@@ -82,10 +82,11 @@
             <tfoot>
                 <tr>
                     <td colspan="5">
-                        Full Size <?php echo $size_all; ?>,
+                        <?php echo t('Full Size %d', ['%d' => $size_all]); ?>,
                         <?php
-                        echo t('@nb_dir folders, @nb_file files', [
-                            '@nb_dir' => $nb_dir, '@nb_file' => $nb_file ]);
+                        echo t('@nb_dir folder(s), @nb_file file(s)', [
+                            '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
+                        ]);
                         ?>
                     </td>
                 </tr>

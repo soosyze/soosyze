@@ -129,7 +129,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'filemanager.admin', 'fa fa-folder', 'Fichier', 'admin/filemanager/show',
+                    'filemanager.admin', 'fa fa-folder', 'File', 'admin/filemanager/show',
                     'menu-admin', 50, -1
                 ])
                 ->execute();

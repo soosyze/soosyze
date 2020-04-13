@@ -174,7 +174,7 @@ class FormNode extends FormBuilder
         ]);
         if (!isset($this->content[ 'entity_id' ])) {
             $form->html('add-' . $key, '<div:attr><p>:_content</p></div>', [
-                '_content' => t('Enregistrer votre contenu avant de pouvoir ajouter des éléments.'),
+                '_content' => t('Save your content before you can add items'),
                 'class'    => 'block-content-disabled',
                 'style'    => 'cursor:not-allowed'
             ]);
@@ -229,7 +229,7 @@ class FormNode extends FormBuilder
                         ':id_node' => $this->content[ 'id' ],
                         ':entity'  => $key,
                     ]),
-                    '_content' => '<i class="fa fa-plus"></i> ' . t('Ajouter un contenu')
+                    '_content' => '<i class="fa fa-plus"></i> ' . t('Add content')
                 ]);
             });
         }
@@ -302,7 +302,7 @@ class FormNode extends FormBuilder
             $form->legend('seo-legend', t('SEO'))
                     ->group('meta_title-group', 'div', function ($form) {
                         $form->label('meta_title-label', t('Title'), [
-                            'data-tooltip' => t('Laisser vide pour utiliser le titre par défaut du site')
+                            'data-tooltip' => t('Leave blank to use the site\'s default title')
                         ])
                         ->text('meta_title', [
                             'class'       => 'form-control',
@@ -310,36 +310,36 @@ class FormNode extends FormBuilder
                             'value'       => $this->content[ 'meta_title' ]
                         ])
                         ->html('cancel', '<p>:_content</p>', [
-                            '_content' => t('Variables allowed') . '<code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                            '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('meta_description-group', 'div', function ($form) {
                         $form->label('meta_description-label', t('Description'), [
-                            'data-tooltip' => t('Laisser vide pour utiliser la description par défaut du site')
+                            'data-tooltip' => t('Leave blank to use the default site description')
                         ])
                         ->textarea('meta_description', $this->content[ 'meta_description' ], [
                             'class' => 'form-control',
                             'rows'  => 3
                         ])
                         ->html('cancel', '<p>:_content</p>', [
-                            '_content' => t('Variables allowed') . '<code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                            '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('meta_noindex-group', 'div', function ($form) {
                         $form->checkbox('meta_noindex', [ 'checked' => $this->content[ 'meta_noindex' ] ])
-                        ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Bloquer l\'indexation') . ' <code>noindex</code>', [
+                        ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Block indexing') . ' <code>noindex</code>', [
                             'for' => 'meta_noindex'
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('meta_nofollow-group', 'div', function ($form) {
                         $form->checkbox('meta_nofollow', [ 'checked' => $this->content[ 'meta_nofollow' ] ])
-                        ->label('meta_nofollow-label', '<span class="ui"></span> ' . t('Bloquer le suivi des liens') . ' <code>nofollow</code>', [
+                        ->label('meta_nofollow-label', '<span class="ui"></span> ' . t('Block link tracking') . ' <code>nofollow</code>', [
                             'for' => 'meta_nofollow'
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_noarchive-group', 'div', function ($form) {
                         $form->checkbox('meta_noarchive', [ 'checked' => $this->content[ 'meta_noarchive' ] ])
-                        ->label('meta_noarchive-label', '<span class="ui"></span> ' . t('Bloquer la mise en cache') . ' <code>noarchive</code>', [
+                        ->label('meta_noarchive-label', '<span class="ui"></span> ' . t('Block caching') . ' <code>noarchive</code>', [
                             'for' => 'meta_noarchive'
                         ]);
                     }, self::$attrGrp);
@@ -353,8 +353,8 @@ class FormNode extends FormBuilder
                     $form
                     ->legend('actions-legend', t('Publication'))
                     ->group('date_created-group', 'div', function ($form) {
-                        $form->label('date_created-label', t('Date de publication'), [
-                            'data-tooltip' => 'Laisser vide pour utiliser la date de soumission du formulaire. Elle doit-être inférieur ou égale à la date du jour.'
+                        $form->label('date_created-label', t('Publication date'), [
+                            'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')
                         ])
                         ->datetime('date_created', [
                             'class'       => 'form-control',

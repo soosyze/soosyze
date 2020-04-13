@@ -49,7 +49,7 @@ class HookUrl
         $form->after('seo-legend', function ($form) use ($data) {
             $form->group('meta_url-group', 'div', function ($form) use ($data) {
                 $form->label('meta_url-label', t('Url'), [
-                    'data-tooltip' => t('Laisser vide pour générer automatiquement votre URL')
+                    'data-tooltip' => t('Leave blank to automatically generate your URL')
                 ])->text('meta_url', [
                     'class'       => 'form-control',
                     'placeholder' => 'page/titre-de-mon-contenu',

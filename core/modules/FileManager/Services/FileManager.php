@@ -126,7 +126,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-edit',
                 'class'      => 'mod',
-                'title_link' => t('Rename'),
+                'title_link' => 'Rename',
                 'link'       => $this->router->getRoute('filemanager.folder.edit', [
                     ':path' => "$path$name"
                 ])
@@ -137,7 +137,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-times',
                 'class'      => 'mod',
-                'title_link' => t('Delete'),
+                'title_link' => 'Delete',
                 'link'       => $this->router->getRoute('filemanager.folder.remove', [
                     ':path' => "$path$name"
                 ])
@@ -157,7 +157,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-edit',
                 'class'      => 'mod',
-                'title_link' => t('Rename'),
+                'title_link' => 'Rename',
                 'link'       => $this->router->getRoute('filemanager.file.edit', [
                     ':path' => $path,
                     ':name' => $name,
@@ -170,7 +170,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-times',
                 'class'      => 'mod',
-                'title_link' => t('Delete'),
+                'title_link' => 'Delete',
                 'link'       => $this->router->getRoute('filemanager.file.remove', [
                     ':path' => $path,
                     ':name' => $name,
@@ -183,7 +183,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'far fa-eye',
                 'class'      => 'mod',
-                'title_link' => t('View'),
+                'title_link' => 'View',
                 'link'       => $this->router->getRoute('filemanager.file.show', [
                     ':path' => $path,
                     ':name' => $name,
@@ -196,7 +196,7 @@ class FileManager
                 'type'       => 'link',
                 'icon'       => 'fa fa-download',
                 'class'      => '',
-                'title_link' => t('Download'),
+                'title_link' => 'Download',
                 'link'       => $this->router->getRoute('filemanager.file.download', [
                     ':path' => $path,
                     ':name' => $name,
@@ -209,7 +209,7 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-copy',
                 'class'      => 'copy-clipboard',
-                'title_link' => t('Copy'),
+                'title_link' => 'Copy',
                 'link'       => $this->core->getPath('files_public') . '/' . $path . $file->getFilename()
             ];
         }

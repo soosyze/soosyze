@@ -147,7 +147,7 @@ class File extends \Soosyze\Controller
             'method' => 'post',
             ]))
             ->group('file-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('file-legend', t('Renommer le nom du fichier'))
+                $form->legend('file-legend', t('Rename the file'))
                 ->group('name-group', 'div', function ($form) use ($data) {
                     $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')

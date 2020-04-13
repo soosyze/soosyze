@@ -25,8 +25,8 @@ class HookConfig
         return $form->group('node_default_url-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('node_default_url-legend', t('Url'))
                     ->group('node_default_url-group', 'div', function ($form) use ($data) {
-                        $form->label('node_default_url-label', t('Url par défaut'), [
-                            'data-tooltip' => t('S\'applique à tous les types de contenus dont les motifs ci-dessous sont vides')
+                        $form->label('node_default_url-label', t('Default url'), [
+                            'data-tooltip' => t('Applies to all types of content if the templates below are empty')
                         ])
                         ->text('node_default_url', [
                             'class' => 'form-control',
@@ -46,7 +46,7 @@ class HookConfig
             }
             $form->html('cancel', '<p>:_content</p>', [
                     '_content' => t('Variables allowed for all') .
-                    '<code>:date_created_year</code>, <code>:date_created_month</code>, <code>:date_created_day</code>, ' .
+                    ' <code>:date_created_year</code>, <code>:date_created_month</code>, <code>:date_created_day</code>, ' .
                     '<code>:node_id</code>, <code>:node_title</code>, <code>:node_type</code>'
                 ]);
         });

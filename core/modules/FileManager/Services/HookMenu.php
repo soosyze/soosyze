@@ -31,7 +31,7 @@ class HookMenu
             'link'       => $this->router->getRoute('filemanager.admin', [
                 ':path' => $path
             ]),
-            'title_link' => t('Fichiers')
+            'title_link' => t('File')
         ];
     }
 

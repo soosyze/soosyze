@@ -2,7 +2,7 @@
     <div class="action_bar">
         <ul class="nav nav-tabs">
             <li>
-                <a href="<?php echo $do_backup_route ?>"><?php echo t('Save'); ?></a>
+                <a href="<?php echo $do_backup_route ?>"><?php echo t('Create a backup'); ?></a>
             </li>
             <li>
                 <a href="<?php echo $delete_all_route ?>" onclick="return confirm('<?php echo t('Delete all the backups ?') ?>');"><?php echo t('Delete all') ?></a>

@@ -19,7 +19,7 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
     public function make()
     {
         $this->group('menu-fieldset', 'fieldset', function ($form) {
-            $form->legend('menu-legend', t('Add a menu'))
+            $form->legend('menu-legend', t('Fill in the following fields'))
                 ->group('title-group', 'div', function ($form) {
                     $form->label('title-label', t('Menu title'))
                     ->text('title', [

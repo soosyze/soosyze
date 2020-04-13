@@ -7,7 +7,7 @@ class HookConfig
     public function menu(&$menu)
     {
         $menu[ 'filemanager' ] = [
-            'title_link' => 'FileManager'
+            'title_link' => 'File'
         ];
     }
 
