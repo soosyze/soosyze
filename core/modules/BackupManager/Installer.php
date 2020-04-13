@@ -20,8 +20,8 @@ class Installer implements \SoosyzeCore\System\Migration
         }
         
         $ci->config()
-            ->set('settings.max_backups', 0)
-            ->set('settings.backup_cron', 0);
+            ->set('settings.max_backups', 30)
+            ->set('settings.backup_cron', false);
     }
 
     public function seeders(ContainerInterface $ci)

@@ -38,10 +38,10 @@ class Installer implements \SoosyzeCore\System\Migration
             });
 
         $ci->config()
-            ->set('settings.maintenance', '')
-            ->set('settings.rewrite_engine', '')
+            ->set('settings.maintenance', false)
             ->set('settings.module_update_date', '')
             ->set('settings.module_update', false)
+            ->set('settings.rewrite_engine', false)
             ->set('settings.path_no_found', 'node/1')
             ->set('settings.path_index', 'node/2')
             ->set('settings.path_access_denied', 'user/login')
