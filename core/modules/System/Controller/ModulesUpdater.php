@@ -9,12 +9,9 @@ class ModulesUpdater extends \Soosyze\Controller
     public function check()
     {
         if (self::migration()->isMigration()) {
-            self::config()
-                ->set('settings.module_update', true)
-                ->set('settings.module_update_time', time());
+            self::config()->set('settings.module_update', true);
         } else {
-            $_SESSION[ 'messages' ][ 'success' ] = [ 'Pas de mise à jour' ];
-            self::config()->set('settings.module_update_time', time());
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Your site is up to date') ];
         }
 
         return new Redirect(self::router()->getRoute('system.module.edit'));
@@ -22,9 +19,12 @@ class ModulesUpdater extends \Soosyze\Controller
 
     public function updater()
     {
-        self::migration()->migrate();
-        self::config()->set('settings.module_update', false);
-        $_SESSION[ 'messages' ][ 'success' ] = [ 'La mise à jour est un succes' ];
+        try {
+            self::migration()->migrate();
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('The update is a success') ];
+        } catch (\Exception $e) {
+            $_SESSION[ 'messages' ][ 'error' ] = [ t('An error occurred during the update') ];
+        }
 
         return new Redirect(self::router()->getRoute('system.module.edit'));
     }

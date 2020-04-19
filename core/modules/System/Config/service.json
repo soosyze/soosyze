@@ -13,11 +13,11 @@
     },
     "migration": {
         "class": "SoosyzeCore\\System\\Services\\Migration",
-        "arguments": ["@composer", "@query", "@schema"]
+        "arguments": ["@composer", "@config", "@query", "@schema"]
     },
     "system.hook.app": {
         "class": "SoosyzeCore\\System\\Services\\HookApp",
-        "arguments": [ "@alias", "@router", "@config", "@template", "@core", "@query"],
+        "arguments": ["@alias", "@router", "@config", "@template", "@core", "@query"],
         "hooks": {
             "app.response.before": "hookSys",
             "app.403": "hooks403",
@@ -50,6 +50,13 @@
             "config.update.system.validator": "validator",
             "config.update.system.before": "before",
             "config.update.system.files": "files"
+        }
+    },
+    "system.hook.cron": {
+        "class": "SoosyzeCore\\System\\Services\\HookCron",
+        "arguments": ["@schema", "@migration", "@config"],
+        "hooks": {
+            "app.cron": "hookCron"
         }
     }
 }

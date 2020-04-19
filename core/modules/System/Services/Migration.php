@@ -8,6 +8,11 @@ class Migration
      * @var Composer
      */
     protected $composer;
+    
+    /**
+     * @var \Soosyze\Config
+     */
+    protected $config;
 
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
@@ -19,9 +24,10 @@ class Migration
      */
     protected $schema;
 
-    public function __construct($composer, $query, $schema)
+    public function __construct($composer, $config, $query, $schema)
     {
         $this->composer = $composer;
+        $this->config   = $config;
         $this->query    = $query;
         $this->schema   = $schema;
     }
@@ -34,7 +40,7 @@ class Migration
     public function isMigration()
     {
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
-        $migrationsInstalled = $this->query->from('migrations')->lists('migration');
+        $migrationsInstalled = $this->query->from('migration')->lists('migration');
         $allComposer         = $this->composer->getAllComposer();
 
         foreach ($titleModulesActive as $titleModule) {
@@ -56,6 +62,7 @@ class Migration
                 }
             }
         }
+        $this->config->set('settings.module_update_time', time());
 
         return false;
     }
@@ -66,7 +73,7 @@ class Migration
     public function migrate()
     {
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
-        $migrationsInstalled = $this->query->from('migrations')->lists('migration');
+        $migrationsInstalled = $this->query->from('migration')->lists('migration');
         $allComposer         = $this->composer->getAllComposer();
 
         $callbacks = [];
@@ -96,10 +103,10 @@ class Migration
 
         ksort($callbacks);
         $query = clone $this->query;
-        $this->query->insertInto('migrations', [ 'migration', 'extension' ]);
+        $this->query->insertInto('migration', [ 'migration', 'extension' ]);
         foreach ($callbacks as $callback) {
             call_user_func_array(
-                $callback[ 'migration' ][ 'up' ],
+                $callback[ 'callback' ][ 'up' ],
                 [ $this->schema, $query ]
             );
             $this->query->values([
@@ -107,6 +114,8 @@ class Migration
             ]);
         }
         $this->query->execute();
+        $this->config->set('settings.module_update', false);
+        $this->config->set('settings.module_update_time', time());
     }
 
     /**
@@ -122,7 +131,7 @@ class Migration
         if (!\is_dir($dir)) {
             return;
         }
-        $this->query->insertInto('migrations', [ 'migration', 'extension' ]);
+        $this->query->insertInto('migration', [ 'migration', 'extension' ]);
         foreach (new \DirectoryIterator($dir) as $fileInfo) {
             if (!$fileInfo->isFile()) {
                 continue;
@@ -135,7 +144,7 @@ class Migration
     public function uninstallMigration($extension)
     {
         $this->query->delete()
-            ->from('migrations')
+            ->from('migration')
             ->where('extension', $extension)
             ->execute();
     }

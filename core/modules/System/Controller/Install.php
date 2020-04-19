@@ -220,7 +220,7 @@ class Install extends \Soosyze\Controller
         if (!\is_dir($dir)) {
             return;
         }
-        self::query()->insertInto('migrations', [ 'migration', 'extension' ]);
+        self::query()->insertInto('migration', [ 'migration', 'extension' ]);
         foreach (new \DirectoryIterator($dir) as $fileInfo) {
             if (!$fileInfo->isFile()) {
                 continue;

@@ -32,14 +32,14 @@ class Installer implements \SoosyzeCore\System\Migration
                 $table->string('source')
                 ->string('alias');
             })
-            ->createTableIfNotExists('migrations', function (TableBuilder $table) {
+            ->createTableIfNotExists('migration', function (TableBuilder $table) {
                 $table->string('migration')
                 ->string('extension');
             });
 
         $ci->config()
             ->set('settings.maintenance', false)
-            ->set('settings.module_update_date', '')
+            ->set('settings.module_update_time', '')
             ->set('settings.module_update', false)
             ->set('settings.rewrite_engine', false)
             ->set('settings.path_no_found', 'node/1')
