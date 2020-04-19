@@ -493,7 +493,7 @@ class User extends \Soosyze\Controller
 
     protected function updateRole($validator, $idUser)
     {
-        $this->container->callHook('user.update.role.before', [ $validator, $idUser ]);
+        $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
         self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
         self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
             ->values([ $idUser, 2 ]);
