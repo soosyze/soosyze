@@ -40,17 +40,21 @@ class FormNode extends FormBuilder
     protected $fields;
 
     protected $router;
+    
+    protected $config;
 
     public function __construct(
         array $attributes,
         $file,
         $query,
-        $router
+        $router,
+        $config
     ) {
         parent::__construct($attributes);
         $this->file   = $file;
         $this->query  = $query;
         $this->router = $router;
+        $this->config = $config;
     }
 
     public function content($content, $type, $fields)
@@ -367,7 +371,11 @@ class FormNode extends FormBuilder
                     }, self::$attrGrp)
                     ->label('date_created-label', t('Publication status'))
                     ->group('node_status-group', 'div', function ($form) {
-                        $status = $this->query->from('node_status')->fetchAll();
+                        $this->query->from('node_status');
+                        if(!$this->config->get('settings.node_cron')) {
+                            $this->query->where('node_status_id', '!=', 2);
+                        }
+                        $status = $this->query->fetchAll();
                         foreach ($status as $value) {
                             $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
                                 $form->radio('node_status_id', [

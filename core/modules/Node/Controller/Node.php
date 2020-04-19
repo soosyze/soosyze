@@ -125,7 +125,7 @@ class Node extends \Soosyze\Controller
         $form = (new FormNode([
             'method'  => 'post',
             'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $type, $fields)
             ->make();
 
@@ -337,7 +337,7 @@ class Node extends \Soosyze\Controller
         $form = (new FormNode([
             'method'  => 'post',
             'action'  => self::router()->getRoute('node.update', [':id_node' => $id_node ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $content['type'], $fields)
             ->make();
 

@@ -83,7 +83,7 @@
     },
     "node.hook.cron": {
         "class": "SoosyzeCore\\Node\\Services\\HookCron",
-        "arguments": ["@query"],
+        "arguments": ["@config", "@query"],
         "hooks": {
             "app.cron": "hookCron"
         }

@@ -44,7 +44,7 @@ class Entity extends \Soosyze\Controller
                 ':id_node' => $id_node,
                 ':entity'  => $entity
             ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $entity, $fields_entity)
             ->fields()
             ->actionsEntitySubmit();
@@ -203,7 +203,7 @@ class Entity extends \Soosyze\Controller
                 ':entity'    => $entity,
                 ':id_entity' => $id_entity
             ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router()))
+            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $entity, $fields_entity)
             ->fields()
             ->actionsEntitySubmit();
