@@ -372,7 +372,7 @@ class FormNode extends FormBuilder
                     ->label('date_created-label', t('Publication status'))
                     ->group('node_status-group', 'div', function ($form) {
                         $this->query->from('node_status');
-                        if(!$this->config->get('settings.node_cron')) {
+                        if (!$this->config->get('settings.node_cron')) {
                             $this->query->where('node_status_id', '!=', 2);
                         }
                         $status = $this->query->fetchAll();

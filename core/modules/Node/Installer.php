@@ -89,7 +89,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->values([ 'body', 'textarea'])
             ->values([ 'image', 'image'])
             ->values([ 'summary', 'textarea' ])
-            ->values([ 'reading_time', 'textarea' ])
+            ->values([ 'reading_time', 'number' ])
             ->execute();
 
         $ci->query()
