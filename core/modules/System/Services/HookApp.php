@@ -163,7 +163,14 @@ class HookApp
         if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
             return;
         }
-        $data   = $this->config->get('settings');
+
+        $meta_title       = $this->config->get('settings.meta_title', 'Soosyze CMS');
+        $meta_description = $this->config->get('settings.meta_description', '');
+        $meta_keyboard    = $this->config->get('settings.meta_keyboard', '');
+        $favicon          = $this->config->get('settings.favicon', '');
+        $logo             = $this->config->get('settings.logo', '');
+        $maintenance      = $this->config->get('settings.maintenance', false);
+
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/js/script.js';
 
         $html      = $response->getBlock('this');
@@ -172,12 +179,12 @@ class HookApp
         $siteTitle = $html->getVar('title');
         $pageTitle = $response->getBlock('page')->getVar('title_main');
 
-        $title = $data[ 'meta_title' ];
+        $title = $meta_title;
         if ($siteTitle) {
             $title = str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
-                [ $data[ 'meta_description' ],
-                $data[ 'meta_title' ], $pageTitle ],
+                [ $meta_description,
+                $meta_title, $pageTitle ],
                 $siteTitle
             );
         } elseif ($pageTitle) {
@@ -187,32 +194,32 @@ class HookApp
         $description = $siteDesc
             ? str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
-                [ $data[ 'meta_description' ], $data[ 'meta_title' ], $pageTitle ],
+                [ $meta_description, $meta_title, $pageTitle ],
                 $siteDesc
             )
-            : $data[ 'meta_description' ];
+            : $meta_description;
 
         $response->view('this', [
             'title'       => $title,
             'description' => $description,
-            'keyboard'    => $data[ 'meta_keyboard' ],
+            'keyboard'    => $meta_keyboard,
             'generator'   => 'Soosyze CMS',
-            'favicon'     => $data[ 'favicon' ],
+            'favicon'     => $favicon,
             'scripts'     => $scripts . '<script src="' . $vendor . '"></script>'
         ])->view('page', [
-            'title' => $data[ 'meta_title' ],
-            'logo'  => is_file(ROOT . $data[ 'logo' ])
-                ? $request->getBasePath() . $data[ 'logo' ]
-                : $data[ 'logo' ]
+            'title' => $meta_title,
+            'logo'  => is_file(ROOT . $logo)
+                ? $request->getBasePath() . $logo
+                : $logo
         ]);
 
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
-        if ($data[ 'maintenance' ] && $granted) {
+        if ($maintenance && $granted) {
             $response->view('page.messages', [ 'infos' => [ t('Site under maintenance') ] ]);
         }
         if ($this->router->parseQueryFromRequest() === '/' &&
-            (!$data[ 'maintenance' ] ||
-            ($data[ 'maintenance' ] && $granted))) {
+            (!$maintenance ||
+            ($maintenance && $granted))) {
             $response->override('page', [ 'page-front.php' ]);
         }
     }
