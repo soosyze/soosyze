@@ -105,34 +105,39 @@ class HookUrl
             ->execute();
     }
 
-    private function makeAlias($validator)
+    private function makeAlias( $validator )
     {
-        $alias = $validator->getInput('meta_url') !== ''
+        $metaUrl = $validator->getInput('meta_url') !== ''
             ? $validator->getInput('meta_url')
             : $this->config->get('settings.node_url_' . $validator->getInput('type'));
 
-        $alias = empty($alias)
-            ? $this->config->get('settings.node_default_url')
-            : $alias;
+        $urlDefault = empty($metaUrl)
+            ? $this->config->get('settings.node_default_url', '')
+            : $metaUrl;
+
+        if( $urlDefault === '' )
+        {
+            return '';
+        }
 
         $time = strtotime($validator->getInput('date_created'));
 
-        return str_replace(
+        $alias = str_replace(
             [
-            ':date_created_year',
-            ':date_created_month',
-            ':date_created_day',
-            ':node_title',
-            ':node_type'
-            ],
-            [
-            date('Y', $time),
-            date('m', $time),
-            date('d', $time),
-            Util::strSlug($validator->getInput('title'), '-'),
-            $validator->getInput('type')
-            ],
-            $alias
+                ':date_created_year',
+                ':date_created_month',
+                ':date_created_day',
+                ':node_title',
+                ':node_type'
+            ], [
+                date('Y', $time),
+                date('m', $time),
+                date('d', $time),
+                $validator->getInput('title'),
+                $validator->getInput('type')
+            ], $urlDefault
         );
+
+        return Util::strSlug($alias, '-', '\/');
     }
 }
