@@ -52,13 +52,13 @@ class Installer implements \SoosyzeCore\System\Migration
             ->values([
                 'article', $idImage, 1, 'Picture',
                 'required_without:file-name-image|!required|image|max:800kb',
-                'Le poids de l\image doit être inférieur ou égale à 800ko',
+                'The weight of the image must be less than or equal to 800ko',
                 true
             ])
             ->values([
                 'article', $idSummary, 2, 'Summary',
                 'required|string|max:512',
-                'Résumé brièvement votre article en moins de 512 caractères',
+                'Briefly summarize your article in less than 512 characters',
                 true
             ])
             ->values([
@@ -68,7 +68,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 true
             ])
             ->values([
-                'article', $idReading, 4, 'Temps de lecture',
+                'article', $idReading, 4, 'Reading time',
                 'number|min:1',
                 '',
                 false
