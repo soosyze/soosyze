@@ -42,13 +42,14 @@ Find us on the networks :
 
 ## Serveur Web
 
-| Web server              | Soosyze 1.x  |
-|-------------------------|--------------|
-| Apache HTTP Server 2.2+ | ✓ Supported  |
-| Ngnix 1+                | ✓ Supported* |
-| IIS                     | Need test    |
+| Web server              | Soosyze 1.x   |
+|-------------------------|---------------|
+| Apache HTTP Server 2.2+ | ✓ Supported   |
+| Ngnix 1+                | ✓ Supported*  |
+| IIS                     | ✓ Supported** |
 
 *For Nginx, see the [installation recommendation](#ngnix)
+**For IIS, see the [installation recommendation](#iis)
 
 ## PHP version
 
@@ -68,7 +69,8 @@ With PHP 7.x, your performance in terms of memory and performance will increase 
 * `gd` for image processing,
 * `json` to save data and configurations,
 * `mbstring` for your emails,
-* `session` to store your data (server side) from one page to another.
+* `session` to store your data (server side) from one page to another,
+* `zip` to create backups and restore them in case of error.
 
 These extensions are usually active by default. But if he missed an error message, he would come to inform you.
 
@@ -100,7 +102,7 @@ To install **the production version of the Soosyze CMS**, download and uncompres
 
 ### :car: Download via Composer
 
-To install the production version of Soosyze CMS via Composer it is necessary to have:
+To install **the production version of Soosyze CMS** via Composer it is necessary to have:
 
 * The installer or the binary file [Composer](https://getcomposer.org/download/),
 * And the `php` command in your environment variables.
@@ -164,6 +166,13 @@ If you use Nginx, add the following items to your server's configuration block t
 ```
 include path\soosyze\.nginx.conf;
 ```
+
+### IIS
+
+If you use IIS, **you must block access to the following directories**:
+
+* `app/config`,
+* `app/data`.
 
 # License
 

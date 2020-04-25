@@ -42,13 +42,14 @@ Vous pouvez également nous trouver sur les réseaux :
 
 ## Serveur Web
 
-| Serveur Web             | Soosyze 1.x |
-|-------------------------|-------------|
-| Apache HTTP Server 2.2+ | ✓ Supporté  |
-| Ngnix 1+                | ✓ Supporté* |
-| IIS                     | Need test   |
+| Serveur Web             | Soosyze 1.x  |
+|-------------------------|--------------|
+| Apache HTTP Server 2.2+ | ✓ Supporté   |
+| Ngnix 1+                | ✓ Supporté*  |
+| IIS                     | ✓ Supporté** |
 
 *Pour Ngnix voir la [recommandation d'installation](#ngnix)
+**Pour IIS voir la [recommandation d'installation](#iis)
 
 ## Version PHP
 
@@ -68,7 +69,8 @@ En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mé
 * `gd` pour le traitement d'image,
 * `json` pour sauvegarder les données et les configurations,
 * `mbstring` pour vos emails,
-* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre.
+* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre,
+* `zip` pour créer des sauvegarde et le restaurer en cas d'erreur.
 
 Ces extensions sont généralement actives par défaut. Mais si l'une venait à manquer un message d'erreur viendrait vous en informer.
 
@@ -162,11 +164,18 @@ Et voilà, le CMS est installé.
 
 ### Ngnix
 
-Si vous utilisez Nginx, ajouter les éléments suivants au bloc de configuration de votre serveur pour assurer la sécurité de CMS Soosyze:
+Si vous utilisez Nginx, ajouter les éléments suivants au bloc de configuration de votre serveur pour assurer la sécurité de CMS Soosyze :
 
 ```
 include path\soosyze\.nginx.conf;
 ```
+
+### IIS
+
+Si vous utilisez IIS, **vous devez impérativement bloquer l'accès aux répertoires suivants** :
+
+* `app/config`,
+* `app/data`.
 
 # Licence
 
