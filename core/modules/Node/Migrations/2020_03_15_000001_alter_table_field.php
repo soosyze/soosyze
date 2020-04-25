@@ -17,6 +17,7 @@ return [
             ->values([ 'image', 'image' ])
             ->values([ 'summary', 'textarea' ])
             ->values([ 'reading_time', 'number' ])
+            ->values([ 'weight', 'number' ])
             ->execute();
 
         $sch->alterTable('node_type_field', function (TableBuilder $table) {
