@@ -238,7 +238,7 @@ class User
     public function isGrantedRoute($request)
     {
         $route = $this->router->parse($request);
-        
+
         /* Si la permission n'existe pas. */
         if ($this->hasPermission($route[ 'key' ])) {
             return $this->isGranted($route[ 'key' ]);

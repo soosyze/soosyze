@@ -111,7 +111,7 @@ Rendez-vous dans le répertoire de votre serveur, ouvrez une invite de commandes
 (*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
 
 ```sh
-php composer.phar create-project soosyze/soosyze [my-directory] --stability=alpha --no-dev
+php composer.phar create-project soosyze/soosyze [my-directory] --stability=beta --no-dev
 ```
 
 ### :airplane: Téléchargement via Git & Composer

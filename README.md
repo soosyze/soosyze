@@ -110,7 +110,7 @@ To install **the production version of Soosyze CMS** via Composer it is necessar
 Go to the directory of your server, open a command prompt and run the command:
 
 ```sh
-php composer.phar create-project soosyze/soosyze [my-directory] --stability=alpha --no-dev
+php composer.phar create-project soosyze/soosyze [my-directory] --stability=beta --no-dev
 ```
 
 ### :airplane: Download via Git & Composer

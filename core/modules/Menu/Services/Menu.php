@@ -178,10 +178,10 @@ class Menu
                 continue;
             }
 
-            if ($alias = $this->alias->getAlias($menu[ 'link' ])) {
-                $menu[ 'link' ] = $alias;
+            if ($source = $this->alias->getSource($menu[ 'link' ])) {
+                $menu[ 'link' ] = $source;
             }
-
+            
             $link = $request->withUri(
                 $this->router->isRewrite()
                 ? $request->getUri()->withPath($menu[ 'link' ])

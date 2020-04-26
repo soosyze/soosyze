@@ -380,7 +380,7 @@ class FormNode extends FormBuilder
                             $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
                                 $form->radio('node_status_id', [
                                     'id'      => "node_status_id-{$value[ 'node_status_id' ]}",
-                                    'checked' => $this->content[ 'node_status_id' ] === $value[ 'node_status_id' ],
+                                    'checked' => $this->content[ 'node_status_id' ] == $value[ 'node_status_id' ],
                                     'class'   => 'radio-button',
                                     'value'   => $value[ 'node_status_id' ]
                                 ])

@@ -470,12 +470,12 @@ class Node extends \Soosyze\Controller
             $value = [
                 'date_changed'     => time(),
                 'date_created'     => strtotime($validator->getInput('date_created')),
-                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
                 'meta_description' => $validator->getInput('meta_description'),
+                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
-                'node_status_id'   => $validator->getInput('node_status_id'),
+                'node_status_id'   => (int) $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title')
             ];
 

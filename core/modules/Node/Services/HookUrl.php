@@ -105,7 +105,7 @@ class HookUrl
             ->execute();
     }
 
-    private function makeAlias( $validator )
+    private function makeAlias($validator)
     {
         $metaUrl = $validator->getInput('meta_url') !== ''
             ? $validator->getInput('meta_url')
@@ -115,8 +115,7 @@ class HookUrl
             ? $this->config->get('settings.node_default_url', '')
             : $metaUrl;
 
-        if( $urlDefault === '' )
-        {
+        if ($urlDefault === '') {
             return '';
         }
 
@@ -129,13 +128,15 @@ class HookUrl
                 ':date_created_day',
                 ':node_title',
                 ':node_type'
-            ], [
+            ],
+            [
                 date('Y', $time),
                 date('m', $time),
                 date('d', $time),
                 $validator->getInput('title'),
                 $validator->getInput('type')
-            ], $urlDefault
+            ],
+            $urlDefault
         );
 
         return Util::strSlug($alias, '-', '\/');
