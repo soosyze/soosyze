@@ -137,7 +137,7 @@ class FormUser extends FormBuilder
                     ->label('terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
                         'for' => 'terms_of_service'
                     ]);
-            }, [ 'class' => 'form-group' ])
+            }, self::$attrGrp)
                 ->html('terms_of_service-info', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the terms of service'),
                     'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
@@ -150,7 +150,7 @@ class FormUser extends FormBuilder
                     ->label('rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
                         'for' => 'rgpd'
                     ]);
-            }, [ 'class' => 'form-group' ])
+            }, self::$attrGrp)
                 ->html('rgpd-info', '<p><a :attr>:_content</a></p>', [
                     '_content' => t('Read the privacy policy'),
                     'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
