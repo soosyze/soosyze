@@ -13,20 +13,26 @@ class FormContact extends FormBuilder
         'message' => '',
     ];
 
+    protected static $attrGrp = [ 'class' => 'form-group' ];
+
     public function setValues($values)
     {
         $this->values = array_merge($this->values, $values);
+
+        return $this;
     }
     
     public function makeFields()
     {
-        return $this->name()
-                ->email()
-                ->object()
-                ->message()
-                ->copy()
-                ->token('token_contact')
-                ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+        $this->name()
+            ->email()
+            ->object()
+            ->message()
+            ->copy()
+            ->token('token_contact')
+            ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+
+        return $this;
     }
 
     protected function name()
@@ -38,7 +44,7 @@ class FormContact extends FormBuilder
                         'required' => 1,
                         'value'    => $this->values[ 'name' ]
                 ]);
-        }, [ 'class' => 'form-group' ]);
+        }, self::$attrGrp);
     }
 
     protected function email()
@@ -50,7 +56,7 @@ class FormContact extends FormBuilder
                         'required' => 1,
                         'value'    => $this->values[ 'email' ]
                 ]);
-        }, [ 'class' => 'form-group' ]);
+        }, self::$attrGrp);
     }
 
     protected function object()
@@ -62,7 +68,7 @@ class FormContact extends FormBuilder
                         'required' => 1,
                         'value'    => $this->values[ 'object' ]
                 ]);
-        }, [ 'class' => 'form-group' ]);
+        }, self::$attrGrp);
     }
 
     protected function message()
@@ -74,7 +80,7 @@ class FormContact extends FormBuilder
                         'required' => 1,
                         'rows'     => 8
                 ]);
-        }, [ 'class' => 'form-group' ]);
+        }, self::$attrGrp);
     }
 
     protected function copy()
@@ -84,6 +90,6 @@ class FormContact extends FormBuilder
                     ->label('copy-label', '<i class="ui" aria-hidden="true"></i> ' . t('Send me a copy of the mail'), [
                         'for' => 'copy'
                     ]);
-        }, [ 'class' => 'form-group' ]);
+        }, self::$attrGrp);
     }
 }

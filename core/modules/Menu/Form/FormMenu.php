@@ -9,6 +9,8 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
         'description' => ''
     ];
 
+    protected static $attrGrp = [ 'class' => 'form-group' ];
+
     public function setValues($values)
     {
         $this->values = array_merge($this->values, $values);
@@ -29,7 +31,7 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
                         'required'    => 1,
                         'value'       => $this->values[ 'title' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('description-group', 'div', function ($form) {
                     $form->label('description-label', t('Description'))
                     ->textarea('description', $this->values[ 'description' ], [
@@ -37,8 +39,8 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
                         'maxlength' => 255,
                         'required'  => 1
                     ]);
-                }, [ 'class' => 'form-group' ]);
-        }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp);
+        }, self::$attrGrp)
             ->token('token_link_form')
             ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),

@@ -15,6 +15,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'target_link' => '_self'
     ];
 
+    protected static $attrGrp = [ 'class' => 'form-group' ];
+
     public function setValues($value)
     {
         $this->values = array_merge($this->values, $value);
@@ -42,7 +44,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'required'    => 1,
                         'value'       => $this->values[ 'title_link' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('link-group', 'div', function ($form) {
                     $form->label('link-label', t('Link'))
                     ->text('link', [
@@ -56,7 +58,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             ? '#' . $this->values[ 'fragment' ]
                             : '')
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('icon-group', 'div', function ($form) {
                     $form->label('icon-label', t('Icon'), [
                         'data-tooltip' => t('Icons are created from the CSS class of FontAwesome'),
@@ -77,7 +79,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             'data-tooltip' => t('Rendering')
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('target_link-group', 'div', function ($form) {
                     $form->label('target_link-label', t('Target'))
                         ->group('target_link_1-group', 'div', function ($form) {
@@ -89,7 +91,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
                                 'for' => 'target_link_1'
                             ]);
-                        }, [ 'class' => 'form-group' ])
+                        }, self::$attrGrp)
                         ->group('target_link_2-group', 'div', function ($form) {
                             $form->radio('target_link', [
                                 'id'       => 'target_link_2',
@@ -99,8 +101,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
                                 'for' => 'target_link_2'
                             ]);
-                        }, [ 'class' => 'form-group' ]);
-                }, [ 'class' => 'form-group' ]);
+                        }, self::$attrGrp);
+                }, self::$attrGrp);
         })
             ->token('token_link_form')
             ->html('cancel', '<button:attr>:_content</button>', [

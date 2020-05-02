@@ -316,7 +316,7 @@ class FormNode extends FormBuilder
                         ->html('cancel', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('meta_description-group', 'div', function ($form) {
                         $form->label('meta_description-label', t('Description'), [
                             'data-tooltip' => t('Leave blank to use the default site description')
@@ -328,13 +328,13 @@ class FormNode extends FormBuilder
                         ->html('cancel', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('meta_noindex-group', 'div', function ($form) {
                         $form->checkbox('meta_noindex', [ 'checked' => $this->content[ 'meta_noindex' ] ])
                         ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Block indexing') . ' <code>noindex</code>', [
                             'for' => 'meta_noindex'
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('meta_nofollow-group', 'div', function ($form) {
                         $form->checkbox('meta_nofollow', [ 'checked' => $this->content[ 'meta_nofollow' ] ])
                         ->label('meta_nofollow-label', '<span class="ui"></span> ' . t('Block link tracking') . ' <code>nofollow</code>', [
