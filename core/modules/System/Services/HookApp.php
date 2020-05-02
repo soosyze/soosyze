@@ -144,16 +144,29 @@ class HookApp
             }
         }
 
-        $response = empty($responseMaintenance) || $responseMaintenance->getStatusCode() === 404
-            ? $this->tpl
+        if( empty($responseMaintenance) || in_array($responseMaintenance->getStatusCode(), [
+                403, 404 ]) )
+        {
+            $response = $this->tpl
                 ->getTheme()
                 ->make('page', 'page-maintenance.php', $this->views, [
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
-                    'title_main' => t('Site under maintenance')
+                    'title_main' => t('Site under maintenance'),
+                ]);
+        }
+        else
+        {
+            $content = $responseMaintenance->getBlock('page.content');
+            $response = $this->tpl
+                ->getTheme()
+                ->make('page', 'page-maintenance.php', $this->views, [
+                    'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
+                    'title_main' => t('Site under maintenance'),
                 ])
-            : $responseMaintenance;
+                ->addBlock('page.content', $content);
+        }
 
-        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+        if (!$response instanceof Redirect) {
             $response = $response->withStatus(503);
         }
     }
