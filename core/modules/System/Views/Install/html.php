@@ -71,6 +71,9 @@
                 font-size: 1.2em;
                 font-weight: 700;
             }
+            .is-invalid{
+                border-color:#a94442;
+            }
         </style>
     </head>
     <body>

@@ -216,7 +216,7 @@ class HookStep
             ->submit('submit', t('Install'), [ 'class' => 'btn btn-success' ]);
 
         if (isset($_SESSION[ 'errors_keys' ][ $id ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ][ $id ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ][ $id ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ][ $id ]);
         }
 
