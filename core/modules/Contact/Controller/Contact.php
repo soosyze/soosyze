@@ -82,8 +82,8 @@ class Contact extends \Soosyze\Controller
 
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
             $mail   = (new Email())
-                ->to(self::config()->get('settings.email'))
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
+                ->to(self::config()->get('settings.email'))
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ]);
 

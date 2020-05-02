@@ -191,7 +191,7 @@ class Role extends \Soosyze\Controller
 
     public function update($id, $req)
     {
-        if (!self::query()->from('role')->where('role_id', '==', $id)->fetch()) {
+        if (!$this->find($id)) {
             return $this->get404($req);
         }
 
@@ -241,7 +241,7 @@ class Role extends \Soosyze\Controller
 
     public function remove($id, $req)
     {
-        if (!($data = self::query()->from('role')->where('role_id', '==', $id)->fetch())) {
+        if (!($data = $this->find($id))) {
             return $this->get404($req);
         }
 
@@ -283,7 +283,7 @@ class Role extends \Soosyze\Controller
 
     public function delete($id, $req)
     {
-        if (!self::query()->from('role')->where('role_id', '==', $id)->fetch()) {
+        if (!$this->find($id)) {
             return $this->get404($req);
         }
 
@@ -313,5 +313,10 @@ class Role extends \Soosyze\Controller
         }
 
         return new Redirect($route);
+    }
+    
+    private function find($id)
+    {
+        return self::query()->from('role')->where('role_id', '==', $id)->fetch();
     }
 }

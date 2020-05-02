@@ -168,7 +168,7 @@ class Profil extends \Soosyze\Controller
 
     public function update($id, $req)
     {
-        if (!($content = self::fileprofil()->find($id))) {
+        if (!self::fileprofil()->find($id)) {
             return $this->get404($req);
         }
 
