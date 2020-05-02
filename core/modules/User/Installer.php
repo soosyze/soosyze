@@ -113,10 +113,13 @@ class Installer implements \SoosyzeCore\System\Migration
                     'user.account', null, 'My account', 'user/account', 'menu-user', 1, -1
                 ])
                 ->values([
-                    'user.login', null, 'Log in', 'user/login', 'menu-user', 2, -1
+                    'user.login', null, 'Sign in', 'user/login', 'menu-user', 2, -1
                 ])
                 ->values([
-                    'user.logout', 'fa fa-power-off', 'Log out', 'user/logout', 'menu-user', 3, -1
+                    'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout', 'menu-user', 3, -1
+                ])
+                ->values([
+                    'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register', 'menu-user', 4, -1
                 ])
                 ->execute();
         }
