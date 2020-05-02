@@ -27,7 +27,7 @@ class BackupService
         $this->router = $router;
         $this->config = $config;
       
-        $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups', false);
+        $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups');
     }
     
     public function listBackups()
