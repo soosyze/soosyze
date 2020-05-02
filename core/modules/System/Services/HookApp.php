@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\System\Services;
 
+use Soosyze\Components\Http\Redirect;
+
 class HookApp
 {
     protected $router;
@@ -88,14 +90,14 @@ class HookApp
                 ])
             : $responseNoFound;
 
-        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+        if (!$response instanceof Redirect) {
             $response = $response->withStatus(404);
         }
     }
 
     public function hooks403($request, &$response)
     {
-        if (($path = $this->config->get('settings.path_access_denied')) != '') {
+        if (($path = $this->config->get('settings.path_access_denied', '')) !== '') {
             $path = $this->alias->getSource($path, $path);
 
             $requestDenied = $request
@@ -121,14 +123,14 @@ class HookApp
                 ])
             : $responseDenied;
 
-        if (!$response instanceof \Soosyze\Components\Http\Redirect) {
+        if (!$response instanceof Redirect) {
             $response = $response->withStatus(403);
         }
     }
 
     public function hooks503($request, &$response)
     {
-        if (($path = $this->config->get('settings.path_access_denied')) != '') {
+        if (($path = $this->config->get('settings.path_maintenance', '')) !== '') {
             $path = $this->alias->getSource($path, $path);
 
             $requestMaintenance = $request
@@ -144,18 +146,15 @@ class HookApp
             }
         }
 
-        if( empty($responseMaintenance) || in_array($responseMaintenance->getStatusCode(), [
-                403, 404 ]) )
-        {
+        if (empty($responseMaintenance) || in_array($responseMaintenance->getStatusCode(), [
+                403, 404 ])) {
             $response = $this->tpl
                 ->getTheme()
                 ->make('page', 'page-maintenance.php', $this->views, [
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Site under maintenance'),
                 ]);
-        }
-        else
-        {
+        } else {
             $content = $responseMaintenance->getBlock('page.content');
             $response = $this->tpl
                 ->getTheme()

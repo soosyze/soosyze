@@ -1,6 +1,6 @@
 
 <header id="wrapper_header">
-    <?php if( $logo ): ?>
+    <?php if ($logo): ?>
 
         <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
     <?php endif; ?>
@@ -14,7 +14,7 @@
     </header>
     <div class="container">
         <div class="row">
-            <?php if( !empty($section[ 'messages' ]) ): ?>
+            <?php if (!empty($section[ 'messages' ])): ?>
 
                 <div class="col-md-12">
                     <?php echo $section[ 'messages' ]; ?>
@@ -23,7 +23,7 @@
             <?php endif; ?>
 
             <div class="col-md-12">
-                <?php if( !empty($section[ 'content' ]) ): ?>
+                <?php if (!empty($section[ 'content' ])): ?>
                     <?php echo $section[ 'content' ]; ?>
 
                 <?php else: ?>
