@@ -76,11 +76,19 @@ class Register extends \Soosyze\Controller
                 ->where('username', $validator->getInput('username'))->fetch())
             ? $user[ 'username' ]
             : '';
+        $is_rgpd = empty(self::config()->get('settings.rgpd_show', ''))
+            ? ''
+            : self::config()->get('settings.rgpd_show');
+
+        $is_terms_of_service = empty(self::config()->get('settings.terms_of_service_show', ''))
+            ? ''
+            : self::config()->get('settings.terms_of_service_show');
+        
         $validator
             ->addInput('is_email', $is_email)
             ->addInput('is_username', $is_username)
-            ->addInput('is_rgpd', self::config()->get('settings.rgpd_show', ''))
-            ->addInput('is_terms_of_service', self::config()->get('settings.terms_of_service_show', ''))
+            ->addInput('is_rgpd', $is_rgpd)
+            ->addInput('is_terms_of_service', $is_terms_of_service)
             ->setRules([
                 'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
                 'email'            => 'required|string|email|!equal:@is_email|to_htmlsc',
@@ -120,10 +128,18 @@ class Register extends \Soosyze\Controller
             ];
 
             $this->container->callHook('register.store.before', [ $validator, &$data ]);
-            self::query()->insertInto('user', array_keys($data))->values($data)->execute();
+            self::query()
+                ->insertInto('user', array_keys($data))
+                ->values($data)
+                ->execute();
+            
             $user = self::user()->getUserActived($data[ 'email' ], false);
-            self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
-                ->values([ $user[ 'user_id' ], 2 ])->execute();
+            
+            self::query()
+                ->insertInto('user_role', [ 'user_id', 'role_id' ])
+                ->values([ $user[ 'user_id' ], 2 ])
+                ->execute();
+            
             $this->sendMailRegister($data[ 'email' ]);
             $this->container->callHook('register.store.after', [ $validator ]);
 
@@ -146,36 +162,40 @@ class Register extends \Soosyze\Controller
         }
 
         $this->container->callHook('register.activate.before', [ $id ]);
-        self::query()->update('user', [ 'token_actived' => '', 'actived' => true ])
-            ->where('user_id', $id)->execute();
+        self::query()
+            ->update('user', [ 'token_actived' => null, 'actived' => true ])
+            ->where('user_id', '==', $id)
+            ->execute();
         $this->container->callHook('register.activate.after', [ $id ]);
 
         $_SESSION[ 'messages' ][ 'success' ] = [
             t('Your user account has just been activated, you can now login.')
         ];
-        $route = self::router()->getRoute('user.login');
 
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('user.login', [
+            ':url' => ''
+        ]));
     }
 
     protected function sendMailRegister($from)
     {
-        $user    = self::user()->getUser($from);
-        $url     = self::router()->getRoute('user.activate', [
+        $user     = self::user()->getUser($from);
+        $urlReset = self::router()->getRoute('user.activate', [
             ':id'    => $user[ 'user_id' ],
             ':token' => $user[ 'token_actived' ]
         ]);
-        $message = t('A user registration request has been made.')
-            . t('You can now validate the creation of your user account by clicking on this link or by copying it to your browser: :url', [
-                ':url' => $url
-            ])
-            . t('This link can only be used once.');
 
-        $mail = (new Email())
-            ->to(self::config()->get('settings.email'))
-            ->from($from)
+        $message = t('A user registration request has been made.') . "<br><br>\n";
+        $message .= t('You can now validate the creation of your user account by clicking on this link or by copying it to your browser: ') . "\n";
+        $message .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . "</a><br>\n";
+        $message .= t('This link can only be used once.');
+
+        $mail = (new Email)
+            ->from(self::config()->get('settings.email'))
+            ->to($from)
             ->subject(t('User registration'))
-            ->message($message);
+            ->message($message)
+            ->isHtml(true);
 
         if ($mail->send()) {
             $_SESSION[ 'messages' ][ 'success' ] = [
