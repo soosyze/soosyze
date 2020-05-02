@@ -18,17 +18,21 @@ class FormContact extends FormBuilder
     public function setValues($values)
     {
         $this->values = array_merge($this->values, $values);
+
+        return $this;
     }
     
     public function makeFields()
     {
-        return $this->name()
-                ->email()
-                ->object()
-                ->message()
-                ->copy()
-                ->token('token_contact')
-                ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+        $this->name()
+            ->email()
+            ->object()
+            ->message()
+            ->copy()
+            ->token('token_contact')
+            ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+
+        return $this;
     }
 
     protected function name()
