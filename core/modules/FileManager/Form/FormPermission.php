@@ -6,7 +6,7 @@ use SoosyzeCore\FileManager\Services\FileManager;
 
 class FormPermission extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $content = [
+    protected $values = [
         'folder_show'         => '',
         'folder_show_sub'     => true,
         'profil_weight'       => 1,
@@ -27,9 +27,9 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
 
     protected $roles = [];
 
-    public function content(array $content)
+    public function setValues(array $values)
     {
-        $this->content = array_merge($this->content, $content);
+        $this->values = array_merge($this->values, $values);
 
         return $this;
     }
@@ -38,13 +38,13 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
     {
         $this->roles = array_merge($this->roles, $roles);
         foreach ($useRole as $value) {
-            $this->content[ 'roles' ][ $value ] = '';
+            $this->values[ 'roles' ][ $value ] = '';
         }
 
         return $this;
     }
 
-    public function createForm()
+    public function makeFields()
     {
         $this->group('folder_show-fieldset', 'fieldset', function ($form) {
             $form->legend('folder_show-legend', t('Directory'))
@@ -53,14 +53,14 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     ->text('folder_show', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $this->content[ 'folder_show' ]
+                        'value'    => $this->values[ 'folder_show' ]
                     ])
                     ->html('cancel', '<p>:_content</p>', [
                         '_content' => t('Variables allowed') . '<code>:user_id</code>'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('folder_show_sub-group', 'div', function ($form) {
-                    $form->checkbox('folder_show_sub', [ 'checked' => $this->content[ 'folder_show_sub' ] ])
+                    $form->checkbox('folder_show_sub', [ 'checked' => $this->values[ 'folder_show_sub' ] ])
                     ->label('folder_show_sub-label', '<i class="ui"></i><i class="fa fa-sitemap"></i> ' . t('Sub directories included'), [
                         'for' => 'folder_show_sub' ]);
                 }, [ 'class' => 'form-group' ])
@@ -71,7 +71,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         'class' => 'form-control',
                         'max'   => 50,
                         'min'   => 0,
-                        'value' => $this->content[ 'profil_weight' ]
+                        'value' => $this->values[ 'profil_weight' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
         })
@@ -80,7 +80,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 foreach ($this->roles as $role) {
                     $form->group('roles-' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role) {
                         $form->checkbox("roles[{$role[ 'role_id' ]}]", [
-                            'checked' => key_exists($role[ 'role_id' ], $this->content[ 'roles' ]),
+                            'checked' => key_exists($role[ 'role_id' ], $this->values[ 'roles' ]),
                             'id'      => "role-{$role[ 'role_id' ]}",
                             'value'   => $role[ 'role_label' ]
                         ])
@@ -99,17 +99,17 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Directory permissions'))
                 ->group('folder_store-group', 'div', function ($form) {
-                    $form->checkbox('folder_store', [ 'checked' => $this->content[ 'folder_store' ] ])
+                    $form->checkbox('folder_store', [ 'checked' => $this->values[ 'folder_store' ] ])
                     ->label('folder_store-label', '<i class="ui"></i><i class="fa fa-plus"></i> ' . t('Create'), [
                         'for' => 'folder_store' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('folder_update-group', 'div', function ($form) {
-                    $form->checkbox('folder_update', [ 'checked' => $this->content[ 'folder_update' ] ])
+                    $form->checkbox('folder_update', [ 'checked' => $this->values[ 'folder_update' ] ])
                     ->label('folder_update-label', '<i class="ui"></i><i class="fa fa-edit"></i> ' . t('Edit'), [
                         'for' => 'folder_update' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('folder_delete-group', 'div', function ($form) {
-                    $form->checkbox('folder_delete', [ 'checked' => $this->content[ 'folder_delete' ] ])
+                    $form->checkbox('folder_delete', [ 'checked' => $this->values[ 'folder_delete' ] ])
                     ->label('folder_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
                         'for' => 'folder_delete' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
@@ -121,7 +121,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         $form->number('folder_size', [
                             'class' => 'form-control',
                             'min'   => 0,
-                            'value' => $this->content[ 'folder_size' ]
+                            'value' => $this->values[ 'folder_size' ]
                         ])->html('folder_size-unit', '<span:attr>:_content</span>', [
                             '_content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
@@ -132,27 +132,27 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
             ->group('file-fieldset', 'fieldset', function ($form) {
                 $form->legend('file-profil-legend', t('Files permissions'))
                 ->group('file_store-group', 'div', function ($form) {
-                    $form->checkbox('file_store', [ 'checked' => $this->content[ 'file_store' ] ])
+                    $form->checkbox('file_store', [ 'checked' => $this->values[ 'file_store' ] ])
                     ->label('file_store-label', '<i class="ui"></i><i class="fa fa-plus"></i> ' . t('Create'), [
                         'for' => 'file_store' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_update-group', 'div', function ($form) {
-                    $form->checkbox('file_update', [ 'checked' => $this->content[ 'file_update' ] ])
+                    $form->checkbox('file_update', [ 'checked' => $this->values[ 'file_update' ] ])
                     ->label('file_update-label', '<i class="ui"></i><i class="fa fa-edit"></i> ' . t('Edit'), [
                         'for' => 'file_update' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_delete-group', 'div', function ($form) {
-                    $form->checkbox('file_delete', [ 'checked' => $this->content[ 'file_delete' ] ])
+                    $form->checkbox('file_delete', [ 'checked' => $this->values[ 'file_delete' ] ])
                     ->label('file_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
                         'for' => 'file_delete' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_download-group', 'div', function ($form) {
-                    $form->checkbox('file_download', [ 'checked' => $this->content[ 'file_download' ] ])
+                    $form->checkbox('file_download', [ 'checked' => $this->values[ 'file_download' ] ])
                     ->label('file_download-label', '<i class="ui"></i><i class="fa fa-download"></i> ' . t('Download'), [
                         'for' => 'file_download' ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_clipboard-group', 'div', function ($form) {
-                    $form->checkbox('file_clipboard', [ 'checked' => $this->content[ 'file_clipboard' ] ])
+                    $form->checkbox('file_clipboard', [ 'checked' => $this->values[ 'file_clipboard' ] ])
                     ->label('file_clipboard-label', '<i class="ui"></i><i class="fa fa-copy"></i> ' . t('Copy link'), [
                         'for' => 'file_clipboard' ]);
                 }, [ 'class' => 'form-group col-sm-8' ])
@@ -164,7 +164,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         $form->number('file_size', [
                             'class' => 'form-control',
                             'min'   => 0,
-                            'value' => $this->content[ 'file_size' ]
+                            'value' => $this->values[ 'file_size' ]
                         ])->html('file_size-unit', '<span:attr>:_content</span>', [
                             '_content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
@@ -176,7 +176,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 $form->legend('extensions-legend', t('File extensions'))
                 ->group('file_extensions_all-group', 'div', function ($form) {
                     $form->checkbox('file_extensions_all', [
-                        'checked' => $this->content[ 'file_extensions_all' ]
+                        'checked' => $this->values[ 'file_extensions_all' ]
                     ])
                     ->label('all_extensions-label', '<i class="ui"></i>' . t('All extensions'), [
                         'for' => 'file_extensions_all'
@@ -186,7 +186,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     $form->group("$extension-group", 'div', function ($form) use ($extension) {
                         $form->checkbox("file_extensions[$extension]", [
                             'class'   => 'ext',
-                            'checked' => in_array($extension, $this->content[ 'file_extensions' ]),
+                            'checked' => in_array($extension, $this->values[ 'file_extensions' ]),
                             'value'   => $extension
                         ])
                         ->label("$extension-label", '<i class="ui"></i>' . $extension, [

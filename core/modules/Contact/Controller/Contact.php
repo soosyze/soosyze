@@ -18,19 +18,21 @@ class Contact extends \Soosyze\Controller
 
     public function form()
     {
-        $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];
+        $values = [];
 
-        $this->container->callHook('contact.form.data', [ &$content ]);
+        $this->container->callHook('contact.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('contact.check');
-        $form = (new FormContact([ 'method' => 'post', 'action' => $action ]))->generate($content);
+        $form = (new FormContact([ 'method' => 'post', 'action' => $action ]))
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('contact.form', [ &$form, $content ]);
+        $this->container->callHook('contact.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -38,7 +40,7 @@ class Contact extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 
@@ -80,8 +82,8 @@ class Contact extends \Soosyze\Controller
 
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
             $mail   = (new Email())
-                ->to(self::config()->get('settings.email'))
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
+                ->to(self::config()->get('settings.email'))
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ]);
 

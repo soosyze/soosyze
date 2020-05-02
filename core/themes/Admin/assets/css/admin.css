@@ -24,7 +24,9 @@
 .action_bar {
     margin-bottom: 1em;
 }
-
+.is-invalid{
+    border-color:#a94442;
+}
 
 /* --------------------------- */
 /* -------- FORM FLEX-- ------ */

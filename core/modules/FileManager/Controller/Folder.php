@@ -5,6 +5,7 @@ namespace SoosyzeCore\FileManager\Controller;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\FileManager\Form\FormFolder;
 
 class Folder extends \Soosyze\Controller
 {
@@ -25,32 +26,18 @@ class Folder extends \Soosyze\Controller
         }
         $spl  = new \SplFileInfo($dir);
 
-        $content[ 'name' ] = '';
+        $values[ 'name' ] = '';
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormBuilder([
+        $form = (new FormFolder([
             'action' => self::router()->getRoute('filemanager.folder.store', [ ':path' => $path ]),
             'method' => 'post',
             ]))
-            ->group('folder-fieldset', 'fieldset', function ($form) use ($content) {
-                $form->legend('folder-legend', t('Créer un répertoire'))
-                ->group('name-group', 'div', function ($form) use ($content) {
-                    $form->label('name-label', t('Name'), [
-                        'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
-                    ])
-                    ->text('name', [
-                        'class'     => 'form-control',
-                        'maxlenght' => 255,
-                        'required'  => 1,
-                        'value'     => $content[ 'name' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token('token_folder_store')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->setValues($values)
+            ->makeFields();
 
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
@@ -113,33 +100,19 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $spl  = new \SplFileInfo($dir);
-        $data = self::filemanager()->parseDir($spl, $path);
+        $spl    = new \SplFileInfo($dir);
+        $values = self::filemanager()->parseDir($spl, $path);
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormBuilder([
+        $form = (new FormFolder([
             'action' => self::router()->getRoute('filemanager.folder.update', [ ':path' => $path ]),
             'method' => 'post',
             ]))
-            ->group('folder-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('folder-legend', t('Rename the directory'))
-                ->group('name-group', 'div', function ($form) use ($data) {
-                    $form->label('name-label', t('Name'), [
-                        'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
-                    ])
-                    ->text('name', [
-                        'class'     => 'form-control',
-                        'maxlenght' => 255,
-                        'required'  => 1,
-                        'value'     => $data[ 'name' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-            })
-            ->token('token_folder_update')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->setValues($values)
+            ->makeFields();
 
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)

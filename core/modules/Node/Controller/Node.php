@@ -118,7 +118,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -137,7 +137,7 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 
@@ -330,7 +330,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.edit.form.data', [ &$content, $id_node ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $content = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
         
@@ -349,7 +349,7 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 

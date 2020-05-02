@@ -4,6 +4,7 @@ namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
 
@@ -37,7 +38,9 @@ class Login extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
-            ], null, self::config()))->content($data);
+            ], null, self::config()))
+            ->setValues($data);
+
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', t('User login'));
             $form->email($formbuilder)
@@ -123,7 +126,9 @@ class Login extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.relogin.check', [ ':url' => $url ])
-            ]))->content($data);
+            ]))
+            ->setValues($data);
+
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $form->email($formbuilder);
         })->submitForm();
@@ -150,7 +155,8 @@ class Login extends \Soosyze\Controller
 
     public function reloginCheck($url, $req)
     {
-        if (self::config()->has('settings.connect_url') && $url !== '/' . self::config()->get('settings.connect_url', '')) {
+        $connect_url = self::config()->get('settings.connect_url', '');
+        if (!empty($connect_url) && $url !== '/' . $connect_url) {
             return $this->get404($req);
         }
 
@@ -165,35 +171,35 @@ class Login extends \Soosyze\Controller
             $query = self::user()->getUserActived($validator->getInput('email'));
 
             if ($query) {
-                $token = hash('sha256', $query[ 'email' ] . $query[ 'time_installed' ] . time());
+                $token = Util::strRandom();
 
                 self::query()
                     ->update('user', [ 'token_forget' => $token ])
                     ->where('email', $validator->getInput('email'))
                     ->execute();
 
-                $url = self::router()->getRoute('user.reset', [
+                $urlReset = self::router()->getRoute('user.reset', [
                     ':id'    => $query[ 'user_id' ],
                     ':token' => $token
                 ]);
+                $message  = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser:') . "\n";
+                $message  .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . '</a>';
 
-                $message = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser :url', [':url' => $url]);
-
-                $adress = self::config()->get('settings.email', $query[ 'email' ]);
-                $email  = (new Email())
-                    ->to($adress)
-                    ->from($query[ 'email' ])
+                $email = (new Email)
+                    ->from(self::config()->get('settings.email'))
+                    ->to($query[ 'email' ])
                     ->subject(t('New Password'))
-                    ->message($message);
+                    ->message($message)
+                    ->isHtml(true);
 
                 if ($email->send()) {
                     $_SESSION[ 'messages' ][ 'success' ] = [
                         t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
                     ];
 
-                    $route = self::router()->getRoute('user.login', [ ':url' => $url ]);
-
-                    return new Redirect($route);
+                    return new Redirect(self::router()->getRoute('user.login', [
+                            ':url' => $url
+                    ]));
                 } else {
                     $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
                 }
@@ -205,9 +211,10 @@ class Login extends \Soosyze\Controller
         }
 
         $_SESSION[ 'inputs' ] = $validator->getInputs();
-        $route                = self::router()->getRoute('user.relogin', [ ':url' => $url ]);
 
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('user.relogin', [
+            ':url' => $url
+        ]));
     }
 
     public function resetUser($id, $token, $req)

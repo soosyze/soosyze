@@ -272,7 +272,7 @@ class Block extends \Soosyze\Controller
         if (isset($_SESSION[ 'errors' ])) {
             unset($_SESSION[ 'errors_keys' ][ 'roles' ]);
             $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
         } elseif (isset($_SESSION[ 'success' ])) {
             $form->setSuccess($_SESSION[ 'success' ]);

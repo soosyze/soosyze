@@ -4,11 +4,11 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\User\Controller');
 
-R::get('user.login', 'user/login:url', 'Login@formLogin', [ ':url' => '(/[\w\d-_]{10,})?' ]);
-R::post('user.login.check', 'user/login:url', 'Login@loginCheck', [ ':url' => '(/[\w\d-_]{10,})?' ]);
-R::get('user.relogin', 'user/relogin:url', 'Login@relogin', [ ':url' => '(/[\w\d-_]{10,})?' ]);
-R::post('user.relogin.check', 'user/relogin:url', 'Login@reloginCheck', [ ':url' => '(/[\w\d-_]{10,})?' ]);
-R::get('user.reset', 'user/:id/reset/:token', 'Login@resetUser', [ ':id' => '(/\w+)?', ':token' => '[0-9a-zA-Z]+' ]);
+R::get('user.login', 'user/login:url', 'Login@formLogin', [ ':url' => '(/[\d\w-]{10,})?' ]);
+R::post('user.login.check', 'user/login:url', 'Login@loginCheck', [ ':url' => '(/[\d\w-]{10,})?' ]);
+R::get('user.relogin', 'user/relogin:url', 'Login@relogin', [ ':url' => '(/[\d\w-]{10,})?' ]);
+R::post('user.relogin.check', 'user/relogin:url', 'Login@reloginCheck', [ ':url' => '(/[\d\w-]{10,})?' ]);
+R::get('user.reset', 'user/:id/reset/:token', 'Login@resetUser', [ ':id' => '\d+', ':token' => '[\d\w-]+' ]);
 R::get('user.logout', 'user/logout', 'Login@logout');
 
 R::get('user.permission.admin', 'admin/user/permission', 'Permission@admin');
@@ -16,7 +16,7 @@ R::post('user.permission.update', 'admin/user/permission', 'Permission@udpate');
 
 R::get('user.register.create', 'user/register', 'Register@create');
 R::post('user.register.store', 'user/register', 'Register@store');
-R::get('user.activate', 'user/:id/activate/:token', 'Register@activate', [ ':id' => '\d+', ':token' => '[0-9a-zA-Z_-]+']);
+R::get('user.activate', 'user/:id/activate/:token', 'Register@activate', [ ':id' => '\d+', ':token' => '[\d\w-]+']);
 
 R::get('user.role.admin', 'admin/user/role', 'Role@admin');
 R::get('user.role.create', 'admin/user/role/create', 'Role@create');

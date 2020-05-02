@@ -34,6 +34,7 @@
             "route.user.role.update": "hookPeopleAdminister",
             "route.user.role.remove": "hookPeopleAdminister",
             "route.user.role.delete": "hookPeopleAdminister",
+            "route.user.account": "hookLogout",
             "route.user.show": "hookUserShow",
             "route.user.create": "hookPeopleAdminister",
             "route.user.store": "hookPeopleAdminister",

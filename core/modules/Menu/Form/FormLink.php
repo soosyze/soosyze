@@ -4,7 +4,9 @@ namespace SoosyzeCore\Menu\Form;
 
 class FormLink extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $content = [
+    protected $isRewrite = false;
+
+    protected $values = [
         'title_link'  => '',
         'link'        => '',
         'query'       => '',
@@ -13,15 +15,21 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'target_link' => '_self'
     ];
 
-    public function content($content, $isRewrite = false)
+    public function setValues($value)
+    {
+        $this->values = array_merge($this->values, $value);
+
+        return $this;
+    }
+    
+    public function setRewrite($isRewrite)
     {
         $this->isRewrite = $isRewrite ? '?' : '&';
-        $this->content = array_merge($this->content, $content);
 
         return $this;
     }
 
-    public function make()
+    public function makeFields()
     {
         $this->group('link-fieldset', 'fieldset', function ($form) {
             $form->legend('link-legend', t('Add a link in the menu'))
@@ -32,7 +40,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'maxlength'   => 255,
                         'placeholder' => t('Example: Home'),
                         'required'    => 1,
-                        'value'       => $this->content[ 'title_link' ]
+                        'value'       => $this->values[ 'title_link' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('link-group', 'div', function ($form) {
@@ -41,11 +49,11 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'class'       => 'form-control',
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
-                        'value'       => $this->content[ 'link' ] .
-                        (!empty($this->content[ 'query' ])
-                            ? $this->isRewrite . $this->content[ 'query' ]
-                            : '') . (!empty($this->content[ 'fragment' ])
-                            ? '#' . $this->content[ 'fragment' ]
+                        'value'       => $this->values[ 'link' ] .
+                        (!empty($this->values[ 'query' ])
+                            ? $this->isRewrite . $this->values[ 'query' ]
+                            : '') . (!empty($this->values[ 'fragment' ])
+                            ? '#' . $this->values[ 'fragment' ]
                             : '')
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -59,10 +67,10 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                             'class'       => 'form-control text_icon',
                             'maxlength'   => 255,
                             'placeholder' => 'fa fa-bars, fa fa-home...',
-                            'value'       => $this->content[ 'icon' ],
+                            'value'       => $this->values[ 'icon' ],
                         ])
                         ->html('icon-btn', '<button:attr>:_content</button>', [
-                            '_content'     => '<i class="' . $this->content[ 'icon' ] . '" aria-hidden="true"></i>',
+                            '_content'     => '<i class="' . $this->values[ 'icon' ] . '" aria-hidden="true"></i>',
                             'aria-label'   => t('Rendering'),
                             'class'        => 'btn render_icon',
                             'type'         => 'button',
@@ -77,7 +85,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                                 'id'       => 'target_link_1',
                                 'value'    => '_self',
                                 'required' => 1,
-                                'checked' => ($this->content[ 'target_link' ] === '_self')
+                                'checked' => ($this->values[ 'target_link' ] === '_self')
                             ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
                                 'for' => 'target_link_1'
                             ]);
@@ -87,7 +95,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                                 'id'       => 'target_link_2',
                                 'value'    => '_blank',
                                 'required' => 1,
-                                'checked' => ($this->content[ 'target_link' ] === '_blank')
+                                'checked' => ($this->values[ 'target_link' ] === '_blank')
                             ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
                                 'for' => 'target_link_2'
                             ]);

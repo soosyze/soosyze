@@ -120,21 +120,21 @@ class Menu extends \Soosyze\Controller
 
     public function create($req)
     {
-        $content = [ 'name' => '' ];
-        $this->container->callHook('menu.create.form.data', [ &$content ]);
+        $values = [];
+        $this->container->callHook('menu.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('menu.store');
 
         $form = (new FormMenu([ 'method' => 'post', 'action' => $action ]))
-            ->content($content)
-            ->make();
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('menu.create.form', [ &$form, $content ]);
+        $this->container->callHook('menu.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -142,7 +142,7 @@ class Menu extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 
@@ -194,24 +194,24 @@ class Menu extends \Soosyze\Controller
 
     public function edit($menu, $req)
     {
-        if (!($content = self::menu()->getMenu($menu)->fetch())) {
+        if (!($values = self::menu()->getMenu($menu)->fetch())) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('menu.store.form.data', [ &$content ]);
+        $this->container->callHook('menu.store.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('menu.update', [ ':menu' => $menu ]);
 
         $form = (new FormMenu([ 'method' => 'post', 'action' => $action ]))
-            ->content($content)
-            ->make();
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('menu.store.form', [ &$form, $content ]);
+        $this->container->callHook('menu.store.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -219,7 +219,7 @@ class Menu extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'style' => 'border-color:#a94442;' ]);
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 
