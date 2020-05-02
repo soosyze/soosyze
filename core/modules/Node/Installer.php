@@ -167,6 +167,7 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->schema()->dropTable('field');
         $ci->schema()->dropTable('node_type');
         $ci->schema()->dropTable('node');
+        $ci->schema()->dropTable('node_status');
     }
 
     public function hookUninstall(ContainerInterface $ci)
