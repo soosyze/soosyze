@@ -156,6 +156,13 @@ class User extends \Soosyze\Controller
                 'password_new'     => t('New Password'),
                 'password_confirm' => t('Confirmation of the new password'),
                 'roles'            => t('User Roles')
+            ])
+            ->setMessages([
+                'password_confirm' => [
+                    'equal' => [
+                        'must' => ':label is incorrect'
+                    ]
+                ]
             ]);
 
         $this->container->callHook('user.store.validator', [ &$validator ]);
@@ -312,7 +319,14 @@ class User extends \Soosyze\Controller
                 'password_confirm' => t('Confirmation of the new password'),
                 'actived'          => t('Active'),
             ])
-            ->setInputs($post + $files);
+            ->setInputs($post + $files)
+            ->setMessages([
+                'password_confirm' => [
+                    'equal' => [
+                        'must' => t(':label is incorrect')
+                    ]
+                ]
+            ]);
 
         $is_email      = $is_username   = false;
         /* En cas de modification du email. */

@@ -97,7 +97,13 @@ class Register extends \Soosyze\Controller
                 'password_confirm' => t('Confirmation of the new password'),
                 'rgpd'             => t('Accepter la politique de confidentialité'),
                 'terms_of_service' => t('Accepter les conditions générale d\'utilisation')
-        ]);
+        ])->setMessages([
+                'password_confirm' => [
+                    'equal' => [
+                        'must' => ':label is incorrect'
+                    ]
+                ]
+            ]);
 
         $this->container->callHook('register.store.validator', [ &$validator ]);
 
