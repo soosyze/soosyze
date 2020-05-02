@@ -4,19 +4,19 @@ namespace SoosyzeCore\Menu\Form;
 
 class FormMenu extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $content = [
+    protected $values = [
         'title'       => '',
         'description' => ''
     ];
 
-    public function content($content)
+    public function setValues($values)
     {
-        $this->content = array_merge($this->content, $content);
+        $this->values = array_merge($this->values, $values);
 
         return $this;
     }
 
-    public function make()
+    public function makeFields()
     {
         $this->group('menu-fieldset', 'fieldset', function ($form) {
             $form->legend('menu-legend', t('Fill in the following fields'))
@@ -27,12 +27,12 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
                         'maxlength'   => 255,
                         'placeholder' => t('Menu perso'),
                         'required'    => 1,
-                        'value'       => $this->content[ 'title' ]
+                        'value'       => $this->values[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('description-group', 'div', function ($form) {
                     $form->label('description-label', t('Description'))
-                    ->textarea('description', $this->content[ 'description' ], [
+                    ->textarea('description', $this->values[ 'description' ], [
                         'class'     => 'form-control',
                         'maxlength' => 255,
                         'required'  => 1

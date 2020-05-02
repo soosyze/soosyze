@@ -6,17 +6,17 @@ use Soosyze\Components\Form\FormBuilder;
 
 class FormUser extends FormBuilder
 {
-    protected $content = [
-        'username'  => '',
-        'email'     => '',
-        'picture'   => '',
-        'bio'       => '',
-        'name'      => '',
-        'firstname' => '',
-        'actived'   => '',
-        'rgpd' => '',
+    protected $values = [
+        'username'         => '',
+        'email'            => '',
+        'picture'          => '',
+        'bio'              => '',
+        'name'             => '',
+        'firstname'        => '',
+        'actived'          => '',
+        'rgpd'             => '',
         'terms_of_service' => '',
-        'roles' => []
+        'roles'            => []
     ];
 
     protected $file;
@@ -30,9 +30,9 @@ class FormUser extends FormBuilder
         $this->config = $config;
     }
 
-    public function content($content)
+    public function setValues($values)
     {
-        $this->content = array_merge($this->content, $content);
+        $this->values = array_merge($this->values, $values);
 
         return $this;
     }
@@ -45,7 +45,7 @@ class FormUser extends FormBuilder
                     'class'     => 'form-control',
                     'maxlength' => 255,
                     'required'  => 1,
-                    'value'     => $this->content[ 'username' ]
+                    'value'     => $this->values[ 'username' ]
             ]);
         }, self::$attrGrp);
 
@@ -61,7 +61,7 @@ class FormUser extends FormBuilder
                     'maxlength'   => 254,
                     'placeholder' => t('example@mail.com'),
                     'required'    => 1,
-                    'value'       => $this->content[ 'email' ]
+                    'value'       => $this->values[ 'email' ]
             ]);
         }, self::$attrGrp);
 
@@ -75,7 +75,7 @@ class FormUser extends FormBuilder
                 'for'          => 'picture',
                 'data-tooltip' => t('200ko maximum. Allowed extensions: jpeg, jpg, png.')
             ]);
-            $this->file->inputFile('picture', $form, $this->content[ 'picture' ]);
+            $this->file->inputFile('picture', $form, $this->values[ 'picture' ]);
         }, self::$attrGrp);
 
         return $this;
@@ -87,7 +87,7 @@ class FormUser extends FormBuilder
             $form->label('bio-label', t('Biography'), [
                     'data-tooltip' => t('Describe yourself in 255 characters maximum.')
                 ])
-                ->textarea('bio', $this->content[ 'bio' ], [
+                ->textarea('bio', $this->values[ 'bio' ], [
                     'class'       => 'form-control',
                     'maxlength'   => 255,
                     'placeholder' => t('Describe yourself in 255 characters maximum.'),
@@ -105,7 +105,7 @@ class FormUser extends FormBuilder
                 ->text('name', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
-                    'value'     => $this->content[ 'name' ]
+                    'value'     => $this->values[ 'name' ]
             ]);
         }, self::$attrGrp);
 
@@ -119,7 +119,7 @@ class FormUser extends FormBuilder
                 ->text('firstname', [
                     'class'     => 'form-control',
                     'maxlength' => 255,
-                    'value'     => $this->content[ 'firstname' ]
+                    'value'     => $this->values[ 'firstname' ]
             ]);
         }, self::$attrGrp);
 
@@ -133,7 +133,7 @@ class FormUser extends FormBuilder
         }
         if ($this->config->get('settings.terms_of_service_show', false)) {
             $form->group('terms_of_service-group', 'div', function ($form) {
-                $form->checkbox('terms_of_service', [ 'checked' => $this->content[ 'terms_of_service' ] ])
+                $form->checkbox('terms_of_service', [ 'checked' => $this->values[ 'terms_of_service' ] ])
                     ->label('terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
                         'for' => 'terms_of_service'
                     ]);
@@ -146,7 +146,7 @@ class FormUser extends FormBuilder
         }
         if ($this->config->get('settings.rgpd_show', false)) {
             $form->group('rgpd-group', 'div', function ($form) {
-                $form->checkbox('rgpd', [ 'checked' => $this->content[ 'rgpd' ] ])
+                $form->checkbox('rgpd', [ 'checked' => $this->values[ 'rgpd' ] ])
                     ->label('rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
                         'for' => 'rgpd'
                     ]);
@@ -282,7 +282,7 @@ class FormUser extends FormBuilder
         return $this->group('actived-fieldset', 'fieldset', function ($form) {
             $form->legend('actived-legend', t('Status'))
                     ->group('actived-group', 'div', function ($form) {
-                        $form->checkbox('actived', [ 'checked' => $this->content[ 'actived' ] ])
+                        $form->checkbox('actived', [ 'checked' => $this->values[ 'actived' ] ])
                         ->label('actived-label', '<span class="ui"></span> ' . t('Active'), [
                             'for' => 'actived' ]);
                     }, self::$attrGrp);
@@ -295,7 +295,7 @@ class FormUser extends FormBuilder
             $form->legend('role-legend', t('User Roles'));
             foreach ($roles as $role) {
                 $attrRole = [
-                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->content['roles']),
+                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values['roles']),
                         'disabled' => $role[ 'role_id' ] <= 2,
                         'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]

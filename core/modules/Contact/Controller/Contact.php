@@ -18,19 +18,21 @@ class Contact extends \Soosyze\Controller
 
     public function form()
     {
-        $content = [ 'name' => '', 'email' => '', 'object' => '', 'message' => '' ];
+        $values = [];
 
-        $this->container->callHook('contact.form.data', [ &$content ]);
+        $this->container->callHook('contact.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('contact.check');
-        $form = (new FormContact([ 'method' => 'post', 'action' => $action ]))->generate($content);
+        $form = (new FormContact([ 'method' => 'post', 'action' => $action ]))
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('contact.form', [ &$form, $content ]);
+        $this->container->callHook('contact.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

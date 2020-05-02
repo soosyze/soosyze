@@ -27,7 +27,8 @@ class Register extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.register.store')
-            ], null, self::config()))->content($data);
+            ], null, self::config()))->setValues($data);
+
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('register-legend', t('User registration'));
             $form->username($formbuilder)

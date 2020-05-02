@@ -44,20 +44,20 @@ class Profil extends \Soosyze\Controller
 
     public function create($req)
     {
-        $content = [];
+        $values = [];
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = $_SESSION[ 'inputs' ];
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
-        $this->container->callHook('filemanager.profil.create.form.data', [ &$content ]);
+        $this->container->callHook('filemanager.profil.create.form.data', [ &$values ]);
 
         $action = self::router()->getRoute('filemanager.profil.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
-            ->content($content)
+            ->setValues($values)
             ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), [])
-            ->createForm();
+            ->makeFields();
 
-        $this->container->callHook('filemanager.profil.create.form', [ &$form, $content ]);
+        $this->container->callHook('filemanager.profil.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -125,25 +125,25 @@ class Profil extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        if (!($content = self::fileprofil()->find($id))) {
+        if (!($values = self::fileprofil()->find($id))) {
             return $this->get404($req);
         }
-        $content[ 'file_extensions' ] = explode(',', $content[ 'file_extensions' ]);
+        $values[ 'file_extensions' ] = explode(',', $values[ 'file_extensions' ]);
 
-        $this->container->callHook('filemanager.profil.edit.form.data', [ &$content ]);
+        $this->container->callHook('filemanager.profil.edit.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('filemanager.profil.update', [ ':id' => $id ]);
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), self::fileprofil()->getIdRolesUser($id))
-            ->content($content)
-            ->createForm();
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('filemanager.profil.edit.form', [ &$form, $content ]);
+        $this->container->callHook('filemanager.profil.edit.form', [ &$form, $values ]);
         
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

@@ -18,21 +18,21 @@ class Link extends \Soosyze\Controller
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->get404($req);
         }
-        $content = [];
-        $this->container->callHook('menu.link.create.form.data', [ &$content ]);
+        $values = [];
+        $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
         $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
-            ->content($content)
-            ->make();
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('menu.link.create.form', [ &$form, $content ]);
+        $this->container->callHook('menu.link.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -109,14 +109,14 @@ class Link extends \Soosyze\Controller
 
     public function edit($name, $id, $req)
     {
-        if (!($query = self::menu()->find($id))) {
+        if (!($values = self::menu()->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('menu.link.edit.form.data', [ &$query ]);
+        $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $query = array_merge($query, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -126,10 +126,11 @@ class Link extends \Soosyze\Controller
         ]);
 
         $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
-            ->content($query, self::router()->isRewrite())
-            ->make();
+            ->setValues($values)
+            ->setRewrite(self::router()->isRewrite())
+            ->makeFields();
 
-        $this->container->callHook('menu.link.edit.form', [ &$form, $query ]);
+        $this->container->callHook('menu.link.edit.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

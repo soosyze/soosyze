@@ -51,20 +51,22 @@ class Role extends \Soosyze\Controller
 
     public function create($req)
     {
-        $data = [];
-        $this->container->callHook('role.create.form.data', [ &$data ]);
+        $values = [];
+        $this->container->callHook('role.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormUserRole([
             'method' => 'post',
             'action' => self::router()->getRoute('user.role.store')
-            ]))->generate();
+            ]))
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('role.create.form', [ &$form, $data ]);
+        $this->container->callHook('role.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -145,23 +147,25 @@ class Role extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        if (!($data = self::query()->from('role')->where('role_id', '==', $id)->fetch())) {
+        if (!($values = $this->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('role.edit.form.data', [ &$data, $id ]);
+        $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormUserRole([
             'method' => 'post',
             'action' => self::router()->getRoute('user.role.update', [ ':id' => $id ])
-            ]))->content($data)->generate();
+            ]))
+            ->setValues($values)
+            ->makeFields();
 
-        $this->container->callHook('role.edit.form', [ &$form, $data, $id ]);
+        $this->container->callHook('role.edit.form', [ &$form, $values, $id ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

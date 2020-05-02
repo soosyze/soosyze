@@ -6,12 +6,20 @@ use Soosyze\Components\Form\FormBuilder;
 
 class FormContact extends FormBuilder
 {
-    protected $content = [];
+    protected $values = [
+        'name'    => '',
+        'email'   => '',
+        'object'  => '',
+        'message' => '',
+    ];
 
-    public function generate($content)
+    public function setValues($values)
     {
-        $this->content = $content;
-
+        $this->values = array_merge($this->values, $values);
+    }
+    
+    public function makeFields()
+    {
         return $this->name()
                 ->email()
                 ->object()
@@ -28,7 +36,7 @@ class FormContact extends FormBuilder
                     ->text('name', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $this->content[ 'name' ]
+                        'value'    => $this->values[ 'name' ]
                 ]);
         }, [ 'class' => 'form-group' ]);
     }
@@ -40,7 +48,7 @@ class FormContact extends FormBuilder
                     ->email('email', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $this->content[ 'email' ]
+                        'value'    => $this->values[ 'email' ]
                 ]);
         }, [ 'class' => 'form-group' ]);
     }
@@ -52,7 +60,7 @@ class FormContact extends FormBuilder
                     ->text('object', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $this->content[ 'object' ]
+                        'value'    => $this->values[ 'object' ]
                 ]);
         }, [ 'class' => 'form-group' ]);
     }
@@ -61,7 +69,7 @@ class FormContact extends FormBuilder
     {
         return $this->group('message-group', 'div', function ($form) {
             $form->label('message-label', t('Message'))
-                    ->textarea('message', $this->content[ 'message' ], [
+                    ->textarea('message', $this->values[ 'message' ], [
                         'class'    => 'form-control',
                         'required' => 1,
                         'rows'     => 8

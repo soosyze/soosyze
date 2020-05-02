@@ -59,11 +59,11 @@ class User extends \Soosyze\Controller
 
     public function create()
     {
-        $data = [ 'username' => '', 'email' => '', 'firstname' => '', 'name' => '' ];
-        $this->container->callHook('user.create.form.data', [ &$data ]);
+        $values = [];
+        $this->container->callHook('user.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -73,7 +73,7 @@ class User extends \Soosyze\Controller
             'method'  => 'post',
             'action'  => self::router()->getRoute('user.store'),
             'enctype' => 'multipart/form-data' ], self::file(), self::config()))
-            ->content($data)
+            ->setValues($values)
             ->fieldsetInformationsCreate()
             ->fieldsetProfil()
             ->fieldsetPassword()
@@ -81,7 +81,7 @@ class User extends \Soosyze\Controller
             ->fieldsetRoles($roles)
             ->submitForm('Save', true);
 
-        $this->container->callHook('user.create.form', [ &$form, $data ]);
+        $this->container->callHook('user.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -213,14 +213,14 @@ class User extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        if (!($data = self::user()->find($id))) {
+        if (!($values = self::user()->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('user.edit.form.data', [ &$data, $id ]);
+        $this->container->callHook('user.edit.form.data', [ &$values, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -228,21 +228,21 @@ class User extends \Soosyze\Controller
             'method'  => 'post',
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ], self::file(), self::config()))
-            ->content($data)
+            ->setValues($values)
             ->fieldsetInformations()
             ->fieldsetProfil()
             ->fieldsetPassword();
+
         if (self::user()->isGranted('user.permission.manage')) {
             $roles      = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
             $roles_user = self::user()->getIdRolesUser($id);
-            $form
-                ->content($data + [ 'roles' => $roles_user ])
+            $form->setValues([ 'roles' => $roles_user ])
                 ->fieldsetActived()
                 ->fieldsetRoles($roles);
         }
         $form->submitForm();
 
-        $this->container->callHook('user.edit.form', [ &$form, $data, $id ]);
+        $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

@@ -37,7 +37,9 @@ class Login extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
-            ], null, self::config()))->content($data);
+            ], null, self::config()))
+            ->setValues($data);
+
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', t('User login'));
             $form->email($formbuilder)
@@ -123,7 +125,9 @@ class Login extends \Soosyze\Controller
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.relogin.check', [ ':url' => $url ])
-            ]))->content($data);
+            ]))
+            ->setValues($data);
+
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $form->email($formbuilder);
         })->submitForm();
