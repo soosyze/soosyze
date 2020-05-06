@@ -19,14 +19,16 @@ class HookMenu
         $this->profil = $profil;
     }
 
-    public function hookUsersMenu(&$menu, $id_user)
+    public function hookUsersMenu(&$menu, $userId)
     {
-        $profils = $this->profil->getProfilsFileByUser($id_user);
+        $profils = $this->profil->getProfilsFileByUser($userId);
         if (empty($profils)) {
             return;
         }
-        $path   = Util::cleanPath($profils[ 0 ][ 'folder_show' ]);
-        $path   = str_replace(':user_id', $id_user, $path);
+
+        $path = Util::cleanPath($profils[ 0 ][ 'folder_show' ]);
+        $path = str_replace(':user_id', $userId, $path);
+
         $menu[] = [
             'link'       => $this->router->getRoute('filemanager.admin', [
                 ':path' => $path

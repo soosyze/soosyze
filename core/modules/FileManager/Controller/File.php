@@ -38,11 +38,12 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($file)) {
+        $spl = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+        );
+        if (!$spl->isFile()) {
             return $this->get404($req);
         }
-        $spl  = new \SplFileInfo($file);
         $data = self::filemanager()->parseFile($spl, $path);
 
         return self::template()
@@ -60,10 +61,13 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
         if ($req->isMaxSize()) {
-            $output[ 'messages' ][ 'errors' ] = [ t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.') ];
+            $output[ 'messages' ][ 'errors' ] = [
+                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+            ];
 
             return $this->json(400, $output);
         }
+
         $dir    = self::core()->getDir('files_public', 'app/files') . $path;
         $profil = $this->get('filemanager.hook.user')->getRight($path);
         $rules  = [
@@ -74,8 +78,9 @@ class File extends \Soosyze\Controller
         if (!empty($profil[ 'file_extensions_all' ])) {
             $rules[ 'file' ] .= '|file_extensions:' . implode(',', FileManager::getWhiteList());
         } else {
-            $rules[ 'file' ] .= '|file_extensions:' . $profil['file_extensions'];
+            $rules[ 'file' ] .= '|file_extensions:' . $profil[ 'file_extensions' ];
         }
+
         if (!empty($profil[ 'file_size' ])) {
             $rules[ 'file' ] .= '|max:' . $profil[ 'file_size' ] . 'mb';
         }
@@ -92,15 +97,16 @@ class File extends \Soosyze\Controller
         } else {
             $validator->addInput('folder', 0);
         }
-        
+
         if (!$validator->isValid()) {
             $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
             return $this->json(400, $output);
         }
 
-        $file = $validator->getInput('file');
+        $file        = $validator->getInput('file');
         $serviceFile = self::file();
+
         if (self::config()->get('settings.replace_file') === 2) {
             $serviceFile = self::file()->setResolveName();
         } elseif (self::config()->get('settings.replace_file') === 3 && is_file($dir . '/' . $file->getClientFilename())) {
@@ -126,11 +132,12 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($file)) {
+        $spl = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+        );
+        if (!$spl->isFile()) {
             return $this->get404($req);
         }
-        $spl  = new \SplFileInfo($file);
         $data = self::filemanager()->parseFile($spl, $path);
 
         if (isset($_SESSION[ 'inputs' ])) {
@@ -176,8 +183,9 @@ class File extends \Soosyze\Controller
         if (!$req->isAjax()) {
             return $this->get404($req);
         }
-        $file_old = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($file_old)) {
+
+        $fileOld = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
+        if (!is_file($fileOld)) {
             return $this->get404($req);
         }
         $dir = self::core()->getDir('files_public', 'app/files') . $path;
@@ -193,31 +201,30 @@ class File extends \Soosyze\Controller
 
         $output = [];
         /* Si les valeur attendues sont les bonnes. */
-        if (!$validator->isValid() || !is_file($file_old)) {
+        if (!$validator->isValid()) {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $statut                           = 400;
 
-            return $this->json($statut, $output);
+            return $this->json(400, $output);
         }
 
-        $folder      = Util::strSlug($validator->getInput('name'));
-        $file_update = "$dir/$folder$ext";
+        $folder     = Util::strSlug($validator->getInput('name'));
+        $fileUpdate = "$dir/$folder$ext";
 
-        /* Si le nouveau nom du répertoire est déjà utilisé. */
-        if (!is_dir($file_update)) {
+        /* Si le nouveau nom du fichier est déjà utilisé. */
+        if (!is_file($fileUpdate)) {
             $folder = Util::strSlug($validator->getInput('name'));
-            rename($file_old, $file_update);
+            rename($fileOld, $fileUpdate);
 
             $output[ 'messages' ][ 'success' ] = [ t('The file has been renamed') ];
-            $statut                            = 200;
-        } else {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the file') ];
-            $statut                           = 400;
+
+            return $this->json(200, $output);
         }
 
-        return $this->json($statut, $output);
+        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the file') ];
+
+        return $this->json(400, $output);
     }
 
     public function remove($path, $name, $ext, $req)
@@ -226,12 +233,12 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($file)) {
+        $spl = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+        );
+        if (!$spl->isFile()) {
             return $this->get404($req);
         }
-        $spl  = new \SplFileInfo($file);
-        $data = self::filemanager()->parseFile($spl, $path);
 
         $form = (new FormBuilder([
             'action' => self::router()->getRoute('filemanager.file.delete', [
@@ -255,7 +262,7 @@ class File extends \Soosyze\Controller
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([ 'title' => t('Deleting the file'),
-                    'info'  => $data,
+                    'info'  => self::filemanager()->parseFile($spl, $path),
                     'form'  => $form ]);
     }
 
@@ -264,32 +271,32 @@ class File extends \Soosyze\Controller
         if (!$req->isAjax()) {
             return $this->get404($req);
         }
+
         $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
         if (!is_file($file)) {
             return $this->get404($req);
         }
 
-        $dir       = self::core()->getDir('files_public', 'app/files') . $path;
         $validator = (new Validator())
             ->setRules([
                 'dir'               => 'required|dir',
                 'token_file_delete' => 'token'
             ])
             ->setInputs($req->getParsedBody())
-            ->addInput('dir', $dir);
+            ->addInput('dir', self::core()->getDir('files_public', 'app/files') . $path);
 
         $output = [];
         if ($validator->isValid()) {
             unlink($file);
             $output[ 'messages' ][ 'success' ] = [ t('The file has been deleted') ];
-            $statut                            = 200;
-        } else {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $statut                           = 400;
+
+            return $this->json(200, $output);
         }
 
-        return $this->json($statut, $output);
+        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+
+        return $this->json(400, $output);
     }
 
     public function download($path, $name, $ext, $req)
@@ -299,19 +306,15 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        if (\is_file($file)) {
-            $stream = new Stream(fopen($file, 'r+'));
+        $stream = new Stream(fopen($file, 'r+'));
 
-            return (new Response(200, $stream))
-                    ->withHeader('content-type', 'application/octet-stream')
-                    ->withHeader('content-length', $stream->getSize())
-                    ->withHeader('content-disposition', 'attachment; filename=' . substr(strrchr("$name$ext", '/'), 1))
-                    ->withHeader('pragma', 'no-cache')
-                    ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
-                    ->withHeader('expires', '0');
-        }
-
-        return $this->get404($req);
+        return (new Response(200, $stream))
+                ->withHeader('content-type', 'application/octet-stream')
+                ->withHeader('content-length', $stream->getSize())
+                ->withHeader('content-disposition', 'attachment; filename=' . substr("$name$ext", 1))
+                ->withHeader('pragma', 'no-cache')
+                ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+                ->withHeader('expires', '0');
     }
 
     protected function visualizeFile(array $info, $path)

@@ -9,36 +9,36 @@ class FileProfil
         $this->query = $query;
     }
 
-    public function find($profil_id)
+    public function find($profilId)
     {
         return $this->query->from('profil_file')
-                ->where('profil_file_id', (int) $profil_id)
+                ->where('profil_file_id', (int) $profilId)
                 ->fetch();
     }
 
-    public function getProfil($user_id)
+    public function getProfil($userId)
     {
         return $this->query->from('user_role')
                 ->leftJoin('role', 'role_id', 'role.role_id')
                 ->leftJoin('profil_file_role', 'role_id', 'role.role_id')
                 ->rightJoin('profil_file', 'profil_file_id', 'profil_file.profil_file_id')
-                ->where('user_id', '==', $user_id)
+                ->where('user_id', '==', $userId)
                 ->orderBy('role_weight', 'desc')
                 ->orderBy('profil_weight', 'desc')
                 ->fetchAll();
     }
 
-    public function getRolesUserByProfil($profil_id)
+    public function getRolesUserByProfil($profilId)
     {
         return $this->query->from('profil_file_role')
                 ->leftJoin('role', 'role_id', 'role.role_id')
-                ->where('profil_file_id', '==', $profil_id)
+                ->where('profil_file_id', '==', $profilId)
                 ->fetchAll();
     }
 
-    public function getIdRolesUser($profil_id)
+    public function getIdRolesUser($profilId)
     {
-        $data = $this->getRolesUserByProfil($profil_id);
+        $data = $this->getRolesUserByProfil($profilId);
         $out  = [];
         foreach ($data as $value) {
             $out[] = $value[ 'role_id' ];
@@ -47,13 +47,13 @@ class FileProfil
         return $out;
     }
 
-    public function getProfilsFileByUser($user_id)
+    public function getProfilsFileByUser($userId)
     {
-        if (!empty($this->profil[ $user_id ])) {
-            return $this->profil[ $user_id ];
+        if (!empty($this->profil[ $userId ])) {
+            return $this->profil[ $userId ];
         }
-        $this->profil[ $user_id ] = $this->getProfil($user_id);
+        $this->profil[ $userId ] = $this->getProfil($userId);
 
-        return $this->profil[ $user_id ];
+        return $this->profil[ $userId ];
     }
 }

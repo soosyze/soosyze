@@ -20,13 +20,14 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $dir = self::core()->getDir('files_public', 'app/files') . $path;
-        if (!is_dir($dir)) {
+        $spl = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path"
+        );
+        if (!$spl->isDir()) {
             return $this->get404($req);
         }
-        $spl  = new \SplFileInfo($dir);
 
-        $values[ 'name' ] = '';
+        $values = [];
         if (isset($_SESSION[ 'inputs' ])) {
             $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
@@ -43,7 +44,7 @@ class Folder extends \Soosyze\Controller
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
                     'title' => t('Create a new directory'),
-                    'info'  => ['actions' => []],
+                    'info'  => [ 'actions' => [] ],
                     'form'  => $form
         ]);
     }
@@ -67,25 +68,24 @@ class Folder extends \Soosyze\Controller
         $output = [];
         if (!$validator->isValid()) {
             $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $statut                           = 400;
 
-            return $this->json($statut, $output);
+            return $this->json(400, $output);
         }
 
-        $folder     = Util::strSlug($validator->getInput('name'));
-        $dir_create = "$dir/$folder";
+        $folder = Util::strSlug($validator->getInput('name'));
+        $newDir = "$dir/$folder";
 
-        if (!is_dir($dir_create)) {
-            mkdir($dir_create, 0755, true);
+        if (!is_dir($newDir)) {
+            mkdir($newDir, 0755, true);
 
             $output[ 'messages' ][ 'success' ] = [ t('The directory is created') ];
-            $statut                            = 200;
-        } else {
-            $output[ 'messages' ][ 'errors' ] = [ t('You can not use this directory name') ];
-            $statut                           = 400;
+
+            return $this->json(200, $output);
         }
 
-        return $this->json($statut, $output);
+        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this directory name') ];
+
+        return $this->json(400, $output);
     }
 
     public function edit($path, $req)
@@ -95,12 +95,13 @@ class Folder extends \Soosyze\Controller
         }
 
         $path = Util::cleanPath($path);
-        $dir = self::core()->getDir('files_public', 'app/files') . $path;
-        if (!is_dir($dir)) {
+        $spl  = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path"
+        );
+        if (!$spl->isDir()) {
             return $this->get404($req);
         }
 
-        $spl    = new \SplFileInfo($dir);
         $values = self::filemanager()->parseDir($spl, $path);
         if (isset($_SESSION[ 'inputs' ])) {
             $values = $_SESSION[ 'inputs' ];
@@ -118,7 +119,7 @@ class Folder extends \Soosyze\Controller
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
                     'title' => t('Rename the directory'),
-                    'info'  => $data,
+                    'info'  => $values,
                     'form'  => $form
         ]);
     }
@@ -143,28 +144,27 @@ class Folder extends \Soosyze\Controller
         if (!$validator->isValid()) {
             $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
             $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $statut                           = 400;
 
-            return $this->json($statut, $output);
+            return $this->json(400, $output);
         }
 
-        $folder     = Util::strSlug($validator->getInput('name'));
-        $dir_update = dirname($dir) . "/$folder";
+        $folder    = Util::strSlug($validator->getInput('name'));
+        $dirUpdate = dirname($dir) . "/$folder";
 
         /* Si le nouveau nom du répertoire est déjà utilisé. */
-        if (!is_dir($dir_update)) {
+        if (!is_dir($dirUpdate)) {
             $folder = Util::strSlug($validator->getInput('name'));
-            rename($dir, $dir_update);
+            rename($dir, $dirUpdate);
 
             $output[ 'messages' ][ 'success' ] = [ t('The directory is renamed') ];
-            $statut                            = 200;
-        } else {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the directory') ];
-            $statut                           = 400;
+
+            return $this->json(200, $output);
         }
 
-        return $this->json($statut, $output);
+        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the directory') ];
+
+        return $this->json(400, $output);
     }
 
     public function remove($path, $req)
@@ -173,12 +173,13 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $dir = self::core()->getDir('files_public', 'app/files') . $path;
-        if (!is_dir($dir)) {
+        $spl = new \SplFileInfo(
+            self::core()->getDir('files_public', 'app/files') . "$path"
+        );
+        if (!$spl->isDir()) {
             return $this->get404($req);
         }
-        $spl  = new \SplFileInfo($dir);
-        $data = self::filemanager()->parseDir($spl, $path);
+        $values = self::filemanager()->parseDir($spl, $path);
 
         $form = (new FormBuilder([
             'action' => self::router()->getRoute('filemanager.folder.delete', [ ':path' => $path ]),
@@ -196,7 +197,7 @@ class Folder extends \Soosyze\Controller
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([ 'title' => t('Delete directory'),
-                    'info'  => $data,
+                    'info'  => $values,
                     'form'  => $form
         ]);
     }
@@ -217,8 +218,8 @@ class Folder extends \Soosyze\Controller
 
         $output = [];
         if ($validator->isValid()) {
-            $dir_iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
-            $iterator     = new \RecursiveIteratorIterator($dir_iterator);
+            $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+            $iterator    = new \RecursiveIteratorIterator($dirIterator);
 
             /* Supprime tous les dossiers et fichiers */
             foreach ($iterator as $file) {
@@ -230,13 +231,13 @@ class Folder extends \Soosyze\Controller
             rmdir($dir);
 
             $output[ 'messages' ][ 'success' ] = [ t('The directory has been deleted') ];
-            $statut                            = 200;
-        } else {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $statut                           = 400;
+
+            return $this->json(200, $output);
         }
 
-        return $this->json($statut, $output);
+        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+
+        return $this->json(400, $output);
     }
 }

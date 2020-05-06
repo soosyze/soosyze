@@ -54,7 +54,8 @@ class Profil extends \Soosyze\Controller
         $action = self::router()->getRoute('filemanager.profil.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->setValues($values)
-            ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), [])
+            ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), [
+            ])
             ->makeFields();
 
         $this->container->callHook('filemanager.profil.create.form', [ &$form, $values ]);
@@ -85,7 +86,7 @@ class Profil extends \Soosyze\Controller
         $validator = $this->getValidator($req);
 
         $this->container->callHook('filemanager.profil.store.validator', [ &$validator ]);
-        
+
         $validatorExtension = new Validator();
         $isValid            = $validator->isValid();
         $listExtension      = implode(',', FileManager::getWhiteList());
@@ -98,14 +99,19 @@ class Profil extends \Soosyze\Controller
         $isValid &= $validatorExtension->isValid();
 
         if ($isValid) {
-            $data               = $this->getData($validator);
-            $this->container->callHook('filemanager.profil.store.before', [ $validator, &$data ]);
+            $data             = $this->getData($validator);
+            $this->container->callHook('filemanager.profil.store.before', [
+                $validator, &$data
+            ]);
+
             self::query()
                 ->insertInto('profil_file', array_keys($data))
                 ->values($data)
                 ->execute();
-            $id_permission_file = self::schema()->getIncrement('profil_file');
-            $this->storeProfilRole($validator, $id_permission_file);
+
+            $permissionFileId = self::schema()->getIncrement('profil_file');
+            $this->storeProfilRole($validator, $permissionFileId);
+
             $this->container->callHook('filemanager.profil.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
@@ -144,13 +150,14 @@ class Profil extends \Soosyze\Controller
             ->makeFields();
 
         $this->container->callHook('filemanager.profil.edit.form', [ &$form, $values ]);
-        
+
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
         if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors_keys' ]);
         }
 
@@ -174,42 +181,44 @@ class Profil extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('filemanager.profil.update.validator', [ &$validator, $id ]);
+        $this->container->callHook('filemanager.profil.update.validator', [ &$validator,
+            $id ]);
 
         $validatorExtension = new Validator();
-        $isValid            = $validator->isValid();
-        $listExtension      = implode(',', FileManager::getWhiteList());
+
+        $listExtension = implode(',', FileManager::getWhiteList());
         foreach ($validator->getInput('file_extensions', []) as $key => $extension) {
             $validatorExtension
                 ->addRule($key, 'inarray:' . $listExtension)
                 ->addLabel($key, $extension)
                 ->addInput($key, $key);
         }
-        $isValid &= $validatorExtension->isValid();
+        $isValid = $validator->isValid() && $validatorExtension->isValid();
 
         if ($isValid) {
             $data = $this->getData($validator);
-            $this->container->callHook('filemanager.profil.update.before', [ $validator, &$data, $id ]);
+            $this->container->callHook('filemanager.profil.update.before', [ $validator,
+                &$data, $id ]);
             self::query()
                 ->update('profil_file', $data)
                 ->where('profil_file_id', '==', $id)
                 ->execute();
             $this->updateProfilRole($validator, $id);
-            $this->container->callHook('filemanager.profil.update.after', [ $validator, $id ]);
+            $this->container->callHook('filemanager.profil.update.after', [ $validator,
+                $id ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route                               = self::router()->getRoute('filemanager.profil.admin');
 
-            return new Redirect($route);
+            return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        $route = self::router()->getRoute('filemanager.profil.edit', [ ':id' => $id ]);
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('filemanager.profil.edit', [
+                ':id' => $id
+        ]));
     }
 
     public function remove($id, $req)
@@ -259,52 +268,54 @@ class Profil extends \Soosyze\Controller
         $validator = (new Validator())
             ->addRule('token_file_permission', 'token')
             ->setInputs($req->getParsedBody());
-        $this->container->callHook('filemanager.profil.delete.validator', [ &$validator,
-            $id ]);
+        $this->container->callHook('filemanager.profil.delete.validator', [
+            &$validator, $id
+        ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('filemanager.profil.delete.before', [ $validator,
-                $id ]);
+            $this->container->callHook('filemanager.profil.delete.before', [
+                $validator, $id
+            ]);
             self::query()
                 ->from('profil_file')
                 ->delete()
                 ->where('profil_file_id', '==', $id)
                 ->execute();
-            $this->container->callHook('filemanager.profil.delete.after', [ $validator,
-                $id ]);
-            $route = self::router()->getRoute('filemanager.profil.admin');
+            $this->container->callHook('filemanager.profil.delete.after', [
+                $validator, $id
+            ]);
 
-            return new Redirect($route);
+            return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $route                              = self::router()->getRoute('filemanager.profil.remove', [
-            ':id' => $id ]);
 
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('filemanager.profil.remove', [
+                ':id' => $id
+        ]));
     }
 
-    protected function storeProfilRole($validator, $profil_file_id)
+    protected function storeProfilRole($validator, $profilFileId)
     {
         self::query()->insertInto('profil_file_role', [
             'profil_file_id', 'role_id'
         ]);
-        foreach (array_keys($validator->getInput('roles')) as $role_id) {
-            self::query()->values([ $profil_file_id, $role_id ]);
+        foreach (array_keys($validator->getInput('roles')) as $roleId) {
+            self::query()->values([ $profilFileId, $roleId ]);
         }
         self::query()->execute();
     }
 
-    protected function updateProfilRole($validator, $profil_file_id)
+    protected function updateProfilRole($validator, $profilFileId)
     {
         self::query()
             ->from('profil_file_role')
-            ->where('profil_file_id', '==', $profil_file_id)
+            ->where('profil_file_id', '==', $profilFileId)
             ->delete()->execute();
         self::query()
             ->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ]);
-        foreach (array_keys($validator->getInput('roles', [])) as $role_id) {
-            self::query()->values([ $profil_file_id, $role_id ]);
+        foreach (array_keys($validator->getInput('roles', [])) as $roleId) {
+            self::query()->values([ $profilFileId, $roleId ]);
         }
         self::query()->execute();
     }
