@@ -16,13 +16,13 @@ class Menu extends \Soosyze\Controller
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
-    
+
     public function index($req)
     {
         if ($menu = self::query()->from('menu')->fetch()) {
-            return $this->show($menu['name'], $req);
+            return $this->show($menu[ 'name' ], $req);
         }
-        
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -261,7 +261,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
             return new Redirect(
-                self::router()->getRoute('menu.show', [ ':menu' => $data[ 'name' ] ])
+                self::router()->getRoute('menu.show', [ ':menu' => $menu ])
             );
         }
 

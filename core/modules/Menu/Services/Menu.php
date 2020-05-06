@@ -132,9 +132,9 @@ class Menu
                 ->createBlock('menu.php', $this->pathViews)
                 ->nameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu' => $this->getGrantedLink($query, $this->core->getRequest()),
+                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()),
                     'level' => $level
-                ]);
+        ]);
     }
 
     public function rewiteUri($link)
@@ -181,7 +181,7 @@ class Menu
             if ($source = $this->alias->getSource($menu[ 'link' ])) {
                 $menu[ 'link' ] = $source;
             }
-            
+
             $link = $request->withUri(
                 $this->router->isRewrite()
                 ? $request->getUri()->withPath($menu[ 'link' ])

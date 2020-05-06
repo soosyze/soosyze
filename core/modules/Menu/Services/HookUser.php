@@ -10,7 +10,7 @@ class HookUser
             'menu.administer' => t('Administer menus and menu items')
         ];
     }
-    
+
     public function hookMenuAdminister()
     {
         return 'menu.administer';

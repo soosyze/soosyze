@@ -146,7 +146,7 @@ class Link extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
-                    'title_main' =>  t('Edit a link')
+                    'title_main' => t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'menu-link-edit.php', $this->pathViews, [

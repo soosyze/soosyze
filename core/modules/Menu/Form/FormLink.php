@@ -23,10 +23,12 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
 
         return $this;
     }
-    
+
     public function setRewrite($isRewrite)
     {
-        $this->isRewrite = $isRewrite ? '?' : '&';
+        $this->isRewrite = $isRewrite
+            ? '?'
+            : '&';
 
         return $this;
     }
@@ -82,26 +84,26 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 }, self::$attrGrp)
                 ->group('target_link-group', 'div', function ($form) {
                     $form->label('target_link-label', t('Target'))
-                        ->group('target_link_1-group', 'div', function ($form) {
-                            $form->radio('target_link', [
-                                'id'       => 'target_link_1',
-                                'value'    => '_self',
-                                'required' => 1,
-                                'checked' => ($this->values[ 'target_link' ] === '_self')
-                            ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
-                                'for' => 'target_link_1'
-                            ]);
-                        }, self::$attrGrp)
-                        ->group('target_link_2-group', 'div', function ($form) {
-                            $form->radio('target_link', [
-                                'id'       => 'target_link_2',
-                                'value'    => '_blank',
-                                'required' => 1,
-                                'checked' => ($this->values[ 'target_link' ] === '_blank')
-                            ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
-                                'for' => 'target_link_2'
-                            ]);
-                        }, self::$attrGrp);
+                    ->group('target_link_1-group', 'div', function ($form) {
+                        $form->radio('target_link', [
+                            'id'       => 'target_link_1',
+                            'value'    => '_self',
+                            'required' => 1,
+                            'checked'  => ($this->values[ 'target_link' ] === '_self')
+                        ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
+                            'for' => 'target_link_1'
+                        ]);
+                    }, self::$attrGrp)
+                    ->group('target_link_2-group', 'div', function ($form) {
+                        $form->radio('target_link', [
+                            'id'       => 'target_link_2',
+                            'value'    => '_blank',
+                            'required' => 1,
+                            'checked'  => ($this->values[ 'target_link' ] === '_blank')
+                        ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
+                            'for' => 'target_link_2'
+                        ]);
+                    }, self::$attrGrp);
                 }, self::$attrGrp);
         })
             ->token('token_link_form')
