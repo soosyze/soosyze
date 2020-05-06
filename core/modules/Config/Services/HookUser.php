@@ -15,16 +15,20 @@ class HookUser
     {
         $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
-        $permission[ 'Configuration' ]['config.manage'] = t('Administer all configurations');
+
+        $permission[ 'Configuration' ][ 'config.manage' ] = t('Administer all configurations');
         foreach ($menu as $key => $link) {
-            $permission[ 'Configuration' ][$key . '.config.manage'] = t('Administer :name configurations', [':name' => $link[ 'title_link' ]]);
+            $permission[ 'Configuration' ][ $key . '.config.manage' ] = t('Administer :name configurations', [
+                ':name' => $link[ 'title_link' ]
+            ]);
         }
     }
 
     public function hookConfigIndex()
     {
-        $menu = [];
+        $menu  = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
+
         $out[] = 'config.manage';
         foreach (array_keys($menu) as $key) {
             $out[] = $key . '.config.manage';
@@ -35,6 +39,6 @@ class HookUser
 
     public function hookConfigManage($id)
     {
-        return ['config.manage', "$id.config.manage"];
+        return [ 'config.manage', "$id.config.manage" ];
     }
 }
