@@ -26,7 +26,7 @@ class File
      *
      * @var string
      */
-    protected $file_hidden;
+    protected $fileHidden;
 
     /**
      * Le nom du fichier à déplacer.
@@ -41,7 +41,7 @@ class File
      * @var string
      */
     protected $ext;
-    
+
     protected $mode = 0755;
 
     /**
@@ -49,14 +49,14 @@ class File
      *
      * @var bool
      */
-    protected $resolve_dir = false;
+    protected $resolveDir = false;
 
     /**
      * Si le nom de fichier doit-être corrigé.
      *
      * @var string
      */
-    protected $resolve_name = false;
+    protected $resolveName = false;
 
     /**
      * Le répertoire d'envoie.
@@ -64,16 +64,16 @@ class File
      * @var string
      */
     protected $dir = null;
-    
-    protected $base_path = '';
-    
-    protected $call_move = null;
+
+    protected $basePath = '';
+
+    protected $callMove = null;
 
     public function __construct($core)
     {
-        $this->core = $core;
-        $this->base_path = $this->core->getRequest()->getBasePath();
-        $this->dir       = $this->core->getDir('files_public', 'app/files');
+        $this->core     = $core;
+        $this->basePath = $this->core->getRequest()->getBasePath();
+        $this->dir      = $this->core->getDir('files_public', 'app/files');
     }
 
     public function inputFile($name, &$form, $content = '', $type = 'image')
@@ -89,10 +89,11 @@ class File
             'type'       => 'button',
             'aria-label' => 'Supprimer le fichier'
         ];
-        $src = '';
-        if (is_file(ROOT . $content)) {
-            $src = $this->base_path . $content;
-        }
+
+        $src = is_file($this->core->getSetting('root', '') . $content)
+            ? $this->basePath . $content
+            : '';
+
         if (!empty($src) && $type == 'image') {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<img:attr/>', [
@@ -104,7 +105,7 @@ class File
         } elseif (!empty($src)) {
             $form->group("file-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<a:attr/><i class="fa fa-download"></i> :_content</a>', [
-                    'href'    => $src,
+                    'href'     => $src,
                     '_content' => $src
                 ]);
             }, [ 'class' => 'form-group' ]);
@@ -136,13 +137,13 @@ class File
 
     public function add(UploadedFileInterface $file, $fileHidden = '')
     {
-        $clone              = clone $this;
-        $clone->file        = $file;
-        $clone->file_hidden = $fileHidden;
-        $ClientFilename     = $file->getClientFilename();
-        $clone->ext         = Util::getFileExtension($ClientFilename);
-        $name               = pathinfo($ClientFilename, PATHINFO_FILENAME);
-        $clone->name        = Util::strSlug($name);
+        $clone             = clone $this;
+        $clone->file       = $file;
+        $clone->fileHidden = $fileHidden;
+        $ClientFilename    = $file->getClientFilename();
+        $clone->ext        = Util::getFileExtension($ClientFilename);
+        $name              = pathinfo($ClientFilename, PATHINFO_FILENAME);
+        $clone->name       = Util::strSlug($name);
 
         return $clone;
     }
@@ -164,11 +165,11 @@ class File
 
         return $clone;
     }
-    
+
     public function setBasePath($basePath = null)
     {
-        $clone      = clone $this;
-        $clone->base_path = $basePath === null
+        $clone           = clone $this;
+        $clone->basePath = $basePath === null
             ? $this->core->getRequest()->getBasePath()
             : $basePath;
 
@@ -177,41 +178,41 @@ class File
 
     public function setResolvePath($resolve = true, $mode = 0755)
     {
-        $clone              = clone $this;
-        $clone->resolve_dir = $resolve;
-        $clone->mode        = $mode;
+        $clone             = clone $this;
+        $clone->resolveDir = $resolve;
+        $clone->mode       = $mode;
 
         return $clone;
     }
 
     public function setResolveName($resolve = true)
     {
-        $clone               = clone $this;
-        $clone->resolve_name = $resolve;
+        $clone              = clone $this;
+        $clone->resolveName = $resolve;
 
         return $clone;
     }
 
     public function callGet(callable $callback)
     {
-        $clone           = clone $this;
-        $clone->call_get = $callback;
+        $clone          = clone $this;
+        $clone->callGet = $callback;
 
         return $clone;
     }
 
     public function callMove(callable $callback)
     {
-        $clone            = clone $this;
-        $clone->call_move = $callback;
+        $clone           = clone $this;
+        $clone->callMove = $callback;
 
         return $clone;
     }
 
     public function callDelete(callable $callback)
     {
-        $clone              = clone $this;
-        $clone->call_delete = $callback;
+        $clone             = clone $this;
+        $clone->callDelete = $callback;
 
         return $clone;
     }
@@ -226,11 +227,13 @@ class File
             $move = $this->resolveName();
 
             $this->file->moveTo($move);
-            call_user_func_array($this->call_move, [ $this->name, "{$this->name}.{$this->ext}", $move ]);
+            call_user_func_array($this->callMove, [ $this->name, "{$this->name}.{$this->ext}",
+                $move ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
-            $file = call_user_func_array($this->call_get, [ $this->name, "{$this->name}.{$this->ext}" ]);
-            if (empty($this->file_hidden) && $file) {
-                call_user_func_array($this->call_delete, [ $this->name, "{$this->name}.{$this->ext}", $file ]);
+            $file = call_user_func_array($this->callGet, [ $this->name, "{$this->name}.{$this->ext}" ]);
+            if (empty($this->fileHidden) && $file) {
+                call_user_func_array($this->callDelete, [ $this->name, "{$this->name}.{$this->ext}",
+                    $file ]);
                 if (file_exists($file)) {
                     unlink($file);
                 }
@@ -247,8 +250,8 @@ class File
             $this->resolveDir();
             $move = $this->resolveName();
             $this->file->moveTo($move);
-            if ($this->call_move) {
-                call_user_func_array($this->call_move, [
+            if ($this->callMove) {
+                call_user_func_array($this->callMove, [
                     $this->name, "{$this->name}.{$this->ext}", $move
                 ]);
             }
@@ -259,7 +262,7 @@ class File
 
     protected function resolveDir()
     {
-        if ($this->resolve_dir && !is_dir($this->dir)) {
+        if ($this->resolveDir && !is_dir($this->dir)) {
             mkdir($this->dir, $this->mode, true);
         }
     }
@@ -267,7 +270,7 @@ class File
     protected function resolveName()
     {
         $file = "{$this->dir}/{$this->name}.{$this->ext}";
-        if (!$this->resolve_name || !is_file($file)) {
+        if (!$this->resolveName || !is_file($file)) {
             return $file;
         }
         $i = 1;
