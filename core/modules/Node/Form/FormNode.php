@@ -17,7 +17,7 @@ class FormNode extends FormBuilder
         'date_created'     => ''
     ];
 
-    protected static $field_rules = [
+    protected static $fieldRules = [
         'email',
         'month',
         'password',
@@ -32,7 +32,7 @@ class FormNode extends FormBuilder
     protected $file;
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
-    
+
     protected static $attrGrpInline = [ 'class' => 'form-group-inline' ];
 
     protected $query;
@@ -40,7 +40,7 @@ class FormNode extends FormBuilder
     protected $fields;
 
     protected $router;
-    
+
     protected $config;
 
     public function __construct(
@@ -156,15 +156,15 @@ class FormNode extends FormBuilder
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'data-tooltip' => t($value[ 'field_description' ])
         ]);
-        foreach ($options as $key_radio => $option) {
-            $form->group("$key_radio-group", 'div', function ($form) use ($key, $key_radio, $value, $option) {
-                $form->checkbox($key . "[$key_radio]", [
-                        'id'      => "$key-$key_radio",
-                        'checked' => in_array($key_radio, explode(',', $this->content[ $key ])),
-                        'value'   => $key_radio
+        foreach ($options as $keyRadio => $option) {
+            $form->group("$keyRadio-group", 'div', function ($form) use ($key, $keyRadio, $value, $option) {
+                $form->checkbox($key . "[$keyRadio]", [
+                        'id'      => "$key-$keyRadio",
+                        'checked' => in_array($keyRadio, explode(',', $this->content[ $key ])),
+                        'value'   => $keyRadio
                     ])
-                    ->label("$key-$key_radio-label", '<span class="ui"></span> ' . t($option), [
-                        'for' => "$key-$key_radio"
+                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
+                        'for' => "$key-$keyRadio"
                         ] + $value[ 'attr' ]);
             }, self::$attrGrp);
         }
@@ -185,27 +185,27 @@ class FormNode extends FormBuilder
 
             return;
         }
-        
+
         $data = $this->query
-                ->from($options['relation_table'])
-                ->where($options['foreign_key'], $this->content[ 'entity_id' ]);
-        if (isset($options['order_by'])) {
-            $data->orderBy($options['order_by'], $options['sort']);
+            ->from($options[ 'relation_table' ])
+            ->where($options[ 'foreign_key' ], $this->content[ 'entity_id' ]);
+        if (isset($options[ 'order_by' ])) {
+            $data->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
-        $sub_fields = $data->fetchAll();
-        $form->group("$key-group", 'div', function ($form) use ($key, $sub_fields, $options) {
-            foreach ($sub_fields as $field) {
-                $id_entity = $field[ "{$key}_id" ];
-                $form->group("$key-$id_entity-group", 'div', function ($form) use ($key, $id_entity, $options, $field) {
+        $subFields = $data->fetchAll();
+        $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options) {
+            foreach ($subFields as $field) {
+                $idEntity = $field[ "{$key}_id" ];
+                $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field) {
                     if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
-                        $form->html("$key-$id_entity-drag", '<i class="fa fa-arrows-alt" aria-hidden="true"></i>')
-                            ->hidden("{$key}[$id_entity][weight]", [
+                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt" aria-hidden="true"></i>')
+                            ->hidden("{$key}[$idEntity][weight]", [
                                 'value' => $field[ 'weight' ]
-                            ])->hidden("{$key}[$id_entity][id]", [
-                            'value' => $id_entity
+                            ])->hidden("{$key}[$idEntity][id]", [
+                            'value' => $idEntity
                         ]);
                     }
-                    $form->html("$key-$id_entity-delete", '<a:attr>:_content</a>', [
+                    $form->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
                             '_content' => '<i class="fa fa-times"></i>',
                             'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.delete', [
@@ -214,7 +214,7 @@ class FormNode extends FormBuilder
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
-                        ->html("$key-$id_entity-edit", '<a:attr>:_content</a>', [
+                        ->html("$key-$idEntity-edit", '<a:attr>:_content</a>', [
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
@@ -222,11 +222,13 @@ class FormNode extends FormBuilder
                             ]),
                             '_content' => $field[ $options[ 'field_show' ] ]
                     ]);
-                }, ['class' => 'sort_weight']);
+                }, [ 'class' => 'sort_weight' ]);
             }
-        }, [ 'class' => $options['sort'] === 'weight' ? 'nested-sortable form-group' : 'form-group' ]);
+        }, [ 'class' => $options[ 'sort' ] === 'weight'
+                ? 'nested-sortable form-group'
+                : 'form-group' ]);
 
-        if (!isset($value[ 'attr' ][ 'max' ]) || $value[ 'attr' ][ 'max' ] > count($sub_fields)) {
+        if (!isset($value[ 'attr' ][ 'max' ]) || $value[ 'attr' ][ 'max' ] > count($subFields)) {
             $form->group("add-$key-group", 'div', function ($form) use ($key) {
                 $form->html('add-' . $key, '<a:attr>:_content</a>', [
                     'href'     => $this->router->getRoute('entity.create', [
@@ -244,15 +246,15 @@ class FormNode extends FormBuilder
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'data-tooltip' => t($value[ 'field_description' ])
         ]);
-        foreach ($options as $key_radio => $option) {
-            $form->group("$key_radio-group", 'div', function ($form) use ($key, $value, $key_radio, $option) {
+        foreach ($options as $keyRadio => $option) {
+            $form->group("$keyRadio-group", 'div', function ($form) use ($key, $value, $keyRadio, $option) {
                 $form->radio($key, [
-                        'id'      => "$key-$key_radio",
-                        'checked' => $this->content[ $key ] == $key_radio,
-                        'value'   => $key_radio
+                        'id'      => "$key-$keyRadio",
+                        'checked' => $this->content[ $key ] == $keyRadio,
+                        'value'   => $keyRadio
                         ] + $value[ 'attr' ])
-                    ->label("$key-$key_radio-label", '<span class="ui"></span> ' . $option, [
-                        'for' => "$key-$key_radio"
+                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . $option, [
+                        'for' => "$key-$keyRadio"
                 ]);
             }, self::$attrGrp);
         }
@@ -260,18 +262,18 @@ class FormNode extends FormBuilder
 
     public function makeSelect(&$form, $key, $value, $options)
     {
-        $select_options = [];
-        foreach ($options as $key_option => $option) {
-            $select_options[ $key_option ] = [ 'label' => $option, 'value' => $key_option ];
-            if ($key_option == $this->content[ $key ]) {
-                $select_options[ $key_option ][ 'selected' ] = 1;
+        $selectOptions = [];
+        foreach ($options as $keyOption => $option) {
+            $selectOptions[ $keyOption ] = [ 'label' => $option, 'value' => $keyOption ];
+            if ($keyOption == $this->content[ $key ]) {
+                $selectOptions[ $keyOption ][ 'selected' ] = 1;
             }
         }
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
-            ->select($key, $select_options, [ 'class' => 'form-control' ] + $value[ 'attr' ]);
+            ->select($key, $selectOptions, [ 'class' => 'form-control' ] + $value[ 'attr' ]);
     }
 
     public function makeTextarea(&$form, $key, $value, $options)
@@ -415,14 +417,14 @@ class FormNode extends FormBuilder
             $value[ 'attr' ][ 'required' ] = 1;
         }
         if (preg_match('/[\|]?(max|max_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches)) {
-            if (in_array($value[ 'field_type' ], self::$field_rules)) {
+            if (in_array($value[ 'field_type' ], self::$fieldRules)) {
                 $value[ 'attr' ][ 'maxlength' ] = (int) $matches[ 2 ];
             } elseif (in_array($value[ 'field_type' ], [ 'number', 'date', 'one_to_many' ])) {
                 $value[ 'attr' ][ 'max' ] = (int) $matches[ 2 ];
             }
         }
         if (preg_match('/[\|]?(min|min_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $value[ 'field_rules' ], $matches)) {
-            if (in_array($value[ 'field_type' ], self::$field_rules)) {
+            if (in_array($value[ 'field_type' ], self::$fieldRules)) {
                 $value[ 'attr' ][ 'minlength' ] = (int) $matches[ 2 ];
             } elseif (in_array($value[ 'field_type' ], [ 'number', 'date', 'one_to_many' ])) {
                 $value[ 'attr' ][ 'min' ] = (int) $matches[ 2 ];

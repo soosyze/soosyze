@@ -31,10 +31,10 @@ class Node
         return $out;
     }
 
-    public function makeFieldsById($entity, $id_entity)
+    public function makeFieldsById($entity, $idEntity)
     {
-        $data         = $this->getEntity($entity, $id_entity);
-        $data[ 'id' ] = $id_entity;
+        $data         = $this->getEntity($entity, $idEntity);
+        $data[ 'id' ] = $idEntity;
 
         return $this->makeFields($this->getFields($entity), $data);
     }
@@ -44,6 +44,7 @@ class Node
         $this->query
             ->from('entity_' . $entity)
             ->where($options[ 'foreign_key' ], '==', $data[ $options[ 'foreign_key' ] ]);
+
         if (isset($options[ 'order_by' ])) {
             $this->query->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
@@ -85,24 +86,29 @@ class Node
                 $link = is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]
                     : $data[ $key ];
+
                 $out[ $key ][ 'field_value' ]   = $link;
                 $out[ $key ][ 'field_display' ] = '<img src="' . $link . '">';
             } elseif ($value[ 'field_type' ] === 'file') {
                 $link = is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]
                     : $data[ $key ];
+
                 $out[ $key ][ 'field_value' ]   = $link;
                 $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
             } elseif ($value[ 'field_type' ] === 'select') {
-                $options                        = json_decode($value[ 'field_option' ], true);
+                $options = json_decode($value[ 'field_option' ], true);
+
                 $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
             } elseif ($value[ 'field_type' ] === 'radio') {
-                $options                        = json_decode($value[ 'field_option' ], true);
+                $options = json_decode($value[ 'field_option' ], true);
+
                 $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
             } elseif ($value[ 'field_type' ] === 'checkbox') {
-                $options                        = json_decode($value[ 'field_option' ], true);
-                $explode                        = explode(',', $data[ $key ]);
-                $intersect                      = array_intersect_key($options, array_flip($explode));
+                $options   = json_decode($value[ 'field_option' ], true);
+                $explode   = explode(',', $data[ $key ]);
+                $intersect = array_intersect_key($options, array_flip($explode));
+
                 $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
             } elseif ($value[ 'field_type' ] === 'one_to_many') {
                 $option = json_decode($value[ 'field_option' ], true);
@@ -124,19 +130,19 @@ class Node
         return $out;
     }
 
-    public function byId($id_node)
+    public function byId($idNode)
     {
         return $this->query
                 ->from('node')
-                ->where('id', '==', $id_node)
+                ->where('id', '==', $idNode)
                 ->fetch();
     }
 
-    public function getEntity($entity, $id_entity)
+    public function getEntity($entity, $idEntity)
     {
         return $this->query
                 ->from('entity_' . $entity)
-                ->where($entity . '_id', '==', $id_entity)
+                ->where($entity . '_id', '==', $idEntity)
                 ->fetch();
     }
 
@@ -184,14 +190,14 @@ class Node
                 ->fetchAll();
     }
 
-    public function isMaxEntity($entity, $foreign_key, $id_node, $count)
+    public function isMaxEntity($entity, $foreignKey, $idNode, $count)
     {
         if ($count === 0) {
             return false;
         }
         $data = $this->query
             ->from('entity_' . $entity)
-            ->where($foreign_key, $id_node)
+            ->where($foreignKey, $idNode)
             ->limit($count + 1)
             ->fetchAll();
 

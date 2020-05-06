@@ -16,39 +16,43 @@ class HookUser
 
     public function hookPermission(&$permission)
     {
-        $node_types           = $this->query->from('node_type')->fetchAll();
+        $nodeTypes = $this->query->from('node_type')->fetchAll();
+
         $permission[ 'Node' ] = [
             'node.index'              => t('Go to the content overview page'),
             'node.administer'         => t('Override access control to content'),
             'node.show.published'     => t('View published content'),
             'node.show.not_published' => t('View unpublished content'),
         ];
-        foreach ($node_types as $node_type) {
+
+        foreach ($nodeTypes as $nodeType) {
             $permission[ 'Node' ] += [
-                'node.show.' . $node_type[ 'node_type' ]    => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('View content'),
-                'node.created.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
-                'node.cloned.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
-                'node.edited.' . $node_type[ 'node_type' ]  => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
-                'node.deleted.' . $node_type[ 'node_type' ] => '<i>' . $node_type[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
+                'node.show.' . $nodeType[ 'node_type' ]    => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View content'),
+                'node.created.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
+                'node.cloned.' . $nodeType[ 'node_type' ]  => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
+                'node.edited.' . $nodeType[ 'node_type' ]  => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
+                'node.deleted.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
             ];
         }
     }
 
-    public function hookNodeClone($id_node)
+    public function hookNodeClone($idNode)
     {
-        $node = $this->query->from('node')
-            ->where('id', '==', $id_node)
+        $node = $this->query
+            ->from('node')
+            ->where('id', '==', $idNode)
             ->fetch();
-        
+
         return $node
             ? [ 'node.administer', 'node.cloned.' . $node[ 'type' ] ]
             : '';
     }
-    
-    public function hookNodeSow($id_node)
+
+    public function hookNodeSow($idNode)
     {
-        $node = $this->query->from('node')
-            ->where('id', '==', $id_node)
+        $node = $this->query
+            ->from('node')
+            ->where('id', '==', $idNode)
             ->fetch();
 
         return $node
@@ -70,21 +74,23 @@ class HookUser
         return [ 'node.administer', 'node.created.' . $type ];
     }
 
-    public function hookNodeEdited($id_node)
+    public function hookNodeEdited($idNode)
     {
-        $node = $this->query->from('node')
-            ->where('id', '==', $id_node)
+        $node = $this->query
+            ->from('node')
+            ->where('id', '==', $idNode)
             ->fetch();
-        
+
         return $node
             ? [ 'node.administer', 'node.edited.' . $node[ 'type' ] ]
             : '';
     }
 
-    public function hookNodeDeleted($id_node)
+    public function hookNodeDeleted($idNode)
     {
-        $node = $this->query->from('node')
-            ->where('id', '==', $id_node)
+        $node = $this->query
+            ->from('node')
+            ->where('id', '==', $idNode)
             ->fetch();
 
         return $node
