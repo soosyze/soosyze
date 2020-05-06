@@ -21,7 +21,7 @@ class FormContact extends FormBuilder
 
         return $this;
     }
-    
+
     public function makeFields()
     {
         $this->name()
@@ -89,7 +89,7 @@ class FormContact extends FormBuilder
             $form->checkbox('copy')
                     ->label('copy-label', '<i class="ui" aria-hidden="true"></i> ' . t('Send me a copy of the mail'), [
                         'for' => 'copy'
-                    ]);
+                ]);
         }, self::$attrGrp);
     }
 }

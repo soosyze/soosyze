@@ -27,8 +27,10 @@ class Contact extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('contact.check');
-        $form = (new FormContact([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormContact([
+            'method' => 'post',
+            'action' => self::router()->getRoute('contact.check')
+            ]))
             ->setValues($values)
             ->makeFields();
 
@@ -67,11 +69,11 @@ class Contact extends \Soosyze\Controller
                 'token_contact' => 'required|token'
             ])
             ->setLabel([
-                'name'          => t('Name'),
-                'email'         => t('E-mail'),
-                'object'        => t('Object'),
-                'message'       => t('Message'),
-                'copy'          => t('Send me a copy of the mail'),
+                'name'    => t('Name'),
+                'email'   => t('E-mail'),
+                'object'  => t('Object'),
+                'message' => t('Message'),
+                'copy'    => t('Send me a copy of the mail'),
             ])
             ->setInputs($req->getParsedBody());
 
@@ -81,7 +83,7 @@ class Contact extends \Soosyze\Controller
             $inputs = $validator->getInputs();
 
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
-            $mail   = (new Email())
+            $mail = (new Email())
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
                 ->to(self::config()->get('settings.email'))
                 ->subject($inputs[ 'object' ])
@@ -91,7 +93,7 @@ class Contact extends \Soosyze\Controller
                 $mail->addCc($inputs[ 'email' ]);
             }
             $this->container->callHook('contact.after', [ &$validator ]);
-            
+
             if ($mail->send()) {
                 $_SESSION[ 'messages' ][ 'success' ] = [ t('Your message has been sent.') ];
             } else {
