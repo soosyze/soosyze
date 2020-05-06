@@ -25,8 +25,9 @@ class Block extends \Soosyze\Controller
         $block[ 'link_update' ] = self::router()->getRoute('block.update', [ ':id' => $id ]);
 
         if (!empty($block[ 'hook' ])) {
-            $data               = self::block()->getBlocks();
-            $tpl                = self::template()->createBlock($data[ $block[ 'key_block' ] ][ 'tpl' ], $data[ $block[ 'key_block' ] ][ 'path' ]);
+            $data = self::block()->getBlocks();
+            $tpl  = self::template()->createBlock($data[ $block[ 'key_block' ] ][ 'tpl' ], $data[ $block[ 'key_block' ] ][ 'path' ]);
+
             $block[ 'content' ] .= (string) self::core()->callHook(
                 'block.' . $block[ 'hook' ],
                 [
@@ -51,19 +52,20 @@ class Block extends \Soosyze\Controller
             'method' => 'POST',
             'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
         ]);
+
         foreach ($data as $key => &$block) {
             if (!empty($block[ 'hook' ])) {
                 $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
                 $content = self::core()->callHook('block.' . $block[ 'hook' ], [
                     $tpl, empty($block[ 'options' ])
-                        ? []
-                        : $block[ 'options' ]
+                    ? []
+                    : $block[ 'options' ]
                 ]);
             } else {
                 $content = self::template()
-                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                        ->addVars([
-                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
+                    ->createBlock($block[ 'tpl' ], $block[ 'path' ])
+                    ->addVars([
+                    'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);
             }
 
@@ -78,6 +80,7 @@ class Block extends \Soosyze\Controller
                 ]);
             });
         }
+
         $form->token("token_$section")
             ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
 
@@ -106,46 +109,51 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $type    = $validator->getInput('type_block');
-            $hook    = null;
+            $block   = $blocks[ $validator->getInput('type_block') ];
             $content = '';
-            if (empty($blocks[ $type ][ 'hook' ])) {
+
+            if (empty($block[ 'hook' ])) {
                 $content = (string) self::template()
-                        ->createBlock($blocks[ $type ][ 'tpl' ], $blocks[ $type ][ 'path' ])
+                        ->createBlock($block, $block[ 'path' ])
                         ->addVars([
                             'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);
-            } else {
-                $hook = $blocks[ $type ][ 'hook' ];
             }
+
             $values = [
                 'section'          => $section,
-                'title'            => $blocks[ $type ][ 'title' ],
+                'title'            => $block[ 'title' ],
                 'content'          => $content,
                 'weight'           => 1,
                 'visibility_roles' => true,
                 'roles'            => '1,2',
-                'hook'             => $hook,
-                'key_block'        => $type,
-                'options'          => empty($blocks[ $type ][ 'options' ])
+                'hook'             => empty($block[ 'hook' ])
                     ? null
-                    : json_encode($blocks[ $type ][ 'options' ])
+                    : $block[ 'hook' ],
+                'key_block'        => $validator->getInput('type_block'),
+                'options'          => empty($block[ 'options' ])
+                    ? null
+                    : json_encode($block[ 'options' ])
             ];
+
             $this->container->callHook('block.store.before', [ $validator, &$values ]);
+
             self::query()
                 ->insertInto('block', array_keys($values))
                 ->values($values)
                 ->execute();
+
             $this->container->callHook('block.store.after', [ $validator, $values ]);
         }
-        $route = self::router()->getRoute('section.admin', [ ':theme' => 'theme' ]);
 
-        return new \Soosyze\Components\Http\Redirect($route);
+        return new \Soosyze\Components\Http\Redirect(
+            self::router()->getRoute('section.admin', [ ':theme' => 'theme' ])
+        );
     }
 
     public function edit($id, $req)
     {
-        $data            = self::query()->from('block')->where('block_id', '==', $id)->fetch();
+        $data            = $this->find($id);
         $data[ 'roles' ] = explode(',', $data[ 'roles' ]);
 
         $this->container->callHook('block.edit.form.data', [ &$data ]);
@@ -274,9 +282,6 @@ class Block extends \Soosyze\Controller
             $form->addErrors($_SESSION[ 'errors' ])
                 ->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
             unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        } elseif (isset($_SESSION[ 'success' ])) {
-            $form->setSuccess($_SESSION[ 'success' ]);
-            unset($_SESSION[ 'success' ], $_SESSION[ 'errors' ]);
         }
 
         return self::template()
@@ -289,7 +294,7 @@ class Block extends \Soosyze\Controller
 
     public function update($id, $req)
     {
-        if (!self::query()->from('block')->where('block_id', '==', $id)->fetch()) {
+        if (!$this->find($id)) {
             return $this->get404($req);
         }
 
@@ -297,7 +302,7 @@ class Block extends \Soosyze\Controller
             ->setRules([
                 'title'            => '!required|string|max:255',
                 'content'          => '!required|string|max:5000',
-                'class'              => '!required|string|max:255',
+                'class'            => '!required|string|max:255',
                 'visibility_pages' => 'bool',
                 'pages'            => '!required|string|to_htmlsc',
                 'visibility_roles' => 'bool',
@@ -315,7 +320,7 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.update.validator', [ &$validator ]);
 
         $validatorRoles = new Validator();
-        if ($isValid = $validator->isValid()) {
+        if ($isValid        = $validator->isValid()) {
             $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
             foreach ($validator->getInput('roles', []) as $key => $role) {
                 $validatorRoles
@@ -328,10 +333,10 @@ class Block extends \Soosyze\Controller
 
         if ($isValid) {
             $idRoles = array_keys($validator->getInput('roles', []));
-            $values = [
+            $values  = [
                 'title'            => $validator->getInput('title'),
                 'content'          => $validator->getInput('content'),
-                'class'              => $validator->getInput('class'),
+                'class'            => $validator->getInput('class'),
                 'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
                 'pages'            => $validator->getInput('pages'),
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
@@ -344,15 +349,15 @@ class Block extends \Soosyze\Controller
                 ->where('block_id', '==', $id)
                 ->execute();
             $this->container->callHook('block.update.after', [ $validator ]);
-        } else {
-            $_SESSION[ 'inputs' ]      = $validator->getInputs();
-            $_SESSION[ 'errors' ]      = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
-            $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
 
-            return $this->edit($id, $req);
+            return $this->show($id, $req);
         }
 
-        return $this->show($id, $req);
+        $_SESSION[ 'inputs' ]      = $validator->getInputs();
+        $_SESSION[ 'errors' ]      = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
+        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+
+        return $this->edit($id, $req);
     }
 
     public function delete($id, $req)
@@ -364,5 +369,10 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.delete.before', [ $id ]);
         self::query()->from('block')->where('block_id', '==', $id)->delete()->execute();
         $this->container->callHook('block.delete.after', [ $id ]);
+    }
+
+    protected function find($id)
+    {
+        return self::query()->from('block')->where('block_id', '==', $id)->fetch();
     }
 }
