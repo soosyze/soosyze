@@ -52,40 +52,40 @@ class Install extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $optionLang   = self::translate()->getLang();
-        $optionLang['en'] = [ 'value' => 'en', 'label' => 'English' ];
+        $optionLang         = self::translate()->getLang();
+        $optionLang[ 'en' ] = [ 'value' => 'en', 'label' => 'English' ];
 
         $optionTimezone = [];
         foreach (timezone_identifiers_list() as $value) {
             $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
         }
 
-        $content = [
+        $values = [
             'lang'     => 'en',
             'timezone' => date_default_timezone_get()
-                ? date_default_timezone_get()
-                : 'Europe/Paris'
+            ? date_default_timezone_get()
+            : 'Europe/Paris'
         ];
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $values = array_merge($values, $_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormBuilder([
             'method' => 'post',
             'action' => self::router()->getRoute('install.language', [ ':id' => $id ]),
             'id'     => 'form_lang' ]))
-            ->group('lang-group', 'div', function ($form) use ($content, $optionLang) {
+            ->group('lang-group', 'div', function ($form) use ($values, $optionLang) {
                 $form->label('lang-label', t('Language'))
                 ->select('lang', $optionLang, [
                     'class'    => 'form-control',
-                    'selected' => $content[ 'lang' ]
+                    'selected' => $values[ 'lang' ]
                 ]);
             }, [ 'class' => 'form-group' ])
-            ->group('timezone-group', 'div', function ($form) use ($content, $optionTimezone) {
+            ->group('timezone-group', 'div', function ($form) use ($values, $optionTimezone) {
                 $form->label('timezone-label', t('Timezone'))
                 ->select('timezone', $optionTimezone, [
                     'class'    => 'form-control',
-                    'selected' => $content[ 'timezone' ]
+                    'selected' => $values[ 'timezone' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token('token_install');
@@ -99,22 +99,22 @@ class Install extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ][ $id ]);
         }
 
-        $block_page     = self::core()->callHook("step.$id", [ $id ]);
-        $block_messages = (new Template('messages.php', $this->pathViews))
+        $blockPage     = self::core()->callHook("step.$id", [ $id ]);
+        $blockMessages = (new Template('messages.php', $this->pathViews))
             ->addVars($messages);
 
         return (new Template('html.php', $this->pathViews))
-                ->addBlock('page', $block_page)
-                ->addBlock('messages', $block_messages)
+                ->addBlock('page', $blockPage)
+                ->addBlock('messages', $blockMessages)
                 ->addVars([
-                    'lang'        => $content['lang'],
+                    'lang'        => $values[ 'lang' ],
                     'form'        => $form,
                     'steps'       => $steps,
                     'step_active' => $id
                 ])
                 ->render();
     }
-    
+
     public function language($id, $req)
     {
         $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
@@ -187,7 +187,7 @@ class Install extends \Soosyze\Controller
             $migration = $namespace . 'Installer';
             $installer = new $migration();
 
-            $dir          = $installer->getDir();
+            $dir      = $installer->getDir();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
@@ -196,14 +196,14 @@ class Install extends \Soosyze\Controller
 
             /* Charge le container des nouveaux services. */
             $this->loadContainer($composer);
-            $composer[ 'dir' ]     = $dir;
+            $composer[ 'dir' ]   = $dir;
             $instances[ $title ] = $composer;
         }
 
         foreach ($instances as $title => $composer) {
             self::module()->create($composer);
             /* Install les scripts de migrations. */
-            $this->installMigration($composer['dir'] . DS . 'Migrations', $title);
+            $this->installMigration($composer[ 'dir' ] . DS . 'Migrations', $title);
             /* Hook d'installation pour les autres modules utilise le module actuel. */
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
@@ -214,7 +214,7 @@ class Install extends \Soosyze\Controller
             ->values([ 'Core', 'User', '1.0' ])
             ->execute();
     }
-    
+
     private function installMigration($dir, $title)
     {
         if (!\is_dir($dir)) {
@@ -235,8 +235,12 @@ class Install extends \Soosyze\Controller
     private function installFinish()
     {
         $save     = $_SESSION[ 'inputs' ][ 'user' ];
-        $lang     = isset($_SESSION[ 'lang' ]) ? $_SESSION[ 'lang' ] : 'en';
-        $timezone = isset($_SESSION[ 'timezone' ]) ? $_SESSION[ 'lang' ] : 'Europe/Paris';
+        $lang     = isset($_SESSION[ 'lang' ])
+            ? $_SESSION[ 'lang' ]
+            : 'en';
+        $timezone = isset($_SESSION[ 'timezone' ])
+            ? $_SESSION[ 'lang' ]
+            : 'Europe/Paris';
         $data     = [
             'username'         => $save[ 'username' ],
             'email'            => $save[ 'email' ],

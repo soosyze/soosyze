@@ -108,7 +108,7 @@ class HookApp
                 )
                 ->withMethod('GET');
 
-            if ($route         = $this->router->parse($requestDenied)) {
+            if ($route = $this->router->parse($requestDenied)) {
                 $responseDenied = $this->router->execute($route, $requestDenied);
             }
         }
@@ -176,12 +176,12 @@ class HookApp
             return;
         }
 
-        $meta_title       = $this->config->get('settings.meta_title', 'Soosyze CMS');
-        $meta_description = $this->config->get('settings.meta_description', '');
-        $meta_keyboard    = $this->config->get('settings.meta_keyboard', '');
-        $favicon          = $this->config->get('settings.favicon', '');
-        $logo             = $this->config->get('settings.logo', '');
-        $maintenance      = $this->config->get('settings.maintenance', false);
+        $metaTitle       = $this->config->get('settings.meta_title', 'Soosyze CMS');
+        $metaDescription = $this->config->get('settings.meta_description', '');
+        $metaKeyboard    = $this->config->get('settings.meta_keyboard', '');
+        $favicon         = $this->config->get('settings.favicon', '');
+        $logo            = $this->config->get('settings.logo', '');
+        $maintenance     = $this->config->get('settings.maintenance', false);
 
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/js/script.js';
 
@@ -191,12 +191,11 @@ class HookApp
         $siteTitle = $html->getVar('title');
         $pageTitle = $response->getBlock('page')->getVar('title_main');
 
-        $title = $meta_title;
+        $title = $metaTitle;
         if ($siteTitle) {
             $title = str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
-                [ $meta_description,
-                $meta_title, $pageTitle ],
+                [ $metaDescription, $metaTitle, $pageTitle ],
                 $siteTitle
             );
         } elseif ($pageTitle) {
@@ -206,20 +205,20 @@ class HookApp
         $description = $siteDesc
             ? str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
-                [ $meta_description, $meta_title, $pageTitle ],
+                [ $metaDescription, $metaTitle, $pageTitle ],
                 $siteDesc
             )
-            : $meta_description;
+            : $metaDescription;
 
         $response->view('this', [
             'title'       => $title,
             'description' => $description,
-            'keyboard'    => $meta_keyboard,
+            'keyboard'    => $metaKeyboard,
             'generator'   => 'Soosyze CMS',
             'favicon'     => $favicon,
             'scripts'     => $scripts . '<script src="' . $vendor . '"></script>'
         ])->view('page', [
-            'title' => $meta_title,
+            'title' => $metaTitle,
             'logo'  => is_file(ROOT . $logo)
                 ? $request->getBasePath() . $logo
                 : $logo

@@ -107,9 +107,9 @@ class HookStep
                     'style'    => 'display:none;'
                 ])->html("img_$key", '<img:attr>', [
                     'src' => $profil[ 'img' ],
-                    'alt' => $profil['title']
+                    'alt' => $profil[ 'title' ]
                 ]);
-            }, ['class' => 'block-body']);
+            }, [ 'class' => 'block-body' ]);
         }
         $form->token('token_step_install')
             ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
@@ -275,11 +275,12 @@ class HookStep
             ->values([ (new Template('about.php', $this->pathContent))->render() ])
             ->values([ t('Not Found') ])
             ->execute();
-        
+
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
+                'title'
             ])
             ->values([ 1, 'page', $time, $time, 1, t('Site') ])
             ->values([ 2, 'page', $time, $time, 1, t('Basic') ])
@@ -298,27 +299,32 @@ class HookStep
                 (new Template('learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">' . t('Introduction') . '</span>', 1, true, '/',
+                'content_header', '<span id="text">' . t('Introduction') . '</span>',
+                1, true, '/',
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->execute();
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook', 'key_block' ])
+            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook',
+                'key_block' ])
             ->values([
                 'sidebar', 'Lorem ipsum dolor', 1,
-                (new Template('card_ui.php', $this->pathContent))->render(), null, null
+                (new Template('card_ui.php', $this->pathContent))->render(), null,
+                null
             ])
             ->values([
                 'sidebar', t('Archives by months'), 2, '', 'news.month', 'news.month'
             ])
             ->values([
                 'sidebar', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null, null
+                (new Template('social.php', $this->pathContent))->render(), null,
+                null
             ])
             ->values([
                 'footer_first', t('To join us'), 1,
-                (new Template('contact.php', $this->pathContent))->render(), null, null
+                (new Template('contact.php', $this->pathContent))->render(), null,
+                null
             ])
             ->values([
                 'footer_second', t('Access map'), 1,
@@ -330,8 +336,8 @@ class HookStep
             ->insertInto('menu_link', [
                 'key', 'menu', 'link', 'weight', 'parent', 'title_link'
             ])
-            ->values([ 'node.show', 'menu-main', 'news', 2, -1, 'Blog'])
-            ->values([ 'node.show', 'menu-main', 'node/7', 3, -1, 'About'])
+            ->values([ 'node.show', 'menu-main', 'news', 2, -1, 'Blog' ])
+            ->values([ 'node.show', 'menu-main', 'node/7', 3, -1, 'About' ])
             ->values([ 'node.show', 'menu-main', 'node/4', 3, 6, 'Basic' ])
             ->values([ 'node.show', 'menu-main', 'node/5', 3, 6, 'Standard' ])
             ->values([ 'node.show', 'menu-main', 'node/6', 3, 6, 'Premium' ])
@@ -347,13 +353,15 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook', 'key_block'  ])
+            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook',
+                'key_block' ])
             ->values([
                 'sidebar', t('Archives by months'), 1, '', 'news.month', 'news.month'
             ])
             ->values([
                 'footer_first', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null, null
+                (new Template('social.php', $this->pathContent))->render(), null,
+                null
             ])
             ->values([
                 'footer_second', 'Lorem ipsum dolor', 1,
@@ -365,11 +373,12 @@ class HookStep
             ->insertInto('entity_page', [ 'body' ])
             ->values([ (new Template('about.php', $this->pathContent))->render() ])
             ->execute();
-        
+
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
+                'title'
             ])
             ->values([ 1, 'page', $time, $time, 1, t('About') ])
             ->execute();
@@ -401,11 +410,12 @@ class HookStep
             ->values([ (new Template('about.php', $this->pathContent))->render() ])
             ->values([ t('Not Found') ])
             ->execute();
-        
+
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
+                'title'
             ])
             ->values([ 1, 'page', $time, $time, 1, t('Site') ])
             ->values([ 2, 'page', $time, $time, 1, t('Education') ])
@@ -418,7 +428,7 @@ class HookStep
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key',  'menu', 'link', 'weight', 'parent',  'title_link'
+                'key', 'menu', 'link', 'weight', 'parent', 'title_link'
             ])
             ->values([ 'node.show', 'menu-main', 'node/2', 3, -1, 'Education' ])
             ->values([ 'node.show', 'menu-main', 'node/3', 3, -1, 'Projects' ])
@@ -457,7 +467,8 @@ class HookStep
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title'
+                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
+                'title'
             ])
             ->values([ 1, 'page', $time, $time, 1, 'Ipsum sed adipiscing' ])
             ->execute();
@@ -481,12 +492,14 @@ class HookStep
                 (new Template('learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">' . t('Introduction') . '</span>', 1, true,
+                'content_header', '<span id="text">' . t('Introduction') . '</span>',
+                1, true,
                 '/',
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_footer', '<span id="img">' . t('About') . '</span>', 1, true, '/',
+                'content_footer', '<span id="img">' . t('About') . '</span>', 1,
+                true, '/',
                 (new Template('img.php', $this->pathContent))->render()
             ])
             ->values([
@@ -494,7 +507,8 @@ class HookStep
                 (new Template('text.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_second', '<span id="social">' . t('Follow us') . '</span>', 2, true,
+                'footer_second', '<span id="social">' . t('Follow us') . '</span>',
+                2, true,
                 '/',
                 (new Template('social.php', $this->pathContent))->render()
             ])

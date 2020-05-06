@@ -15,7 +15,6 @@ class Install
 
     public function hook404($request, &$response)
     {
-        $route    = $this->router->getRoute('install.index');
-        $response = new Redirect($route);
+        $response = new Redirect($this->router->getRoute('install.index'));
     }
 }

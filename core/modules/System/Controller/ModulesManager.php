@@ -48,7 +48,7 @@ class ModulesManager extends \Soosyze\Controller
                     if (!isset($data[ $require ])) {
                         $isRequired[]       = htmlspecialchars($require);
                         $attr[ 'disabled' ] = 'disabled';
-                    } elseif (!self::composer()->validVersion($version, $data[ $require ]['version'], true)) {
+                    } elseif (!self::composer()->validVersion($version, $data[ $require ][ 'version' ], true)) {
                         $isRequired[]       = htmlspecialchars($require . " (v$version)");
                         $attr[ 'disabled' ] = 'disabled';
                     }
@@ -112,7 +112,7 @@ class ModulesManager extends \Soosyze\Controller
                     'packages'           => $packages
         ]);
     }
-    
+
     public function update($req)
     {
         $route     = self::router()->getRoute('system.module.edit');
@@ -129,27 +129,28 @@ class ModulesManager extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $data          = $validator->getInput('modules')
+        $data = $validator->getInput('modules')
             ? $validator->getInput('modules')
             : [];
-        $module_active = array_flip(self::module()->listModuleActiveNotRequire());
 
-        $outUninstall = $this->uninstallModule($module_active, $data);
-        $outInstall   = $this->installModule($module_active, $data);
+        $moduleActive = array_flip(self::module()->listModuleActiveNotRequire());
 
-        if (!empty($outInstall) || !empty($outUninstall)) {
-            $_SESSION[ 'messages' ][ 'errors' ] = $outInstall + $outUninstall;
-        } else {
+        $outUninstall = $this->uninstallModule($moduleActive, $data);
+        $outInstall   = $this->installModule($moduleActive, $data);
+
+        if (empty($outInstall) && empty($outUninstall)) {
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+        } else {
+            $_SESSION[ 'messages' ][ 'errors' ] = $outInstall + $outUninstall;
         }
 
         return new Redirect($route);
     }
 
-    private function installModule($module_active, $data)
+    private function installModule($moduleActive, $data)
     {
         /* S'il n'y a pas de modules à installer. */
-        if (!($diff = array_diff_key($data, $module_active))) {
+        if (!($diff = array_diff_key($data, $moduleActive))) {
             return [];
         }
 
@@ -161,7 +162,7 @@ class ModulesManager extends \Soosyze\Controller
             /* Vérifie que le module existe. */
             if (!isset($composer[ $title ])) {
                 /* Installation d'un module non existant. */
-                $errors[] = t('The :title module does not exist.', [':title' => $title ]);
+                $errors[] = t('The :title module does not exist.', [ ':title' => $title ]);
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
             elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {
@@ -179,8 +180,8 @@ class ModulesManager extends \Soosyze\Controller
 
         /* Installation */
         foreach ($modules as $title) {
-            $migration = self::composer()->getNamespace($title) . 'Installer';
-            $installer   = new $migration();
+            $migration                   = self::composer()->getNamespace($title) . 'Installer';
+            $installer                   = new $migration();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
@@ -197,20 +198,20 @@ class ModulesManager extends \Soosyze\Controller
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
             /* Install les scripts de migrations. */
-            self::migration()->installMigration($composer[ $title ]['dir'] . DS . 'Migrations', $title);
+            self::migration()->installMigration($composer[ $title ][ 'dir' ] . DS . 'Migrations', $title);
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 
         return [];
     }
 
-    private function uninstallModule($module_active, $data)
+    private function uninstallModule($moduleActive, $data)
     {
         /* S'il n'y a pas des modules à désinstaller. */
-        if (!($diff = array_diff_key($module_active, $data))) {
+        if (!($diff = array_diff_key($moduleActive, $data))) {
             return [];
         }
-        
+
         $composer = self::composer()->getAllComposer();
         $errors   = [];
         $modules  = array_keys($diff);
@@ -219,7 +220,7 @@ class ModulesManager extends \Soosyze\Controller
             /* Vérifie que le module existe. */
             if (!isset($composer[ $title ])) {
                 /* Dé-installation d'un module non existant. */
-                $errors[] = t('The :title module does not exist.', [':title' => $title ]);
+                $errors[] = t('The :title module does not exist.', [ ':title' => $title ]);
             }
             /* Vérifie que le fichier composer n'est pas corrompu. */
             elseif ($out = self::composer()->validComposer($title, $composer[ $title ])) {
@@ -233,8 +234,8 @@ class ModulesManager extends \Soosyze\Controller
 
         $instances = [];
         foreach ($modules as $title) {
-            $migration = self::composer()->getNamespace($title) . 'Installer';
-            $installer   = new $migration();
+            $migration           = self::composer()->getNamespace($title) . 'Installer';
+            $installer           = new $migration();
             $instances[ $title ] = $installer;
             /* Supprime le module à partir de son nom. */
             self::module()->uninstallModule($title);
