@@ -8,7 +8,7 @@ class HookUser
     {
         $permission[ 'Template' ][ 'template.admin' ] = t('Use the admin theme');
     }
-    
+
     public function hookInstallUser($ci)
     {
         $ci->query()
