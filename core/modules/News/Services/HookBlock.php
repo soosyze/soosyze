@@ -76,6 +76,7 @@ class HookBlock
         foreach ($data as $value) {
             $year  = date('Y', $value[ 'date_created' ]);
             $month = date('m', $value[ 'date_created' ]);
+
             if (!isset($output[ $year ])) {
                 $output[ $year ] = [
                     'number' => 1,
@@ -86,6 +87,7 @@ class HookBlock
                     ])
                 ];
             }
+
             if (!isset($output[ $year ][ 'months' ][ $month ])) {
                 $output[ $year ][ 'months' ][ $month ] = [
                     'number' => 1,

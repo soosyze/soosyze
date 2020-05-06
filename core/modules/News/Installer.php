@@ -47,7 +47,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('node_type_field', [
-                'node_type', 'field_id', 'field_weight', 'field_label', 'field_rules', 'field_description', 'field_show_form'
+                'node_type', 'field_id', 'field_weight', 'field_label', 'field_rules',
+                'field_description', 'field_show_form'
             ])
             ->values([
                 'article', $idImage, 1, 'Picture',
@@ -103,10 +104,11 @@ class Installer implements \SoosyzeCore\System\Migration
         $time = (string) time();
         $ci->query()
             ->insertInto('node', [
-                'title', 'type', 'date_created', 'date_changed', 'node_status_id', 'entity_id'
+                'title', 'type', 'date_created', 'date_changed', 'node_status_id',
+                'entity_id'
             ])
             ->values([
-                'Bienvenue sur mon site', 'article', $time, $time,  1, 1
+                'Bienvenue sur mon site', 'article', $time, $time, 1, 1
             ])
             ->values([
                 'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2
