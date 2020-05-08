@@ -114,7 +114,7 @@ class Block extends \Soosyze\Controller
 
             if (empty($block[ 'hook' ])) {
                 $content = (string) self::template()
-                        ->createBlock($block, $block[ 'path' ])
+                        ->createBlock($block['tpl'], $block[ 'path' ])
                         ->addVars([
                             'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);

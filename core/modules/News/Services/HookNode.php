@@ -12,9 +12,9 @@ class HookNode
     public function hookNodeStoreBefore($validator, &$fieldsInsert, $type)
     {
         if ($type === 'article') {
-            $words = str_word_count(strip_tags($fieldsUpdate[ 'body' ]));
+            $words = str_word_count(strip_tags($fieldsInsert[ 'body' ]));
             
-            $fieldsUpdate[ 'reading_time' ] = ceil($words / 200);
+            $fieldsInsert[ 'reading_time' ] = ceil($words / 200);
         }
     }
 

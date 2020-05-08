@@ -73,7 +73,8 @@ class HookMenu
                         ->group('node-menu', 'div', function ($form) use ($data) {
                             $form->group('node-menu-title-group', 'div', function ($form) use ($data) {
                                 $form->label('node-menu-title-label', t('Link title'), [
-                                    'for' => 'title_link' ])
+                                    'for' => 'title_link'
+                                ])
                                 ->text('title_link', [
                                     'class'       => 'form-control',
                                     'placeholder' => t('Example: Home'),

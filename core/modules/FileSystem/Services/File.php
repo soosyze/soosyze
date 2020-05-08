@@ -94,7 +94,9 @@ class File
             ? $this->basePath . $content
             : '';
 
-        if (!empty($src) && $type == 'image') {
+        if (empty($src)) {
+            $attr[ 'disabled' ] = 'disabled';
+        } elseif ($type == 'image') {
             $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<img:attr/>', [
                     'alt'   => 'Picture user',
@@ -102,15 +104,13 @@ class File
                     'class' => 'input-file-img img-thumbnail'
                 ]);
             }, [ 'class' => 'form-group' ]);
-        } elseif (!empty($src)) {
+        } else {
             $form->group("file-$name-group", 'div', function ($form) use ($name, $src) {
                 $form->html("file-image-$name", '<a:attr/><i class="fa fa-download"></i> :_content</a>', [
                     'href'     => $src,
                     '_content' => $src
                 ]);
             }, [ 'class' => 'form-group' ]);
-        } else {
-            $attr[ 'disabled' ] = 'disabled';
         }
 
         $form->group("file-input-$name-flex", 'div', function ($form) use ($name, $content, $attr) {

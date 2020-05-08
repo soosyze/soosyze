@@ -47,18 +47,19 @@ class HookBlock
         $output = [];
         foreach ($data as $value) {
             $year = date('Y', $value[ 'date_created' ]);
-            if (!isset($output[ $year ])) {
-                $output[ $year ] = [
-                    'number' => 1,
-                    'year'   => $year,
-                    'link'   => $this->router->getRoute('news.years', [
-                        ':year' => $year,
-                        ':id'   => ''
-                    ])
-                ];
-            } else {
+            if (isset($output[ $year ])) {
                 $output[ $year ][ 'number' ]++;
+
+                continue;
             }
+            $output[ $year ] = [
+                'number' => 1,
+                'year'   => $year,
+                'link'   => $this->router->getRoute('news.years', [
+                    ':year' => $year,
+                    ':id'   => ''
+                ])
+            ];
         }
 
         return $tpl->addVar('archive', $output);
