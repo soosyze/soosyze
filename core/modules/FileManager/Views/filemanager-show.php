@@ -95,7 +95,7 @@
     </div>
 </div>
 
-<div id="modal_folder" class="modal" role="dialog" aria-label="<?php echo t('File action window.'); ?>">
+<div id="modal_folder" class="modal" role="dialog" aria-label="<?php echo t('File actions window'); ?>">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content"></div>
     </div>

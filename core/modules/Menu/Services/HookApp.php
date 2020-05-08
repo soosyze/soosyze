@@ -27,7 +27,7 @@ class HookApp
     public function hookMenuShowResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
-            $script  = $response->getBlock('this')->getVar('scripts');
+            $script = $response->getBlock('this')->getVar('scripts');
             $script .= '<script>
             $().ready(function () {
                 var nestedSortables = [].slice.call($(\'.nested-sortable\'));

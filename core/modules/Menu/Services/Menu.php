@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\Menu\Services;
 
+use Soosyze\Components\Http\Uri;
+
 class Menu
 {
     protected $core;
@@ -75,7 +77,7 @@ class Menu
         }
 
         $isRewrite = $this->router->isRewrite();
-        $uri       = \Soosyze\Components\Http\Uri::create(($isRewrite
+        $uri       = Uri::create(($isRewrite
                 ? ''
                 : 'q=') . $link);
         if (!$isRewrite) {
@@ -132,16 +134,15 @@ class Menu
                 ->createBlock('menu.php', $this->pathViews)
                 ->nameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu' => $this->getGrantedLink($query, $this->core->getRequest()),
+                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()),
                     'level' => $level
-                ]);
+        ]);
     }
 
     public function rewiteUri($link)
     {
         $basePath = $this->core->getRequest()->getBasePath();
-        $uri      = \Soosyze\Components\Http\Uri::create($basePath)
-            ->withFragment($link[ 'fragment' ]);
+        $uri      = Uri::create($basePath)->withFragment($link[ 'fragment' ]);
 
         if ($this->router->isRewrite()) {
             return $uri->withPath($link[ 'link' ])
@@ -181,7 +182,7 @@ class Menu
             if ($source = $this->alias->getSource($menu[ 'link' ])) {
                 $menu[ 'link' ] = $source;
             }
-            
+
             $link = $request->withUri(
                 $this->router->isRewrite()
                 ? $request->getUri()->withPath($menu[ 'link' ])
@@ -198,7 +199,8 @@ class Menu
             $menu[ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
                 ? 'active'
                 : '';
-            $menu[ 'link' ]        = $this->rewiteUri($menu);
+
+            $menu[ 'link' ] = $this->rewiteUri($menu);
         }
 
         return $query;

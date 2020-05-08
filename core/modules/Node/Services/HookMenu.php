@@ -19,19 +19,19 @@ class HookMenu
      *
      * @var bool
      */
-    private $is_menu;
+    private $isMenu;
 
     public function __construct($alias, $schema, $query)
     {
-        $this->alias   = $alias;
-        $this->schema  = $schema;
-        $this->query   = $query;
-        $this->is_menu = $this->schema->hasTable('menu');
+        $this->alias  = $alias;
+        $this->schema = $schema;
+        $this->query  = $query;
+        $this->isMenu = $this->schema->hasTable('menu');
     }
 
     public function hookCreateFormData(&$data)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             $data[ 'title_link' ] = '';
             $data[ 'active' ]     = '';
         }
@@ -39,7 +39,7 @@ class HookMenu
 
     public function hookEditFormData(&$data, $item)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             $data[ 'title_link' ] = '';
             $data[ 'active' ]     = '';
             $link                 = $this->query
@@ -57,7 +57,7 @@ class HookMenu
 
     public function hookCreateForm($form, $data)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             $form->before('actions-group', function ($form) use ($data) {
                 $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('node-menu-legend', t('Menu'))
@@ -73,7 +73,8 @@ class HookMenu
                         ->group('node-menu', 'div', function ($form) use ($data) {
                             $form->group('node-menu-title-group', 'div', function ($form) use ($data) {
                                 $form->label('node-menu-title-label', t('Link title'), [
-                                    'for' => 'title_link' ])
+                                    'for' => 'title_link'
+                                ])
                                 ->text('title_link', [
                                     'class'       => 'form-control',
                                     'placeholder' => t('Example: Home'),
@@ -93,7 +94,7 @@ class HookMenu
 
     public function hookStoreValidator($validator)
     {
-        if ($this->is_menu && $validator->hasInput('active')) {
+        if ($this->isMenu && $validator->hasInput('active')) {
             $validator->addRule('title_link', 'required|string|max:255|to_striptags')
                 ->addRule('active', 'bool');
         }
@@ -101,7 +102,7 @@ class HookMenu
 
     public function hookStoreValid($validator)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             if (!$validator->hasInput('active')) {
                 return;
             }
@@ -136,7 +137,7 @@ class HookMenu
 
     public function hookUpdateValid($validator, $id)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             $nodeMenuLink = $this->query->from('node_menu_link')
                 ->where('node_id', '==', $id)
                 ->fetch();
@@ -207,7 +208,7 @@ class HookMenu
 
     public function hookDeleteValid($validator, $item)
     {
-        if ($this->is_menu) {
+        if ($this->isMenu) {
             $nodeMenuLink = $this->query->from('node_menu_link')
                 ->where('node_id', '==', $item)
                 ->fetch();

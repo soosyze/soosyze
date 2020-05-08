@@ -12,22 +12,23 @@ class HookUser
         $this->profil = $profil;
     }
 
-    public function getRight($path, $user_id = null)
+    public function getRight($path, $userId = null)
     {
-        if (empty($user_id) && ($user = $this->user->isConnected())) {
-            $user_id = $user[ 'user_id' ];
+        if (empty($userId) && ($user = $this->user->isConnected())) {
+            $userId = $user[ 'user_id' ];
         }
 
         $path    = '/' . Util::cleanPath($path);
-        $profils = $this->profil->getProfilsFileByUser($user_id);
+        $profils = $this->profil->getProfilsFileByUser($userId);
 
         foreach ($profils as $profil) {
             $pattern = '/' . Util::cleanPath($profil[ 'folder_show' ]);
-            $pattern = str_replace(':user_id', $user_id, $pattern);
+            $pattern = str_replace(':user_id', $userId, $pattern);
             $pattern .= $profil[ 'folder_show_sub' ]
                 ? '.*'
                 : '';
             $pattern = str_replace('/', '\/', $pattern);
+
             if (preg_match('/^' . $pattern . '$/', $path)) {
                 return $profil;
             }
@@ -74,6 +75,7 @@ class HookUser
         $user = null
     ) {
         $right = $this->getRight($path, $user[ 'user_id' ]);
+
         if (empty($right[ 'file_update' ])) {
             return false;
         }
@@ -85,6 +87,7 @@ class HookUser
         $path,
         $name,
         $ext,
+        $req = null,
         $user = null
     ) {
         $right = $this->getRight($path, $user[ 'user_id' ]);
@@ -100,6 +103,7 @@ class HookUser
         $user = null
     ) {
         $right = $this->getRight($path, $user[ 'user_id' ]);
+
         if (empty($right[ 'file_delete' ])) {
             return false;
         }

@@ -33,7 +33,8 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'config.index', 'fa fa-cog', 'Configuration', 'admin/config', 'menu-admin', 6, -1
+                    'config.index', 'fa fa-cog', 'Configuration', 'admin/config',
+                    'menu-admin', 6, -1
                 ])
                 ->execute();
         }

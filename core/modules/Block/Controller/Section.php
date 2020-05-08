@@ -15,6 +15,7 @@ class Section extends \Soosyze\Controller
     {
         $styles  = self::template()->getBlock('this')->getVar('styles');
         $scripts = self::template()->getBlock('this')->getVar('scripts');
+
         $styles  .= '<link rel="stylesheet" href="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/styles.css">';
         $scripts .= '<script src="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/scripts.js"></script>';
 
@@ -51,12 +52,11 @@ class Section extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
-            $value = [
-                'weight'  => (int) $validator->getInput('weight'),
-                'section' => $validator->getInput('section')
-            ];
             self::query()
-                ->update('block', $value)
+                ->update('block', [
+                    'weight'  => (int) $validator->getInput('weight'),
+                    'section' => $validator->getInput('section')
+                ])
                 ->where('block_id', '==', $id)
                 ->execute();
         }

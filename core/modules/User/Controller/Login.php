@@ -12,26 +12,24 @@ class Login extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function formLogin($url, $req)
     {
-        $connect_url = self::config()->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
         }
-        if ($user = self::user()->isConnected()) {
-            $route = self::router()->getRoute('user.account');
 
-            return new Redirect($route);
+        if (self::user()->isConnected()) {
+            return new Redirect(self::router()->getRoute('user.account'));
         }
 
-        $data = [ 'email' => '' ];
-        $this->container->callHook('login.form.data', [ &$data ]);
+        $values = [];
+        $this->container->callHook('login.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -39,7 +37,7 @@ class Login extends \Soosyze\Controller
             'method' => 'post',
             'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
             ], null, self::config()))
-            ->setValues($data);
+            ->setValues($values);
 
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', t('User login'));
@@ -47,7 +45,7 @@ class Login extends \Soosyze\Controller
                 ->passwordCurrent($formbuilder);
         })->submitForm(t('Log in'));
 
-        $this->container->callHook('login.form', [ &$form, $data ]);
+        $this->container->callHook('login.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -58,22 +56,23 @@ class Login extends \Soosyze\Controller
         return self::template()
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' =>  t('Log in')
+                    'title_main' => t('Log in')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-login.php', $this->pathViews, [
                     'form'             => $form,
-                    'url_relogin'      => self::router()->getRoute('user.relogin', [ ':url' => $url ]),
+                    'url_relogin'      => self::router()->getRoute('user.relogin', [
+                        ':url' => $url
+                    ]),
                     'url_register'     => self::router()->getRoute('user.register.create'),
-                    'granted_relogin'  => empty($user) && self::config()->get('settings.user_relogin'),
-                    'granted_register' => empty($user) && self::config()->get('settings.user_register')
+                    'granted_relogin'  => self::config()->get('settings.user_relogin'),
+                    'granted_register' => self::config()->get('settings.user_register')
         ]);
     }
 
     public function loginCheck($url, $req)
     {
-        $connect_url = self::config()->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
         }
 
@@ -94,9 +93,12 @@ class Login extends \Soosyze\Controller
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = [ t('E-mail or password not recognized.') ];
-            $route                              = self::router()->getRoute('user.login', [ ':url' => $url ]);
+
+            $route = self::router()->getRoute('user.login', [
+                ':url' => $url
+            ]);
         }
-        
+
         return new Redirect($route);
     }
 
@@ -110,16 +112,15 @@ class Login extends \Soosyze\Controller
 
     public function relogin($url, $req)
     {
-        $connect_url = self::config()->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
         }
 
-        $data = [];
-        $this->container->callHook('relogin.form.data', [ &$data ]);
+        $values = [];
+        $this->container->callHook('relogin.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -127,13 +128,13 @@ class Login extends \Soosyze\Controller
             'method' => 'post',
             'action' => self::router()->getRoute('user.relogin.check', [ ':url' => $url ])
             ]))
-            ->setValues($data);
+            ->setValues($values);
 
-        $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
-            $form->email($formbuilder);
+        $form->group('login-fieldset', 'fieldset', function ($formBuilder) use ($form) {
+            $form->email($formBuilder);
         })->submitForm();
 
-        $this->container->callHook('relogin.form', [ &$form, $data ]);
+        $this->container->callHook('relogin.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -155,8 +156,7 @@ class Login extends \Soosyze\Controller
 
     public function reloginCheck($url, $req)
     {
-        $connect_url = self::config()->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
         }
 
@@ -168,9 +168,9 @@ class Login extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
-            $query = self::user()->getUserActived($validator->getInput('email'));
+            $user = self::user()->getUserActived($validator->getInput('email'));
 
-            if ($query) {
+            if ($user) {
                 $token = Util::strRandom();
 
                 self::query()
@@ -179,7 +179,7 @@ class Login extends \Soosyze\Controller
                     ->execute();
 
                 $urlReset = self::router()->getRoute('user.reset', [
-                    ':id'    => $query[ 'user_id' ],
+                    ':id'    => $user[ 'user_id' ],
                     ':token' => $token
                 ]);
                 $message  = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser:') . "\n";
@@ -187,7 +187,7 @@ class Login extends \Soosyze\Controller
 
                 $email = (new Email)
                     ->from(self::config()->get('settings.email'))
-                    ->to($query[ 'email' ])
+                    ->to($user[ 'email' ])
                     ->subject(t('New Password'))
                     ->message($message)
                     ->isHtml(true);
@@ -213,37 +213,34 @@ class Login extends \Soosyze\Controller
         $_SESSION[ 'inputs' ] = $validator->getInputs();
 
         return new Redirect(self::router()->getRoute('user.relogin', [
-            ':url' => $url
+                ':url' => $url
         ]));
     }
 
     public function resetUser($id, $token, $req)
     {
-        if (!($user = self::user()->findActived($id))) {
+        if (!($user = self::user()->findActived($id)) && $user[ 'token_forget' ] != $token) {
             return $this->get404($req);
         }
 
-        if ($user[ 'token_forget' ] != $token) {
-            return $this->get404($req);
-        }
+        $pwd = time();
 
-        $time         = time();
-        $mdp          = self::auth()->hash($time);
         self::query()
-            ->update('user', [ 'password' => $mdp, 'token_forget' => '' ])
+            ->update('user', [
+                'password'     => self::auth()->hash($pwd),
+                'token_forget' => ''
+            ])
             ->where('user_id', '==', $id)
             ->execute();
-        self::auth()->login($user[ 'email' ], $time);
 
-        $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
+        self::auth()->login($user[ 'email' ], $pwd);
 
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('user.edit', [ ':id' => $id ]));
     }
-    
+
     protected function getRedirectLogin($req)
     {
-        $redirect = self::config()->get('settings.connect_redirect', '');
-        if ($redirect) {
+        if (!($redirect = self::config()->get('settings.connect_redirect', ''))) {
             return (string) self::router()->makeRoute($redirect);
         }
 

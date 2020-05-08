@@ -8,13 +8,14 @@ class Query extends \Queryflatfile\Request
 
     public function fetchAll()
     {
-        $request             = (string) $this;
-        $time_start          = microtime(true);
-        $output              = parent::fetchAll();
-        $time_end            = microtime(true);
+        $request   = (string) $this;
+        $timeStart = microtime(true);
+        $output    = parent::fetchAll();
+        $timeEnd   = microtime(true);
+
         $this->listRequest[] = [
             'request' => $request,
-            'time'    => $time_end - $time_start
+            'time'    => $timeEnd - $timeStart
         ];
 
         return $output;

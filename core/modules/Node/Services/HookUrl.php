@@ -10,7 +10,7 @@ class HookUrl
      * @var \Queryflatfile\Schema
      */
     private $alias;
-    
+
     /**
      * @var \Queryflatfile\Schema
      */

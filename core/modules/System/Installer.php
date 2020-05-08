@@ -83,7 +83,8 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'system.module.edit', 'fa fa-th-large', 'Modules', 'admin/modules', 'menu-admin', 5, -1
+                    'system.module.edit', 'fa fa-th-large', 'Modules', 'admin/modules',
+                    'menu-admin', 5, -1
                 ])
                 ->execute();
         }
@@ -112,7 +113,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->execute();
         }
     }
-    
+
     public function hookUninstallUser(ContainerInterface $ci)
     {
         if ($ci->module()->has('User')) {

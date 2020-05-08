@@ -18,12 +18,13 @@ class Manager extends \Soosyze\Controller
     {
         $user    = self::user()->isConnected();
         $profils = self::fileprofil()->getProfilsFileByUser($user[ 'user_id' ]);
+
         if (empty($profils)) {
             return $this->get404();
-        } else {
-            $path = $profils[ 0 ][ 'folder_show' ];
-            $path = str_replace(':user_id', $user[ 'user_id' ], $path);
         }
+
+        $path = $profils[ 0 ][ 'folder_show' ];
+        $path = str_replace(':user_id', $user[ 'user_id' ], $path);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -46,29 +47,36 @@ class Manager extends \Soosyze\Controller
             'onclick' => 'document.getElementById(\'file\').click();',
             ]))
             ->group('filemanager-group', 'div', function ($form) {
-                $form->label('filemanager-box_file-label', '<i class="fa fa-download"></i> <span class="choose">' . t('Choose a file') . '</span> ' . t('or drag it here.'))
+                $form->label(
+                'filemanager-box_file-label',
+                '<i class="fa fa-download"></i> <span class="choose">'
+                . t('Choose a file')
+                . '</span> '
+                . t('or drag it here.')
+            )
             ->file('file', [
                 'multiple' => 1,
-                'style'    => 'display:none' ]);
+                'style'    => 'display:none'
+            ]);
             });
 
         $breadcrumb = self::template()
             ->createBlock('breadcrumb.php', $this->pathViews)
             ->addVar('links', self::filemanager()->getBreadcrumb($path));
 
-        $files_public = self::core()->getDir('files_public', 'app/files') . $path;
-        $files        = [];
-        $nb_dir       = 0;
-        $size         = 0;
-        $nb_file      = 0;
+        $filesPublic = self::core()->getDir('files_public', 'app/files') . $path;
+        $files       = [];
+        $nbDir       = 0;
+        $size        = 0;
+        $nbFile      = 0;
 
-        if (is_dir($files_public)) {
-            $dir_iterator = new \DirectoryIterator($files_public);
-            $iterator     = $this->get('filemanager.filter.iterator')->load($path, $dir_iterator);
+        if (is_dir($filesPublic)) {
+            $dirIterator = new \DirectoryIterator($filesPublic);
+            $iterator    = $this->get('filemanager.filter.iterator')->load($path, $dirIterator);
             foreach ($iterator as $file) {
                 try {
                     if ($file->isDir()) {
-                        $nb_dir++;
+                        $nbDir++;
                         $spl     = self::filemanager()->parseDir($file, "$path/", $file->getBasename());
                         $size    += $spl[ 'size_octet' ];
                         $files[] = $spl;
@@ -80,7 +88,7 @@ class Manager extends \Soosyze\Controller
             foreach ($iterator as $file) {
                 try {
                     if ($file->isFile()) {
-                        $nb_file++;
+                        $nbFile++;
                         $spl     = self::filemanager()->parseFile($file, $path);
                         $size    += $spl[ 'size_octet' ];
                         $files[] = $spl;
@@ -104,8 +112,8 @@ class Manager extends \Soosyze\Controller
                     ]),
                     'form'                  => $form,
                     'files'                 => $files,
-                    'nb_dir'                => $nb_dir,
-                    'nb_file'               => $nb_file,
+                    'nb_dir'                => $nbDir,
+                    'nb_file'               => $nbFile,
                     'size_all'              => Util::strFileSizeFormatted($size)
                 ])
                 ->addBlock('breadcrumb', $breadcrumb);

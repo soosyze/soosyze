@@ -54,7 +54,7 @@ class HookConfig
                     $form->legend('node_cron-legend', t('Published'))
                     ->group('node_cron-group', 'div', function ($form) use ($data) {
                         $form->checkbox('node_cron', [ 'checked' => $data[ 'node_cron' ] ])
-                        ->label('node_cron-label', '<span class="ui"></span> ' . t('Activé la publication automatique des contenus CRON'), [
+                        ->label('node_cron-label', '<span class="ui"></span> ' . t('Activate automatic publication of CRON content'), [
                             'for' => 'node_cron'
                         ]);
                     }, [ 'class' => 'form-group' ])
@@ -72,8 +72,8 @@ class HookConfig
             'node_default_url' => '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/',
             'node_cron'        => 'bool'
         ])->setLabel([
-            'node_default_url' => t('Url par défaut'),
-            'node_cron'        => t('Url par défaut'),
+            'node_default_url' => t('Default url'),
+            'node_cron'        => t('Default url'),
         ]);
         foreach ($this->nodeTypes as $nodeType) {
             $validator->addRule('node_url_' . $nodeType[ 'node_type' ], '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/')

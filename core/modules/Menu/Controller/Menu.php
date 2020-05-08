@@ -16,13 +16,13 @@ class Menu extends \Soosyze\Controller
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
-    
+
     public function index($req)
     {
         if ($menu = self::query()->from('menu')->fetch()) {
-            return $this->show($menu['name'], $req);
+            return $this->show($menu[ 'name' ], $req);
         }
-        
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -124,7 +124,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -201,7 +201,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -261,7 +261,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
             return new Redirect(
-                self::router()->getRoute('menu.show', [ ':menu' => $data[ 'name' ] ])
+                self::router()->getRoute('menu.show', [ ':menu' => $menu ])
             );
         }
 

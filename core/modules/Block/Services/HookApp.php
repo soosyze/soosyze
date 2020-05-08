@@ -51,23 +51,24 @@ class HookApp
 
     protected function getBlocks($request, $isAdmin)
     {
-        $blocks = $this->query
+        $blocks    = $this->query
             ->from('block')
             ->orderBy('weight')
             ->fetchAll();
         $listBlock = $this->core->get('block')->getBlocks();
-        $out    = [];
+
+        $out = [];
         foreach ($blocks as $block) {
             if (!$isAdmin && (!$this->isVisibilityPages($block, $request) || !$this->isVisibilityRoles($block))) {
                 continue;
             }
             if (!empty($block[ 'hook' ])) {
-                $tplBlock = $this->tpl->createBlock(
-                    $listBlock[$block['key_block']][ 'tpl' ],
-                    $listBlock[$block['key_block']][ 'path' ]
+                $tplBlock           = $this->tpl->createBlock(
+                    $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
+                    $listBlock[ $block[ 'key_block' ] ][ 'path' ]
                 );
-                $block['content'] .= (string) $this->core->callHook('block.' . $block['hook'], [
-                    $tplBlock, empty($block[ 'options' ])
+                $block[ 'content' ] .= (string) $this->core->callHook('block.' . $block[ 'hook' ], [
+                        $tplBlock, empty($block[ 'options' ])
                         ? []
                         : json_decode($block[ 'options' ], true)
                 ]);
@@ -89,7 +90,7 @@ class HookApp
     protected function isVisibilityPages(array $block, $request)
     {
         $path = $this->router->parseQueryFromRequest();
-        
+
         $visibility = $block[ 'visibility_pages' ];
         $pages      = $block[ 'pages' ];
 

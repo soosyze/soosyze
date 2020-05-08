@@ -8,7 +8,7 @@ class Permission extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function admin($req)
@@ -19,28 +19,28 @@ class Permission extends \Soosyze\Controller
         ksort($modules);
 
         /* Récupére les pérmissions et role en base de données. */
-        $permissions_by_role = self::query()
+        $permissionsByRole = self::query()
             ->select('permission_id', 'role_id')
             ->from('role')
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
             ->fetchAll();
-        $roles               = self::query()->from('role')->orderBy('role_weight')->fetchAll();
+        $roles             = self::query()->from('role')->orderBy('role_weight')->fetchAll();
 
         /* Simplifie les permissions par roles. */
-        foreach ($permissions_by_role as $value) {
+        foreach ($permissionsByRole as $value) {
             $tmp[ $value[ 'permission_id' ] ][] = $value[ 'role_id' ];
         }
-        $permissions_by_role = $tmp;
+        $permissionsByRole = $tmp;
 
         /* Met en forme les droit utilisateurs. */
         $output = [];
-        foreach ($modules as $key_module => $module) {
-            foreach ($module as $key_permission => $permission) {
-                $output[ $key_module ][ $key_permission ][ 'action' ] = $permission;
+        foreach ($modules as $keyModule => $module) {
+            foreach ($module as $keyPermission => $permission) {
+                $output[ $keyModule ][ $keyPermission ][ 'action' ] = $permission;
                 foreach ($roles as $role) {
-                    $output[ $key_module ][ $key_permission ][ 'roles' ][ $role[ 'role_id' ] ] = '';
-                    if (isset($permissions_by_role[ $key_permission ]) && in_array($role[ 'role_id' ], $permissions_by_role[ $key_permission ])) {
-                        $output[ $key_module ][ $key_permission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
+                    $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = '';
+                    if (isset($permissionsByRole[ $keyPermission ]) && in_array($role[ 'role_id' ], $permissionsByRole[ $keyPermission ])) {
+                        $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
                     }
                 }
             }
@@ -71,22 +71,22 @@ class Permission extends \Soosyze\Controller
     {
         $post = $req->getParsedBody();
 
-        $roles_id            = self::query()->from('role')->lists('role_id');
-        $permissions_by_role = self::query()->from('role_permission')->fetchAll();
+        $rolesId           = self::query()->from('role')->lists('role_id');
+        $permissionsByRole = self::query()->from('role_permission')->fetchAll();
 
-        foreach ($roles_id as $id) {
+        foreach ($rolesId as $id) {
             $perm[ $id ] = [];
             if (empty($post[ $id ])) {
                 $post[ $id ] = [];
             }
-            foreach ($permissions_by_role as $permission) {
+            foreach ($permissionsByRole as $permission) {
                 $perm[ $permission[ 'role_id' ] ][ $permission[ 'permission_id' ] ] = $permission[ 'permission_id' ];
             }
             $this->storePermission($id, $perm[ $id ], $post[ $id ]);
             $this->deletePermission($id, $perm[ $id ], $post[ $id ]);
         }
         $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        $route = self::router()->getRoute('user.permission.admin');
+        $route                               = self::router()->getRoute('user.permission.admin');
 
         return new Redirect($route);
     }
@@ -96,9 +96,9 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if ($diff_create = array_diff_key($newPermission, $permission)) {
+        if ($diffCreate = array_diff_key($newPermission, $permission)) {
             self::query()->insertInto('role_permission', [ 'role_id', 'permission_id' ]);
-            foreach ($diff_create as $create) {
+            foreach ($diffCreate as $create) {
                 if (!self::user()->hasPermission($create)) {
                     continue;
                 }
@@ -113,11 +113,11 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if (!($diff_delete = array_diff_key($permission, $newPermission))) {
+        if (!($diffDelete = array_diff_key($permission, $newPermission))) {
             return null;
         }
         self::query()->from('role_permission')->delete();
-        foreach ($diff_delete as $delete) {
+        foreach ($diffDelete as $delete) {
             self::query()->orWhere(function ($query) use ($idRole, $delete) {
                 $query->where('role_id', '==', $idRole)
                     ->where('permission_id', '==', $delete);

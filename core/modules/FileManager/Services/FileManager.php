@@ -63,6 +63,7 @@ class FileManager
             if (!$this->hookUser->hookFolderShow($nextPath)) {
                 continue;
             }
+
             $breadcrumb[ $key ] = [
                 'title_link' => empty($value)
                 ? '<i class="fa fa-home"></i> ' . t('Home')
@@ -91,7 +92,9 @@ class FileManager
             'path'       => $dir->getPath(),
             'size'       => Util::strFileSizeFormatted($info[ 'size' ]),
             'size_octet' => $info[ 'size' ],
-            'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ] ? $info[ 'time' ] : $dir->getMTime()),
+            'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ]
+                ? $info[ 'time' ]
+                : $dir->getMTime()),
             'type'       => 'dir',
             'actions'    => $this->getActionsFolder($dir, $path, $name)
         ];
@@ -219,11 +222,11 @@ class FileManager
 
     public function parseRecursive($dir)
     {
-        $dir_iterator = new \RecursiveDirectoryIterator($dir);
-        $iterator     = new \RecursiveIteratorIterator($dir_iterator);
-        $size         = 0;
-        $time         = 0;
-        
+        $dirIterator = new \RecursiveDirectoryIterator($dir);
+        $iterator    = new \RecursiveIteratorIterator($dirIterator);
+        $size        = 0;
+        $time        = 0;
+
         $iterator->rewind();
         foreach ($iterator as $file) {
             if ($iterator->isDot() || $iterator->isLink()) {

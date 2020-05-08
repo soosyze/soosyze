@@ -20,6 +20,7 @@ class HookCron
             ->set('settings.node_cron', false)
             ->set('settings.node_default_url', ':node_type/:node_title')
             ->set('settings.path_maintenance', '');
+
         $this->schema->createTableIfNotExists('migration', function ($table) {
             $table->string('migration')
                 ->string('extension');

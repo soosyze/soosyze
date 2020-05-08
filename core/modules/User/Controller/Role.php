@@ -10,7 +10,7 @@ class Role extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews  = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function admin($req)
@@ -55,7 +55,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -112,21 +112,22 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
         if ($validator->isValid()) {
-            $role_weight = $validator->getInput('role_weight');
-            $role_color  = $validator->getInput('role_color');
-            $role_icon   = $validator->getInput('role_icon');
+            $roleWeight = $validator->getInput('role_weight');
+            $roleColor  = $validator->getInput('role_color');
+            $roleIcon   = $validator->getInput('role_icon');
+
             $value = [
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => !empty($role_weight)
-                ? $role_weight
-                : 1,
-                'role_color'       => !empty($role_color)
-                ? strtolower($role_color)
-                : '#e6e7f4',
-                'role_icon'        => !empty($role_icon)
-                    ? strtolower($role_icon)
-                    : 'fa fa-user',
+                'role_weight'      => empty($roleWeight)
+                    ? 1
+                    : $roleWeight,
+                'role_color'       => empty($roleColor)
+                    ? '#e6e7f4'
+                    : strtolower($roleColor),
+                'role_icon'        => empty($roleIcon)
+                    ? 'fa fa-user'
+                    : strtolower($roleIcon)
             ];
 
             $this->container->callHook('role.store.before', [ &$validator, &$value ]);
@@ -134,15 +135,15 @@ class Role extends \Soosyze\Controller
             $this->container->callHook('role.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route                               = self::router()->getRoute('user.role.admin');
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $route                              = self::router()->getRoute('user.role.create');
+
+            return new Redirect(self::router()->getRoute('user.role.admin'));
         }
 
-        return new Redirect($route);
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return new Redirect(self::router()->getRoute('user.role.create'));
     }
 
     public function edit($id, $req)
@@ -154,7 +155,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -223,20 +224,24 @@ class Role extends \Soosyze\Controller
                 'role_icon'        => $validator->getInput('role_icon')
             ];
 
-            $this->container->callHook('role.udpate.before', [ &$validator, &$value, $id ]);
+            $this->container->callHook('role.udpate.before', [
+                &$validator, &$value, $id
+            ]);
             self::query()->update('role', $value)->where('role_id', '==', $id)->execute();
-            $this->container->callHook('role.udpate.after', [ $validator, $value, $id ]);
+            $this->container->callHook('role.udpate.after', [
+                $validator, $value, $id
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route = self::router()->getRoute('user.role.admin');
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $route = self::router()->getRoute('user.role.edit', [ ':id' => $id ]);
+
+            return new Redirect(self::router()->getRoute('user.role.admin'));
         }
 
-        return new Redirect($route);
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return new Redirect(self::router()->getRoute('user.role.edit', [ ':id' => $id ]));
     }
 
     public function remove($id, $req)
@@ -255,7 +260,8 @@ class Role extends \Soosyze\Controller
         $form = (new FormUserRole([
             'method' => 'post',
             'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ])
-            ]))->generateDelete();
+            ]))
+            ->generateDelete();
 
         $this->container->callHook('role.remove.form', [ &$form, $data, $id ]);
 
@@ -273,7 +279,7 @@ class Role extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Deleting the :name role', [':name' => $data[ 'role_label' ]])
+                    'title_main' => t('Deleting the :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-role.php', $this->pathViews, [
@@ -299,22 +305,26 @@ class Role extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $this->container->callHook('role.delete.before', [ $validator, $id ]);
+
             self::query()->from('user_role')->where('role_id', '==', $id)->delete()->execute();
             self::query()->from('role')->where('role_id', '==', $id)->delete()->execute();
+
             $this->container->callHook('role.delete.after', [ $validator, $id ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route = self::router()->getRoute('user.role.admin');
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $route = self::router()->getRoute('user.role.remove', [ ':id' => $id ]);
-        }
 
-        return new Redirect($route);
+            return new Redirect(self::router()->getRoute('user.role.admin'));
+        }
+        
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return new Redirect(self::router()->getRoute('user.role.remove', [
+                ':id' => $id
+        ]));
     }
-    
+
     private function find($id)
     {
         return self::query()->from('role')->where('role_id', '==', $id)->fetch();

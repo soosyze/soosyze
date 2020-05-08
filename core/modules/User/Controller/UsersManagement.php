@@ -6,7 +6,7 @@ class UsersManagement extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function admin()
@@ -43,7 +43,7 @@ class UsersManagement extends \Soosyze\Controller
                     'menu'  => $this->getMenu()
         ]);
     }
-    
+
     public function getMenu()
     {
         $menu[] = [
@@ -60,8 +60,8 @@ class UsersManagement extends \Soosyze\Controller
                 'link'       => self::router()->getRoute('user.permission.admin')
             ];
         }
-        
-        self::core()->callHook('user.manage.menu', [&$menu, self::user()]);
+
+        self::core()->callHook('user.manage.menu', [ &$menu, self::user() ]);
 
         return $menu;
     }

@@ -151,13 +151,14 @@ class FormUserRole extends FormBuilder
 
     public function generateDelete()
     {
-        return $this->group('role-fieldset', 'fieldset', function ($form) {
+        $this->group('role-fieldset', 'fieldset', function ($form) {
             $form->legend('role-legend', t('Delete role'))
-                    ->html('role-info', '<p:attr>:_content</p>', [
-                        '_content' => t('Warning ! The deletion of the role is final.')
-                    ]);
-        })
-                ->token('token_role_delete')
-                ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+                ->html('role-info', '<p:attr>:_content</p>', [
+                    '_content' => t('Warning ! The deletion of the role is final.')
+                ]);
+        })->token('token_role_delete')
+            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+
+        return $this;
     }
 }

@@ -26,21 +26,21 @@ class Templating extends \Soosyze\Components\Http\Response
      *
      * @var string
      */
-    protected $default_theme_name = '';
+    protected $defaultThemeName = '';
 
     /**
      * Chemin du thème.
      *
      * @var string
      */
-    protected $default_theme_path = '';
+    protected $defaultThemePath = '';
 
     /**
      * Liste des répertoires contenant les thèmes.
      *
      * @var string[]
      */
-    protected $themes_path = [];
+    protected $themesPath = [];
 
     /**
      * Les données du fichier composer.json
@@ -51,11 +51,11 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function __construct($core, $config)
     {
-        $this->core        = $core;
-        $this->config      = $config;
-        $this->themes_path = $core->getSetting('themes_path');
-        $this->base_path   = $core->getRequest()->getBasePath();
-        $this->pathViews   = dirname(__DIR__) . '/Views/';
+        $this->core       = $core;
+        $this->config     = $config;
+        $this->themesPath = $core->getSetting('themes_path');
+        $this->basePath   = $core->getRequest()->getBasePath();
+        $this->pathViews  = dirname(__DIR__) . '/Views/';
     }
 
     public function __toString()
@@ -113,15 +113,15 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getTheme($theme = 'theme')
     {
-        $granted                  = $this->core->callHook('app.granted', [ 'template.admin' ]);
-        $this->default_theme_name = $theme === 'theme_admin' && !$granted
+        $granted                = $this->core->callHook('app.granted', [ 'template.admin' ]);
+        $this->defaultThemeName = $theme === 'theme_admin' && !$granted
             ? 'theme'
             : $theme;
 
-        foreach ($this->themes_path as $path) {
-            $dir = $path . '/' . $this->config->get('settings.' . $this->default_theme_name, '');
+        foreach ($this->themesPath as $path) {
+            $dir = $path . '/' . $this->config->get('settings.' . $this->defaultThemeName, '');
             if (is_dir($dir)) {
-                $this->default_theme_path = $dir;
+                $this->defaultThemePath = $dir;
 
                 break;
             }
@@ -133,7 +133,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function isTheme($themeName)
     {
-        return $this->default_theme_name === $themeName;
+        return $this->defaultThemeName === $themeName;
     }
 
     /**
@@ -205,7 +205,7 @@ class Templating extends \Soosyze\Components\Http\Response
     public function getThemes()
     {
         $folders = [];
-        foreach ($this->themes_path as $path) {
+        foreach ($this->themesPath as $path) {
             if (is_dir($path)) {
                 $folders = array_merge($folders, Util::getFolder($path));
             }
@@ -221,8 +221,8 @@ class Templating extends \Soosyze\Components\Http\Response
     {
         return (new Block($tpl, $tplPath))
                 ->addVars([
-                    'base_path'  => $this->base_path,
-                    'base_theme' => $this->base_path . $this->default_theme_path . '/'
+                    'base_path'  => $this->basePath,
+                    'base_theme' => $this->basePath . $this->defaultThemePath . '/'
                 ])
                 ->pathOverride($this->getPathTheme());
     }
@@ -245,9 +245,9 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getPathTheme()
     {
-        return is_dir(ROOT . $this->default_theme_path)
-            ? ROOT . $this->default_theme_path . '/'
-            : $this->default_theme_path;
+        return is_dir(ROOT . $this->defaultThemePath)
+            ? ROOT . $this->defaultThemePath . '/'
+            : $this->defaultThemePath;
     }
 
     public function getSections()

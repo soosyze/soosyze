@@ -17,10 +17,8 @@ class Config extends \Soosyze\Controller
 
     public function index($req)
     {
-        if ($menu = $this->getMenuConfig()) {
-            $key = count($menu) ? array_keys($menu)[0] : null;
-
-            return $this->edit($key, $req);
+        if (($menu = $this->getMenuConfig()) && count($menu)) {
+            return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
         }
 
         return self::template()
@@ -37,7 +35,64 @@ class Config extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        if (!($menu = $this->getMenuConfig()) || !isset($menu[$id])) {
+        if ($menu = $this->getMenuConfig()) {
+            return $this->getConfig($menu, $id, $req);
+        }
+
+        return $this->get404($req);
+    }
+
+    public function update($id, $req)
+    {
+        if (!($menu = $this->getMenuConfig()) || !isset($menu[ $id ])) {
+            return $this->get404($req);
+        }
+
+        $validator = (new Validator())
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+        $dataFiles = [];
+        self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
+
+        self::core()->callHook("config.update.$id.validator", [ &$validator ]);
+        $validator->addRule('token_' . $id . '_config', 'token');
+
+        if ($validator->isValid()) {
+            $data = [];
+            self::core()->callHook("config.update.$id.before", [
+                &$validator, &$data, $id
+            ]);
+            foreach ($data as $key => $value) {
+                self::config()->set('settings.' . $key, $value);
+            }
+            foreach ($dataFiles as $file) {
+                $this->saveFile($file, $validator);
+            }
+            self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
+
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+
+            return new Redirect(
+                self::router()->getRoute('config.edit', [ ':id' => $id ])
+            );
+        }
+
+        if ($req->isMaxSize()) {
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
+            $_SESSION[ 'errors_keys' ]            = [];
+        } else {
+            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        }
+
+        return new Redirect(
+            self::router()->getRoute('config.edit', [ ':id' => $id ])
+        );
+    }
+
+    protected function getConfig($menu, $id, $req)
+    {
+        if (!isset($menu[ $id ])) {
             return $this->get404($req);
         }
 
@@ -52,8 +107,12 @@ class Config extends \Soosyze\Controller
         $form = new FormBuilder([
             'method'  => 'post',
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data' ]);
-        $this->container->callHook("config.edit.$id.form.generate", [ &$form, $data, $req ]);
+            'enctype' => 'multipart/form-data'
+        ]);
+
+        $this->container->callHook("config.edit.$id.form.generate", [
+            &$form, $data, $req
+        ]);
         $form->token('token_' . $id . '_config')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
@@ -84,56 +143,12 @@ class Config extends \Soosyze\Controller
         ]);
     }
 
-    public function update($id, $req)
-    {
-        if (!($menu = $this->getMenuConfig()) || !isset($menu[$id])) {
-            return $this->get404($req);
-        }
-
-        $validator = (new Validator())
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
-        $dataFiles = [];
-        self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
-
-        self::core()->callHook("config.update.$id.validator", [ &$validator ]);
-        $validator->addRule('token_' . $id . '_config', 'token');
-
-        if ($validator->isValid()) {
-            $data = [];
-            self::core()->callHook("config.update.$id.before", [ &$validator, &$data,
-                $id ]);
-            foreach ($data as $key => $value) {
-                self::config()->set('settings.' . $key, $value);
-            }
-            foreach ($dataFiles as $file) {
-                $this->saveFile($file, $validator);
-            }
-            self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
-
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
-
-            return new Redirect($route);
-        }
-
-        if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
-            $_SESSION[ 'errors_keys' ]            = [];
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        }
-        $route     = self::router()->getRoute('config.edit', [ ':id' => $id ]);
-        
-        return new Redirect($route);
-    }
-
     protected function getMenuConfig()
     {
         $menu = [];
         $this->container->callHook('config.edit.menu', [ &$menu ]);
         ksort($menu);
+
         $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
         foreach ($menu as $key => &$link) {
             $manage = $this->container->callHook('app.granted', [ $key . '.config.manage' ]);
@@ -142,7 +157,7 @@ class Config extends \Soosyze\Controller
 
                 continue;
             }
-            unset($menu[$key]);
+            unset($menu[ $key ]);
         }
 
         return $menu;
@@ -157,8 +172,8 @@ class Config extends \Soosyze\Controller
                 return self::config()->get("settings.$key");
             })
             ->callMove(function ($key, $name, $move) {
-                $file_public = self::core()->getSettingEnv('files_public', 'app/files');
-                self::config()->set("settings.$key", "$file_public/$name");
+                $filePublic = self::core()->getSettingEnv('files_public', 'app/files');
+                self::config()->set("settings.$key", "$filePublic/$name");
             })
             ->callDelete(function ($key, $name) {
                 self::config()->set("settings.$key", '');

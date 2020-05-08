@@ -22,7 +22,7 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -116,7 +116,7 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -146,7 +146,7 @@ class Link extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
-                    'title_main' =>  t('Edit a link')
+                    'title_main' => t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'menu-link-edit.php', $this->pathViews, [

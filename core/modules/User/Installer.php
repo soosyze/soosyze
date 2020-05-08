@@ -55,7 +55,8 @@ class Installer implements \SoosyzeCore\System\Migration
             });
 
         $ci->query()
-            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight', 'role_icon' ])
+            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight',
+                'role_icon' ])
             ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane' ])
             ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt' ])
             ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-wrench' ])
@@ -89,7 +90,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.password_digit', 1)
             ->set('settings.password_special', 1);
     }
-    
+
     public function seeders(ContainerInterface $ci)
     {
     }
@@ -107,19 +108,24 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'user.management.admin', 'fa fa-user', 'User', 'admin/user', 'menu-admin', 4, -1
+                    'user.management.admin', 'fa fa-user', 'User', 'admin/user',
+                    'menu-admin', 4, -1
                 ])
                 ->values([
-                    'user.account', null, 'My account', 'user/account', 'menu-user', 1, -1
+                    'user.account', null, 'My account', 'user/account', 'menu-user',
+                    1, -1
                 ])
                 ->values([
-                    'user.login', null, 'Sign in', 'user/login', 'menu-user', 2, -1
+                    'user.login', null, 'Sign in', 'user/login', 'menu-user', 2,
+                    -1
                 ])
                 ->values([
-                    'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout', 'menu-user', 3, -1
+                    'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout',
+                    'menu-user', 3, -1
                 ])
                 ->values([
-                    'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register', 'menu-user', 4, -1
+                    'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register',
+                    'menu-user', 4, -1
                 ])
                 ->execute();
         }

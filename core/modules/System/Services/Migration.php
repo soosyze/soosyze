@@ -8,7 +8,7 @@ class Migration
      * @var Composer
      */
     protected $composer;
-    
+
     /**
      * @var \Soosyze\Config
      */
@@ -93,6 +93,7 @@ class Migration
                     in_array($fileInfo->getBasename('.php'), $migrationsInstalled)) {
                     continue;
                 }
+
                 $callbacks[ $fileInfo->getBasename('.php') ] = [
                     'migration' => $fileInfo->getBasename('.php'),
                     'extension' => $titleModule,
@@ -104,6 +105,7 @@ class Migration
         ksort($callbacks);
         $query = clone $this->query;
         $this->query->insertInto('migration', [ 'migration', 'extension' ]);
+
         foreach ($callbacks as $callback) {
             call_user_func_array(
                 $callback[ 'callback' ][ 'up' ],
@@ -113,6 +115,7 @@ class Migration
                 $callback[ 'migration' ], $callback[ 'extension' ]
             ]);
         }
+
         $this->query->execute();
         $this->config->set('settings.module_update', false);
         $this->config->set('settings.module_update_time', time());
@@ -131,19 +134,23 @@ class Migration
         if (!\is_dir($dir)) {
             return;
         }
+
         $this->query->insertInto('migration', [ 'migration', 'extension' ]);
+
         foreach (new \DirectoryIterator($dir) as $fileInfo) {
             if (!$fileInfo->isFile()) {
                 continue;
             }
             $this->query->values([ $fileInfo->getBasename('.php'), $extension ]);
         }
+
         $this->query->execute();
     }
-    
+
     public function uninstallMigration($extension)
     {
-        $this->query->delete()
+        $this->query
+            ->delete()
             ->from('migration')
             ->where('extension', $extension)
             ->execute();

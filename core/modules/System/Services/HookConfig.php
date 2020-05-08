@@ -11,7 +11,7 @@ class HookConfig
     protected $translate;
 
     protected $router;
-    
+
     public function __construct($router, $template, $file, $translate)
     {
         $this->router    = $router;
@@ -235,28 +235,28 @@ class HookConfig
                     }, [ 'class' => 'form-group' ]);
                 });
     }
-    
+
     public function validator(&$validator)
     {
         $themes = implode(',', $this->template->getThemes());
         $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
-            'lang'                => 'required|inarray:' . $langs,
-            'timezone'            => 'required|timezone',
-            'email'               => 'required|email|max:254|to_htmlsc',
-            'maintenance'         => '!required|bool',
-            'rewrite_engine'      => 'bool',
-            'theme'               => 'required|inarray:' . $themes,
-            'theme_admin'         => 'required|inarray:' . $themes,
-            'logo'                => '!required|image|max:200Kb',
-            'path_index'          => 'route',
-            'path_access_denied'  => '!required|route',
-            'path_no_found'       => '!required|route',
-            'path_maintenance'    => '!required|route',
-            'meta_title'          => 'required|string|max:64|to_htmlsc',
-            'meta_description'    => 'required|string|max:256|to_htmlsc',
-            'meta_keyboard'       => '!required|string|to_htmlsc',
-            'favicon'             => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
+            'lang'               => 'required|inarray:' . $langs,
+            'timezone'           => 'required|timezone',
+            'email'              => 'required|email|max:254|to_htmlsc',
+            'maintenance'        => '!required|bool',
+            'rewrite_engine'     => 'bool',
+            'theme'              => 'required|inarray:' . $themes,
+            'theme_admin'        => 'required|inarray:' . $themes,
+            'logo'               => '!required|image|max:200Kb',
+            'path_index'         => 'route',
+            'path_access_denied' => '!required|route',
+            'path_no_found'      => '!required|route',
+            'path_maintenance'   => '!required|route',
+            'meta_title'         => 'required|string|max:64|to_htmlsc',
+            'meta_description'   => 'required|string|max:256|to_htmlsc',
+            'meta_keyboard'      => '!required|string|to_htmlsc',
+            'favicon'            => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
         ])->setLabel([
             'lang'               => t('Language'),
             'timezone'           => t('Timezone'),

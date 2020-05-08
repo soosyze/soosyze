@@ -10,7 +10,7 @@ class HookUser
             'backups.manage' => t('Manage the backups of Soosyze')
         ];
     }
-    
+
     public function hookBackupManage()
     {
         return 'backups.manage';

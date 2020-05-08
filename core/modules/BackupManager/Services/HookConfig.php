@@ -62,8 +62,8 @@ class HookConfig
             'max_backups' => 'min:0',
             'backup_cron' => 'bool'
         ])->setLabel([
-            'max_backups' => t('Max backup possible'),
-            'backup_cron' => t('Cron backups')
+            'max_backups' => t('Maximum number of backups'),
+            'backup_cron' => t('Enable CRON backups')
         ]);
     }
 

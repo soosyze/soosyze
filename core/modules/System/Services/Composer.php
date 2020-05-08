@@ -52,13 +52,18 @@ class Composer
         if (!$validator->isValid()) {
             $errors += $validator->getKeyErrors();
         } elseif (empty($data[ 'autoload' ][ 'psr-4' ]) || !is_array($data[ 'autoload' ][ 'psr-4' ])) {
-            $errors[] = t('The namespace information for the :name module does not exist.', [':name' => $title]);
+            $errors[] = t('The namespace information for the :name module does not exist.', [
+                ':name' => $title ]);
         } else {
             $migration = array_keys($data[ 'autoload' ][ 'psr-4' ])[ 0 ] . 'Installer';
             if (!class_exists($migration)) {
-                $errors[] = t('The installation scripts for the :name module do not exist.', [':name' => $title ]);
+                $errors[] = t('The installation scripts for the :name module do not exist.', [
+                    ':name' => $title
+                ]);
             } elseif (!(new $migration() instanceof Migration)) {
-                $errors[] = t('The :name install class does not implement the migration interface.', [':name' => $migration]);
+                $errors[] = t('The :name install class does not implement the migration interface.', [
+                    ':name' => $migration
+                ]);
             }
         }
 
@@ -116,10 +121,11 @@ class Composer
         if (!empty($this->composer) || $reload) {
             return $this->composer;
         }
-        $module            = $this->core->getDir('modules', 'core/modules', false);
-        $module_contribued = $this->core->getDir('modules_contributed', 'app/modules', false);
 
-        $this->composer = $this->getComposerModules($module_contribued) + $this->getComposerModules($module) + $this->getComposerInstalledModules();
+        $module           = $this->core->getDir('modules', 'core/modules', false);
+        $moduleContribued = $this->core->getDir('modules_contributed', 'app/modules', false);
+
+        $this->composer = $this->getComposerModules($moduleContribued) + $this->getComposerModules($module) + $this->getComposerInstalledModules();
 
         return $this->composer;
     }
@@ -197,7 +203,7 @@ class Composer
     {
         $errors = [];
         if (!isset($composer[ 'extra' ][ 'soosyze' ]) && !is_array($composer[ 'extra' ][ 'soosyze' ])) {
-            $errors[] = t('The :name module information does not exist.', [':name' => $title]);
+            $errors[] = t('The :name module information does not exist.', [ ':name' => $title ]);
 
             return $errors;
         }
@@ -214,7 +220,9 @@ class Composer
         if (!$validator->isValid()) {
             $errors += $validator->getKeyErrors();
         } elseif (empty($composer[ 'extra' ][ 'soosyze' ][ 'controller' ])) {
-            $errors[] = t('The information on the controllers of the :name module does not exist.', [':name' => $title]);
+            $errors[] = t('The information on the controllers of the :name module does not exist.', [
+                ':name' => $title
+            ]);
         } else {
             $controller = $composer[ 'extra' ][ 'soosyze' ][ 'controller' ];
             if (!class_exists($controller)) {

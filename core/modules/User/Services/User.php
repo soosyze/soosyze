@@ -8,19 +8,16 @@ use Soosyze\Components\Http\Stream;
 class User
 {
     /**
-     * Dépendance du service.
      * @var \QueryBuilder\Services\Query
      */
     private $query;
 
     /**
-     * Dépendance du service.
      * @var \Soosyze\Router
      */
     private $router;
 
     /**
-     * Dépendance du service.
      * @var \Soosyze\App
      */
     private $core;
@@ -52,14 +49,16 @@ class User
 
     public function find($id)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('user_id', '==', $id)
                 ->fetch();
     }
 
     public function findActived($id, $actived = true)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('user_id', '==', $id)
                 ->where('actived', $actived)
                 ->fetch();
@@ -67,14 +66,24 @@ class User
 
     public function getUser($email)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('email', $email)
+                ->fetch();
+    }
+
+    public function getUserByUsername($username)
+    {
+        return $this->query
+                ->from('user')
+                ->where('username', $username)
                 ->fetch();
     }
 
     public function getUserActived($email, $actived = true)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('email', $email)
                 ->where('actived', $actived)
                 ->fetch();
@@ -82,7 +91,8 @@ class User
 
     public function getUserActivedToken($token, $actived = true)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('token_connected', $token)
                 ->where('actived', $actived)
                 ->fetch();
@@ -95,7 +105,8 @@ class User
 
     public function getRolesUser($idUser)
     {
-        return $this->query->from('user_role')
+        return $this->query
+                ->from('user_role')
                 ->leftJoin('role', 'role_id', 'role.role_id')
                 ->where('user_id', '==', $idUser)
                 ->fetchAll();
@@ -103,20 +114,18 @@ class User
 
     public function getRoles()
     {
-        return $this->query
-            ->from('role')
-            ->fetchAll();
+        return $this->query->from('role')->fetchAll();
     }
-    
+
     public function getIdRolesUser($idUser)
     {
         $data = $this->query->from('user_role')
-                ->leftJoin('role', 'role_id', 'role.role_id')
-                ->where('user_id', '==', $idUser)
-                ->fetchAll();
-        $out = [];
+            ->leftJoin('role', 'role_id', 'role.role_id')
+            ->where('user_id', '==', $idUser)
+            ->fetchAll();
+        $out  = [];
         foreach ($data as $value) {
-            $out[$value['role_id']] = $value['role_label'];
+            $out[ $value[ 'role_id' ] ] = $value[ 'role_label' ];
         }
 
         return $out;
@@ -143,7 +152,8 @@ class User
             return in_array($idPermission, $this->granted);
         }
 
-        $this->granted = $this->query->from('user_role')
+        $this->granted = $this->query
+            ->from('user_role')
             ->leftJoin('role', 'role_id', 'role.role_id')
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
             ->where('user_id', $user[ 'user_id' ])
@@ -181,7 +191,7 @@ class User
                 return false;
             }
 
-            $this->connect = $_SESSION[ 'token_connected' ] == $user['token_connected']
+            $this->connect = $_SESSION[ 'token_connected' ] == $user[ 'token_connected' ]
                 ? $user
                 : false;
 
@@ -191,18 +201,25 @@ class User
         return false;
     }
 
+    public function isConnectUrl($url)
+    {
+        $connectUrl = $this->core->get('config')->get('settings.connect_url', '');
+
+        return !empty($connectUrl) && $url !== '/' . $connectUrl;
+    }
+
     public function passwordPolicy()
     {
-        if (($length  = (int) $this->core->get('config')->get('settings.password_length', 8)) < 8) {
+        if (($length = (int) $this->core->get('config')->get('settings.password_length', 8)) < 8) {
             $length = 8;
         }
-        if (($upper  = (int) $this->core->get('config')->get('settings.password_upper', 1)) < 1) {
+        if (($upper = (int) $this->core->get('config')->get('settings.password_upper', 1)) < 1) {
             $upper = 1;
         }
-        if (($digit  = (int) $this->core->get('config')->get('settings.password_digit', 1)) < 1) {
+        if (($digit = (int) $this->core->get('config')->get('settings.password_digit', 1)) < 1) {
             $digit = 1;
         }
-        if (($special  = (int) $this->core->get('config')->get('settings.password_special', 1)) < 1) {
+        if (($special = (int) $this->core->get('config')->get('settings.password_special', 1)) < 1) {
             $special = 1;
         }
 
@@ -255,7 +272,7 @@ class User
 
         return $this->isGrantedPermission($permissions);
     }
-    
+
     public function isGrantedPermission($permissions)
     {
         if (\is_bool($permissions)) {

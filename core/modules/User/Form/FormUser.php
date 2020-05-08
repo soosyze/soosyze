@@ -295,7 +295,7 @@ class FormUser extends FormBuilder
             $form->legend('role-legend', t('User Roles'));
             foreach ($roles as $role) {
                 $attrRole = [
-                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values['roles']),
+                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values[ 'roles' ]),
                         'disabled' => $role[ 'role_id' ] <= 2,
                         'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]

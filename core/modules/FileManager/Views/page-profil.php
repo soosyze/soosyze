@@ -1,7 +1,7 @@
 
 <div class="action_bar">
     <a href="<?php echo $link_add; ?>" class="btn btn-primary">
-        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add profil'); ?>
+        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a files profile'); ?>
     </a>
 </div>
 <div class="responsive">

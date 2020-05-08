@@ -71,8 +71,8 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->query()->insertInto('node_status', [
                 'node_status_id', 'node_status_name'
             ])
-            ->values([ 1, 'Published'])
-            ->values([ 2, 'Pending publication'])
+            ->values([ 1, 'Published' ])
+            ->values([ 2, 'Pending publication' ])
             ->values([ 3, 'Draft' ])
             ->values([ 4, 'Archived' ])
             ->execute();
@@ -86,8 +86,8 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->query()->insertInto('field', [
                 'field_name', 'field_type'
             ])
-            ->values([ 'body', 'textarea'])
-            ->values([ 'image', 'image'])
+            ->values([ 'body', 'textarea' ])
+            ->values([ 'image', 'image' ])
             ->values([ 'summary', 'textarea' ])
             ->values([ 'reading_time', 'number' ])
             ->values([ 'weight', 'number' ])
@@ -95,9 +95,10 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('node_type_field', [
-                'node_type', 'field_id', 'field_label', 'field_weight', 'field_rules', 'field_option'
+                'node_type', 'field_id', 'field_label', 'field_weight', 'field_rules',
+                'field_option'
             ])
-            ->values([ 'page', 1, 'Body', 2, '!required|string', ''])
+            ->values([ 'page', 1, 'Body', 2, '!required|string', '' ])
             ->execute();
 
         $ci->config()

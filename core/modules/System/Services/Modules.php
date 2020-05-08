@@ -70,6 +70,7 @@ class Modules
             ->select($columns)
             ->from('module_active')
             ->fetchAll();
+
         foreach ($modules as $value) {
             $modules[ $value[ 'title' ] ] = $value;
         }
@@ -138,9 +139,11 @@ class Modules
             $this->query->insertInto('module_require', [
                 'title_module', 'title_required', 'version'
             ]);
+
             foreach ($module[ 'require' ] as $require => $version) {
                 $this->query->values([ $module[ 'title' ], $require, $version ]);
             }
+
             $this->query->execute();
         }
     }

@@ -37,7 +37,7 @@
             <span data-tooltip="<?php echo $info[ 'size_octet' ]; ?> octets">
                 <i class="fa fa-weight-hanging" aria-hidden="true"></i> <?php echo $info[ 'size' ]; ?>
             </span>
-            <span data-tooltip="<?php echo t('Date de création'); ?>">
+            <span data-tooltip="<?php echo t('Creation date'); ?>">
                 <i class="fa fa-clock" aria-hidden="true"></i> <?php echo $info[ 'time' ]; ?>
             </span>
         </p>
