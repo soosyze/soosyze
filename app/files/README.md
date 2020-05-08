@@ -1,1 +1,0 @@
-Tous fichiers téléchargés devront être déposés dans le répertoire app/files
