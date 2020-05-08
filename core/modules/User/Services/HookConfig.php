@@ -4,16 +4,10 @@ namespace SoosyzeCore\User\Services;
 
 class HookConfig
 {
-    /**
-     * @var \Soosyze\Config
-     */
-    protected $config;
-
     protected $router;
 
-    public function __construct($config, $router)
+    public function __construct($router)
     {
-        $this->config = $config;
         $this->router = $router;
     }
 
@@ -47,7 +41,7 @@ class HookConfig
                             'minlength'   => 10,
                             'placeholder' => t('Add a token to your connection routes (10 characters minimum)'),
                             'value'       => $data[ 'connect_url' ]
-                            ]);
+                        ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('connect_redirect-group', 'div', function ($form) use ($data) {
@@ -165,7 +159,7 @@ class HookConfig
                         'class'    => 'form-control',
                         'min'      => 1,
                         'required' => 1,
-                        'value' => $data[ 'password_upper' ] > 1
+                        'value'    => $data[ 'password_upper' ] > 1
                             ? $data[ 'password_upper' ]
                             : 1
                     ]);
@@ -187,7 +181,7 @@ class HookConfig
                         'class'    => 'form-control',
                         'min'      => 1,
                         'required' => 1,
-                        'value' => $data[ 'password_special' ] > 1
+                        'value'    => $data[ 'password_special' ] > 1
                             ? $data[ 'password_special' ]
                             : 1
                     ]);
@@ -204,7 +198,7 @@ class HookConfig
             'terms_of_service_page' => 'required_with:terms_of_service_show|route',
             'rgpd_show'             => 'bool',
             'rgpd_page'             => 'required_with:rgpd_show|route',
-            'connect_url'           => '!required|string|min:10|regex:/^[\w\d-_]{10,}$/',
+            'connect_url'           => '!required|string|min:10|regex:/^[\d\w\-]{10,}$/',
             'connect_redirect'      => 'required|route',
             'password_show'         => 'bool',
             'password_policy'       => 'bool',

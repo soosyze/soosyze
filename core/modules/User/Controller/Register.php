@@ -12,22 +12,23 @@ class Register extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews  = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function create()
     {
-        $data = [ 'username' => '', 'email' => '', 'password' => '', 'password_confirm' => '', 'terms_of_service' => false, 'rgpd' => false ];
+        $values = [];
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
+            $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormUser([
             'method' => 'post',
             'action' => self::router()->getRoute('user.register.store')
-            ], null, self::config()))->setValues($data);
+            ], null, self::config()))
+            ->setValues($values);
 
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('register-legend', t('User registration'));
@@ -49,10 +50,9 @@ class Register extends \Soosyze\Controller
             unset($_SESSION[ 'errors_keys' ]);
         }
 
-        if (($connect_url = self::config()->get('settings.connect_url', ''))) {
-            $connect_url = '/' . $connect_url;
+        if (($connectUrl = self::config()->get('settings.connect_url', ''))) {
+            $connectUrl = '/' . $connectUrl;
         }
-        $url = self::router()->getRoute('user.login', [ ':url' => $connect_url ]);
 
         return self::template()
                 ->view('page', [
@@ -62,33 +62,30 @@ class Register extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-register.php', $this->pathViews, [
                     'form'        => $form,
-                    'url_relogin' => $url ]);
+                    'url_relogin' => self::router()->getRoute('user.login', [
+                        ':url' => $connectUrl
+                    ])
+        ]);
     }
 
     public function store($req)
     {
-        $route       = self::router()->getRoute('user.register.create');
-        $validator   = (new Validator())->setInputs($req->getParsedBody());
-        $is_email    = ($user = self::user()->getUser($validator->getInput('email')))
+        $route     = self::router()->getRoute('user.register.create');
+        $validator = (new Validator())->setInputs($req->getParsedBody());
+
+        $isEmail = ($user = self::user()->getUser($validator->getInput('email')))
             ? $user[ 'email' ]
             : '';
-        $is_username = ($user = self::query()->from('user')
-                ->where('username', $validator->getInput('username'))->fetch())
+
+        $isUsername = ($user = self::user()->getUserByUsername($validator->getInput('username')))
             ? $user[ 'username' ]
             : '';
-        $is_rgpd = empty(self::config()->get('settings.rgpd_show', ''))
-            ? ''
-            : self::config()->get('settings.rgpd_show');
 
-        $is_terms_of_service = empty(self::config()->get('settings.terms_of_service_show', ''))
-            ? ''
-            : self::config()->get('settings.terms_of_service_show');
-        
         $validator
-            ->addInput('is_email', $is_email)
-            ->addInput('is_username', $is_username)
-            ->addInput('is_rgpd', $is_rgpd)
-            ->addInput('is_terms_of_service', $is_terms_of_service)
+            ->addInput('is_email', $isEmail)
+            ->addInput('is_username', $isUsername)
+            ->addInput('is_rgpd', self::config()->get('settings.rgpd_show', ''))
+            ->addInput('is_terms_of_service', self::config()->get('settings.terms_of_service_show', ''))
             ->setRules([
                 'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
                 'email'            => 'required|string|email|!equal:@is_email|to_htmlsc',
@@ -105,18 +102,19 @@ class Register extends \Soosyze\Controller
                 'password_confirm' => t('Confirmation of the new password'),
                 'rgpd'             => t('Accepter la politique de confidentialité'),
                 'terms_of_service' => t('Accepter les conditions générale d\'utilisation')
-        ])->setMessages([
+            ])
+            ->setMessages([
                 'password_confirm' => [
                     'equal' => [
                         'must' => ':label is incorrect'
                     ]
                 ]
-            ]);
+        ]);
 
         $this->container->callHook('register.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $data        = [
+            $data = [
                 'username'         => $validator->getInput('username'),
                 'email'            => $validator->getInput('email'),
                 'password'         => self::auth()->hash($validator->getInput('password_new')),
@@ -132,14 +130,14 @@ class Register extends \Soosyze\Controller
                 ->insertInto('user', array_keys($data))
                 ->values($data)
                 ->execute();
-            
+
             $user = self::user()->getUserActived($data[ 'email' ], false);
-            
+
             self::query()
                 ->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $user[ 'user_id' ], 2 ])
                 ->execute();
-            
+
             $this->sendMailRegister($data[ 'email' ]);
             $this->container->callHook('register.store.after', [ $validator ]);
 
@@ -154,10 +152,7 @@ class Register extends \Soosyze\Controller
 
     public function activate($id, $token, $req)
     {
-        if (!($user = self::user()->find($id))) {
-            return $this->get404($req);
-        }
-        if ($user[ 'token_actived' ] !== $token) {
+        if (!($user = self::user()->find($id)) && $user[ 'token_actived' ] !== $token) {
             return $this->get404($req);
         }
 
@@ -198,11 +193,9 @@ class Register extends \Soosyze\Controller
             ->isHtml(true);
 
         if ($mail->send()) {
-            $_SESSION[ 'messages' ][ 'success' ] = [
-                t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
-            ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.');
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('An error prevented your email from being sent.');
         }
     }
 }

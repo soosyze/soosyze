@@ -87,7 +87,8 @@ class Auth
 
     public function getUserActived($email, $actived = true)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('email', $email)
                 ->where('actived', $actived)
                 ->fetch();
@@ -95,7 +96,8 @@ class Auth
 
     public function getUserActivedToken($token, $actived = true)
     {
-        return $this->query->from('user')
+        return $this->query
+                ->from('user')
                 ->where('token_connected', $token)
                 ->where('actived', $actived)
                 ->fetch();

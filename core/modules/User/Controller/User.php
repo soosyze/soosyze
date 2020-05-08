@@ -34,8 +34,6 @@ class User extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $roles = self::user()->getRolesUser($id);
-
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
@@ -50,7 +48,7 @@ class User extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-user-show.php', $this->pathViews, [
                     'user'  => $user,
-                    'roles' => $roles
+                    'roles' => self::user()->getRolesUser($id)
                 ])
                 ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
                     'menu' => $this->getMenuUser($id)
@@ -63,7 +61,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -102,16 +100,14 @@ class User extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                'menu' => []
+                ])
+                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                    'menu' => []
         ]);
     }
 
     public function store($req)
     {
-        $post   = $req->getParsedBody();
-        $files  = $req->getUploadedFiles();
-
         if ($req->isMaxSize()) {
             $_SESSION[ 'messages' ][ 'errors' ] = [
                 t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
@@ -121,17 +117,20 @@ class User extends \Soosyze\Controller
             return new Redirect(self::router()->getRoute('user.create'));
         }
 
-        $validator = (new Validator())->setInputs($post + $files);
-        $is_email = ($user = self::user()->getUser($validator->getInput('email')))
-            ? $user['email']
+        $validator = (new Validator())
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+
+        $isEmail = ($user    = self::user()->getUser($validator->getInput('email')))
+            ? $user[ 'email' ]
             : '';
-        $is_username = ($user = self::query()->from('user')
-                ->where('username', $validator->getInput('username'))->fetch())
-            ? $user['username']
+
+        $isUsername = ($user       = self::user()->getUserByUsername($validator->getInput('username')))
+            ? $user[ 'username' ]
             : '';
+
         $validator
-            ->addInput('is_email', $is_email)
-            ->addInput('is_username', $is_username)
+            ->addInput('is_email', $isEmail)
+            ->addInput('is_username', $isUsername)
             ->setRules([
                 'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
                 'email'            => 'required|email|max:254|!equal:@is_email|to_htmlsc',
@@ -159,28 +158,22 @@ class User extends \Soosyze\Controller
             ])
             ->setMessages([
                 'password_confirm' => [
-                    'equal' => [
-                        'must' => ':label is incorrect'
-                    ]
+                    'equal' => [ 'must' => t(':label is incorrect') ]
+                ],
+                'email'            => [
+                    'equal' => [ 'not' => t('The :value :label is unavailable.') ]
+                ],
+                'username'         => [
+                    'equal' => [ 'not' => t('The :value :label is unavailable.') ]
                 ]
-            ]);
+        ]);
 
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
-        $validatorRoles = new Validator();
-        if ($isValid        = $validator->isValid()) {
-            $listRoles = implode(',', self::query()->from('role')->where('role_id', '>', 2)->lists('role_id'));
-            foreach ($validator->getInput('roles', []) as $key => $role) {
-                $validatorRoles
-                    ->addRule($key, 'int|inarray:' . $listRoles)
-                    ->addLabel($key, t($role))
-                    ->addInput($key, $key);
-            }
-        }
-        $isValid &= $validatorRoles->isValid();
+        $validatorRoles = $this->validRole($validator);
 
-        if ($isValid) {
-            $data        = [
+        if ($validator->isValid() && $validatorRoles->isValid()) {
+            $data = [
                 'username'       => $validator->getInput('username'),
                 'email'          => $validator->getInput('email'),
                 'bio'            => $validator->getInput('bio'),
@@ -198,21 +191,24 @@ class User extends \Soosyze\Controller
                 ->execute();
 
             $user = self::user()->getUser($validator->getInput('email'));
-            self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+
+            self::query()
+                ->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $user[ 'user_id' ], 2 ]);
-            if (isset($post[ 'roles' ])) {
-                foreach ($post[ 'roles' ] as $role) {
-                    self::query()->values([ $user[ 'user_id' ], $role ]);
-                }
+
+            foreach ($validator->getInput('roles', []) as $role) {
+                self::query()->values([ $user[ 'user_id' ], $role ]);
             }
             self::query()->execute();
+
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
             return new Redirect(self::router()->getRoute('user.management.admin'));
         }
+
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
         return new Redirect(self::router()->getRoute('user.create'));
@@ -241,9 +237,9 @@ class User extends \Soosyze\Controller
             ->fieldsetPassword();
 
         if (self::user()->isGranted('user.permission.manage')) {
-            $roles      = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
-            $roles_user = self::user()->getIdRolesUser($id);
-            $form->setValues([ 'roles' => $roles_user ])
+            $roles     = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
+            $rolesUser = self::user()->getIdRolesUser($id);
+            $form->setValues([ 'roles' => $rolesUser ])
                 ->fieldsetActived()
                 ->fieldsetRoles($roles);
         }
@@ -270,8 +266,9 @@ class User extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                'menu' => $this->getMenuUser($id)
+                ])
+                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                    'menu' => $this->getMenuUser($id)
         ]);
     }
 
@@ -281,20 +278,20 @@ class User extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $post   = $req->getParsedBody();
-        $files  = $req->getUploadedFiles();
-        $route  = self::router()->getRoute('user.edit', [ ':id' => $id ]);
+        $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
 
         if ($req->isMaxSize()) {
             $_SESSION[ 'messages' ][ 'errors' ] = [
                 t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
             ];
-            $_SESSION[ 'errors_keys' ]          = [];
+
+            $_SESSION[ 'errors_keys' ] = [];
 
             return new Redirect($route);
         }
 
         $validator = (new Validator())
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->setRules([
                 /* max:254 RFC5321 - 4.5.3.1.3. */
                 'username'         => 'required|string|max:255|to_htmlsc',
@@ -303,9 +300,11 @@ class User extends \Soosyze\Controller
                 'bio'              => '!required|string|max:255|to_htmlsc',
                 'name'             => '!required|string|max:255|to_htmlsc',
                 'firstname'        => '!required|string|max:255|to_htmlsc',
+                'password'         => '!required|string',
                 'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
                 'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                 'actived'          => 'bool',
+                'roles'            => '!required|array',
                 'token_user_form'  => 'required|token'
             ])
             ->setLabel([
@@ -315,43 +314,60 @@ class User extends \Soosyze\Controller
                 'bio'              => t('Biography'),
                 'name'             => t('Name'),
                 'firstname'        => t('First name'),
+                'password'         => t('Password'),
                 'password_new'     => t('New Password'),
                 'password_confirm' => t('Confirmation of the new password'),
                 'actived'          => t('Active'),
+                'roles'            => t('User Roles')
             ])
-            ->setInputs($post + $files)
             ->setMessages([
-                'password_confirm' => [
-                    'equal' => [
-                        'must' => t(':label is incorrect')
-                    ]
-                ]
-            ]);
+            'password_confirm' => [ 'equal' => [ 'must' => t(':label is incorrect') ] ],
+            'password'         => [ 'required' => [ 'must' => t(':label is incorrect') ] ]
+        ]);
 
-        $is_email      = $is_username   = false;
-        /* En cas de modification du email. */
-        if ($isUpdateEmail = $validator->getInput('email') !== $user[ 'email' ]) {
-            $is_email = self::user()->getUser($validator->getInput('email'));
-            $password = $validator->getInput('password');
-            $verify   = self::auth()->hashVerify($password, $user);
-            $validator->addInput('password', '');
-            if (!$verify) {
-                $validator->addRule('password', 'required');
-            }
+        /* En cas de modification du username. */
+        if ($isUpdateUsername = ($validator->getInput('username') !== $user[ 'username' ])) {
+            $isUsername = ($userName   = self::user()->getUserByUsername($validator->getInput('username')))
+                ? $userName[ 'username' ]
+                : '';
+            $validator
+                ->addInput('is_username', $isUsername)
+                ->addRule('username', 'required|string|max:255|!equal:@is_username|to_htmlsc')
+                ->setMessages([
+                    'username' => [
+                        'equal' => [ 'not' => t('The :value :label is unavailable.') ]
+                    ]
+            ]);
         }
-        if ($validator->getInput('username') !== $user[ 'username' ]) {
-            $is_username = self::query()->from('user')
-                    ->where('username', $validator->getInput('username'))->fetch();
+
+        /* En cas de modification du email. */
+        if ($isUpdateEmail = ($validator->getInput('email') !== $user[ 'email' ])) {
+            $isEmail   = ($userEmail = self::user()->getUser($validator->getInput('email')))
+                ? $userEmail[ 'email' ]
+                : '';
+            $validator
+                ->addInput('is_email', $isEmail)
+                ->addRule('email', 'required|email|max:254|!equal:is_email')
+                ->setMessages([
+                    'email' => [
+                        'equal' => [ 'not' => t('The :value :label is unavailable.') ]
+                    ]
+            ]);
+        }
+
+        if ($isUpdateEmail || $isUpdateUsername) {
+            $validator->addRule('password', 'required|string');
+
+            if (!self::auth()->hashVerify($validator->getInput('password'), $user)) {
+                $validator->addInput('password', '');
+            }
         }
 
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
         $grantedRole = self::user()->isGranted('user.people.manage');
+
         /* Ajoute la règle pour le tableau de roles si l'utilisateur à le droit de les modifier. */
-        if ($grantedRole) {
-            $validator->addRule('roles', '!required|array')
-                ->addLabel('roles', t('User Roles'));
-        }
         $isValid = $validator->isValid();
 
         if ($grantedRole) {
@@ -361,7 +377,7 @@ class User extends \Soosyze\Controller
             $isValid       &= $validatorRole->isValid();
         }
 
-        if ($isValid && !$is_email && !$is_username) {
+        if ($isValid) {
             /* Prépare les donnée à mettre à jour. */
             $value = [
                 'username'  => $validator->getInput('username'),
@@ -381,23 +397,24 @@ class User extends \Soosyze\Controller
                 $value[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
             }
 
-            $this->container->callHook('user.update.before', [ &$validator, &$value,
-                $id ]);
+            $this->container->callHook('user.update.before', [
+                &$validator, &$value, $id
+            ]);
             self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
+
             if ($grantedRole) {
                 $this->updateRole($validator, $id);
             }
+
             $this->savePicture($id, $validator);
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
-            $user_current = self::user()->isConnected();
-            if ($isUpdateEmail && $user_current[ 'user_id' ] == $id) {
-                $user = self::user()->find($id);
-                self::user()->login($user[ 'email' ], $password);
-            }
-            if ($isUpdateMdp && $user_current[ 'user_id' ] == $id) {
-                $user = self::user()->find($id);
-                self::user()->login($user[ 'email' ], $validator->getInput('password_new'));
+            if (($userCurrent = self::user()->isConnected()) && $userCurrent[ 'user_id' ] == $id) {
+                $pwd = $isUpdateMdp
+                    ? $validator->getInput('password_new')
+                    : $validator->getInput('password');
+
+                self::auth()->login($validator->getInput('email'), $pwd);
             }
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
@@ -412,25 +429,16 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] += $validatorRole->getKeyErrors();
         }
 
-        if ($is_email) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :email email is unavailable.', [':email' => $validator->getInput('email')]);
-            $_SESSION[ 'errors_keys' ][]          = 'email';
-        }
-        if ($is_username) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The :name username is unavailable.', [':name' => $validator->getInput('username')]);
-            $_SESSION[ 'errors_keys' ][]          = 'username';
-        }
-
         return new Redirect($route);
     }
 
     public function remove($id, $req)
     {
-        if (!($data = self::user()->find($id))) {
+        if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('user.remove.form.data', [ &$data, $id ]);
+        $this->container->callHook('user.remove.form.data', [ &$user, $id ]);
 
         $form = (new FormBuilder([
             'method' => 'post',
@@ -445,24 +453,25 @@ class User extends \Soosyze\Controller
             ->token('token_user_remove')
             ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
-        $this->container->callHook('user.remove.form', [ &$form, $data, $id ]);
+        $this->container->callHook('user.remove.form', [ &$form, $user, $id ]);
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Delete :name account', [':name'=> $data[ 'username' ]])
+                    'title_main' => t('Delete :name account', [ ':name' => $user[ 'username' ] ])
                 ])
                 ->make('page.content', 'form-user.php', $this->pathViews, [
                     'form' => $form
-                ])->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                'menu' => $this->getMenuUser($id)
+                ])
+                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
+                    'menu' => $this->getMenuUser($id)
         ]);
     }
 
     public function delete($id, $req)
     {
-        if (!($query = self::user()->find($id))) {
+        if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
 
@@ -474,13 +483,16 @@ class User extends \Soosyze\Controller
             ->setInputs($req->getParsedBody())
             ->addInput('id', $id);
 
-        $this->container->callHook('user.delete.validator', [ &$validator, $query, $id ]);
+        $this->container->callHook('user.delete.validator', [ &$validator, $user,
+            $id ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('user.delete.before', [ $validator, $query, $id ]);
+            $this->container->callHook('user.delete.before', [ $validator, $user,
+                $id ]);
             self::query()->from('user_role')->where('user_id', '==', $id)->delete()->execute();
             self::query()->from('user')->where('user_id', '==', $id)->delete()->execute();
-            $this->container->callHook('user.delete.after', [ $validator, $query, $id ]);
+            $this->container->callHook('user.delete.after', [ $validator, $user,
+                $id ]);
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
@@ -508,36 +520,45 @@ class User extends \Soosyze\Controller
     protected function updateRole($validator, $idUser)
     {
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
-        self::query()->from('user_role')->where('user_id', '==', $idUser)->delete()->execute();
-        self::query()->insertInto('user_role', [ 'user_id', 'role_id' ])
+
+        self::query()
+            ->from('user_role')
+            ->where('user_id', '==', $idUser)
+            ->delete()
+            ->execute();
+
+        self::query()
+            ->insertInto('user_role', [ 'user_id', 'role_id' ])
             ->values([ $idUser, 2 ]);
         foreach (array_keys($validator->getInput('roles', [])) as $idRole) {
             self::query()->values([ $idUser, $idRole ]);
         }
         self::query()->execute();
+
         $this->container->callHook('user.update.role.after', [ $validator, $idUser ]);
     }
 
     protected function getMenuUser($id)
     {
-        $menu[] = [
+        $menu[]    = [
             'title_link' => t('View'),
             'link'       => self::router()->getRoute('user.show', [ ':id' => $id ])
         ];
-        if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.edited')) {
+        $isGranted = self::user()->isGranted('user.people.manage');
+        if ($isGranted || self::user()->isGranted('user.edited')) {
             $menu[] = [
                 'title_link' => t('Edit'),
                 'link'       => self::router()->getRoute('user.edit', [ ':id' => $id ])
             ];
         }
-        if (self::user()->isGranted('user.people.manage') || self::user()->isGranted('user.deleted')) {
+        if ($isGranted || self::user()->isGranted('user.deleted')) {
             $menu[] = [
                 'title_link' => t('Delete'),
                 'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
             ];
         }
-        
-        self::core()->callHook('user.menu', [&$menu, $id]);
+
+        self::core()->callHook('user.menu', [ &$menu, $id ]);
 
         return $menu;
     }

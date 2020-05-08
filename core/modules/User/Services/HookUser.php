@@ -82,8 +82,7 @@ class HookUser
 
     public function hookLogin($url, $req, $user)
     {
-        $connect_url = $this->config->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if ($this->user->isConnectUrl($url)) {
             return false;
         }
 
@@ -92,8 +91,7 @@ class HookUser
 
     public function hookLoginCheck($url, $req, $user)
     {
-        $connect_url = $this->config->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if ($this->user->isConnectUrl($url)) {
             return false;
         }
         /* Si le site est en maintenance. */
@@ -119,8 +117,7 @@ class HookUser
 
     public function hookRelogin($url, $req, $user)
     {
-        $connect_url = $this->config->get('settings.connect_url', '');
-        if (!empty($connect_url) && $url !== '/' . $connect_url) {
+        if ($this->user->isConnectUrl($url)) {
             return false;
         }
 

@@ -54,7 +54,7 @@
     },
     "user.hook.config": {
         "class": "SoosyzeCore\\User\\Services\\HookConfig",
-        "arguments": ["@config", "@router"],
+        "arguments": ["@router"],
         "hooks": {
             "config.edit.menu": "menu",
             "config.edit.user.form.generate": "form",
