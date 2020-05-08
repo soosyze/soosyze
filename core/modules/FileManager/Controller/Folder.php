@@ -58,9 +58,9 @@ class Folder extends \Soosyze\Controller
         $dir       = self::core()->getDir('files_public', 'app/files') . $path;
         $validator = (new Validator())
             ->setRules([
-                'name'               => 'required|string|max:255',
-                'dir'                => 'required|dir',
-                'token_folder_store' => 'token'
+                'name'         => 'required|string|max:255',
+                'dir'          => 'required|dir',
+                'token_folder' => 'token'
             ])
             ->setInputs($req->getParsedBody())
             ->addInput('dir', $dir);
@@ -133,9 +133,9 @@ class Folder extends \Soosyze\Controller
         $dir       = self::core()->getDir('files_public', 'app/files') . $path;
         $validator = (new Validator())
             ->setRules([
-                'name'                => 'required|string|max:255',
-                'dir'                 => 'required|dir',
-                'token_folder_update' => 'token'
+                'name'         => 'required|string|max:255',
+                'dir'          => 'required|dir',
+                'token_folder' => 'token'
             ])
             ->setInputs($req->getParsedBody())
             ->addInput('dir', $dir);
