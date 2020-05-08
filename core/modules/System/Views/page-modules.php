@@ -28,12 +28,12 @@
     <div class="col-md-9">
         <?php if ($module_update): ?>
             <div class="alert alert-info">
-                <p>Des mises à jours sont disponible.</p>
-                <p><a class="btn btn-primary" href="<?php echo $link_module_update; ?>">Mettre à jour votre application</a></p>
+                <p><?php echo t('Updates are available'); ?></p>
+                <p><a class="btn btn-primary" href="<?php echo $link_module_update; ?>"><?php echo t('Update your application'); ?></a></p>
             </div>
         <?php else: ?>
-        <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="Dernière mise à jour : <?php echo date('d/m/Y', time()); ?>">
-            Vérifier les mises à jours <i class="fa fa-info-circle"></i>
+        <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
+            <?php echo t('Check for updates'); ?> <i class="fa fa-info-circle"></i>
         </a>
         <?php endif; ?>
 

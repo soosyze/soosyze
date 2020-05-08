@@ -37,9 +37,9 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('menu', [ 'name', 'title', 'description' ])
-            ->values([ 'menu-admin', 'Administration menu', 'Le menu pour la gestion du site.' ])
-            ->values([ 'menu-main', 'Main Menu', 'Main menu of the site.' ])
-            ->values([ 'menu-user', 'User Menu', 'User links menu.' ])
+            ->values([ 'menu-admin', 'Administration menu', 'Menu for the management of the site' ])
+            ->values([ 'menu-main', 'Main Menu', 'Main menu of the site' ])
+            ->values([ 'menu-user', 'User Menu', 'User links menu' ])
             ->execute();
 
         $ci->query()

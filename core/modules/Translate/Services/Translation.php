@@ -203,8 +203,8 @@ class Translation extends \Soosyze\Config
         $this->lang = isset($config[ 'settings.lang' ])
             ? $config[ 'settings.lang' ]
             : $langDefault;
-        if (isset($_SESSION['lang']) && !in_array($_SESSION['lang'], $this->iso639_1)) {
-            $this->lang = $_SESSION['lang'];
+        if (isset($_SESSION[ 'lang' ]) && !in_array($_SESSION[ 'lang' ], $this->iso639_1)) {
+            $this->lang = $_SESSION[ 'lang' ];
         }
         parent::__construct($dir);
     }
@@ -224,19 +224,19 @@ class Translation extends \Soosyze\Config
     {
         $path = $this->getPath();
 
-        $dir_iterator = new \DirectoryIterator($path);
+        $dirIterator = new \DirectoryIterator($path);
 
         /* On supprime chaque dossier et chaque fichier	du dossier cible */
         $output = [];
-        foreach ($dir_iterator as $file) {
+        foreach ($dirIterator as $file) {
             /* Fichier instance de SplFileInfo */
             if ($file->isDot() || $file->isDir()) {
                 continue;
             }
             $name = $file->getBasename('.' . $file->getExtension());
-          
+
             if (isset($this->iso639_1[ $name ])) {
-                $output[$name] = [
+                $output[ $name ] = [
                     'value' => $name,
                     'label' => $this->iso639_1[ $name ]
                 ];
