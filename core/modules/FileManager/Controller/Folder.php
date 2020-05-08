@@ -219,7 +219,7 @@ class Folder extends \Soosyze\Controller
         $output = [];
         if ($validator->isValid()) {
             $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
-            $iterator    = new \RecursiveIteratorIterator($dirIterator);
+            $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
 
             /* Supprime tous les dossiers et fichiers */
             foreach ($iterator as $file) {
