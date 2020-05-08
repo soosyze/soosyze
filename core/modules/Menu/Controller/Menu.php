@@ -124,7 +124,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -201,7 +201,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 

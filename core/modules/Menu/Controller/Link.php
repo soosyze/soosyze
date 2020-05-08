@@ -22,7 +22,7 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -116,7 +116,7 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 

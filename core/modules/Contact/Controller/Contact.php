@@ -23,7 +23,7 @@ class Contact extends \Soosyze\Controller
         $this->container->callHook('contact.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
