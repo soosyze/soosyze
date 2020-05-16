@@ -30,10 +30,7 @@
     "filemanager.hook.config": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookConfig",
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.filemanager.form.generate": "form",
-            "config.update.filemanager.validator": "validator",
-            "config.update.filemanager.before": "before"
+            "config.edit.menu": "menu"
         }
     },
     "filemanager.hook.menu": {

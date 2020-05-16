@@ -45,11 +45,7 @@
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
         "arguments": ["@router", "@template", "@file", "@translate"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.system.form.generate": "form",
-            "config.update.system.validator": "validator",
-            "config.update.system.before": "before",
-            "config.update.system.files": "files"
+            "config.edit.menu": "menu"
         }
     },
     "system.hook.cron": {

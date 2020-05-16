@@ -14,10 +14,7 @@
         "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
         "arguments": ["@config", "@router"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.backupmanager.form.generate": "form",
-            "config.update.backupmanager.validator": "validator",
-            "config.update.backupmanager.before": "before"
+            "config.edit.menu": "menu"
         }
     },
     "backupmanager.hook.user": {

@@ -52,24 +52,26 @@ class Config extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
-        $dataFiles = [];
-        self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
+        $inputsFile = [];
 
-        self::core()->callHook("config.update.$id.validator", [ &$validator ]);
+        $config = $this->container->get("$id.hook.config");
+
+        $config->validator($validator);
+        $config->files($inputsFile);
+
         $validator->addRule('token_' . $id . '_config', 'token');
 
         if ($validator->isValid()) {
             $data = [];
-            self::core()->callHook("config.update.$id.before", [
-                &$validator, &$data, $id
-            ]);
+
+            $config->before($validator, $data, $id);
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
-            foreach ($dataFiles as $file) {
+            foreach ($inputsFile as $file) {
                 $this->saveFile($file, $validator);
             }
-            self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
+            $config->after($validator, $data, $id);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
@@ -82,7 +84,7 @@ class Config extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
             $_SESSION[ 'errors_keys' ]            = [];
         } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
+            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($inputsFile);
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
@@ -112,9 +114,9 @@ class Config extends \Soosyze\Controller
             'enctype' => 'multipart/form-data'
         ]);
 
-        $this->container->callHook("config.edit.$id.form.generate", [
-            &$form, $data, $req
-        ]);
+        $config = $this->container->get("$id.hook.config");
+        $config->form($form, $data, $req);
+
         $form->token('token_' . $id . '_config')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);

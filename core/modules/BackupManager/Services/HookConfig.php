@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\BackupManager\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     /**
      * @var \Soosyze\Config
@@ -24,7 +24,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         $form
             ->group('backups-fieldset', 'fieldset', function ($form) use ($data) {
@@ -67,11 +67,19 @@ class HookConfig
         ]);
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'max_backups' => $validator->getInput('max_backups'),
             'backup_cron' => (bool) $validator->getInput('backup_cron'),
         ];
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }

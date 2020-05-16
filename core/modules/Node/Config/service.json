@@ -15,10 +15,7 @@
         "class": "SoosyzeCore\\Node\\Services\\HookConfig",
         "arguments": ["@query"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.node.form.generate": "form",
-            "config.update.node.validator": "validator",
-            "config.update.node.before": "before"
+            "config.edit.menu": "menu"
         }
     },
     "node.hook.app": {

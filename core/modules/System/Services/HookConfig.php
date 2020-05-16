@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\System\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     protected $template;
 
@@ -27,7 +27,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         $optionThemes = [];
         foreach ($this->template->getThemes() as $theme) {
@@ -277,7 +277,7 @@ class HookConfig
         ]);
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'lang'               => $validator->getInput('lang'),
@@ -300,5 +300,9 @@ class HookConfig
     public function files(&$inputFiles)
     {
         $inputFiles = [ 'logo', 'favicon' ];
+    }
+
+    public function after(&$validator, $data, $id)
+    {
     }
 }

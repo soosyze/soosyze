@@ -22,10 +22,7 @@
     "news.hook.config": {
         "class": "SoosyzeCore\\News\\Services\\HookConfig",
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.news.form.generate": "form",
-            "config.update.news.validator": "validator",
-            "config.update.news.before": "before"
+            "config.edit.menu": "menu"
         }
     },
     "news.hook.block": {

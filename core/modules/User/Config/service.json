@@ -56,10 +56,7 @@
         "class": "SoosyzeCore\\User\\Services\\HookConfig",
         "arguments": ["@router"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.user.form.generate": "form",
-            "config.update.user.validator": "validator",
-            "config.update.user.before": "before"
+            "config.edit.menu": "menu"
         }
     }
 }

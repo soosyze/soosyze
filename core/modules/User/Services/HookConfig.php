@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\User\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     protected $router;
 
@@ -18,7 +18,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         $form
             ->group('login-fieldset', 'fieldset', function ($form) use ($data) {
@@ -224,7 +224,7 @@ class HookConfig
         ]);
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'user_register'         => (bool) $validator->getInput('user_register'),
@@ -242,5 +242,13 @@ class HookConfig
             'password_digit'        => (int) $validator->getInput('password_digit'),
             'password_special'      => (int) $validator->getInput('password_special')
         ];
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }

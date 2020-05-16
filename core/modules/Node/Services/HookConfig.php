@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     protected $nodeTypes = [];
 
@@ -20,7 +20,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         return $form->group('node_default_url-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('node_default_url-legend', t('Url'))
@@ -81,7 +81,7 @@ class HookConfig
         }
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'node_default_url' => $validator->getInput('node_default_url'),
@@ -91,5 +91,13 @@ class HookConfig
         foreach ($this->nodeTypes as $nodeType) {
             $data[ 'node_url_' . $nodeType[ 'node_type' ] ] = $validator->getInput('node_url_' . $nodeType[ 'node_type' ]);
         }
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }

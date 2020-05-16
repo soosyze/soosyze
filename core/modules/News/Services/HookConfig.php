@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\News\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     public function menu(&$menu)
     {
@@ -11,7 +11,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         $form->group('news-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news-legend', t('Settings'))
@@ -37,10 +37,18 @@ class HookConfig
         ]);
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'news_pagination' => (int) $validator->getInput('news_pagination')
         ];
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }
