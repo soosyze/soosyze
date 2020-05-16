@@ -8,6 +8,8 @@ class FilterManagerIterator extends \FilterIterator
      * @var \SoosyzeCore\FileManager\Services\HookUser
      */
     protected $hookUser;
+    
+    protected $path;
 
     public function __construct($hookUser)
     {

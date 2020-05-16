@@ -42,6 +42,11 @@ class File
      */
     protected $ext;
 
+    /**
+     * Droits attribués à la création du répertoire.
+     *
+     * @var int
+     */
     protected $mode = 0755;
 
     /**
@@ -66,6 +71,10 @@ class File
     protected $dir = null;
 
     protected $basePath = '';
+
+    protected $callGet = null;
+    
+    protected $callDelete = null;
 
     protected $callMove = null;
 

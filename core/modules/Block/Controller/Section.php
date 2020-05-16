@@ -6,6 +6,8 @@ use Soosyze\Components\Validator\Validator;
 
 class Section extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

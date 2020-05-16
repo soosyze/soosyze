@@ -9,6 +9,8 @@ use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';

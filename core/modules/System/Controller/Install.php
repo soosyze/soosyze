@@ -10,6 +10,8 @@ use Soosyze\Components\Validator\Validator;
 
 class Install extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     /**
      * Liste des modules à installer.
      *

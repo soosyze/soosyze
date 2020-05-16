@@ -4,6 +4,8 @@ namespace SoosyzeCore\Node\Services;
 
 class HookMenu
 {
+    private $alias;
+
     /**
      * @var \Queryflatfile\Schema
      */

@@ -6,6 +6,8 @@ use Soosyze\Components\Http\Uri;
 
 class Menu
 {
+    protected $alias;
+
     protected $core;
 
     /**

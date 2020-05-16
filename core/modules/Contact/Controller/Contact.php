@@ -9,6 +9,8 @@ use SoosyzeCore\Contact\Form\FormContact;
 
 class Contact extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';

@@ -5,6 +5,8 @@ namespace SoosyzeCore\Block\Services;
 class Block
 {
     protected $core;
+    
+    protected $pathViews;
 
     public function __construct($core)
     {

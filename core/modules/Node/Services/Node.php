@@ -4,6 +4,8 @@ namespace SoosyzeCore\Node\Services;
 
 class Node
 {
+    protected $pathViews;
+
     protected $query;
 
     /**

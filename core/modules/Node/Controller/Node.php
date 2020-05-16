@@ -13,6 +13,8 @@ class Node extends \Soosyze\Controller
 {
     public static $limit = 20;
 
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';

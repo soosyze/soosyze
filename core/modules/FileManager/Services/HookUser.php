@@ -6,6 +6,10 @@ use Soosyze\Components\Util\Util;
 
 class HookUser
 {
+    protected $profil;
+
+    protected $user;
+
     public function __construct($user, $profil)
     {
         $this->user   = $user;

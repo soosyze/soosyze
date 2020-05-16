@@ -4,6 +4,10 @@ namespace SoosyzeCore\FileManager\Services;
 
 class FileProfil
 {
+    protected $profil = [];
+
+    protected $query;
+
     public function __construct($query)
     {
         $this->query = $query;
