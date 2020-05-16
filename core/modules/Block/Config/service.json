@@ -1,13 +1,22 @@
 {
     "block": {
         "class": "SoosyzeCore\\Block\\Services\\Block",
-        "arguments": ["@core"]
+        "arguments": ["@core", "@config"],
+        "hooks": {
+            "block.social": "hookBlockSocial"
+        }
     },
     "block.hook.app": {
         "class": "SoosyzeCore\\Block\\Services\\HookApp",
         "arguments": ["@template", "@core", "@query", "@user", "@router"],
         "hooks": {
             "app.response.after": "hookResponseAfter"
+        }
+    },
+    "social.hook.config": {
+        "class": "SoosyzeCore\\Block\\Services\\HookConfig",
+        "hooks": {
+            "config.edit.menu": "menu"
         }
     },
     "block.hook.user": {

@@ -4,13 +4,16 @@ namespace SoosyzeCore\Block\Services;
 
 class Block
 {
+    protected $config;
+    
     protected $core;
     
     protected $pathViews;
 
-    public function __construct($core)
+    public function __construct($core, $config)
     {
         $this->core      = $core;
+        $this->config    = $config;
         $this->pathViews = dirname(__DIR__) . '/Views/blocks/';
     }
 
@@ -60,7 +63,8 @@ class Block
             'social'  => [
                 'title' => t('Social networks'),
                 'tpl'   => 'block-social.php',
-                'path'  => $this->pathViews
+                'path'  => $this->pathViews,
+                'hook'  => 'social'
             ],
             'table'   => [
                 'title' => t('Table'),
@@ -82,5 +86,13 @@ class Block
         $this->core->callHook('block.create.form.data', [ &$blocks ]);
 
         return $blocks;
+    }
+    
+    public function hookBlockSocial($tpl, array $options)
+    {
+        return $tpl->addVar(
+            'icon_socials',
+            $this->config->get('settings.icon_socials')
+        );
     }
 }

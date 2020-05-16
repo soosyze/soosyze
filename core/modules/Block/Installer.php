@@ -30,6 +30,24 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('key_block')->nullable()
                 ->string('options')->nullable();
             });
+
+        $ci->config()->set('settings.icon_socials', [
+            'blogger'    => '',
+            'dribbble'   => '',
+            'facebook'   => '#',
+            'github'     => '',
+            'instagram'  => '#',
+            'linkedin'   => '#',
+            'mastodon'   => '#',
+            'snapchat'   => '',
+            'soundcloud' => '',
+            'spotify'    => '',
+            'steam'      => '',
+            'tumblr'     => '',
+            'twitch'     => '#',
+            'twitter'    => '#',
+            'youtube'    => '#'
+        ]);
     }
 
     public function seeders(ContainerInterface $ci)
