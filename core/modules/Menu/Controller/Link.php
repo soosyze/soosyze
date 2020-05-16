@@ -208,7 +208,7 @@ class Link extends \Soosyze\Controller
 
     public function delete($name, $id, $req)
     {
-        if (!self::menu()->find($id)) {
+        if (!($linkMenu = self::menu()->find($id))) {
             return $this->get404($req);
         }
 
@@ -227,6 +227,10 @@ class Link extends \Soosyze\Controller
                 ->from('menu_link')
                 ->delete()
                 ->where('id', '==', $id)
+                ->execute();
+            self::query()
+                ->update('menu_link', [ 'parent' => $linkMenu['parent'] ])
+                ->where('parent', '==', $id)
                 ->execute();
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
