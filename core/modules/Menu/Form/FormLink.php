@@ -12,7 +12,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'query'       => '',
         'fragment'    => '',
         'icon'        => '',
-        'target_link' => '_self'
+        'target_link' => false
     ];
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
@@ -83,27 +83,13 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                     }, [ 'class' => 'form-group-flex' ]);
                 }, self::$attrGrp)
                 ->group('target_link-group', 'div', function ($form) {
-                    $form->label('target_link-label', t('Target'))
-                    ->group('target_link_1-group', 'div', function ($form) {
-                        $form->radio('target_link', [
-                            'id'       => 'target_link_1',
-                            'value'    => '_self',
-                            'required' => 1,
-                            'checked'  => ($this->values[ 'target_link' ] === '_self')
-                        ])->label('target_link-label', '(_self) ' . t('Load in the same window'), [
-                            'for' => 'target_link_1'
-                        ]);
-                    }, self::$attrGrp)
-                    ->group('target_link_2-group', 'div', function ($form) {
-                        $form->radio('target_link', [
-                            'id'       => 'target_link_2',
-                            'value'    => '_blank',
-                            'required' => 1,
-                            'checked'  => ($this->values[ 'target_link' ] === '_blank')
-                        ])->label('target_link-label', '(_blank) ' . t('Load in a new window'), [
-                            'for' => 'target_link_2'
-                        ]);
-                    }, self::$attrGrp);
+                    $form->checkbox('target_link', [
+                        'id'      => 'target_link',
+                        'checked' => $this->values[ 'target_link' ]
+                    ])
+                    ->label('target_link-label', '<span class="ui"></span>' . t('Open in a new window'), [
+                        'for' => 'target_link'
+                    ]);
                 }, self::$attrGrp);
         })
             ->token('token_link_form')

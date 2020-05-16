@@ -77,7 +77,7 @@ class Link extends \Soosyze\Controller
                 'icon'        => $validator->getInput('icon'),
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => $validator->getInput('target_link'),
+                'target_link' => (bool) $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
                 'parent'      => -1,
@@ -176,7 +176,7 @@ class Link extends \Soosyze\Controller
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'query'       => $infoUrlOrRoute[ 'query' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => $validator->getInput('target_link')
+                'target_link' => (bool) $validator->getInput('target_link')
             ];
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
@@ -243,7 +243,7 @@ class Link extends \Soosyze\Controller
                     'title_link'      => 'required|string|max:255|to_htmlsc',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
-                    'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
+                    'target_link'     => 'bool',
                     'token_link_form' => 'required|token'
                 ])
                 ->setLabel([

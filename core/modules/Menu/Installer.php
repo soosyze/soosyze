@@ -28,7 +28,7 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('query')->nullable()
                 ->string('fragment')->nullable()
                 ->string('title_link')
-                ->string('target_link')->valueDefault('_self')
+                ->boolean('target_link')->valueDefault(false)
                 ->string('menu')
                 ->integer('weight')->valueDefault(1)
                 ->integer('parent')
@@ -44,12 +44,11 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent',
-                'target_link'
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'menu.show', 'fa fa-bars', 'Menu', 'admin/menu/menu-main', 'menu-admin',
-                3, -1, '_self'
+                'menu.index', 'fa fa-bars', 'Menu', 'admin/menu', 'menu-admin',
+                3, -1
             ])
             ->execute();
     }
@@ -63,7 +62,11 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->values([
                 null, null, 'Soosyze website', 'https://soosyze.com', 'menu-main',
-                50, -1, '_blank'
+                50, -1, true
+            ])
+            ->values([
+                'node.show', 'fa fa-arrow-circle-left', 'Return to site', '/', 'menu-admin',
+                1, -1, false
             ])
             ->execute();
     }
