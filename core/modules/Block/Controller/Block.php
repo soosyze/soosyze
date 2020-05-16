@@ -46,19 +46,21 @@ class Block extends \Soosyze\Controller
                 ->addVars([ 'block' => $block ]);
     }
 
-    public function create($section)
+    public function create($theme, $section)
     {
         $data = self::block()->getBlocks();
 
         $form = new FormBuilder([
             'method' => 'POST',
-            'action' => self::router()->getRoute('block.store', [ ':section' => $section ])
+            'action' => self::router()->getRoute('block.store', [
+                ':theme' => $theme, ':section' => $section
+            ])
         ]);
 
         foreach ($data as $key => &$block) {
             if (!empty($block[ 'hook' ])) {
                 $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
-                $content = self::core()->callHook('block.' . $block[ 'hook' ], [
+                $content = $this->container->callHook('block.' . $block[ 'hook' ], [
                     $tpl, empty($block[ 'options' ])
                     ? []
                     : $block[ 'options' ]
@@ -97,7 +99,7 @@ class Block extends \Soosyze\Controller
         ]);
     }
 
-    public function store($section, $req)
+    public function store($theme, $section, $req)
     {
         $blocks = self::block()->getBlocks();
 
@@ -149,7 +151,7 @@ class Block extends \Soosyze\Controller
         }
 
         return new \Soosyze\Components\Http\Redirect(
-            self::router()->getRoute('section.admin', [ ':theme' => 'theme' ])
+            self::router()->getRoute('section.admin', [ ':theme' => $theme ])
         );
     }
 

@@ -20,6 +20,11 @@ class HookApp
         $this->user      = $user;
         $this->router    = $router;
         $this->pathViews = dirname(__DIR__) . '/Views/';
+        
+        $this->userCurrent = $this->user->isConnected();
+        $this->roles = $this->userCurrent
+            ? $this->user->getRolesUser($this->userCurrent[ 'user_id' ])
+            : [];
     }
 
     public function hookResponseAfter(
@@ -30,23 +35,43 @@ class HookApp
             return;
         }
 
-        $isAdmin = in_array($this->router->parseQueryFromRequest(), [
-            'admin/section/theme', 'admin/section/theme_admin'
-        ]);
-        $blocks  = $this->getBlocks($request, $isAdmin);
+        $theme   = $this->getNameTheme();
+        $isAdmin = $this->core->callHook('app.granted', [ 'block.administer' ]) && !empty($theme);
 
-        $sections = $this->tpl->getSections();
+        $blocks = $this->getBlocks($request, $isAdmin);
+
+        $sections   = $this->tpl->getSections();
+        $linkCreate = '';
+
         foreach ($sections as $section) {
+            if ($isAdmin) {
+                $linkCreate = $this->router->getRoute('block.create', [
+                    ':theme'   => $theme,
+                    ':section' => $section
+                ]);
+            }
             $response->make('page.' . $section, 'section.php', $this->pathViews, [
                 'section_id'  => $section,
                 'content'     => !empty($blocks[ $section ])
                     ? $blocks[ $section ]
                     : [],
-                'edit'        => $isAdmin,
-                'link_create' => $this->router->getRoute('block.create', [
-                    ':section' => $section ])
+                'is_admin'    => $isAdmin,
+                'link_create' => $linkCreate
             ]);
         }
+    }
+    
+    protected function getNameTheme()
+    {
+        $query = $this->router->parseQueryFromRequest();
+        if ($query === 'admin/section/theme') {
+            return 'theme';
+        }
+        if ($query === 'admin/section/theme_admin') {
+            return 'theme_admin';
+        }
+
+        return '';
     }
 
     protected function getBlocks($request, $isAdmin)
@@ -59,7 +84,7 @@ class HookApp
 
         $out = [];
         foreach ($blocks as $block) {
-            if (!$isAdmin && (!$this->isVisibilityPages($block, $request) || !$this->isVisibilityRoles($block))) {
+            if (!$isAdmin && (!$this->isVisibilityPages($block) || !$this->isVisibilityRoles($block))) {
                 continue;
             }
             if (!empty($block[ 'hook' ])) {
@@ -87,14 +112,14 @@ class HookApp
         return $out;
     }
 
-    protected function isVisibilityPages(array $block, $request)
+    protected function isVisibilityPages(array $block)
     {
         $path = $this->router->parseQueryFromRequest();
 
         $visibility = $block[ 'visibility_pages' ];
-        $pages      = $block[ 'pages' ];
+        $pages      = explode(PHP_EOL, $block[ 'pages' ]);
 
-        foreach (explode(PHP_EOL, $pages) as $page) {
+        foreach ($pages as $page) {
             $page = trim($page);
             if ($page === $path) {
                 return $visibility;
@@ -111,19 +136,16 @@ class HookApp
 
     protected function isVisibilityRoles($block)
     {
-        $userCurrent = $this->user->isConnected();
         $rolesBlock  = explode(',', $block[ 'roles' ]);
         $visibility  = $block[ 'visibility_roles' ];
 
         /* S'il n'y a pas d'utilisateur et que l'on demande de suivre les utilisateurs non connectés. */
-        if (!$userCurrent && in_array(1, $rolesBlock)) {
+        if (!$this->userCurrent && in_array(1, $rolesBlock)) {
             return $visibility;
         }
 
-        $roles = $this->user->getRolesUser($userCurrent[ 'user_id' ]);
-
         foreach ($rolesBlock as $analyticsRole) {
-            foreach ($roles as $role) {
+            foreach ($this->roles as $role) {
                 if ($analyticsRole == $role[ 'role_id' ]) {
                     return $visibility;
                 }
