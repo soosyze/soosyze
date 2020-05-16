@@ -1,16 +1,16 @@
 {
-    "backup.install": {
+    "backupmanager.install": {
         "class": "SoosyzeCore\\BackupManager\\Installer",
         "hooks": {
             "install.menu": "hookInstallMenu",
             "install.user": "hookInstallUser"
         }
     },
-    "backupservice": {
+    "backupmanager": {
         "class": "SoosyzeCore\\BackupManager\\Services\\BackupService",
         "arguments": ["@core", "@router", "@config"]
     },
-    "backup.hook.config": {
+    "backupmanager.hook.config": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
         "arguments": ["@config", "@router"],
         "hooks": {
@@ -20,7 +20,7 @@
             "config.update.backupmanager.before": "before"
         }
     },
-    "backup.hook.user": {
+    "backupmanager.hook.user": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
@@ -32,7 +32,7 @@
             "route.backupmanager.download": "hookBackupManage"
         }
     },
-    "backup.hook.cron": {
+    "backupmanager.hook.cron": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookCron",
         "arguments": ["@backupservice", "@config"],
         "hooks": {

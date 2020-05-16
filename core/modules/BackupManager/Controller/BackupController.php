@@ -31,7 +31,7 @@ class BackupController extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-index.php', $this->pathViews, [
-                    'backups'          => self::backupservice()->listBackups(),
+                    'backups'          => self::backupmanager()->listBackups(),
                     'max_backups'      => self::config()->get('settings.max_backups'),
                     'do_backup_route'  => self::router()->getRoute('backupmanager.dobackup'),
                     'delete_all_route' => self::router()->getRoute('backupmanager.delete.all')
@@ -40,7 +40,7 @@ class BackupController extends \Soosyze\Controller
 
     public function deleteAll()
     {
-        $_SESSION[ 'messages' ] = self::backupservice()->deleteAll()
+        $_SESSION[ 'messages' ] = self::backupmanager()->deleteAll()
             ? [ 'success' => [ t('Backups deleted successfuly') ] ]
             : [ 'errors' => [ t('Backups delete failed') ] ];
 
@@ -51,7 +51,7 @@ class BackupController extends \Soosyze\Controller
 
     public function download($path)
     {
-        if ($content = self::backupservice()->getBackup($path)) {
+        if ($content = self::backupmanager()->getBackup($path)) {
             return new Response(200, new Stream($content), [
                 'content-type'        => 'application/zip',
                 'content-disposition' => 'attachement; filename="' . $path . '.zip"'
@@ -63,7 +63,7 @@ class BackupController extends \Soosyze\Controller
 
     public function restore($path)
     {
-        $_SESSION[ 'messages' ] = self::backupservice()->restore($path)
+        $_SESSION[ 'messages' ] = self::backupmanager()->restore($path)
             ? [ 'success' => [ t('Backup restored successfuly') ] ]
             : [ 'errors' => [ t('Backup restore failed') ] ];
 
@@ -74,7 +74,7 @@ class BackupController extends \Soosyze\Controller
 
     public function delete($path, $req)
     {
-        $_SESSION[ 'messages' ] = self::backupservice()->delete($path)
+        $_SESSION[ 'messages' ] = self::backupmanager()->delete($path)
             ? [ 'success' => [ t('Backup deleted successfuly') ] ]
             : [ 'errors' => [ t('Backup delete failed') ] ];
 
@@ -85,7 +85,7 @@ class BackupController extends \Soosyze\Controller
 
     public function doBackup()
     {
-        $_SESSION[ 'messages' ] = self::backupservice()->doBackup()
+        $_SESSION[ 'messages' ] = self::backupmanager()->doBackup()
             ? [ 'success' => [ t('Backup done successfuly') ] ]
             : [ 'errors' => [ t('Backup failed') ] ];
 
