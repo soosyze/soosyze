@@ -29,10 +29,23 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function form(&$form, $data, $req)
     {
-        $optionThemes = [];
-        foreach ($this->template->getThemes() as $theme) {
-            $optionThemes[] = [ 'value' => $theme, 'label' => $theme ];
+        $optionThemes      = [];
+        $optionThemesAdmin = [];
+
+        $composers = $this->template->getThemes();
+
+        foreach ($composers as $key => $composer) {
+            $theme = [
+                'value' => $key,
+                'label' => $key
+            ];
+            if (empty($composer[ 'extra' ][ 'soosyze-theme' ][ 'options' ][ 'admin' ])) {
+                $optionThemes[] = $theme;
+            } else {
+                $optionThemesAdmin[] = $theme;
+            }
         }
+
         $optionTimezone = [];
         foreach (timezone_identifiers_list() as $value) {
             $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
@@ -41,7 +54,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $optionLang   = $this->translate->getLang();
         $optionLang[] = [ 'value' => 'en', 'label' => 'English' ];
 
-        return $form->group('translate-fieldset', 'fieldset', function ($form) use ($data, $optionLang, $optionTimezone) {
+        $form->group('translate-fieldset', 'fieldset', function ($form) use ($data, $optionLang, $optionTimezone) {
             $form->legend('translate-legend', t('Language'))
                     ->group('lang-group', 'div', function ($form) use ($data, $optionLang) {
                         $form->label('lang-label', t('Language'))
@@ -60,7 +73,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
-                ->group('information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes) {
+                ->group('information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes, $optionThemesAdmin) {
                     $form->legend('information-legend', t('Information'))
                     ->group('email-group', 'div', function ($form) use ($data) {
                         $form->label('email-label', t('E-mail of the site'), [
@@ -99,9 +112,9 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'selected' => $data[ 'theme' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
-                    ->group('theme_admin-group', 'div', function ($form) use ($data, $optionThemes) {
+                    ->group('theme_admin-group', 'div', function ($form) use ($data, $optionThemesAdmin) {
                         $form->label('theme_admin-label', t('Website administration theme'))
-                        ->select('theme_admin', $optionThemes, [
+                        ->select('theme_admin', $optionThemesAdmin, [
                             'class'    => 'form-control',
                             'required' => 1,
                             'selected' => $data[ 'theme_admin' ]
@@ -238,7 +251,6 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function validator(&$validator)
     {
-        $themes = implode(',', $this->template->getThemes());
         $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
             'lang'               => 'required|inarray:' . $langs,
@@ -246,8 +258,9 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'email'              => 'required|email|max:254|to_htmlsc',
             'maintenance'        => '!required|bool',
             'rewrite_engine'     => 'bool',
-            'theme'              => 'required|inarray:' . $themes,
-            'theme_admin'        => 'required|inarray:' . $themes,
+            'theme'              => 'required|string',
+            'theme_admin'        => 'required|string',
+            'theme_admin_dark'   => 'bool',
             'logo'               => '!required|image|max:200Kb',
             'path_index'         => 'route',
             'path_access_denied' => '!required|route',
@@ -287,6 +300,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
             'theme'              => $validator->getInput('theme'),
             'theme_admin'        => $validator->getInput('theme_admin'),
+            'theme_admin_dark'   => (bool) $validator->getInput('theme_admin_dark'),
             'path_index'         => $validator->getInput('path_index'),
             'path_access_denied' => $validator->getInput('path_access_denied'),
             'path_no_found'      => $validator->getInput('path_no_found'),

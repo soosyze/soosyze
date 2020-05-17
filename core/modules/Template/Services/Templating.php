@@ -204,14 +204,19 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getThemes()
     {
-        $folders = [];
+        $themes = [];
         foreach ($this->themesPath as $path) {
-            if (is_dir($path)) {
-                $folders = array_merge($folders, Util::getFolder($path));
+            foreach (new \DirectoryIterator($path) as $splFile) {
+                $composer = $splFile->getRealPath() . '/composer.json';
+                if (!file_exists($composer)) {
+                    continue;
+                }
+
+                $themes[ $splFile->getBasename() ] = Util::getJson($composer);
             }
         }
 
-        return $folders;
+        return $themes;
     }
 
     /**

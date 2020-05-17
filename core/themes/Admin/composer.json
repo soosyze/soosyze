@@ -5,12 +5,16 @@
     "version": "1.0",
     "extra": {
         "soosyze-theme": {
+            "name": "Admin",
             "sections": [
                 "header",
                 "content_header",
                 "content_footer",
                 "footer"
-            ]
+            ],
+            "options": {
+                "admin": true
+            }
         }
     }
 }
