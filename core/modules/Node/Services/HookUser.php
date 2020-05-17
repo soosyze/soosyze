@@ -26,12 +26,13 @@ class HookUser
         ];
 
         foreach ($nodeTypes as $nodeType) {
-            $permission[ 'Node' ] += [
-                'node.show.' . $nodeType[ 'node_type' ]    => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View content'),
-                'node.created.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
-                'node.cloned.' . $nodeType[ 'node_type' ]  => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
-                'node.edited.' . $nodeType[ 'node_type' ]  => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
-                'node.deleted.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
+            $permission[ 'Node ' . $nodeType[ 'node_type_name' ] ] = [
+                'node.show.published.' . $nodeType[ 'node_type' ]      => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View published content'),
+                'node.show.not_published.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View unpublished content'),
+                'node.created.' . $nodeType[ 'node_type' ]            => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
+                'node.cloned.' . $nodeType[ 'node_type' ]             => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
+                'node.edited.' . $nodeType[ 'node_type' ]             => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
+                'node.deleted.' . $nodeType[ 'node_type' ]            => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
             ];
         }
     }
@@ -56,11 +57,15 @@ class HookUser
             ->fetch();
 
         return $node
-            ? [ $node[ 'node_status_id' ] !== 1
+            ? [
+                'node.administer',
+                $node[ 'node_status_id' ] !== 1
                     ? 'node.show.not_published'
                     : 'node.show.published',
-                'node.show.' . $node[ 'type' ],
-                'node.administer' ]
+                $node[ 'node_status_id' ] !== 1
+                    ? 'node.show.not_published.' . $node[ 'type' ]
+                    : 'node.show.published' . $node[ 'type' ]
+            ]
             : '';
     }
 
