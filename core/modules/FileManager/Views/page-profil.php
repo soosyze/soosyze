@@ -17,6 +17,7 @@
             </tr>
         </thead>
         <tbody>
+            <?php if($profils): ?>
             <?php foreach ($profils as $profil): ?>
                 <tr>
                     <th data-title="<?php echo t('Directory'); ?>">
@@ -73,6 +74,18 @@
                     </td>
                 </tr>
             <?php endforeach; ?>
+            <?php else: ?>
+
+            <tr>
+                <td colspan="6" class="alert alert-info">
+                    <div class="content-nothing">
+                        <i class="fa fa-inbox"></i>
+                        <p><?php echo t('Your site does not have a file profile at this time.'); ?></p>
+                    </div>
+                </td>
+            </tr>
+            <?php endif; ?>
         </tbody>
     </table>
+    </fieldset>
 </div>

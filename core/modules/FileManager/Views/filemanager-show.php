@@ -41,6 +41,7 @@
                 </tr>
             </thead>
             <tbody>
+            <?php if($files): ?>
             <?php foreach ($files as $file): ?>
 
             <tr>
@@ -78,6 +79,18 @@
 
                 </td>
             </tr><?php endforeach; ?>
+
+            <?php else: ?>
+
+            <tr>
+                <td colspan="5" class="alert alert-info">
+                    <div class="content-nothing">
+                        <i class="fa fa-inbox"></i>
+                        <p><?php echo t('This directory does not currently contain any files.'); ?></p>
+                    </div>
+                </td>
+            </tr>
+            <?php endif; ?>
             </tbody>
             <tfoot>
                 <tr>

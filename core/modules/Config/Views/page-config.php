@@ -10,6 +10,16 @@
         <?php echo $form ?>
 
     </div>
+    <?php else: ?>
+
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <div class="content-nothing">
+                <i class="fa fa-inbox"></i>
+                <p><?php echo t('No configuration available'); ?></p>
+            </div>
+        </div>
+    </div>
     <?php endif; ?>
 
 </div>

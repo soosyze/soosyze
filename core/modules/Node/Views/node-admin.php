@@ -70,19 +70,27 @@
 
                 <?php endif; ?>
 
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
+                                <?php endif; ?>
 
-            <tr>
-                <td colspan="5"><?php echo t('Your site has no content at the moment.'); ?></td>
-            </tr>
-        <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
 
-        </tbody>
-    </table>
-</fieldset>
+                <tr>
+                    <td colspan="5" class="alert alert-info">
+                        <div class="content-nothing">
+                            <i class="fa fa-inbox"></i>
+                            <p><?php echo t('Your site has no content at the moment.'); ?></p>
+                        </div>
+                    </td>
+                </tr>
+                <?php endif; ?>
+
+            </tbody>
+        </table>
+    </fieldset>
+</div>
 <div class="col-md-12">
     <?php echo $paginate; ?>
 </div>

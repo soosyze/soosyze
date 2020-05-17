@@ -11,10 +11,6 @@
 </div>
 <fieldset class="responsive">
     <legend><?php echo t('Backups'); ?></legend>
-    <?php if (empty($backups)) : ?>
-
-    <h4 class="text-center"><?php echo t('There is no backup yet') ?></h4> 
-    <?php else: ?>
 
     <table id="table-file" class="table table-hover">
         <thead>
@@ -34,6 +30,7 @@
             </tr>
         </thead>
         <tbody>
+        <?php if (!empty($backups)) : ?>
         <?php foreach ($backups as $i => $backup) : ?>
 
             <tr>
@@ -75,9 +72,18 @@
                 </td>
             <tr>
         <?php endforeach; ?>
+        <?php else: ?>
 
+            <tr>
+                <td colspan="4" class="alert alert-info">
+                    <div class="content-nothing">
+                        <i class="fa fa-inbox"></i>
+                        <p><?php echo t('There is no backup yet') ?></p>
+                    </div>
+                </td>
+            </tr>
+        <?php endif; ?>
         </tbody>
     </table>
-    <?php endif; ?>
 
 </fieldset>
