@@ -37,6 +37,10 @@ $('#nav_config li a').click(function () {
     highlight(elemId);
 });
 
+$('#theme_admin_dark').click(function () {
+    $('body').toggleClass('dark');
+});
+
 function highlight(elemId) {
     var elem = $(elemId);
     elem.css("backgroundColor", "#fff"); // hack for Safari

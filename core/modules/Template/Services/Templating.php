@@ -48,6 +48,8 @@ class Templating extends \Soosyze\Components\Http\Response
      * @var array
      */
     protected $composer = [];
+    
+    protected $isDarkTheme = false;
 
     public function __construct($core, $config)
     {
@@ -99,6 +101,7 @@ class Templating extends \Soosyze\Components\Http\Response
         $this->template = $this->createBlock('html.php', $this->pathViews)
             ->addBlock('page', $page)
             ->addVars([
+                'dark'        => $this->isDarkTheme ? 'dark' : '',
                 'title'       => '',
                 'logo'        => '',
                 'favicon'     => '',
@@ -113,10 +116,14 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getTheme($theme = 'theme')
     {
-        $granted                = $this->core->callHook('app.granted', [ 'template.admin' ]);
-        $this->defaultThemeName = $theme === 'theme_admin' && !$granted
-            ? 'theme'
-            : $theme;
+        $granted = $this->core->callHook('app.granted', [ 'template.admin' ]);
+
+        if ($theme === 'theme_admin' && $granted) {
+            $this->defaultThemeName = 'theme_admin';
+            $this->isDarkTheme      = $this->config[ 'settings.theme_admin_dark' ];
+        } else {
+            $this->defaultThemeName = 'theme';
+        }
 
         foreach ($this->themesPath as $path) {
             $dir = $path . '/' . $this->config->get('settings.' . $this->defaultThemeName, '');
