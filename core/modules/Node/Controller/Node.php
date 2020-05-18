@@ -5,14 +5,11 @@ namespace SoosyzeCore\Node\Controller;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Http\UploadedFile;
-use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
 class Node extends \Soosyze\Controller
 {
-    public static $limit = 20;
-
     protected $pathViews;
 
     public function __construct()
@@ -20,65 +17,6 @@ class Node extends \Soosyze\Controller
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
-    }
-
-    public function admin($req)
-    {
-        return $this->adminPage(1, $req);
-    }
-
-    public function adminPage($page, $req)
-    {
-        $offset = self::$limit * ($page - 1);
-
-        $nodes = self::query()
-            ->from('node')
-            ->orderBy('date_changed', 'desc')
-            ->limit(self::$limit, $offset)
-            ->fetchAll();
-
-        if (!$nodes && $page !== 1) {
-            return $this->get404($req);
-        }
-
-        foreach ($nodes as &$node) {
-            $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_edit' ]   = self::router()->getRoute('node.edit', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_clone' ]  = self::router()->getRoute('node.clone', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-        }
-
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
-        $queryAll = self::query()
-            ->from('node')
-            ->fetchAll();
-        $link     = self::router()->getRoute('node.page', [], false);
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
-                    'title_main' => t('My contents')
-                ])
-                ->view('page.messages', $messages)
-                ->make('page.content', 'node-admin.php', $this->pathViews, [
-                    'link_add' => self::router()->getRoute('node.add'),
-                    'nodes'    => $nodes,
-                    'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link)
-        ]);
     }
 
     public function add($req)

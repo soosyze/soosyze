@@ -4,8 +4,9 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Node\Controller');
 
-R::get('node.index', 'admin/node', 'Node@admin');
-R::get('node.page', 'admin/node/:id', 'Node@adminPage', [ ':id' => '\d+' ]);
+R::get('node.index', 'admin/node', 'NodeManager@admin');
+R::get('node.page', 'admin/node/:id', 'NodeManager@adminPage', [ ':id' => '\d+' ]);
+
 R::get('node.add', 'admin/node/add', 'Node@add');
 R::get('node.show', 'node/:id_node', 'Node@show', [ ':id_node' => '\d+' ]);
 R::get('node.create', 'admin/node/:node/create', 'Node@create', [ ':node' => '[_a-z]+' ]);
