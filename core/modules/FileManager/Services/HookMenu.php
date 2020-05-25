@@ -42,7 +42,7 @@ class HookMenu
         if ($user->isGranted('filemanager.profil.admin')) {
             $menu[] = [
                 'link'       => $this->router->getRoute('filemanager.profil.admin'),
-                'title_link' => t('Administer file profiles')
+                'title_link' => t('File permissions')
             ];
         }
     }

@@ -15,33 +15,6 @@ class Profil extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin($req)
-    {
-        $profils = self::query()->from('profil_file')->orderBy('profil_weight')->fetchAll();
-        foreach ($profils as &$profil) {
-            $profil[ 'roles' ] = self::fileprofil()->getRolesUserByProfil($profil[ 'profil_file_id' ]);
-        }
-
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
-                    'title_main' => t('File profile')
-                ])
-                ->view('page.messages', $messages)
-                ->make('page.content', 'page-profil.php', $this->pathViews, [
-                    'link_add' => self::router()->getRoute('filemanager.profil.create'),
-                    'profils'  => $profils,
-                    'router'   => self::router()
-        ]);
-    }
-
     public function create($req)
     {
         $values = [];

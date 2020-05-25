@@ -1,0 +1,116 @@
+<?php
+
+namespace SoosyzeCore\FileManager\Controller;
+
+use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Validator\Validator;
+
+class FilePermissionManager extends \Soosyze\Controller
+{
+    protected $pathViews;
+
+    public function __construct()
+    {
+        $this->pathViews = dirname(__DIR__) . '/Views/';
+    }
+
+    public function admin($req)
+    {
+        $values = self::query()->from('profil_file')->orderBy('profil_weight')->fetchAll();
+
+        $this->container->callHook('filemanager.profil.admin.form.data', [ &$values ]);
+
+        $form = ( new FormBuilder([
+            'action' => self::router()->getRoute('filemanager.profil.admin.check'),
+            'method' => 'post'
+        ]));
+
+        foreach ($values as &$profil) {
+            $profil[ 'roles' ] = self::fileprofil()->getRolesUserByProfil($profil[ 'profil_file_id' ]);
+
+            $form->group("profil_{$profil[ 'profil_file_id' ]}-group", 'div', function ($form) use ($profil) {
+                $form->number("profil_weight-{$profil[ 'profil_file_id' ]}", [
+                    'class' => 'form-control',
+                    'max'   => 50,
+                    'min'   => 1,
+                    'value' => $profil[ 'profil_weight' ]
+                ]);
+            });
+        }
+        $form->token('token_profil_form')
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+
+        $this->container->callHook('filemanager.profil.admin.form', [ &$form, $values ]);
+
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
+            unset($_SESSION[ 'errors_keys' ]);
+        }
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
+                    'title_main' => t('Administer file permissions')
+                ])
+                ->view('page.messages', $messages)
+                ->make('page.content', 'page-file_permission_manager.php', $this->pathViews, [
+                    'form'     => $form,
+                    'link_add' => self::router()->getRoute('filemanager.profil.create'),
+                    'profils'  => $values,
+                    'router'   => self::router()
+        ]);
+    }
+
+    public function adminCheck($req)
+    {
+        $profils = self::query()->from('profil_file')->fetchAll();
+
+        $validator = (new Validator())
+            ->addRule('token_profil_form', 'token')
+            ->setInputs($req->getParsedBody());
+
+        foreach ($profils as $profil) {
+            $validator
+                ->addRule("profil_weight-{$profil[ 'profil_file_id' ]}", 'required|numeric|between:1,50');
+        }
+
+        $this->container->callHook('filemanager.profil.admin.check.validator', [
+            &$validator ]);
+
+        if ($validator->isValid()) {
+            foreach ($profils as $profil) {
+                $data = [
+                    'profil_weight' => $validator->getInput("profil_weight-{$profil[ 'profil_file_id' ]}")
+                ];
+
+                $this->container->callHook('filemanager.profil.admin.check.before', [
+                    &$validator, &$data
+                ]);
+
+                self::query()
+                    ->update('profil_file', $data)
+                    ->where('profil_file_id', $profil[ 'profil_file_id' ])
+                    ->execute();
+
+                $this->container->callHook('filemanager.profil.admin.check.after', [
+                    &$validator
+                ]);
+            }
+
+            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+        } else {
+            $_SESSION[ 'inputs' ]               = $validator->getInputs();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        }
+
+        return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
+    }
+}

@@ -4,7 +4,9 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\FileManager\Controller');
 
-R::get('filemanager.profil.admin', 'admin/user/permission/filemanager', 'Profil@admin');
+R::get('filemanager.profil.admin', 'admin/user/permission/filemanager', 'FilePermissionManager@admin');
+R::post('filemanager.profil.admin.check', 'admin/user/permission/filemanager', 'FilePermissionManager@adminCheck');
+
 R::get('filemanager.profil.create', 'admin/user/permission/filemanager/create', 'Profil@create');
 R::post('filemanager.profil.store', 'admin/user/permission/filemanager/store', 'Profil@store');
 R::get('filemanager.profil.edit', 'admin/user/permission/filemanager/:id/edit', 'Profil@edit', [ ':id' => '\d+' ]);
