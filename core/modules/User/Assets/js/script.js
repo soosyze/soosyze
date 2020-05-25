@@ -1,3 +1,26 @@
+$().ready(function () {
+    var nestedSortables = [].slice.call($('.nested-sortable-role'));
+
+    for (var i = 0; i < nestedSortables.length; i++) {
+        new Sortable(nestedSortables[i], {
+            animation: 150,
+            handle: '.draggable',
+            onEnd: function (evt) {
+                sortRole("#main_sortable");
+            }
+        });
+    }
+
+    function sortRole(idMenu) {
+        var weight = 1;
+
+        $(idMenu).find('input[name^="role_weight"]').each(function () {
+            $(this).val(weight);
+            weight++;
+        });
+    }
+});
+
 function togglePassword(button, idPasswordInput) {
     let passwordInput = document.getElementById(idPasswordInput);
 

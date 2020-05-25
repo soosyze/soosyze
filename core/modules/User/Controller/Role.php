@@ -13,42 +13,6 @@ class Role extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin($req)
-    {
-        $roles = self::query()->from('role')->orderBy('role_weight')->fetchAll();
-        foreach ($roles as &$role) {
-            $role[ 'link_edit' ] = self::router()->getRoute('user.role.edit', [
-                ':id' => $role[ 'role_id' ]
-            ]);
-            if ($role[ 'role_id' ] > 3) {
-                $role[ 'link_remove' ] = self::router()->getRoute('user.role.remove', [
-                    ':id' => $role[ 'role_id' ]
-                ]);
-            }
-        }
-
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            unset($_SESSION[ 'errors_keys' ]);
-        }
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Administer roles')
-                ])
-                ->view('page.messages', $messages)
-                ->make('page.content', 'page-role.php', $this->pathViews, [
-                    'roles'    => $roles,
-                    'link_add' => self::router()->getRoute('user.role.create')
-        ]);
-    }
-
     public function create($req)
     {
         $values = [];

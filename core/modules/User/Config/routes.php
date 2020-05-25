@@ -18,9 +18,12 @@ R::get('user.register.create', 'user/register', 'Register@create');
 R::post('user.register.store', 'user/register', 'Register@store');
 R::get('user.activate', 'user/:id/activate/:token', 'Register@activate', [ ':id' => '\d+', ':token' => '[\d\w-]+']);
 
-R::get('user.role.admin', 'admin/user/role', 'Role@admin');
+/* Page de gestion des rôles */
+R::get('user.role.admin', 'admin/user/role', 'RoleManager@admin');
+R::post('user.role.admin.check', 'admin/user/role', 'RoleManager@adminCheck');
+/* Rôles utilisateur */
 R::get('user.role.create', 'admin/user/role/create', 'Role@create');
-R::post('user.role.store', 'admin/user/role', 'Role@store');
+R::post('user.role.store', 'admin/user/role/create', 'Role@store');
 R::get('user.role.edit', 'admin/user/role/:id/edit', 'Role@edit', [ ':id' => '\d+' ]);
 R::post('user.role.update', 'admin/user/role/:id/edit', 'Role@update', [ ':id' => '\d+' ]);
 R::get('user.role.remove', 'admin/user/role/:id/delete', 'Role@remove', [ ':id' => '\d+' ]);

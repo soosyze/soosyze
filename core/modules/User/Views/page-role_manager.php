@@ -1,10 +1,13 @@
 
-<div class="action_bar">
-    <a class="btn btn-primary" href="<?php echo $link_add; ?>">
-        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a new role'); ?>
-    </a>
+<div class="nav-action">
+    <div class="nav-action-right">
+        <a class="btn btn-primary" href="<?php echo $link_add; ?>">
+            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a new role'); ?>
+        </a>
+    </div>
 </div>
 
+<?php echo $form->form_open(); ?>
 <fieldset class="responsive">
     <legend><?php echo t('User Roles'); ?></legend>
     <table class="table table-hover">
@@ -16,26 +19,32 @@
                 <th><?php echo t('Actions'); ?></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="main_sortable" class="nested-sortable-role">
             <?php foreach ($roles as $role): ?>
 
             <tr>
-                <th>
+                <th class="draggable draggable-verticale">
+                    <i class="fa fa-arrows-alt-v"></i>
                     <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
-                        <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i>
+                        <i class="<?php echo $role[ 'role_icon' ]; ?>" aria-hidden="true"></i>
                     </span>
                     <?php echo t($role[ 'role_label' ]); ?>
 
                 </th>
                 <td data-title="<?php echo t('Description'); ?>"><em><?php echo t($role[ 'role_description' ]); ?></em></td>
-                <td data-title="<?php echo t('Weight'); ?>"><?php echo $role[ 'role_weight' ]; ?></td>
+                <td data-title="<?php echo t('Weight'); ?>">
+                    <?php echo $form->form_group("role_{$role[ 'role_id' ]}-group"); ?>
+
                 <td data-title="<?php echo t('Actions'); ?>">
                     <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ]; ?>">
                         <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+
                     </a>
                     <?php if (isset($role[ 'link_remove' ])): ?>
+
                     <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ]; ?>">
                         <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+
                     </a>
                     <?php endif; ?>
 
@@ -46,3 +55,6 @@
         </tbody>
     </table>
 </fieldset>
+<?php echo $form->form_input('token_role_form'); ?>
+<?php echo $form->form_input('submit'); ?>
+<?php echo $form->form_close(); ?>
