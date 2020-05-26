@@ -2,8 +2,10 @@
 
 namespace SoosyzeCore\User\Controller;
 
-class UsersManagement extends \Soosyze\Controller
+class UsersManager extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -38,7 +40,8 @@ class UsersManagement extends \Soosyze\Controller
                     'title_main' => t('Administer users')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-user_management.php', $this->pathViews, [
+                ->make('page.content', 'page-user_manager.php', $this->pathViews, [
+                    'link_create_user' => self::router()->getRoute('user.create'),
                     'users' => $users,
                     'menu'  => $this->getMenu()
         ]);

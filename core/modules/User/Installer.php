@@ -108,7 +108,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'user.management.admin', 'fa fa-user', 'User', 'admin/user',
+                    'user.admin', 'fa fa-user', 'User', 'admin/user',
                     'menu-admin', 4, -1
                 ])
                 ->values([

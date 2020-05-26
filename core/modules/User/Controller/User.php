@@ -204,7 +204,7 @@ class User extends \Soosyze\Controller
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
-            return new Redirect(self::router()->getRoute('user.management.admin'));
+            return new Redirect(self::router()->getRoute('user.admin'));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
@@ -497,7 +497,7 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
 
-        return new Redirect(self::router()->getRoute('user.management.admin'));
+        return new Redirect(self::router()->getRoute('user.admin'));
     }
 
     protected function validRole(Validator $validator)
