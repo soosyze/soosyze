@@ -60,11 +60,12 @@ class Permission extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-permission.php', $this->pathViews, [
-                    'link_update' => self::router()->getRoute('user.permission.update'),
-                    'roles'       => $roles,
-                    'colspan'     => count($roles) + 1,
-                    'modules'     => $output
-        ]);
+                    'colspan'              => count($roles) + 1,
+                    'link_update'          => self::router()->getRoute('user.permission.update'),
+                    'modules'              => $output,
+                    'roles'                => $roles,
+                    'user_manager_submenu' => self::user()->getManagerSubmenu('user.permission.admin')
+                ]);
     }
 
     public function udpate($req)

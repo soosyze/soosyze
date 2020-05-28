@@ -45,6 +45,7 @@ class User
         $this->query  = $query;
         $this->router = $router;
         $this->core   = $core;
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function find($id)
@@ -129,6 +130,41 @@ class User
         }
 
         return $out;
+    }
+    
+    public function getManagerSubmenu($key_route)
+    {
+        $menu = [
+            [
+                'title_link' => t('Users'),
+                'link'       => $this->router->getRoute('user.admin'),
+                'granted'    => 'user.admin'
+            ], [
+                'title_link' => t('Roles'),
+                'link'       => $this->router->getRoute('user.role.admin'),
+                'granted'    => 'user.role.admin'
+            ], [
+                'title_link' => t('Permissions'),
+                'link'       => $this->router->getRoute('user.permission.admin'),
+                'granted'    => 'user.permission.admin'
+            ]
+        ];
+
+        $this->core->callHook('user.manager.menu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted', [ $link[ 'granted' ] ])) {
+                unset($menu[ $key ]);
+            }
+        }
+
+        return $this->core
+                ->get('template')
+                ->createBlock('submenu-user_manager.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $key_route,
+                    'menu'      => $menu
+        ]);
     }
 
     public function hasPermission($idPermission)

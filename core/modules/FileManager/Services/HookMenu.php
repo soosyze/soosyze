@@ -37,13 +37,12 @@ class HookMenu
         ];
     }
 
-    public function hookUsersManagementMenu(&$menu, $user)
+    public function hookUserManagerMenu(&$menu)
     {
-        if ($user->isGranted('filemanager.profil.admin')) {
-            $menu[] = [
-                'link'       => $this->router->getRoute('filemanager.profil.admin'),
-                'title_link' => t('File permissions')
-            ];
-        }
+        $menu[] = [
+            'link'       => $this->router->getRoute('filemanager.profil.admin'),
+            'title_link' => t('File permissions'),
+            'granted'    => 'filemanager.profil.admin'
+        ];
     }
 }

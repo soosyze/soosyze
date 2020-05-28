@@ -41,10 +41,10 @@ class UsersManager extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-user_manager.php', $this->pathViews, [
-                    'link_create_user' => self::router()->getRoute('user.create'),
-                    'users' => $users,
-                    'menu'  => $this->getMenu()
-        ]);
+                    'link_create_user'     => self::router()->getRoute('user.create'),
+                    'users'                => $users,
+                    'user_manager_submenu' => self::user()->getManagerSubmenu('user.admin')
+                ]);
     }
 
     public function getMenu()
