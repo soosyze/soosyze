@@ -130,6 +130,20 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'for' => 'user_relogin'
                     ]);
                 }, [ 'class' => 'form-group' ])
+                ->group('password_reset_timeout-group', 'div', function ($form) use ($data) {
+                    $form->label('password_reset_timeout-label', t('Délai de réinitialisation du mot de passe'))
+                        ->text('password_reset_timeout', [
+                            'class'       => 'form-control',
+                            'maxlength'   => 255,
+                            'placeholder' => '30 min, 1 hour, 1 day, 1 month, 1 year...',
+                            'value'       => $data[ 'password_reset_timeout' ]
+                        ]);
+                }, [ 'class' => 'form-group' ])
+                    ->group('password_reset_timeout-info-group', 'div', function ($form) {
+                        $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
+                            '_content' => t('Formats relatifs des dates de PHP')
+                        ]);
+                    }, [ 'class' => 'form-group' ])
                 ->group('password_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
                     ->label('password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
@@ -192,55 +206,75 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     public function validator(&$validator)
     {
         $validator->setRules([
-            'user_register'         => 'bool',
-            'user_relogin'          => 'bool',
-            'terms_of_service_show' => 'bool',
-            'terms_of_service_page' => 'required_with:terms_of_service_show|route',
-            'rgpd_show'             => 'bool',
-            'rgpd_page'             => 'required_with:rgpd_show|route',
-            'connect_url'           => '!required|string|min:10|regex:/^[\d\w\-]{10,}$/',
-            'connect_redirect'      => 'required|route',
-            'password_show'         => 'bool',
-            'password_policy'       => 'bool',
-            'password_length'       => 'min_numeric:8',
-            'password_upper'        => 'min_numeric:1',
-            'password_digit'        => 'min_numeric:1',
-            'password_special'      => 'min_numeric:1'
+            'user_register'          => 'bool',
+            'user_relogin'           => 'bool',
+            'terms_of_service_show'  => 'bool',
+            'terms_of_service_page'  => '!required_without:terms_of_service_show|route',
+            'rgpd_show'              => 'bool',
+            'rgpd_page'              => '!required_without:rgpd_show|route',
+            'connect_url'            => '!required|string|min:10|regex:/^[\d\w\-]{10,}$/',
+            'connect_redirect'       => 'required|route',
+            'password_show'          => 'bool',
+            'password_policy'        => 'bool',
+            'password_length'        => 'min_numeric:8',
+            'password_upper'         => 'min_numeric:1',
+            'password_digit'         => 'min_numeric:1',
+            'password_special'       => 'min_numeric:1',
+            'password_reset_timeout' => '!required_without:user_relogin|required|string|max:255|equal:@is_date_time_valid'
         ])->setLabel([
-            'user_register'         => t('Registration'),
-            'user_relogin'          => t('Open password recovery'),
-            'terms_of_service_show' => t('Activate the Terms'),
-            'terms_of_service_page' => t('CGU page'),
-            'rgpd_show'             => t('Enable Data Privacy Policy'),
-            'rgpd_page'             => t('RGPD Page'),
-            'connect_url'           => t('Protection of connection paths'),
-            'connect_redirect'      => t('Redirect page after connection'),
-            'password_show'         => t('Add a button to view passwords'),
-            'password_policy'       => t('Add visualization of the password policy'),
-            'password_length'       => t('Minimum length'),
-            'password_upper'        => t('Number of uppercase characters'),
-            'password_digit'        => t('Number of numeric characters'),
-            'password_special'      => t('Number of special characters'),
+            'user_register'          => t('Registration'),
+            'user_relogin'           => t('Open password recovery'),
+            'terms_of_service_show'  => t('Activate the Terms'),
+            'terms_of_service_page'  => t('CGU page'),
+            'rgpd_show'              => t('Enable Data Privacy Policy'),
+            'rgpd_page'              => t('RGPD Page'),
+            'connect_url'            => t('Protection of connection paths'),
+            'connect_redirect'       => t('Redirect page after connection'),
+            'password_show'          => t('Add a button to view passwords'),
+            'password_policy'        => t('Add visualization of the password policy'),
+            'password_length'        => t('Minimum length'),
+            'password_upper'         => t('Number of uppercase characters'),
+            'password_digit'         => t('Number of numeric characters'),
+            'password_special'       => t('Number of special characters'),
+            'password_reset_timeout' => t('Délai de réinitialisation du mot de passe'),
+        ])->setMessages([
+            'password_reset_timeout' => [
+                'equal' => [
+                    'must' => 'Le champ :label doit être un formats relatifs positif'
+                ]
+            ]
         ]);
+
+        $passwordResetTimeout = $validator->getInput('password_reset_timeout', '');
+
+        $dateTime = date_create('now ' . $passwordResetTimeout);
+        if ($dateTime === false) {
+            $validator->addInput('is_date_time_valid', false);
+        } elseif ($dateTime->getTimestamp() <= time()) {
+            $validator->addInput('is_date_time_valid', false);
+        } else {
+            $validator->addInput('is_date_time_valid', $passwordResetTimeout);
+        }
     }
 
     public function before(&$validator, &$data, $id)
     {
         $data = [
-            'user_register'         => (bool) $validator->getInput('user_register'),
-            'user_relogin'          => (bool) $validator->getInput('user_relogin'),
-            'terms_of_service_show' => (bool) $validator->getInput('terms_of_service_show'),
-            'terms_of_service_page' => $validator->getInput('terms_of_service_page'),
-            'rgpd_show'             => (bool) $validator->getInput('rgpd_show'),
-            'rgpd_page'             => $validator->getInput('rgpd_page'),
-            'connect_url'           => $validator->getInput('connect_url'),
-            'connect_redirect'      => $validator->getInput('connect_redirect'),
-            'password_show'         => (bool) $validator->getInput('password_show'),
-            'password_policy'       => (bool) $validator->getInput('password_policy'),
-            'password_length'       => (int) $validator->getInput('password_length'),
-            'password_upper'        => (int) $validator->getInput('password_upper'),
-            'password_digit'        => (int) $validator->getInput('password_digit'),
-            'password_special'      => (int) $validator->getInput('password_special')
+            'user_register'          => (bool) $validator->getInput('user_register'),
+            'user_relogin'           => (bool) $validator->getInput('user_relogin'),
+            'terms_of_service_show'  => (bool) $validator->getInput('terms_of_service_show'),
+            'terms_of_service_page'  => $validator->getInput('terms_of_service_page'),
+            'rgpd_show'              => (bool) $validator->getInput('rgpd_show'),
+            'rgpd_page'              => $validator->getInput('rgpd_page'),
+            'connect_url'            => $validator->getInput('connect_url'),
+            'connect_redirect'       => $validator->getInput('connect_redirect'),
+            'password_show'          => (bool) $validator->getInput('password_show'),
+            'password_policy'        => (bool) $validator->getInput('password_policy'),
+            'password_length'        => (int) $validator->getInput('password_length'),
+            'password_upper'         => (int) $validator->getInput('password_upper'),
+            'password_digit'         => (int) $validator->getInput('password_digit'),
+            'password_special'       => (int) $validator->getInput('password_special'),
+            'password_reset_timeout' => $validator->getInput('password_reset_timeout')
         ];
     }
 

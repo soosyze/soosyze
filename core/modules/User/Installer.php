@@ -88,7 +88,8 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.password_length', 8)
             ->set('settings.password_upper', 1)
             ->set('settings.password_digit', 1)
-            ->set('settings.password_special', 1);
+            ->set('settings.password_special', 1)
+            ->set('settings.password_reset_timeout', '1 day');
     }
 
     public function seeders(ContainerInterface $ci)
