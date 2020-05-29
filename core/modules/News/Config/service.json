@@ -27,11 +27,12 @@
     },
     "news.hook.block": {
         "class": "SoosyzeCore\\News\\Services\\HookBlock",
-        "arguments": ["@query", "@router"],
+        "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
             "block.create.form.data": "hookNewShow",
             "block.news.year": "hookBlockNewsYear",
-            "block.news.month": "hookBlockNewsMonth"
+            "block.news.month": "hookBlockNewsMonth",
+            "block.news.last": "hookBlockNewsLast"
         }
     },
     "news.hook.node": {

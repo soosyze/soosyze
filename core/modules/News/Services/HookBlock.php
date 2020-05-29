@@ -4,6 +4,11 @@ namespace SoosyzeCore\News\Services;
 
 class HookBlock
 {
+    protected $alias;
+
+    protected $node;
+
+    protected $pathViews;
     /**
      * @var \Queryflatfile\Request
      */
@@ -11,11 +16,13 @@ class HookBlock
 
     protected $router;
 
-    public function __construct($query, $router)
+    public function __construct($alias, $node, $query, $router)
     {
+        $this->alias     = $alias;
+        $this->node      = $node;
+        $this->pathViews = dirname(__DIR__) . '/Views/';
         $this->query     = $query;
         $this->router    = $router;
-        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function hookNewShow(array &$blocks)
@@ -33,6 +40,13 @@ class HookBlock
             'path'      => $this->pathViews,
             'key_block' => 'news.month',
             'hook'      => 'news.month'
+        ];
+        $blocks[ 'news.last' ]  = [
+            'title'     => t('Last News'),
+            'tpl'       => 'block-news-last.php',
+            'path'      => $this->pathViews,
+            'key_block' => 'news.last',
+            'hook'      => 'news.last'
         ];
     }
 
@@ -107,5 +121,41 @@ class HookBlock
         }
 
         return $tpl->addVar('years', $output);
+    }
+    
+    public function hookBlockNewsLast($tpl)
+    {
+        $news = $this->query
+            ->from('node')
+            ->where('node_status_id', 1)
+            ->where('type', 'article')
+            ->orderBy('date_created', 'desc')
+            ->limit(4)
+            ->fetchAll();
+
+        $link_news = false;
+        foreach ($news as $key => &$value) {
+            if ($key > 2) {
+                $link_news = $this->router->getRoute('news.index');
+                unset($news[ $key ]);
+
+                continue;
+            }
+            $value[ 'field' ] = $this->node->makeFieldsById('article', $value[ 'entity_id' ]);
+
+            if ($alias = $this->alias->getAlias('node/' . $value[ 'id' ])) {
+                $value[ 'link_view' ] = $this->router->makeRoute($alias);
+            } else {
+                $value[ 'link_view' ] = $this->router->getRoute('node.show', [
+                    ':id_node' => $value[ 'id' ]
+                ]);
+            }
+        }
+
+        return $tpl->addVars([
+                'default'   => t('No articles for the moment'),
+                'news'      => $news,
+                'link_news' => $link_news
+        ]);
     }
 }
