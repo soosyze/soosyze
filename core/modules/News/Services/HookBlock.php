@@ -28,25 +28,23 @@ class HookBlock
     public function hookNewShow(array &$blocks)
     {
         $blocks[ 'news.year' ]  = [
-            'title'     => t('Archives by years'),
-            'tpl'       => 'block-news-year.php',
+            'hook'      => 'news.year',
             'path'      => $this->pathViews,
-            'key_block' => 'news.year',
-            'hook'      => 'news.year'
+            'title'     => t('Archives by years'),
+            'tpl'       => 'block-news-year.php'
         ];
         $blocks[ 'news.month' ] = [
-            'title'     => t('Archives by months'),
-            'tpl'       => 'block-news-month.php',
+            'hook'      => 'news.month',
             'path'      => $this->pathViews,
-            'key_block' => 'news.month',
-            'hook'      => 'news.month'
+            'title'     => t('Archives by months'),
+            'tpl'       => 'block-news-month.php'
         ];
         $blocks[ 'news.last' ]  = [
-            'title'     => t('Last News'),
-            'tpl'       => 'block-news-last.php',
+            'hook'      => 'news.last',
+            'options'   => [ 'limit' => 3, 'offset' => 0, 'more' => true ],
             'path'      => $this->pathViews,
-            'key_block' => 'news.last',
-            'hook'      => 'news.last'
+            'title'     => t('Last News'),
+            'tpl'       => 'block-news-last.php'
         ];
     }
 
@@ -123,20 +121,20 @@ class HookBlock
         return $tpl->addVar('years', $output);
     }
     
-    public function hookBlockNewsLast($tpl)
+    public function hookBlockNewsLast($tpl, array $options)
     {
-        $news = $this->query
+        $news   = $this->query
             ->from('node')
             ->where('node_status_id', 1)
             ->where('type', 'article')
             ->orderBy('date_created', 'desc')
-            ->limit(4)
+            ->limit($options[ 'limit' ] + 1, $options[ 'offset' ] )
             ->fetchAll();
 
-        $link_news = false;
+        $isMore = false;
         foreach ($news as $key => &$value) {
-            if ($key > 2) {
-                $link_news = $this->router->getRoute('news.index');
+            if ($key > $options[ 'limit' ] - 1) {
+                $isMore = $options[ 'more' ] ;
                 unset($news[ $key ]);
 
                 continue;
@@ -153,9 +151,74 @@ class HookBlock
         }
 
         return $tpl->addVars([
-                'default'   => t('No articles for the moment'),
-                'news'      => $news,
-                'link_news' => $link_news
+                'is_link_more' => $isMore,
+                'limit'        => $options[ 'limit' ],
+                'link_more'    => $this->router->getRoute('news.index'),
+                'news'         => $news,
+                'offset'       => $options[ 'offset' ]
+        ]);
+    }
+
+    public function hookBlockNewsLastEditForm( &$form, $data )
+    {
+        $form->group('new-fieldset', 'fieldset', function ($form) use ($data)
+        {
+            $form->legend('limit-legend', t('Paramètre des news'))
+                ->group('limit-group', 'div', function ($form) use ($data)
+                {
+                    $options = [
+                        [ 'value' => 1, 'label' => 1 ],
+                        [ 'value' => 2, 'label' => 2 ],
+                        [ 'value' => 3, 'label' => 3 ],
+                        [ 'value' => 4, 'label' => 4 ]
+                    ];
+
+                    $form->label('limit-label', t('Nombre de news à afficher'))
+                    ->select('limit', $options, [
+                        'class'    => 'form-control',
+                        'max'      => 4,
+                        'min'      => 1,
+                        'selected' => $data[ 'options' ][ 'limit' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('offset-group', 'div', function ($form) use ($data)
+                {
+                    $form->label('offset-label', t('Décalage'))
+                    ->number('offset', [
+                        'class' => 'form-control',
+                        'min'   => 0,
+                        'value' => $data[ 'options' ][ 'offset' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('more-group', 'div', function ($form) use ($data)
+                {
+                        $form->checkbox('more', [
+                            'checked' => $data[ 'options' ][ 'more' ]
+                        ])
+                        ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Ajouter un lien "plus" en bas de l\'affichage s\'il y a plus de contenu '), [
+                            'for' => 'more'
+                        ]);
+                }, [ 'class' => 'form-group' ]);
+        });
+    }
+
+    public function hookBlockNewsLastUpdateForm( &$validator, $id )
+    {
+        $validator
+            ->addRule('limit', 'required|inarray:1,2,3,4')
+            ->addRule('offset', 'required|numeric|min_numeric:0')
+            ->addRule('more', 'bool')
+            ->addLabel('limit', t('Nombre de news à afficher'))
+            ->addLabel('offset', t('Décalage'))
+            ->addLabel('more', t('Ajouter un lien "plus" en bas de l\'affichage'));
+    }
+
+    public function hookNewsLastUpdateBefore( $validator, &$values, $id )
+    {
+        $values[ 'options' ] = json_encode([
+            'limit'  => ( int ) $validator->getInput('limit'),
+            'offset' => ( int ) $validator->getInput('offset'),
+            'more'   => ( bool ) $validator->getInput('more')
         ]);
     }
 }

@@ -32,7 +32,10 @@
             "block.create.form.data": "hookNewShow",
             "block.news.year": "hookBlockNewsYear",
             "block.news.month": "hookBlockNewsMonth",
-            "block.news.last": "hookBlockNewsLast"
+            "block.news.last": "hookBlockNewsLast",
+            "block.news.last.edit.form": "hookBlockNewsLastEditForm",
+            "block.news.last.update.validator": "hookBlockNewsLastUpdateForm",
+            "block.news.last.update.before": "hookNewsLastUpdateBefore"
         }
     },
     "news.hook.node": {

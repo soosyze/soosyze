@@ -1,9 +1,21 @@
 
+<div class="row">
 <?php if ($news): ?>
 <?php foreach ($news as $key => $new): ?>
-<?php if ($key % 3 === 0): ?><div class="row"><?php endif; ?>
+    <?php if($limit == 1): ?>
+
+    <article class="col-md-12">
+    <?php elseif($limit === 2): ?>
+
+    <article class="col-md-6">
+    <?php elseif($limit === 3): ?>
 
     <article class="col-md-4">
+    <?php elseif($limit === 4): ?>
+
+    <article class="col-md-3">
+    <?php endif; ?>
+
         <div class="card_blog">
             <header style="background-image: url('<?php echo $new[ 'field' ][ 'image' ][ 'field_value' ]; ?>');"></header>
             <div class="card_main">
@@ -32,15 +44,15 @@
             </div>
         </div>
     </article>
-<?php if ($key % 4 === 3): ?></div><?php endif; ?>
 <?php endforeach; ?>
 <?php else: ?>
-    <p><?php echo $default; ?></p>
+
+    <p><?php echo t('No articles for the moment'); ?></p>
 <?php endif; ?>
-<?php if ($link_news): ?>
-    <div class="row">
-        <div class="col-md-12">
-            <a href="<?php echo $link_news; ?>" class="btn btn-primary"><?php echo t('Toutes les actualités'); ?></a>
-        </div>
+<?php if ($is_link_more): ?>
+
+    <div class="col-md-12">
+        <a href="<?php echo $link_more; ?>" class="btn btn-primary"><?php echo t('Toutes les actualités'); ?></a>
     </div>
 <?php endif; ?>
+</div>
