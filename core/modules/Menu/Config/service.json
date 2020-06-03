@@ -42,7 +42,10 @@
         "arguments": ["@menu"],
         "hooks": {
             "block.create.form.data": "hookCreateFormData",
-            "block.menu": "hookBlockMenu"
+            "block.menu": "hookBlockMenu",
+            "block.menu.edit.form": "hookMenuEditFormData",
+            "block.menu.update.validator": "hookMenuUpdateValidator",
+            "block.menu.update.before": "hookMenuUpdateBefore"
         }
     }
 }

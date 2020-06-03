@@ -15,13 +15,15 @@ class HookBlock
     {
         $menus = $this->menu->getAllMenu();
 
-        foreach ($menus as $menu) {
+        foreach( $menus as $menu )
+        {
             $blocks[ "menu.{$menu[ 'name' ]}" ] = [
-                'title'   => t($menu[ 'title' ]),
-                'tpl'     => "block_menu-{$menu[ 'name' ]}.php",
-                'path'    => $this->menu->getPathViews(),
-                'hook'    => 'menu',
-                'options' => [ 'name' => $menu[ 'name' ] ]
+                'hook'      => 'menu',
+                'key_block' => 'menu',
+                'options'   => [ 'name' => $menu[ 'name' ] ],
+                'path'      => $this->menu->getPathViews(),
+                'title'     => t($menu[ 'title' ]),
+                'tpl'       => "block_menu-{$menu[ 'name' ]}.php"
             ];
         }
     }
@@ -32,5 +34,52 @@ class HookBlock
             return $menu->setName('block_menu.php')
                     ->addNamesOverride([ 'block_menu_' . $options[ 'name' ] ]);
         }
+    }
+    
+    public function hookMenuEditFormData( &$form, $data )
+    {
+        $menus = $this->menu->getAllMenu();
+        
+        $options = [];
+        foreach( $menus as $menu )
+        {
+            $options[] = [ 'value' => $menu[ 'name' ], 'label' => $menu[ 'title' ] ];
+        }
+
+        $form->group('menu-fieldset', 'fieldset', function ($form) use ($data, $options)
+        {
+            $form->legend('name-legend', t('Paramètre des news'))
+                ->group('name-group', 'div', function ($form) use ($data, $options)
+                {
+                    $form->label('name-label', t('Menu à afficher'))
+                    ->select('name', $options, [
+                        'class'    => 'form-control',
+                        'min'      => 1,
+                        'max'      => 4,
+                        'selected' => $data[ 'options' ][ 'name' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+        });
+    }
+    
+    public function hookMenuUpdateValidator( &$validator, $id )
+    {
+        $menus = $this->menu->getAllMenu();
+        $listName = [];
+        foreach( $menus as $menu )
+        {
+            $listName[] = $menu[ 'name' ];
+        }
+
+        $validator
+            ->addRule('name', 'required|inarray:' . implode(',', $listName))
+            ->addLabel('name', t('Menu à afficher'));
+    }
+    
+    public function hookMenuUpdateBefore( $validator, &$values, $id )
+    {
+        $values[ 'options' ] = json_encode([
+            'name'  => $validator->getInput('name')
+        ]);
     }
 }
