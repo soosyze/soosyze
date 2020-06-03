@@ -28,16 +28,12 @@ class Block extends \Soosyze\Controller
 
         if (!empty($block[ 'hook' ])) {
             $data = self::block()->getBlocks();
-            $tpl  = self::template()->createBlock($data[ $block[ 'key_block' ] ][ 'tpl' ], $data[ $block[ 'key_block' ] ][ 'path' ]);
+            $key  = $block[ 'key_block' ];
 
-            $block[ 'content' ] .= (string) self::core()->callHook(
-                'block.' . $block[ 'hook' ],
-                [
-                    $tpl,
-                    empty($block[ 'options' ])
-                        ? []
-                        : json_decode($block[ 'options' ], true)
-                ]
+            $tpl = self::template()->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
+
+            $block[ 'content' ] .= ( string ) self::core()->callHook(
+                'block.' . $block[ 'key_block' ], [ $tpl, $this->getOptions($block) ]
             );
         }
 
@@ -51,34 +47,39 @@ class Block extends \Soosyze\Controller
         $data = self::block()->getBlocks();
 
         $form = new FormBuilder([
-            'method' => 'POST',
+            'method' => 'post',
             'action' => self::router()->getRoute('block.store', [
                 ':theme' => $theme, ':section' => $section
             ])
         ]);
 
         foreach ($data as $key => &$block) {
-            if (!empty($block[ 'hook' ])) {
-                $tpl     = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
-                $content = $this->container->callHook('block.' . $block[ 'hook' ], [
-                    $tpl, empty($block[ 'options' ])
-                    ? []
-                    : $block[ 'options' ]
-                ]);
-            } else {
+            if (empty($block[ 'hook' ])) {
                 $content = self::template()
                     ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                     ->addVars([
                     'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);
+            } else {
+                $tpl      = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
+                $keyBlock = empty($block[ 'key_block' ])
+                    ? $key
+                    : $block[ 'key_block' ];
+
+                $content = $this->container->callHook('block.' . $keyBlock, [
+                    $tpl,
+                    empty($block[ 'options' ])
+                    ? []
+                    : $block[ 'options' ]
+                ]);
             }
 
-            $form->group('type_block_' . $key . '-group', 'div', function ($form) use ($key, $content) {
-                $form->radio('type_block', [
-                        'id'    => "type_block-$key",
+            $form->group("key_block-$key-group", 'div', function ($form) use ($key, $content) {
+                $form->radio('key_block', [
+                        'id'    => "key_block-$key",
                         'value' => $key
                     ])
-                    ->html('type_block-label', '<div:attr>:_content</div>', [
+                    ->html('key_block-label', '<div:attr>:_content</div>', [
                         'class'    => 'block-content',
                         '_content' => $content
                 ]);
@@ -105,7 +106,7 @@ class Block extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'type_block'     => 'required|string|max:255',
+                'key_block'      => 'required|string|max:255',
                 "token_$section" => 'token'
             ])
             ->setInputs($req->getParsedBody());
@@ -113,10 +114,12 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $block   = $blocks[ $validator->getInput('type_block') ];
+            $block   = $blocks[ $validator->getInput('key_block') ];
             $content = '';
 
             if (empty($block[ 'hook' ])) {
+                $block[ 'hook' ] = null;
+
                 $content = (string) self::template()
                         ->createBlock($block['tpl'], $block[ 'path' ])
                         ->addVars([
@@ -131,10 +134,8 @@ class Block extends \Soosyze\Controller
                 'weight'           => 1,
                 'visibility_roles' => true,
                 'roles'            => '1,2',
-                'hook'             => empty($block[ 'hook' ])
-                    ? null
-                    : $block[ 'hook' ],
-                'key_block'        => $validator->getInput('type_block'),
+                'hook'             => $block[ 'hook' ],
+                'key_block'        => $validator->getInput('key_block'),
                 'options'          => empty($block[ 'options' ])
                     ? null
                     : json_encode($block[ 'options' ])
@@ -157,10 +158,13 @@ class Block extends \Soosyze\Controller
 
     public function edit($id, $req)
     {
-        $data            = $this->find($id);
-        $data[ 'roles' ] = explode(',', $data[ 'roles' ]);
+        if (!($data = $this->find($id))) {
+            return $this->get404($req);
+        }
+        $data[ 'roles' ]   = explode(',', $data[ 'roles' ]);
+        $data[ 'options' ] = $this->getOptions($data);
 
-        $this->container->callHook('block.edit.form.data', [ &$data ]);
+        $this->container->callHook('block.edit.form.data', [ &$data, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $data = array_merge($data, $_SESSION[ 'inputs' ]);
@@ -200,9 +204,14 @@ class Block extends \Soosyze\Controller
                         'value'       => $data[ 'class' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
-            })
-            ->group('page-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('page-legend', t('Visibility by pages'))
+            });
+
+        if ($data[ 'hook' ]) {
+            $this->container->callHook("block.{$data[ 'key_block' ]}.edit.form", [ &$form, $data, $id ]);
+        }
+
+        $form->group('page-fieldset', 'fieldset', function ($form) use ($data) {
+            $form->legend('page-legend', t('Visibility by pages'))
                 ->group('visibility_pages_1-group', 'div', function ($form) use ($data) {
                     $form->radio('visibility_pages', [
                         'checked'  => !$data[ 'visibility_pages' ],
@@ -233,7 +242,7 @@ class Block extends \Soosyze\Controller
                         'rows'        => 5
                     ]);
                 }, [ 'class' => 'form-group' ]);
-            })
+        })
             ->group('roles-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('roles-legend', t('Visibility by roles'))
                 ->group('visibility_roles_1-group', 'div', function ($form) use ($data) {
@@ -279,7 +288,7 @@ class Block extends \Soosyze\Controller
             ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success' ])
             ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
-        $this->container->callHook('block.edit.form', [ &$form, $data ]);
+        $this->container->callHook('block.edit.form', [ &$form, $data, $id ]);
 
         if (isset($_SESSION[ 'errors' ])) {
             unset($_SESSION[ 'errors_keys' ][ 'roles' ]);
@@ -298,7 +307,7 @@ class Block extends \Soosyze\Controller
 
     public function update($id, $req)
     {
-        if (!$this->find($id)) {
+        if (!($block = $this->find($id))) {
             return $this->get404($req);
         }
 
@@ -319,9 +328,14 @@ class Block extends \Soosyze\Controller
                 'pages'   => t('List of pages'),
                 'roles'   => t('User Roles')
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs(
+                $req->getParsedBody() + $this->getOptions($block)
+            );
 
-        $this->container->callHook('block.update.validator', [ &$validator ]);
+        if ($block[ 'hook' ]) {
+            $this->container->callHook("block.{$block[ 'key_block' ]}.update.validator", [ &$validator, $id ]);
+        }
+        $this->container->callHook("block.update.validator", [ &$validator, $id ]);
 
         $validatorRoles = new Validator();
         if ($isValid        = $validator->isValid()) {
@@ -346,13 +360,29 @@ class Block extends \Soosyze\Controller
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
                 'roles'            => implode(',', $idRoles)
             ];
+            
+            if( $block[ 'hook' ] )
+            {
+                $this->container->callHook("block.{$block[ 'key_block' ]}.update.before", [
+                    &$validator, &$values, $id
+                ]);
+            }
+            $this->container->callHook("block.update.before", [
+                $validator, &$values, $id
+            ]);
 
-            $this->container->callHook('block.update.before', [ $validator, &$values ]);
             self::query()
                 ->update('block', $values)
                 ->where('block_id', '==', $id)
                 ->execute();
-            $this->container->callHook('block.update.after', [ $validator ]);
+
+            if( $block[ 'hook' ] )
+            {
+                $this->container->callHook("block.{$block[ 'key_block' ]}.update.after", [
+                    &$validator, $id
+                ]);
+            }
+            $this->container->callHook("block.update.after", [ $validator, $id ]);
 
             return $this->show($id, $req);
         }
@@ -366,7 +396,7 @@ class Block extends \Soosyze\Controller
 
     public function delete($id, $req)
     {
-        if (!self::query()->from('block')->where('block_id', '==', $id)->fetch()) {
+        if (!$this->find($id)) {
             return $this->get404($req);
         }
 
@@ -378,5 +408,11 @@ class Block extends \Soosyze\Controller
     protected function find($id)
     {
         return self::query()->from('block')->where('block_id', '==', $id)->fetch();
+    }
+    
+    protected function getOptions($block, $default = []) {
+        return empty($block[ 'options' ])
+                ? $default
+                : json_decode($block[ 'options' ], true);
     }
 }

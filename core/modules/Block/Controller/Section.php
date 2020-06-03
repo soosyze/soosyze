@@ -34,9 +34,11 @@ class Section extends \Soosyze\Controller
                 ->make('page.content', 'page-block-admin.php', $this->pathViews, [
                     'content'          => t('View and edit your site\'s display on the following topics.'),
                     'link_theme'       => self::router()->getRoute('section.admin', [
-                        ':theme' => 'theme' ]),
+                        ':theme' => 'theme' 
+                    ]),
                     'link_theme_admin' => self::router()->getRoute('section.admin', [
-                        ':theme' => 'theme_admin' ])
+                        ':theme' => 'theme_admin' 
+                    ])
         ]);
     }
 

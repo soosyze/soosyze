@@ -100,11 +100,14 @@ class HookApp
             }
             if ($isAdmin) {
                 $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', [
-                    ':id' => $block[ 'block_id' ] ]);
+                    ':id' => $block[ 'block_id' ]
+                ]);
                 $block[ 'link_delete' ] = $this->router->getRoute('block.delete', [
-                    ':id' => $block[ 'block_id' ] ]);
+                    ':id' => $block[ 'block_id' ]
+                ]);
                 $block[ 'link_update' ] = $this->router->getRoute('section.update', [
-                    ':id' => $block[ 'block_id' ] ]);
+                    ':id' => $block[ 'block_id' ]
+                ]);
             }
             $out[ $block[ 'section' ] ][] = $block;
         }

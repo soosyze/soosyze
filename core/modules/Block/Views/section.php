@@ -1,4 +1,4 @@
-<?php if (!empty($content)): ?>
+<?php if (!empty($content) || $is_admin): ?>
 <div class="section">
     <div class="block-sortable" data-id="<?php echo $section_id; ?>">
     <?php foreach ($content as $block): ?>

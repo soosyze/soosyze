@@ -21,65 +21,65 @@ class Block
     {
         $blocks = [
             'button'  => [
+                'path'  => $this->pathViews,
                 'title' => t('Text with button'),
-                'tpl'   => 'block-button.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-button.php'
             ],
             'card_ui' => [
+                'path'  => $this->pathViews,
                 'title' => t('Simple UI card'),
-                'tpl'   => 'block-card_ui.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-card_ui.php'
             ],
             'code'    => [
+                'path'  => $this->pathViews,
                 'title' => t('Code'),
-                'tpl'   => 'block-code.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-code.php'
             ],
             'contact' => [
+                'path'  => $this->pathViews,
                 'title' => t('Contact'),
-                'tpl'   => 'block-contact.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-contact.php'
             ],
             'gallery' => [
+                'path'  => $this->pathViews,
                 'title' => t('Picture Gallery'),
-                'tpl'   => 'block-gallery.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-gallery.php'
             ],
             'img'     => [
+                'path'  => $this->pathViews,
                 'title' => t('Image and text'),
-                'tpl'   => 'block-img.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-img.php'
             ],
             'map'     => [
+                'path'  => $this->pathViews,
                 'title' => t('Map'),
-                'tpl'   => 'block-map.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-map.php'
             ],
             'video'   => [
+                'path'  => $this->pathViews,
                 'title' => t('Video'),
-                'tpl'   => 'block-peertube.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-peertube.php'
             ],
             'social'  => [
+                'path'  => $this->pathViews,
                 'title' => t('Social networks'),
                 'tpl'   => 'block-social.php',
-                'path'  => $this->pathViews,
                 'hook'  => 'social'
             ],
             'table'   => [
+                'path'  => $this->pathViews,
                 'title' => t('Table'),
-                'tpl'   => 'block-table.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-table.php'
             ],
             'text'    => [
+                'path'  => $this->pathViews,
                 'title' => t('Simple text'),
-                'tpl'   => 'block-text.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-text.php'
             ],
             'three'   => [
+                'path'  => $this->pathViews,
                 'title' => t('3 columns'),
-                'tpl'   => 'block-three.php',
-                'path'  => $this->pathViews
+                'tpl'   => 'block-three.php'
             ]
         ];
 
