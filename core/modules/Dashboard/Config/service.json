@@ -1,0 +1,15 @@
+{
+    "dashboard": {
+        "class": "SoosyzeCore\\Dashboard\\Services\\Dashboard",
+        "arguments": ["@config", "@core"]
+    },
+    "dashboard.hook.user": {
+        "class": "SoosyzeCore\\Dashboard\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.dashboard.index": "hookDashboardAdminister",
+            "route.dashboard.about": "hookDashboardAdminister",
+            "route.dashboard.cron": "hookDashboardAdminister"
+        }
+    }
+}
