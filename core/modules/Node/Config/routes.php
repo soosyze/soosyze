@@ -4,8 +4,9 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Node\Controller');
 
-R::get('node.index', 'admin/node', 'NodeManager@admin');
-R::get('node.page', 'admin/node/:id', 'NodeManager@adminPage', [ ':id' => '\d+' ]);
+R::get('node.index', 'admin/node', 'NodeManager@index');
+R::get('node.page', 'admin/node/:id', 'NodeManager@page', [ ':id' => '[1-9]\d*' ]);
+R::get('node.filter', 'node/filter', 'NodeManager@search');
 
 R::get('node.add', 'admin/node/add', 'Node@add');
 R::get('node.show', 'node/:id_node', 'Node@show', [ ':id_node' => '\d+' ]);
@@ -39,3 +40,6 @@ R::get('entity.delete', 'admin/node/:id_node/:entity/:id_entity/delete', 'Entity
     ':entity'    => '[_a-z]+',
     ':id_entity' => '\d+'
 ]);
+
+R::get('node.status.search', 'node/status/search', 'NodeStatus@search');
+R::get('node.type.search', 'node/type/search', 'NodeType@search');

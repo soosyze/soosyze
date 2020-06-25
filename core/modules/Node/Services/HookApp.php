@@ -4,7 +4,27 @@ namespace SoosyzeCore\Node\Services;
 
 class HookApp
 {
-    public function hookResponseAfter($response, $node)
+    /**
+     * @var \Soosyze\App
+     */
+    protected $core;
+
+    public function __construct($core)
+    {
+        $this->core = $core;
+    }
+
+    public function hookResponseAfter($request, &$response)
+    {
+        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
+            $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Node/Assets/script.js';
+            $script = $response->getBlock('this')->getVar('scripts');
+            $script .= '<script src="' . $vendor . '"></script>';
+            $response->view('this', [ 'scripts' => $script ]);
+        }
+    }
+
+    public function hookNodeShowResponseAfter($response, $node)
     {
         $robots = '';
         if ($node[ 'meta_noindex' ]) {
@@ -28,7 +48,7 @@ class HookApp
         }
     }
 
-    public function hookMenuShowResponseAfter($request, &$response)
+    public function hookNodeEditResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $script = $response->getBlock('this')->getVar('scripts');

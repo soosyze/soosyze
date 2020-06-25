@@ -19,7 +19,7 @@ class HookUser
         $nodeTypes = $this->query->from('node_type')->fetchAll();
 
         $permission[ 'Node' ] = [
-            'node.index'              => t('Go to the content overview page'),
+            'node.manager'            => t('Go to the content overview page'),
             'node.administer'         => t('Override access control to content'),
             'node.show.published'     => t('View published content'),
             'node.show.not_published' => t('View unpublished content'),
@@ -35,6 +35,11 @@ class HookUser
                 'node.deleted.' . $nodeType[ 'node_type' ]            => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
             ];
         }
+    }
+
+    public function hookNodeManager()
+    {
+        return [ 'node.administer', 'node.manager' ];
     }
 
     public function hookNodeClone($idNode)

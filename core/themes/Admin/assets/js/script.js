@@ -1,3 +1,26 @@
+var debounce = function (func, wait, immediate) {
+    var timeout;
+
+    return function () {
+        var context = this;
+        var args = arguments;
+
+        var later = function () {
+            timeout = null;
+            if (!immediate) {
+                func.apply(context, args);
+            }
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+
+        if (immediate && !timeout) {
+            func.apply(context, args);
+        }
+    };
+};
+    
 $(function () {
     /* SCROLL TOP */
     $('#btn_up').click(function () {
@@ -37,8 +60,41 @@ $(function () {
                 .find('.maxlength_show')
                 .html('<div class="maxlength_show">' + $this.val().length + '/' + $this.attr('maxLength') + '<div>');
     });
+
     /* INPUT ICON RENDER */
     $('.text_icon').keyup(function () {
         $(this).parent().find('.render_icon i').attr('class', this.value);
     });
+
+    $('.select-ajax-multiple').select2({
+        width: "100%",
+        ajax: {
+            delay: 300,
+            url: function (params) {
+                return $(this).data('link');
+            },
+            data: function (params) {
+                var query = {
+                    search: params.term
+                }
+
+                return query;
+            }
+        },
+        templateResult: function (repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            if (repo.tpl) {
+                var $container = $(repo.tpl);
+            } else {
+                return repo.text;
+            }
+
+            return $container;
+        }
+    });
+
 });
+

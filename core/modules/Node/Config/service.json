@@ -20,9 +20,11 @@
     },
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
+        "arguments": ["@core"],
         "hooks": {
-            "node.show.tpl": "hookResponseAfter",
-            "node.edit.response.after": "hookMenuShowResponseAfter"
+            "app.response.after": "hookResponseAfter",
+            "node.show.tpl": "hookNodeShowResponseAfter",
+            "node.edit.response.after": "hookNodeEditResponseAfter"
         }
     },
     "node.hook.url": {
@@ -63,6 +65,8 @@
         "arguments": ["@query"],
         "hooks": {
             "user.permission.module": "hookPermission",
+            "route.node.index": "hookNodeManager",
+            "route.node.page": "hookNodeManager",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",
             "route.node.clone": "hookNodeClone",
