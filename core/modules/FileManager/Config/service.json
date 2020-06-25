@@ -24,7 +24,7 @@
         "class": "SoosyzeCore\\FileManager\\Services\\HookApp",
         "arguments": ["@core"],
         "hooks": {
-            "app.response.after": "hookReponseAfter"
+            "app.response.after": "hookResponseAfter"
         }
     },
     "filemanager.hook.config": {

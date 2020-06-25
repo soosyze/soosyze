@@ -32,8 +32,9 @@ class Block extends \Soosyze\Controller
 
             $tpl = self::template()->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
 
-            $block[ 'content' ] .= ( string ) self::core()->callHook(
-                'block.' . $block[ 'key_block' ], [ $tpl, $this->getOptions($block) ]
+            $block[ 'content' ] .= (string) self::core()->callHook(
+                'block.' . $block[ 'key_block' ],
+                [ $tpl, $this->getOptions($block) ]
             );
         }
 
@@ -335,7 +336,7 @@ class Block extends \Soosyze\Controller
         if ($block[ 'hook' ]) {
             $this->container->callHook("block.{$block[ 'key_block' ]}.update.validator", [ &$validator, $id ]);
         }
-        $this->container->callHook("block.update.validator", [ &$validator, $id ]);
+        $this->container->callHook('block.update.validator', [ &$validator, $id ]);
 
         $validatorRoles = new Validator();
         if ($isValid        = $validator->isValid()) {
@@ -361,13 +362,12 @@ class Block extends \Soosyze\Controller
                 'roles'            => implode(',', $idRoles)
             ];
             
-            if( $block[ 'hook' ] )
-            {
+            if ($block[ 'hook' ]) {
                 $this->container->callHook("block.{$block[ 'key_block' ]}.update.before", [
                     &$validator, &$values, $id
                 ]);
             }
-            $this->container->callHook("block.update.before", [
+            $this->container->callHook('block.update.before', [
                 $validator, &$values, $id
             ]);
 
@@ -376,13 +376,12 @@ class Block extends \Soosyze\Controller
                 ->where('block_id', '==', $id)
                 ->execute();
 
-            if( $block[ 'hook' ] )
-            {
+            if ($block[ 'hook' ]) {
                 $this->container->callHook("block.{$block[ 'key_block' ]}.update.after", [
                     &$validator, $id
                 ]);
             }
-            $this->container->callHook("block.update.after", [ $validator, $id ]);
+            $this->container->callHook('block.update.after', [ $validator, $id ]);
 
             return $this->show($id, $req);
         }
@@ -410,7 +409,8 @@ class Block extends \Soosyze\Controller
         return self::query()->from('block')->where('block_id', '==', $id)->fetch();
     }
     
-    protected function getOptions($block, $default = []) {
+    protected function getOptions($block, $default = [])
+    {
         return empty($block[ 'options' ])
                 ? $default
                 : json_decode($block[ 'options' ], true);

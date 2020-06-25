@@ -60,8 +60,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallUser(ContainerInterface $ci)

@@ -47,9 +47,11 @@
                 <td data-title="<?php echo t('Actions'); ?>">
                     <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
                         <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+
                     </a>
                     <a class="btn btn-action" href="<?php echo $user[ 'link_remove' ] ?>">
                         <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+
                     </a>
                 </td>
             </tr>

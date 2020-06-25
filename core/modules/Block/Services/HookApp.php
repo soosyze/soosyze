@@ -38,7 +38,7 @@ class HookApp
         $theme   = $this->getNameTheme();
         $isAdmin = $this->core->callHook('app.granted', [ 'block.administer' ]) && !empty($theme);
 
-        $blocks = $this->getBlocks($request, $isAdmin);
+        $blocks = $this->getBlocks($isAdmin);
 
         $sections   = $this->tpl->getSections();
         $linkCreate = '';
@@ -74,7 +74,7 @@ class HookApp
         return '';
     }
 
-    protected function getBlocks($request, $isAdmin)
+    protected function getBlocks($isAdmin)
     {
         $blocks    = $this->query
             ->from('block')

@@ -2,16 +2,16 @@
 <div class="row">
 <?php if ($news): ?>
 <?php foreach ($news as $key => $new): ?>
-    <?php if($limit == 1): ?>
+    <?php if ($limit == 1): ?>
 
     <article class="col-md-12">
-    <?php elseif($limit === 2): ?>
+    <?php elseif ($limit === 2): ?>
 
     <article class="col-md-6">
-    <?php elseif($limit === 3): ?>
+    <?php elseif ($limit === 3): ?>
 
     <article class="col-md-4">
-    <?php elseif($limit === 4): ?>
+    <?php elseif ($limit === 4): ?>
 
     <article class="col-md-3">
     <?php endif; ?>

@@ -37,11 +37,12 @@
                             '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
                         ]);
                         ?>
+
                     </td>
                 </tr>
             </thead>
             <tbody>
-            <?php if($files): ?>
+            <?php if ($files): ?>
             <?php foreach ($files as $file): ?>
 
             <tr>
@@ -56,14 +57,18 @@
                     <span class="file <?php echo $file[ 'ext' ]; ?>"><span class="ext-name"><?php echo $file[ 'ext' ]; ?></span></span>
                 </th>
                 <?php endif; ?>
+
                 <td class="file-name" data-title="<?php echo t('Name'); ?>">
                     <?php echo $file[ 'name' ]; ?><?php if ($file[ 'ext' ] !== 'dir'): ?><span class="ext">.<?php echo $file[ 'ext' ]; ?></span><?php endif; ?>
 
                 </td>
-                <td>
+                <td data-title="<?php echo t('Size'); ?>">
                     <span data-tooltip="<?php echo $file[ 'size_octet' ]; ?> octets"><?php echo $file[ 'size' ]; ?></span>
                 </td>
-                <td><?php echo $file[ 'time' ]; ?></td>
+                <td data-title="<?php echo t('Creation date'); ?>">
+                    <?php echo $file[ 'time' ]; ?>
+
+                </td>
                 <td class="actions-file">
                     <?php foreach ($file[ 'actions' ] as $action): if ($action[ 'type' ] === 'button'): ?><button 
                         class="btn btn-action <?php echo $action[ 'class' ]; ?>" data-link="<?php echo $action[ 'link' ]; ?>" data-tooltip="<?php echo $action[ 'title_link' ]; ?>"
@@ -101,6 +106,7 @@
                             '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
                         ]);
                         ?>
+
                     </td>
                 </tr>
             </tfoot>

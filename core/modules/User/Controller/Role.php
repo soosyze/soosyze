@@ -85,7 +85,7 @@ class Role extends \Soosyze\Controller
                 'role_description' => $validator->getInput('role_description'),
                 'role_weight'      => empty($roleWeight)
                     ? 1
-                    : $roleWeight,
+                    : (int) $roleWeight,
                 'role_color'       => empty($roleColor)
                     ? '#e6e7f4'
                     : strtolower($roleColor),
@@ -164,7 +164,7 @@ class Role extends \Soosyze\Controller
             ->setRules([
                 'role_label'        => 'required|string|max:255|to_htmlsc',
                 'role_description'  => '!required|string|max:255|to_htmlsc',
-                'role_weight'       => 'required|int|between:1,50',
+                'role_weight'       => 'required|between_numeric:1,50',
                 'role_color'        => '!required|colorhex',
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
@@ -183,7 +183,7 @@ class Role extends \Soosyze\Controller
             $value = [
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => $validator->getInput('role_weight'),
+                'role_weight'      => (int) $validator->getInput('role_weight'),
                 'role_color'       => $validator->getInput('role_color'),
                 'role_icon'        => $validator->getInput('role_icon')
             ];

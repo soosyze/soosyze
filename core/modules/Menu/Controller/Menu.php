@@ -32,8 +32,8 @@ class Menu extends \Soosyze\Controller
                     'title_main' => t('Menu')
                 ])
                 ->make('page.content', 'page-not-menu-show.php', $this->pathViews, [
-                    'menu_add'    => self::router()->getRoute('menu.create')
-                ]);
+                    'menu_add' => self::router()->getRoute('menu.create')
+        ]);
     }
 
     public function show($name, $req)

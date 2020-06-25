@@ -14,7 +14,7 @@ class HookApp
         $this->core = $core;
     }
 
-    public function hookReponseAfter($request, &$response)
+    public function hookResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $vendor = $this->core->getPath('modules', 'modules/core', false);

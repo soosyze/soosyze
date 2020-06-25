@@ -29,7 +29,6 @@ class Config extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Configuration')
                 ])
-                ->view('page.messages', [ 'infos' => [ t('No configuration available') ] ])
                 ->make('page.content', 'page-config.php', $this->pathViews, [
                     'form' => null
         ]);

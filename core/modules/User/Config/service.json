@@ -6,7 +6,7 @@
             "app.granted": "isGranted",
             "app.granted.route": "isGrantedRoute",
             "app.response.before": "hookResponseBefore",
-            "app.response.after": "hookReponseAfter"
+            "app.response.after": "hookResponseAfter"
         }
     },
     "auth": {

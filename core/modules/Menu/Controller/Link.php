@@ -229,7 +229,7 @@ class Link extends \Soosyze\Controller
                 ->where('id', '==', $id)
                 ->execute();
             self::query()
-                ->update('menu_link', [ 'parent' => $linkMenu['parent'] ])
+                ->update('menu_link', [ 'parent' => $linkMenu[ 'parent' ] ])
                 ->where('parent', '==', $id)
                 ->execute();
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);

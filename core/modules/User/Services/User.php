@@ -342,7 +342,7 @@ class User
         }
     }
 
-    public function hookReponseAfter($request, &$response)
+    public function hookResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';
