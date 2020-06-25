@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\BackupManager\Services;
 
-class BackupService
+class BackupManager
 {
     /**
      * ISO8601 adapté.
