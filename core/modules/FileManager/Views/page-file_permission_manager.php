@@ -1,4 +1,6 @@
 
+<?php echo $user_manager_submenu; ?>
+
 <div class="nav-action">
     <div class="nav-action-right">
         <a href="<?php echo $link_add; ?>" class="btn btn-primary">

@@ -1,11 +1,6 @@
 
-<div class="action_bar">
-    <ul class="nav nav-tabs">
-    <?php foreach ($menu as $link): ?>
-        <li><a href="<?php echo $link['link'] ?>"><?php echo $link['title_link']; ?></a></li>
-    <?php endforeach; ?>
+<?php echo $user_manager_submenu; ?>
 
-    </ul>
 </div>
 
 <div class="hidden" id="filter_user">

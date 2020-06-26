@@ -1,4 +1,6 @@
 
+<?php echo $user_manager_submenu; ?>
+
 <div class="form-group">
     <input type="text"
            id="search"
