@@ -19,6 +19,20 @@ $().ready(function () {
             weight++;
         });
     }
+
+    $('#form_filter_user').on('keyup change', debounce(function () {
+        const $this = $(this);
+
+        $.ajax({
+            url: $this.attr('action'),
+            type: $this.attr('method'),
+            data: $this.serialize(),
+            dataType: 'html',
+            success: function (data) {
+                $('tbody').replaceWith(data);
+            }
+        });
+    }, 250));
 });
 
 function togglePassword(button, idPasswordInput) {

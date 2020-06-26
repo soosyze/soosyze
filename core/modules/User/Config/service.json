@@ -27,6 +27,7 @@
             "route.user.permission.admin": "hookPermissionAdminister",
             "route.user.permission.update": "hookPermissionAdminister",
             "route.user.admin": "hookPeopleAdminister",
+            "route.user.admin.filter": "hookPeopleAdminister",
             "route.user.role.admin": "hookPeopleAdminister",
             "route.user.role.create": "hookPeopleAdminister",
             "route.user.role.store": "hookPeopleAdminister",

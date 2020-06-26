@@ -7,13 +7,60 @@
 
     </ul>
 </div>
+
+<div class="hidden" id="filter_user">
+    <div class="row">
+        <form action="<?php echo $link_filter_user; ?>" method="get" id="form_filter_user">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="username"><?php echo t('Username'); ?></label>
+                    <input type="text" name="username" id="username" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="firstname"><?php echo t('Firstname'); ?></label>
+                    <input type="text" name="firstname" id="firstname" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="name"><?php echo t('Name'); ?></label>
+                    <input type="text" name="name" id="name" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="actived"><?php echo t('Status'); ?></label>
+                    <select name="actived" class="form-control" id="actived">
+                        <option value=""><?php echo t('All'); ?></option>
+                        <option value="1"><?php echo t('Active'); ?></option>
+                        <option value="0"><?php echo t('Inactive'); ?></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <a href="<?php echo $link_user_admin; ?>" class="btn danger"><?php echo t('Reset'); ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <fieldset class="responsive">
     <legend><?php echo t('User Management'); ?></legend>
     <table class="table table-hover table-user_management">
         <thead>
             <tr class="form-head">
                 <th>Id</th>
-                <th><?php echo t('Name'); ?></th>
+                <th><?php echo t('Username'); ?></th>
                 <th><?php echo t('Status'); ?></th>
                 <th><?php echo t('Registration date'); ?></th>
                 <th><?php echo t('Date of last access'); ?></th>
@@ -25,7 +72,7 @@
 
             <tr>
                 <th>#<?php echo $user[ 'user_id' ] ?></th>
-                <td data-title="<?php echo t('Name'); ?>">
+                <td data-title="<?php echo t('Username'); ?>">
                     <a href="<?php echo $user[ 'link_show' ] ?>"><?php echo $user[ 'username' ] ?></a>
                     <?php foreach ($user[ 'roles' ] as $role): ?>
 

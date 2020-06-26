@@ -39,3 +39,4 @@ R::get('user.remove', 'user/:id/delete', 'User@remove', [ ':id' => '\d+' ]);
 R::post('user.delete', 'user/:id/delete', 'User@delete', [ ':id' => '\d+' ]);
 
 R::get('user.admin', 'admin/user', 'UsersManager@admin');
+R::get('user.admin.filter', 'admin/user/filter', 'UsersManager@filter');
