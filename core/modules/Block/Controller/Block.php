@@ -330,7 +330,7 @@ class Block extends \Soosyze\Controller
                 'roles'   => t('User Roles')
             ])
             ->setInputs(
-                $req->getParsedBody() + $this->getOptions($block)
+                $req->getParsedBody()
             );
 
         if ($block[ 'hook' ]) {
@@ -339,7 +339,8 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.update.validator', [ &$validator, $id ]);
 
         $validatorRoles = new Validator();
-        if ($isValid        = $validator->isValid()) {
+
+        if ($isValid = $validator->isValid()) {
             $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
             foreach ($validator->getInput('roles', []) as $key => $role) {
                 $validatorRoles
