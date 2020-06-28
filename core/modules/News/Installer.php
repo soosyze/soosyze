@@ -52,7 +52,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->values([
                 'article', $idImage, 1, 'Picture',
-                'required_without:file-name-image|!required|image|max:800kb',
+                '!required|image|max:800kb',
                 'The weight of the image must be less than or equal to 800ko',
                 true
             ])
@@ -78,6 +78,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->config()
             ->set('settings.news_pagination', 6)
+            ->set('settings.new_default_image', '')
+            ->set('settings.new_default_icon', 'fas fa-newspaper')
             ->set('settings.node_url_article', 'news/:date_created_year/:date_created_month/:date_created_day/:node_title');
     }
 

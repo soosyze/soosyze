@@ -38,10 +38,10 @@ class Node
         $data         = $this->getEntity($entity, $idEntity);
         $data[ 'id' ] = $idEntity;
 
-        return $this->makeFields($this->getFields($entity), $data);
+        return $this->makeFields($entity, $this->getFields($entity), $data);
     }
 
-    public function makeFieldsByEntity($entity, $data, $options)
+    public function makeFieldsByEntity($entity, array $data, array $options)
     {
         $this->query
             ->from('entity_' . $entity)
@@ -56,7 +56,7 @@ class Node
         $out    = [];
 
         foreach ($data as $value) {
-            $out[] = $this->makeFields($fields, $value);
+            $out[] = $this->makeFields($entity, $fields, $value);
         }
 
         return $out;
@@ -72,64 +72,6 @@ class Node
                 ->where('field_show', true)
                 ->orderby('field_weight')
                 ->fetchAll();
-    }
-
-    public function makeFields(array $fields, array $data)
-    {
-        $out = [];
-        foreach ($fields as $value) {
-            $key = $value[ 'field_name' ];
-            if (isset($data[ $key ])) {
-                $value[ 'field_display' ] = '<div>' . $data[ $key ] . '</div>';
-                $value[ 'field_value' ]   = $data[ $key ];
-            }
-            $out[ $key ] = $value;
-            if ($value[ 'field_type' ] === 'image') {
-                $link = is_file($data[ $key ])
-                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
-                    : $data[ $key ];
-
-                $out[ $key ][ 'field_value' ]   = $link;
-                $out[ $key ][ 'field_display' ] = '<img src="' . $link . '">';
-            } elseif ($value[ 'field_type' ] === 'file') {
-                $link = is_file($data[ $key ])
-                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
-                    : $data[ $key ];
-
-                $out[ $key ][ 'field_value' ]   = $link;
-                $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
-            } elseif ($value[ 'field_type' ] === 'select') {
-                $options = json_decode($value[ 'field_option' ], true);
-
-                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
-            } elseif ($value[ 'field_type' ] === 'radio') {
-                $options = json_decode($value[ 'field_option' ], true);
-
-                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
-            } elseif ($value[ 'field_type' ] === 'checkbox') {
-                $options   = json_decode($value[ 'field_option' ], true);
-                $explode   = explode(',', $data[ $key ]);
-                $intersect = array_intersect_key($options, array_flip($explode));
-
-                $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
-            } elseif ($value[ 'field_type' ] === 'one_to_many') {
-                $option = json_decode($value[ 'field_option' ], true);
-
-                $out[ $key ][ 'field_value' ]   = '';
-                $out[ $key ][ 'field_display' ] = $this->tpl
-                    ->getTheme()
-                    ->createBlock('entity-show.php', $this->pathViews)
-                    ->addVars([
-                        'entities' => $this->makeFieldsByEntity($key, $data, $option)
-                    ])
-                    ->addNamesOverride([ 'entity-' . $value[ 'field_name' ] . '-show.php' ]);
-                $this->core->callHook('node.entity.' . $value[ 'field_name' ] . '.show', [
-                    &$out[ $key ][ 'field_display' ]
-                ]);
-            }
-        }
-
-        return $out;
     }
 
     public function byId($idNode)
@@ -217,6 +159,70 @@ class Node
         }
         if (preg_match('/[\|]?(min|min_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $field[ 'field_rules' ], $matches)) {
             $out[ 'min' ] = (int) $matches[ 2 ];
+        }
+
+        return $out;
+    }
+
+    private function makeFields($type, array $fields, array $data)
+    {
+        $out = [];
+
+        $this->core->callHook('node.makefields', [ $type, &$fields, &$data ]);
+
+        foreach ($fields as $value) {
+            $key = $value[ 'field_name' ];
+
+            $out[ $key ] = $value;
+
+            if (isset($data[ $key ])) {
+                $out[ $key ][ 'field_value' ]   = $data[ $key ];
+                $out[ $key ][ 'field_display' ] = '<div>' . $data[ $key ] . '</div>';
+            }
+            if ($value[ 'field_type' ] === 'image') {
+                $link = is_file($data[ $key ])
+                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
+                    : $data[ $key ];
+
+                $out[ $key ][ 'field_value' ]   = $link;
+                $out[ $key ][ 'field_display' ] = '<img src="' . $link . '">';
+            } elseif ($value[ 'field_type' ] === 'file') {
+                $link = is_file($data[ $key ])
+                    ? $this->core->getRequest()->getBasePath() . $data[ $key ]
+                    : $data[ $key ];
+
+                $out[ $key ][ 'field_value' ]   = $link;
+                $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
+            } elseif ($value[ 'field_type' ] === 'select') {
+                $options = json_decode($value[ 'field_option' ], true);
+
+                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
+            } elseif ($value[ 'field_type' ] === 'radio') {
+                $options = json_decode($value[ 'field_option' ], true);
+
+                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
+            } elseif ($value[ 'field_type' ] === 'checkbox') {
+                $options   = json_decode($value[ 'field_option' ], true);
+                $explode   = explode(',', $data[ $key ]);
+                $intersect = array_intersect_key($options, array_flip($explode));
+
+                $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
+            } elseif ($value[ 'field_type' ] === 'one_to_many') {
+                $option = json_decode($value[ 'field_option' ], true);
+
+                $out[ $key ][ 'field_value' ]   = '';
+                $out[ $key ][ 'field_display' ] = $this->tpl
+                    ->getTheme()
+                    ->createBlock('entity-show.php', $this->pathViews)
+                    ->addVars([
+                        'entities' => $this->makeFieldsByEntity($key, $data, $option)
+                    ])
+                    ->addNamesOverride([ 'entity-' . $value[ 'field_name' ] . '-show.php' ]);
+
+                $this->core->callHook('node.entity.' . $value[ 'field_name' ] . '.show', [
+                    &$out[ $key ][ 'field_display' ]
+                ]);
+            }
         }
 
         return $out;

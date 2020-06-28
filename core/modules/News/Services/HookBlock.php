@@ -199,7 +199,7 @@ class HookBlock
         });
     }
 
-    public function hookBlockNewsLastUpdateForm(&$validator, $id)
+    public function hookBlockNewsLastUpdateValidator(&$validator, $id)
     {
         $validator
             ->addRule('limit', 'required|inarray:1,2,3,4')

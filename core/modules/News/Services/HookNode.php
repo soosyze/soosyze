@@ -4,6 +4,13 @@ namespace SoosyzeCore\News\Services;
 
 class HookNode
 {
+    protected $config;
+
+    public function __construct($config)
+    {
+        $this->config = $config;
+    }
+
     public function hookNodeEntityPictureShow(&$entity)
     {
         $entity->pathOverride(dirname(__DIR__) . '/Views/');
@@ -13,7 +20,7 @@ class HookNode
     {
         if ($type === 'article') {
             $words = str_word_count(strip_tags($fieldsInsert[ 'body' ]));
-            
+
             $fieldsInsert[ 'reading_time' ] = ceil($words / 200);
         }
     }
@@ -26,8 +33,22 @@ class HookNode
     ) {
         if ($node[ 'type' ] === 'article') {
             $words = str_word_count(strip_tags($fieldsUpdate[ 'body' ]));
-            
+
             $fieldsUpdate[ 'reading_time' ] = ceil($words / 200);
+        }
+    }
+
+    public function hookNodeShowBefore($type, &$fields, &$data)
+    {
+        if ($type === 'article') {
+            if (empty($data[ 'image' ])) {
+                $fields[]      = [
+                    'field_name' => 'icon',
+                    'field_type' => 'text'
+                ];
+                $data[ 'image' ] = $this->config->get('settings.new_default_image', null);
+                $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', null);
+            }
         }
     }
 }

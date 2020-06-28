@@ -21,6 +21,7 @@
     },
     "news.hook.config": {
         "class": "SoosyzeCore\\News\\Services\\HookConfig",
+        "arguments": ["@file"],
         "hooks": {
             "config.edit.menu": "menu"
         }
@@ -34,13 +35,15 @@
             "block.news.month": "hookBlockNewsMonth",
             "block.news.last": "hookBlockNewsLast",
             "block.news.last.edit.form": "hookBlockNewsLastEditForm",
-            "block.news.last.update.validator": "hookBlockNewsLastUpdateForm",
+            "block.news.last.update.validator": "hookBlockNewsLastUpdateValidator",
             "block.news.last.update.before": "hookNewsLastUpdateBefore"
         }
     },
     "news.hook.node": {
         "class": "SoosyzeCore\\News\\Services\\HookNode",
+        "arguments": ["@config"],
         "hooks": {
+            "node.makefields": "hookNodeShowBefore",
             "node.entity.store.before": "hookNodeStoreBefore",
             "node.entity.update.before": "hookNodeUpdateBefore",
             "node.entity.news.show": "hookNodeEntityPictureShow"

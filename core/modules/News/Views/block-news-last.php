@@ -17,7 +17,16 @@
     <?php endif; ?>
 
         <div class="card_blog">
+            <?php if (empty($new[ 'field' ][ 'image' ]['field_value'])): ?>
+
+            <header class="icon_default">
+                <i class="<?php echo $new[ 'field' ][ 'icon' ][ 'field_value' ]; ?>"></i>
+            </header>
+            <?php else: ?>
+
             <header style="background-image: url('<?php echo $new[ 'field' ][ 'image' ][ 'field_value' ]; ?>');"></header>
+            <?php endif; ?>
+
             <div class="card_main">
                 <div class="card_content">
                     <div class="card_date_tags">
