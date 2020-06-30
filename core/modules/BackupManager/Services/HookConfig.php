@@ -4,19 +4,6 @@ namespace SoosyzeCore\BackupManager\Services;
 
 class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    /**
-     * @var \Soosyze\Config
-     */
-    protected $config;
-
-    protected $router;
-
-    public function __construct($config, $router)
-    {
-        $this->config = $config;
-        $this->router = $router;
-    }
-
     public function menu(&$menu)
     {
         $menu[ 'backupmanager' ] = [
@@ -32,7 +19,6 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 ->group('max_backup-group', 'div', function ($form) use ($data) {
                     $form->label('max_backup-label', t('Maximum number of backups'), [
                         'data-tooltip' => t('The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited'),
-                        'for'          => 'max_backups'
                     ])
                     ->number('max_backups', [
                         'class' => 'form-control',
@@ -40,6 +26,22 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'value' => $data[ 'max_backups' ] > 0
                             ? $data[ 'max_backups' ]
                             : 0
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('backup_frequency-group', 'div', function ($form) use ($data) {
+                    $form->label('frequency_backup-label', t('Fréquence des sauvegardes'), [
+                        'data-tooltip' => t('Laisser la valeur à 0 pour que la fréquence ne soit pas prises en compte'),
+                    ])
+                    ->text('backup_frequency', [
+                        'class'       => 'form-control',
+                        'maxlength'   => 255,
+                        'placeholder' => '30 min, 1 hour, 1 day, 1 month, 1 year...',
+                        'value'       => $data[ 'backup_frequency' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('backup_frequency-info-group', 'div', function ($form) {
+                    $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
+                        '_content' => t('Formats relatifs des dates de PHP')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_cron-group', 'div', function ($form) use ($data) {
@@ -59,19 +61,22 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     public function validator(&$validator)
     {
         $validator->setRules([
-            'max_backups' => 'min:0',
-            'backup_cron' => 'bool'
+            'max_backups'      => 'min:0',
+            'backup_cron'      => 'bool',
+            'backup_frequency' => '!required|string'
         ])->setLabel([
-            'max_backups' => t('Maximum number of backups'),
-            'backup_cron' => t('Enable CRON backups')
+            'max_backups'      => t('Maximum number of backups'),
+            'backup_cron'      => t('Enable CRON backups'),
+            'backup_frequency' => t('Fréquence des sauvegardes')
         ]);
     }
 
     public function before(&$validator, &$data, $id)
     {
         $data = [
-            'max_backups' => $validator->getInput('max_backups'),
-            'backup_cron' => (bool) $validator->getInput('backup_cron'),
+            'max_backups'      => $validator->getInput('max_backups'),
+            'backup_cron'      => (bool) $validator->getInput('backup_cron'),
+            'backup_frequency' => $validator->getInput('backup_frequency')
         ];
     }
 

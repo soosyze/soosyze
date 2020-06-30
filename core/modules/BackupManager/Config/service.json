@@ -12,7 +12,6 @@
     },
     "backupmanager.hook.config": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
-        "arguments": ["@config", "@router"],
         "hooks": {
             "config.edit.menu": "menu"
         }

@@ -40,6 +40,8 @@ Options +FollowSymLinks
 
         $ci->config()
             ->set('settings.max_backups', 30)
+            ->set('settings.backup_frequency', '1 day')
+            ->set('settings.backup_time', 0)
             ->set('settings.backup_cron', false);
     }
 
