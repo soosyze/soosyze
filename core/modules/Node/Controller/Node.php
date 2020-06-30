@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\Node\Controller;
 
+use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Http\UploadedFile;
@@ -246,8 +247,9 @@ class Node extends \Soosyze\Controller
                     'title_main' => $node[ 'title' ],
                 ])
                 ->make('page.content', 'node-show.php', $this->pathViews, [
-                    'fields' => $fields,
-                    'node'   => $node
+                    'fields'       => $fields,
+                    'node'         => $node,
+                    'node_submenu' => $this->getSubmenuNode($node, 'node.show')
                 ])->override('page.content', [ 'node-show-' . $idNode . '.php', 'node-show-' . $node[ 'type' ] . '.php' ]);
 
         self::core()->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
@@ -299,7 +301,10 @@ class Node extends \Soosyze\Controller
                     'title_main' => t('Edit :title content', [ ':title' => $content[ 'title' ] ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
+                ->make('page.content', 'node-edit.php', $this->pathViews, [
+                    'form'         => $form,
+                    'node_submenu' => $this->getSubmenuNode($node, 'node.edit')
+        ]);
     }
 
     public function update($idNode, $req)
@@ -441,6 +446,41 @@ class Node extends \Soosyze\Controller
                 ':id_node' => $idNode
             ])
         );
+    }
+
+    public function remove($idNode, $req)
+    {
+        if (!($node = self::node()->byId($idNode))) {
+            return $this->get404($req);
+        }
+
+        $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
+
+        $form = (new FormBuilder([
+                'method' => 'post',
+                'action' => self::router()->getRoute('node.delete', [ ':id_node' => $idNode ])
+                ]))
+            ->group('node-remove-information-fieldset', 'fieldset', function ($form) {
+                $form->legend('node-remove-information-legend', t('Node deletion'))
+                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+                    '_content' => t('Warning ! The deletion of the node is final.')
+                ]);
+            })
+            ->token('token_node_remove')
+            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+
+        $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
+                ])
+                ->make('page.content', 'node-remove.php', $this->pathViews, [
+                    'form'         => $form,
+                    'node_submenu' => $this->getSubmenuNode($node, 'node.delete')
+        ]);
     }
 
     public function delete($idNode, $req)
@@ -602,6 +642,48 @@ class Node extends \Soosyze\Controller
     public static function getBasename($pathFile)
     {
         return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
+    }
+
+    public function getSubmenuNode(array $node, $keyRoute)
+    {
+        $menu = [];
+
+        $isGranted = self::user()->isGranted('node.administer');
+        if ($isGranted || self::user()->isGranted('node.edited.' . $node[ 'type' ])) {
+            $menu = [
+                [
+                    'title_link' => t('View'),
+                    'link'       => self::router()->getRoute('node.show', [
+                        ':id_node' => $node[ 'id' ]
+                    ]),
+                    'granted'    => 'node.show'
+                ], [
+                    'title_link' => t('Edit'),
+                    'link'       => self::router()->getRoute('node.edit', [
+                        ':id_node' => $node[ 'id' ]
+                    ]),
+                    'granted'    => 'node.edit'
+                ]
+            ];
+        }
+        if ($isGranted || self::user()->isGranted('node.deleted.' . $node[ 'type' ])) {
+            $menu[] = [
+                'title_link' => t('Delete'),
+                'link'       => self::router()->getRoute('node.remove', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'granted'    => 'node.delete'
+            ];
+        }
+
+        self::core()->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
+
+        return self::template()
+                ->createBlock('submenu-node_show.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
     }
 
     private function deleteFile($idNode)
