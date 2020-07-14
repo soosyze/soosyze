@@ -105,7 +105,7 @@ class HookApp
                 $block[ 'link_delete' ] = $this->router->getRoute('block.delete', [
                     ':id' => $block[ 'block_id' ]
                 ]);
-                $block[ 'link_update' ] = $this->router->getRoute('section.update', [
+                $block[ 'link_update' ] = $this->router->getRoute('block.section.update', [
                     ':id' => $block[ 'block_id' ]
                 ]);
             }

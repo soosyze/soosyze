@@ -78,7 +78,7 @@ class Installer extends \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'section.admin', 'fa fa-columns', 'Block', 'admin/section/theme',
+                    'block.section.admin', 'fa fa-columns', 'Block', 'admin/section/theme',
                     'menu-admin', 7, -1
                 ])
                 ->execute();
@@ -112,12 +112,12 @@ class Installer extends \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'admin/section%')
-                ->orWhere('link', 'like', 'admin/block%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'block%')
+                        ->fetchAll();
+            });
         }
     }
 

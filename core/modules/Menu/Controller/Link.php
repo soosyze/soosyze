@@ -223,15 +223,11 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $this->container->callHook('menu.link.delete.before', [ $validator, $id ]);
-            self::query()
-                ->from('menu_link')
-                ->delete()
-                ->where('id', '==', $id)
-                ->execute();
-            self::query()
-                ->update('menu_link', [ 'parent' => $linkMenu[ 'parent' ] ])
-                ->where('parent', '==', $id)
-                ->execute();
+
+            self::menu()->deleteLinks(function () use ($linkMenu) {
+                return [ $linkMenu ];
+            });
+
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 

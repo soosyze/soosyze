@@ -4,8 +4,8 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Block\Controller');
 
-R::get('section.admin', 'admin/section/:theme', 'Section@admin', [ ':theme' => 'theme_admin|theme' ]);
-R::post('section.update', 'admin/section/:id/edit', 'Section@update', [ ':id' => '\d+' ]);
+R::get('block.section.admin', 'admin/section/:theme', 'Section@admin', [ ':theme' => 'theme_admin|theme' ]);
+R::post('block.section.update', 'admin/section/:id/edit', 'Section@update', [ ':id' => '\d+' ]);
 
 R::get('block.show', 'block/:id', 'Block@show', [ ':id' => '\d+' ]);
 R::get('block.create', 'block/:theme/:section', 'Block@create', [ ':theme' => 'theme_admin|theme', ':section' => '[\-a-z_]+' ]);

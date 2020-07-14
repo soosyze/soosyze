@@ -189,11 +189,13 @@ class Installer extends \SoosyzeCore\System\Migration
             $ci->schema()->dropTable('node_menu_link');
         }
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->orWhere('key', 'like', 'node%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'node%')
+                        ->orWhere('key', 'like', 'entity%')
+                        ->fetchAll();
+            });
         }
     }
 

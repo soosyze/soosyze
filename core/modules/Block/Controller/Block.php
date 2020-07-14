@@ -153,7 +153,7 @@ class Block extends \Soosyze\Controller
         }
 
         return new \Soosyze\Components\Http\Redirect(
-            self::router()->getRoute('section.admin', [ ':theme' => $theme ])
+            self::router()->getRoute('block.section.admin', [ ':theme' => $theme ])
         );
     }
 

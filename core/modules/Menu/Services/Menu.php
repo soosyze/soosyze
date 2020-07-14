@@ -43,6 +43,23 @@ class Menu
                 ->where('id', '==', $id)
                 ->fetch();
     }
+    
+    public function deleteLinks(callable $callable)
+    {
+        $links = $callable();
+
+        foreach ($links as $link) {
+            $this->query
+                ->from('menu_link')
+                ->delete()
+                ->where('id', $link['id'])
+                ->execute();
+            $this->query
+                ->update('menu_link', [ 'parent' => $link[ 'parent' ] ])
+                ->where('parent', $link['id'])
+                ->execute();
+        }
+    }
 
     public function getMenu($name)
     {

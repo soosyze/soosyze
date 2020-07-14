@@ -23,8 +23,8 @@
         "class": "SoosyzeCore\\Block\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.section.admin": "hookBlockAdmin",
-            "route.section.update": "hookBlockAdmin",
+            "route.block.section.admin": "hookBlockAdmin",
+            "route.block.section.update": "hookBlockAdmin",
             "route.block.create": "hookBlockCreated",
             "route.block.store": "hookBlockCreated",
             "route.block.edit": "hookBlockEdited",

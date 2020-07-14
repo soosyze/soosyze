@@ -179,10 +179,12 @@ class Installer extends \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'news%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'news%')
+                        ->fetchAll();
+            });
         }
     }
 
