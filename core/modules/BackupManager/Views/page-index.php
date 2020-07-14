@@ -1,14 +1,17 @@
 
-<div class="action_bar">
-    <ul class="nav nav-tabs">
-        <li>
-            <a href="<?php echo $do_backup_route ?>"><?php echo t('Create a backup'); ?></a>
-        </li>
-        <li>
-            <a href="<?php echo $delete_all_route ?>" onclick="return confirm('<?php echo t('Delete all the backups ?') ?>');"><?php echo t('Delete all') ?></a>
-        </li>
-    </ul>
+<div class="nav-action">    
+    <div class="nav-action-right">
+        <a href="<?php echo $delete_all_route ?>" 
+           class="btn"
+           onclick="return confirm('<?php echo t('Delete all the backups ?') ?>');">
+               <?php echo t('Delete all') ?>
+        </a>
+        <a class="btn btn-primary" href="<?php echo $do_backup_route ?>">
+            <i class="fa fa-plus"></i> <?php echo t('Create a backup'); ?>
+        </a>
+    </div>
 </div>
+
 <fieldset class="responsive">
     <legend><?php echo t('Backups'); ?></legend>
 

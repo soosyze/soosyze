@@ -32,9 +32,13 @@
                 <p><a class="btn btn-primary" href="<?php echo $link_module_update; ?>"><?php echo t('Update your application'); ?></a></p>
             </div>
         <?php else: ?>
-        <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
-            <?php echo t('Check for updates'); ?> <i class="fa fa-info-circle"></i>
-        </a>
+            <div class="nav-action">
+                <div class="nav-action-right">
+                    <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
+                        <?php echo t('Check for updates'); ?> <i class="fa fa-info-circle"></i>
+                    </a>
+                </div>
+            </div>
         <?php endif; ?>
 
         <?php echo $form->form_open(); ?>
