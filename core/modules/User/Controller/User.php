@@ -566,10 +566,8 @@ class User extends \Soosyze\Controller
     private function savePicture($id, $validator)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/user/$id";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
         $key = 'picture';
+
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
             ->setName($key)

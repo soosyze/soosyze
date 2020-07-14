@@ -383,9 +383,7 @@ class Entity extends \Soosyze\Controller
     private function saveFile($type, $idNode, $idEntity, $nameFeld, $validator)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$idNode}";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+
         self::file()
             ->add($validator->getInput($nameFeld), $validator->getInput("file-name-$nameFeld"))
             ->setPath($dir)

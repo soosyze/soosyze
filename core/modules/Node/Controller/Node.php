@@ -748,9 +748,7 @@ class Node extends \Soosyze\Controller
     private function saveFile($node, $nameField, $validator)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'id' ]}";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+
         self::file()
             ->add($validator->getInput($nameField), $validator->getInput("file-name-$nameField"))
             ->setName($nameField)
