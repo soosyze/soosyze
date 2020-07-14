@@ -4,23 +4,27 @@ namespace SoosyzeCore\Block\Services;
 
 class HookApp
 {
-    protected $tpl;
-
     protected $core;
 
     protected $query;
 
+    protected $roles = [];
+
+    protected $router;
+
     protected $user;
 
-    public function __construct($template, $core, $query, $user, $router)
+    protected $tpl;
+
+    public function __construct($core, $query, $router, $template, $user)
     {
-        $this->tpl       = $template;
         $this->core      = $core;
         $this->query     = $query;
-        $this->user      = $user;
         $this->router    = $router;
+        $this->tpl       = $template;
+        $this->user      = $user;
         $this->pathViews = dirname(__DIR__) . '/Views/';
-        
+
         $this->userCurrent = $this->user->isConnected();
         $this->roles = $this->userCurrent
             ? $this->user->getRolesUser($this->userCurrent[ 'user_id' ])

@@ -8,7 +8,7 @@
     },
     "backupmanager": {
         "class": "SoosyzeCore\\BackupManager\\Services\\BackupManager",
-        "arguments": ["@core", "@router", "@config"]
+        "arguments": ["@config", "@core", "@router"]
     },
     "backupmanager.hook.config": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",

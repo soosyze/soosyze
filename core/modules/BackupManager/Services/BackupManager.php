@@ -22,9 +22,9 @@ class BackupManager
     private $repository;
 
     public function __construct(
+        $config,
         \Soosyze\App $core,
-        \Soosyze\Components\Router\Router $router,
-        $config
+        \Soosyze\Components\Router\Router $router
     ) {
         $this->core   = $core;
         $this->router = $router;

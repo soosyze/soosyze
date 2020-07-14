@@ -4,6 +4,8 @@ namespace SoosyzeCore\Node\Services;
 
 class Node
 {
+    protected $core;
+
     protected $pathViews;
 
     protected $query;
@@ -13,13 +15,12 @@ class Node
      */
     protected $tpl;
 
-    protected $core;
-
-    public function __construct($query, $tpl, $core)
+    public function __construct($core, $query, $tpl)
     {
-        $this->query     = $query;
-        $this->tpl       = $tpl;
-        $this->core      = $core;
+        $this->core  = $core;
+        $this->query = $query;
+        $this->tpl   = $tpl;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 

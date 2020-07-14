@@ -14,7 +14,7 @@ class HookUrl
     /**
      * @var \Queryflatfile\Schema
      */
-    private $schema;
+    private $config;
 
     /**
      * @var \Queryflatfile\Request
@@ -24,14 +24,14 @@ class HookUrl
     /**
      * @var \Queryflatfile\Schema
      */
-    private $config;
+    private $schema;
 
-    public function __construct($alias, $schema, $query, $config)
+    public function __construct($alias, $config, $query, $schema)
     {
         $this->alias  = $alias;
-        $this->schema = $schema;
-        $this->query  = $query;
         $this->config = $config;
+        $this->query  = $query;
+        $this->schema = $schema;
     }
 
     public function hookCreateFormData(&$data)

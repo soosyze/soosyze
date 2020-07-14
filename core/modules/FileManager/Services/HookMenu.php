@@ -6,17 +6,17 @@ use Soosyze\Components\Util\Util;
 
 class HookMenu
 {
+    protected $profil;
+
     /**
      * @var \Soosyze\Router
      */
     protected $router;
 
-    protected $profil;
-
-    public function __construct($router, $profil)
+    public function __construct($profil, $router)
     {
-        $this->router = $router;
         $this->profil = $profil;
+        $this->router = $router;
     }
 
     public function hookUsersMenu(&$menu, $userId)

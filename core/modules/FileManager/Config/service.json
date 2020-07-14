@@ -1,13 +1,11 @@
 {
     "filemanager": {
         "class": "SoosyzeCore\\FileManager\\Services\\FileManager",
-        "arguments": ["@core", "@router", "@filemanager.hook.user"]
+        "arguments": ["@core", "@filemanager.hook.user", "@router"]
     },
     "fileprofil": {
         "class": "SoosyzeCore\\FileManager\\Services\\FileProfil",
-        "arguments": [
-            "@query"
-        ] 
+        "arguments": ["@query"] 
     },
     "filemanager.filter.iterator": {
         "class": "SoosyzeCore\\FileManager\\Services\\FilterManagerIterator",
@@ -35,10 +33,7 @@
     },
     "filemanager.hook.menu": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
-        "arguments": [
-            "@router",
-            "@fileprofil"
-        ],
+        "arguments": ["@fileprofil", "@router"],
         "hooks": {
             "user.menu": "hookUsersMenu",
             "user.manage.menu": "hookUsersManagementMenu"
@@ -46,7 +41,7 @@
     },
     "filemanager.hook.user": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookUser",
-        "arguments": ["@user", "@fileprofil"],
+        "arguments": ["@fileprofil", "@user"],
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.filemanager.profil.admin": "hookFileAdmin",

@@ -4,19 +4,19 @@ namespace SoosyzeCore\System\Services;
 
 class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    protected $template;
-
     protected $file;
-
-    protected $translate;
 
     protected $router;
 
-    public function __construct($router, $template, $file, $translate)
+    protected $template;
+
+    protected $translate;
+
+    public function __construct($file, $router, $template, $translate)
     {
+        $this->file      = $file;
         $this->router    = $router;
         $this->template  = $template;
-        $this->file      = $file;
         $this->translate = $translate;
     }
 

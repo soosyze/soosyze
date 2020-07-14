@@ -9,6 +9,13 @@ use SoosyzeCore\System\Migration;
 class Composer
 {
     /**
+     * Les informations des fichiers composer des modules.
+     *
+     * @var array
+     */
+    protected $composer = [];
+
+    /**
      * @var \Core
      */
     protected $core;
@@ -18,17 +25,10 @@ class Composer
      */
     protected $module;
 
-    /**
-     * Les informations des fichiers composer des modules.
-     *
-     * @var array
-     */
-    protected $composer = [];
-
-    public function __construct($module, $core)
+    public function __construct($core, $module)
     {
-        $this->module = $module;
         $this->core   = $core;
+        $this->module = $module;
     }
 
     /**

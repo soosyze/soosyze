@@ -10,10 +10,10 @@ class Block
     
     protected $pathViews;
 
-    public function __construct($core, $config)
+    public function __construct($config, $core)
     {
-        $this->core      = $core;
         $this->config    = $config;
+        $this->core      = $core;
         $this->pathViews = dirname(__DIR__) . '/Views/blocks/';
     }
 

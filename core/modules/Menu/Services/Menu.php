@@ -8,26 +8,27 @@ class Menu
 {
     protected $alias;
 
+    protected $config;
+
     protected $core;
+
+    protected $pathViews;
+
+    protected $query;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
     protected $router;
 
-    protected $config;
-
-    protected $query;
-
-    protected $pathViews;
-
-    public function __construct($alias, $core, $router, $config, $query)
+    public function __construct($alias, $config, $core, $query, $router)
     {
-        $this->alias     = $alias;
-        $this->core      = $core;
-        $this->router    = $router;
-        $this->config    = $config;
-        $this->query     = $query;
+        $this->alias  = $alias;
+        $this->config = $config;
+        $this->core   = $core;
+        $this->query  = $query;
+        $this->router = $router;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 

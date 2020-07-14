@@ -4,11 +4,17 @@ namespace SoosyzeCore\System\Services;
 
 class HookCron
 {
-    public function __construct($schema, $migration, $config)
+    private $config;
+
+    private $migration;
+
+    private $schema;
+
+    public function __construct($config, $migration, $schema)
     {
-        $this->schema    = $schema;
-        $this->migration = $migration;
         $this->config    = $config;
+        $this->migration = $migration;
+        $this->schema    = $schema;
     }
 
     public function hookCron()

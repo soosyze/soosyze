@@ -7,9 +7,11 @@ class HookMenu
     private $alias;
 
     /**
-     * @var \Queryflatfile\Schema
+     * Si le module menu existe.
+     *
+     * @var bool
      */
-    private $schema;
+    private $isMenu;
 
     /**
      * @var \Queryflatfile\Request
@@ -17,17 +19,16 @@ class HookMenu
     private $query;
 
     /**
-     * Si le module menu existe.
-     *
-     * @var bool
+     * @var \Queryflatfile\Schema
      */
-    private $isMenu;
+    private $schema;
 
-    public function __construct($alias, $schema, $query)
+    public function __construct($alias, $query, $schema)
     {
         $this->alias  = $alias;
-        $this->schema = $schema;
         $this->query  = $query;
+        $this->schema = $schema;
+
         $this->isMenu = $this->schema->hasTable('menu');
     }
 

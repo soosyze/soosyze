@@ -10,10 +10,10 @@ class HookUser
 
     protected $user;
 
-    public function __construct($user, $profil)
+    public function __construct($profil, $user)
     {
-        $this->user   = $user;
         $this->profil = $profil;
+        $this->user   = $user;
     }
 
     public function getRight($path, $userId = null)

@@ -8,14 +8,10 @@ use Soosyze\Components\Http\Stream;
 class User
 {
     /**
-     * @var \QueryBuilder\Services\Query
+     * Les données utilisateur courant ou false.
+     * @var bool|array
      */
-    private $query;
-
-    /**
-     * @var \Soosyze\Router
-     */
-    private $router;
+    private $connect = false;
 
     /**
      * @var \Soosyze\App
@@ -26,7 +22,7 @@ class User
      * La liste des permissions pour l'utilisateur courant.
      * @var array
      */
-    private $granted = [];
+    private $granted     = [];
 
     /**
      * La liste des permissions
@@ -35,16 +31,21 @@ class User
     private $permissions = [];
 
     /**
-     * Les données utilisateur courant ou false.
-     * @var bool|array
+     * @var \QueryBuilder\Services\Query
      */
-    private $connect = false;
+    private $query;
 
-    public function __construct($query, $router, $core)
+    /**
+     * @var \Soosyze\Router
+     */
+    private $router;
+
+    public function __construct($core, $query, $router)
     {
+        $this->core   = $core;
         $this->query  = $query;
         $this->router = $router;
-        $this->core   = $core;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 

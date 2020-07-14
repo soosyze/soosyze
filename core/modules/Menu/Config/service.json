@@ -1,7 +1,7 @@
 {
     "menu": {
         "class": "SoosyzeCore\\Menu\\Services\\Menu",
-        "arguments": ["@alias", "@core", "@router", "@config", "@query"]
+        "arguments": ["@alias", "@config", "@core", "@query", "@router"]
     },
     "menu.install": {
         "class": "SoosyzeCore\\Menu\\Installer",

@@ -19,11 +19,12 @@ class HookBlock
 
     public function __construct($alias, $node, $query, $router)
     {
-        $this->alias     = $alias;
-        $this->node      = $node;
+        $this->alias  = $alias;
+        $this->node   = $node;
+        $this->query  = $query;
+        $this->router = $router;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
-        $this->query     = $query;
-        $this->router    = $router;
     }
 
     public function hookNewShow(array &$blocks)

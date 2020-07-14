@@ -33,20 +33,20 @@ class FileManager
     private $core;
 
     /**
-     * @var \Soosyze\Router
-     */
-    private $router;
-
-    /**
      * @var \SoosyzeCore\FileManager\Services\HookUser
      */
     private $hookUser;
 
-    public function __construct($core, $router, $hookUser)
+    /**
+     * @var \Soosyze\Router
+     */
+    private $router;
+
+    public function __construct($core, $hookUser, $router)
     {
         $this->core     = $core;
-        $this->router   = $router;
         $this->hookUser = $hookUser;
+        $this->router   = $router;
     }
 
     public static function getWhiteList()

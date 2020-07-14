@@ -1,7 +1,7 @@
 {
     "node": {
         "class": "SoosyzeCore\\Node\\Services\\Node",
-        "arguments": ["@query", "@template", "@core"]
+        "arguments": ["@core", "@query", "@template"]
     },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",
@@ -29,7 +29,7 @@
     },
     "node.hook.url": {
         "class": "SoosyzeCore\\Node\\Services\\HookUrl",
-        "arguments": ["@alias", "@schema", "@query", "@config"],
+        "arguments": ["@alias", "@config", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
@@ -44,7 +44,7 @@
     },
     "node.hook.menu": {
         "class": "SoosyzeCore\\Node\\Services\\HookMenu",
-        "arguments": ["@alias", "@schema", "@query"],
+        "arguments": ["@alias", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
