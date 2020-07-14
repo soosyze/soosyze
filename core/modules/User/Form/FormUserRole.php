@@ -137,14 +137,14 @@ class FormUserRole extends FormBuilder
 
     public function submitForm()
     {
-        $this->html('cancel', '<button:attr>:_content</button>', [
+        $this->token('token_role_submit')
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+            ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'
-            ])
-            ->token('token_role_submit')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ]);
 
         return $this;
     }

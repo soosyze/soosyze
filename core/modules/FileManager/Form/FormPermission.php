@@ -195,13 +195,13 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 }
             })
             ->token('token_file_permission')
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
             ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'
-            ])
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ]);
 
         return $this;
     }
