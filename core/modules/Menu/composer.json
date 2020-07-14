@@ -1,7 +1,7 @@
 {
     "name": "soosyze-core/menu",
     "type": "soosyze-module",
-    "description": "Gestion de vos menus",
+    "description": "Manage your menus",
     "version": "1.0",
     "autoload": {
         "psr-4": {

@@ -124,7 +124,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         $form->checkbox('theme_admin_dark', [
                             'checked' => $data[ 'theme_admin_dark' ]
                         ])
-                        ->label('theme_admin_dark-label', '<i class="ui" aria-hidden="true"></i> ' . t('Activer le mode Dark pour le thème d\'administration si disponible'), [
+                        ->label('theme_admin_dark-label', '<i class="ui" aria-hidden="true"></i> ' . t('Activate the dark mode for the administrator theme if available'), [
                             'for' => 'theme_admin_dark'
                         ]);
                     }, [ 'class' => 'form-group' ])

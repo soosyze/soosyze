@@ -34,9 +34,9 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ]);
         })
             ->group('new_default_image-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('new_default_image-legend', t('Image par défaut'))
+                $form->legend('new_default_image-legend', t('Default image'))
                 ->group('new_default_image-group', 'div', function ($form) use ($data) {
-                    $form->label('new_default_image-label', t('Image par défaut'), [
+                    $form->label('new_default_image-label', t('Default image'), [
                         'class'        => 'control-label',
                         'data-tooltip' => '200ko maximum.',
                         'for'          => 'new_default_image'
@@ -44,8 +44,8 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     $this->file->inputFile('new_default_image', $form, $data[ 'new_default_image' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('new_default_icon-group', 'div', function ($form) use ($data) {
-                    $form->label('new_default_icon-group', t('Icone par défaut'), [
-                        'data-tooltip' => t('Icon FontAwesome en cas d\'absence d\'une image par défaut')
+                    $form->label('new_default_icon-group', t('Default icon'), [
+                        'data-tooltip' => t('Icon Font Awesome if there is no default image')
                     ])
                     ->text('new_default_icon', [
                         'class'    => 'form-control',

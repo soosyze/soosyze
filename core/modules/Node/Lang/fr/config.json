@@ -1,0 +1,6 @@
+{
+    "Default url": "Url par défaut",
+    "Applies to all types of content if the templates below are empty": "S'applique à tous les types de contenu si les modèles ci-dessous sont vides",
+    "Activate automatic publication of CRON content": "Activer la publication automatique des contenus CRON",
+    "How to set up the CRON service ?": "Comment configurer le service CRON ?"
+}

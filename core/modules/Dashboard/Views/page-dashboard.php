@@ -1,7 +1,11 @@
 <div class="nav-action">
     <div class="nav-action-right">
-        <a href="<?php echo $link_cron; ?>" class="btn btn-primary btn-filter-node">
-            <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Executer la tâche cron'); ?>
+        <a href="<?php echo $link_trans; ?>" class="btn">
+            <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
+        </a>
+
+        <a href="<?php echo $link_cron; ?>" class="btn primary">
+            <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Execute the cron task'); ?>
         </a>
     </div>
 </div>
@@ -30,7 +34,7 @@
             <div class="link-utils">
                 <a href="https://github.com/soosyze" target="_blank">
                     <i class="fa fa-code-branch"></i>
-                    <div><?php echo t('Repo'); ?></div>
+                    <div><?php echo t('Source code'); ?></div>
                 </a>
             </div>
         </div>
@@ -38,30 +42,30 @@
 
     <div class="col-md-5">
         <fieldset class="responsive">
-            <legend><?php echo t('Infos CMS'); ?></legend>
+            <legend><?php echo t('CMS Info'); ?></legend>
             <table class="table">
                 <thead>
                     <tr>
-                        <th><?php echo t('Paramètre'); ?></th>
-                        <th><?php echo t('Valeur'); ?></th>
+                        <th><?php echo t('Setting'); ?></th>
+                        <th><?php echo t('Value'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th><?php echo t('Version Soosyze'); ?></th>
+                        <th><?php echo t('Soosyze version'); ?></th>
                         <td>1.0.0-beta1.2</td>
                     </tr>
                     <tr>
-                        <th><?php echo t('Mode'); ?></th>
+                        <th><?php echo t('Environment'); ?></th>
                         <td><?php
                             echo empty($config[ 'debug' ])
-                                ? t('Production')
-                                : t('Debug');
+                                ? 'Production'
+                                : 'Debug';
                             ?>
                         </td>
                     </tr>
                     <tr>
-                        <th><?php echo t('Taille des données'); ?></th>
+                        <th><?php echo t('Data size'); ?></th>
                         <td>
                             <span data-tooltip="<?php echo $size_data; ?> octets">
                                 <?php echo \Soosyze\Components\Util\Util::strFileSizeFormatted($size_data); ?>
@@ -69,7 +73,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th><?php echo t('Taille des ressources multimédias'); ?></th>
+                        <th><?php echo t('Size of multimedia resources'); ?></th>
                         <td>
                             <span data-tooltip="<?php echo $size_file; ?> octets">
                                 <?php echo \Soosyze\Components\Util\Util::strFileSizeFormatted($size_file); ?>
@@ -77,7 +81,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th><?php echo t('Taille des sauvegardes'); ?></th>
+                        <th><?php echo t('Backups size'); ?></th>
                         <td>
                             <span data-tooltip="<?php echo $size_backup; ?> octets">
                                 <?php echo \Soosyze\Components\Util\Util::strFileSizeFormatted($size_backup); ?>
@@ -91,26 +95,26 @@
 
     <div class="col-md-5">
         <fieldset class="responsive">
-            <legend><?php echo t('Infos server'); ?></legend>
+            <legend><?php echo t('Server info'); ?></legend>
             <table class="table">
                 <thead>
                     <tr>
-                        <th><?php echo t('Paramètre'); ?></th>
-                        <th><?php echo t('Valeur'); ?></th>
+                        <th><?php echo t('Setting'); ?></th>
+                        <th><?php echo t('Value'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('Taille maximale des données reçues par la méthode POST'); ?>">
-                                <?php echo t('Version PHP'); ?>
+                            <span>
+                                <?php echo t('PHP version'); ?>
                             </span>
                         </th>
                         <td><?php echo phpversion(); ?></td>
                     </tr>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('Taille maximale des données reçues par la méthode POST'); ?>">
+                            <span data-tooltip="<?php echo t('Maximum size of data received by the POST method'); ?>">
                                 post_max_size <i class="fa fa-info-circle"></i>
                             </span>
                         </th>
@@ -118,7 +122,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('Taille maximale en octets, qu\'un script est autorisé à allouer'); ?>">
+                            <span data-tooltip="<?php echo t('Maximum size in bytes that a script is allowed to allocate'); ?>">
                                 memory_limit <i class="fa fa-info-circle"></i>
                             </span>
                         </th>
@@ -126,7 +130,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('Temps maximal d\'exécution d\'un script, en secondes'); ?>">
+                            <span data-tooltip="<?php echo t('Maximum script execution time, in seconds'); ?>">
                                 max_execution_time <i class="fa fa-info-circle"></i>
                             </span>
                         </th>
@@ -134,7 +138,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('Si vous êtes autorisé à charger des fichiers via les formulaires'); ?>">
+                            <span data-tooltip="<?php echo t('If you are allowed to upload files with forms'); ?>">
                                 file_uploads <i class="fa fa-info-circle"></i>
                             </span>
                         </th>
@@ -147,7 +151,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <span data-tooltip="<?php echo t('La taille maximale en octets d\'un fichier à charger'); ?>">
+                            <span data-tooltip="<?php echo t('The maximum size in bytes of a file to load'); ?>">
                                 upload_max_filesize <i class="fa fa-info-circle"></i>
                             </span>
                         </th>
@@ -157,7 +161,7 @@
                 <tfoot>
                     <tr>
                         <th colspan="2">
-                            <a href="<?php echo $link_about; ?>"><?php echo t('En voir plus'); ?></a>
+                            <a href="<?php echo $link_about; ?>"><?php echo t('More information about the server'); ?></a>
                         </th>
                     </tr>
                 </tfoot>

@@ -124,7 +124,7 @@ class File
         $form->group("file-input-$name-flex", 'div', function ($form) use ($name, $content, $attr) {
             $form
                 ->text("file-name-$name", [
-                    'aria-label' => 'visualisation du chemin du fichier',
+                    'aria-label' => t('View the file path'),
                     'class'      => 'form-control form-file-name',
                     'onclick'    => "document.getElementById('$name').click();",
                     'value'      => $content

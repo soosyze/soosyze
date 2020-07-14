@@ -29,8 +29,8 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_frequency-group', 'div', function ($form) use ($data) {
-                    $form->label('frequency_backup-label', t('Fréquence des sauvegardes'), [
-                        'data-tooltip' => t('Laisser la valeur à 0 pour que la fréquence ne soit pas prises en compte'),
+                    $form->label('frequency_backup-label', t('Backup frequency'), [
+                        'data-tooltip' => t('Leave the value at 0 so that the frequency is not taken into account'),
                     ])
                     ->text('backup_frequency', [
                         'class'       => 'form-control',
@@ -41,7 +41,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_frequency-info-group', 'div', function ($form) {
                     $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
-                        '_content' => t('Formats relatifs des dates de PHP')
+                        '_content' => t('Relative PHP Date Formats')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_cron-group', 'div', function ($form) use ($data) {

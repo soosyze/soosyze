@@ -26,14 +26,14 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     public function menu(&$menu)
     {
         $menu[ 'social' ] = [
-            'title_link' => 'Social'
+            'title_link' => 'Social networks'
         ];
     }
 
     public function form(&$form, $data, $req)
     {
         $form->group('social-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('social-legend', t('Réseaux sociaux'));
+            $form->legend('social-legend', t('Social networks'));
             foreach ($this->socials as $key => $social) {
                 $form->group("$key-group", 'div', function ($form) use ($data, $key, $social) {
                     $form->label("$key-label", $social, [ 'for' => $key ])

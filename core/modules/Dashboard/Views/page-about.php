@@ -2,16 +2,16 @@
 
 <div class="nav-action">
     <div class="nav-action-left">
-        <button class="btn btn-default" onclick="javascript:history.back();"><?php echo t('Retour'); ?></button>
+        <button class="btn btn-default" onclick="javascript:history.back();"><?php echo t('Back'); ?></button>
     </div>
 </div>
 
 <fieldset class="responsive">
-    <legend><?php echo t('Infos server'); ?></legend>
+    <legend><?php echo t('Server info'); ?></legend>
     <table class="table">
         <thead>
             <tr>
-                <th><?php echo t('Contante'); ?></th>
+                <th><?php echo t('Constante'); ?></th>
                 <th><?php echo t('Value'); ?></th>
             </tr>
         </thead>
@@ -47,12 +47,12 @@
 </fieldset>
 
 <fieldset class="responsive">
-    <legend><?php echo t('Paramètres'); ?></legend>
+    <legend><?php echo t('Settings'); ?></legend>
     <table class="table">
         <thead>
             <tr>
-                <th><?php echo t('Paramètre'); ?></th>
-                <th><?php echo t('Valeur'); ?></th>
+                <th><?php echo t('Setting'); ?></th>
+                <th><?php echo t('Value'); ?></th>
             </tr>
         </thead>
         <tbody>

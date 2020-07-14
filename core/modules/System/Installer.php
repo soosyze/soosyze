@@ -5,11 +5,19 @@ namespace SoosyzeCore\System;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
+    }
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/lang/fr/humans_time.json');
+        $this->loadTranslation('fr', __DIR__ . '/lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/lang/fr/standard.json');
     }
 
     public function install(ContainerInterface $ci)

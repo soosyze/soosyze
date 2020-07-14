@@ -230,7 +230,8 @@ class Login extends \Soosyze\Controller
             return $this->get404($req);
         }
         if ($user['time_reset'] < time()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = t('Le délai de réinitialisation du mot de passe est dépassé');
+            $_SESSION[ 'messages' ][ 'errors' ] = t('Password reset timeout');
+
             return $this->get404($req);
         }
 

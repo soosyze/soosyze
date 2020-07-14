@@ -182,8 +182,10 @@ class ModulesManager extends \Soosyze\Controller
 
         /* Installation */
         foreach ($modules as $title) {
-            $migration                   = self::composer()->getNamespace($title) . 'Installer';
-            $installer                   = new $migration();
+            $migration = self::composer()->getNamespace($title) . 'Installer';
+            $installer = new $migration();
+
+            $installer->boot();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
@@ -192,15 +194,25 @@ class ModulesManager extends \Soosyze\Controller
             $installer->hookInstall($this->container);
             /* Charge le container de nouveaux services. */
             $this->loadContainer($composer[ $title ]);
-            $composer[ $title ][ 'dir' ] = $installer->getDir();
+
+            $composer[ $title ] += [
+                'dir'          => $installer->getDir(),
+                'translations' => $installer->getTranslations()
+            ];
         }
+
+        self::module()->loadTranslations($modules, $composer, true);
 
         /* Lance l'installation des hooks présents dans les modules nouvellement installés. */
         foreach ($modules as $title) {
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
             /* Install les scripts de migrations. */
-            self::migration()->installMigration($composer[ $title ][ 'dir' ] . DS . 'Migrations', $title);
+            self::migration()->installMigration(
+                $composer[ $title ][ 'dir' ] . DS . 'Migrations',
+                $title
+            );
+            
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 

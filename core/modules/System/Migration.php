@@ -4,17 +4,49 @@ namespace SoosyzeCore\System;
 
 use Psr\Container\ContainerInterface;
 
-interface Migration
+abstract class Migration
 {
-    public function getDir();
+    private $translations = [];
 
-    public function install(ContainerInterface $ci);
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
 
-    public function seeders(ContainerInterface $ci);
+    public function loadTranslation($lang, $file)
+    {
+        $this->translations[ $lang ][] = $file;
+    }
 
-    public function uninstall(ContainerInterface $ci);
+    abstract public function getDir();
 
-    public function hookInstall(ContainerInterface $ci);
+    /**
+     * Chargement des Assets du module.
+     */
+    abstract public function boot();
 
-    public function hookUninstall(ContainerInterface $ci);
+    /**
+     * Script d'installation du module.
+     */
+    abstract public function install(ContainerInterface $ci);
+
+    /**
+     * Ajoute des données de demo.
+     */
+    abstract public function seeders(ContainerInterface $ci);
+
+    /**
+     * Script de dés-installation.
+     */
+    abstract public function uninstall(ContainerInterface $ci);
+
+    /**
+     * Install ou créer des données si d'autre modules sont présent.
+     */
+    abstract public function hookInstall(ContainerInterface $ci);
+
+    /**
+     * Désinstall ou supprime des données si d'autre modules se déhinstall.
+     */
+    abstract public function hookUninstall(ContainerInterface $ci);
 }

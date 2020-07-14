@@ -9,7 +9,7 @@
     },
     "module": {
         "class": "SoosyzeCore\\System\\Services\\Modules",
-        "arguments": ["@query", "@core"]
+        "arguments": ["@query", "@translate"]
     },
     "migration": {
         "class": "SoosyzeCore\\System\\Services\\Migration",

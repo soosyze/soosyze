@@ -22,7 +22,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     {
         $form
             ->group('login-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('login-legend', t('Log in'))
+                $form->legend('login-legend', t('Sign in'))
                 ->group('connect_url-group', 'div', function ($form) use ($data) {
                     $form->label('connect_url-label', t('Protection of connection paths'), [
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
@@ -73,7 +73,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('eula-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('eula-legend', t('CGU et RGPD'))
+                $form->legend('eula-legend', t('Terms and GDPR'))
                 ->group('terms_of_service_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('terms_of_service_show', [ 'checked' => $data[ 'terms_of_service_show' ] ])
                     ->label('terms_of_service_show-label', '<span class="ui"></span> ' . t('Activate the Terms'), [
@@ -81,8 +81,8 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('terms_of_service_page-group', 'div', function ($form) use ($data) {
-                    $form->label('terms_of_service_page-label', t('CGU page'), [
-                        'data-tooltip' => t('Conditions générales d\'utilisation (CGU)')
+                    $form->label('terms_of_service_page-label', t('Terms page'), [
+                        'data-tooltip' => t('End-User License Agreement (EULA)')
                     ])
                     ->group('terms_of_service_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
@@ -105,8 +105,8 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('rgpd_page-group', 'div', function ($form) use ($data) {
-                    $form->label('rgpd_page-label', t('RGPD Page'), [
-                        'data-tooltip' => t('Règlement général sur la protection des données (RGPD)')
+                    $form->label('rgpd_page-label', t('GDPR Page'), [
+                        'data-tooltip' => t('General Data Protection Regulation (GDPR)')
                     ])
                     ->group('rgpd_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
@@ -131,7 +131,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_reset_timeout-group', 'div', function ($form) use ($data) {
-                    $form->label('password_reset_timeout-label', t('Délai de réinitialisation du mot de passe'))
+                    $form->label('password_reset_timeout-label', t('Password reset time'))
                         ->text('password_reset_timeout', [
                             'class'       => 'form-control',
                             'maxlength'   => 255,
@@ -139,11 +139,11 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'       => $data[ 'password_reset_timeout' ]
                         ]);
                 }, [ 'class' => 'form-group' ])
-                    ->group('password_reset_timeout-info-group', 'div', function ($form) {
-                        $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
-                            '_content' => t('Formats relatifs des dates de PHP')
-                        ]);
-                    }, [ 'class' => 'form-group' ])
+                ->group('password_reset_timeout-info-group', 'div', function ($form) {
+                    $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
+                        '_content' => t('Relative PHP Date Formats')
+                    ]);
+                }, [ 'class' => 'form-group' ])
                 ->group('password_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
                     ->label('password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
@@ -236,11 +236,11 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'password_upper'         => t('Number of uppercase characters'),
             'password_digit'         => t('Number of numeric characters'),
             'password_special'       => t('Number of special characters'),
-            'password_reset_timeout' => t('Délai de réinitialisation du mot de passe'),
+            'password_reset_timeout' => t('Password reset time'),
         ])->setMessages([
             'password_reset_timeout' => [
                 'equal' => [
-                    'must' => 'Le champ :label doit être un formats relatifs positif'
+                    'must' => 'The :label field must be a positive relative formats'
                 ]
             ]
         ]);

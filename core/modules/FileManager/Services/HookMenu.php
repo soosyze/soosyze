@@ -41,7 +41,7 @@ class HookMenu
     {
         $menu[] = [
             'link'       => $this->router->getRoute('filemanager.profil.admin'),
-            'title_link' => t('File permissions'),
+            'title_link' => t('Files permissions'),
             'granted'    => 'filemanager.profil.admin'
         ];
     }

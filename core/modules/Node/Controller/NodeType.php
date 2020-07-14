@@ -14,7 +14,7 @@ class NodeType extends \Soosyze\Controller
         foreach ($data as $value) {
             $out[] = [
                 'id'   => $value[ 'node_type' ],
-                'text' => $value[ 'node_type_name' ]
+                'text' => t($value[ 'node_type_name' ])
             ];
         }
 

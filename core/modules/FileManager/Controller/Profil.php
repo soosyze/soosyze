@@ -46,7 +46,7 @@ class Profil extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Add a files profile')
+                    'title_main' => t('Add a files permission')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
@@ -138,7 +138,7 @@ class Profil extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Edit the file profile')
+                    'title_main' => t('Edit the files permission')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [
@@ -207,9 +207,9 @@ class Profil extends \Soosyze\Controller
             'method' => 'post',
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
-                $form->legend('folder-legend', t('Delete file profile'))
+                $form->legend('folder-legend', t('Delete files permission'))
                 ->html('folder-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the file profile is final.')
+                    '_content' => t('Warning ! The deletion of the files permission is final.')
                 ]);
             })
             ->token('token_file_permission')
@@ -225,7 +225,7 @@ class Profil extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Delete file profile')
+                    'title_main' => t('Delete files permission')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-form.php', $this->pathViews, [

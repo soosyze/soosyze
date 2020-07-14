@@ -14,7 +14,7 @@ class NodeStatus extends \Soosyze\Controller
         foreach ($data as $value) {
             $out[] = [
                 'id'   => $value[ 'node_status_id' ],
-                'text' => $value[ 'node_status_name' ]
+                'text' => t($value[ 'node_status_name' ])
             ];
         }
 

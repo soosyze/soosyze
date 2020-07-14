@@ -1,6 +1,17 @@
 
 <?php echo $user_manager_submenu; ?>
 
+<div class="nav-action">   
+    <div class="nav-action-left">
+        <button class="btn" onclick="document.getElementById('filter_user').classList.toggle('hidden')">
+            <i class="fa fa-filter"></i> <?php echo t('Filter'); ?>
+        </button>
+    </div>
+    <div class="nav-action-right">
+        <a href="<?php echo $link_create_user; ?>" class="btn btn-primary">
+            <i class="fa fa-plus"></i> <?php echo t('Add a user'); ?>
+        </a>
+    </div>
 </div>
 
 <div class="hidden" id="filter_user">
@@ -8,14 +19,14 @@
         <form action="<?php echo $link_filter_user; ?>" method="get" id="form_filter_user">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="username"><?php echo t('Username'); ?></label>
+                    <label for="username"><?php echo t('User name'); ?></label>
                     <input type="text" name="username" id="username" class="form-control">
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="firstname"><?php echo t('Firstname'); ?></label>
+                    <label for="firstname"><?php echo t('First name'); ?></label>
                     <input type="text" name="firstname" id="firstname" class="form-control">
                 </div>
             </div>

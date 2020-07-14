@@ -20,6 +20,7 @@ class Install extends \Soosyze\Controller
     private $modules = [
         'Config'      => 'SoosyzeCore\\Config\\',
         'Contact'     => 'SoosyzeCore\\Contact\\',
+        'Dashboard'   => 'SoosyzeCore\\Dashboard\\',
         'Node'        => 'SoosyzeCore\\Node\\',
         'Menu'        => 'SoosyzeCore\\Menu\\',
         'System'      => 'SoosyzeCore\\System\\',
@@ -182,36 +183,55 @@ class Install extends \Soosyze\Controller
     private function installModule()
     {
         /* Installation */
-        $instances = [];
+        $composer = [];
         $profil    = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
+
         $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
+
         foreach ($this->modules as $title => $namespace) {
             $migration = $namespace . 'Installer';
             $installer = new $migration();
 
-            $dir      = $installer->getDir();
+            $installer->boot();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
             $installer->seeders($this->container);
-            $composer = Util::getJson($dir . '/composer.json');
+
+            $composer[ $title ] = Util::getJson($installer->getDir() . '/composer.json');
+
+            $composer[ $title ] += [
+                'dir'          => $installer->getDir(),
+                'translations' => $installer->getTranslations()
+            ];
 
             /* Charge le container des nouveaux services. */
-            $this->loadContainer($composer);
-            $composer[ 'dir' ]   = $dir;
-            $instances[ $title ] = $composer;
+            $this->loadContainer($composer[ $title ]);
         }
 
-        foreach ($instances as $title => $composer) {
-            self::module()->create($composer);
+        self::module()->loadTranslations(
+            array_keys($this->modules),
+            $composer,
+            true
+        );
+
+        foreach ($this->modules as $title => $namespace) {
+            /* Enregistre le module en base de données. */
+            self::module()->create($composer[ $title ]);
             /* Install les scripts de migrations. */
-            $this->installMigration($composer[ 'dir' ] . DS . 'Migrations', $title);
+            self::migration()->installMigration(
+                $composer[ $title ][ 'dir' ] . DS . 'Migrations',
+                $title
+            );
+
             /* Hook d'installation pour les autres modules utilise le module actuel. */
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 
         self::query()
-            ->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
+            ->insertInto('module_require', [
+                'title_module', 'title_required', 'version'
+            ])
             ->values([ 'Core', 'System', '1.0' ])
             ->values([ 'Core', 'User', '1.0' ])
             ->execute();

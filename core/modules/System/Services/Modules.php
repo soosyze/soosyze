@@ -2,16 +2,21 @@
 
 namespace SoosyzeCore\System\Services;
 
+use Soosyze\Components\Util\Util;
+
 class Modules
 {
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     protected $query;
+    
+    protected $translate;
 
-    public function __construct($query)
+    public function __construct($query, $translate)
     {
-        $this->query = $query;
+        $this->query     = $query;
+        $this->transalte = $translate;
     }
 
     /**
@@ -71,11 +76,12 @@ class Modules
             ->from('module_active')
             ->fetchAll();
 
+        $out = [];
         foreach ($modules as $value) {
-            $modules[ $value[ 'title' ] ] = $value;
+            $out[ $value[ 'title' ] ] = $value;
         }
 
-        return $modules;
+        return $out;
     }
 
     public function listModuleActiveNotRequire(array $columns = [])
@@ -145,6 +151,46 @@ class Modules
             }
 
             $this->query->execute();
+        }
+    }
+
+    /**
+     * Installe les fichiers de traduction.
+     *
+     * @param array $modules  Liste des noms de modules à installer
+     * @param array $composer Liste de tous les fichiers composer
+     * @param bool  $crushed  Si la mise à jour de la traduction ne prend pas en compte existante.
+     */
+    public function loadTranslations(array $modules, array $composer, $crushed = false)
+    {
+        $path         = $this->transalte->getPath();
+
+        $strTranslations = [];
+
+        /* Réuni tous les fichiers de traductions par langues */
+        foreach ($modules as $title) {
+            foreach ($composer[ $title ][ 'translations' ] as $lang => $translations) {
+                foreach ($translations as $translation) {
+                    if (isset($strTranslations[ $lang ])) {
+                        $strTranslations[ $lang ] += Util::getJson($translation);
+                    } else {
+                        $strTranslations[ $lang ] = Util::getJson($translation);
+                    }
+                }
+            }
+        }
+
+        /* Enregistre les fichiers de traductions */
+        foreach ($strTranslations as $lang => $translation) {
+            if (file_exists("$path/$lang.json")) {
+                $current = $crushed
+                    ? Util::getJson("$path/$lang.json")
+                    : [];
+
+                Util::saveJson($path, $lang, $current + $translation);
+            } else {
+                Util::createJson($path, $lang, $translation);
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ class Dashboard extends \Soosyze\Controller
                 ->make('page.content', 'page-dashboard.php', $this->pathViews, [
                     'link_about'  => self::router()->getRoute('dashboard.about'),
                     'link_cron'   => self::router()->getRoute('dashboard.cron'),
+                    'link_trans'  => self::router()->getRoute('dashboard.trans'),
                     'size_backup' => self::dashboard()->getSizeBackups(),
                     'size_data'   => self::dashboard()->getSizeDatabase(),
                     'size_file'   => self::dashboard()->getSizeFiles()
@@ -54,7 +55,31 @@ class Dashboard extends \Soosyze\Controller
     {
         self::core()->callHook('app.cron', [ $req ]);
 
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('La tâche cron a été exécutée avec succès') ];
+        $_SESSION[ 'messages' ][ 'success' ] = [ t('The cron task has been successfully executed') ];
+
+        return new Redirect(self::router()->getRoute('dashboard.index'));
+    }
+    
+    public function updateTranslations($req)
+    {
+        $modules  = array_keys(self::module()->listModuleActive());
+        $composer = self::composer()->getAllComposer();
+
+        $composerActive = [];
+        foreach ($modules as $title) {
+            $migration = self::composer()->getNamespace($title) . 'Installer';
+            $installer = new $migration();
+            
+            $installer->boot();
+
+            $composerActive[ $title ] = $composer[ $title ] + [
+                'dir'          => $installer->getDir(),
+                'translations' => $installer->getTranslations()
+            ];
+        }
+
+        self::module()->loadTranslations($modules, $composerActive);
+        $_SESSION[ 'messages' ][ 'success' ] = [ t('The translation files have been updated') ];
 
         return new Redirect(self::router()->getRoute('dashboard.index'));
     }

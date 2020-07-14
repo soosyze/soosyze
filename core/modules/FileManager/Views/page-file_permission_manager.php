@@ -4,7 +4,7 @@
 <div class="nav-action">
     <div class="nav-action-right">
         <a href="<?php echo $link_add; ?>" class="btn btn-primary">
-            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a file permission'); ?>
+            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a files permission'); ?>
         </a>
     </div>
 </div>

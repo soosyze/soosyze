@@ -525,7 +525,7 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
         if (mb_strlen($node[ 'title' ] . ' clone') > 255) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Le titre du contenu cloner est trop long.' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Clone content title is too long' ];
 
             return new Redirect(self::router()->getRoute('node.index'));
         }
