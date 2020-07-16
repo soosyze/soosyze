@@ -3,6 +3,13 @@
         "class": "SoosyzeCore\\Dashboard\\Services\\Dashboard",
         "arguments": ["@config", "@core"]
     },
+    "dashboard.install": {
+        "class": "SoosyzeCore\\Dashboard\\Installer",
+        "hooks": {
+            "install.user": "hookInstallUser",
+            "install.menu": "hookInstallMenu"
+        }
+    },
     "dashboard.hook.user": {
         "class": "SoosyzeCore\\Dashboard\\Services\\HookUser",
         "hooks": {
