@@ -70,7 +70,7 @@ class RoleManager extends \Soosyze\Controller
                     'form'                 => $form,
                     'link_add'             => self::router()->getRoute('user.role.create'),
                     'roles'                => $values,
-                    'user_manager_submenu' => self::user()->getManagerSubmenu('user.role.admin')
+                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.role.admin')
                 ]);
     }
 

@@ -30,7 +30,8 @@ class HookMenu
         $path = str_replace(':user_id', $userId, $path);
 
         $menu[] = [
-            'link'       => $this->router->getRoute('filemanager.admin', [
+            'key'        => 'filemanager.admin',
+            'request'    => $this->router->getRequestByRoute('filemanager.admin', [
                 ':path' => $path
             ]),
             'title_link' => t('File')
@@ -40,9 +41,9 @@ class HookMenu
     public function hookUserManagerMenu(&$menu)
     {
         $menu[] = [
-            'link'       => $this->router->getRoute('filemanager.profil.admin'),
-            'title_link' => t('Files permissions'),
-            'granted'    => 'filemanager.profil.admin'
+            'key'        => 'filemanager.profil.admin',
+            'request'    => $this->router->getRequestByRoute('filemanager.profil.admin'),
+            'title_link' => t('Files permissions')
         ];
     }
 }

@@ -65,7 +65,7 @@ class FilePermissionManager extends \Soosyze\Controller
                     'link_add'             => self::router()->getRoute('filemanager.profil.create'),
                     'profils'              => $values,
                     'router'               => self::router(),
-                    'user_manager_submenu' => self::user()->getManagerSubmenu('filemanager.profil.admin')
+                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('filemanager.profil.admin')
         ]);
     }
 

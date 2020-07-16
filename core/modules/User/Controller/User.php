@@ -47,12 +47,10 @@ class User extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-user-show.php', $this->pathViews, [
-                    'user'  => $user,
-                    'roles' => self::user()->getRolesUser($id)
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                    'roles'        => self::user()->getRolesUser($id),
+                    'user'         => $user,
+                    'user_submenu' => self::user()->getUserSubmenu('user.show', $id)
+                ]);
     }
 
     public function create()
@@ -265,11 +263,9 @@ class User extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                    'form'         => $form,
+                    'user_submenu' => self::user()->getUserSubmenu('user.edit', $id)
+                ]);
     }
 
     public function update($id, $req)
@@ -462,11 +458,9 @@ class User extends \Soosyze\Controller
                     'title_main' => t('Delete :name account', [ ':name' => $user[ 'username' ] ])
                 ])
                 ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                    'form'         => $form,
+                    'user_submenu' => self::user()->getUserSubmenu('user.remove', $id)
+                ]);
     }
 
     public function delete($id, $req)
@@ -536,31 +530,6 @@ class User extends \Soosyze\Controller
         self::query()->execute();
 
         $this->container->callHook('user.update.role.after', [ $validator, $idUser ]);
-    }
-
-    protected function getMenuUser($id)
-    {
-        $menu[]    = [
-            'title_link' => t('View'),
-            'link'       => self::router()->getRoute('user.show', [ ':id' => $id ])
-        ];
-        $isGranted = self::user()->isGranted('user.people.manage');
-        if ($isGranted || self::user()->isGranted('user.edited')) {
-            $menu[] = [
-                'title_link' => t('Edit'),
-                'link'       => self::router()->getRoute('user.edit', [ ':id' => $id ])
-            ];
-        }
-        if ($isGranted || self::user()->isGranted('user.deleted')) {
-            $menu[] = [
-                'title_link' => t('Delete'),
-                'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
-            ];
-        }
-
-        self::core()->callHook('user.menu', [ &$menu, $id ]);
-
-        return $menu;
     }
 
     private function savePicture($id, $validator)

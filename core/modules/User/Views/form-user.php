@@ -1,3 +1,3 @@
 
-<?php echo $section[ 'menu_user' ]; ?>
+<?php echo $user_submenu; ?>
 <?php echo $form ?>

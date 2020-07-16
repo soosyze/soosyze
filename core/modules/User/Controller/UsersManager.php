@@ -37,7 +37,7 @@ class UsersManager extends \Soosyze\Controller
                     'link_filter_user'     => self::router()->getRoute('user.admin.filter'),
                     'link_user_admin'      => self::router()->getRoute('user.admin'),
                     'users'                => $users,
-                    'user_manager_submenu' => self::user()->getManagerSubmenu('user.admin')
+                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.admin')
                 ]);
     }
 

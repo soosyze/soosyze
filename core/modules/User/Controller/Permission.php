@@ -64,7 +64,7 @@ class Permission extends \Soosyze\Controller
                     'link_update'          => self::router()->getRoute('user.permission.update'),
                     'modules'              => $output,
                     'roles'                => $roles,
-                    'user_manager_submenu' => self::user()->getManagerSubmenu('user.permission.admin')
+                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.permission.admin')
                 ]);
     }
 

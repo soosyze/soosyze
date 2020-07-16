@@ -132,38 +132,85 @@ class User
 
         return $out;
     }
-    
-    public function getManagerSubmenu($key_route)
+
+    public function getUserSubmenu($keyRoute, $id)
     {
         $menu = [
             [
-                'title_link' => t('Users'),
-                'link'       => $this->router->getRoute('user.admin'),
-                'granted'    => 'user.admin'
+                'key'        => 'user.show',
+                'request'    => $this->router->getRequestByRoute('user.show', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('View')
             ], [
-                'title_link' => t('Roles'),
-                'link'       => $this->router->getRoute('user.role.admin'),
-                'granted'    => 'user.role.admin'
+                'key'        => 'user.edit',
+                'request'    => $this->router->getRequestByRoute('user.edit', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('Edit')
             ], [
-                'title_link' => t('Permissions'),
-                'link'       => $this->router->getRoute('user.permission.admin'),
-                'granted'    => 'user.permission.admin'
+                'key'        => 'user.remove',
+                'request'    => $this->router->getRequestByRoute('user.remove', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
+
+        $this->core->callHook('user.menu', [ &$menu, $id ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return $this->core
+                ->get('template')
+                ->createBlock('submenu-user.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
+    }
+    
+    public function getUserManagerSubmenu($keyRoute)
+    {
+        $menu = [
+            [
+                'key'        => 'user.admin',
+                'request'    => $this->router->getRequestByRoute('user.admin'),
+                'title_link' => t('Users')
+            ], [
+                'key'        => 'user.role.admin',
+                'request'    => $this->router->getRequestByRoute('user.role.admin'),
+                'title_link' => t('Roles')
+            ], [
+                'key'        => 'user.permission.admin',
+                'request'    => $this->router->getRequestByRoute('user.permission.admin'),
+                'title_link' => t('Permissions')
             ]
         ];
 
         $this->core->callHook('user.manager.menu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
-            if (!$this->core->callHook('app.granted', [ $link[ 'granted' ] ])) {
+            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
                 unset($menu[ $key ]);
+
+                continue;
             }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
 
         return $this->core
                 ->get('template')
                 ->createBlock('submenu-user_manager.php', $this->pathViews)
                 ->addVars([
-                    'key_route' => $key_route,
+                    'key_route' => $keyRoute,
                     'menu'      => $menu
         ]);
     }

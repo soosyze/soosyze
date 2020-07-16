@@ -24,7 +24,7 @@
         <div class="user-bio"><?php echo $user[ 'bio' ]; ?></div>
     </div>
     <div class="col-sm-9">
-        <?php echo $section[ 'menu_user' ]; ?>
+        <?php echo $user_submenu; ?>
         <fieldset>
             <legend><?php echo t('User'); ?></legend>
 
