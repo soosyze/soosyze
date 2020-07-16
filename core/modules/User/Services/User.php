@@ -119,6 +119,15 @@ class User
         return $this->query->from('role')->fetchAll();
     }
 
+    public function getRolesAttribuable()
+    {
+        return $this->query
+            ->from('role')
+            ->where('role_id', '>', 2)
+            ->orderBy('role_weight')
+            ->fetchAll();
+    }
+
     public function getIdRolesUser($idUser)
     {
         $data = $this->query->from('user_role')
@@ -242,7 +251,11 @@ class User
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
             ->where('user_id', $user[ 'user_id' ])
             ->lists('permission_id');
-
+        $this->granted = array_merge($this->granted, $this->query
+            ->from('role_permission')
+            ->where('role_id', 2)
+            ->lists('permission_id'));
+        
         return in_array($idPermission, $this->granted);
     }
 

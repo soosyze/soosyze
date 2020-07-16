@@ -29,6 +29,12 @@ class HookUser
             'user.edited'            => t('Edit your user account'),
             'user.deleted'           => t('Delete your user account'),
         ];
+        $permission[ 'User role' ][ 'role.all' ] = t('Attribuer tous les rôles');
+        foreach ($this->user->getRolesAttribuable() as $role) {
+            $permission[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = t('Attribuer le role de :name', [
+                ':name' => $role[ 'role_label' ]
+            ]);
+        }
     }
 
     public function hookPermissionAdminister()

@@ -26,9 +26,11 @@ class HookApp
         $this->pathViews = dirname(__DIR__) . '/Views/';
 
         $this->userCurrent = $this->user->isConnected();
-        $this->roles = $this->userCurrent
-            ? $this->user->getRolesUser($this->userCurrent[ 'user_id' ])
-            : [];
+        
+        if ($this->userCurrent) {
+            $this->roles   = $this->user->getRolesUser($this->userCurrent[ 'user_id' ]);
+            $this->roles[] = [ 'role_id' => 2 ];
+        }
     }
 
     public function hookResponseAfter(

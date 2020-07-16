@@ -289,19 +289,20 @@ class FormUser extends FormBuilder
         });
     }
 
-    public function fieldsetRoles($roles)
+    public function fieldsetRoles(array $roles)
     {
-        return $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
-            $form->legend('role-legend', t('User Roles'));
-            foreach ($roles as $role) {
-                $attrRole = [
+        return $roles
+            ? $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
+                $form->legend('role-legend', t('User Roles'));
+                foreach ($roles as $role) {
+                    $attrRole = [
                         'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values[ 'roles' ]),
                         'disabled' => $role[ 'role_id' ] <= 2,
                         'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]
                     ];
-                $form->group('role_' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
-                    $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
+                    $form->group('role_' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
+                        $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
                             ->label(
                                 'role_' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
@@ -311,9 +312,10 @@ class FormUser extends FormBuilder
                                 . t($role[ 'role_label' ]),
                                 [ 'for' => "role_{$role[ 'role_id' ]}" ]
                             );
-                }, self::$attrGrp);
-            }
-        });
+                    }, self::$attrGrp);
+                }
+            })
+        : $this;
     }
 
     /**
