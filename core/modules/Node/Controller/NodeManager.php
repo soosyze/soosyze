@@ -126,6 +126,7 @@ class NodeManager extends \Soosyze\Controller
 
         if ($this->container->callHook('app.granted', [ 'node.administer' ])) {
             return $nodes
+                    ->orderBy('sticky', 'desc')
                     ->orderBy('date_changed', 'desc')
                     ->limit(self::$limit, self::$limit * ($page - 1));
         }
@@ -160,6 +161,7 @@ class NodeManager extends \Soosyze\Controller
         }
 
         return $nodes
+                ->orderBy('sticky', 'desc')
                 ->orderBy('date_changed', 'desc')
                 ->limit(self::$limit, self::$limit * ($page - 1));
     }

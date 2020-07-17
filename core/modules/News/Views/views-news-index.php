@@ -16,6 +16,14 @@
 
         <div class="card_main">
             <div class="card_content">
+                <?php if ($new['sticky']): ?>
+
+                <small class="card_blog_sticky">
+                    <i class="fa fa-thumbtack" aria-hidden="true"></i> <?php echo t('Pinned content'); ?>
+                </small>
+                <?php endif; ?>
+                
+                <h3 class="card__title"><?php echo $new[ 'title' ]; ?></h3>
                 <div class="card_date_tags">
                     <span class="card_date">
                         <i class="fa fa-calendar-alt"></i> 
@@ -25,9 +33,8 @@
                         ~<?php echo $new[ 'field' ][ 'reading_time' ]['field_value'] . ' ' . t('minute(s)'); ?>
                     </span>
                 </div>
-                <h3 class="card__title"><?php echo $new[ 'title' ]; ?></h3>
                 <?php echo $new[ 'field' ][ 'summary' ]['field_display']; ?>
-
+                
             </div>
         </div>
 

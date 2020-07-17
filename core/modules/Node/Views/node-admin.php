@@ -82,6 +82,12 @@
 
                 <tr>
                     <th>
+                        <?php if ($node[ 'sticky' ]): ?>
+
+                        <span data-tooltip="<?php echo t('Pinned content'); ?>">
+                            <i class="fa fa-thumbtack" aria-hidden="true"></i>
+                        </span>
+                        <?php endif; ?>
                         <?php if (isset($node[ 'link_edit' ])): ?>
 
                         <a href="<?php echo $node[ 'link_edit' ]; ?>">

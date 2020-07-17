@@ -38,6 +38,7 @@ class News extends \Soosyze\Controller
             ->from('node')
             ->where('node_status_id', 1)
             ->where('type', 'article')
+            ->orderBy('sticky', 'desc')
             ->orderBy('date_created', 'desc')
             ->limit(self::$limit, self::$limit * ($page - 1))
             ->fetchAll();
@@ -204,6 +205,7 @@ class News extends \Soosyze\Controller
                 ->where('type', 'article')
                 ->between('date_created', $dateCurrent, $dateNext)
                 ->where('node_status_id', 1)
+                ->orderBy('sticky', 'desc')
                 ->orderBy('date_created', 'desc')
                 ->limit(self::$limit, $offset)
                 ->fetchAll();

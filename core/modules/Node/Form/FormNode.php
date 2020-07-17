@@ -13,6 +13,7 @@ class FormNode extends FormBuilder
         'meta_nofollow'    => false,
         'meta_noarchive'   => false,
         'meta_title'       => '',
+        'sticky'           => false,
         'node_status_id'   => 3,
         'date_created'     => ''
     ];
@@ -358,6 +359,12 @@ class FormNode extends FormBuilder
                 ->group('actions-group', 'fieldset', function ($form) {
                     $form
                     ->legend('actions-legend', t('Publication'))
+                    ->group('sticky-group', 'div', function ($form) {
+                        $form->checkbox('sticky', [ 'checked' => $this->content[ 'sticky' ] ])
+                        ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
+                            'for' => 'sticky'
+                        ]);
+                    }, self::$attrGrp)
                     ->group('date_created-group', 'div', function ($form) {
                         $form->label('date_created-label', t('Publication date'), [
                             'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')

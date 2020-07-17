@@ -129,6 +129,7 @@ class HookBlock
             ->from('node')
             ->where('node_status_id', 1)
             ->where('type', 'article')
+            ->orderBy('sticky', 'desc')
             ->orderBy('date_created', 'desc')
             ->limit($options[ 'limit' ] + 1, $options[ 'offset' ])
             ->fetchAll();

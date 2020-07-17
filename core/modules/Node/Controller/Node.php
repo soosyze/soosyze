@@ -118,6 +118,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
@@ -193,6 +194,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
+                'sticky'           => (bool) $validator->getInput('sticky'),
                 'node_status_id'   => $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title'),
                 'type'             => $type,
@@ -337,6 +339,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
@@ -422,6 +425,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
                 'node_status_id'   => (int) $validator->getInput('node_status_id'),
+                'sticky'           => (bool) $validator->getInput('sticky'),
                 'title'            => $validator->getInput('title')
             ];
 

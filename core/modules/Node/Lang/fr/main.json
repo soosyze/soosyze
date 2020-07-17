@@ -32,5 +32,7 @@
     "This content is not published": "Ce contenu n'est pas publié",
     "Creation date": "Date de création",
     "Page": "Page",
-    "Clone content title is too long": "Le titre du contenu cloner est trop long"
+    "Clone content title is too long": "Le titre du contenu cloner est trop long",
+    "Pinned content": "Contenu épinglé",
+    "Pin content": "Épingler le contenu"
 }

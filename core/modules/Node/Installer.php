@@ -32,6 +32,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->boolean('meta_noindex')->valueDefault(false)
                 ->string('meta_title')->valueDefault('')
                 ->integer('node_status_id')->valueDefault(3)
+                ->boolean('sticky')->valueDefault(false)
                 ->string('title')
                 ->string('type', 32);
             })
