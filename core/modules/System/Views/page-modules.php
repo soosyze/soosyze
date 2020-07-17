@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-3 sticky">
         <div class="form-group">
-            <div id="result-search" style="height: 2em;"><?php echo $count; ?> module(s)</div>
+            <div id="result-search" style="height: 2em;"><?php echo $count; ?> modules</div>
             <input type="text" id="search" class="form-control" placeholder="<?php echo t('Search modules'); ?>" aria-label="<?php echo t('Search modules'); ?>" onkeyup="search();" autofocus>
         </div>
         <div class="form-group">
@@ -41,7 +41,7 @@
             </div>
         <?php endif; ?>
 
-        <?php echo $form->form_open(); ?>
+        <?php echo $form->form_open([ 'id' => 'form-package' ]); ?>
         <?php foreach ($packages as $package => $modules): ?>
 
         <fieldset id="<?php echo $package; ?>" class="responsive package">
@@ -117,5 +117,11 @@
         <?php echo $form->form_input('submit', [ 'class' => 'btn btn-success' ]); ?>
         <?php echo $form->form_close(); ?>
 
+        <div class="alert alert-info" id="package-nothing" style="display:none">
+            <div class="content-nothing">
+                <i class="fa fa-inbox"></i>
+                <p><?php echo t('No results were found for your search.'); ?></p>
+            </div>
+        </div>
     </div>
 </div>
