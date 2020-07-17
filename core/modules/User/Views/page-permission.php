@@ -1,79 +1,129 @@
 
 <?php echo $user_manager_submenu; ?>
 
-<div class="form-group">
-    <input type="text"
-           id="search"
-           class="form-control"
-           placeholder="<?php echo t('Search permissions'); ?>"
-           aria-label="<?php echo t('Search permissions'); ?>"
-           onkeyup="searchPermission();"
-           autofocus>
-</div>
-<form method="post" action="<?php echo $link_update ?>">
-    <fieldset class="responsive">
-        <legend><?php echo t('User permissions'); ?></legend>
-        <table class="table table-hover">
-            <thead>
-                <tr class="form-head">
-                    <th><?php echo t('Name'); ?></th>
-                    <?php foreach ($roles as $key => $role): ?>
+<div class="row">
+    <div class="col-md-3 sticky">
+        <div class="form-group">
+            <div id="result-search" style="height: 2em;"><?php echo $count; ?> permissions</div>
+            <div class="form-group">
+                <input 
+                    type="text"
+                    id="search"
+                    class="form-control"
+                    placeholder="<?php echo t('Search permissions'); ?>"
+                    aria-label="<?php echo t('Search permissions'); ?>"
+                    onkeyup="searchPermission();"
+                    autofocus>
+            </div>
+        </div>
 
-                    <th id="role-<?php echo $role['role_id']; ?>">
-                        <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
-                            <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i></span>
-                            <?php echo t($role[ 'role_label' ]); ?></th>
-                    <?php endforeach; ?>
+        <nav id="nav_config">
+            <ul id="top-menu" class="nav nav-pills nav-stacked">
+                <?php foreach (array_keys($modules) as $module): ?>
 
-                </tr>
-            </thead>
-            <tbody id="table-permission">
-                <?php foreach ($modules as $key => $module): ?>
-
-                <tr><td id="<?php echo $key; ?>" colspan="<?php echo $colspan; ?>" class="permission-module"><?php echo t($key); ?></td></tr>
-                <?php foreach ($module as $key => $permission): ?>
-
-                <tr id="<?php echo $key ?>">
-                    <th><?php echo $permission[ 'action' ] ?></th>
-                    <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
-                    <?php $name = $role . '[' . $key . ']' ?>
-
-                    <td data-title="<?php echo t($roles[ $role - 1 ][ 'role_label' ]); ?>">
-                        <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?> aria-labelledby="role-<?php echo $role; ?>">
-                        <label for="<?php echo $name ?>"><i class="ui" aria-hidden="true"></i></label>
-                    </td>
-                    <?php endforeach; ?>
-
-                </tr>
+                <li id="nav-<?php echo \Soosyze\Components\Util\Util::strSlug($module); ?>">
+                    <a href="#<?php echo \Soosyze\Components\Util\Util::strSlug($module); ?>"><?php echo $module; ?></a>
+                </li>
                 <?php endforeach; ?>
+
+            </ul>
+        </nav>
+    </div>
+
+    <div class="col-md-9">
+        <form method="post" action="<?php echo $link_update ?>" id="form-permission">
+            
+            <?php foreach ($modules as $key => $module): ?>
+            <fieldset id="<?php echo \Soosyze\Components\Util\Util::strSlug($key); ?>" class="modules">
+                <legend><?php echo t($key); ?></legend>
+                <table class="table table-hover responsive">
+                    <thead>
+                        <tr class="form-head">
+                            <th><?php echo t('Name'); ?></th>
+                            <?php foreach ($roles as $key => $role): ?>
+
+                            <th>
+                                <div class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
+                                    <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i>
+                                </div>
+                                <div><?php echo t($role[ 'role_label' ]); ?></div>
+
+                            </th>
+                            <?php endforeach; ?>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($module as $key => $permission): ?>
+
+                        <tr id="<?php echo $key ?>" class="permission"  data-title="<?php echo $permission[ 'action' ]; ?>">
+                            <th><?php echo $permission[ 'action' ] ?></th>
+                            <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
+                            <?php $name = $role . '[' . $key . ']' ?>
+
+                            <td data-title="<?php echo t($roles[ $role - 1 ][ 'role_label' ]); ?>">
+                                <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?> aria-labelledby="role-<?php echo $role; ?>">
+                                <label for="<?php echo $name ?>"><i class="ui" aria-hidden="true"></i></label>
+                            </td>
+                            <?php endforeach; ?>
+
+                        </tr>
+                        <?php endforeach; ?>
+
+                    </tbody>
+                </table>
+            </fieldset>
             <?php endforeach; ?>
 
-            </tbody>
-        </table>
-    </fieldset>
-    <input type="submit" name="submit" class="btn btn-success" value="<?php echo t('Save'); ?>">
-</form>
+            <input type="submit" name="submit" class="btn btn-success" value="<?php echo t('Save'); ?>">
+        </form>
+
+        <div class="alert alert-info" id="permission-nothing" style="display:none">
+            <div class="content-nothing">
+                <i class="fa fa-inbox"></i>
+                <p><?php echo t('No results were found for your search.'); ?></p>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    var modules = <?php echo json_encode($modules) ?>;
     function searchPermission()
     {
-        var input = document.getElementById('search').value;
-        var reg = new RegExp(input, 'i');
-        Object.keys(modules).forEach(function (module)
-        {
-            var module_hide = true;
-            Object.keys(modules[module]).forEach(function (permission) {
-                if (!reg.test(modules[module][permission].action)) {
-                    document.getElementById(permission).style.display = "none";
+        const search = $('#search').val();
+        const reg = new RegExp(search, 'i');
+        let number = 0;
+
+        $('.modules').each(function () {
+            var package_hide = 'none';
+
+            $(this).find('.permission').each(function () {
+                $(this).css('display', '');
+
+                if (reg.test($(this).data('title'))) {
+                    number++;
+                    package_hide = '';
                 } else {
-                    document.getElementById(permission).style.display = "";
-                    module_hide = false;
-                }
+                    $(this).css('display', 'none');
+                };
             });
 
-            document.getElementById(module).style.display = module_hide
-                    ? "none"
-                    : "";
+            $(this).css('display', package_hide);
+            /* Pour l'affichage de la navigation. */
+            $(`#nav-${this.id}`).css('display', package_hide);
         });
+        
+        if(number === 0) {
+            $('#form-permission').css('display', 'none');
+            $('#permission-nothing').css('display', '');
+        } else {
+            $('#form-permission').css('display', '');
+            $('#permission-nothing').css('display', 'none');
+        }
+
+        $('#result-search').text(
+            number <= 1
+                ? `${number} permission`
+                : `${number} permissions`
+        );
     }
 </script>

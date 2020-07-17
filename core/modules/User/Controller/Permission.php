@@ -34,6 +34,7 @@ class Permission extends \Soosyze\Controller
 
         /* Met en forme les droit utilisateurs. */
         $output = [];
+        $count  = 0;
         foreach ($modules as $keyModule => $module) {
             foreach ($module as $keyPermission => $permission) {
                 $output[ $keyModule ][ $keyPermission ][ 'action' ] = $permission;
@@ -43,6 +44,7 @@ class Permission extends \Soosyze\Controller
                         $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
                     }
                 }
+                $count++;
             }
         }
 
@@ -60,7 +62,7 @@ class Permission extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'page-permission.php', $this->pathViews, [
-                    'colspan'              => count($roles) + 1,
+                    'count'                => $count,
                     'link_update'          => self::router()->getRoute('user.permission.update'),
                     'modules'              => $output,
                     'roles'                => $roles,
