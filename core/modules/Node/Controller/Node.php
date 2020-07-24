@@ -63,9 +63,10 @@ class Node extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
-            'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post',
+                'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
+                'id'      => 'form-node',
+                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $type, $fields)
             ->make();
 
@@ -91,7 +92,8 @@ class Node extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-create.php', $this->pathViews, [
-                    'form' => $form
+                    'form'                  => $form,
+                    'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
         ]);
     }
 
@@ -278,9 +280,10 @@ class Node extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
-            'action'  => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post',
+                'action'  => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
+                'id'      => 'form-node',
+                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $content[ 'type' ], $fields)
             ->make();
 
@@ -304,8 +307,9 @@ class Node extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-edit.php', $this->pathViews, [
-                    'form'         => $form,
-                    'node_submenu' => $this->getSubmenuNode($node, 'node.edit')
+                    'form'                  => $form,
+                    'node_submenu'          => $this->getSubmenuNode($node, 'node.edit'),
+                    'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
         ]);
     }
 
@@ -650,44 +654,78 @@ class Node extends \Soosyze\Controller
 
     public function getSubmenuNode(array $node, $keyRoute)
     {
-        $menu = [];
-
-        $isGranted = self::user()->isGranted('node.administer');
-        if ($isGranted || self::user()->isGranted('node.edited.' . $node[ 'type' ])) {
-            $menu = [
-                [
-                    'title_link' => t('View'),
-                    'link'       => self::router()->getRoute('node.show', [
-                        ':id_node' => $node[ 'id' ]
-                    ]),
-                    'granted'    => 'node.show'
-                ], [
-                    'title_link' => t('Edit'),
-                    'link'       => self::router()->getRoute('node.edit', [
-                        ':id_node' => $node[ 'id' ]
-                    ]),
-                    'granted'    => 'node.edit'
-                ]
-            ];
-        }
-        if ($isGranted || self::user()->isGranted('node.deleted.' . $node[ 'type' ])) {
-            $menu[] = [
-                'title_link' => t('Delete'),
-                'link'       => self::router()->getRoute('node.remove', [
+        $menu = [
+            [
+                'key'        => 'node.show',
+                'request'    => self::router()->getRequestByRoute('node.show', [
                     ':id_node' => $node[ 'id' ]
                 ]),
-                'granted'    => 'node.delete'
-            ];
-        }
+                'title_link' => t('View')
+            ], [
+                'key'        => 'node.edit',
+                'request'    => self::router()->getRequestByRoute('node.edit', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'node.delete',
+                'request'    => self::router()->getRequestByRoute('node.remove', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
 
         self::core()->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
 
+        foreach ($menu as $key => &$link) {
+            if (!self::core()->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
         return self::template()
-                ->createBlock('submenu-node_show.php', $this->pathViews)
+                ->createBlock('submenu-node.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu
         ]);
+    }
+    
+    public function getNodeFieldsetSubmenu()
+    {
+        $menu = [
+            [
+                'class'      => 'active',
+                'link'       => '#fields-fieldset',
+                'title_link' => t('Content')
+            ], [
+                'class'      => '',
+                'link'       => '#seo-fieldset',
+                'title_link' => t('SEO')
+            ], [
+                'class'      => '',
+                'link'       => '#publication-fieldset',
+                'title_link' => t('Publication')
+            ]
+        ];
+        
+        if (self::module()->has('Menu')) {
+            $menu[] = [
+                    'class'      => '',
+                    'link'       => '#menu-fieldset',
+                    'title_link' => t('Menu')
+            ];
+        }
+
+        self::core()->callHook('node.fieldset.submenu', [ &$menu ]);
+
+        return self::template()
+                ->createBlock('submenu-node_fieldset.php', $this->pathViews)
+                ->addVar('menu', $menu);
     }
 
     private function deleteFile($idNode)

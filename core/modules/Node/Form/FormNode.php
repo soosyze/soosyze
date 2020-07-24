@@ -69,7 +69,7 @@ class FormNode extends FormBuilder
 
     public function make()
     {
-        return $this->title()
+        return $this
                 ->fields()
                 ->seo()
                 ->actionsSubmit();
@@ -79,6 +79,16 @@ class FormNode extends FormBuilder
     {
         return $this->group('fields-fieldset', 'fieldset', function ($form) {
             $form->legend('fields-legend', t('Fill in the following fields'));
+            $form->group('title-group', 'div', function ($form) {
+                $form->label('title-label', t('Title of the content'))
+                        ->text('title', [
+                            'class'       => 'form-control',
+                            'maxlength'   => 255,
+                            'required'    => 1,
+                            'placeholder' => t('Title of the content'),
+                            'value'       => $this->content[ 'title' ]
+                    ]);
+            }, self::$attrGrp);
             foreach ($this->fields as $value) {
                 $key                   = $value[ 'field_name' ];
                 /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
@@ -87,7 +97,10 @@ class FormNode extends FormBuilder
                         : '';
                 $this->makeField($form, $value);
             }
-        });
+        }, [
+                'class' => 'tab-pane active fade',
+                'id'    => 'fields-fieldset'
+        ]);
     }
 
     public function makeField(&$form, $value)
@@ -305,7 +318,7 @@ class FormNode extends FormBuilder
 
     public function seo()
     {
-        return $this->group('seo-group', 'fieldset', function ($form) {
+        return $this->group('seo-fieldset', 'fieldset', function ($form) {
             $form->legend('seo-legend', t('SEO'))
                     ->group('meta_title-group', 'div', function ($form) {
                         $form->label('meta_title-label', t('Title'), [
@@ -350,15 +363,18 @@ class FormNode extends FormBuilder
                             'for' => 'meta_noarchive'
                         ]);
                     }, self::$attrGrp);
-        });
+        }, [
+                'class' => 'tab-pane fade',
+                'id'    => 'seo-fieldset'
+        ]);
     }
 
     public function actionsSubmit()
     {
         return $this
-                ->group('actions-group', 'fieldset', function ($form) {
+                ->group('publication-fieldset', 'fieldset', function ($form) {
                     $form
-                    ->legend('actions-legend', t('Publication'))
+                    ->legend('publication-legend', t('Publication'))
                     ->group('sticky-group', 'div', function ($form) {
                         $form->checkbox('sticky', [ 'checked' => $this->content[ 'sticky' ] ])
                         ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
@@ -400,9 +416,14 @@ class FormNode extends FormBuilder
                             }, self::$attrGrpInline);
                         }
                     }, self::$attrGrp);
-                })
+                }, [
+                    'class' => 'tab-pane fade',
+                    'id'    => 'publication-fieldset'
+                ])
                 ->token('token_node')
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                ->group('actions-group', 'fieldset', function ($form) {
+                    $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                }, self::$attrGrp);
     }
 
     public function actionsEntitySubmit()

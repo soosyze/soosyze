@@ -62,22 +62,20 @@ class HookMenu
     {
         if ($this->isMenu) {
             $form->before('actions-group', function ($form) use ($data) {
-                $form->group('node-menu-fieldset', 'fieldset', function ($form) use ($data) {
-                    $form->legend('node-menu-legend', t('Menu'))
-                        ->group('node-menu-active-group', 'div', function ($form) use ($data) {
+                $form->group('menu-fieldset', 'fieldset', function ($form) use ($data) {
+                    $form->legend('menu-legend', t('Menu'))
+                        ->group('active-group', 'div', function ($form) use ($data) {
                             $form->checkbox('active', [
                                 'checked' => $data[ 'active' ],
                                 'onclick' => 'toggle("menu_toogle")'
                             ])
-                            ->label('node-menu-active-label', '<span class="ui"></span> ' . t('Add a link in the menu'), [
+                            ->label('active-label', '<span class="ui"></span> ' . t('Add a link in the menu'), [
                                 'for' => 'active'
                             ]);
                         }, [ 'class' => 'form-group' ])
-                        ->group('node-menu', 'div', function ($form) use ($data) {
-                            $form->group('node-menu-title-group', 'div', function ($form) use ($data) {
-                                $form->label('node-menu-title-label', t('Link title'), [
-                                    'for' => 'title_link'
-                                ])
+                        ->group('title_link-group', 'div', function ($form) use ($data) {
+                            $form->group('title_link-group', 'div', function ($form) use ($data) {
+                                $form->label('title_link-label', t('Link title'))
                                 ->text('title_link', [
                                     'class'       => 'form-control',
                                     'placeholder' => t('Example: Home'),
@@ -90,7 +88,10 @@ class HookMenu
                                 ? 'display:none'
                                 : ''
                     ]);
-                });
+                }, [
+                    'class' => 'tab-pane fade',
+                    'id'    => 'menu-fieldset'
+                ]);
             });
         }
     }
