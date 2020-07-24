@@ -141,8 +141,8 @@ class Config extends \Soosyze\Controller
                     'form' => $form
                 ])
                 ->make('content.menu_config', 'submenu-config.php', $this->pathViews, [
-                    'menu' => $menu,
-                    'id'   => $id
+                    'menu'      => $menu,
+                    'key_route' => $id
         ]);
     }
 

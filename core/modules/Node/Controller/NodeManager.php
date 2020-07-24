@@ -61,8 +61,12 @@ class NodeManager extends \Soosyze\Controller
         ]);
     }
 
-    public function search($req)
+    public function filter($req)
     {
+        if (!$req->isAjax()) {
+            return $this->get404($req);
+        }
+
         $validator = (new Validator)
             ->setRules([
                 'title'          => '!required|string|max:255',
@@ -142,7 +146,7 @@ class NodeManager extends \Soosyze\Controller
             $typeNotPublish = $notPublish || $this->container->callHook('app.granted', [
                 'node.show.not_published.' . $type[ 'node_type' ]
             ]);
- 
+
             if ($typePublish || $typeNotPublish) {
                 $nodes->orWhere(function ($query) use ($type, $typePublish, $typeNotPublish) {
                     $query->where('type', $type[ 'node_type' ])

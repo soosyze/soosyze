@@ -6,7 +6,7 @@ R::useNamespace('SoosyzeCore\Node\Controller');
 
 R::get('node.index', 'admin/node', 'NodeManager@index');
 R::get('node.page', 'admin/node/:id', 'NodeManager@page', [ ':id' => '[1-9]\d*' ]);
-R::get('node.filter', 'node/filter', 'NodeManager@search');
+R::get('node.filter', 'node/filter', 'NodeManager@filter');
 
 R::get('node.add', 'admin/node/add', 'Node@add');
 R::get('node.show', 'node/:id_node', 'Node@show', [ ':id_node' => '\d+' ]);

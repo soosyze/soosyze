@@ -131,9 +131,7 @@ class ModulesManager extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $data = $validator->getInput('modules')
-            ? $validator->getInput('modules')
-            : [];
+        $data = $validator->getInput('modules', []);
 
         $moduleActive = array_flip(self::module()->listModuleActiveNotRequire());
 
@@ -265,7 +263,7 @@ class ModulesManager extends \Soosyze\Controller
 
         return [];
     }
-
+    
     /**
      * Si un module installé est requis par d'autre module.
      *

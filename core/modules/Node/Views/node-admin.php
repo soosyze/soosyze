@@ -58,7 +58,7 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <a href="<?php echo $link_index; ?>" class="btn danger"><?php echo t('Reset'); ?></a>
+                <a href="<?php echo $link_index; ?>" class="btn btn-danger"><?php echo t('Reset'); ?></a>
             </div>
         </div>
     </div>

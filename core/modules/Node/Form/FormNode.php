@@ -267,7 +267,7 @@ class FormNode extends FormBuilder
                         'checked' => $this->content[ $key ] == $keyRadio,
                         'value'   => $keyRadio
                         ] + $value[ 'attr' ])
-                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . $option, [
+                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
                         'for' => "$key-$keyRadio"
                 ]);
             }, self::$attrGrp);

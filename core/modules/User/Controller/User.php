@@ -448,9 +448,9 @@ class User extends \Soosyze\Controller
             'method' => 'post',
             'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
             ]))
-            ->group('user-edit-information-fieldset', 'fieldset', function ($form) {
-                $form->legend('user-edit-information-legend', t('Account deletion'))
-                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+            ->group('user-remove-info-fieldset', 'fieldset', function ($form) {
+                $form->legend('user-remove-info-legend', t('Account deletion'))
+                ->html('user-remove-info', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the user account is final.')
                 ]);
             })
