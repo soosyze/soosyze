@@ -11,7 +11,8 @@ R::get('menu.show', 'admin/menu/:menu', 'Menu@show', [ ':menu' => '[a-z\d-]+' ])
 R::post('menu.check', 'admin/menu/:menu', 'Menu@check', [ ':menu' => '[a-z\d-]+' ]);
 R::get('menu.edit', 'admin/menu/:menu/edit', 'Menu@edit', [ ':menu' => '[a-z\d-]+' ]);
 R::post('menu.update', 'admin/menu/:menu/edit', 'Menu@update', [ ':menu' => '[a-z\d-]+' ]);
-R::get('menu.delete', 'admin/menu/:menu/delete', 'Menu@delete', [ ':menu' => '[a-z\d-]+' ]);
+R::get('menu.remove', 'admin/menu/:menu/delete', 'Menu@remove', [ ':menu' => '[a-z\d-]+' ]);
+R::post('menu.delete', 'admin/menu/:menu/delete', 'Menu@delete', [ ':menu' => '[a-z\d-]+' ]);
 
 R::get('menu.link.create', 'admin/menu/:menu/link', 'Link@create', [ ':menu' => '[a-z\d-]+' ]);
 R::post('menu.link.store', 'admin/menu/:menu/link', 'Link@store', [ ':menu' => '[a-z\d-]+' ]);

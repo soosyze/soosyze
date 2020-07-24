@@ -4,7 +4,7 @@
     "Edit a link": "Éditer un lien",
     "Link title": "Titre du lien",
     "Add a menu": "Ajouter un menu",
-    "Edit a menu": "Éditer un menu",
+    "Edit the menu :name": "Éditer le menu :name",
     "Menu title": "Titre du menu",
     "Add a link in the menu": "Ajouter un lien dans le menu",
     "Example: Home": "Exemple: Accueil",
@@ -20,6 +20,8 @@
     "Main menu of the site": "Menu principal du site",
     "User Menu": "Menu utilisateur",
     "User links menu": "Menu des liens utilisateurs",
-    "Delete a menu": "Supprimer un menu",
-    "Link value is not a URL or a route": "La valeur de link n'est pas une URL ou une route"
+    "Link value is not a URL or a route": "La valeur de link n'est pas une URL ou une route",
+    "Delete menu": "Supprimer le menu",
+    "Delete the menu :name": "Supprimer le menu :name",
+    "Warning ! The deletion of the menu is final." : "Attention ! La suppression du menu est définitive."
 }

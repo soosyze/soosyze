@@ -1,34 +1,26 @@
 
+<?php echo $menu_submenu; ?>
+
+<div class="nav-flex">
+    <div class="nav-flex-right">
+        <a href="<?php echo $link_create_link; ?>" class="btn btn-primary">
+            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a link'); ?>
+        </a>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-3 sticky">
-        <?php echo $section['submenu']; ?>
+        <?php echo $list_menu_submenu; ?>
+        
+        <a href="<?php echo $link_create_menu; ?>" class="btn btn-primary">
+            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a menu'); ?>
+        </a>
     </div>
     <div class="col-md-9">
-        <div class="nav-action">
-            <div class="nav-action-left">
-                <a href="<?php echo $menu_delete; ?>" 
-                   class="btn btn-danger"
-                   data-tooltip="<?php echo t('Delete a menu'); ?>"
-                   onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')"
-                   >
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </a>
-                <a href="<?php echo $menu_edit; ?>" class="btn btn-default" data-tooltip="<?php echo t('Edit a menu'); ?>">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </a>
-                <a href="<?php echo $menu_add; ?>" class="btn btn-default" data-tooltip="<?php echo t('Add a menu'); ?>">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </a>
-            </div>
-            <div class="nav-action-right">
-                <a href="<?php echo $link_add; ?>" class="btn btn-primary">
-                    <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a link'); ?>
-                </a>
-            </div>
-        </div>
 
         <fieldset class="responsive">
-            <legend><?php echo t($menuName); ?></legend>
+            <legend><?php echo t($menu_name); ?></legend>
 
             <?php if ($menu->getVar('menu')): ?>
                 <?php echo $form->form_open(); ?>
