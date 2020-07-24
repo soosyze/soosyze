@@ -38,7 +38,7 @@ class HookMenu
         ];
     }
 
-    public function hookUserManagerMenu(&$menu)
+    public function hookUserManagerSubmenu(&$menu)
     {
         $menu[] = [
             'key'        => 'filemanager.profil.admin',

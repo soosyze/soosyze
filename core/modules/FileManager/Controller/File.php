@@ -54,7 +54,9 @@ class File extends \Soosyze\Controller
                 ->addVars([
                     'file'  => $spl,
                     'info'  => $data,
-                    'title' => t('See the file') ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.show', $spl, $path),
+                    'title' => t('See the file')
+        ]);
     }
 
     public function store($path, $req)
@@ -175,9 +177,11 @@ class File extends \Soosyze\Controller
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Rename the file'),
+                    'form'  => $form,
                     'info'  => $data,
-                    'form'  => $form ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.edit', $spl, $path),
+                    'title' => t('Rename the file'),
+        ]);
     }
 
     public function update($path, $name, $ext, $req)
@@ -263,9 +267,12 @@ class File extends \Soosyze\Controller
 
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
-                ->addVars([ 'title' => t('Deleting the file'),
+                ->addVars([
+                    'form'  => $form,
                     'info'  => self::filemanager()->parseFile($spl, $path),
-                    'form'  => $form ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.remove', $spl, $path),
+                    'title' => t('Deleting the file')
+        ]);
     }
 
     public function delete($path, $name, $ext, $req)

@@ -36,7 +36,7 @@
         "arguments": ["@fileprofil", "@router"],
         "hooks": {
             "user.menu": "hookUsersMenu",
-            "user.manage.menu": "hookUsersManagementMenu"
+            "user.manager.submenu": "hookUserManagerSubmenu"
         }
     },
     "filemanager.hook.user": {

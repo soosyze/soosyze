@@ -4,7 +4,7 @@
 }
 .dropfile{
     font-size: 1.25rem;
-    padding: 3em;
+    padding: 2em;
     outline: 2px dashed #ccc;
     margin-bottom: 1em;
     text-align: center;
@@ -15,6 +15,10 @@
     color: #0086b3;
     cursor: pointer;
 }
+.dir-link_show,
+.file-link_show {
+    cursor:pointer;
+}
 .file{
     background-position: center;
     background-repeat: no-repeat;
@@ -22,7 +26,6 @@
     display:inline-block;
     width: 5em;
     height: 6em;
-    cursor:pointer;
     text-align: center;
 }
 .ext-name{
@@ -36,13 +39,6 @@
 }
 .modal-info{
     word-wrap: break-word;
-}
-.actions-file a,
-.actions-file button{
-    margin-bottom: .5em;
-}
-.actions-file i {
-    width: 1em;
 }
 .modal-visulaize {
     background-color: #eee;

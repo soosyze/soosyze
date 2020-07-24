@@ -22,19 +22,18 @@ $().ready(function () {
 });
 
 /* COPY CLIPBOARD */
-document.querySelectorAll('.copy-clipboard').forEach(function (el) {
-    el.addEventListener('click', function () {
-        const tmp = document.createElement("textarea");
-        tmp.value = this.dataset.link;
-        tmp.style.height = "0";
-        tmp.style.overflow = "hidden";
-        tmp.style.position = "fixed";
-        document.body.appendChild(tmp);
-        tmp.focus();
-        tmp.select();
-        document.execCommand("copy");
-        document.body.removeChild(tmp);
-    });
+$(document).delegate('.copy-clipboard', 'click', function (evt) {
+    evt.preventDefault();
+    const tmp = document.createElement("textarea");
+    tmp.value = this.href;
+    tmp.style.height = "0";
+    tmp.style.overflow = "hidden";
+    tmp.style.position = "fixed";
+    document.body.appendChild(tmp);
+    tmp.focus();
+    tmp.select();
+    document.execCommand("copy");
+    document.body.removeChild(tmp);
 });
 /**
  * Evenements de la page des profils de fichier.
@@ -85,7 +84,7 @@ $(document).delegate('#modal_folder input[name="submit"]', 'click', function (ev
 $(document).delegate('.actions-file .mod', 'click', function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    const link = $(this).data('link');
+    const link = evt.currentTarget.href;
     $.ajax({
         url: link,
         type: 'GET',
@@ -95,7 +94,7 @@ $(document).delegate('.actions-file .mod', 'click', function (evt) {
             renderMessage('.modal-messages', data);
         }
     });
-})
+});
 /**
  * Evenement pour l'affichage des sous dossiers (icone).
  */
@@ -144,9 +143,9 @@ dropFile();
  */
 function dropFile() {
     const $form = $('.dropfile');
-    $form.on('dragover dragleave drop', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+    $form.on('dragover dragleave drop', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
     }).on('dragover', function () {
         $form.css('outline-offset', '-10px');
     }).on('dragleave', function () {

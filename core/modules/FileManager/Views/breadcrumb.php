@@ -1,5 +1,5 @@
 
-<ul id="breadcrumb" class="nav nav-pills">
+<ul id="breadcrumb" class="nav">
     <?php foreach ($links as $link): ?>
         <li class="<?php echo $link['active']; ?>">
             <button 

@@ -43,9 +43,8 @@ class Folder extends \Soosyze\Controller
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Create a new directory'),
-                    'info'  => [ 'actions' => [] ],
-                    'form'  => $form
+                    'form'  => $form,
+                    'title' => t('Create a new directory')
         ]);
     }
 
@@ -118,9 +117,10 @@ class Folder extends \Soosyze\Controller
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Rename the directory'),
+                    'form'  => $form,
                     'info'  => $values,
-                    'form'  => $form
+                    'menu'  => self::filemanager()->getFolderSubmenu('filemanager.folder.edit', $path),
+                    'title' => t('Rename the directory')
         ]);
     }
 
@@ -196,9 +196,11 @@ class Folder extends \Soosyze\Controller
 
         return self::template()
                 ->createBlock('modal.php', $this->pathViews)
-                ->addVars([ 'title' => t('Delete directory'),
+                ->addVars([
+                    'form'  => $form,
                     'info'  => $values,
-                    'form'  => $form
+                    'menu'  => self::filemanager()->getFolderSubmenu('filemanager.folder.remove', $path),
+                    'title' => t('Delete directory')
         ]);
     }
 
