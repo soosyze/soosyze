@@ -1,7 +1,7 @@
 
 
-<div class="nav-action">
-    <div class="nav-action-left">
+<div class="nav-flex">
+    <div class="nav-flex-left">
         <button class="btn btn-default" onclick="javascript:history.back();"><?php echo t('Back'); ?></button>
     </div>
 </div>

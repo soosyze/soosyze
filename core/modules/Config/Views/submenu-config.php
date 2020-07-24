@@ -1,6 +1,6 @@
 
-<nav id="nav_config">
-    <ul class="nav nav-pills nav-stacked">
+<nav>
+    <ul class="nav nav-pills">
         <?php foreach ($menu as $key => $link): ?>
 
         <li class="<?php if ($key === $id): ?>active<?php endif; ?>">

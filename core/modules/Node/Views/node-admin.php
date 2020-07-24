@@ -1,11 +1,11 @@
 
-<div class="nav-action">
-    <div class="nav-action-left">
+<div class="nav-flex">
+    <div class="nav-flex-left">
         <button class="btn" onclick="document.getElementById('filter_node').classList.toggle('hidden')">
             <i class="fa fa-filter"></i> <?php echo t('Filter'); ?>
         </button>
     </div>
-    <div class="nav-action-right">
+    <div class="nav-flex-right">
         <a href="<?php echo $link_add; ?>" class="btn btn-primary btn-filter-node">
             <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
         </a>

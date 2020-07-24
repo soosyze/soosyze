@@ -1,5 +1,5 @@
-<div class="nav-action">
-    <div class="nav-action-right">
+<div class="nav-flex">
+    <div class="nav-flex-right">
         <a href="<?php echo $link_trans; ?>" class="btn">
             <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
         </a>

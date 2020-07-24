@@ -1,13 +1,13 @@
 
 <?php echo $user_manager_submenu; ?>
 
-<div class="nav-action">   
-    <div class="nav-action-left">
+<div class="nav-flex">   
+    <div class="nav-flex-left">
         <button class="btn" onclick="document.getElementById('filter_user').classList.toggle('hidden')">
             <i class="fa fa-filter"></i> <?php echo t('Filter'); ?>
         </button>
     </div>
-    <div class="nav-action-right">
+    <div class="nav-flex-right">
         <a href="<?php echo $link_create_user; ?>" class="btn btn-primary">
             <i class="fa fa-plus"></i> <?php echo t('Add a user'); ?>
         </a>

@@ -1,6 +1,6 @@
 
-<div class="nav-action">    
-    <div class="nav-action-right">
+<div class="nav-flex">    
+    <div class="nav-flex-right">
         <a href="<?php echo $delete_all_route ?>" 
            class="btn"
            onclick="return confirm('<?php echo t('Delete all the backups ?') ?>');">

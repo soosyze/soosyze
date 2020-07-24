@@ -18,7 +18,7 @@
         </div>
 
         <nav id="nav_config">
-            <ul id="top-menu" class="nav nav-pills nav-stacked">
+            <ul id="top-menu" class="nav nav-pills">
                 <?php foreach (array_keys($modules) as $module): ?>
 
                 <li id="nav-<?php echo \Soosyze\Components\Util\Util::strSlug($module); ?>">

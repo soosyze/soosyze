@@ -1,4 +1,23 @@
 
+<div class="nav-flex">
+    <div class="nav-flex-right">
+        <?php if ($module_update): ?>
+            <div class="alert alert-info">
+                <p><?php echo t('Updates are available'); ?></p>
+                <p><a class="btn btn-primary" href="<?php echo $link_module_update; ?>"><?php echo t('Update your application'); ?></a></p>
+            </div>
+        <?php else: ?>
+            <div class="nav-flex">
+                <div class="nav-flex-right">
+                    <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
+                        <i class="fa fa-question-circle"></i> <?php echo t('Check for updates'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-3 sticky">
         <div class="form-group">
@@ -14,7 +33,7 @@
             <label for="disabled"><span class="ui"></span> <?php echo t('Disabled'); ?></label>
         </div>
         <nav id="nav_config">
-            <ul id="top-menu" class="nav nav-pills nav-stacked">
+            <ul id="top-menu" class="nav nav-pills">
                 <?php foreach (array_keys($packages) as $package): ?>
 
                 <li id="nav-<?php echo $package; ?>">
@@ -26,21 +45,6 @@
         </nav>
     </div>
     <div class="col-md-9">
-        <?php if ($module_update): ?>
-            <div class="alert alert-info">
-                <p><?php echo t('Updates are available'); ?></p>
-                <p><a class="btn btn-primary" href="<?php echo $link_module_update; ?>"><?php echo t('Update your application'); ?></a></p>
-            </div>
-        <?php else: ?>
-            <div class="nav-action">
-                <div class="nav-action-right">
-                    <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
-                        <?php echo t('Check for updates'); ?> <i class="fa fa-info-circle"></i>
-                    </a>
-                </div>
-            </div>
-        <?php endif; ?>
-
         <?php echo $form->form_open([ 'id' => 'form-package' ]); ?>
         <?php foreach ($packages as $package => $modules): ?>
 

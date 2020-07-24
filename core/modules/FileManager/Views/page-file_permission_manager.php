@@ -1,8 +1,8 @@
 
 <?php echo $user_manager_submenu; ?>
 
-<div class="nav-action">
-    <div class="nav-action-right">
+<div class="nav-flex">
+    <div class="nav-flex-right">
         <a href="<?php echo $link_add; ?>" class="btn btn-primary">
             <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a files permission'); ?>
         </a>
