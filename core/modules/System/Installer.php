@@ -14,10 +14,10 @@ class Installer extends \SoosyzeCore\System\Migration
     
     public function boot()
     {
-        $this->loadTranslation('fr', __DIR__ . '/lang/fr/config.json');
-        $this->loadTranslation('fr', __DIR__ . '/lang/fr/humans_time.json');
-        $this->loadTranslation('fr', __DIR__ . '/lang/fr/main.json');
-        $this->loadTranslation('fr', __DIR__ . '/lang/fr/standard.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/humans_time.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/standard.json');
     }
 
     public function install(ContainerInterface $ci)
