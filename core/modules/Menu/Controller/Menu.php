@@ -21,19 +21,7 @@ class Menu extends \Soosyze\Controller
 
     public function index($req)
     {
-        if ($menu = self::query()->from('menu')->fetch()) {
-            return $this->show($menu[ 'name' ], $req);
-        }
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
-                    'title_main' => t('Menu')
-                ])
-                ->make('page.content', 'page-not-menu-show.php', $this->pathViews, [
-                    'menu_add' => self::router()->getRoute('menu.create')
-        ]);
+        return $this->show('menu-main', $req);
     }
 
     public function show($name, $req)
