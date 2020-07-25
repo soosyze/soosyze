@@ -44,6 +44,8 @@
         "arguments": ["@config"],
         "hooks": {
             "node.makefields": "hookNodeShowBefore",
+            "node.create.form.data": "hookNodeFormData",
+            "node.edit.form.data": "hookNodeFormData",
             "node.entity.store.before": "hookNodeStoreBefore",
             "node.entity.update.before": "hookNodeUpdateBefore",
             "node.entity.news.show": "hookNodeEntityPictureShow"

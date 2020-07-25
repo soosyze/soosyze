@@ -4,7 +4,7 @@ namespace SoosyzeCore\News\Services;
 
 class HookNode
 {
-    protected $config;
+    private $config;
 
     public function __construct($config)
     {
@@ -49,6 +49,19 @@ class HookNode
                 $data[ 'image' ] = $this->config->get('settings.new_default_image', null);
                 $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', null);
             }
+        }
+    }
+
+    public function hookNodeFormData(
+        &$content,
+        $type
+    ) {
+        if ($type === 'article') {
+            if (!empty($content[ 'image' ])) {
+                return;
+            }
+
+            $content['image'] = $this->config->get('settings.new_default_image', '');
         }
     }
 }

@@ -90,6 +90,7 @@ class Installer extends \SoosyzeCore\System\Migration
             ->set('settings.news_pagination', 6)
             ->set('settings.new_default_image', '')
             ->set('settings.new_default_icon', 'fas fa-newspaper')
+            ->set('settings.new_default_color', '#fff')
             ->set('settings.node_url_article', 'news/:date_created_year/:date_created_month/:date_created_day/:node_title');
     }
 
