@@ -39,6 +39,7 @@ class Installer extends \SoosyzeCore\System\Migration
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
                 $table->string('node_type')
                 ->string('node_type_name')
+                ->string('node_type_icon')
                 ->text('node_type_description');
             })
             ->createTableIfNotExists('node_status', function (TableBuilder $table) {
@@ -85,9 +86,17 @@ class Installer extends \SoosyzeCore\System\Migration
             ->execute();
 
         $ci->query()->insertInto('node_type', [
-                'node_type', 'node_type_name', 'node_type_description'
+                'node_type',
+                'node_type_name',
+                'node_type_description',
+                'node_type_icon'
             ])
-            ->values([ 'page', 'Page', 'Use the pages for your static content.' ])
+            ->values([
+                'page',
+                'Page',
+                'Use the pages for your static content.',
+                'fa fa-file'
+            ])
             ->execute();
 
         $ci->query()->insertInto('field', [

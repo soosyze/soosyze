@@ -34,5 +34,7 @@
     "Page": "Page",
     "Clone content title is too long": "Le titre du contenu cloner est trop long",
     "Pinned content": "Contenu épinglé",
-    "Pin content": "Épingler le contenu"
+    "Pin content": "Épingler le contenu",
+    "Add :name": "Ajouter :name",
+    "Content": "Contenu"
 }

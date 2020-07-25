@@ -37,12 +37,16 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->integer('reading_time')->comment('In minute');
             });
         $ci->query()->insertInto('node_type', [
-                'node_type', 'node_type_name', 'node_type_description'
+                'node_type',
+                'node_type_name',
+                'node_type_description',
+                'node_type_icon'
             ])
             ->values([
                 'node_type'             => 'article',
                 'node_type_name'        => 'Article',
-                'node_type_description' => 'Use articles for your news and blog posts.'
+                'node_type_description' => 'Use articles for your news and blog posts.',
+                'node_type_icon'        => 'fas fa-newspaper'
             ])
             ->execute();
 
