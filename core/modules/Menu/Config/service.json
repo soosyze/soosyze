@@ -25,8 +25,8 @@
             "route.menu.store": "hookMenuAdminister",
             "route.menu.edit": "hookMenuAdminister",
             "route.menu.update": "hookMenuAdminister",
-            "route.menu.remove": "hookMenuAdminister",
-            "route.menu.delete": "hookMenuAdminister"
+            "route.menu.remove": "hookMenuDelete",
+            "route.menu.delete": "hookMenuDelete"
         }
     },
     "menu.hook.app": {
