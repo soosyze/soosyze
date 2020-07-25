@@ -9,7 +9,7 @@
         <?php if ($granted_folder_create): ?>
         
         <div class="nav-flex">
-            <div class="nav-flex-right">
+            <div class="nav-flex-right btn-group">
                 <button
                     id="folder_create"
                     class="btn btn-primary"
@@ -18,6 +18,13 @@
                     data-target="#modal_filemanager">
                     <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add folder'); ?>
 
+                </button>
+                <button
+                    id="filemanager-btn__refresh"
+                    class="btn btn-primary dir-link_show"
+                    data-link_show="<?php echo $link_show; ?>"
+                    data-tooltip="<?php echo t('Refresh'); ?>">
+                    <i class="fa fa-sync-alt" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

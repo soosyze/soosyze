@@ -45,5 +45,6 @@
     "Your browser does not support the @name element": "Votre navigateur ne prend pas en charge l'élément @name",
     "No preview available": "Aucun aperçu disponible",
     "File actions window": "Fenêtre d'actions de fichier",
-    "View the file path":"Visualisation du chemin du fichier"
+    "View the file path": "Visualisation du chemin du fichier",
+    "Refresh": "Rafraîchir"
 }
