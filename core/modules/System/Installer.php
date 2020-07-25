@@ -59,7 +59,8 @@ class Installer extends \SoosyzeCore\System\Migration
             ->set('settings.meta_keyboard', '')
             ->set('settings.favicon', '')
             ->set('settings.lang', 'en')
-            ->set('settings.timezone', 'Europe/Paris');
+            ->set('settings.timezone', 'Europe/Paris')
+            ->set('settings.theme_admin_dark', true);
     }
 
     public function seeders(ContainerInterface $ci)
