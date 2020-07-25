@@ -4,7 +4,6 @@ namespace SoosyzeCore\System\Services;
 
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\System\Migration;
 
 class Composer
 {
@@ -60,7 +59,7 @@ class Composer
                 $errors[] = t('The installation scripts for the :name module do not exist.', [
                     ':name' => $title
                 ]);
-            } elseif (!(new $migration() instanceof Migration)) {
+            } elseif (!(new $migration() instanceof \SoosyzeCore\System\Migration)) {
                 $errors[] = t('The :name install class does not implement the migration interface.', [
                     ':name' => $migration
                 ]);
@@ -201,38 +200,35 @@ class Composer
      */
     protected function validComposerModule($title, array $composer)
     {
-        $errors = [];
         if (!isset($composer[ 'extra' ][ 'soosyze' ]) && !is_array($composer[ 'extra' ][ 'soosyze' ])) {
-            $errors[] = t('The :name module information does not exist.', [ ':name' => $title ]);
-
-            return $errors;
+            return [ t('The :name module information does not exist.', [ ':name' => $title ]) ];
         }
 
         $validator = (new Validator())
                 ->setRules([
                     'title'      => 'required|string|max:128',
                     'package'    => 'required|string|max:128',
-                    'controller' => 'required|string',
+                    'controller' => 'required|class_exists:1',
                     'icon'       => '!required|array',
                     'require'    => '!required|array'
+                ])
+                ->setMessages([
+                    'controller' => [
+                        'required'     => [
+                            'must' => t('The information on the controllers of the :name module does not exist.', [
+                                ':name' => $title
+                            ])
+                        ],
+                        'class_exists' => [
+                            'must' => t('The :label of the :name module is not found by the autoloader.', [
+                                ':name' => $title
+                            ])
+                        ]
+                    ]
                 ])->setInputs($composer[ 'extra' ][ 'soosyze' ]);
 
-        if (!$validator->isValid()) {
-            $errors += $validator->getKeyErrors();
-        } elseif (empty($composer[ 'extra' ][ 'soosyze' ][ 'controller' ])) {
-            $errors[] = t('The information on the controllers of the :name module does not exist.', [
-                ':name' => $title
-            ]);
-        } else {
-            $controller = $composer[ 'extra' ][ 'soosyze' ][ 'controller' ];
-            if (!class_exists($controller)) {
-                $errors[] = t('The :controller controller of the :name module is not found by the autoloader.', [
-                    ':controller' => $controller,
-                    ':name'       => $title
-                ]);
-            }
-        }
-
-        return $errors;
+        return $validator->isValid()
+            ? []
+            : $validator->getKeyErrors();
     }
 }
