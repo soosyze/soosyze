@@ -65,14 +65,16 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         'for' => 'folder_show_sub' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('profil_weight-group', 'div', function ($form) {
-                    $form
-                    ->label('profil_weight-label', t('Weight'))
-                    ->number('profil_weight', [
-                        'class' => 'form-control',
-                        'max'   => 50,
-                        'min'   => 0,
-                        'value' => $this->values[ 'profil_weight' ]
-                    ]);
+                    $form->label('profil_weight-label', t('Weight'))
+                    ->group('profil_weight-flex', 'div', function ($form) {
+                        $form->number('profil_weight', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'max'      => 50,
+                            'min'      => 1,
+                            'value'    => $this->values[ 'profil_weight' ]
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
         })
             ->group('roles-fieldset', 'fieldset', function ($form) {

@@ -56,12 +56,15 @@ class FormUserRole extends FormBuilder
     {
         $form->group('role_weight-group', 'div', function ($form) {
             $form->label('role_weight-label', t('Weight'))
-                ->number('role_weight', [
-                    'class' => 'form-control',
-                    'max'   => 50,
-                    'min'   => 1,
-                    'value' => $this->values[ 'role_weight' ]
-            ]);
+                ->group('role_weight-flex', 'div', function ($form) {
+                    $form->number('role_weight', [
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'max'      => 50,
+                        'min'      => 1,
+                        'value'    => $this->values[ 'role_weight' ]
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
         }, self::$attrGrp);
 
         return $this;

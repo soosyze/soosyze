@@ -30,12 +30,15 @@ class FilePermissionManager extends \Soosyze\Controller
             $profil[ 'roles' ] = self::fileprofil()->getRolesUserByProfil($profil[ 'profil_file_id' ]);
 
             $form->group("profil_{$profil[ 'profil_file_id' ]}-group", 'div', function ($form) use ($profil) {
-                $form->number("profil_weight-{$profil[ 'profil_file_id' ]}", [
-                    'class' => 'form-control',
-                    'max'   => 50,
-                    'min'   => 1,
-                    'value' => $profil[ 'profil_weight' ]
-                ]);
+                $form->group('profil_weight-flex', 'div', function ($form) use ($profil) {
+                    $form->number("profil_weight-{$profil[ 'profil_file_id' ]}", [
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'max'      => 50,
+                        'min'      => 1,
+                        'value'    => $profil[ 'profil_weight' ]
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
             });
         }
         $form->token('token_profil_form')

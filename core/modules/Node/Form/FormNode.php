@@ -141,12 +141,35 @@ class FormNode extends FormBuilder
                         $this->makeTextarea($form, $key, $value, $options);
 
                         break;
+                    case 'number':
+                        $this->makeNumber($form, $key, $value, $options);
+
+                        break;
                     default:
                         $this->makeInput($form, $key, $value, $options);
 
                         break;
                 }
         }, self::$attrGrp);
+    }
+
+    public function makeNumber(&$form, $key, $value, $options)
+    {
+        $default = empty($this->content[ $key ])
+            ? $value[ 'field_default_value' ]
+            : $this->content[ $key ];
+
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+                'data-tooltip' => t($value[ 'field_description' ])
+            ])
+            ->group("$key-flex", 'div', function ($form) use ($key, $value, $default) {
+                $form->number($key, [
+                    ':actions'    => 1,
+                    'class'       => 'form-control',
+                    'placeholder' => t($value[ 'field_label' ]),
+                    'value'       => $default
+                    ] + $value[ 'attr' ]);
+            }, [ 'class' => 'form-group-flex' ]);
     }
 
     public function makeInput(&$form, $key, $value, $options)

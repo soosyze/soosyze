@@ -20,13 +20,16 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     $form->label('max_backup-label', t('Maximum number of backups'), [
                         'data-tooltip' => t('The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited'),
                     ])
-                    ->number('max_backups', [
-                        'class' => 'form-control',
-                        'min'   => 0,
-                        'value' => $data[ 'max_backups' ] > 0
-                            ? $data[ 'max_backups' ]
-                            : 0
-                    ]);
+                    ->group('max_backups-flex', 'div', function ($form) use ($data) {
+                        $form->number('max_backups', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'min'      => 0,
+                            'value'    => $data[ 'max_backups' ] > 0
+                                ? $data[ 'max_backups' ]
+                                : 0
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_frequency-group', 'div', function ($form) use ($data) {
                     $form->label('frequency_backup-label', t('Backup frequency'), [

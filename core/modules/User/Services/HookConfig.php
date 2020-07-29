@@ -158,47 +158,59 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('password_length-group', 'div', function ($form) use ($data) {
                     $form->label('password_length-label', t('Minimum length'))
-                    ->number('password_length', [
-                        'class'    => 'form-control',
-                        'min'      => 8,
-                        'required' => 1,
-                        'value'    => $data[ 'password_length' ] > 8
-                            ? $data[ 'password_length' ]
-                            : 8
-                    ]);
+                    ->group('password_length-flex', 'div', function ($form) use ($data) {
+                        $form->number('password_length', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'min'      => 8,
+                            'required' => 1,
+                            'value'    => $data[ 'password_length' ] > 8
+                                ? $data[ 'password_length' ]
+                                : 8
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_upper-group', 'div', function ($form) use ($data) {
                     $form->label('password_upper-label', t('Number of uppercase characters'))
-                    ->number('password_upper', [
-                        'class'    => 'form-control',
-                        'min'      => 1,
-                        'required' => 1,
-                        'value'    => $data[ 'password_upper' ] > 1
-                            ? $data[ 'password_upper' ]
-                            : 1
-                    ]);
+                    ->group('password_upper-flex', 'div', function ($form) use ($data) {
+                        $form->number('password_upper', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'min'      => 1,
+                            'required' => 1,
+                            'value'    => $data[ 'password_upper' ] > 1
+                                ? $data[ 'password_upper' ]
+                                : 1
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_digit-group', 'div', function ($form) use ($data) {
                     $form->label('password_digit-label', t('Number of numeric characters'))
-                    ->number('password_digit', [
-                        'class'    => 'form-control',
-                        'min'      => 1,
-                        'required' => 1,
-                        'value'    => $data[ 'password_digit' ] > 1
-                            ? $data[ 'password_digit' ]
-                            : 1
-                    ]);
+                    ->group('password_digit-flex', 'div', function ($form) use ($data) {
+                        $form->number('password_digit', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'min'      => 1,
+                            'required' => 1,
+                            'value'    => $data[ 'password_digit' ] > 1
+                                ? $data[ 'password_digit' ]
+                                : 1
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_special-group', 'div', function ($form) use ($data) {
                     $form->label('password_special-label', t('Number of special characters'))
-                    ->number('password_special', [
-                        'class'    => 'form-control',
-                        'min'      => 1,
-                        'required' => 1,
-                        'value'    => $data[ 'password_special' ] > 1
-                            ? $data[ 'password_special' ]
-                            : 1
-                    ]);
+                    ->group('password_special-flex', 'div', function ($form) use ($data) {
+                        $form->number('password_special', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'min'      => 1,
+                            'required' => 1,
+                            'value'    => $data[ 'password_special' ] > 1
+                                ? $data[ 'password_special' ]
+                                : 1
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
             });
     }

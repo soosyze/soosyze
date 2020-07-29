@@ -24,13 +24,16 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             $form->legend('news_pagination-legend', t('Settings'))
                 ->group('news_pagination-group', 'div', function ($form) use ($data) {
                     $form->label('news_pagination-group', t('Number of articles per page'))
-                    ->number('news_pagination', [
-                        'class'    => 'form-control',
-                        'max'      => 50,
-                        'min'      => 1,
-                        'required' => 1,
-                        'value'    => $data[ 'news_pagination' ]
-                    ]);
+                    ->group('news_pagination-flex', 'div', function ($form) use ($data) {
+                        $form->number('news_pagination', [
+                            ':actions' => 1,
+                            'class'    => 'form-control',
+                            'max'      => 50,
+                            'min'      => 1,
+                            'required' => 1,
+                            'value'    => $data[ 'news_pagination' ]
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
         })
             ->group('new_default_image-fieldset', 'fieldset', function ($form) use ($data) {

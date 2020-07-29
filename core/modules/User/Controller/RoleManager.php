@@ -36,12 +36,15 @@ class RoleManager extends \Soosyze\Controller
                 ]);
             }
             $form->group("role_{$role[ 'role_id' ]}-group", 'div', function ($form) use ($role) {
-                $form->number("role_weight-{$role[ 'role_id' ]}", [
-                    'class' => 'form-control',
-                    'max'   => 50,
-                    'min'   => 1,
-                    'value' => $role[ 'role_weight' ]
-                ]);
+                $form->group('role_weight-flex', 'div', function ($form) use ($role) {
+                    $form->number("role_weight-{$role[ 'role_id' ]}", [
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'max'      => 50,
+                        'min'      => 1,
+                        'value'    => $role[ 'role_weight' ]
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
             });
         }
         $form->token('token_role_form')
