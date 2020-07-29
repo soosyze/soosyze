@@ -513,7 +513,7 @@ class Node extends \Soosyze\Controller
                 ->where('id', '==', $idNode)
                 ->execute();
 
-            $this->deleteFile($idNode);
+            $this->deleteFile($node['type'], $idNode);
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
         }
 
@@ -565,7 +565,7 @@ class Node extends \Soosyze\Controller
             $fieldName = $value[ 'field_name' ];
             /* Copie ses fichiers. */
             if (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
-                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$nodeId";
+                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId";
                 $file = $entity[ $fieldName ];
 
                 if (!is_file($file)) {
@@ -612,7 +612,7 @@ class Node extends \Soosyze\Controller
                         $fieldName = $file[ 'field_name' ];
                         /* Parcours ses fichiers pour les copier. */
                         if (isset($data[ $fieldName ])) {
-                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$nodeId";
+                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId/{$file['node_type']}";
                             $pathFile = $data[ $fieldName ];
 
                             if (!is_file($pathFile)) {
@@ -728,9 +728,9 @@ class Node extends \Soosyze\Controller
                 ->addVar('menu', $menu);
     }
 
-    private function deleteFile($idNode)
+    private function deleteFile($type, $idNode)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$idNode}";
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$idNode";
         if (!is_dir($dir)) {
             return;
         }
@@ -789,7 +789,7 @@ class Node extends \Soosyze\Controller
 
     private function saveFile($node, $nameField, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'id' ]}";
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'type' ]}/{$node[ 'id' ]}";
 
         self::file()
             ->add($validator->getInput($nameField), $validator->getInput("file-name-$nameField"))

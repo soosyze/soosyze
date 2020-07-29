@@ -149,8 +149,8 @@ class Entity extends \Soosyze\Controller
             /* Télécharge et enregistre les fichiers. */
             $idEntity = self::schema()->getIncrement('entity_' . $entity);
             foreach ($fieldsEntity as $value) {
-                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $this->saveFile($entity, $idNode, $idEntity, $value[ 'field_name' ], $validator);
+                if( in_array($value[ 'field_type' ], [ 'image', 'file' ]) ) {
+                    $this->saveFile($node[ 'type' ], $idNode, $entity, $idEntity, $value[ 'field_name' ], $validator);
                 }
             }
 
@@ -283,7 +283,7 @@ class Entity extends \Soosyze\Controller
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     unset($fields[ $key ]);
-                    $this->saveFile($entity, $idNode, $idEntity, $key, $validator);
+                    $this->saveFile($node['type'], $idNode, $entity, $idEntity, $key, $validator);
                 } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
                     unset($fields[ $key ]);
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
@@ -380,31 +380,31 @@ class Entity extends \Soosyze\Controller
         );
     }
 
-    private function saveFile($type, $idNode, $idEntity, $nameFeld, $validator)
+    private function saveFile($typeNode, $idNode, $typeEntity, $idEntity, $nameField, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$idNode}";
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$typeNode/{$idNode}/$typeEntity";
 
         self::file()
             ->add($validator->getInput($nameFeld), $validator->getInput("file-name-$nameFeld"))
             ->setPath($dir)
             ->setResolvePath()
             ->setResolveName()
-            ->callGet(function ($key, $name) use ($type, $idEntity) {
+            ->callGet(function ($key, $name) use ($typeEntity, $idEntity) {
                 return self::query()
-                    ->from('entity_' . $type)
-                    ->where($type . '_id', '==', $idEntity)
+                    ->from('entity_' . $typeEntity)
+                    ->where($typeEntity . '_id', '==', $idEntity)
                     ->fetch();
             })
-            ->callMove(function ($key, $name, $move) use ($type, $idEntity, $nameFeld) {
+            ->callMove(function ($key, $name, $move) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $type, [ $nameFeld => $move ])
-                ->where($type . '_id', '==', $idEntity)
+                ->update('entity_' . $typeEntity, [ $nameField => $move ])
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
             })
-            ->callDelete(function ($key, $name) use ($type, $idEntity, $nameFeld) {
+            ->callDelete(function ($key, $name) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $type, [ $nameFeld => '' ])
-                ->where($type . '_id', '==', $idEntity)
+                ->update('entity_' . $typeEntity, [ $nameField => '' ])
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
             })
             ->save();
