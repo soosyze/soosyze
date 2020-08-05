@@ -91,7 +91,7 @@ class FilePermissionManager extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($profils as $profil) {
                 $data = [
-                    'profil_weight' => $validator->getInput("profil_weight-{$profil[ 'profil_file_id' ]}")
+                    'profil_weight' => (int) $validator->getInput("profil_weight-{$profil[ 'profil_file_id' ]}")
                 ];
 
                 $this->container->callHook('filemanager.profil.admin.check.before', [

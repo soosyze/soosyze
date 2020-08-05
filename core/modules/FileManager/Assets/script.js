@@ -1,4 +1,4 @@
-$().ready(function () {
+$(function () {
     var nestedSortables = [].slice.call($('.nested-sortable-file_permission'));
 
     for (var i = 0; i < nestedSortables.length; i++) {
@@ -58,7 +58,7 @@ document.querySelectorAll('.ext').forEach(function (el) {
 /**
  * Ajoute les événements des action (voir, modifier, supprimer) de fichiers.
  */
-$(document).delegate('#modal_folder input[name="submit"]', 'click', function (evt) {
+$(document).delegate('#modal_filemanager input[name="submit"]', 'click', function (evt) {
     evt.preventDefault();
     const $formModal = $(this).parent('form');
     const $modal = $(this).closest('.modal');
@@ -68,8 +68,7 @@ $(document).delegate('#modal_folder input[name="submit"]', 'click', function (ev
         data: $formModal.serialize(),
         dataType: 'json',
         success: function () {
-            $modal.hide();
-            $('body').toggleClass('modal-open');
+            $modal.toggleClass('modal-open');
             var action = $('#table-file').data('link_show');
             updateManager(action);
         },
@@ -135,14 +134,28 @@ $(document).delegate('#folder_create', 'click', function (evt) {
     });
 });
 
+$(document).delegate('#file_create', 'click', function (evt) {
+    evt.preventDefault();
+    const link = $(this).data('link');
+    
+    $.ajax({
+        url: link,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            $('.modal-content').html(data);
+            dropFile();
+        }
+    });
+});
 
-dropFile();
+
 
 /**
  * Ajoute les événements à la création de fichier.
  */
 function dropFile() {
-    const $form = $('.dropfile');
+    const $form = $('.filemanager-dropfile');
     $form.on('dragover dragleave drop', function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -157,6 +170,25 @@ function dropFile() {
         const data = new FormData($form.get(0));
         const action = $form.attr("action");
         $.ajax({
+            xhr: function () {
+                $(".filemanager-dropfile__label").hide();
+                $(".filemanager-dropfile__progress_bar")
+                        .append('<div class="filemanager-dropfile__progress_bar_complete"></div>');
+                $(".filemanager-dropfile__progress").show();
+                
+
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function (evt) {
+                    console.log(((evt.loaded / evt.total) * 100));
+                    if (evt.lengthComputable) {
+                        var percentComplete = Math.floor((evt.loaded / evt.total) * 100);
+                        $(".filemanager-dropfile__progress_percent").html(percentComplete + '%');
+                        $(".filemanager-dropfile__progress_bar_complete").width(percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+            },
             url: action,
             type: 'POST',
             data: data,
@@ -165,16 +197,25 @@ function dropFile() {
             contentType: false,
             processData: false,
             complete: function () {
-                $form.css('outline-offset', '0px');
+                setTimeout(function () {
+                    $form.removeClass('filemanager-dropfile__success');
+                    $form.removeClass('filemanager-dropfile__error');
+                    $form.css('outline-offset', '0px');
+                    $(".filemanager-dropfile__progress").hide();
+                    $(".filemanager-dropfile__label").show();
+                    $(".filemanager-dropfile__progress_bar_complete").remove();
+                }, 1000);
             },
             success: function () {
-                $form.css('outline', '2px dashed green');
+                $form.addClass('filemanager-dropfile__success');
+                $(".filemanager-dropfile__progress_percent").html('Complete !');
                 var action = $('#table-file').data('link_show');
                 updateManager(action);
             },
             error: function (data) {
-                $form.css('outline', '2px dashed red');
-                renderMessage('.dropfile-messages', data.responseJSON);
+                $form.addClass('filemanager-dropfile__error');
+                $(".filemanager-dropfile__progress_percent").html('Error !');
+                renderMessage('.modal-messages', data.responseJSON);
             }
         });
     });
@@ -209,7 +250,6 @@ function updateManager(action) {
         dataType: 'html',
         success: function (data) {
             $('#filemanager').html(data);
-            dropFile();
         }
     });
 }

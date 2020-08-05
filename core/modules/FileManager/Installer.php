@@ -52,6 +52,7 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         $ci->query()
             ->insertInto('profil_file', [
+                'profil_file_id',
                 'folder_show',
                 'folder_show_sub',
                 'profil_weight',
@@ -69,13 +70,14 @@ class Installer extends \SoosyzeCore\System\Migration
                 'file_extensions'
             ])
             ->values([
-                '/',
+                1,
+                '/user/:user_id',
                 true,
                 1,
                 true,
                 true,
                 true,
-                100,
+                20,
                 true,
                 true,
                 true,
@@ -86,12 +88,67 @@ class Installer extends \SoosyzeCore\System\Migration
                 ''
             ])
             ->values([
-                '/user/:user_id',
+                2,
+                '/node',
                 true,
                 2,
                 false,
                 false,
                 false,
+                10,
+                false,
+                false,
+                false,
+                false,
+                false,
+                1,
+                true,
+                ''
+            ])
+            ->values([
+                3,
+                '/node/',
+                true,
+                3,
+                true,
+                true,
+                true,
+                0,
+                true,
+                true,
+                false,
+                true,
+                true,
+                0,
+                true,
+                ''
+            ])
+            ->values([
+                4,
+                '/dowload',
+                true,
+                4,
+                false,
+                false,
+                false,
+                10,
+                false,
+                false,
+                false,
+                true,
+                false,
+                1,
+                true,
+                ''
+            ])
+            ->values([
+                5,
+                '/',
+                true,
+                5,
+                true,
+                true,
+                true,
                 10,
                 true,
                 true,
@@ -99,15 +156,18 @@ class Installer extends \SoosyzeCore\System\Migration
                 true,
                 true,
                 1,
-                false,
-                'jpg,jpeg,gif,png,pdf'
+                true,
+                ''
             ])
             ->execute();
 
         $ci->query()
             ->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ])
-            ->values([ 1, 3 ])
-            ->values([ 2, 2 ])
+            ->values([ 1, 2 ])
+            ->values([ 2, 3 ])
+            ->values([ 3, 2 ])
+            ->values([ 4, 1 ])
+            ->values([ 5, 3 ])
             ->execute();
     }
 

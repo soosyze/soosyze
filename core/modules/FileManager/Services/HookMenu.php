@@ -21,19 +21,9 @@ class HookMenu
 
     public function hookUsersMenu(&$menu, $userId)
     {
-        $profils = $this->profil->getProfilsFileByUser($userId);
-        if (empty($profils)) {
-            return;
-        }
-
-        $path = Util::cleanPath($profils[ 0 ][ 'folder_show' ]);
-        $path = str_replace(':user_id', $userId, $path);
-
         $menu[] = [
             'key'        => 'filemanager.admin',
-            'request'    => $this->router->getRequestByRoute('filemanager.admin', [
-                ':path' => $path
-            ]),
+            'request'    => $this->router->getRequestByRoute('filemanager.admin'),
             'title_link' => t('File')
         ];
     }

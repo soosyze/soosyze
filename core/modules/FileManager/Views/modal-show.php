@@ -10,7 +10,7 @@
             <?php if (!empty($menu)): echo $menu; endif; ?>
         </div>
         <div class="col-md-6">
-            <div class="modal-visulaize"><?php echo $section[ 'visualize' ]; ?></div>
+            <div class="modal-visulaize img-thumbnail"><?php echo $section[ 'visualize' ]; ?></div>
         </div>
         <div class="col-md-6">
             <div class="modal-info">

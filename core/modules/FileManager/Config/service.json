@@ -35,7 +35,7 @@
         "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
         "arguments": ["@fileprofil", "@router"],
         "hooks": {
-            "user.menu": "hookUsersMenu",
+            "user.submenu": "hookUsersMenu",
             "user.manager.submenu": "hookUserManagerSubmenu"
         }
     },
@@ -67,6 +67,13 @@
             "route.filemanager.folder.update": "hookFolderUpdate",
             "route.filemanager.folder.remove": "hookFolderDelete",
             "route.filemanager.folder.delete": "hookFolderDelete"
+        }
+    },
+    "filemanager.hook.role": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookRole",
+        "arguments": ["@query"],
+        "hooks": {
+            "role.delete.before": "hookRoleDeleteBefore"
         }
     }
 }

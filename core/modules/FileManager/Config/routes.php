@@ -14,10 +14,12 @@ R::post('filemanager.profil.update', 'admin/user/permission/filemanager/:id/edit
 R::get('filemanager.profil.remove', 'admin/user/permission/filemanager/:id/delete', 'Profil@remove', [ ':id' => '\d+' ]);
 R::post('filemanager.profil.delete', 'admin/user/permission/filemanager/:id/delete', 'Profil@delete', [ ':id' => '\d+' ]);
 
-R::get('filemanager.admin', 'admin/filemanager/show:path', 'Manager@admin', [ ':path' => '(/[-\w ]+){0,255}' ]);
-R::get('filemanager.show', 'filemanager/show:path', 'Manager@show', [ ':path' => '(/[-\w ]+){0,255}' ]);
+R::get('filemanager.admin', 'admin/filemanager/show', 'Manager@admin');
+R::get('filemanager.public', 'filemanager/public:path', 'Manager@showPublic', [ ':path' => '(/[-\w]+){0,255}' ]);
+R::get('filemanager.show', 'filemanager/show:path', 'Manager@show', [ ':path' => '(/[-\w]+){0,255}' ]);
 
-R::get('filemanager.file.show', 'filemanager/file:path:name:ext', 'File@show', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
+R::get('filemanager.file.show', 'filemanager/file:path:name:ext', 'File@show', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
+R::get('filemanager.file.create', 'filemanager/file:path', 'File@create', [ ':path' => '(/[-\w]+){0,255}' ]);
 R::post('filemanager.file.store', 'filemanager/file:path', 'File@store', [ ':path' => '(/[-\w]+){0,255}' ]);
 R::get('filemanager.file.edit', 'filemanager/file:path:name:ext/edit', 'File@edit', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
 R::post('filemanager.file.update', 'filemanager/file:path:name:ext/edit', 'File@update', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);

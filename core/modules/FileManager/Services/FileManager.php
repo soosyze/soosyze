@@ -6,7 +6,7 @@ use Soosyze\Components\Util\Util;
 
 class FileManager
 {
-    protected static $whiteList = [
+    protected static $extAllowed = [
         '7z',
         'ai', 'avi',
         'css', 'csv',
@@ -53,15 +53,16 @@ class FileManager
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public static function getWhiteList()
+    public static function getExtAllowed()
     {
-        return self::$whiteList;
+        return self::$extAllowed;
     }
 
     public function getBreadcrumb($path)
     {
         $path     = rtrim($path, '/');
         $nextPath = '';
+        $breadcrumb = [];
         foreach (explode('/', $path) as $key => $value) {
             $nextPath .= "/$value";
             if (!$this->hookUser->hookFolderShow($nextPath)) {
@@ -78,7 +79,9 @@ class FileManager
                 'active'     => ''
             ];
         }
-        $breadcrumb[ $key ][ 'active' ] = 'active';
+        if(isset($breadcrumb[ $key ])) {
+            $breadcrumb[$key][ 'active' ] = 'active';
+        }
 
         return $breadcrumb;
     }
@@ -94,7 +97,7 @@ class FileManager
             ]),
             'name'       => $dir->getBasename(),
             'path'       => $dir->getPath(),
-            'size'       => Util::strFileSizeFormatted($info[ 'size' ]),
+            'size'       => Util::strFileSizeFormatted($info[ 'size' ], 2, t('Empty folder')),
             'size_octet' => $info[ 'size' ],
             'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ]
                 ? $info[ 'time' ]
@@ -131,7 +134,7 @@ class FileManager
     public function getActionsFolder($path, $name = '')
     {
         $actions = [];
-        if ($this->hookUser->hookFolderUpdate($path)) {
+        if ($this->hookUser->hookFolderUpdate("$path$name")) {
             $actions[] = [
                 'icon'       => 'fa fa-edit',
                 'class'      => 'mod',
@@ -141,7 +144,7 @@ class FileManager
                 ])
             ];
         }
-        if ($this->hookUser->hookFolderDelete($path)) {
+        if ($this->hookUser->hookFolderDelete("$path$name")) {
             $actions[] = [
                 'icon'       => 'fa fa-times',
                 'class'      => 'mod',

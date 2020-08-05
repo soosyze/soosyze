@@ -1,24 +1,25 @@
 
 <div class="col-md-12">
     <div class="dropfile-messages"></div>
-    <?php if ($granted_file_create): ?>
-    <?php echo $form; ?>
-    <?php endif; ?>
 
     <div class="responsive">
-        <?php if ($granted_folder_create): ?>
-        
         <div class="nav-flex">
+            <div class="nav-flex-left">
+                <?php echo $section[ 'breadcrumb' ]; ?>
+            </div>
             <div class="nav-flex-right btn-group">
-                <button
-                    id="folder_create"
-                    class="btn btn-primary"
-                    data-link="<?php echo $link_add; ?>"
-                    data-toogle="modal"
-                    data-target="#modal_filemanager">
-                    <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add folder'); ?>
+                <?php if ($granted_file_create): ?>
+                    <button
+                        id="file_create"
+                        class="btn btn-primary"
+                        data-link="<?php echo $link_file_create; ?>"
+                        data-toogle="modal"
+                        data-target="#modal_filemanager">
+                        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add file'); ?>
 
-                </button>
+                    </button>
+                <?php endif; ?>
+
                 <button
                     id="filemanager-btn__refresh"
                     class="btn btn-primary dir-link_show"
@@ -28,8 +29,6 @@
                 </button>
             </div>
         </div>
-        <?php endif; ?>
-        <?php echo $section[ 'breadcrumb' ]; ?>
 
         <table id="table-file" class="table table-hover" data-link_show="<?php echo $link_show; ?>">
             <thead>
@@ -40,24 +39,12 @@
                     <th><?php echo t('Creation date'); ?></th>
                     <th><?php echo t('Actions'); ?></th>
                 </tr>
-                <tr>
-                    <td colspan="5">
-                        <?php echo t('Full Size %d', ['%d' => $size_all]); ?>,
-                        <?php
-                        echo t('@nb_dir folder(s), @nb_file file(s)', [
-                            '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
-                        ]);
-                        ?>
-
-                    </td>
-                </tr>
             </thead>
             <tbody>
-            <?php if ($files): ?>
-            <?php foreach ($files as $file): ?>
+            <?php if ($files): foreach ($files as $file): ?>
 
             <tr>
-                <?php if ($file[ 'type' ] === 'dir'):?>
+                <?php if ($file[ 'type' ] === 'dir'): ?>
 
                 <th class="dir-link_show" data-link_show="<?php echo $file[ 'link_show' ]; ?>">
                     <span class="file <?php echo $file[ 'ext' ]; ?>"></span>
@@ -65,7 +52,9 @@
                 <?php elseif ($file[ 'type' ] === 'image'): ?>
 
                 <th class="file-link_show" data-link_show="<?php echo $file[ 'link_show' ]; ?>" data-toogle="modal" data-target="#modal_filemanager">
-                    <img src="<?php echo $file[ 'link' ]; ?>" class="img-responsive"/>
+                    <div class="file-link_show_img img-thumbnail" 
+                         style="background-image: url('<?php echo $file[ 'link' ]; ?>')">
+                    </div>
                 </th>
                 <?php else: ?>
 
@@ -99,9 +88,7 @@
                     <?php endforeach; ?>
 
                 </td>
-            </tr><?php endforeach; ?>
-
-            <?php else: ?>
+            </tr><?php endforeach; else: ?>
 
             <tr>
                 <td colspan="5" class="alert alert-info">
@@ -112,11 +99,13 @@
                 </td>
             </tr>
             <?php endif; ?>
+
             </tbody>
+            <?php if ($files): ?>
+
             <tfoot>
                 <tr>
-                    <td colspan="5">
-                        <?php echo t('Full Size %d', ['%d' => $size_all]); ?>,
+                    <td colspan="2">
                         <?php
                         echo t('@nb_dir folder(s), @nb_file file(s)', [
                             '@nb_dir'  => $nb_dir, '@nb_file' => $nb_file
@@ -124,14 +113,28 @@
                         ?>
 
                     </td>
+                    <td colspan="3">
+                    <?php if ($profil[ 'folder_store' ] || $profil[ 'file_store' ]): ?>
+
+                        <span data-tooltip="<?php echo t('Total size / maximum data quota'); ?>">
+                            <?php echo $size_all; ?>
+                            <?php if ($profil[ 'folder_size' ] === 0): ?>
+                                / <i class="fa fa-infinity"></i>
+                            <?php else: ?>
+                                / <?php echo $profil[ 'folder_size' ]; ?>Mo
+                            <?php endif; ?>
+
+                        </span>
+                    <?php else: ?>
+
+                        <span data-tooltip="Total size"><?php echo $size_all; ?></span>
+                    <?php endif; ?>
+
+                    </td>
                 </tr>
             </tfoot>
-        </table>
-    </div>
-</div>
+            <?php endif; ?>
 
-<div id="modal_filemanager" class="modal" role="dialog" aria-label="<?php echo t('File actions window'); ?>">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content"></div>
+        </table>
     </div>
 </div>

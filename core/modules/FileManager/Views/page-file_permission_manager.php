@@ -51,7 +51,7 @@
                 <td data-title="<?php echo t('Directory permissions'); ?>">
                 <?php if ($profil[ 'folder_store' ]): ?>
 
-                    <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Add'); ?></i><br>
+                    <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Create'); ?></i><br>
                 <?php endif; ?>
                 <?php if ($profil[ 'folder_update' ]): ?>
 
@@ -66,7 +66,7 @@
                 <td data-title="<?php echo t('Files permissions'); ?>">
                 <?php if ($profil[ 'file_store' ]): ?>
 
-                    <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Add'); ?></i><br>
+                    <i class="fa fa-plus" aria-hidden="true"> <?php echo t('Create'); ?></i><br>
                 <?php endif; ?>
                 <?php if ($profil[ 'file_update' ]): ?>
 

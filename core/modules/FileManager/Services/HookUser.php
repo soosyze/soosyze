@@ -22,16 +22,18 @@ class HookUser
             $userId = $user[ 'user_id' ];
         }
 
-        $path    = '/' . Util::cleanPath($path);
+        $path    = $path === '/' || $path === ''
+            ? '/'
+            : Util::cleanPath('/' . $path);
         $profils = $this->profil->getProfilsFileByUser($userId);
 
         foreach ($profils as $profil) {
-            $pattern = '/' . Util::cleanPath($profil[ 'folder_show' ]);
+            $pattern = $profil[ 'folder_show' ];
             $pattern = str_replace(':user_id', $userId, $pattern);
+            $pattern = preg_quote($pattern, '/');
             $pattern .= $profil[ 'folder_show_sub' ]
                 ? '.*'
                 : '';
-            $pattern = str_replace('/', '\/', $pattern);
 
             if (preg_match('/^' . $pattern . '$/', $path)) {
                 return $profil;
@@ -44,7 +46,7 @@ class HookUser
     public function hookPermission(&$profil)
     {
         $profil[ 'FileManager' ] = [
-            'filemanager.profil.admin' => t('Administer file profiles')
+            'filemanager.profil.admin' => t('Administer file permissions')
         ];
     }
 
@@ -131,7 +133,7 @@ class HookUser
         return $this->rightExtension($ext, $right);
     }
 
-    public function hookFolderAdmin($path, $req = null, $user = null)
+    public function hookFolderAdmin($req = null, $user = null)
     {
         $profils = $this->profil->getProfilsFileByUser($user[ 'user_id' ]);
 
@@ -155,7 +157,7 @@ class HookUser
     public function hookFolderUpdate($path, $req = null, $user = null)
     {
         $right = $this->getRight(dirname($path), $user[ 'user_id' ]);
-
+        
         return !empty($right[ 'folder_update' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
@@ -164,6 +166,19 @@ class HookUser
         $right = $this->getRight(dirname($path), $user[ 'user_id' ]);
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
+    }
+    
+    public function getMaxUpload($path)
+    {
+        $profil = $this->getRight($path);
+
+        if (empty($profil['file_size'])) {
+            return Util::getOctetUploadLimit();
+        }
+
+        $maxUpload = $profil[ 'file_size' ] * 1048576;
+
+        return min(Util::getOctetUploadLimit(), $maxUpload);
     }
 
     protected function rightExtension($ext, array $right = [])

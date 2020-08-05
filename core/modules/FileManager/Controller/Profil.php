@@ -27,8 +27,7 @@ class Profil extends \Soosyze\Controller
         $action = self::router()->getRoute('filemanager.profil.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->setValues($values)
-            ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), [
-            ])
+            ->roles(self::query()->from('role')->fetchAll())
             ->makeFields();
 
         $this->container->callHook('filemanager.profil.create.form', [ &$form, $values ]);
@@ -61,18 +60,19 @@ class Profil extends \Soosyze\Controller
         $this->container->callHook('filemanager.profil.store.validator', [ &$validator ]);
 
         $validatorExtension = new Validator();
-        $isValid            = $validator->isValid();
-        $listExtension      = implode(',', FileManager::getWhiteList());
-        foreach ($validator->getInput('file_extensions', []) as $key => $extension) {
+
+        $listExtension      = implode(',', FileManager::getExtAllowed());
+        foreach ($validator->getInput('file_extensions') as $key => $extension) {
             $validatorExtension
                 ->addRule($key, 'inarray:' . $listExtension)
                 ->addLabel($key, $extension)
                 ->addInput($key, $key);
         }
-        $isValid &= $validatorExtension->isValid();
+        $isValid = $validator->isValid() && $validatorExtension->isValid();
 
         if ($isValid) {
-            $data             = $this->getData($validator);
+            $data = $this->getData($validator);
+
             $this->container->callHook('filemanager.profil.store.before', [
                 $validator, &$data
             ]);
@@ -108,6 +108,7 @@ class Profil extends \Soosyze\Controller
             return $this->get404($req);
         }
         $values[ 'file_extensions' ] = explode(',', $values[ 'file_extensions' ]);
+        $values[ 'roles' ] = self::fileprofil()->getIdRolesUser($id);
 
         $this->container->callHook('filemanager.profil.edit.form.data', [ &$values ]);
 
@@ -118,7 +119,7 @@ class Profil extends \Soosyze\Controller
 
         $action = self::router()->getRoute('filemanager.profil.update', [ ':id' => $id ]);
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
-            ->roles(self::query()->from('role')->where('role_id', '>', 1)->fetchAll(), self::fileprofil()->getIdRolesUser($id))
+            ->roles(self::query()->from('role')->fetchAll())
             ->setValues($values)
             ->makeFields();
 
@@ -154,13 +155,14 @@ class Profil extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('filemanager.profil.update.validator', [ &$validator,
-            $id ]);
+        $this->container->callHook('filemanager.profil.update.validator', [
+            &$validator, $id
+        ]);
 
         $validatorExtension = new Validator();
 
-        $listExtension = implode(',', FileManager::getWhiteList());
-        foreach ($validator->getInput('file_extensions', []) as $key => $extension) {
+        $listExtension = implode(',', FileManager::getExtAllowed());
+        foreach ($validator->getInput('file_extensions') as $key => $extension) {
             $validatorExtension
                 ->addRule($key, 'inarray:' . $listExtension)
                 ->addLabel($key, $extension)
@@ -170,15 +172,18 @@ class Profil extends \Soosyze\Controller
 
         if ($isValid) {
             $data = $this->getData($validator);
-            $this->container->callHook('filemanager.profil.update.before', [ $validator,
-                &$data, $id ]);
+            
+            $this->container->callHook('filemanager.profil.update.before', [
+                $validator, &$data, $id
+            ]);
             self::query()
                 ->update('profil_file', $data)
                 ->where('profil_file_id', '==', $id)
                 ->execute();
             $this->updateProfilRole($validator, $id);
-            $this->container->callHook('filemanager.profil.update.after', [ $validator,
-                $id ]);
+            $this->container->callHook('filemanager.profil.update.after', [
+                $validator, $id
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
@@ -250,6 +255,11 @@ class Profil extends \Soosyze\Controller
                 $validator, $id
             ]);
             self::query()
+                ->from('profil_file_role')
+                ->delete()
+                ->where('profil_file_id', '==', $id)
+                ->execute();
+            self::query()
                 ->from('profil_file')
                 ->delete()
                 ->where('profil_file_id', '==', $id)
@@ -297,23 +307,32 @@ class Profil extends \Soosyze\Controller
     {
         $validator = (new Validator())
             ->setRules([
-                'folder_show'           => 'required|string',
+                'folder_show'           => 'required|string|regex:/^\/([\-\:\w]+\/?)*$/',
                 'folder_show_sub'       => 'bool',
-                'profil_weight'         => 'required|between_numeric:0,50',
+                'profil_weight'         => 'required|between_numeric:1,50',
                 'roles'                 => '!required|array',
                 'folder_store'          => 'bool',
                 'folder_update'         => 'bool',
                 'folder_delete'         => 'bool',
-                'folder_size'           => '!required|min_numeric:0',
+                'folder_size'           => '!required|numeric|min_numeric:0',
                 'file_store'            => 'bool',
                 'file_update'           => 'bool',
                 'file_delete'           => 'bool',
                 'file_download'         => 'bool',
                 'file_clipboard'        => 'bool',
-                'file_size'             => '!required|min_numeric:0',
+                'file_size'             => '!required|numeric|min_numeric:0',
                 'file_extensions_all'   => 'bool',
                 'file_extensions'       => '!required|array',
                 'token_file_permission' => 'token'
+            ])
+            ->setMessages([
+                'folder_show' => [
+                    'regex' => [
+                        'must' => t('The :label field should represent a tree structure of your files.')
+                        . '<br>'
+                        . t('It must start with a `\\` and may consist of alphanumeric characters `[a-z0-9]`, slashes `\\`, hyphens `-` and underscores `_`')
+                    ]
+                ]
             ])
             ->setLabel([
                 'folder_show'     => t('Directory path'),
