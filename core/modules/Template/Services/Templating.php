@@ -53,6 +53,8 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function __construct($core, $config)
     {
+        parent::__construct();
+
         $this->core       = $core;
         $this->config     = $config;
         $this->themesPath = $core->getSetting('themes_path');

@@ -239,8 +239,11 @@ class Block extends \Soosyze\Controller
                     ])
                     ->textarea('pages', $data[ 'pages' ], [
                         'class'       => 'form-control',
-                        'placeholder' => 'admin' . PHP_EOL . 'admin/*',
+                        'placeholder' => 'admin' . PHP_EOL . 'admin/%',
                         'rows'        => 5
+                    ])
+                    ->html('cancel', '<p>:_content</p>', [
+                        '_content' => t('Variables allowed') . ' <code>%</code>'
                     ]);
                 }, [ 'class' => 'form-group' ]);
         })

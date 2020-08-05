@@ -37,7 +37,10 @@ class HookApp
         \Soosyze\Components\Http\ServerRequest $request,
         &$response
     ) {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (
+            !($response instanceof \SoosyzeCore\Template\Services\Templating) ||
+            $response->getStatusCode() !== 200
+        ) {
             return;
         }
 
