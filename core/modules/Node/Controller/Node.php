@@ -57,7 +57,7 @@ class Node extends \Soosyze\Controller
 
         $content = [];
 
-        $this->container->callHook('node.create.form.data', [ &$content ]);
+        $this->container->callHook('node.create.form.data', [ &$content, $type ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
@@ -72,7 +72,7 @@ class Node extends \Soosyze\Controller
             ->content($content, $type, $fields)
             ->make();
 
-        $this->container->callHook('node.create.form', [ &$form, $content ]);
+        $this->container->callHook('node.create.form', [ &$form, $content, $type ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -174,7 +174,7 @@ class Node extends \Soosyze\Controller
             $validator->addRule('node_status_id', '!accepted');
         }
 
-        $this->container->callHook('node.store.validator', [ &$validator ]);
+        $this->container->callHook('node.store.validator', [ &$validator, $type ]);
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
