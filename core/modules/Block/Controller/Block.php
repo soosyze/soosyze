@@ -219,7 +219,7 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility_pages_1',
                         'required' => 1,
                         'value'    => 0
-                    ])->label('visibility_pages-label', t('Hide the block on the pages listed'), [
+                    ])->label('visibility_pages-label', '<i class="fa fa-eye-slash" aria-hidden="true"></i> ' . t('Hide the block on the pages listed'), [
                         'for' => 'visibility_pages_1'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -229,7 +229,7 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility_pages_2',
                         'required' => 1,
                         'value'    => 1
-                    ])->label('visibility_pages-label', t('Display the block on the pages listed'), [
+                    ])->label('visibility_pages-label', '<i class="fa fa-eye" aria-hidden="true"></i> ' . t('Display the block on the pages listed'), [
                         'for' => 'visibility_pages_2'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -255,7 +255,7 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility_roles_1',
                         'required' => 1,
                         'value'    => 0
-                    ])->label('visibility_roles-label', t('Hide block to selected roles'), [
+                    ])->label('visibility_roles-label', '<i class="fa fa-eye-slash" aria-hidden="true"></i> ' . t('Hide block to selected roles'), [
                         'for' => 'visibility_roles_1'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -265,7 +265,7 @@ class Block extends \Soosyze\Controller
                         'id'       => 'visibility_roles_2',
                         'required' => 1,
                         'value'    => 1
-                    ])->label('visibility_roles-label', t('Show block with selected roles'), [
+                    ])->label('visibility_roles-label', '<i class="fa fa-eye" aria-hidden="true"></i> ' . t('Show block with selected roles'), [
                         'for' => 'visibility_roles_2'
                     ]);
                 }, [ 'class' => 'form-group' ]);
