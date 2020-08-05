@@ -2,7 +2,7 @@
 <div class="nav-flex">
     <div class="nav-flex-left">
         <button class="btn" onclick="document.getElementById('filter_node').classList.toggle('hidden')">
-            <i class="fa fa-filter"></i> <?php echo t('Filter'); ?>
+            <i class="fa fa-filter" aria-hidden="true"></i> <?php echo t('Filter'); ?>
         </button>
     </div>
     <div class="nav-flex-right">

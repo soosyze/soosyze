@@ -75,7 +75,7 @@
     <tr>
         <td colspan="5" class="alert alert-info">
            <div class="content-nothing">
-                <i class="fa fa-inbox"></i>
+                <i class="fa fa-inbox" aria-hidden="true"></i>
                 <p><?php echo t('No results were found for your search.'); ?><p>
             </div>
         </td>

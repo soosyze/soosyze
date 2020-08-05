@@ -80,7 +80,7 @@
 
         <div class="alert alert-info" id="permission-nothing" style="display:none">
             <div class="content-nothing">
-                <i class="fa fa-inbox"></i>
+                <i class="fa fa-inbox" aria-hidden="true"></i>
                 <p><?php echo t('No results were found for your search.'); ?></p>
             </div>
         </div>

@@ -46,7 +46,8 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('connect_redirect-group', 'div', function ($form) use ($data) {
                     $form->label('connect_redirect-label', t('Redirect page after connection'), [
-                        'for' => 'connect_redirect'
+                        'for'      => 'connect_redirect',
+                        'required' => 1
                     ])
                     ->group('connect_redirect-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
@@ -157,7 +158,10 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_length-group', 'div', function ($form) use ($data) {
-                    $form->label('password_length-label', t('Minimum length'))
+                    $form->label('password_length-label', t('Minimum length'), [
+                        'for'      => 'password_length',
+                        'required' => 1
+                    ])
                     ->group('password_length-flex', 'div', function ($form) use ($data) {
                         $form->number('password_length', [
                             ':actions' => 1,
@@ -171,7 +175,10 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_upper-group', 'div', function ($form) use ($data) {
-                    $form->label('password_upper-label', t('Number of uppercase characters'))
+                    $form->label('password_upper-label', t('Number of uppercase characters'), [
+                        'for'      => 'password_upper',
+                        'required' => 1
+                    ])
                     ->group('password_upper-flex', 'div', function ($form) use ($data) {
                         $form->number('password_upper', [
                             ':actions' => 1,
@@ -185,7 +192,10 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_digit-group', 'div', function ($form) use ($data) {
-                    $form->label('password_digit-label', t('Number of numeric characters'))
+                    $form->label('password_digit-label', t('Number of numeric characters'), [
+                        'for'      => 'password_digit',
+                        'required' => 1
+                    ])
                     ->group('password_digit-flex', 'div', function ($form) use ($data) {
                         $form->number('password_digit', [
                             ':actions' => 1,
@@ -199,7 +209,10 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_special-group', 'div', function ($form) use ($data) {
-                    $form->label('password_special-label', t('Number of special characters'))
+                    $form->label('password_special-label', t('Number of special characters'), [
+                        'for'      => 'password_special',
+                        'required' => 1
+                    ])
                     ->group('password_special-flex', 'div', function ($form) use ($data) {
                         $form->number('password_special', [
                             ':actions' => 1,

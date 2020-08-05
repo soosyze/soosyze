@@ -81,7 +81,7 @@ class File extends \Soosyze\Controller
                 . '</div>'
                 . '</div>'
                 . '<div class="filemanager-dropfile__label">'
-                . '<i class="fa fa-download"></i> <span class="choose">'
+                . '<i class="fa fa-download" aria-hidden="true"></i> <span class="choose">'
                 . t('Choose a file')
                 . '</span> '
                 . t('or drag it here.')

@@ -29,7 +29,7 @@
 
             <tr>
                 <th class="draggable draggable-verticale" data-title="<?php echo t('Directory'); ?>">
-                    <i class="fa fa-arrows-alt-v"></i>
+                    <i class="fa fa-arrows-alt-v" aria-hidden="true"></i>
                     <?php echo $profil[ 'folder_show' ]; ?>
                     <?php if ($profil[ 'folder_show_sub' ]): ?>
 
@@ -111,7 +111,7 @@
             <tr>
                 <td colspan="6" class="alert alert-info">
                     <div class="content-nothing">
-                        <i class="fa fa-inbox"></i>
+                        <i class="fa fa-inbox" aria-hidden="true"></i>
                         <p><?php echo t('Your site does not have a file profile at this time.'); ?></p>
                     </div>
                 </td>

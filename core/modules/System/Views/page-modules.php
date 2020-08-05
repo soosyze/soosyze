@@ -10,7 +10,7 @@
             <div class="nav-flex">
                 <div class="nav-flex-right">
                     <a class="btn btn-primary" href="<?php echo $link_module_check; ?>" data-tooltip="<?php echo t('Last update:') . ' ' . date('d/m/Y', time()); ?>">
-                        <i class="fa fa-question-circle"></i> <?php echo t('Check for updates'); ?>
+                        <i class="fa fa-question-circle" aria-hidden="true"></i> <?php echo t('Check for updates'); ?>
                     </a>
                 </div>
             </div>
@@ -123,7 +123,7 @@
 
         <div class="alert alert-info" id="package-nothing" style="display:none">
             <div class="content-nothing">
-                <i class="fa fa-inbox"></i>
+                <i class="fa fa-inbox" aria-hidden="true"></i>
                 <p><?php echo t('No results were found for your search.'); ?></p>
             </div>
         </div>

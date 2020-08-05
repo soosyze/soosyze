@@ -67,7 +67,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 }, [ 'class' => 'form-group' ])
                 ->group('folder_show_sub-group', 'div', function ($form) {
                     $form->checkbox('folder_show_sub', [ 'checked' => $this->values[ 'folder_show_sub' ] ])
-                    ->label('folder_show_sub-label', '<i class="ui"></i><i class="fa fa-sitemap"></i> ' . t('Apply permission to subdirectories'), [
+                    ->label('folder_show_sub-label', '<i class="ui"></i><i class="fa fa-sitemap" aria-hidden="true"></i> ' . t('Apply permission to subdirectories'), [
                         'for' => 'folder_show_sub'
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -113,19 +113,19 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 $form->legend('folder-legend', t('Directory permissions'))
                 ->group('folder_store-group', 'div', function ($form) {
                     $form->checkbox('folder_store', [ 'checked' => $this->values[ 'folder_store' ] ])
-                    ->label('folder_store-label', '<i class="ui"></i><i class="fa fa-plus"></i> ' . t('Create'), [
+                    ->label('folder_store-label', '<i class="ui"></i><i class="fa fa-plus" aria-hidden="true"></i> ' . t('Create'), [
                         'for' => 'folder_store'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('folder_update-group', 'div', function ($form) {
                     $form->checkbox('folder_update', [ 'checked' => $this->values[ 'folder_update' ] ])
-                    ->label('folder_update-label', '<i class="ui"></i><i class="fa fa-edit"></i> ' . t('Edit'), [
+                    ->label('folder_update-label', '<i class="ui"></i><i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'), [
                         'for' => 'folder_update'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('folder_delete-group', 'div', function ($form) {
                     $form->checkbox('folder_delete', [ 'checked' => $this->values[ 'folder_delete' ] ])
-                    ->label('folder_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
+                    ->label('folder_delete-label', '<i class="ui"></i><i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'), [
                         'for' => 'folder_delete'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
@@ -150,31 +150,31 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 $form->legend('file-legend', t('Files permissions'))
                 ->group('file_store-group', 'div', function ($form) {
                     $form->checkbox('file_store', [ 'checked' => $this->values[ 'file_store' ] ])
-                    ->label('file_store-label', '<i class="ui"></i><i class="fa fa-plus"></i> ' . t('Create'), [
+                    ->label('file_store-label', '<i class="ui"></i><i class="fa fa-plus" aria-hidden="true"></i> ' . t('Create'), [
                         'for' => 'file_store'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_update-group', 'div', function ($form) {
                     $form->checkbox('file_update', [ 'checked' => $this->values[ 'file_update' ] ])
-                    ->label('file_update-label', '<i class="ui"></i><i class="fa fa-edit"></i> ' . t('Edit'), [
+                    ->label('file_update-label', '<i class="ui"></i><i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'), [
                         'for' => 'file_update'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_delete-group', 'div', function ($form) {
                     $form->checkbox('file_delete', [ 'checked' => $this->values[ 'file_delete' ] ])
-                    ->label('file_delete-label', '<i class="ui"></i><i class="fa fa-times"></i> ' . t('Delete'), [
+                    ->label('file_delete-label', '<i class="ui"></i><i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'), [
                         'for' => 'file_delete'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_download-group', 'div', function ($form) {
                     $form->checkbox('file_download', [ 'checked' => $this->values[ 'file_download' ] ])
-                    ->label('file_download-label', '<i class="ui"></i><i class="fa fa-download"></i> ' . t('Download'), [
+                    ->label('file_download-label', '<i class="ui"></i><i class="fa fa-download" aria-hidden="true"></i> ' . t('Download'), [
                         'for' => 'file_download'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_clipboard-group', 'div', function ($form) {
                     $form->checkbox('file_clipboard', [ 'checked' => $this->values[ 'file_clipboard' ] ])
-                    ->label('file_clipboard-label', '<i class="ui"></i><i class="fa fa-copy"></i> ' . t('Copy link'), [
+                    ->label('file_clipboard-label', '<i class="ui"></i><i class="fa fa-copy" aria-hidden="true"></i> ' . t('Copy link'), [
                         'for' => 'file_clipboard'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])

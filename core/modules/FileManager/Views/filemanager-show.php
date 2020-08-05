@@ -93,7 +93,7 @@
             <tr>
                 <td colspan="5" class="alert alert-info">
                     <div class="content-nothing">
-                        <i class="fa fa-inbox"></i>
+                        <i class="fa fa-inbox" aria-hidden="true"></i>
                         <p><?php echo t('This directory does not currently contain any files.'); ?></p>
                     </div>
                 </td>
@@ -119,7 +119,7 @@
                         <span data-tooltip="<?php echo t('Total size / maximum data quota'); ?>">
                             <?php echo $size_all; ?>
                             <?php if ($profil[ 'folder_size' ] === 0): ?>
-                                / <i class="fa fa-infinity"></i>
+                                / <i class="fa fa-infinity" aria-hidden="true"></i>
                             <?php else: ?>
                                 / <?php echo $profil[ 'folder_size' ]; ?>Mo
                             <?php endif; ?>

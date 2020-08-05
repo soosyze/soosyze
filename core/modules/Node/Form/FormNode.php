@@ -160,7 +160,8 @@ class FormNode extends FormBuilder
             : $this->content[ $key ];
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
-                'data-tooltip' => t($value[ 'field_description' ])
+                'data-tooltip' => t($value[ 'field_description' ]),
+                'for'          => $key
             ])
             ->group("$key-flex", 'div', function ($form) use ($key, $value, $default) {
                 $form->number($key, [
@@ -272,7 +273,7 @@ class FormNode extends FormBuilder
                         ':id_node' => $this->content[ 'id' ],
                         ':entity'  => $key,
                     ]),
-                    '_content' => '<i class="fa fa-plus"></i> ' . t('Add content')
+                    '_content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
                 ]);
             });
         }

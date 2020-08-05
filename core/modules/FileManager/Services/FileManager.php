@@ -71,7 +71,7 @@ class FileManager
 
             $breadcrumb[ $key ] = [
                 'title_link' => empty($value)
-                ? '<i class="fa fa-home"></i> ' . t('Home')
+                ? '<i class="fa fa-home" aria-hidden="true"></i> ' . t('Home')
                 : $value,
                 'link'       => $this->router->getRoute('filemanager.show', [
                     ':path' => Util::cleanPath($nextPath)

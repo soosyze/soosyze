@@ -15,7 +15,7 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <div class="content-nothing">
-                <i class="fa fa-inbox"></i>
+                <i class="fa fa-inbox" aria-hidden="true"></i>
                 <p><?php echo t('No configuration available'); ?></p>
             </div>
         </div>

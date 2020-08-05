@@ -32,7 +32,7 @@
 
             <div class="alert alert-info">
                 <div class="content-nothing">
-                    <i class="fa fa-inbox"></i>
+                    <i class="fa fa-inbox" aria-hidden="true"></i>
                     <p><?php echo t('The menu contains no links'); ?></p>
                 </div>
             </div>

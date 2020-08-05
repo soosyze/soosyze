@@ -7,7 +7,7 @@
         
         <div class="col-md-3">
             <h3 class="node_type-badge node_type-badge__<?php echo $node[ 'node_type' ]; ?>">
-                <i class="<?php echo $node[ 'node_type_icon' ]; ?>"></i> <?php echo t($node[ 'node_type_name' ]); ?>
+                <i class="<?php echo $node[ 'node_type_icon' ]; ?>" aria-hidden="true"></i> <?php echo t($node[ 'node_type_name' ]); ?>
 
             </h3>
             <p><?php echo t($node[ 'node_type_description' ]); ?></p>

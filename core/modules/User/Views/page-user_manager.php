@@ -4,12 +4,12 @@
 <div class="nav-flex">   
     <div class="nav-flex-left">
         <button class="btn" onclick="document.getElementById('filter_user').classList.toggle('hidden')">
-            <i class="fa fa-filter"></i> <?php echo t('Filter'); ?>
+            <i class="fa fa-filter" aria-hidden="true"></i> <?php echo t('Filter'); ?>
         </button>
     </div>
     <div class="nav-flex-right">
         <a href="<?php echo $link_create_user; ?>" class="btn btn-primary">
-            <i class="fa fa-plus"></i> <?php echo t('Add a user'); ?>
+            <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a user'); ?>
         </a>
     </div>
 </div>

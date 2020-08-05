@@ -26,7 +26,7 @@
 
             <tr>
                 <th class="draggable draggable-verticale">
-                    <i class="fa fa-arrows-alt-v"></i>
+                    <i class="fa fa-arrows-alt-v" aria-hidden="true"></i>
                     <span class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
                         <i class="<?php echo $role[ 'role_icon' ]; ?>" aria-hidden="true"></i>
                     </span>

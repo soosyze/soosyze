@@ -7,7 +7,7 @@
         <?php if (empty($new[ 'field' ][ 'image' ]['field_value'])): ?>
 
         <header class="icon_default">
-            <i class="<?php echo $new[ 'field' ][ 'icon' ][ 'field_value' ]; ?>"></i>
+            <i class="<?php echo $new[ 'field' ][ 'icon' ][ 'field_value' ]; ?>" aria-hidden="true"></i>
         </header>
         <?php else: ?>
 
@@ -26,10 +26,10 @@
                 <h3 class="card__title"><?php echo $new[ 'title' ]; ?></h3>
                 <div class="card_date_tags">
                     <span class="card_date">
-                        <i class="fa fa-calendar-alt"></i> 
+                        <i class="fa fa-calendar-alt" aria-hidden="true"></i> 
                         <?php echo strftime('%d.%B.%Y', $new[ 'date_created' ]); ?>
                         -
-                        <i class="fa fa-clock"></i> 
+                        <i class="fa fa-clock" aria-hidden="true"></i> 
                         ~<?php echo $new[ 'field' ][ 'reading_time' ]['field_value'] . ' ' . t('minute(s)'); ?>
                     </span>
                 </div>
@@ -41,7 +41,7 @@
         <div class="card_footer">
             <div class="card_more">
                 <a href="<?php echo $new[ 'link_view' ]; ?>" class="btn btn-default">
-                    <span class="card_more_txt"><?php echo t('Learn more'); ?></span> <i class="fa fa-arrow-right"></i>
+                    <span class="card_more_txt"><?php echo t('Learn more'); ?></span> <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </a>
             </div>
         </div>

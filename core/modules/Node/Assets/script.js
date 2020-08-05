@@ -20,7 +20,7 @@ $(function () {
             if ($(this).hasClass('is-invalid')) {
                 const error = `
                     <span class="fieldset-error" title="Error">
-                        <i class='fa fa-exclamation-triangle'></i>
+                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
                     <span>`;
 
                 $(`ul a[href="#${idPane}"]`).css("color", "red");
@@ -43,7 +43,7 @@ $(function () {
                 if (this.checkValidity() === false || $(this).hasClass('is-invalid')) {
                     const error = `
                     <span class="fieldset-error" title="Error">
-                        <i class='fa fa-exclamation-triangle'></i>
+                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
                     <span>`;
 
                     $(`ul a[href="#${idPane}"]`).css("color", "red");

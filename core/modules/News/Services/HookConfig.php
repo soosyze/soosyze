@@ -23,7 +23,10 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $form->group('news_pagination-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news_pagination-legend', t('Settings'))
                 ->group('news_pagination-group', 'div', function ($form) use ($data) {
-                    $form->label('news_pagination-group', t('Number of articles per page'))
+                    $form->label('news_pagination-group', t('Number of articles per page'), [
+                        'for'      => 'news_pagination',
+                        'required' => 1
+                    ])
                     ->group('news_pagination-flex', 'div', function ($form) use ($data) {
                         $form->number('news_pagination', [
                             ':actions' => 1,
@@ -48,13 +51,24 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('new_default_icon-group', 'div', function ($form) use ($data) {
                     $form->label('new_default_icon-group', t('Default icon'), [
-                        'data-tooltip' => t('Icon Font Awesome if there is no default image')
-                    ])
-                    ->text('new_default_icon', [
-                        'class'    => 'form-control',
+                        'data-tooltip' => t('Icon Font Awesome if there is no default image'),
+                        'for'      => 'new_default_icon',
                         'required' => 1,
-                        'value'    => $data[ 'new_default_icon' ]
-                    ]);
+                    ])
+                    ->group('new_default_icon-flex', 'div', function ($form) use ($data) {
+                        $form->text('new_default_icon', [
+                            'class'    => 'form-control',
+                            'required' => 1,
+                            'value'    => $data[ 'new_default_icon' ]
+                        ])
+                        ->html('new_default_icon-btn', '<button:attr>:_content</button>', [
+                            '_content'     => '<i class="' . $data[ 'new_default_icon' ] . '" aria-hidden="true"></i>',
+                            'aria-label'   => t('Rendering'),
+                            'class'        => 'btn render_icon',
+                            'type'         => 'button',
+                            'data-tooltip' => t('Rendering')
+                        ]);
+                    }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
             });
     }
