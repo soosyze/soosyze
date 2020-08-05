@@ -15,7 +15,7 @@ class Permission extends \Soosyze\Controller
     {
         /* Récupère toutes les permissions par module. */
         $modules = [];
-        self::core()->callHook('user.permission.module', [ &$modules ]);
+        $this->container->callHook('user.permission.module', [ &$modules ]);
         ksort($modules);
 
         /* Récupére les pérmissions et role en base de données. */

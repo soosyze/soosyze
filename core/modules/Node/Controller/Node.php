@@ -256,7 +256,7 @@ class Node extends \Soosyze\Controller
                     'node_submenu' => $this->getSubmenuNode($node, 'node.show')
                 ])->override('page.content', [ 'node-show-' . $idNode . '.php', 'node-show-' . $node[ 'type' ] . '.php' ]);
 
-        self::core()->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
+        $this->container->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
 
         return $tpl;
     }
@@ -676,7 +676,7 @@ class Node extends \Soosyze\Controller
             ]
         ];
 
-        self::core()->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
+        $this->container->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
 
         foreach ($menu as $key => &$link) {
             if (!self::core()->callHook('app.granted.route', [ $link[ 'request' ] ])) {
@@ -721,7 +721,7 @@ class Node extends \Soosyze\Controller
             ];
         }
 
-        self::core()->callHook('node.fieldset.submenu', [ &$menu ]);
+        $this->container->callHook('node.fieldset.submenu', [ &$menu ]);
 
         return self::template()
                 ->createBlock('submenu-node_fieldset.php', $this->pathViews)

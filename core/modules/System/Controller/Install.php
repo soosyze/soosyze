@@ -102,7 +102,7 @@ class Install extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ][ $id ]);
         }
 
-        $blockPage     = self::core()->callHook("step.$id", [ $id ]);
+        $blockPage     = $this->container->callHook("step.$id", [ $id ]);
         $blockMessages = (new Template('messages.php', $this->pathViews))
             ->addVars($messages);
 
@@ -146,7 +146,7 @@ class Install extends \Soosyze\Controller
         }
 
         /* Validation de l'étape. */
-        self::core()->callHook("step.$id.check", [ $id, $req ]);
+        $this->container->callHook("step.$id.check", [ $id, $req ]);
 
         $route = self::router()->getRoute('install.step', [ ':id' => $id ]);
         if (!empty($_SESSION[ 'inputs' ][ $id ]) && empty($_SESSION[ 'messages' ][ $id ])) {
@@ -166,7 +166,7 @@ class Install extends \Soosyze\Controller
     protected function getSteps()
     {
         $step = [];
-        self::core()->callHook('step', [ &$step ]);
+        $this->container->callHook('step', [ &$step ]);
         uasort($step, function ($a, $b) {
             if ($a[ 'weight' ] === $b[ 'weight' ]) {
                 return 0;

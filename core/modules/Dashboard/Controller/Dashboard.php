@@ -53,7 +53,7 @@ class Dashboard extends \Soosyze\Controller
 
     public function cron($req)
     {
-        self::core()->callHook('app.cron', [ $req ]);
+        $this->container->callHook('app.cron', [ $req ]);
 
         $_SESSION[ 'messages' ][ 'success' ] = [ t('The cron task has been successfully executed') ];
 
