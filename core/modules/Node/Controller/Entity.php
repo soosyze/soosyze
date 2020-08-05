@@ -325,18 +325,18 @@ class Entity extends \Soosyze\Controller
         );
     }
 
-    public function delete($idNode, $entity, $idEntity, $req)
+    public function delete($idNode, $typeEntity, $idEntity, $req)
     {
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
-        if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
+        if (!($fieldNode = self::node()->getFieldRelationByEntity($typeEntity))) {
             return $this->get404($req);
         }
-        if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
+        if (!($fieldsEntity = self::node()->getFieldsEntity($typeEntity))) {
             return $this->get404($req);
         }
-        if (!self::node()->getEntity($entity, $idEntity)) {
+        if (!($entity = self::node()->getEntity($typeEntity, $idEntity))) {
             return $this->get404($req);
         }
 
@@ -347,7 +347,7 @@ class Entity extends \Soosyze\Controller
         /* Si la node est publié. */
         if ($node[ 'node_status_id' ] === 1 && ($rules = self::node()->getRules($fieldNode))) {
             $entitys = self::query()
-                ->from('entity_' . $entity)
+                ->from('entity_' . $typeEntity)
                 ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
                 ->limit(2)
                 ->fetchAll();
@@ -358,13 +358,15 @@ class Entity extends \Soosyze\Controller
                     ->addInput('node_status_id', 1);
             }
         }
-
+        
         if ($validator->isValid()) {
             self::query()
-                ->from('entity_' . $entity)
+                ->from('entity_' . $typeEntity)
                 ->delete()
-                ->where($entity . '_id', '==', $idEntity)
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
+
+            $this->deleteFile($fieldsEntity, $entity);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
@@ -374,10 +376,25 @@ class Entity extends \Soosyze\Controller
         return new Redirect(
             self::router()->getRoute('node.edit', [
                 ':id_node'   => $idNode,
-                ':entity'    => $entity,
+                ':entity'    => $typeEntity,
                 ':id_entity' => $idEntity
             ])
         );
+    }
+
+    private function deleteFile($fieldsEntity, $entity)
+    {
+        foreach ($fieldsEntity as $field) {
+            if (!in_array($field[ 'field_type' ], [ 'image', 'file' ])) {
+                continue;
+            }
+
+            $file = $dir = self::core()->getSetting('root', '') . $entity[ $field[ 'field_name' ] ];
+            if (!is_file($file)) {
+                continue;
+            }
+            \unlink($file);
+        }
     }
 
     private function saveFile($typeNode, $idNode, $typeEntity, $idEntity, $nameField, $validator)

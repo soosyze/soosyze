@@ -734,12 +734,17 @@ class Node extends \Soosyze\Controller
         if (!is_dir($dir)) {
             return;
         }
-        foreach (new \DirectoryIterator($dir) as $file) {
-            if ($file->isDot() || $file->isDir()) {
-                continue;
-            }
-            \unlink($file->getPathname());
+
+        $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+        $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+
+        /* Supprime tous les dossiers et fichiers */
+        foreach ($iterator as $file) {
+            $file->isDir()
+                    ? \rmdir($file)
+                    : \unlink($file);
         }
+        /* Supprime le dossier cible. */
         \rmdir($dir);
     }
 
