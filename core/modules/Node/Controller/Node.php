@@ -792,7 +792,7 @@ class Node extends \Soosyze\Controller
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'type' ]}/{$node[ 'id' ]}";
 
         self::file()
-            ->add($validator->getInput($nameField), $validator->getInput("file-name-$nameField"))
+            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
             ->setName($nameField)
             ->setPath($dir)
             ->setResolvePath()

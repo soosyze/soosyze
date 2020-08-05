@@ -171,7 +171,7 @@ class Config extends \Soosyze\Controller
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . '/config';
 
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
             ->setPath($dir)
             ->setResolvePath()

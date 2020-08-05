@@ -86,13 +86,7 @@ class File
 
     public function inputFile($name, &$form, $content = '', $type = 'image')
     {
-        $src = is_file($this->core->getSetting('root', '') . $content)
-            ? $this->basePath . $content
-            : '';
-
-        if (!empty($src)) {
-            $this->getThumbnail($form, $type, $name, $src);
-        }
+        $this->getThumbnail($form, $type, $name, $content);
 
         $form->group("file-$name-flex", 'div', function ($form) use ($name, $content) {
             $attr = [
@@ -103,7 +97,7 @@ class File
                 . "document.getElementById('$name').value='';"
                 . "document.getElementById('file-$name-name').value='';"
                 . "document.getElementById('file-$name-reset').disabled = true;",
-                '_content'   => '✗',
+                '_content'   => '<i class="fa fa-times" aria-hidden="true"></i>',
                 'id'         => "file-$name-reset",
                 'type'       => 'button',
                 'aria-label' => 'Supprimer le fichier',
@@ -117,30 +111,40 @@ class File
                     'onclick'    => "document.getElementById('$name').click();",
                     'value'      => $content
                 ])
-                ->html("file-$name-reset", '<button:attr>:_content</button>', $attr)
                 ->file($name, [
                     'style'    => 'display:none',
                     'onchange' => "document.getElementById('file-$name-name').value = this.files[0].name;"
                     . "document.getElementById('file-$name-reset').disabled = false;"
-            ]);
+                ])
+                ->html("file-$name-reset", '<button:attr>:_content</button>', $attr);
         }, [ 'class' => 'form-group-flex' ]);
     }
 
     public function getThumbnail(&$form, $type, $name, $src)
     {
+        $src = is_file($this->core->getSetting('root', '') . $src)
+            ? $this->basePath . $src
+            : '';
+
+        if (empty($src)) {
+            return;
+        }
+
         if ($type === 'image') {
             $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-$name-thumbnail", '<img:attr/>', [
-                    'alt'   => 'Thumbnail',
-                    'src'   => $src,
-                    'class' => 'input-file-img img-thumbnail'
+                $img = '<img alt="Thumbnail" src="' . $src . '" class="input-file-img img-thumbnail img-thumbnail-light"/>';
+                $form->html("file-$name-thumbnail", '<a:attr/>:_content</a>', [
+                    '_content' => $img,
+                    'href'     => $src,
+                    'target'   => '_blank'
                 ]);
             }, [ 'class' => 'form-group' ]);
         } else {
             $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-$name-thumbnail", '<a:attr/><i class="fa fa-download"></i> :_content</a>', [
+                $form->html("file-$name-thumbnail", '<a:attr/><i class="fa fa-download" aria-hidden="true"></i> :_content</a>', [
+                    '_content' => $src,
                     'href'     => $src,
-                    '_content' => $src
+                    'target'   => '_blank'
                 ]);
             }, [ 'class' => 'form-group' ]);
         }

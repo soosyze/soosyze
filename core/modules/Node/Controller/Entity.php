@@ -385,7 +385,7 @@ class Entity extends \Soosyze\Controller
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$typeNode/{$idNode}/$typeEntity";
 
         self::file()
-            ->add($validator->getInput($nameFeld), $validator->getInput("file-name-$nameFeld"))
+            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
             ->setPath($dir)
             ->setResolvePath()
             ->setResolveName()

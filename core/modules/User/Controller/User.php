@@ -564,7 +564,7 @@ class User extends \Soosyze\Controller
         $key = 'picture';
 
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
             ->setPath($dir)
             ->setResolvePath()
