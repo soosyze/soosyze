@@ -40,6 +40,11 @@ class NodeManager extends \Soosyze\Controller
         $queryAll = self::query()
             ->from('node')
             ->fetchAll();
+        
+        $requestNodeAdd = self::router()->getRequestByRoute('node.add');
+        $linkAdd        = $this->container->callHook('app.granted.route', [ $requestNodeAdd ])
+            ? $requestNodeAdd->getUri()
+            : null;
 
         $link = self::router()->getRoute('node.page', [], false);
 
@@ -52,7 +57,7 @@ class NodeManager extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node-admin.php', $this->pathViews, [
                     'action_filter'         => self::router()->getRoute('node.filter'),
-                    'link_add'              => self::router()->getRoute('node.add'),
+                    'link_add'              => $linkAdd,
                     'link_index'            => self::router()->getRoute('node.index'),
                     'link_search_status'    => self::router()->getRoute('node.status.search'),
                     'link_search_node_type' => self::router()->getRoute('node.type.search'),

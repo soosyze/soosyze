@@ -70,7 +70,14 @@ class HookUser
 
     public function hookNodeAdd($req, $user)
     {
-        return !empty($user);
+        $nodeTypes = $this->query->from('node_type')->fetchAll();
+        $rights    = [ 'node.administer' ];
+
+        foreach ($nodeTypes as $nodeType) {
+            $rights[] = 'node.created.' . $nodeType[ 'node_type' ];
+        }
+
+        return $rights;
     }
 
     public function hookNodeCreated($type)

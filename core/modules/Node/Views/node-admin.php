@@ -6,9 +6,11 @@
         </button>
     </div>
     <div class="nav-flex-right">
-        <a href="<?php echo $link_add; ?>" class="btn btn-primary btn-filter-node">
+        <?php if ($link_add): ?>
+        <a href="<?php echo $link_add; ?>" class="btn btn-primary btn-filter">
             <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add content'); ?>
         </a>
+        <?php endif; ?>
     </div>
 </div>
 
