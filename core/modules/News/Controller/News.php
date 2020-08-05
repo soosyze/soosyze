@@ -127,7 +127,7 @@ class News extends \Soosyze\Controller
     {
         self::$limit = self::config()->get('settings.news_pagination', 6);
 
-        $query = self::query()
+        $items = self::query()
             ->from('node')
             ->where('node_status_id', 1)
             ->where('type', 'article')
@@ -135,24 +135,33 @@ class News extends \Soosyze\Controller
             ->limit(self::$limit)
             ->fetchAll();
 
-        foreach ($query as &$new) {
-            $new[ 'field' ]      = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
-            $new[ 'route_show' ] = self::router()->getRoute('node.show', [ ':id_node' => $new[ 'id' ] ]);
+        foreach ($items as &$item) {
+            $item[ 'field' ] = self::node()->makeFieldsById('article', $item[ 'entity_id' ]);
+            $item[ 'link' ]  = self::router()->getRoute('node.show', [ ':id_node' => $item[ 'id' ] ]);
         }
+        
+        $lastBuildDate = isset($items[0]['date_created'])
+            ? $items[0]['date_created']
+            : '';
 
         $stream = new \Soosyze\Components\Http\Stream(
             self::template()
                 ->createBlock('page-rss.php', $this->pathViews)
                 ->addVars([
-                    'routeRss' => self::router()->getRoute('news.rss'),
-                    'news'     => $query
-                ])
+                    'description'   => self::config()->get('settings.meta_description', ''),
+                    'items'         => $items,
+                    'language'      => self::config()->get('settings.lang', 'en'),
+                    'lastBuildDate' => $lastBuildDate,
+                    'link'          => self::router()->getBasePath(),
+                    'title'         => self::config()->get('settings.meta_title', ''),
+                    'xml'           => '<?xml version="1.0" encoding="UTF-8" ?>'
+        ])
         );
 
         return (new \Soosyze\Components\Http\Response(200, $stream))
-                ->withHeader('content-Type', 'application/rss+xml; charset=utf-8')
-                ->withHeader('content-length', $stream->getSize())
-                ->withHeader('content-disposition', 'attachment; filename=rss.xml');
+                ->withHeader('Content-Type', 'application/rss+xml; charset=utf-8')
+                ->withHeader('Content-Length', $stream->getSize())
+                ->withHeader('Content-Disposition', 'attachment; filename=rss.xml');
     }
 
     protected function renderNews($page, $req)
