@@ -26,14 +26,18 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 ->group('connect_url-group', 'div', function ($form) use ($data) {
                     $form->label('connect_url-label', t('Protection of connection paths'), [
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
-                        . t('Example: Ab1P-9eM_s8Y : ')
-                        . $this->router->getRoute('user.login', [ ':url' => '/Ab1P-9eM_s8Y' ]),
+                        . ' ' . t('Example: :value ', [
+                            ':value' => $this->router->getRoute('user.login', [
+                                ':url' => '/Ab1P-9eM_s8Y'
+                            ])
+                        ]),
                         'for'          => 'connect_url'
                     ])
                     ->group('connect_url-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:_content</span>', [
                             '_content' => $this->router->getRoute('user.login', [
-                                ':url' => '' ]),
+                                ':url' => ''
+                            ]),
                             'id'       => ''
                         ])
                         ->text('connect_url', [

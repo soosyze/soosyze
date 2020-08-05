@@ -16,7 +16,7 @@ class HookUser
         return 'menu.administer';
     }
     
-    public function hookMenuDelete( $name )
+    public function hookMenuDelete($name)
     {
         return in_array($name, [ 'menu-main', 'menu-admin', 'menu-user' ])
             ? false

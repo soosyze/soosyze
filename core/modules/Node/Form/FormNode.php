@@ -236,7 +236,7 @@ class FormNode extends FormBuilder
                 $idEntity = $field[ "{$key}_id" ];
                 $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field) {
                     if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
-                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt" aria-hidden="true"></i>')
+                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt-v" aria-hidden="true"></i>')
                             ->hidden("{$key}[$idEntity][weight]", [
                                 'value' => $field[ 'weight' ]
                             ])->hidden("{$key}[$idEntity][id]", [
@@ -446,20 +446,26 @@ class FormNode extends FormBuilder
                 ])
                 ->token('token_node')
                 ->group('actions-group', 'fieldset', function ($form) {
-                    $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                    $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+                    ->html('cancel', '<button:attr>:_content</button>', [
+                        '_content' => t('Cancel'),
+                        'class'    => 'btn btn-danger',
+                        'onclick'  => 'javascript:history.back();',
+                        'type'     => 'button'
+                    ]);
                 }, self::$attrGrp);
     }
 
     public function actionsEntitySubmit()
     {
         return $this->token('token_entity')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->html('cancel', '<button:attr>:_content</button>', [
                     '_content' => t('Cancel'),
                     'class'    => 'btn btn-danger',
                     'onclick'  => 'javascript:history.back();',
                     'type'     => 'button'
-                ])
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                ]);
     }
 
     public function rules(&$value)

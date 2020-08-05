@@ -79,7 +79,7 @@ class FileManager
                 'active'     => ''
             ];
         }
-        if(isset($breadcrumb[ $key ])) {
+        if (isset($breadcrumb[ $key ])) {
             $breadcrumb[$key][ 'active' ] = 'active';
         }
 

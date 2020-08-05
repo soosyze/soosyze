@@ -96,7 +96,7 @@ class RoleManager extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($roles as $role) {
                 $data = [
-                    'role_weight' => $validator->getInput("role_weight-{$role[ 'role_id' ]}")
+                    'role_weight' => (int) $validator->getInput("role_weight-{$role[ 'role_id' ]}")
                 ];
 
                 $this->container->callHook('user.role.admin.check.before', [

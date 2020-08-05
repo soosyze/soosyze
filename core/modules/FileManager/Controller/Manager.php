@@ -52,7 +52,8 @@ class Manager extends \Soosyze\Controller
                 ])->override('page', [ 'page-fuild.php' ]);
     }
     
-    public function showPublic($path, $req) {
+    public function showPublic($path, $req)
+    {
         return self::template()
                 ->view('page', [
                     'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',

@@ -155,6 +155,10 @@ class Node
         if (preg_match('/^(.*\|)?required(\|.*)?/', $field[ 'field_rules' ])) {
             $out[ 'required' ] = 1;
         }
+        if (preg_match('/[\|]?(between|between_numeric):(\d+),(\d+)?/', $field[ 'field_rules' ], $matches)) {
+            $out[ 'min' ] = (int) $matches[ 2 ];
+            $out[ 'max' ] = (int) $matches[ 3 ];
+        }
         if (preg_match('/[\|]?(max|max_numeric):(\d+)(yb|zb|eb|pb|tb|gb|mb|kb|b)?/', $field[ 'field_rules' ], $matches)) {
             $out[ 'max' ] = (int) $matches[ 2 ];
         }

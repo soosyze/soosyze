@@ -27,8 +27,10 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
 
         foreach ($nodeType as $key => &$value) {
-            $reqGranted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
-            if (!self::core()->callHook('app.granted.route', [ $reqGranted ])) {
+            $reqGranted = self::router()->getRequestByRoute('node.create', [
+                ':node' => $value[ 'node_type' ]
+            ]);
+            if (!$this->container->callHook('app.granted.route', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
@@ -58,7 +60,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.create.form.data', [ &$content ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content += $_SESSION[ 'inputs' ];
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -124,6 +126,17 @@ class Node extends \Soosyze\Controller
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
             ])
+            ->setLabel([
+                'date_created'     => t('Publication date'),
+                'meta_description' => t('Description'),
+                'meta_noarchive'   => t('Block caching'),
+                'meta_nofollow'    => t('Block link tracking'),
+                'meta_noindex'     => t('Block indexing'),
+                'meta_title'       => t('Title'),
+                'node_status_id'   => t('Publication status'),
+                'sticky'           => t('Pin content'),
+                'title'            => t('Title of the content')
+            ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $type);
 
@@ -138,7 +151,8 @@ class Node extends \Soosyze\Controller
                     $canPublish = false;
                 }
             } else {
-                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
+                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
             }
             if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                 $files[] = $value[ 'field_name' ];
@@ -275,7 +289,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.edit.form.data', [ &$content, $idNode ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content += $_SESSION[ 'inputs' ];
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -346,6 +360,17 @@ class Node extends \Soosyze\Controller
                 'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
+            ])
+            ->setLabel([
+                'date_created'     => t('Publication date'),
+                'meta_description' => t('Description'),
+                'meta_noarchive'   => t('Block caching'),
+                'meta_nofollow'    => t('Block link tracking'),
+                'meta_noindex'     => t('Block indexing'),
+                'meta_title'       => t('Title'),
+                'node_status_id'   => t('Publication status'),
+                'sticky'           => t('Pin content'),
+                'title'            => t('Title of the content')
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $node[ 'type' ]);

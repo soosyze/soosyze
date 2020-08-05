@@ -126,8 +126,8 @@ class NodeManager extends \Soosyze\Controller
     
     protected function getNodes($page)
     {
-        $nodes = clone self::query()
-            ->from('node')
+        $nodes = clone self::query();
+        $nodes = $nodes->from('node')
             ->leftJoin('node_type', 'type', 'node_type.node_type');
 
         if ($this->container->callHook('app.granted', [ 'node.administer' ])) {

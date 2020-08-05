@@ -270,7 +270,6 @@ class Install extends \Soosyze\Controller
             'firstname'        => $save[ 'firstname' ],
             'name'             => $save[ 'name' ],
             'actived'          => true,
-            'time_reset'       => '',
             'time_installed'   => (string) time(),
             'timezone'         => $timezone,
             'rgpd'             => true,

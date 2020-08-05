@@ -127,7 +127,7 @@ class Entity extends \Soosyze\Controller
             foreach ($fieldsEntity as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $fieldsInsert[ $key ] = '';
+                    $fields[ $key ] = '';
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fields[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
@@ -149,7 +149,7 @@ class Entity extends \Soosyze\Controller
             /* Télécharge et enregistre les fichiers. */
             $idEntity = self::schema()->getIncrement('entity_' . $entity);
             foreach ($fieldsEntity as $value) {
-                if( in_array($value[ 'field_type' ], [ 'image', 'file' ]) ) {
+                if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $this->saveFile($node[ 'type' ], $idNode, $entity, $idEntity, $value[ 'field_name' ], $validator);
                 }
             }
@@ -243,12 +243,13 @@ class Entity extends \Soosyze\Controller
 
             return new Redirect(
                 self::router()->getRoute('entity.update', [
-                    ':id_node'  => $idNode,
-                    ':entity'   => $entity,
-                    'id_entity' => $idEntity
+                    ':id_node'   => $idNode,
+                    ':entity'    => $entity,
+                    ':id_entity' => $idEntity
                 ])
             );
         }
+
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
@@ -261,6 +262,7 @@ class Entity extends \Soosyze\Controller
         if (!self::node()->getEntity($entity, $idEntity)) {
             return $this->get404($req);
         }
+
         $validator = (new Validator())
             ->setRules([ 'token_entity' => 'token' ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
@@ -282,10 +284,7 @@ class Entity extends \Soosyze\Controller
             foreach ($fieldsEntity as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    unset($fields[ $key ]);
                     $this->saveFile($node['type'], $idNode, $entity, $idEntity, $key, $validator);
-                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                    unset($fields[ $key ]);
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fields[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
@@ -318,9 +317,9 @@ class Entity extends \Soosyze\Controller
 
         return new Redirect(
             self::router()->getRoute('entity.update', [
-                ':id_node'  => $idNode,
-                ':entity'   => $entity,
-                'id_entity' => $idEntity
+                ':id_node'   => $idNode,
+                ':entity'    => $entity,
+                ':id_entity' => $idEntity
             ])
         );
     }

@@ -73,6 +73,7 @@
             "route.node.store": "hookNodeCreated",
             "route.node.edit": "hookNodeEdited",
             "route.node.update": "hookNodeEdited",
+            "route.node.remove": "hookNodeDeleted",
             "route.node.delete": "hookNodeDeleted",
             "route.node.add": "hookNodeAdd",
             "route.entity.create": "hookNodeCreated",

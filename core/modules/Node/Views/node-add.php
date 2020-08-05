@@ -3,7 +3,7 @@
     <legend><?php echo t('Type of content'); ?></legend>
 
     <div class="row">
-        <?php foreach( $node_type as $node ): ?>
+        <?php foreach ($node_type as $node): ?>
         
         <div class="col-md-3">
             <h3 class="node_type-badge node_type-badge__<?php echo $node[ 'node_type' ]; ?>">

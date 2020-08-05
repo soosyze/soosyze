@@ -104,11 +104,9 @@ class User extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => []
-        ]);
+                    'form'         => $form,
+                    'user_submenu' => ''
+                ]);
     }
 
     public function store($req)
@@ -483,7 +481,14 @@ class User extends \Soosyze\Controller
                 'token_user_remove' => 'token'
             ])
             ->setInputs($req->getParsedBody())
-            ->addInput('id', $id);
+            ->addInput('id', $id)
+            ->setMessages([
+                'id' => [
+                    'equal' => [
+                        'not' => t('You cannot delete the site administrator account')
+                    ]
+                ]
+            ]);
 
         $this->container->callHook('user.delete.validator', [ &$validator, $user,
             $id ]);
