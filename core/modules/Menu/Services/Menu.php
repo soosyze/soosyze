@@ -154,7 +154,7 @@ class Menu
                 ->createBlock('menu.php', $this->pathViews)
                 ->nameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()),
+                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()->withMethod('GET')),
                     'level' => $level
         ]);
     }
