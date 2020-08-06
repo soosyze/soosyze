@@ -6,8 +6,12 @@
     "Biography": "Biographie",
     "Administrator": "Administrateur",
     "Administer permissions": "Administrer les permissions",
+    "View user profiles": "Voir les profils utilisateurs",
+    "Edit your user account": "Éditer son compte utilisateur",
+    "Delete your user account": "Supprimer son compte utilisateur",
     "Administer roles": "Administrer les rôles",
     "Administer users": "Administrer les utilisateurs",
+    "Use the admin theme": "Utiliser le thème d'administration",
     "User Management": "Gestion des utilisateurs",
     "Show/Hide password": "Afficher/Cacher le mot de passe",
     "Add a new role": "Ajouter un nouveau rôle",
@@ -58,5 +62,9 @@
     "Roles": "Roles",
     "Permissions": "Permissions",
     "Password reset timeout": "Le délai de réinitialisation du mot de passe est dépassé",
-    "You cannot delete the site administrator account": "Vous ne pouvez pas supprimer le compte d'administration du site"
+    "You cannot delete the site administrator account": "Vous ne pouvez pas supprimer le compte d'administration du site",
+    "I have read and accept your terms of service (Required)": "J'ai lu et j'accepte vos conditions d'utilisation (Obligatoire)",
+    "Read the terms of service": "Lire les conditions générales d'utilisation",
+    "I have read and accept your privacy policy (Required)": "J'ai lu et j'accepte votre politique de confidentialité (Obligatoire)",
+    "Read the privacy policy": "Lire la politique de confidentialité"
 }
