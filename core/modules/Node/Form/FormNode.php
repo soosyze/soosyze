@@ -243,24 +243,40 @@ class FormNode extends FormBuilder
                             'value' => $idEntity
                         ]);
                     }
-                    $form->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
-                            '_content' => '<i class="fa fa-times"></i>',
-                            'class'    => 'btn',
-                            'href'     => $this->router->getRoute('entity.delete', [
+
+                    $content = $field[ $options[ 'field_show' ] ];
+                    if ($this->isShowFile($options, $field)) {
+                        $src     = $field[ $options[ 'field_type_show' ] ];
+                        $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
+                    }
+
+                    $form->html("$key-$idEntity-show", '<a:attr>:_content</a>', [
+                            '_content' => $content,
+                            'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
                         ->html("$key-$idEntity-edit", '<a:attr>:_content</a>', [
+                            '_content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
+                            'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
-                            '_content' => $field[ $options[ 'field_show' ] ]
+                        ])
+                        ->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
+                            '_content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
+                            'class'    => 'btn',
+                            'href'     => $this->router->getRoute('entity.delete', [
+                                ':id_node'   => $this->content[ 'id' ],
+                                ':entity'    => $key,
+                                ':id_entity' => $field[ "{$key}_id" ]
+                            ]),
                     ]);
-                }, [ 'class' => 'sort_weight' ]);
+                }, [ 'class' => 'sort_weight draggable node-draggable_one_to_many' ]);
             }
         }, [ 'class' => $options[ 'sort' ] === 'weight'
                 ? 'nested-sortable form-group'
@@ -277,6 +293,11 @@ class FormNode extends FormBuilder
                 ]);
             });
         }
+    }
+    
+    public function isShowFile($options, $field)
+    {
+        return isset($options[ 'field_type_show' ]) && $options[ 'field_type_show' ] === 'image' && is_file($field[ $options[ 'field_type_show' ] ]);
     }
 
     public function makeRadio(&$form, $key, $value, $options)
