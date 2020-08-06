@@ -61,11 +61,12 @@ class Installer extends \SoosyzeCore\System\Migration
             });
 
         $ci->query()
-            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight',
-                'role_icon' ])
-            ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane' ])
-            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt' ])
-            ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-wrench' ])
+            ->insertInto('role', [
+                'role_label', 'role_description', 'role_weight', 'role_icon', 'role_color'
+            ])
+            ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane', '#e5941f' ])
+            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt', '#fe4341'  ])
+            ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-crown', '#858eec' ])
             ->execute();
 
         $ci->query()
