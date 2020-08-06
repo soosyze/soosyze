@@ -681,12 +681,6 @@ class Node extends \Soosyze\Controller
     {
         $menu = [
             [
-                'key'        => 'node.show',
-                'request'    => self::router()->getRequestByRoute('node.show', [
-                    ':id_node' => $node[ 'id' ]
-                ]),
-                'title_link' => t('View')
-            ], [
                 'key'        => 'node.edit',
                 'request'    => self::router()->getRequestByRoute('node.edit', [
                     ':id_node' => $node[ 'id' ]
@@ -704,12 +698,26 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
 
         foreach ($menu as $key => &$link) {
-            if (!self::core()->callHook('app.granted.route', [ $link[ 'request' ] ])) {
-                unset($menu[ $key ]);
+            if ($this->container->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                $link[ 'link' ] = $link[ 'request' ]->getUri();
 
                 continue;
             }
-            $link[ 'link' ] = $link[ 'request' ]->getUri();
+
+            unset($menu[ $key ]);
+        }
+        if ($menu) {
+            $nodeShow = [
+                'key'        => 'node.show',
+                'request'    => self::router()->getRequestByRoute('node.show', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('View')
+            ];
+            if ($this->container->callHook('app.granted.route', [ $nodeShow[ 'request' ] ])) {
+                $nodeShow[ 'link' ] = $nodeShow[ 'request' ]->getUri();
+                $menu               = array_merge([ $nodeShow ], $menu);
+            }
         }
 
         return self::template()
