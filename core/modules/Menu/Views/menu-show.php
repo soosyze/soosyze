@@ -3,7 +3,7 @@
 <?php if ($menu): ?>
     <?php foreach ($menu as $link): ?>
 
-    <li class="link-item">
+    <li class="link-item draggable">
         <div class="link-title">
             <i class="fa fa-arrows-alt" aria-hidden="true"></i>
             <a href="<?php echo $link[ 'link' ]; ?>" target="<?php echo $link[ 'target_link' ]; ?>" <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>

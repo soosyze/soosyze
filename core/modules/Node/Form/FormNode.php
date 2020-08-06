@@ -161,7 +161,8 @@ class FormNode extends FormBuilder
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ]),
-                'for'          => $key
+                'for'          => $key,
+                'required'     => !empty($value[ 'attr' ][ 'required' ])
             ])
             ->group("$key-flex", 'div', function ($form) use ($key, $value, $default) {
                 $form->number($key, [
@@ -179,6 +180,7 @@ class FormNode extends FormBuilder
         $default = empty($this->content[ $key ])
             ? $value[ 'field_default_value' ]
             : $this->content[ $key ];
+
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
@@ -230,6 +232,7 @@ class FormNode extends FormBuilder
         if (isset($options[ 'order_by' ])) {
             $data->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
+
         $subFields = $data->fetchAll();
         $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options) {
             foreach ($subFields as $field) {

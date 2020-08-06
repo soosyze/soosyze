@@ -161,9 +161,6 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->values([
                     'node.show', null, 'Home', '/', 'menu-main', 1, -1
                 ])
-                ->values([
-                    'node.show', 'fa fa-home', 'Home', '/', 'menu-admin', 1, -1
-                ])
                 ->execute();
 
             $ci->schema()

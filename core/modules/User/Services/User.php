@@ -166,7 +166,7 @@ class User
             ]
         ];
 
-        $this->core->callHook('user.menu', [ &$menu, $id ]);
+        $this->core->callHook('user.submenu', [ &$menu, $id ]);
 
         foreach ($menu as $key => &$link) {
             if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
@@ -204,7 +204,7 @@ class User
             ]
         ];
 
-        $this->core->callHook('user.manager.menu', [ &$menu ]);
+        $this->core->callHook('user.manager.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
             if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {

@@ -39,9 +39,9 @@ class HookUrl
         $data[ 'meta_url' ] = '';
     }
 
-    public function hookEditFormData(&$data, $id)
+    public function hookEditFormData(&$data, $idNode)
     {
-        $data[ 'meta_url' ] = $this->alias->getAlias('node/' . $id, '');
+        $data[ 'meta_url' ] = $this->alias->getAlias('node/' . $idNode, '');
     }
 
     public function hookCreateForm($form, $data)
@@ -76,31 +76,31 @@ class HookUrl
             ->execute();
     }
 
-    public function hookUpdateValid($validator, $id)
+    public function hookUpdateValid($validator, $idNode)
     {
         if (!($alias = $this->makeAlias($validator))) {
             $this->query
                 ->delete()
                 ->from('system_alias_url')
-                ->where('alias', 'node/' . $id)
+                ->where('alias', 'node/' . $idNode)
                 ->execute();
-        } elseif ($link = $this->alias->getAlias('node/' . $id)) {
+        } elseif ($link = $this->alias->getAlias('node/' . $idNode)) {
             $this->query
                 ->update('system_alias_url', [ 'alias' => $alias ])
-                ->where('source', 'node/' . $id)
+                ->where('source', 'node/' . $idNode)
                 ->execute();
         } else {
             $this->query
                 ->insertInto('system_alias_url', [ 'source', 'alias' ])
-                ->values([ 'node/' . $id, $alias ])
+                ->values([ 'node/' . $idNode, $alias ])
                 ->execute();
         }
     }
 
-    public function hookDeleteValid($validator, $id)
+    public function hookDeleteValid($validator, $idNode)
     {
         $this->query->from('system_alias_url')
-            ->where('source', 'node/' . $id)
+            ->where('source', 'node/' . $idNode)
             ->delete()
             ->execute();
     }

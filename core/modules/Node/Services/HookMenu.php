@@ -40,15 +40,16 @@ class HookMenu
         }
     }
 
-    public function hookEditFormData(&$data, $item)
+    public function hookEditFormData(&$data, $idNode)
     {
         if ($this->isMenu) {
             $data[ 'title_link' ] = '';
             $data[ 'active' ]     = '';
-            $link                 = $this->query
+
+            $link = $this->query
                 ->from('node_menu_link')
                 ->leftJoin('menu_link', 'menu_link_id', '=', 'menu_link.id')
-                ->where('node_id', '==', $item)
+                ->where('node_id', '==', $idNode)
                 ->fetch();
 
             if ($link) {

@@ -393,7 +393,9 @@ class Node extends \Soosyze\Controller
                     }
                 }
             } else {
-                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+                $validator
+                    ->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
+                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
             }
             if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                 $files[] = $value[ 'field_name' ];
@@ -576,8 +578,8 @@ class Node extends \Soosyze\Controller
         unset($node[ 'id' ], $node[ 'node_status_id' ]);
         $node[ 'entity_id' ]    = $entityId;
         $node[ 'title' ]        = $node[ 'title' ] . ' clone';
-        $node[ 'date_created' ] = (string) time();
-        $node[ 'date_changed' ] = (string) time();
+        $node[ 'date_created' ] = time();
+        $node[ 'date_changed' ] = time();
 
         self::query()
             ->insertInto('node', array_keys($node))

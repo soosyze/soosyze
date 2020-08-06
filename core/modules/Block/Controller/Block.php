@@ -182,7 +182,6 @@ class Block extends \Soosyze\Controller
                         'class'       => 'form-control',
                         'maxlength'   => 255,
                         'placeholder' => 'Titre',
-                        'required'    => 1,
                         'value'       => $data[ 'title' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -193,7 +192,6 @@ class Block extends \Soosyze\Controller
                     ->textarea('content', $data[ 'content' ], [
                         'class'       => 'form-control editor',
                         'placeholder' => '<p>Hello World!</p>',
-                        'required'    => 1,
                         'rows'        => 8
                     ]);
                 }, [ 'class' => 'form-group' ])
@@ -242,7 +240,7 @@ class Block extends \Soosyze\Controller
                         'placeholder' => 'admin' . PHP_EOL . 'admin/%',
                         'rows'        => 5
                     ])
-                    ->html('cancel', '<p>:_content</p>', [
+                    ->html('info-variable_allowed', '<p>:_content</p>', [
                         '_content' => t('Variables allowed') . ' <code>%</code>'
                     ]);
                 }, [ 'class' => 'form-group' ]);

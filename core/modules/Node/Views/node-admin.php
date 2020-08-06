@@ -69,7 +69,7 @@
 <div>
     <fieldset class="responsive">
         <legend><?php echo t('My contents'); ?></legend>
-        <table class="table table-hover table-node">
+        <table class="table table-hover node-table">
             <thead>
                 <tr class="form-head">
                     <th><?php echo t('Name'); ?></th>
@@ -138,22 +138,22 @@
                     <td data-title="<?php echo t('Status'); ?>">
                         <?php if ($node[ 'node_status_id' ] === 1): ?>
 
-                        <span class="icon-publish" data-tooltip="<?php echo t('Published'); ?>">
+                        <span class="node_status-icon node_status-icon__publish" data-tooltip="<?php echo t('Published'); ?>">
                             <i class="fa fa-check" aria-hidden="true"></i>
                         </span>
                         <?php elseif ($node[ 'node_status_id' ] === 2): ?>
 
-                        <span class="icon-pending_publication" data-tooltip="<?php echo t('Pending publication'); ?>">
+                        <span class="node_status-icon node_status-icon__pending_publication" data-tooltip="<?php echo t('Pending publication'); ?>">
                             <i class="fa fa-clock" aria-hidden="true"></i>
                         </span>
                         <?php elseif ($node[ 'node_status_id' ] === 3): ?>
 
-                        <span class="icon-draft" data-tooltip="<?php echo t('Draft'); ?>">
+                        <span class="node_status-icon node_status-icon__draft" data-tooltip="<?php echo t('Draft'); ?>">
                             <i class="fa fa-pen" aria-hidden="true"></i>
                         </span>
                         <?php elseif ($node[ 'node_status_id' ] === 4): ?>
 
-                        <span class="icon-archived" data-tooltip="<?php echo t('Archived'); ?>">
+                        <span class="node_status-icon node_status-icon__archived" data-tooltip="<?php echo t('Archived'); ?>">
                             <i class="fa fa-archive" aria-hidden="true"></i>
                         </span>
                         <?php endif; ?>
