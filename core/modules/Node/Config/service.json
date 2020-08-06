@@ -18,6 +18,16 @@
             "config.edit.menu": "menu"
         }
     },
+    "node.hook.filemanager": {
+        "class": "SoosyzeCore\\Node\\Services\\HookFileManager",
+        "arguments": ["@core", "@module", "@router"],
+        "hooks": {
+            "node.create.form": "hookNodeCreateForm",
+            "node.edit.form": "hookNodeEditForm",
+            "entity.create.form": "hookEntityForm",
+            "entity.edit.form": "hookEntityForm"
+        }
+    },
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
         "arguments": ["@core"],
