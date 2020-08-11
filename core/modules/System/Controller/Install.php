@@ -26,7 +26,8 @@ class Install extends \Soosyze\Controller
         'System'      => 'SoosyzeCore\\System\\',
         'User'        => 'SoosyzeCore\\User\\',
         'Block'       => 'SoosyzeCore\\Block\\',
-        'FileManager' => 'SoosyzeCore\\FileManager\\'
+        'FileManager' => 'SoosyzeCore\\FileManager\\',
+        'Trumbowyg'   => 'SoosyzeCore\\Trumbowyg\\'
     ];
 
     public function __construct()

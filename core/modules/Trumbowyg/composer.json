@@ -1,0 +1,23 @@
+{
+    "name": "soosyze-extension/trumbowyg",
+    "type": "soosyze-module",
+    "description": "Rich text editor for your content.",
+    "version": "1.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Trumbowyg\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "Trumbowyg",
+            "package": "Core",
+            "controller": "SoosyzeCore\\Trumbowyg\\Controller\\Trumbowyg",
+            "icon": {
+                "name": "fas fa-paragraph",
+                "background-color": "#fc5951",
+                "color": "#fff"
+            }
+        }
+    }
+}

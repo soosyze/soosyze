@@ -1,0 +1,24 @@
+{
+    "trumbowyg.install": {
+        "class": "SoosyzeCore\\Trumbowyg\\Installer",
+        "hooks": {
+            "install.user": "hookInstallUser"
+        }
+    },
+    "trumbowyg.hook.node": {
+        "class": "SoosyzeCore\\Trumbowyg\\Services\\Trumbowyg",
+        "arguments": ["@core", "@router"],
+        "hooks": {
+            "node.create.response.after": "getEditor",
+            "node.edit.response.after": "getEditor",
+            "section.admin.response.after": "getEditor"
+        }
+    },
+    "trumbowyg.hook.user": {
+        "class": "SoosyzeCore\\Trumbowyg\\Services\\HookUser",
+        "hooks": {
+            "user.permission.module": "hookPermission",
+            "route.trumbowyg.upload": "hookUpload"
+        }
+    }
+}
