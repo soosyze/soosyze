@@ -4,7 +4,7 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Menu\Controller');
 
-R::get('menu.index', 'admin/menu', 'Menu@index');
+R::get('menu.admin', 'admin/menu', 'Menu@admin');
 R::get('menu.create', 'admin/menu/create', 'Menu@create');
 R::post('menu.store', 'admin/menu/create', 'Menu@store');
 R::get('menu.show', 'admin/menu/:menu', 'Menu@show', [ ':menu' => '[a-z\d-]+' ]);

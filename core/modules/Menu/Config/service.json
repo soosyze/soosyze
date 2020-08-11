@@ -18,7 +18,7 @@
             "route.menu.link.edit": "hookMenuAdminister",
             "route.menu.link.update": "hookMenuAdminister",
             "route.menu.link.delete": "hookMenuAdminister",
-            "route.menu.index": "hookMenuAdminister",
+            "route.menu.admin": "hookMenuAdminister",
             "route.menu.show": "hookMenuAdminister",
             "route.menu.check": "hookMenuAdminister",
             "route.menu.create": "hookMenuAdminister",
@@ -34,7 +34,7 @@
         "arguments": ["@menu"],
         "hooks": {
             "app.response.after": "hookResponseAfter",
-            "menu.index.response.after": "hookMenuShowResponseAfter",
+            "menu.admin.response.after": "hookMenuShowResponseAfter",
             "menu.show.response.after": "hookMenuShowResponseAfter"
         }
     },

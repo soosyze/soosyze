@@ -140,7 +140,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->values([ 3, 'node.show.not_published' ])
                 ->values([ 3, 'node.show.published' ])
                 ->values([ 3, 'node.administer' ])
-                ->values([ 3, 'node.index' ])
+                ->values([ 3, 'node.admin' ])
                 ->values([ 2, 'node.show.published' ])
                 ->values([ 1, 'node.show.published' ])
                 ->execute();
@@ -155,7 +155,7 @@ class Installer extends \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'node.index', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
+                    'node.admin', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
                     2, -1
                 ])
                 ->values([

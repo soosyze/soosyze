@@ -32,9 +32,9 @@ class UsersManager extends \Soosyze\Controller
                     'title_main' => t('Administer users')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-user_manager.php', $this->pathViews, [
+                ->make('page.content', 'user/content-user_manager-admin.php', $this->pathViews, [
                     'link_create_user'     => self::router()->getRoute('user.create'),
-                    'link_filter_user'     => self::router()->getRoute('user.admin.filter'),
+                    'link_filter_user'     => self::router()->getRoute('user.filter'),
                     'link_user_admin'      => self::router()->getRoute('user.admin'),
                     'users'                => $users,
                     'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.admin')
@@ -78,7 +78,8 @@ class UsersManager extends \Soosyze\Controller
         $this->hydrateUsersLinks($users);
 
         return self::template()
-                ->createBlock('filter-user.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('user/filter-user.php', $this->pathViews)
                 ->addVars([ 'users' => $users ]);
     }
 

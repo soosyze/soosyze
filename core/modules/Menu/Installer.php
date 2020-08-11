@@ -52,7 +52,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'menu.index', 'fa fa-bars', 'Menu', 'admin/menu', 'menu-admin',
+                'menu.admin', 'fa fa-bars', 'Menu', 'admin/menu', 'menu-admin',
                 3, -1
             ])
             ->execute();

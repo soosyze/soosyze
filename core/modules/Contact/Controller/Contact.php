@@ -54,7 +54,7 @@ class Contact extends \Soosyze\Controller
                     'title_main' => 'Contact'
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-contact.php', $this->pathViews, [
+                ->make('page.content', 'contact/content-contact-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

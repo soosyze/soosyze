@@ -30,7 +30,9 @@ class Block extends \Soosyze\Controller
             $data = self::block()->getBlocks();
             $key  = $block[ 'key_block' ];
 
-            $tpl = self::template()->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
+            $tpl = self::template()
+                ->getTheme('theme_admin')
+                ->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
 
             $block[ 'content' ] .= (string) $this->container->callHook(
                 'block.' . $block[ 'key_block' ],
@@ -39,7 +41,8 @@ class Block extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('block-show.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('block/block-show.php', $this->pathViews)
                 ->addVars([ 'block' => $block ]);
     }
 
@@ -57,12 +60,16 @@ class Block extends \Soosyze\Controller
         foreach ($data as $key => &$block) {
             if (empty($block[ 'hook' ])) {
                 $content = self::template()
+                    ->getTheme('theme_admin')
                     ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                     ->addVars([
                     'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);
             } else {
-                $tpl      = self::template()->createBlock($block[ 'tpl' ], $block[ 'path' ]);
+                $tpl = self::template()
+                    ->getTheme('theme_admin')
+                    ->createBlock($block[ 'tpl' ], $block[ 'path' ]);
+
                 $keyBlock = empty($block[ 'key_block' ])
                     ? $key
                     : $block[ 'key_block' ];
@@ -93,7 +100,8 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.create.form', [ &$form, $data ]);
 
         return self::template()
-                ->createBlock('block-create.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('block/content-block-create.php', $this->pathViews)
                 ->addVars([
                     'section' => $section,
                     'blocks'  => $data,
@@ -121,8 +129,9 @@ class Block extends \Soosyze\Controller
             if (empty($block[ 'hook' ])) {
                 $block[ 'hook' ] = null;
 
-                $content = (string) self::template()
-                        ->createBlock($block['tpl'], $block[ 'path' ])
+                $content = ( string ) self::template()
+                        ->getTheme('theme_admin')
+                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                         ->addVars([
                             'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
                 ]);
@@ -300,7 +309,8 @@ class Block extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('block-form.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('block/content-block-form.php', $this->pathViews)
                 ->addVars([
                     'form'      => $form,
                     'link_show' => self::router()->getRoute('block.show', [ ':id' => $data[ 'block_id' ] ])

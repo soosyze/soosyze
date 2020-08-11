@@ -78,8 +78,9 @@ Options +FollowSymLinks
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent',
                     'active'
                 ])
-                ->values([ 'backupmanager.index', 'fas fa-file-archive', 'Backups',
-                    'admin/backupmanager/backups', 'menu-admin', 50, -1, true ])
+                ->values([ 'backupmanager.admin', 'fas fa-file-archive', 'Backups',
+                    'admin/backupmanager', 'menu-admin', 50, -1, true
+                ])
                 ->execute();
         }
     }

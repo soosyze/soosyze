@@ -47,7 +47,7 @@ class Manager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
                     'title_main' => t('File manager')
                 ])
-                ->make('page.content', 'page-manager.php', $this->pathViews, [
+                ->make('page.content', 'filemanager/content-file_manager-admin.php', $this->pathViews, [
                     'filemanager' => $filemanager
                 ])->override('page', [ 'page-fuild.php' ]);
     }
@@ -74,7 +74,8 @@ class Manager extends \Soosyze\Controller
         $path = Util::cleanPath('/' . $path);
 
         $breadcrumb = self::template()
-            ->createBlock('breadcrumb.php', $this->pathViews)
+            ->getTheme('theme_admin')
+            ->createBlock('filemanager/breadcrumb-file_manager-show.php', $this->pathViews)
             ->addVars([
             'granted_folder_create' => $this->get('filemanager.hook.user')->hookFolderStore($path),
             'links'                 => self::filemanager()->getBreadcrumb($path),
@@ -119,7 +120,8 @@ class Manager extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('filemanager-show.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/content-file_manager-show.php', $this->pathViews)
                 ->addVars([
                     'files'               => $files,
                     'granted_file_create' => $this->get('filemanager.hook.user')->hookFileStore($path),

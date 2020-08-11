@@ -71,7 +71,7 @@ class Entity extends \Soosyze\Controller
                         ':name' => $entity ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-create.php', $this->pathViews, [
+                ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -230,7 +230,7 @@ class Entity extends \Soosyze\Controller
                     ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
+                ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [ 'form' => $form ]);
     }
 
     public function update($idNode, $entity, $idEntity, $req)

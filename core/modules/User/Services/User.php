@@ -179,7 +179,7 @@ class User
 
         return $this->core
                 ->get('template')
-                ->createBlock('submenu-user.php', $this->pathViews)
+                ->createBlock('user/submenu-user.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu
@@ -217,7 +217,7 @@ class User
 
         return $this->core
                 ->get('template')
-                ->createBlock('submenu-user_manager.php', $this->pathViews)
+                ->createBlock('user/submenu-user_manager.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu

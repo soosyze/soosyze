@@ -220,7 +220,8 @@ class FileManager
 
         return $this->core
                 ->get('template')
-                ->createBlock('submenu-modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-submenu.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu
@@ -258,7 +259,8 @@ class FileManager
 
         return $this->core
                 ->get('template')
-                ->createBlock('submenu-modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-submenu.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu

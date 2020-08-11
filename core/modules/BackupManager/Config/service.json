@@ -20,7 +20,7 @@
         "class": "SoosyzeCore\\BackupManager\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.backupmanager.index": "hookBackupManage",
+            "route.backupmanager.admin": "hookBackupManage",
             "route.backupmanager.dobackup": "hookBackupManage",
             "route.backupmanager.delete": "hookBackupManage",
             "route.backupmanager.restore": "hookBackupManage",

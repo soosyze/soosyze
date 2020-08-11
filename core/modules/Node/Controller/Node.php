@@ -44,7 +44,7 @@ class Node extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Add content')
                 ])
-                ->make('page.content', 'node-add.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-add.php', $this->pathViews, [
                     'node_type' => $nodeType
         ]);
     }
@@ -93,10 +93,11 @@ class Node extends \Soosyze\Controller
                     ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-create.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
                     'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
-        ]);
+                ])
+                ->override('page.content', [ 'node/content-node-form_create.php' ]);
     }
 
     public function store($type, $req)
@@ -239,7 +240,7 @@ class Node extends \Soosyze\Controller
             return new Redirect(
                 $fieldsRelation
                 ? self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
-                : self::router()->getRoute('node.index')
+                : self::router()->getRoute('node.admin')
             );
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
@@ -264,11 +265,14 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $node[ 'title' ],
                 ])
-                ->make('page.content', 'node-show.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields'       => $fields,
                     'node'         => $node,
                     'node_submenu' => $this->getSubmenuNode($node, 'node.show')
-                ])->override('page.content', [ 'node-show-' . $idNode . '.php', 'node-show-' . $node[ 'type' ] . '.php' ]);
+                ])->override('page.content', [ 
+                    'node/content-node-show_' . $idNode . '.php',
+                    'node/content-node-show_' . $node[ 'type' ] . '.php' 
+                ]);
 
         $this->container->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
 
@@ -320,11 +324,12 @@ class Node extends \Soosyze\Controller
                     'title_main' => t('Edit :title content', [ ':title' => $content[ 'title' ] ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-edit.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
                     'node_submenu'          => $this->getSubmenuNode($node, 'node.edit'),
                     'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
-        ]);
+                ])
+                ->override('page.content', [ 'node/content-node-form_edit.php' ]);
     }
 
     public function update($idNode, $req)
@@ -512,10 +517,11 @@ class Node extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
                 ])
-                ->make('page.content', 'node-remove.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'         => $form,
                     'node_submenu' => $this->getSubmenuNode($node, 'node.delete')
-        ]);
+                ])
+                ->override('page.content', [ 'node/content-node-form_remove.php' ]);
     }
 
     public function delete($idNode, $req)
@@ -544,7 +550,7 @@ class Node extends \Soosyze\Controller
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
         }
 
-        return new Redirect(self::router()->getRoute('node.index'));
+        return new Redirect(self::router()->getRoute('node.admin'));
     }
 
     public function cloneNode($idNode, $req)
@@ -562,7 +568,7 @@ class Node extends \Soosyze\Controller
         if (mb_strlen($node[ 'title' ] . ' clone') > 255) {
             $_SESSION[ 'messages' ][ 'errors' ] = [ 'Clone content title is too long' ];
 
-            return new Redirect(self::router()->getRoute('node.index'));
+            return new Redirect(self::router()->getRoute('node.admin'));
         }
 
         $entityClone = $entity;
@@ -671,7 +677,7 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        return new Redirect(self::router()->getRoute('node.index'));
+        return new Redirect(self::router()->getRoute('node.admin'));
     }
 
     public static function getBasename($pathFile)
@@ -723,7 +729,7 @@ class Node extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('submenu-node.php', $this->pathViews)
+                ->createBlock('node/submenu-node.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
                     'menu'      => $menu
@@ -759,7 +765,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.fieldset.submenu', [ &$menu ]);
 
         return self::template()
-                ->createBlock('submenu-node_fieldset.php', $this->pathViews)
+                ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
     }
 

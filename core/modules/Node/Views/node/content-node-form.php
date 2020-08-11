@@ -1,4 +1,8 @@
 
+<?php if (!empty($node_submenu)): ?>
+    <?php echo $node_submenu; ?>
+<?php endif; ?>
+
 <div class="row">
     <?php if (!empty($node_fieldset_submenu)): ?>
     <div class="col-md-3 sticky">

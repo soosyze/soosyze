@@ -105,7 +105,7 @@ class ModulesManager extends \Soosyze\Controller
                     'title_main' => t('Modules')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-modules.php', $this->pathViews, [
+                ->make('page.content', 'system/content-modules_manager-admin.php', $this->pathViews, [
                     'module_update'      => self::config()->get('settings.module_update'),
                     'count'              => count($composer),
                     'link_module_check'  => self::router()->getRoute('system.module.check'),

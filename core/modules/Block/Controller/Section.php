@@ -31,7 +31,7 @@ class Section extends \Soosyze\Controller
                     'styles'  => $styles,
                     'scripts' => $scripts
                 ])
-                ->make('page.content', 'page-block-admin.php', $this->pathViews, [
+                ->make('page.content', 'block/content-section-admin.php', $this->pathViews, [
                     'content'          => t('View and edit your site\'s display on the following topics.'),
                     'link_theme'       => self::router()->getRoute('block.section.admin', [
                         ':theme' => 'theme'

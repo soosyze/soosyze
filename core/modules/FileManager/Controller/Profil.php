@@ -48,7 +48,7 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Add a files permission')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-form.php', $this->pathViews, [
+                ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -142,7 +142,7 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Edit the files permission')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-form.php', $this->pathViews, [
+                ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -233,7 +233,7 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Delete files permission')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-form.php', $this->pathViews, [
+                ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

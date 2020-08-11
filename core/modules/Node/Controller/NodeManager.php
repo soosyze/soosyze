@@ -16,7 +16,7 @@ class NodeManager extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function index($req)
+    public function admin($req)
     {
         return $this->page(1, $req);
     }
@@ -55,10 +55,10 @@ class NodeManager extends \Soosyze\Controller
                     'title_main' => t('My contents')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-admin.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
                     'action_filter'         => self::router()->getRoute('node.filter'),
                     'link_add'              => $linkAdd,
-                    'link_index'            => self::router()->getRoute('node.index'),
+                    'link_index'            => self::router()->getRoute('node.admin'),
                     'link_search_status'    => self::router()->getRoute('node.status.search'),
                     'link_search_node_type' => self::router()->getRoute('node.type.search'),
                     'nodes'                 => $nodes,
@@ -97,7 +97,8 @@ class NodeManager extends \Soosyze\Controller
         $this->hydrateNodesLinks($data);
 
         return self::template()
-                ->createBlock('filter-node.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('node/filter-node.php', $this->pathViews)
                 ->addVars([
                     'nodes' => $data
         ]);

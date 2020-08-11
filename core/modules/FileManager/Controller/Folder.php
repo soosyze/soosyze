@@ -41,6 +41,7 @@ class Folder extends \Soosyze\Controller
             ->makeFields();
 
         return self::template()
+                ->getTheme('theme_admin')
                 ->createBlock('modal.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
@@ -116,7 +117,8 @@ class Folder extends \Soosyze\Controller
             ->makeFields();
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'info'  => $values,
@@ -197,7 +199,8 @@ class Folder extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'info'  => $values,

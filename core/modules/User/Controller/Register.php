@@ -60,7 +60,7 @@ class Register extends \Soosyze\Controller
                     'title_main' => t('Registration')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-register.php', $this->pathViews, [
+                ->make('page.content', 'user/content-register-create.php', $this->pathViews, [
                     'form'        => $form,
                     'url_relogin' => self::router()->getRoute('user.login', [
                         ':url' => $connectUrl

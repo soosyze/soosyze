@@ -75,7 +75,7 @@ class News extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => 'Articles'
                 ])
-                ->make('page.content', 'views-news-index.php', $this->pathViews, [
+                ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $query,
                     'default'  => $default,
                     'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link),
@@ -199,7 +199,7 @@ class News extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $this->titleMain
                 ])
-                ->make('page.content', 'views-news-index.php', $this->pathViews, [
+                ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $news,
                     'paginate' => new Paginator(count($nodesAll), self::$limit, $page, $this->link),
                     'default'  => $default,

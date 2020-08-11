@@ -15,7 +15,7 @@ class Login extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function formLogin($url, $req)
+    public function login($url, $req)
     {
         if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
@@ -59,7 +59,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => t('Log in')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-login.php', $this->pathViews, [
+                ->make('page.content', 'user/content-login-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin', [
                         ':url' => $url
@@ -148,7 +148,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => t('Request a new password')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-relogin.php', $this->pathViews, [
+                ->make('page.content', 'user/content-login-relogin.php', $this->pathViews, [
                     'form'      => $form,
                     'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])
         ]);

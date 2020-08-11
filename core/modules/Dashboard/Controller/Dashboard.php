@@ -30,7 +30,7 @@ class Dashboard extends \Soosyze\Controller
                     'title_main' => t('Dashboard')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-dashboard.php', $this->pathViews, [
+                ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
                     'link_about'  => self::router()->getRoute('dashboard.about'),
                     'link_cron'   => self::router()->getRoute('dashboard.cron'),
                     'link_trans'  => self::router()->getRoute('dashboard.trans'),
@@ -48,7 +48,7 @@ class Dashboard extends \Soosyze\Controller
                     'icon'       => '<i class="fas fa-tachometer-alt" aria-hidden="true"></i>',
                     'title_main' => t('About')
                 ])
-                ->make('page.content', 'page-about.php', $this->pathViews);
+                ->make('page.content', 'dashboard/content-dashboard-about.php', $this->pathViews);
     }
 
     public function cron($req)

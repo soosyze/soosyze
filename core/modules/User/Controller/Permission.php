@@ -61,7 +61,7 @@ class Permission extends \Soosyze\Controller
                     'title_main' => t('Administer permissions')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-permission.php', $this->pathViews, [
+                ->make('page.content', 'user/content-permission-admin.php', $this->pathViews, [
                     'count'                => $count,
                     'link_update'          => self::router()->getRoute('user.permission.update'),
                     'modules'              => $output,

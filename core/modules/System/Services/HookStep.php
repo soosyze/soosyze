@@ -32,8 +32,8 @@ class HookStep
     {
         $this->core        = $core;
         $this->router      = $router;
-        $this->pathViews   = dirname(__DIR__) . '/Views/Install/';
-        $this->pathContent = dirname(__DIR__) . '/Views/Content/';
+        $this->pathViews   = dirname(__DIR__) . '/Views/system/';
+        $this->pathContent = dirname(__DIR__) . '/Views/install/';
     }
 
     public function hookStep(&$step)
@@ -114,7 +114,7 @@ class HookStep
         $form->token('token_step_install')
             ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
 
-        return (new Template('form-profil.php', $this->pathViews))->addVars([
+        return (new Template('content-install-form_profil.php', $this->pathViews))->addVars([
                 'form'    => $form,
                 'profils' => $profils
         ]);

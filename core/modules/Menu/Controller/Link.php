@@ -53,7 +53,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Add a link')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-add.php', $this->pathViews, [
+                ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -151,7 +151,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-edit.php', $this->pathViews, [
+                ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

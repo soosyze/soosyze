@@ -63,7 +63,7 @@ class FilePermissionManager extends \Soosyze\Controller
                     'title_main' => t('Administer file permissions')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-file_permission_manager.php', $this->pathViews, [
+                ->make('page.content', 'filemanager/content-file_permission_manager-admin.php', $this->pathViews, [
                     'form'                 => $form,
                     'link_add'             => self::router()->getRoute('filemanager.profil.create'),
                     'profils'              => $values,

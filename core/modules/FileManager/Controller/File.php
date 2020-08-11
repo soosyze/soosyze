@@ -49,7 +49,8 @@ class File extends \Soosyze\Controller
         $data = self::filemanager()->parseFile($spl, $path);
 
         return self::template()
-                ->createBlock('modal-show.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-file-show.php', $this->pathViews)
                 ->addBlock('visualize', $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext"))
                 ->addVars([
                     'file'  => $spl,
@@ -99,7 +100,8 @@ class File extends \Soosyze\Controller
             });
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'title' => t('Add a new file')
@@ -240,7 +242,8 @@ class File extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'info'  => $data,
@@ -330,7 +333,8 @@ class File extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'info'  => self::filemanager()->parseFile($spl, $path),
@@ -394,14 +398,16 @@ class File extends \Soosyze\Controller
     {
         if (in_array($info[ 'ext' ], self::$extensionImage)) {
             return self::template()
-                    ->createBlock('file-show-image.php', $this->pathViews . '/show/')
+                    ->getTheme('theme_admin')
+                    ->createBlock('filemanager/modal-file-show_visualize-image.php', $this->pathViews)
                     ->addVars([ 'path' => $path ]);
         }
         if (in_array($info[ 'ext' ], self::$extensionCode)) {
             $code = file_get_contents($path);
 
             return self::template()
-                    ->createBlock('file-show-code.php', $this->pathViews . '/show/')
+                    ->getTheme('theme_admin')
+                    ->createBlock('filemanager/modal-file-show_visualize-code.php', $this->pathViews)
                     ->addVars([
                         'code'      => htmlspecialchars($code),
                         'extension' => $info[ 'ext' ]
@@ -409,7 +415,8 @@ class File extends \Soosyze\Controller
         }
         if (in_array($info[ 'ext' ], self::$extensionVideo)) {
             return self::template()
-                    ->createBlock('file-show-video.php', $this->pathViews . '/show/')
+                    ->getTheme('theme_admin')
+                    ->createBlock('filemanager/modal-file-show_visualize-video.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
@@ -417,7 +424,8 @@ class File extends \Soosyze\Controller
         }
         if (in_array($info[ 'ext' ], self::$extensionAudio)) {
             return self::template()
-                    ->createBlock('file-show-audio.php', $this->pathViews . '/show/')
+                    ->getTheme('theme_admin')
+                    ->createBlock('filemanager/modal-file-show_visualize-audio.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
@@ -428,7 +436,8 @@ class File extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('file-show-default.php', $this->pathViews . '/show/')
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-file-show_visualize-default.php', $this->pathViews)
                 ->addVars([ 'extension' => $info[ 'ext' ] ]);
     }
 }

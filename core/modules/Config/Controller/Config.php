@@ -17,7 +17,7 @@ class Config extends \Soosyze\Controller
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
     }
 
-    public function index($req)
+    public function admin($req)
     {
         if (($menu = $this->getMenuConfig()) && count($menu)) {
             return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
@@ -29,7 +29,7 @@ class Config extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Configuration')
                 ])
-                ->make('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'config/content-config-form.php', $this->pathViews, [
                     'form' => null
         ]);
     }
@@ -137,10 +137,10 @@ class Config extends \Soosyze\Controller
                     'title_main' => t('Configuration')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'config/content-config-form.php', $this->pathViews, [
                     'form' => $form
                 ])
-                ->make('content.menu_config', 'submenu-config.php', $this->pathViews, [
+                ->make('content.menu_config', 'config/submenu-config.php', $this->pathViews, [
                     'menu'      => $menu,
                     'key_route' => $id
         ]);

@@ -33,7 +33,7 @@ class Install extends \Soosyze\Controller
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes-install.php';
-        $this->pathViews    = dirname(__DIR__) . '/Views/Install/';
+        $this->pathViews    = dirname(__DIR__) . '/Views/system/';
     }
 
     public function index($req)
@@ -103,10 +103,10 @@ class Install extends \Soosyze\Controller
         }
 
         $blockPage     = $this->container->callHook("step.$id", [ $id ]);
-        $blockMessages = (new Template('messages.php', $this->pathViews))
+        $blockMessages = (new Template('messages-install.php', $this->pathViews))
             ->addVars($messages);
 
-        return (new Template('html.php', $this->pathViews))
+        return (new Template('html-install.php', $this->pathViews))
                 ->addBlock('page', $blockPage)
                 ->addBlock('messages', $blockMessages)
                 ->addVars([

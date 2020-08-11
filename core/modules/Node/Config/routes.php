@@ -4,7 +4,7 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\Node\Controller');
 
-R::get('node.index', 'admin/node', 'NodeManager@index');
+R::get('node.admin', 'admin/node', 'NodeManager@admin');
 R::get('node.page', 'admin/node/:id', 'NodeManager@page', [ ':id' => '[1-9]\d*' ]);
 R::get('node.filter', 'node/filter', 'NodeManager@filter');
 

@@ -75,7 +75,7 @@
         "arguments": ["@query"],
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.node.index": "hookNodeManager",
+            "route.node.admin": "hookNodeManager",
             "route.node.page": "hookNodeManager",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",

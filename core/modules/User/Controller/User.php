@@ -46,7 +46,7 @@ class User extends \Soosyze\Controller
                     'title_main' => $user[ 'username' ]
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-user-show.php', $this->pathViews, [
+                ->make('page.content', 'user/content-user-show.php', $this->pathViews, [
                     'roles'        => self::user()->getRolesUser($id),
                     'user'         => $user,
                     'user_submenu' => self::user()->getUserSubmenu('user.show', $id)
@@ -103,7 +103,7 @@ class User extends \Soosyze\Controller
                     'title_main' => t('User creation')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form'         => $form,
                     'user_submenu' => ''
                 ]);
@@ -277,7 +277,7 @@ class User extends \Soosyze\Controller
                     'title_main' => t('Editing a user')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form'         => $form,
                     'user_submenu' => self::user()->getUserSubmenu('user.edit', $id)
                 ]);
@@ -463,7 +463,7 @@ class User extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Delete :name account', [ ':name' => $user[ 'username' ] ])
                 ])
-                ->make('page.content', 'form-user.php', $this->pathViews, [
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form'         => $form,
                     'user_submenu' => self::user()->getUserSubmenu('user.remove', $id)
                 ]);

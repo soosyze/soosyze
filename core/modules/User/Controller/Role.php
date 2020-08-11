@@ -49,7 +49,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -149,7 +149,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -246,7 +246,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Deleting the :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

@@ -4,7 +4,7 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\User\Controller');
 
-R::get('user.login', 'user/login:url', 'Login@formLogin', [ ':url' => '(/[\d\w-]{10,})?' ]);
+R::get('user.login', 'user/login:url', 'Login@login', [ ':url' => '(/[\d\w-]{10,})?' ]);
 R::post('user.login.check', 'user/login:url', 'Login@loginCheck', [ ':url' => '(/[\d\w-]{10,})?' ]);
 R::get('user.relogin', 'user/relogin:url', 'Login@relogin', [ ':url' => '(/[\d\w-]{10,})?' ]);
 R::post('user.relogin.check', 'user/relogin:url', 'Login@reloginCheck', [ ':url' => '(/[\d\w-]{10,})?' ]);
@@ -39,4 +39,4 @@ R::get('user.remove', 'user/:id/delete', 'User@remove', [ ':id' => '\d+' ]);
 R::post('user.delete', 'user/:id/delete', 'User@delete', [ ':id' => '\d+' ]);
 
 R::get('user.admin', 'admin/user', 'UsersManager@admin');
-R::get('user.admin.filter', 'admin/user/filter', 'UsersManager@filter');
+R::get('user.filter', 'user/filter', 'UsersManager@filter');

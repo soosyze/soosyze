@@ -12,7 +12,7 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function __construct()
     {
-        $this->pathContent = __DIR__ . '/Views/Content/';
+        $this->pathContent = __DIR__ . '/Views/install/';
     }
 
     public function getDir()

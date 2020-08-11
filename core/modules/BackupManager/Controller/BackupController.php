@@ -17,7 +17,7 @@ class BackupController extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function index()
+    public function admin()
     {
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -32,7 +32,7 @@ class BackupController extends \Soosyze\Controller
                     'title_main' => t('Backups manager')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-index.php', $this->pathViews, [
+                ->make('page.content', 'backupmanager\content-backup-admin.php', $this->pathViews, [
                     'backups'          => self::backupmanager()->listBackups(),
                     'max_backups'      => self::config()->get('settings.max_backups'),
                     'do_backup_route'  => self::router()->getRoute('backupmanager.dobackup'),
@@ -47,7 +47,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backups delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.index')
+            self::router()->getRoute('backupmanager.admin')
         );
     }
 
@@ -70,7 +70,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup restore failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.index')
+            self::router()->getRoute('backupmanager.admin')
         );
     }
 
@@ -81,7 +81,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.index')
+            self::router()->getRoute('backupmanager.admin')
         );
     }
 
@@ -92,7 +92,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.index')
+            self::router()->getRoute('backupmanager.admin')
         );
     }
 }

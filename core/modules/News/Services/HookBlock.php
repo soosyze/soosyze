@@ -33,20 +33,20 @@ class HookBlock
             'hook'  => 'news.year',
             'path'  => $this->pathViews,
             'title' => t('Archives by years'),
-            'tpl'   => 'block-news-year.php'
+            'tpl'   => 'components/block/news-year.php'
         ];
         $blocks[ 'news.month' ] = [
             'hook'  => 'news.month',
             'path'  => $this->pathViews,
             'title' => t('Archives by months'),
-            'tpl'   => 'block-news-month.php'
+            'tpl'   => 'components/block/news-month.php'
         ];
         $blocks[ 'news.last' ]  = [
             'hook'    => 'news.last',
             'options' => [ 'limit' => 3, 'offset' => 0, 'more' => true ],
             'path'    => $this->pathViews,
             'title'   => t('Last News'),
-            'tpl'     => 'block-news-last.php'
+            'tpl'     => 'components/block/news-last.php'
         ];
     }
 

@@ -22,7 +22,7 @@ class HookBlock
                 'options'   => [ 'name' => $menu[ 'name' ] ],
                 'path'      => $this->menu->getPathViews(),
                 'title'     => t($menu[ 'title' ]),
-                'tpl'       => "block_menu-{$menu[ 'name' ]}.php"
+                'tpl'       => "components/block/menu_{$menu[ 'name' ]}.php"
             ];
         }
     }
@@ -30,8 +30,8 @@ class HookBlock
     public function hookBlockMenu($tpl, array $options)
     {
         if ($menu = $this->menu->renderMenu($options[ 'name' ])) {
-            return $menu->setName('block_menu.php')
-                    ->addNamesOverride([ 'block_menu_' . $options[ 'name' ] ]);
+            return $menu->setName('components/block/menu.php')
+                    ->addNamesOverride([ 'components/block/menu-menu_' . $options[ 'name' ] ]);
         }
     }
 
