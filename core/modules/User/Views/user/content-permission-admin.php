@@ -34,9 +34,9 @@
         <form method="post" action="<?php echo $link_update ?>" id="form-permission">
             
             <?php foreach ($modules as $key => $module): ?>
-            <fieldset id="<?php echo \Soosyze\Components\Util\Util::strSlug($key); ?>" class="modules">
+            <fieldset id="<?php echo \Soosyze\Components\Util\Util::strSlug($key); ?>" class="modules responsive">
                 <legend><?php echo t($key); ?></legend>
-                <table class="table table-hover responsive">
+                <table class="table table-hover table-striped table-responsive permission-table">
                     <thead>
                         <tr class="form-head">
                             <th><?php echo t('Name'); ?></th>

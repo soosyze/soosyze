@@ -43,7 +43,7 @@
     <div class="col-md-5">
         <fieldset class="responsive">
             <legend><?php echo t('CMS Info'); ?></legend>
-            <table class="table">
+            <table class="table table-hover table-responsive dashboard-table">
                 <thead>
                     <tr>
                         <th><?php echo t('Setting'); ?></th>
@@ -96,7 +96,7 @@
     <div class="col-md-5">
         <fieldset class="responsive">
             <legend><?php echo t('Server info'); ?></legend>
-            <table class="table">
+            <table class="table table-hover table-responsive">
                 <thead>
                     <tr>
                         <th><?php echo t('Setting'); ?></th>

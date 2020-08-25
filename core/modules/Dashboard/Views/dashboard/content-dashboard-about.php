@@ -8,7 +8,7 @@
 
 <fieldset class="responsive">
     <legend><?php echo t('Server info'); ?></legend>
-    <table class="table">
+        <table class="table table-hover table-responsive">
         <thead>
             <tr>
                 <th><?php echo t('Constante'); ?></th>
@@ -28,7 +28,7 @@
 
 <fieldset class="responsive">
     <legend><?php echo t('Module PHP'); ?></legend>
-    <table class="table">
+    <table class="table table-hover table-responsive dashboard-table">
         <thead>
             <tr><th><?php echo t('Module'); ?></th></tr>
         </thead>
@@ -48,7 +48,7 @@
 
 <fieldset class="responsive">
     <legend><?php echo t('Settings'); ?></legend>
-    <table class="table">
+    <table class="table table-hover table-responsive">
         <thead>
             <tr>
                 <th><?php echo t('Setting'); ?></th>

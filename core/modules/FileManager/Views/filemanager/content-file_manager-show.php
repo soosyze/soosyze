@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <table id="table-file" class="table table-hover" data-link_show="<?php echo $link_show; ?>">
+        <table id="table-file" class="table table-hover table-striped table-responsive file_manager-table" data-link_show="<?php echo $link_show; ?>">
             <thead>
                 <tr>
                     <th>&nbsp;</th>

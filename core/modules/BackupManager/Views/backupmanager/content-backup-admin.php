@@ -17,7 +17,7 @@
 <fieldset class="responsive">
     <legend><?php echo t('Backups'); ?></legend>
 
-    <table id="table-file" class="table table-hover">
+    <table id="table-file" class="table table-hover table-striped table-responsive">
         <thead>
             <tr class="form-head">
                 <th data-tooltip="<?php echo t('The number of backup you did and the maximum number available') ?>">

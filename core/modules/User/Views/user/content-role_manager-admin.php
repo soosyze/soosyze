@@ -12,7 +12,7 @@
 <?php echo $form->form_open(); ?>
 <fieldset class="responsive">
     <legend><?php echo t('User Roles'); ?></legend>
-    <table class="table table-hover">
+    <table class="table table-hover table-striped table-responsive role_manager-table">
         <thead>
             <tr class="form-head">
                 <th><?php echo count($roles) ?> <?php echo t('Role(s)'); ?></th>

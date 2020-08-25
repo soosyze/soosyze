@@ -12,7 +12,7 @@
 <?php echo $form->form_open(); ?>
 <fieldset class="responsive">
     <legend><?php echo t('User file permissions'); ?></legend>
-    <table class="table table-hover">
+    <table class="table table-hover table-striped table-responsive file_permission_manager-table">
         <thead>
             <tr>
                 <th><?php echo t('Directory'); ?></th>
