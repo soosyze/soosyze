@@ -15,8 +15,8 @@
             "controller": "SoosyzeCore\\Dashboard\\Controller\\Dashboard",
             "icon": {
                 "name": "fas fa-tachometer-alt",
-                "background-color": "#275dba",
-                "color": "#b7ccea"
+                "background-color": "#2b26b7",
+                "color": "#fff"
             }
         }
     }

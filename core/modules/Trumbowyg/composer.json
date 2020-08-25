@@ -15,7 +15,7 @@
             "controller": "SoosyzeCore\\Trumbowyg\\Controller\\Trumbowyg",
             "icon": {
                 "name": "fas fa-paragraph",
-                "background-color": "#fc5951",
+                "background-color": "#b65207",
                 "color": "#fff"
             }
         }

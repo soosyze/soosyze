@@ -15,7 +15,7 @@
             "controller": "SoosyzeCore\\BackupManager\\Controller\\BackupController",
             "icon": {
                 "name": "fa fa-file-archive",
-                "background-color": "#b51c1c",
+                "background-color": "#ac1b1b",
                 "color": "#fff"
             }
         }

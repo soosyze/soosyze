@@ -15,8 +15,8 @@
             "controller": "SoosyzeCore\\Menu\\Controller\\Menu",
             "icon": {
                 "name": "fas fa-bars",
-                "background-color": "#275dba",
-                "color": "#b7ccea"
+                "background-color": "#2454a8",
+                "color": "#fff"
             }
         }
     },

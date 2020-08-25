@@ -18,7 +18,7 @@
             "controller": "SoosyzeCore\\System\\Controller\\ModulesManager",
             "icon": {
                 "name": "fa fa-th-large",
-                "background-color": "#6e42e5",
+                "background-color": "#5d2ce2",
                 "color": "#fff"
             }
         }
