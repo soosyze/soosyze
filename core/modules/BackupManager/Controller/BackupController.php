@@ -24,6 +24,11 @@ class BackupController extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
+        
+        $backups = self::backupmanager()->listBackups();
+        $doBackupRoute = count($backups) > 0
+            ? self::router()->getRoute('backupmanager.delete.all')
+            : null;
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -33,10 +38,10 @@ class BackupController extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'backupmanager\content-backup-admin.php', $this->pathViews, [
-                    'backups'          => self::backupmanager()->listBackups(),
+                    'backups'          => $backups,
                     'max_backups'      => self::config()->get('settings.max_backups'),
                     'do_backup_route'  => self::router()->getRoute('backupmanager.dobackup'),
-                    'delete_all_route' => self::router()->getRoute('backupmanager.delete.all')
+                    'delete_all_route' => $doBackupRoute
         ]);
     }
 

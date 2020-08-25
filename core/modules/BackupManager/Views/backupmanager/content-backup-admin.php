@@ -1,11 +1,13 @@
 
 <div class="nav-flex">    
     <div class="nav-flex-right">
+        <?php if ($delete_all_route): ?>
         <a href="<?php echo $delete_all_route ?>" 
            class="btn"
            onclick="return confirm('<?php echo t('Delete all the backups ?') ?>');">
                <?php echo t('Delete all') ?>
         </a>
+        <?php endif; ?>
         <a class="btn btn-primary" href="<?php echo $do_backup_route ?>">
             <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Create a backup'); ?>
         </a>
