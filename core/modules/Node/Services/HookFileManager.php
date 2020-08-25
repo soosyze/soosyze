@@ -34,7 +34,7 @@ class HookFileManager
             $form->group('files-fieldset', 'div', function ($form) {
                 $response = '<div class="col-md-12">'
                     . '<div class="alert alert-info">'
-                    . t('NOTE: You cannot add media files until you save the page. Just click \'Save\' on top')
+                    . t('NOTE: You cannot add media files until you save the content. Just click Save')
                     . '</div>'
                     . '</div>';
 

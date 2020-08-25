@@ -33,5 +33,9 @@
     "Pin content": "Épingler le contenu",
     "Add :name": "Ajouter :name",
     "Content": "Contenu",
-    "You do not have the necessary permissions to use the file manager": "Vous ne disposez pas des permissions nécessaires pour utiliser le gestionnaire de fichiers"
+    "You do not have the necessary permissions to use the file manager": "Vous ne disposez pas des permissions nécessaires pour utiliser le gestionnaire de fichiers",
+    "NOTE: You cannot add media files until you save the content. Just click Save": "REMARQUE: vous ne pouvez pas ajouter de fichiers multimédias tant que vous n'avez pas enregistré le contenu. Cliquez simplement sur Enregistrer",
+    "Delete :name content": "Supprimer le contenu :name",
+    "Node deletion": "Suppression du contenu",
+    "Warning ! The deletion of the node is final.": "Attention ! La suppression du contenu est définitive."
 }

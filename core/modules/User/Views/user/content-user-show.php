@@ -26,7 +26,7 @@
     <div class="col-sm-9">
         <?php echo $user_submenu; ?>
         <fieldset>
-            <legend><?php echo t('User'); ?></legend>
+            <legend><?php echo t('Roles'); ?></legend>
 
             <?php foreach ($roles as $role): ?>
 

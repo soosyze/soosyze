@@ -59,5 +59,6 @@
     "You exceed your quota of :max of data authorized in this directory": "Vous dépassez votre quota de :max de données autorisé dans ce répertoire",
     "<root>": "<racine>",
     "It must start with a `\\` and may consist of alphanumeric characters `[a-z0-9]`, slashes `\\`, hyphens `-` and underscores `_`": "Il doit commencer par un `\\` et peut-être composé de caractères alphanumériques `[a-z0-9]`, de slash `\\`, de tirets `-` et d'underscores `_`",
-    "The :label field should represent a tree structure of your files": "Le champ :label doit représenter une arborescence de vos fichiers."
+    "The :label field should represent a tree structure of your files": "Le champ :label doit représenter une arborescence de vos fichiers.",
+    "This directory does not currently contain any files.": "Ce répertoire ne contient actuellement aucun fichier."
 }

@@ -66,7 +66,7 @@
         <thead>
             <tr class="form-head">
                 <th>Id</th>
-                <th><?php echo t('Username'); ?></th>
+                <th><?php echo t('User name'); ?></th>
                 <th><?php echo t('Status'); ?></th>
                 <th><?php echo t('Registration date'); ?></th>
                 <th><?php echo t('Date of last access'); ?></th>

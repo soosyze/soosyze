@@ -45,9 +45,9 @@ class HookBlock
         }
 
         $form->group('menu-fieldset', 'fieldset', function ($form) use ($data, $options) {
-            $form->legend('name-legend', t('Paramètre des news'))
+            $form->legend('menu-legend', t('Settings'))
                 ->group('name-group', 'div', function ($form) use ($data, $options) {
-                    $form->label('name-label', t('Menu à afficher'))
+                    $form->label('name-label', t('Menu to display'))
                     ->select('name', $options, [
                         'class'    => 'form-control',
                         'min'      => 1,
@@ -69,7 +69,7 @@ class HookBlock
 
         $validator
             ->addRule('name', 'required|inarray:' . implode(',', $listName))
-            ->addLabel('name', t('Menu à afficher'));
+            ->addLabel('name', t('Menu to display'));
     }
 
     public function hookMenuUpdateBefore($validator, &$values, $id)

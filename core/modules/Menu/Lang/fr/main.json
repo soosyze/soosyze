@@ -22,5 +22,6 @@
     "Link value is not a URL or a route": "La valeur de link n'est pas une URL ou une route",
     "Delete menu": "Supprimer le menu",
     "Delete the menu :name": "Supprimer le menu :name",
-    "Warning ! The deletion of the menu is final." : "Attention ! La suppression du menu est définitive."
+    "Warning ! The deletion of the menu is final.": "Attention ! La suppression du menu est définitive.",
+    "Menu to display": "Menu à afficher"
 }
