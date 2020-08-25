@@ -6,10 +6,12 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     public $socials = [
         'blogger'    => 'Blogger',
+        'codepen'    => 'Codepen',
         'discord'    => 'Discord',
         'dribbble'   => 'Dribbble',
         'facebook'   => 'Facebook',
         'github'     => 'GitHub',
+        'gitlab'     => 'GitLab',
         'instagram'  => 'Instagram',
         'linkedin'   => 'Linkedin',
         'mastodon'   => 'Mastodon',
