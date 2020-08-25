@@ -15,6 +15,7 @@ class Installer extends \SoosyzeCore\System\Migration
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
     
     public function install(ContainerInterface $ci)

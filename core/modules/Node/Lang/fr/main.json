@@ -14,14 +14,6 @@
     "Block indexing": "Bloquer l'indexation",
     "Block link tracking": "Bloquer le suivi des liens",
     "Block caching": "Bloquer la mise en cache",
-    "Go to the content overview page": "Accéder à la page de vue d'ensemble du contenu",
-    "Override access control to content": "Outrepasser le contrôle d'accès au contenu",
-    "View published content": "Voir le contenu publié",
-    "View unpublished content": "Voir le contenu non publié",
-    "View content": "Voir le contenu",
-    "Create new content": "Créer un nouveau contenu",
-    "Edit any content": "Modifier n'importe quel contenu",
-    "Delete any content": "Supprimer n'importe quel contenu",
     "Type of content": "Type de contenu",
     "Published": "Publié",
     "Pending publication": "Publication en attente",
@@ -41,6 +33,5 @@
     "Pin content": "Épingler le contenu",
     "Add :name": "Ajouter :name",
     "Content": "Contenu",
-    "Clone any content": "Clonner n'importe qu'elle contenu",
     "You do not have the necessary permissions to use the file manager": "Vous ne disposez pas des permissions nécessaires pour utiliser le gestionnaire de fichiers"
 }

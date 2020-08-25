@@ -17,6 +17,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/humans_time.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/standard.json');
     }
 

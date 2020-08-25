@@ -21,8 +21,8 @@ class HookUser
         $permission[ 'Node' ] = [
             'node.manager'            => t('Go to the content overview page'),
             'node.administer'         => t('Override access control to content'),
-            'node.show.published'     => t('View published content'),
-            'node.show.not_published' => t('View unpublished content'),
+            'node.show.published'     => t('View any published content'),
+            'node.show.not_published' => t('View any unpublished content'),
         ];
 
         foreach ($nodeTypes as $nodeType) {

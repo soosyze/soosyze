@@ -8,7 +8,6 @@
     "Backup delete failed": "La suppression de la sauvegarde a échoué",
     "Backup done successfuly": "Sauvegarde faite avec succès",
     "Backup failed": "La sauvegarde a échoué",
-    "Manage the backups of Soosyze": "Gérer les sauvegardes de Soosyze",
     "Maximum number of backups": "Nombre maximum de sauvegardes",
     "The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited": "Le nombre maximum de sauvegardes qui vont être stocké en même temps. Ensuite les plus anciennes seront supprimé. Mettre 0 pour ne pas être limité",
     "Enable CRON backups": "Activer les sauvegardes CRON",

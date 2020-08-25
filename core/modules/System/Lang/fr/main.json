@@ -15,8 +15,6 @@
     "The :controller controller of the :name module is not found by the autoloader.": "Le contrôleur :controller du module :name n'est pas trouvé par l'autoloader.",
     "Not Found": "Non trouvé",
     "Information": "Information",
-    "Administer the modules": "Administrer les modules",
-    "Access the site in maintenance mode": "Accéder au site en mode maintenance",
     "Updates are available": "Des mises à jours sont disponible",
     "Check for updates": "Vérifier les mises à jours",
     "Last update:": "Dernière mise à jour :",

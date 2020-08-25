@@ -10,7 +10,7 @@ class HookUser
             'block.administer' => t('See the block administration page'),
             'block.created'    => t('Create a new block'),
             'block.edited'     => t('Edit blocks'),
-            'block.deleted'    => t('Delete a block')
+            'block.deleted'    => t('Delete blocks')
         ];
     }
 
