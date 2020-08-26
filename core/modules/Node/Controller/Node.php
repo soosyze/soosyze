@@ -24,6 +24,7 @@ class Node extends \Soosyze\Controller
     {
         $nodeType = self::query()
             ->from('node_type')
+            ->orderBy('node_type_name')
             ->fetchAll();
 
         foreach ($nodeType as $key => &$value) {
