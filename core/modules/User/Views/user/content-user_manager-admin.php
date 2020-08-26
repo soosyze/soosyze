@@ -61,7 +61,6 @@
 </div>
 
 <fieldset class="responsive">
-    <legend><?php echo t('User Management'); ?></legend>
     <table class="table table-hover table-striped table-responsive table-user_management user_manager-table">
         <thead>
             <tr class="form-head">

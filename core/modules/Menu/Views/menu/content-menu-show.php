@@ -20,8 +20,6 @@
     <div class="col-md-9">
 
         <fieldset class="responsive">
-            <legend><?php echo t($menu_name); ?></legend>
-
             <?php if ($menu->getVar('menu')): ?>
                 <?php echo $form->form_open(); ?>
                 <?php echo $menu; ?>

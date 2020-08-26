@@ -15,8 +15,6 @@
 </div>
 
 <fieldset class="responsive">
-    <legend><?php echo t('Backups'); ?></legend>
-
     <table id="table-file" class="table table-hover table-striped table-responsive">
         <thead>
             <tr class="form-head">

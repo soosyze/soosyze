@@ -68,7 +68,6 @@
 
 <div>
     <fieldset class="responsive">
-        <legend><?php echo t('My contents'); ?></legend>
         <table class="table table-hover table-striped table-responsive node_manager-table">
             <thead>
                 <tr class="form-head">

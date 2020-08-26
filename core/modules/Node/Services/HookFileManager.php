@@ -38,8 +38,7 @@ class HookFileManager
                     . '</div>'
                     . '</div>';
 
-                $form->legend('files-legend', t('Files'))
-                    ->html('key', '<div:attr>:_content</div>', [
+                $form->html('files-manager', '<div:attr>:_content</div>', [
                         '_content' => $response,
                         'class'    => 'row',
                         'id'       => 'filemanager'
@@ -86,9 +85,8 @@ class HookFileManager
         }
 
         $form->append('fields-fieldset', function ($form) use ($response) {
-            $form->group('files-fieldset', 'div', function ($form) use ($response) {
-                $form->legend('files-legend', t('Files'))
-                    ->html('key', '<div:attr>:_content</div>', [
+            $form->group('files-group', 'div', function ($form) use ($response) {
+                $form->html('files-manager', '<div:attr>:_content</div>', [
                         '_content' => $response,
                         'class'    => 'row',
                         'id'       => 'filemanager'

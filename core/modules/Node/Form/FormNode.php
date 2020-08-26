@@ -78,7 +78,6 @@ class FormNode extends FormBuilder
     public function fields()
     {
         return $this->group('fields-fieldset', 'fieldset', function ($form) {
-            $form->legend('fields-legend', t('Fill in the following fields'));
             $form->group('title-group', 'div', function ($form) {
                 $form->label('title-label', t('Title of the content'))
                         ->text('title', [
