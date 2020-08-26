@@ -88,20 +88,22 @@
                     <?php echo $form->form_group("profil_{$profil[ 'profil_file_id' ]}-group"); ?>
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>">
-                    <a class="btn btn-action" href="<?php
-                        echo $router->getRoute('filemanager.profil.edit', [
-                            ':id' => $profil[ 'profil_file_id' ] ]);
-                    ?>">
-                        <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+                    <div class="btn-actions" role="group" aria-label="action">
+                        <a class="btn btn-action" href="<?php
+                            echo $router->getRoute('filemanager.profil.edit', [
+                                ':id' => $profil[ 'profil_file_id' ] ]);
+                        ?>">
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
 
-                    </a>
-                    <a class="btn btn-action" href="<?php
-                        echo $router->getRoute('filemanager.profil.remove', [
-                            ':id' => $profil[ 'profil_file_id' ] ]);
-                    ?>">
-                        <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                        </a>
+                        <a class="btn btn-action" href="<?php
+                            echo $router->getRoute('filemanager.profil.remove', [
+                                ':id' => $profil[ 'profil_file_id' ] ]);
+                        ?>">
+                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
 
-                    </a>
+                        </a>
+                    </div>
                 </td>
             </tr>
             <?php endforeach; ?>

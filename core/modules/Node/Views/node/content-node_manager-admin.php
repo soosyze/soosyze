@@ -111,7 +111,7 @@
 
                     </td>
                     <td data-title="<?php echo t('Actions'); ?>" class="text-right">
-                        <div class="btn-group btn-actions" role="group" aria-label="action">
+                        <div class="btn-actions" role="group" aria-label="action">
                             <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
                                 <i class="far fa-eye" aria-hidden="true"></i> <?php echo t('View'); ?></a>
                             <?php if (isset($node[ 'link_clone' ])): ?>

@@ -37,18 +37,20 @@
                     <?php echo $form->form_group("role_{$role[ 'role_id' ]}-group"); ?>
 
                 <td data-title="<?php echo t('Actions'); ?>">
-                    <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ]; ?>">
-                        <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+                    <div class="btn-actions" role="group" aria-label="action">
+                        <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ]; ?>">
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
 
-                    </a>
-                    <?php if (isset($role[ 'link_remove' ])): ?>
+                        </a>
+                        <?php if (isset($role[ 'link_remove' ])): ?>
 
-                    <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ]; ?>">
-                        <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                        <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ]; ?>">
+                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
 
-                    </a>
-                    <?php endif; ?>
+                        </a>
+                        <?php endif; ?>
 
+                    </div>
                 </td>
             </tr>
             <?php endforeach; ?>

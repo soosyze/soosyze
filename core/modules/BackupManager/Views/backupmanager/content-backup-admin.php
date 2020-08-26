@@ -52,26 +52,25 @@
                     </span>
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>">
-                    <a data-tooltip="<?php echo t('Restore') ?>"
-                       class="btn btn-action"
-                       onclick="return confirm('<?php echo t('Restore the backup ?') ?>');"
-                       href="<?php echo $backup[ 'restore_link' ] ?>"
-                    >
-                        <i class="fa fa-trash-restore" aria-hidden="true"></i>
-                    </a>
-                    <a data-tooltip="<?php echo t('Download') ?>"
-                       class="btn btn-action"
-                       href="<?php echo $backup[ 'download_link' ] ?>"
-                    >
-                        <i class="fa fa-download" aria-hidden="true"></i>
-                    </a>
-                    <a data-tooltip="<?php echo t('Delete') ?>"
-                       class="btn btn-action"
-                       onclick="return confirm('<?php echo t('Delete the backup ?') ?>');"
-                       href="<?php echo $backup[ 'delete_link' ] ?>"
-                    >
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </a>
+                    <div class="btn-actions" role="group" aria-label="action">
+                        <a class="btn btn-action"
+                           onclick="return confirm('<?php echo t('Restore the backup ?') ?>');"
+                           href="<?php echo $backup[ 'restore_link' ] ?>"
+                        >
+                            <i class="fa fa-trash-restore" aria-hidden="true"></i> <?php echo t('Restore') ?>
+                        </a>
+                        <a class="btn btn-action"
+                           href="<?php echo $backup[ 'download_link' ] ?>"
+                        >
+                            <i class="fa fa-download" aria-hidden="true"></i> <?php echo t('Download') ?>
+                        </a>
+                        <a class="btn btn-action"
+                           onclick="return confirm('<?php echo t('Delete the backup ?') ?>');"
+                           href="<?php echo $backup[ 'delete_link' ] ?>"
+                        >
+                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete') ?>
+                        </a>
+                    </div>
                 </td>
             <tr>
         <?php endforeach; ?>
