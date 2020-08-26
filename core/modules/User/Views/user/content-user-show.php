@@ -1,3 +1,11 @@
+
+<div class="row">
+    <div class="col-sm-12">
+        <?php echo $user_submenu; ?>
+
+    </div>
+</div>
+
 <div class="row">
     <div class="col-sm-3">
         <?php if ($user[ 'picture' ]): ?>
@@ -19,12 +27,10 @@
                 <?php echo mb_convert_case($user[ 'firstname' ], MB_CASE_TITLE, 'UTF-8') ?>
             <?php endif; ?>
             </span>
-            <span class="user-username"><?php echo $user[ 'username' ]; ?></span>
         </h2>
         <div class="user-bio"><?php echo $user[ 'bio' ]; ?></div>
     </div>
     <div class="col-sm-9">
-        <?php echo $user_submenu; ?>
         <fieldset>
             <legend><?php echo t('Roles'); ?></legend>
 

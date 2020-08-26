@@ -1,10 +1,10 @@
 <div class="nav-flex">
-    <div class="nav-flex-right">
-        <a href="<?php echo $link_trans; ?>" class="btn">
+    <div class="nav-flex-right btn-group">
+        <a href="<?php echo $link_trans; ?>" class="btn btn-default">
             <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
         </a>
 
-        <a href="<?php echo $link_cron; ?>" class="btn primary">
+        <a href="<?php echo $link_cron; ?>" class="btn btn-primary">
             <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Execute the cron task'); ?>
         </a>
     </div>
@@ -13,25 +13,25 @@
 <div class="row">
     <div class="col-md-2">
         <div class="row">
-            <div class="link-utils">
+            <div class="dashboard-link-utils">
                 <a href="https://community.soosyze.com/" target="_blank">
                     <i class="fa fa-comments" aria-hidden="true"></i>
                     <div><?php echo t('Forum'); ?></div>
                 </a>
             </div>
-            <div class="link-utils">
+            <div class="dashboard-link-utils">
                 <a href="https://soosyze.com/documentation" target="_blank">
                     <i class="fa fa-book" aria-hidden="true"></i>
                     <div><?php echo t('Documentation'); ?></div>
                 </a>
             </div>
-            <div class="link-utils">
+            <div class="dashboard-link-utils">
                 <a href="https://soosyze.com/download/modules" target="_blank">
                     <i class="fa fa-store" aria-hidden="true"></i>
                     <div><?php echo t('Store'); ?></div>
                 </a>
             </div>
-            <div class="link-utils">
+            <div class="dashboard-link-utils">
                 <a href="https://github.com/soosyze" target="_blank">
                     <i class="fa fa-code-branch" aria-hidden="true"></i>
                     <div><?php echo t('Source code'); ?></div>

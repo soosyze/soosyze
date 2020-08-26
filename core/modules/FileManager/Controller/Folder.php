@@ -42,7 +42,7 @@ class Folder extends \Soosyze\Controller
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->createBlock('modal.php', $this->pathViews)
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
                     'title' => t('Create a new directory')

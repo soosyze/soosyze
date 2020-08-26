@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\Node\Services;
 
-use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Form\FormBuilder;
 
 class HookFileManager
@@ -31,7 +30,7 @@ class HookFileManager
         }
 
         $form->append('fields-fieldset', function ($form) {
-            $form->group('files-fieldset', 'div', function ($form) {
+            $form->group('files-group', 'div', function ($form) {
                 $response = '<div class="col-md-12">'
                     . '<div class="alert alert-info">'
                     . t('NOTE: You cannot add media files until you save the content. Just click Save')

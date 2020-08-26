@@ -1,5 +1,5 @@
 
-<?php if( isset($menu_submenu) ): ?>
+<?php if (isset($menu_submenu)): ?>
     <?php echo $menu_submenu; ?>
 <?php endif; ?>
 

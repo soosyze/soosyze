@@ -1,7 +1,7 @@
 
 <div class="nav-flex">
     <div class="nav-flex-left">
-        <button class="btn" onclick="document.getElementById('filter_node').classList.toggle('hidden')">
+        <button class="btn btn-default" onclick="document.getElementById('filter_node').classList.toggle('hidden')">
             <i class="fa fa-filter" aria-hidden="true"></i> <?php echo t('Filter'); ?>
         </button>
     </div>
@@ -114,15 +114,18 @@
                         <div class="btn-actions" role="group" aria-label="action">
                             <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
                                 <i class="far fa-eye" aria-hidden="true"></i> <?php echo t('View'); ?></a>
+
                             <?php if (isset($node[ 'link_clone' ])): ?>
 
                             <a href=" <?php echo $node[ 'link_clone' ]; ?>" class="btn btn-action">
                                 <i class="fa fa-copy" aria-hidden="true"></i> <?php echo t('Clone'); ?></a>
+
                             <?php endif; ?>
                             <?php if (isset($node[ 'link_edit' ])): ?>
 
                             <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?></a>
+
                             <?php endif; ?>
                             <?php if (isset($node[ 'link_delete' ])): ?>
 
@@ -130,6 +133,7 @@
                                class="btn btn-action" 
                                onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
                                <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?></a>
+
                             <?php endif; ?>
 
                         </div>

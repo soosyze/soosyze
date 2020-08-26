@@ -129,7 +129,7 @@ class Block extends \Soosyze\Controller
             if (empty($block[ 'hook' ])) {
                 $block[ 'hook' ] = null;
 
-                $content = ( string ) self::template()
+                $content = (string) self::template()
                         ->getTheme('theme_admin')
                         ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                         ->addVars([
@@ -208,7 +208,7 @@ class Block extends \Soosyze\Controller
                     $form->label('class-label', t('Class CSS'))
                     ->text('class', [
                         'class'       => 'form-control',
-                        'placeholder' => 'text-beautiful',
+                        'placeholder' => 'text-center',
                         'value'       => $data[ 'class' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);

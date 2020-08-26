@@ -154,7 +154,7 @@ class Menu
                 ->createBlock('menu.php', $this->pathViews)
                 ->nameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()->withMethod('GET')),
+                    'menu'  => $this->getGrantedLink($query),
                     'level' => $level
         ]);
     }
@@ -183,14 +183,14 @@ class Menu
     /**
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
-     * @param array   $query   liens du menu
-     * @param Request $request
+     * @param array $query liens du menu
      *
      * @return array
      */
-    protected function getGrantedLink($query, $request)
+    protected function getGrantedLink($query)
     {
-        $route = $this->router->parseQueryFromRequest();
+        $route   = $this->router->parseQueryFromRequest();
+        $request = $this->core->getRequest()->withMethod('GET');
 
         foreach ($query as $key => &$menu) {
             if (!$menu[ 'key' ]) {

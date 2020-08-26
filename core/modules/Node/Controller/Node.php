@@ -264,15 +264,17 @@ class Node extends \Soosyze\Controller
                     'description' => $node[ 'meta_description' ],
                 ])
                 ->view('page', [
-                    'title_main' => $node[ 'title' ],
+                    'fields'     => $fields,
+                    'node'       => $node,
+                    'title_main' => $node[ 'title' ]
                 ])
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields'       => $fields,
                     'node'         => $node,
                     'node_submenu' => $this->getSubmenuNode($node, 'node.show')
-                ])->override('page.content', [ 
+                ])->override('page.content', [
                     'node/content-node-show_' . $idNode . '.php',
-                    'node/content-node-show_' . $node[ 'type' ] . '.php' 
+                    'node/content-node-show_' . $node[ 'type' ] . '.php'
                 ]);
 
         $this->container->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);

@@ -77,6 +77,7 @@
                 <td class="actions-file">
                     <div class="btn-actions" role="group" aria-label="action">
                         <?php foreach ($file[ 'actions' ] as $action): ?>
+
                         <a class="btn btn-action <?php echo $action[ 'class' ]; ?>"
                             href="<?php echo $action[ 'link' ]; ?>"
                             <?php if ($action[ 'class' ] === 'mod'): ?>
