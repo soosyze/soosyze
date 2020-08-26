@@ -81,11 +81,10 @@ class FormNode extends FormBuilder
             $form->group('title-group', 'div', function ($form) {
                 $form->label('title-label', t('Title of the content'))
                         ->text('title', [
-                            'class'       => 'form-control',
-                            'maxlength'   => 255,
-                            'required'    => 1,
-                            'placeholder' => t('Title of the content'),
-                            'value'       => $this->content[ 'title' ]
+                            'class'     => 'form-control',
+                            'maxlength' => 255,
+                            'required'  => 1,
+                            'value'     => $this->content[ 'title' ]
                     ]);
             }, self::$attrGrp);
             foreach ($this->fields as $value) {
@@ -165,10 +164,9 @@ class FormNode extends FormBuilder
             ])
             ->group("$key-flex", 'div', function ($form) use ($key, $value, $default) {
                 $form->number($key, [
-                    ':actions'    => 1,
-                    'class'       => 'form-control',
-                    'placeholder' => t($value[ 'field_label' ]),
-                    'value'       => $default
+                    ':actions' => 1,
+                    'class'    => 'form-control',
+                    'value'    => $default
                     ] + $value[ 'attr' ]);
             }, [ 'class' => 'form-group-flex' ]);
     }
@@ -184,9 +182,8 @@ class FormNode extends FormBuilder
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
             ->$type($key, [
-                'class'       => 'form-control',
-                'placeholder' => t($value[ 'field_label' ]),
-                'value'       => $default
+                'class' => 'form-control',
+                'value' => $default
                 ] + $value[ 'attr' ]);
     }
 
@@ -343,9 +340,8 @@ class FormNode extends FormBuilder
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
             ->textarea($key, $this->content[ $key ], [
-                'class'       => 'form-control editor',
-                'rows'        => 8,
-                'placeholder' => t($value[ 'field_label' ])
+                'class' => 'form-control editor',
+                'rows'  => 8
                 ] + $value[ 'attr' ]);
     }
 
