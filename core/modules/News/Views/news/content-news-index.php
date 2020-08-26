@@ -27,7 +27,7 @@
                 <div class="card_date_tags">
                     <span class="card_date">
                         <i class="fa fa-calendar-alt" aria-hidden="true"></i> 
-                        <?php echo strftime('%d.%B.%Y', $new[ 'date_created' ]); ?>
+                        <?php echo utf8_encode(strftime('%d.%B.%Y', $new[ 'date_created' ])); ?>
                         -
                         <i class="fa fa-clock" aria-hidden="true"></i> 
                         ~<?php echo $new[ 'field' ][ 'reading_time' ]['field_value'] . ' ' . t('minute(s)'); ?>
