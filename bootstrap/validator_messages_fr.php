@@ -187,6 +187,14 @@ return [
         'must' => 'La valeur du champ :label doit être une ressource.',
         'not'  => 'La valeur du champ :label ne doit pas être une ressource.'
     ],
+    'route'                   => [
+        'must' => 'La valeur du champ :label doit être une route.',
+        'not'  => 'La valeur du champ :label ne doit pas être une route.'
+    ],
+    'route_or_url'            => [
+        'must' => 'La valeur du champ :label doit être un lien ou une route.',
+        'not'  => 'La valeur du champ :label ne doit pas être un lien ou une route.'
+    ],
     'size'                    => [
         'size'         => 'La valeur du champ :label doit être de type entier, flottant, chaine de caractère, tableau, fichier ou ressource.',
         'size_numeric' => 'La valeur du champ :label doit être numérique.'
