@@ -48,15 +48,18 @@ class File extends \Soosyze\Controller
         }
         $data = self::filemanager()->parseFile($spl, $path);
 
+        $visualize = $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext");
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/modal-file-show.php', $this->pathViews)
-                ->addBlock('visualize', $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext"))
+                ->addBlock('visualize', $visualize['block'])
                 ->addVars([
                     'file'  => $spl,
                     'info'  => $data,
                     'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.show', $spl, $path),
-                    'title' => t('See the file')
+                    'title' => t('See the file'),
+                    'type'  => $visualize[ 'type' ]
         ]);
     }
 
@@ -396,48 +399,60 @@ class File extends \Soosyze\Controller
 
     protected function visualizeFile(array $info, $path)
     {
+        self::template()->getTheme('theme_admin');
+
         if (in_array($info[ 'ext' ], self::$extensionImage)) {
-            return self::template()
-                    ->getTheme('theme_admin')
+            return [
+                'block' => self::template()
                     ->createBlock('filemanager/modal-file-show_visualize-image.php', $this->pathViews)
-                    ->addVars([ 'path' => $path ]);
+                    ->addVar('path', $path),
+                'type'  => 'img'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionCode)) {
             $code = file_get_contents($path);
 
-            return self::template()
-                    ->getTheme('theme_admin')
+            return [
+                'block' => self::template()
                     ->createBlock('filemanager/modal-file-show_visualize-code.php', $this->pathViews)
                     ->addVars([
                         'code'      => htmlspecialchars($code),
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type'  => 'code'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionVideo)) {
-            return self::template()
-                    ->getTheme('theme_admin')
+            return [
+                'block' => self::template()
                     ->createBlock('filemanager/modal-file-show_visualize-video.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type' => 'video'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionAudio)) {
-            return self::template()
-                    ->getTheme('theme_admin')
+            return [
+                'block' => self::template()
                     ->createBlock('filemanager/modal-file-show_visualize-audio.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type'  => 'audio'
+            ];
         }
         if ($out = $this->container->callHook('filemanager.visualize', [ $info[ 'ext' ] ])) {
             return $out;
         }
 
-        return self::template()
-                ->getTheme('theme_admin')
+        return [
+            'block' => self::template()
                 ->createBlock('filemanager/modal-file-show_visualize-default.php', $this->pathViews)
-                ->addVars([ 'extension' => $info[ 'ext' ] ]);
+                ->addVar('extension', $info[ 'ext' ]),
+            'type'  => 'default'
+        ];
     }
 }

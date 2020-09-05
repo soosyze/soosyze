@@ -52,7 +52,7 @@
                 <?php elseif ($file[ 'type' ] === 'image'): ?>
 
                 <th class="file-link_show" data-link_show="<?php echo $file[ 'link_show' ]; ?>" data-toogle="modal" data-target="#modal_filemanager">
-                    <div class="file-link_show_img img-thumbnail" 
+                    <div class="file-link_show_img" 
                          style="background-image: url('<?php echo $file[ 'link' ]; ?>')">
                     </div>
                 </th>
