@@ -36,5 +36,7 @@
     "NOTE: You cannot add media files until you save the content. Just click Save": "REMARQUE: vous ne pouvez pas ajouter de fichiers multimédias tant que vous n'avez pas enregistré le contenu. Cliquez simplement sur Enregistrer",
     "Delete :name content": "Supprimer le contenu :name",
     "Node deletion": "Suppression du contenu",
-    "Warning ! The deletion of the node is final.": "Attention ! La suppression du contenu est définitive."
+    "Warning ! The deletion of the node is final.": "Attention ! La suppression du contenu est définitive.",
+    "Private page": "Page privée",
+    "Use the private pages for content reserved for your members.": "Utilisez les pages privée pour les contenus réservés à vos membres."
 }

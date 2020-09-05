@@ -75,6 +75,10 @@ class Installer extends \SoosyzeCore\System\Migration
             ->createTableIfNotExists('entity_page', function (TableBuilder $table) {
                 $table->increments('page_id')
                 ->text('body');
+            })
+            ->createTableIfNotExists('entity_page_private', function (TableBuilder $table) {
+                $table->increments('page_private_id')
+                ->text('body');
             });
 
         $ci->query()->insertInto('node_status', [
@@ -98,6 +102,12 @@ class Installer extends \SoosyzeCore\System\Migration
                 'Use the pages for your static content.',
                 'fa fa-file'
             ])
+            ->values([
+                'page_private',
+                'Private page',
+                'Use the private pages for content reserved for your members.',
+                'far fa-file'
+            ])
             ->execute();
 
         $ci->query()->insertInto('field', [
@@ -116,10 +126,12 @@ class Installer extends \SoosyzeCore\System\Migration
                 'field_option'
             ])
             ->values([ 'page', 1, 'Body', 2, '!required|string', '' ])
+            ->values([ 'page_private', 1, 'Body', 2, '!required|string', '' ])
             ->execute();
 
         $ci->config()
             ->set('settings.node_default_url', ':node_type/:node_title')
+            ->set('settings.node_url_page_private', 'page/:node_title')
             ->set('settings.node_cron', false);
     }
 
@@ -129,8 +141,8 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallUser(ContainerInterface $ci)
@@ -138,12 +150,10 @@ class Installer extends \SoosyzeCore\System\Migration
         if ($ci->module()->has('User')) {
             $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'node.show.not_published' ])
-                ->values([ 3, 'node.show.published' ])
                 ->values([ 3, 'node.administer' ])
-                ->values([ 3, 'node.admin' ])
-                ->values([ 2, 'node.show.published' ])
-                ->values([ 1, 'node.show.published' ])
+                ->values([ 2, 'node.show.published.page_private' ])
+                ->values([ 2, 'node.show.published.page' ])
+                ->values([ 1, 'node.show.published.page' ])
                 ->execute();
         }
     }

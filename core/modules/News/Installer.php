@@ -132,6 +132,7 @@ class Installer extends \SoosyzeCore\System\Migration
     public function hookInstall(ContainerInterface $ci)
     {
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
@@ -142,6 +143,16 @@ class Installer extends \SoosyzeCore\System\Migration
                     'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
                 ])
                 ->values([ 'news.index', 'Blog', 'news', 'menu-main', 3, -1, false ])
+                ->execute();
+        }
+    }
+
+    public function hookInstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 2, 'node.show.published.article' ])
                 ->execute();
         }
     }
@@ -199,7 +210,7 @@ class Installer extends \SoosyzeCore\System\Migration
             $ci->query()
                 ->from('role_permission')
                 ->delete()
-                ->where('permission_id', 'like', 'news.%')
+                ->where('permission_id', 'like', '%article%')
                 ->execute();
         }
     }
