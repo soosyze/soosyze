@@ -199,14 +199,14 @@ class Menu
                 continue;
             }
 
-            if ($source = $this->alias->getSource($menu[ 'link' ])) {
-                $menu[ 'link' ] = $source;
+            if (!($source = $this->alias->getSource($menu[ 'link' ]))) {
+                $source = $menu[ 'link' ];
             }
 
             $link = $request->withUri(
                 $this->router->isRewrite()
-                ? $request->getUri()->withPath($menu[ 'link' ])
-                : $request->getUri()->withQuery('q=' . $menu[ 'link' ])
+                ? $request->getUri()->withPath($source)
+                : $request->getUri()->withQuery('q=' . $source)
             );
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
