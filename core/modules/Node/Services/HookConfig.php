@@ -69,15 +69,24 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     public function validator(&$validator)
     {
         $validator->setRules([
-            'node_default_url' => '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/',
+            'node_default_url' => '!required|string|max:255|regex:/^[-:\w\d_\/]+$/',
             'node_cron'        => 'bool'
         ])->setLabel([
             'node_default_url' => t('Default url'),
             'node_cron'        => t('Default url'),
+        ])->addMessage('node_default_url', [
+            'regex' => [
+                'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+            ]
         ]);
         foreach ($this->nodeTypes as $nodeType) {
-            $validator->addRule('node_url_' . $nodeType[ 'node_type' ], '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/')
-                ->addLabel('node_url_' . $nodeType[ 'node_type' ], t($nodeType[ 'node_type_name' ]));
+            $validator->addRule('node_url_' . $nodeType[ 'node_type' ], '!required|string|max:255|regex:/^[-:\w\d_\/]+$/')
+                ->addLabel('node_url_' . $nodeType[ 'node_type' ], t($nodeType[ 'node_type_name' ]))
+                ->addMessage('meta_url', [
+                    'regex' => [
+                        'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+                    ]
+                ]);
         }
     }
 

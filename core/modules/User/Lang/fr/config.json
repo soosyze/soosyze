@@ -22,5 +22,6 @@
     "Minimum length": "Longueur minimum",    
     "Number of uppercase characters": "Nombre de caractères majuscule",
     "Number of numeric characters": "Nombre de caractères numérique",
-    "Number of special characters": "Nombre de caractères spéciaux"
+    "Number of special characters": "Nombre de caractères spéciaux",
+    "The :label field must contain alphanumeric characters, hyphens (-) or underscores (_).": "Le champ :label doit contenir des caractères alphanumériques, des tirets (-) ou des traits de soulignement (_)."
 }

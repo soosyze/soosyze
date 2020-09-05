@@ -61,7 +61,14 @@ class HookUrl
 
     public function hookStoreValidator($validator)
     {
-        $validator->addRule('meta_url', '!required|string|max:255|regex:/^[:a-z0-9-_\/]+$/');
+        /* Caractère : pour les variables autorisées. */
+        $validator->addRule('meta_url', '!required|string|max:255|regex:/^[-:\w\d_\/]+$/')
+            ->addLabel('meta_url', t('Url'))
+            ->addMessage('meta_url', [
+                'regex' => [
+                    'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+                ]
+            ]);
     }
 
     public function hookStoreAfter($validator)

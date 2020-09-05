@@ -241,7 +241,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'terms_of_service_page'  => '!required_without:terms_of_service_show|route',
             'rgpd_show'              => 'bool',
             'rgpd_page'              => '!required_without:rgpd_show|route',
-            'connect_url'            => '!required|string|min:10|regex:/^[\d\w\-]{10,}$/',
+            'connect_url'            => '!required|string|min:10|regex:/^[\d\w\-]+$/',
             'connect_redirect'       => 'required|route',
             'password_show'          => 'bool',
             'password_policy'        => 'bool',
@@ -270,6 +270,11 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'password_reset_timeout' => [
                 'equal' => [
                     'must' => 'The :label field must be a positive relative formats'
+                ]
+            ],
+            'connect_url' => [
+                'regex' => [
+                    'must' => t('The :label field must contain alphanumeric characters, hyphens (-) or underscores (_).')
                 ]
             ]
         ]);
