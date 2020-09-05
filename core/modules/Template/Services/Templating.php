@@ -100,6 +100,8 @@ class Templating extends \Soosyze\Components\Http\Response
             }
         }
 
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets/';
+
         $this->template = $this->createBlock('html.php', $this->pathViews)
             ->addBlock('page', $page)
             ->addVars([
@@ -110,8 +112,9 @@ class Templating extends \Soosyze\Components\Http\Response
                 'description' => '',
                 'keyboard'    => '',
                 'meta'        => '',
-                'styles'      => '',
-                'scripts'     => ''
+                'styles'      => '<link rel="stylesheet" href="' . $vendor . 'css/soosyze.css">',
+                'scripts'     => '<script src="' . $vendor . 'js/script.js">'
+                . '</script><script src="' . $vendor . 'js/soosyze.js"></script>'
             ])
             ->addVars($this->core->getSettings());
     }
@@ -206,6 +209,11 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this;
     }
 
+    /*
+     * @param string $parent
+     *
+     * @return \Soosyze\Components\Template\Template
+     */
     public function getBlock($parent)
     {
         return $this->getThemplate()->getBlockWithParent($parent);
