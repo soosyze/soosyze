@@ -22,6 +22,7 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function boot()
     {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
     }
