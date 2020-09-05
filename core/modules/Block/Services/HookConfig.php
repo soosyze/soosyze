@@ -66,8 +66,11 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function before(&$validator, &$data, $id)
     {
+        $data[ 'icon_socials' ] = [];
         foreach (array_keys($this->socials) as $key) {
-            $data['icon_socials'][ $key ] = $validator->getInput($key);
+            if ($validator->getInput($key)) {
+                $data[ 'icon_socials' ][ $key ] = $validator->getInput($key);
+            }
         }
     }
 
