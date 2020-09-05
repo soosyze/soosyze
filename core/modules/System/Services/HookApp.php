@@ -238,7 +238,7 @@ class HookApp
         if ($this->router->parseQueryFromRequest() === '/' &&
             (!$maintenance ||
             ($maintenance && $granted))) {
-            $response->override('page', [ 'page-front.php' ]);
+            $response->getBlock('page')->setNamesOverride([ 'page-front.php' ]);
         }
     }
 }

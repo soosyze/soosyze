@@ -152,7 +152,7 @@ class Menu
         return $this->core
                 ->get('template')
                 ->createBlock('menu.php', $this->pathViews)
-                ->nameOverride($nameMenu . '.php')
+                ->addNameOverride($nameMenu . '.php')
                 ->addVars([
                     'menu'  => $this->getGrantedLink($query),
                     'level' => $level

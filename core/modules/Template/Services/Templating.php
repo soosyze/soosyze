@@ -201,7 +201,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function override($parent, array $templates)
     {
-        $this->getBlock($parent)->addNamesOverride($templates);
+        $this->getBlock($parent)->setNamesOverride($templates);
 
         return $this;
     }
@@ -238,7 +238,7 @@ class Templating extends \Soosyze\Components\Http\Response
                     'base_path'  => $this->basePath,
                     'base_theme' => $this->basePath . $this->defaultThemePath . '/'
                 ])
-                ->pathOverride($this->getPathTheme());
+                ->addPathOverride($this->getPathTheme());
     }
 
     public function addBlock($parent, $template, array $vars = [])

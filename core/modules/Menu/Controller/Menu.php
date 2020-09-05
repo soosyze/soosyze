@@ -364,7 +364,7 @@ class Menu extends \Soosyze\Controller
 
         return self::template()
                 ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
-                ->nameOverride("menu-show-$nameMenu.php")
+                ->addNameOverride("menu-show-$nameMenu.php")
                 ->addVars([ 'menu' => $query, 'level' => $level ]);
     }
     
