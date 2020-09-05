@@ -146,7 +146,7 @@ class News extends \Soosyze\Controller
 
         $stream = new \Soosyze\Components\Http\Stream(
             self::template()
-                ->createBlock('page-rss.php', $this->pathViews)
+                ->createBlock('news/page-news-rss.php', $this->pathViews)
                 ->addVars([
                     'description'   => self::config()->get('settings.meta_description', ''),
                     'items'         => $items,

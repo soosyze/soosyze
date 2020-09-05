@@ -268,6 +268,7 @@ class Node extends \Soosyze\Controller
                     'node'       => $node,
                     'title_main' => $node[ 'title' ]
                 ])
+                ->override('page', [ 'page-node.php' ])
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields'       => $fields,
                     'node'         => $node,

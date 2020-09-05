@@ -70,10 +70,6 @@ class Installer extends \SoosyzeCore\System\Migration
                 null, null, 'Soosyze website', 'https://soosyze.com', 'menu-main',
                 50, -1, true
             ])
-            ->values([
-                'node.show', 'fa fa-arrow-circle-left', 'Return to site', '/', 'menu-admin',
-                1, -1, false
-            ])
             ->execute();
     }
 

@@ -190,7 +190,7 @@ class Node
                     : $data[ $key ];
 
                 $out[ $key ][ 'field_value' ]   = $link;
-                $out[ $key ][ 'field_display' ] = '<img src="' . $link . '">';
+                $out[ $key ][ 'field_display' ] = '<img src="' . $link . '" alt="' . $value[ 'field_label' ] . '">';
             } elseif ($value[ 'field_type' ] === 'file') {
                 $link = is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]

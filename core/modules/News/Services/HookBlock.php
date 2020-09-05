@@ -165,7 +165,7 @@ class HookBlock
     public function hookBlockNewsLastEditForm(&$form, $data)
     {
         $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('limit-legend', t('Paramètre des news'))
+            $form->legend('limit-legend', t('News setting'))
                 ->group('limit-group', 'div', function ($form) use ($data) {
                     $options = [
                         [ 'value' => 1, 'label' => 1 ],
@@ -174,7 +174,7 @@ class HookBlock
                         [ 'value' => 4, 'label' => 4 ]
                     ];
 
-                    $form->label('limit-label', t('Nombre de news à afficher'))
+                    $form->label('limit-label', t('Number of news to display'))
                     ->select('limit', $options, [
                         'class'    => 'form-control',
                         'max'      => 4,
@@ -183,7 +183,7 @@ class HookBlock
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('offset-group', 'div', function ($form) use ($data) {
-                    $form->label('offset-label', t('Décalage'))
+                    $form->label('offset-label', t('Offset'))
                     ->number('offset', [
                         'class' => 'form-control',
                         'min'   => 0,
@@ -194,7 +194,7 @@ class HookBlock
                     $form->checkbox('more', [
                         'checked' => $data[ 'options' ][ 'more' ]
                     ])
-                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Ajouter un lien "plus" en bas de l\'affichage s\'il y a plus de contenu '), [
+                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Add a "more" link at the bottom of the screen if there is more content'), [
                         'for' => 'more'
                     ]);
                 }, [ 'class' => 'form-group' ]);

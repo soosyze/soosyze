@@ -9,11 +9,3 @@
         style="border: 1px solid black"
         title="Carte openstreetmap">
 </iframe>
-<br/>
-<small>
-    <a href="https://www.openstreetmap.org/#map=12/48.8504/2.3459">Afficher une carte plus grande</a>
-</small>
-<p>In Lorem ipsum dolor sit amet,
-    consectetur adipisicing elit. <a href="#">Amet architecto</a> assumenda consequuntur esse eum facere,
-    illum libero molestiae nam nihil nulla pariatur quo saepe sequi sint.
-</p>

@@ -19,8 +19,8 @@ class HookUser
         $nodeTypes = $this->query->from('node_type')->fetchAll();
 
         $permission[ 'Node' ] = [
-            'node.manager'            => t('Go to the content overview page'),
             'node.administer'         => t('Override access control to content'),
+            'node.manager'            => t('Go to the content overview page'),
             'node.show.published'     => t('View any published content'),
             'node.show.not_published' => t('View any unpublished content'),
         ];
@@ -54,7 +54,7 @@ class HookUser
     public function hookNodeSow($idNode)
     {
         $node = $this->getNode($idNode);
-
+        
         return $node
             ? [
                 'node.administer',

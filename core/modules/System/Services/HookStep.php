@@ -229,7 +229,6 @@ class HookStep
         $validator = (new Validator())
             ->setRules([
                 'username'         => 'required|string|max:255|to_htmlsc',
-                /* max:254 RFC5321 - 4.5.3.1.3. */
                 'email'            => 'required|string|email',
                 'name'             => '!required|string|max:255|to_htmlsc',
                 'firstname'        => '!required|string|max:255|to_htmlsc',

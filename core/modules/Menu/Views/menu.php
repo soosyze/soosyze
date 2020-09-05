@@ -5,7 +5,7 @@
     <li class="<?php echo empty($link[ 'submenu' ]) ? '' : '​dropdown-submenu'; ?> <?php echo $link[ 'link_active' ]; ?>">
         <?php if (empty($link[ 'submenu' ])): ?>
 
-        <a href="<?php echo $link[ 'link' ]; ?>" target="<?php echo $link[ 'target_link' ]; ?>" <?php if ($link[ 'target_link' ] === '_blank'): ?> rel="noopener noreferrer" <?php endif; ?>>
+        <a href="<?php echo $link[ 'link' ]; ?>" <?php if ($link[ 'target_link' ] === '_blank'): ?>target="<?php echo $link[ 'target_link' ]; ?>" rel="noopener noreferrer" <?php endif; ?>>
             <?php echo !empty($link['icon']) ? "<i class='{$link['icon']}' aria-hidden='true'></i> {$link[ 'title_link' ]}" : $link[ 'title_link' ]; ?>
 
         </a>
