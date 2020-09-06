@@ -71,7 +71,7 @@
 <h2>Table</h2>
 
 <h3>Default</h3>
-<table class="table responsive">
+<table class="table table-responsive">
     <thead>
         <tr>
             <th>Name</th>

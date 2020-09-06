@@ -52,14 +52,6 @@
                 text-align: center;
                 margin-bottom: 15px;
             }
-            .profil-item input[type=radio]:checked + img {
-                -webkit-box-shadow: 0 0 10px 1px #fff;
-                -moz-box-shadow: 0 0 10px 1px #fff;
-                box-shadow: 0 0 10px 1px #fff;
-            }
-            .profil-item input[type=radio] + img {
-                cursor: pointer;
-            }
             .step {
                 padding: 1em;
             }
@@ -73,6 +65,35 @@
             }
             .is-invalid{
                 border-color:#a94442;
+            }
+            .radio-button label {
+                border: 1px solid #fff;
+                border-radius: 4px;
+                color: #fff;
+                cursor: pointer;
+                font-size: 1em;
+                font-weight: 600;
+                margin-top:.5em;
+                text-align: center;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+            .radio-button label:hover  {
+                background-color: rgba(255, 255,255,.5);
+            }
+            .radio-button [type="radio"] {
+                display: none;
+            }
+            .radio-button [type="radio"]:checked ~ label {
+                background-color: #fff;
+                color: #333;
+            }
+            .radio-button [type="radio"] + label {
+                padding: .7em 1em;
+            }
+            .radio-button [type="radio"] + label::after,
+            .radio-button [type="radio"] + label::before  {
+                display: none;
             }
         </style>
     </head>
@@ -88,7 +109,7 @@
                     <nav>
                         <ul class="nav nav-pills nav-stacked">
                             <?php $i = 1; ?>
-                            <?php foreach ($steps as $key => $step): ?>
+                            <?php foreach( $steps as $key => $step ): ?>
                                 <li class="step <?php
                                 echo $key === $step_active
                                     ? 'active'
@@ -105,7 +126,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="cadre">
-                        <?php if (!empty($section[ 'messages' ])): ?>
+                        <?php if( !empty($section[ 'messages' ]) ): ?>
                             <?php echo $section[ 'messages' ]; ?>
                         <?php endif; ?>
                         <?php echo $section[ 'page' ]; ?>
@@ -120,7 +141,7 @@
             </div>
         </div>
         <script>
-            document.getElementById('form_lang').addEventListener('change', function(){
+            document.getElementById('form_lang').addEventListener('change', function () {
                 this.submit();
             });
         </script>

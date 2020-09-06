@@ -97,19 +97,17 @@ class HookStep
             'method' => 'post',
             'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]) ]));
 
-        foreach ($profils as $key => $profil) {
-            $form->label("profil-$key", function ($form) use ($key, $content, $profil) {
+        foreach (array_keys($profils) as $key) {
+            $form->group("profil_$key-group", 'div', function ( $form ) use ( $key, $content )
+            {
                 $form->radio('profil', [
-                    'id'       => $key,
-                    'checked'  => $key === $content[ 'profil' ],
-                    'required' => 1,
-                    'value'    => $key,
-                    'style'    => 'display:none;'
-                ])->html("img_$key", '<img:attr>', [
-                    'src' => $profil[ 'img' ],
-                    'alt' => $profil[ 'title' ]
+                    'id'      => "profil_$key",
+                    'checked' => $key === $content[ 'profil' ],
+                    'value'   => $key
+                ])->label("$key-label", 'Choisir', [
+                    'for' => "profil_$key"
                 ]);
-            }, [ 'class' => 'block-body' ]);
+            }, [ 'class' => 'radio-button' ]);
         }
         $form->token('token_step_install')
             ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
@@ -259,6 +257,7 @@ class HookStep
 
     public function hookSite($ci)
     {
+        $this->ci = $ci;
         $ci->config()
             ->set('settings.path_index', 'node/3')
             ->set('settings.path_no_found', 'node/8')
@@ -267,11 +266,11 @@ class HookStep
 
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
-            ->values([ (new Template('features.php', $this->pathContent))->render() ])
-            ->values([ (new Template('text.php', $this->pathContent))->render() ])
-            ->values([ (new Template('text.php', $this->pathContent))->render() ])
-            ->values([ (new Template('text.php', $this->pathContent))->render() ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('block-features.php', $this->pathContent))->render() ])
+            ->values([ (new Template('block-text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('block-text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('block-text.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
             ->values([ t('Not Found') ])
             ->execute();
 
@@ -281,7 +280,7 @@ class HookStep
                 'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
                 'title'
             ])
-            ->values([ 1, 'page', $time, $time, 1, t('Site') ])
+            ->values([ 1, 'page', $time, $time, 1, t('Site') ]) // id = 3
             ->values([ 2, 'page', $time, $time, 1, t('Basic') ])
             ->values([ 3, 'page', $time, $time, 1, t('Standard') ])
             ->values([ 4, 'page', $time, $time, 1, t('Premium') ])
@@ -290,61 +289,122 @@ class HookStep
             ->execute();
 
         $ci->query()
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ 'node/3', 'page/site' ])
+            ->values([ 'node/4', 'page/basic' ])
+            ->values([ 'node/5', 'page/standard' ])
+            ->values([ 'node/6', 'page/premium' ])
+            ->values([ 'node/7', 'page/about' ])
+            ->execute();
+
+        $columns = [ 'key', 'menu', 'icon', 'link', 'weight', 'parent', 'title_link' ];
+
+        $idMenuBasic    = $this->lastInsertId('menu_link', $columns, [
+            'node.show', 'menu-main', 'fa fa-bolt', 'page/basic', 1, 7, 'Basic'
+        ]);
+        $idMenuStandard = $this->lastInsertId('menu_link', $columns, [
+            'node.show', 'menu-main', 'fa fa-anchor', 'page/standard', 2, 7, 'Standard'
+        ]);
+        $idMenuPremium  = $this->lastInsertId('menu_link', $columns, [
+            'node.show', 'menu-main', 'fa fa-gem', 'page/premium', 3, 7, 'Premium'
+        ]);
+        $this->lastInsertId('menu_link', $columns, [
+            'node.show', 'menu-main', '', 'news', 2, -1, 'Blog'
+        ]);
+        $idMenuAbout    = $this->lastInsertId('menu_link', $columns, [
+            'node.show', 'menu-main', '', 'page/about', 3, -1, 'About'
+        ]);
+
+        $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+            ->values([ 4, $idMenuBasic ])
+            ->values([ 5, $idMenuStandard ])
+            ->values([ 6, $idMenuPremium ])
+            ->values([ 7, $idMenuAbout ])
+            ->execute();
+
+        /* Block content */
+        $ci->query()
             ->insertInto('block', [
-                'section', 'title', 'weight', 'visibility_pages', 'pages', 'content'
+                'section', 'title',
+                'weight',
+                'visibility_pages', 'pages',
+                'content'
             ])
             ->values([
-                'header', '', 1, true, '/',
-                (new Template('learn_more.php', $this->pathContent))->render()
+                'header', '',
+                1,
+                true, '/',
+                (new Template('block-learn_more.php', $this->pathContent))->render()
             ])
             ->values([
                 'content_header', '<span id="text">' . t('Introduction') . '</span>',
-                1, true, '/',
-                (new Template('text.php', $this->pathContent))->render()
+                1,
+                true, '/',
+                (new Template('block-text.php', $this->pathContent))->render()
+            ])
+            ->values([
+                'sidebar', '',
+                1,
+                true, '/',
+                (new Template('block-about.php', $this->pathContent))->render()
+            ])
+            ->values([
+                'footer_first', t('To join us'),
+                1,
+                true, 'contact',
+                (new Template('block-contact.php', $this->pathContent))->render()
+            ])
+            ->values([
+                'footer_second', t('Access map'),
+                1,
+                true, 'contact',
+                (new Template('block-map.php', $this->pathContent))->render()
             ])
             ->execute();
 
+        /* block hook. */
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook',
-                'key_block' ])
-            ->values([
-                'sidebar', 'Lorem ipsum dolor', 1,
-                (new Template('card_ui.php', $this->pathContent))->render(), null,
-                null
+            ->insertInto('block', [
+                'section', 'title',
+                'weight',
+                'hook', 'key_block',
+                'options',
+                'visibility_pages', 'pages'
             ])
             ->values([
-                'sidebar', t('Archives by months'), 2, '', 'news.month', 'news.month'
+                'content_footer', t('Last News'),
+                1,
+                'news.last', 'news.last',
+                json_encode([ 'limit' => 3, 'offset' => 0, 'more' => true ]),
+                true, '/'
             ])
             ->values([
-                'sidebar', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null,
-                null
+                'sidebar', '',
+                1,
+                'social', 'social',
+                '',
+                true, '/' . PHP_EOL . 'new'
             ])
             ->values([
-                'footer_first', t('To join us'), 1,
-                (new Template('contact.php', $this->pathContent))->render(), null,
-                null
+                'footer', '',
+                1,
+                'social', 'social',
+                '',
+                false, '/' . PHP_EOL . 'new' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
-                'footer_second', t('Access map'), 1,
-                (new Template('map.php', $this->pathContent))->render(), null, null
+                'sidebar', t('Archives by months'),
+                2,
+                'news.month', 'news.month',
+                '',
+                true, '/' . PHP_EOL . 'new/%'
             ])
-            ->execute();
-
-        $ci->query()
-            ->insertInto('menu_link', [
-                'key', 'menu', 'link', 'weight', 'parent', 'title_link'
-            ])
-            ->values([ 'node.show', 'menu-main', 'news', 2, -1, 'Blog' ])
-            ->values([ 'node.show', 'menu-main', 'node/7', 3, -1, 'About' ])
-            ->values([ 'node.show', 'menu-main', 'node/4', 3, 6, 'Basic' ])
-            ->values([ 'node.show', 'menu-main', 'node/5', 3, 6, 'Standard' ])
-            ->values([ 'node.show', 'menu-main', 'node/6', 3, 6, 'Premium' ])
             ->execute();
     }
 
     public function hookBlog($ci)
     {
+        $this->ci = $ci;
         $ci->config()
             ->set('settings.path_index', 'news')
             ->set('settings.path_no_found', '')
@@ -352,46 +412,57 @@ class HookStep
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content', 'hook',
-                'key_block' ])
+            ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
+            ->values([
+                'footer_second', 'Lorem ipsum dolor', 1,
+                (new Template('block-text.php', $this->pathContent))->render()
+            ])
+            ->execute();
+
+        $ci->query()
+            ->insertInto('block', [
+                'section', 'title', 'weight', 'content', 'hook', 'key_block'
+            ])
             ->values([
                 'sidebar', t('Archives by months'), 1, '', 'news.month', 'news.month'
             ])
             ->values([
-                'footer_first', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render(), null,
-                null
-            ])
-            ->values([
-                'footer_second', 'Lorem ipsum dolor', 1,
-                (new Template('text.php', $this->pathContent))->render(), null, null
+                'footer_first', t('Follow us'), 1, '', 'social', 'social'
             ])
             ->execute();
 
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
             ->execute();
 
         $time = (string) time();
-        $ci->query()
-            ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'title'
-            ])
-            ->values([ 1, 'page', $time, $time, 1, t('About') ])
-            ->execute();
+
+        $idNodeAbout = $this->lastInsertId(
+            'node',
+            [ 'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title' ],
+            [ 1, 'page', $time, $time, 1, t('About') ]
+        );
 
         $ci->query()
-            ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent'
-            ])
-            ->values([ 'node.show', 'About', 'node/3', 'menu-main', 3, -1 ])
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ 'node/' . $idNodeAbout, 'page/about' ])
+            ->execute();
+
+        $idMenuAbout = $this->lastInsertId(
+            'menu_link',
+            [ 'key', 'title_link', 'link', 'menu', 'weight', 'parent' ],
+            [ 'node.show', 'About', 'page/about', 'menu-main', 3, -1 ]
+        );
+
+        $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+            ->values([ $idNodeAbout, $idMenuAbout ])
             ->execute();
     }
 
     public function hookPortfolio($ci)
     {
+        $this->ci = $ci;
         $ci->config()
             ->set('settings.path_index', 'node/1')
             ->set('settings.path_no_found', '')
@@ -400,58 +471,106 @@ class HookStep
 
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
-            ->values([ (new Template('education.php', $this->pathContent))->render() ])
-            ->values([ (new Template('project.php', $this->pathContent))->render() ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
-            ->values([ (new Template('about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-education.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-project.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
             ->values([ t('Not Found') ])
             ->execute();
 
         $time = (string) time();
-        $ci->query()
-            ->insertInto('node', [
+        
+        $columns = [
                 'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
                 'title'
-            ])
-            ->values([ 1, 'page', $time, $time, 1, t('Site') ])
-            ->values([ 2, 'page', $time, $time, 1, t('Education') ])
-            ->values([ 3, 'page', $time, $time, 1, t('Projects') ])
-            ->values([ 4, 'page', $time, $time, 1, t('Project 1') ])
-            ->values([ 5, 'page', $time, $time, 1, t('Project 2') ])
-            ->values([ 6, 'page', $time, $time, 1, t('Project 3') ])
-            ->values([ 7, 'page', $time, $time, 1, t('Project 4') ])
-            ->execute();
+            ];
+
+        $idNodeSite      = $this->lastInsertId('node', $columns, [
+            1, 'page', $time, $time, 1, t('Site')
+        ]);
+        $idNodeEducation = $this->lastInsertId('node', $columns, [
+            2, 'page', $time, $time, 1, t('Education')
+        ]);
+        $idNodeProjects  = $this->lastInsertId('node', $columns, [
+            3, 'page', $time, $time, 1, t('Projects')
+        ]);
+        $idNodeProject1  = $this->lastInsertId('node', $columns, [
+            4, 'page', $time, $time, 1, t('Project 1')
+        ]);
+        $idNodeProject2  = $this->lastInsertId('node', $columns, [
+            5, 'page', $time, $time, 1, t('Project 2')
+        ]);
+        $idNodeProject3  = $this->lastInsertId('node', $columns, [
+            6, 'page', $time, $time, 1, t('Project 3')
+        ]);
+        $idNodeProject4  = $this->lastInsertId('node', $columns, [
+            6, 'page', $time, $time, 1, t('Project 4')
+        ]);
 
         $ci->query()
-            ->insertInto('menu_link', [
-                'key', 'menu', 'link', 'weight', 'parent', 'title_link'
-            ])
-            ->values([ 'node.show', 'menu-main', 'node/2', 3, -1, 'Education' ])
-            ->values([ 'node.show', 'menu-main', 'node/3', 3, -1, 'Projects' ])
-            ->values([ 'node.show', 'menu-main', 'node/4', 4, 16, 'Project 1' ])
-            ->values([ 'node.show', 'menu-main', 'node/5', 5, 16, 'Project 2' ])
-            ->values([ 'node.show', 'menu-main', 'node/6', 6, 16, 'Project 3' ])
-            ->values([ 'node.show', 'menu-main', 'node/7', 7, 16, 'Project 4' ])
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ 'node/' . $idNodeSite, 'page/site' ])
+            ->values([ 'node/' . $idNodeEducation, 'education' ])
+            ->values([ 'node/' . $idNodeProjects, 'project' ])
+            ->values([ 'node/' . $idNodeProject1, 'project/1' ])
+            ->values([ 'node/' . $idNodeProject2, 'project/2' ])
+            ->values([ 'node/' . $idNodeProject3, 'project/3' ])
+            ->values([ 'node/' . $idNodeProject4, 'project/4' ])
+            ->execute();
+
+        $columnsMenuLink = [ 'key', 'menu', 'link', 'weight', 'parent', 'title_link' ];
+
+        $idMenuEducation = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'education', 3, -1, 'Education'
+        ]);
+        $idMenuProjects  = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'project', 3, -1, 'Projects'
+        ]);
+        $idMenuProject1  = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'project/1', 4, $idMenuProjects, 'Project 1'
+        ]);
+        $idMenuProject2  = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'project/2', 5, $idMenuProjects, 'Project 2'
+        ]);
+        $idMenuProject3  = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'project/3', 6, $idMenuProjects, 'Project 3'
+        ]);
+        $idMenuProject4  = $this->lastInsertId('menu_link', $columnsMenuLink, [
+            'node.show', 'menu-main', 'project/4', 7, $idMenuProjects, 'Project 4'
+        ]);
+
+        $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
+            ->values([ $idNodeEducation, $idMenuEducation ])
+            ->values([ $idNodeProjects, $idMenuProjects ])
+            ->values([ $idNodeProject1, $idMenuProject1 ])
+            ->values([ $idNodeProject2, $idMenuProject2 ])
+            ->values([ $idNodeProject3, $idMenuProject3 ])
+            ->values([ $idNodeProject4, $idMenuProject4 ])
             ->execute();
 
         $ci->query()
             ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
             ->values([
-                'sidebar', t('About'), 1,
-                (new Template('card_ui.php', $this->pathContent))->render()
+                'sidebar', '', 1,
+                (new Template('block-about.php', $this->pathContent))->render()
+            ])
+            ->execute();
+
+        $ci->query()
+            ->insertInto('block', [
+                'section', 'title', 'weight', 'content', 'hook', 'key_block'
             ])
             ->values([
-                'sidebar', t('Follow us'), 1,
-                (new Template('social.php', $this->pathContent))->render()
+                'sidebar', '', 1, '', 'social', 'social'
             ])
             ->execute();
     }
 
     public function hookOnePage($ci)
     {
+        $this->ci = $ci;
         $ci->config()
             ->set('settings.path_index', 'node/1')
             ->set('settings.path_no_found', '')
@@ -460,16 +579,23 @@ class HookStep
 
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
-            ->values([ (new Template('features.php', $this->pathContent))->render() ])
+            ->values([ (new Template('block-features.php', $this->pathContent))->render() ])
             ->execute();
 
         $time = (string) time();
-        $ci->query()
-            ->insertInto('node', [
+
+        $columns = [
                 'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
                 'title'
-            ])
-            ->values([ 1, 'page', $time, $time, 1, 'Ipsum sed adipiscing' ])
+            ];
+
+        $idNodeSite = $this->lastInsertId('node', $columns, [
+            1, 'page', $time, $time, 1, 'Ipsum sed adipiscing'
+        ]);
+
+        $ci->query()
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ 'node/' . $idNodeSite, 'index' ])
             ->execute();
 
         $ci->query()
@@ -488,29 +614,47 @@ class HookStep
             ])
             ->values([
                 'header', '', 1, true, '/',
-                (new Template('learn_more.php', $this->pathContent))->render()
+                (new Template('block-learn_more.php', $this->pathContent))->render()
             ])
             ->values([
                 'content_header', '<span id="text">' . t('Introduction') . '</span>',
                 1, true,
                 '/',
-                (new Template('text.php', $this->pathContent))->render()
+                (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->values([
                 'content_footer', '<span id="img">' . t('About') . '</span>', 1,
                 true, '/',
-                (new Template('img.php', $this->pathContent))->render()
+                (new Template('block-img.php', $this->pathContent))->render()
             ])
             ->values([
                 'footer_first', 'Lorem ipsum', 1, false, 'admin/%' . PHP_EOL . 'user/%',
-                (new Template('text.php', $this->pathContent))->render()
-            ])
-            ->values([
-                'footer_second', '<span id="social">' . t('Follow us') . '</span>',
-                2, true,
-                '/',
-                (new Template('social.php', $this->pathContent))->render()
+                (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->execute();
+
+        $ci->query()
+            ->insertInto('block', [
+                'section', 'title', 'weight', 'content', 'hook', 'key_block'
+            ])
+            ->values([
+                'footer_second',
+                '<span id="social">' . t('Follow us') . '</span>',
+                1,
+                '',
+                'social',
+                'social'
+            ])
+            ->execute();
+    }
+
+    protected function lastInsertId($table, array $columns, array $values)
+    {
+        $this->ci->query()
+            ->insertInto($table, $columns)
+            ->values($values)
+            ->execute();
+
+        return $this->ci->schema()->getIncrement($table);
     }
 }

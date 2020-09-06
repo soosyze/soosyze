@@ -70,8 +70,9 @@ class Install extends \Soosyze\Controller
             ? date_default_timezone_get()
             : 'Europe/Paris'
         ];
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = array_merge($values, $_SESSION[ 'inputs' ]);
+        if( isset($_SESSION[ 'inputs' ][ 'main' ]) )
+        {
+            $values = array_merge($values, $_SESSION[ 'inputs' ][ 'main' ]);
         }
 
         $form = (new FormBuilder([
@@ -132,7 +133,7 @@ class Install extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $_SESSION[ 'lang' ]   = $validator->getInput('lang');
-            $_SESSION[ 'inputs' ] = $validator->getInputs();
+            $_SESSION[ 'inputs' ][ 'main' ] = $validator->getInputs();
         } else {
             $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
         }

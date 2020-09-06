@@ -2,7 +2,8 @@
     "news.install": {
         "class": "SoosyzeCore\\News\\Installer",
         "hooks": {
-            "install.menu": "hookInstallMenu"
+            "install.menu": "hookInstallMenu",
+            "install.user": "hookInstallUser"
         }
     },
     "news.hook.user": {

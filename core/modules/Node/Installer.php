@@ -186,13 +186,18 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         $types = $ci->query()->from('node_type')->lists('node_type');
         foreach ($types as $type) {
-            $ci->schema()->dropTable('entity_' . $type);
+            $ci->schema()->dropTableIfExists('entity_' . $type);
         }
-        $ci->schema()->dropTable('node_type_field');
-        $ci->schema()->dropTable('field');
-        $ci->schema()->dropTable('node_type');
-        $ci->schema()->dropTable('node');
-        $ci->schema()->dropTable('node_status');
+        $ci->schema()->dropTableIfExists('node_type_field');
+        $ci->schema()->dropTableIfExists('field');
+        $ci->schema()->dropTableIfExists('node_type');
+        $ci->schema()->dropTableIfExists('node');
+        $ci->schema()->dropTableIfExists('node_status');
+        
+        $ci->query()->from('system_alias_url')
+            ->delete()
+            ->where('source', 'like', 'node%')
+            ->execute();
     }
 
     public function hookUninstall(ContainerInterface $ci)
@@ -203,9 +208,8 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        if ($ci->schema()->hasTable('node_menu_link')) {
-            $ci->schema()->dropTable('node_menu_link');
-        }
+        $ci->schema()->dropTableIfExists('node_menu_link');
+
         if ($ci->module()->has('Menu')) {
             $ci->menu()->deleteLinks(function () use ($ci) {
                 return $ci->query()

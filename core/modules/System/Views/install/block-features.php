@@ -1,4 +1,3 @@
-
 <section>
     <div class="row">
         <div class="col-md-12">
@@ -10,36 +9,36 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/31/200/200" alt="">
-            <h3>Lorem ipsum dolor</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/31/200/200" alt=""></div>
+            <h3 style="text-align: center;">Lorem ipsum dolor</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/32/200/200" alt="">
-            <h3>Pellentesque eu erat</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/32/200/200" alt=""></div>
+            <h3 style="text-align: center;">Pellentesque eu erat</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/33/200/200" alt="">
-            <h3>Vivamus a arcu sit</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/33/200/200" alt=""></div>
+            <h3 style="text-align: center;">Vivamus a arcu sit</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/34/200/200" alt="">
-            <h3>Sed hendrerit metus</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/34/200/200" alt=""></div>
+            <h3 style="text-align: center;">Sed hendrerit metus</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/35/200/200" alt="">
-            <h3>Pellentesque faucibus</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/35/200/200" alt=""></div>
+            <h3 style="text-align: center;">Pellentesque faucibus</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
         <div class="col-md-4">
-            <img src="https://picsum.photos/id/36/200/200" alt="">
-            <h3>Pellentesque dignissim</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
+            <div style="text-align: center;"><img src="https://picsum.photos/id/36/200/200" alt=""></div>
+            <h3 style="text-align: center;">Pellentesque dignissim</h3>
+            <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue, a rutrum quam laoreet et.</p>
         </div>
     </div>
 </section>
@@ -48,12 +47,12 @@
     <div class="row">
         <div class="col-md-12">
             <header class="major">
-                <h2 id="features">Deals</h2>
+                <h2 id="deals">Deals</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare luctus augue.</p>
             </header>
         </div>
     </div>
-    <table class="table responsive">
+    <table class="table table-responsive">
         <thead>
             <tr>
                 <th>Deals</th>

@@ -119,14 +119,28 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->query()
             ->insertInto('node', [
                 'title', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'entity_id'
+                'entity_id', 'sticky'
             ])
             ->values([
-                'Bienvenue sur mon site', 'article', $time, $time, 1, 1
+                'Bienvenue sur mon site', 'article', $time, $time, 1, 1, true
             ])
             ->values([
-                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2
+                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2, false
             ])
+            ->execute();
+
+        /* Création des Alias. */
+        $idFirstNews  = $ci->query()->from('node')->where('entity_id', 1)->where('type', 'article')->fetch()[ 'id' ];
+        $idSecondNews = $ci->query()->from('node')->where('entity_id', 2)->where('type', 'article')->fetch()[ 'id' ];
+
+        $Y = date('Y', $time);
+        $m = date('m', $time);
+        $d = date('d', $time);
+
+        $ci->query()
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ "node/$idFirstNews", "news/$Y/$m/$d/bienvenue-sur-mon-site" ])
+            ->values([ "node/$idSecondNews", "news/$Y/$m/$d/lorem-ipsum-dolor-sit-amet" ])
             ->execute();
     }
 
@@ -160,6 +174,14 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function uninstall(ContainerInterface $ci)
     {
+        $nodes = $ci->query()->from('node')->where('type', 'article')->fetchAll();
+        $ci->query()->from('system_alias_url')
+            ->delete();
+        foreach ($nodes as $node) {
+            $ci->query()->orWhere('source', 'node/' . $node[ 'id' ]);
+        }
+        $ci->query()->execute();
+
         $ci->query()->from('node')
             ->delete()
             ->where('type', 'article')
