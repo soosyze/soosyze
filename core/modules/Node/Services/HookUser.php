@@ -63,7 +63,7 @@ class HookUser
                     : 'node.show.published',
                 $node[ 'node_status_id' ] !== 1
                     ? 'node.show.not_published.' . $node[ 'type' ]
-                    : 'node.show.published' . $node[ 'type' ]
+                    : 'node.show.published.' . $node[ 'type' ]
             ]
             : '';
     }
