@@ -87,10 +87,12 @@ var decrement = function () {
     if (!input.value) {
         input.value = 0;
     }
-    if (min && input.value - step < min) {
+    if (min && input.value - step <= min) {
         input.value = min;
+        this.disabled = true;
     } else {
         input.value -= step;
+        this.parentNode.querySelector('.input-number-increment').disabled = false;
     }
 };
 
@@ -106,8 +108,10 @@ var increment = function (evt) {
     }
     if (max && Number(input.value) + step > max) {
         input.value = max;
+        this.disabled = true;
     } else {
         input.value = Number(input.value) + step;
+        this.parentNode.querySelector('.input-number-decrement').disabled = false;
     }
 };
 
