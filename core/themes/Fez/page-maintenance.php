@@ -1,17 +1,25 @@
 
-<header id="wrapper_header">
-    <?php if ($logo): ?>
+<header id="wrapper_navigation" class="page lite">
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="nav-flex ">
+                    <div class="nav-flex-left">
+                        <?php if ($logo): ?>
 
-        <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
-    <?php endif; ?>
+                            <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
+                        <?php endif; ?>
 
-    <h1><?php echo $title; ?></h1>
+                        <a href="<?php echo $base_path; ?>" class="title">
+                            <?php echo $title; ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
-
 <div id="wrapper_main">
-    <header>
-        <h2><?php echo $title_main; ?></h2>
-    </header>
     <div class="container">
         <div class="row">
             <?php if (!empty($section[ 'messages' ])): ?>
@@ -23,6 +31,8 @@
             <?php endif; ?>
 
             <div class="col-md-12">
+
+                <h1><?php echo $title_main; ?></h1>
                 <?php if (!empty($section[ 'content' ])): ?>
                     <?php echo $section[ 'content' ]; ?>
 
@@ -34,6 +44,8 @@
         </div>
     </div>
 </div>
+
+<hr>
 
 <footer id="wrapper_footer">
     <div class="container">

@@ -61,4 +61,20 @@ $(function () {
     $('.text_icon').keyup(function () {
         $(this).parent().find('.render_icon i').attr('class', this.value);
     });
+
+
+    var isTop = true;
+    if (window.scrollY > 0) {
+        $('#wrapper_navigation.front').toggleClass('lite');
+        isTop = false;
+    }
+    window.addEventListener('scroll', function (e) {
+        if (isTop && (window.scrollY > 0)) {
+            $('#wrapper_navigation.front').toggleClass('lite');
+            isTop = false;
+        } else if (window.scrollY <= 0) {
+            $('#wrapper_navigation.front').toggleClass('lite');
+            isTop = true;
+        }
+    });
 });

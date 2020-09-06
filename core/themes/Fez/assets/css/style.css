@@ -1,0 +1,321 @@
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+:before,:after {
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+}
+body {  
+    color: rgba(0,0,0,.8);
+    font-family: "Open Sans","Segoe UI","Helvetica",Calibri,Arial,sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: #c1345c;
+}
+address {
+    margin-bottom: 1em;
+}
+p,
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1em;
+    padding-top: 0;
+}
+h2, h3, h4, h5, h6 {
+    font-family: Roboto,Verdana,sans-serif;
+}
+hr {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+img {
+    height: auto;
+    max-width: 100%;
+}
+
+
+/* --------------------------- */
+/* ---------- LAYOUT --------- */
+/* --------------------------- */
+#wrapper_header {
+    background: no-repeat center center;
+    background-image: url('../files/background.jpg');
+    background-size: cover;
+    margin-bottom: 1em;
+    position: relative;
+}
+#wrapper_header .overlay {
+    background-color: #212529;
+    height: 100%;
+    left: 0;
+    opacity: .3;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+#wrapper_header .logo {
+    border-radius: 200px;
+    width: 200px;
+}
+#wrapper_navigation {
+    background-color: transparent;
+    left: 0;
+    margin-bottom: 1em;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    transition: .2s background-color;
+}
+#wrapper_navigation.lite {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    opacity: 1;
+}
+
+#wrapper_navigation.page .logo {
+    border-radius: 200px;
+    display: inline-block;
+    height: 32px;
+}
+#wrapper_navigation.page .nav-flex{
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+#wrapper_navigation.page .nav-flex-left, 
+#wrapper_navigation.page .nav-flex-right {
+    align-items: center;
+    display: flex;
+    -webkit-box-flex: initial;
+    flex: initial;
+}
+#wrapper_navigation.page .nav-flex-left {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+#wrapper_navigation.page .nav-flex-left .title {
+    color: #000;
+    margin-left: 12px;
+    text-decoration: none;
+}
+#wrapper_navigation.page .nav-flex-left .title:hover {
+    color: #c1345c;
+}
+.header-content {
+    color:#fff;
+    padding: 150px 0;
+    text-align: center;
+}
+.header-content h1 {
+    font-size: 80px;
+    margin-bottom: .5rem;
+    margin-top: 0;
+}
+.header-overlay {
+    background-color: #212529;
+    height: 100%;
+    left: 0;
+    opacity: .2;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.learn_more .btn {
+    color: #fff;
+}
+#wrapper_main {
+    margin-top: 75px;
+}
+/* --------------------------- */
+/* ----------- BLOG ---------- */
+/* --------------------------- */
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.card__blog {
+    border: 1px solid #eaeaea;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    min-height: 20em;
+    min-width: 10em;
+}
+.card__content {
+    flex: 1;
+    font-family: "Lora",serif;
+    overflow: hidden;
+}
+.card__content,
+.card__footer {
+    padding: 1em;
+}
+.card__blog header {
+    background-color: #fafafa;
+}
+.card__blog header a {
+    color: #fff;
+    display: block;
+    height: 200px;
+    overflow: hidden;
+}
+.card__blog header i {
+    color: #666;
+    padding: 1em;
+}
+.card__blog header img {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease-in-out;
+    vertical-align: middle;
+    width: 100%;
+}
+.card__blog header img:hover {
+    opacity: 0.8;
+    transform: scale(1.1) translate(-45%, -45%);
+}
+.card__blog h3 a{
+    color: #666;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+.card__blog h3 a:hover{
+    color: #c1345c;
+}
+.card__blog header.icon_default{
+    display: flex;
+    flex-direction: column;
+    font-size: 3em;
+    justify-content: center;
+    text-align: center;
+}
+.card__blog .card__blog_sticky {
+    color: #777;
+}
+.card__blog .card__date_tags {
+    color: #666;
+}
+.card__footer {
+    background: #fafafa;
+}
+
+.article_date_time{
+    margin-bottom: 1.5em;
+}
+.article_img img{
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 1.5em;
+}
+/* --------------------------- */
+/* -------- PAGINATION ------- */
+/* --------------------------- */
+.pagination {
+    border-radius: 4px;
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.pagination > li {
+    display: inline;
+}
+.pagination > li > a, 
+.pagination > li > span {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top-color: rgb(221, 221, 221);
+    border-right-color: rgb(221, 221, 221);
+    border-bottom-color: rgb(221, 221, 221);
+    border-left-color: rgb(221, 221, 221);
+    color: #337ab7;
+    float: left;
+    line-height: 1.42857143;
+    margin-left: -1px;
+    padding: 6px 12px;
+    position: relative;
+    text-decoration: none;
+}
+.pagination > .active > a, 
+.pagination > .active > a:focus, 
+.pagination > .active > a:hover, 
+.pagination > .active > span, 
+.pagination > .active > span:focus, 
+.pagination > .active > span:hover {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+    cursor: default;
+    z-index: 3;
+}
+
+/* --------------------------- */
+/* ---------- ROLE ----------- */
+/* --------------------------- */
+.badge-role {
+    border-radius: 1em;
+    box-shadow: 0 2px 2px rgba(0,0,0,.2);
+    color: #fff;
+    display: inline-block;
+    height: 1.5em;
+    line-height: 1.3em;
+    text-align: center;
+    vertical-align: middle;
+    width: 1.5em;
+}
+.badge-role i {
+    font-size: .8em;
+}
+
+/* Social menu */
+ul.icons {
+    cursor: default;
+    list-style: none;
+    padding-left: 0;
+}
+ul.icons li {
+    display: inline-block;
+    vertical-align: middle;
+}
+ul.icons li a::before {
+    display: inline-block;
+    font-size: 2em;
+    line-height: 1em;
+    text-align: center;
+    width: 1em;
+}
+ul.icons li a i {
+    display: none;
+}
+/*Install*/
+#card_about img {
+    border-radius: 500px;
+}
+.icons {
+    text-align: center;
+}
+#btn_up {
+    bottom: 15px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    right: 25px;
+}

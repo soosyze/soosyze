@@ -293,7 +293,7 @@ class Install extends \Soosyze\Controller
             ->set('settings.time_installed', time())
             ->set('settings.lang', 'en')
             ->set('settings.timezone', $timezone)
-            ->set('settings.theme', 'QuietBlue')
+            ->set('settings.theme', 'Fez')
             ->set('settings.theme_admin', 'Admin')
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
