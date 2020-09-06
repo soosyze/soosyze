@@ -8,11 +8,13 @@
             "name": "Admin",
             "sections": [
                 "header",
+                "sidebar",
                 "content_header",
                 "content_footer",
                 "footer"
             ],
             "options": {
+                "dark": true,
                 "admin": true
             }
         }
