@@ -11,7 +11,7 @@
         "hooks": {
             "node.create.response.after": "getEditor",
             "node.edit.response.after": "getEditor",
-            "section.admin.response.after": "getEditor"
+            "block.section.admin.response.after": "getEditor"
         }
     },
     "trumbowyg.hook.user": {

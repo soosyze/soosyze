@@ -104,7 +104,7 @@ class HookStep
                     'id'      => "profil_$key",
                     'checked' => $key === $content[ 'profil' ],
                     'value'   => $key
-                ])->label("$key-label", 'Choisir', [
+                ])->label("$key-label", t('Select'), [
                     'for' => "profil_$key"
                 ]);
             }, [ 'class' => 'radio-button' ]);
