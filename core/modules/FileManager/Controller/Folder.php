@@ -23,9 +23,6 @@ class Folder extends \Soosyze\Controller
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path"
         );
-        if (!$spl->isDir()) {
-            return $this->get404($req);
-        }
 
         $values = [];
         if (isset($_SESSION[ 'inputs' ])) {
@@ -41,11 +38,11 @@ class Folder extends \Soosyze\Controller
             ->makeFields();
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Create a new directory'),
-                    'info'  => [ 'actions' => [] ],
-                    'form'  => $form
+                    'form'  => $form,
+                    'title' => t('Create a new directory')
         ]);
     }
 
@@ -62,14 +59,15 @@ class Folder extends \Soosyze\Controller
                 'dir'          => 'required|dir',
                 'token_folder' => 'token'
             ])
+            ->addLabel('name', t('Name'))
             ->setInputs($req->getParsedBody())
             ->addInput('dir', $dir);
 
-        $output = [];
+        $out = [];
         if (!$validator->isValid()) {
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
         $folder = Util::strSlug($validator->getInput('name'));
@@ -78,14 +76,14 @@ class Folder extends \Soosyze\Controller
         if (!is_dir($newDir)) {
             mkdir($newDir, 0755, true);
 
-            $output[ 'messages' ][ 'success' ] = [ t('The directory is created') ];
+            $out[ 'messages' ][ 'success' ] = [ t('The directory is created') ];
 
-            return $this->json(200, $output);
+            return $this->json(200, $out);
         }
 
-        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this directory name') ];
+        $out[ 'messages' ][ 'errors' ] = [ t('You can not use this directory name') ];
 
-        return $this->json(400, $output);
+        return $this->json(400, $out);
     }
 
     public function edit($path, $req)
@@ -116,11 +114,13 @@ class Folder extends \Soosyze\Controller
             ->makeFields();
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Rename the directory'),
+                    'form'  => $form,
                     'info'  => $values,
-                    'form'  => $form
+                    'menu'  => self::filemanager()->getFolderSubmenu('filemanager.folder.edit', $path),
+                    'title' => t('Rename the directory')
         ]);
     }
 
@@ -137,15 +137,16 @@ class Folder extends \Soosyze\Controller
                 'dir'          => 'required|dir',
                 'token_folder' => 'token'
             ])
+            ->addLabel('name', t('Name'))
             ->setInputs($req->getParsedBody())
             ->addInput('dir', $dir);
 
-        $output = [];
+        $out = [];
         if (!$validator->isValid()) {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
         $folder    = Util::strSlug($validator->getInput('name'));
@@ -156,15 +157,15 @@ class Folder extends \Soosyze\Controller
             $folder = Util::strSlug($validator->getInput('name'));
             rename($dir, $dirUpdate);
 
-            $output[ 'messages' ][ 'success' ] = [ t('The directory is renamed') ];
+            $out[ 'messages' ][ 'success' ] = [ t('The directory is renamed') ];
 
-            return $this->json(200, $output);
+            return $this->json(200, $out);
         }
 
-        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the directory') ];
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $out[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the directory') ];
 
-        return $this->json(400, $output);
+        return $this->json(400, $out);
     }
 
     public function remove($path, $req)
@@ -195,10 +196,13 @@ class Folder extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
-                ->addVars([ 'title' => t('Delete directory'),
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
+                ->addVars([
+                    'form'  => $form,
                     'info'  => $values,
-                    'form'  => $form
+                    'menu'  => self::filemanager()->getFolderSubmenu('filemanager.folder.remove', $path),
+                    'title' => t('Delete directory')
         ]);
     }
 
@@ -216,7 +220,7 @@ class Folder extends \Soosyze\Controller
             ->setInputs($req->getParsedBody())
             ->addInput('dir', $dir);
 
-        $output = [];
+        $out = [];
         if ($validator->isValid()) {
             $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
             $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
@@ -230,14 +234,14 @@ class Folder extends \Soosyze\Controller
             /* Supprime le dossier cible. */
             rmdir($dir);
 
-            $output[ 'messages' ][ 'success' ] = [ t('The directory has been deleted') ];
+            $out[ 'messages' ][ 'success' ] = [ t('The directory has been deleted') ];
 
-            return $this->json(200, $output);
+            return $this->json(200, $out);
         }
 
-        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-        return $this->json(400, $output);
+        return $this->json(400, $out);
     }
 }

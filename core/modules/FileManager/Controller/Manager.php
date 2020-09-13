@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\FileManager\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 
 class Manager extends \Soosyze\Controller
@@ -14,7 +13,7 @@ class Manager extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin($path, $req)
+    public function admin($req)
     {
         $user    = self::user()->isConnected();
         $profils = self::fileprofil()->getProfilsFileByUser($user[ 'user_id' ]);
@@ -23,8 +22,24 @@ class Manager extends \Soosyze\Controller
             return $this->get404();
         }
 
-        $path = $profils[ 0 ][ 'folder_show' ];
-        $path = str_replace(':user_id', $user[ 'user_id' ], $path);
+        $filemanager = null;
+        /*
+         * Le profil par défaut est derterminé par le premier profil trouvé.
+         * Si aucun profil n'est trouvé, aucun aperçu du filemanager ne sera disponible.
+         */
+        foreach ($profils as $profil) {
+            $path = $profil[ 'folder_show' ];
+            $path = str_replace(':user_id', $user[ 'user_id' ], $path);
+            /* Si le profil est mal écrit. */
+            $path = Util::strSlug($path, '-', '\/');
+            
+            /* Si le profil trouvé permet d'être vu. */
+            if ($this->get('filemanager.hook.user')->hookFolderShow($path)) {
+                $filemanager = $this->getFileManager($path);
+
+                break;
+            }
+        }
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -32,38 +47,43 @@ class Manager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
                     'title_main' => t('File manager')
                 ])
-                ->make('page.content', 'page-manager.php', $this->pathViews, [
-                    'filemanager' => $this->show($path, $req)
+                ->make('page.content', 'filemanager/content-file_manager-admin.php', $this->pathViews, [
+                    'filemanager' => $filemanager
                 ])->override('page', [ 'page-fuild.php' ]);
+    }
+    
+    public function showPublic($path, $req)
+    {
+        return self::template()
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
+                    'title_main' => t('File manager')
+                ])
+                ->make('page.content', 'page-manager.php', $this->pathViews, [
+                    'filemanager' => $this->getFileManager($path)
+                ])->override('page', [ 'page-filemanager-public.php', 'page-fuild.php' ]);
     }
 
     public function show($path, $req)
     {
-        $path = Util::cleanPath($path);
-        $form = (new FormBuilder([
-            'action'  => self::router()->getRoute('filemanager.file.store', [ ':path' => $path ]),
-            'class'   => 'dropfile',
-            'method'  => 'post',
-            'onclick' => 'document.getElementById(\'file\').click();',
-            ]))
-            ->group('filemanager-group', 'div', function ($form) {
-                $form->label(
-                'filemanager-box_file-label',
-                '<i class="fa fa-download"></i> <span class="choose">'
-                . t('Choose a file')
-                . '</span> '
-                . t('or drag it here.')
-            )
-            ->file('file', [
-                'multiple' => 1,
-                'style'    => 'display:none'
-            ]);
-            });
+        return $this->getFileManager($path);
+    }
+
+    private function getFileManager($path)
+    {
+        $path = Util::cleanPath('/' . $path);
 
         $breadcrumb = self::template()
-            ->createBlock('breadcrumb.php', $this->pathViews)
-            ->addVar('links', self::filemanager()->getBreadcrumb($path));
-
+            ->getTheme('theme_admin')
+            ->createBlock('filemanager/breadcrumb-file_manager-show.php', $this->pathViews)
+            ->addVars([
+            'granted_folder_create' => $this->get('filemanager.hook.user')->hookFolderStore($path),
+            'links'                 => self::filemanager()->getBreadcrumb($path),
+            'link_folder_create'    => self::router()->getRoute('filemanager.folder.create', [
+                ':path' => $path
+            ]),
+        ]);
+        
         $filesPublic = self::core()->getDir('files_public', 'app/files') . $path;
         $files       = [];
         $nbDir       = 0;
@@ -100,21 +120,21 @@ class Manager extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('filemanager-show.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/content-file_manager-show.php', $this->pathViews)
                 ->addVars([
-                    'granted_folder_create' => $this->get('filemanager.hook.user')->hookFolderStore($path),
-                    'granted_file_create'   => $this->get('filemanager.hook.user')->hookFileStore($path),
-                    'link_show'             => self::router()->getRoute('filemanager.show', [
+                    'files'               => $files,
+                    'granted_file_create' => $this->get('filemanager.hook.user')->hookFileStore($path),
+                    'link_show'           => self::router()->getRoute('filemanager.show', [
                         ':path' => $path
                     ]),
-                    'link_add'              => self::router()->getRoute('filemanager.folder.create', [
+                    'link_file_create'    => self::router()->getRoute('filemanager.file.create', [
                         ':path' => $path
                     ]),
-                    'form'                  => $form,
-                    'files'                 => $files,
-                    'nb_dir'                => $nbDir,
-                    'nb_file'               => $nbFile,
-                    'size_all'              => Util::strFileSizeFormatted($size)
+                    'nb_dir'              => $nbDir,
+                    'nb_file'             => $nbFile,
+                    'profil'              => $this->get('filemanager.hook.user')->getRight($path),
+                    'size_all'            => Util::strFileSizeFormatted($size)
                 ])
                 ->addBlock('breadcrumb', $breadcrumb);
     }

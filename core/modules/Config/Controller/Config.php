@@ -8,6 +8,8 @@ use Soosyze\Components\Validator\Validator;
 
 class Config extends \Soosyze\Controller
 {
+    protected $pathViews;
+    
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
@@ -15,7 +17,7 @@ class Config extends \Soosyze\Controller
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
     }
 
-    public function index($req)
+    public function admin($req)
     {
         if (($menu = $this->getMenuConfig()) && count($menu)) {
             return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
@@ -27,8 +29,7 @@ class Config extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Configuration')
                 ])
-                ->view('page.messages', [ 'infos' => [ t('No configuration available') ] ])
-                ->make('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'config/content-config-form.php', $this->pathViews, [
                     'form' => null
         ]);
     }
@@ -50,24 +51,26 @@ class Config extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
-        $dataFiles = [];
-        self::core()->callHook("config.update.$id.files", [ &$dataFiles ]);
+        $inputsFile = [];
 
-        self::core()->callHook("config.update.$id.validator", [ &$validator ]);
+        $config = $this->container->get("$id.hook.config");
+
+        $config->validator($validator);
+        $config->files($inputsFile);
+
         $validator->addRule('token_' . $id . '_config', 'token');
 
         if ($validator->isValid()) {
             $data = [];
-            self::core()->callHook("config.update.$id.before", [
-                &$validator, &$data, $id
-            ]);
+
+            $config->before($validator, $data, $id);
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
             }
-            foreach ($dataFiles as $file) {
+            foreach ($inputsFile as $file) {
                 $this->saveFile($file, $validator);
             }
-            self::core()->callHook("config.update.$id.after", [ &$validator, $id ]);
+            $config->after($validator, $data, $id);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
@@ -80,7 +83,7 @@ class Config extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
             $_SESSION[ 'errors_keys' ]            = [];
         } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($dataFiles);
+            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($inputsFile);
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
@@ -110,9 +113,9 @@ class Config extends \Soosyze\Controller
             'enctype' => 'multipart/form-data'
         ]);
 
-        $this->container->callHook("config.edit.$id.form.generate", [
-            &$form, $data, $req
-        ]);
+        $config = $this->container->get("$id.hook.config");
+        $config->form($form, $data, $req);
+
         $form->token('token_' . $id . '_config')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
@@ -134,12 +137,12 @@ class Config extends \Soosyze\Controller
                     'title_main' => t('Configuration')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-config.php', $this->pathViews, [
+                ->make('page.content', 'config/content-config-form.php', $this->pathViews, [
                     'form' => $form
                 ])
-                ->make('content.menu_config', 'submenu-config.php', $this->pathViews, [
-                    'menu' => $menu,
-                    'id'   => $id
+                ->make('content.menu_config', 'config/submenu-config.php', $this->pathViews, [
+                    'menu'      => $menu,
+                    'key_route' => $id
         ]);
     }
 
@@ -165,15 +168,18 @@ class Config extends \Soosyze\Controller
 
     private function saveFile($key, $validator)
     {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . '/config';
+
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
+            ->setPath($dir)
+            ->setResolvePath()
             ->callGet(function ($key, $name) {
                 return self::config()->get("settings.$key");
             })
-            ->callMove(function ($key, $name, $move) {
-                $filePublic = self::core()->getSettingEnv('files_public', 'app/files');
-                self::config()->set("settings.$key", "$filePublic/$name");
+            ->callMove(function ($key, $name, $move) use ($dir) {
+                self::config()->set("settings.$key", "$dir/$name");
             })
             ->callDelete(function ($key, $name) {
                 self::config()->set("settings.$key", '');

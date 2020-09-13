@@ -1,68 +1,101 @@
 
-<header id="header_main">
-    <nav class="navbar navbar-grey navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-admin" aria-expanded="false">
-                    Menu <i class="fa fa-bars" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-admin">
-                <?php echo $section[ 'main_menu' ]; ?>
-                <?php echo $section[ 'second_menu' ]; ?>
+<div id="footer_main">
+    <nav class="nav-flex nav-flex-right menu_main">
+        <button id="toogle_menu" class="btn" data-toogle="drawer" data-target="#drawer_menu">
+            <?php echo t('Menu'); ?> <i class="fa fa-ellipsis-v"></i>
+        </button>
+    </nav>
+</div>
 
+<div class="admin-wrapper">
+    <div id="drawer_menu" class="drawer drawer-right">
+        <div class="drawer-dialog">
+            <div class="drawer-content">
+                <div class="drawer-header drawer-header">
+                    <img class="header_logo" src="<?php echo $base_path . '/logo.svg'; ?>" alt="Logo light mode">
+                    <img class="header_logo_dark" src="<?php echo $base_path . '/logo_dark.svg'; ?>" alt="Logo dark mode">
+
+                    <h2>Soosyze</h2>
+
+                    <button class="close" data-dismiss="drawer" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+
+                <div class="drawer-body">
+                    <div class="navbar-nav">
+                        <ul>
+                            <li>
+                                <a href="<?php echo $base_path; ?>">
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
+
+                                </a>
+                            </li>
+                        </ul>
+
+                        <?php echo $section[ 'main_menu' ]; ?>
+                        <?php echo $section[ 'second_menu' ]; ?>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-    <h1><?php echo $icon; ?> <?php echo $title_main; ?></h1>
-    <div class="souligne" ></div>
-</header>
-<div class="main-wrapper">
-    <div class="container">
-        <div class="row">
+    </div>
+
+    <div class="sidebar-wrapper">
+        <div class="sidebar-wrapper__inner">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <img class="header_logo" src="<?php echo $base_path . '/logo.svg'; ?>" alt="Logo light mode">
+                    <img class="header_logo_dark" src="<?php echo $base_path . '/logo_dark.svg'; ?>" alt="Logo dark mode">
+                    <h2>Soosyze</h2>
+                </div>
+                <div class="navbar-nav">
+                    <ul>
+                        <li>
+                            <a href="<?php echo $base_path; ?>">
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
+
+                            </a>
+                        </li>
+                    </ul>
+                    <?php echo $section[ 'main_menu' ]; ?>
+
+                    <?php if (!empty($section[ 'sidebar' ])): ?>
+                        <?php echo $section[ 'sidebar' ]; ?>
+
+                    <?php endif; ?>
+                    <?php echo $section[ 'second_menu' ]; ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="content">
+            <header id="header_main">
+                <h1><?php echo $icon; ?> <?php echo $title_main; ?></h1>
+            </header>
             <?php if (!empty($section[ 'messages' ])): ?>
 
-                <div class="col-md-12">
-                    <?php echo $section[ 'messages' ]; ?>
-
-                </div>
-            <?php endif; ?>
-            <?php if (!empty($section[ 'sidebar' ])): ?>
-
-                <div class="col-md-4">
-                    <?php echo $section[ 'sidebar' ]; ?>
-
-                </div>
-            <?php endif; ?>
-
-            <?php if (!empty($section[ 'sidebar' ])): ?>
-                <?php echo '<div class="col-md-8">'; ?>
-            <?php else: ?>
-                <?php echo '<div class="col-sm-12">'; ?>
+                <?php echo $section[ 'messages' ]; ?>
             <?php endif; ?>
 
             <?php if (!empty($section[ 'content_header' ])): ?>
+
                 <?php echo $section[ 'content_header' ]; ?>
             <?php endif; ?>
+
             <?php echo $section[ 'content' ]; ?>
+
             <?php if (!empty($section[ 'content_footer' ])): ?>
+
                 <?php echo $section[ 'content_footer' ]; ?>
             <?php endif; ?>
-            <?php echo '</div>'; ?>
 
         </div>
     </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <footer>             
-                <?php if (!empty($section[ 'footer' ])): ?>
-                    <hr>   
-                    <?php echo $section[ 'footer' ]; ?>
+    <div class="sidebar-wrapper sidebar-wrapper--empty">
 
-                <?php endif; ?>
-            </footer>
-        </div>
     </div>
 </div>

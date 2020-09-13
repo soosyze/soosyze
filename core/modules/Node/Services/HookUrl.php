@@ -14,7 +14,7 @@ class HookUrl
     /**
      * @var \Queryflatfile\Schema
      */
-    private $schema;
+    private $config;
 
     /**
      * @var \Queryflatfile\Request
@@ -24,14 +24,14 @@ class HookUrl
     /**
      * @var \Queryflatfile\Schema
      */
-    private $config;
+    private $schema;
 
-    public function __construct($alias, $schema, $query, $config)
+    public function __construct($alias, $config, $query, $schema)
     {
         $this->alias  = $alias;
-        $this->schema = $schema;
-        $this->query  = $query;
         $this->config = $config;
+        $this->query  = $query;
+        $this->schema = $schema;
     }
 
     public function hookCreateFormData(&$data)
@@ -39,29 +39,42 @@ class HookUrl
         $data[ 'meta_url' ] = '';
     }
 
-    public function hookEditFormData(&$data, $id)
+    public function hookEditFormData(&$data, $idNode)
     {
-        $data[ 'meta_url' ] = $this->alias->getAlias('node/' . $id, '');
+        $data[ 'meta_url' ] = $this->alias->getAlias('node/' . $idNode, '');
     }
 
     public function hookCreateForm($form, $data)
     {
-        $form->after('seo-legend', function ($form) use ($data) {
-            $form->group('meta_url-group', 'div', function ($form) use ($data) {
-                $form->label('meta_url-label', t('Url'), [
-                    'data-tooltip' => t('Leave blank to automatically generate your URL')
-                ])->text('meta_url', [
-                    'class'       => 'form-control',
-                    'placeholder' => 'page/titre-de-mon-contenu',
-                    'value'       => $data[ 'meta_url' ]
-                ]);
-            }, [ 'class' => 'form-group' ]);
+        $form->before('seo-fieldset', function ($form) use ($data) {
+            $form->group('url-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('meta_url', t('URL alias'))
+                    ->group('meta_url-group', 'div', function ($form) use ($data) {
+                        $form->label('meta_url-label', t('Url'), [
+                            'data-tooltip' => t('Leave blank to automatically generate your URL')
+                        ])->text('meta_url', [
+                            'class'       => 'form-control',
+                            'placeholder' => 'page/titre-de-mon-contenu',
+                            'value'       => $data[ 'meta_url' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ]);
+            }, [
+                'class' => 'tab-pane fade',
+                'id'    => 'url-fieldset'
+            ]);
         });
     }
 
     public function hookStoreValidator($validator)
     {
-        $validator->addRule('meta_url', '!required|string|max:255|regex:/^[:a-z0-9-_\/]+$/');
+        /* Caractère : pour les variables autorisées. */
+        $validator->addRule('meta_url', '!required|string|max:255|regex:/^[-:\w\d_\/]+$/')
+            ->addLabel('meta_url', t('Url'))
+            ->addMessage('meta_url', [
+                'regex' => [
+                    'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+                ]
+            ]);
     }
 
     public function hookStoreAfter($validator)
@@ -76,31 +89,31 @@ class HookUrl
             ->execute();
     }
 
-    public function hookUpdateValid($validator, $id)
+    public function hookUpdateValid($validator, $idNode)
     {
         if (!($alias = $this->makeAlias($validator))) {
             $this->query
                 ->delete()
                 ->from('system_alias_url')
-                ->where('alias', 'node/' . $id)
+                ->where('alias', 'node/' . $idNode)
                 ->execute();
-        } elseif ($link = $this->alias->getAlias('node/' . $id)) {
+        } elseif ($link = $this->alias->getAlias('node/' . $idNode)) {
             $this->query
                 ->update('system_alias_url', [ 'alias' => $alias ])
-                ->where('source', 'node/' . $id)
+                ->where('source', 'node/' . $idNode)
                 ->execute();
         } else {
             $this->query
                 ->insertInto('system_alias_url', [ 'source', 'alias' ])
-                ->values([ 'node/' . $id, $alias ])
+                ->values([ 'node/' . $idNode, $alias ])
                 ->execute();
         }
     }
 
-    public function hookDeleteValid($validator, $id)
+    public function hookDeleteValid($validator, $idNode)
     {
         $this->query->from('system_alias_url')
-            ->where('source', 'node/' . $id)
+            ->where('source', 'node/' . $idNode)
             ->delete()
             ->execute();
     }

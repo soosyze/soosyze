@@ -6,18 +6,25 @@ use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 use Soosyze\Components\Template\Template;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     protected $pathContent;
 
     public function __construct()
     {
-        $this->pathContent = __DIR__ . '/Views/Content/';
+        $this->pathContent = __DIR__ . '/Views/install/';
     }
 
     public function getDir()
     {
         return __DIR__;
+    }
+
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
     }
 
     public function install(ContainerInterface $ci)
@@ -31,12 +38,16 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->integer('reading_time')->comment('In minute');
             });
         $ci->query()->insertInto('node_type', [
-                'node_type', 'node_type_name', 'node_type_description'
+                'node_type',
+                'node_type_name',
+                'node_type_description',
+                'node_type_icon'
             ])
             ->values([
                 'node_type'             => 'article',
                 'node_type_name'        => 'Article',
-                'node_type_description' => 'Use articles for your news and blog posts.'
+                'node_type_description' => 'Use articles for your news and blog posts.',
+                'node_type_icon'        => 'fas fa-newspaper'
             ])
             ->execute();
 
@@ -52,7 +63,7 @@ class Installer implements \SoosyzeCore\System\Migration
             ])
             ->values([
                 'article', $idImage, 1, 'Picture',
-                'required_without:file-name-image|!required|image|max:800kb',
+                '!required|image|max:800kb',
                 'The weight of the image must be less than or equal to 800ko',
                 true
             ])
@@ -78,6 +89,9 @@ class Installer implements \SoosyzeCore\System\Migration
 
         $ci->config()
             ->set('settings.news_pagination', 6)
+            ->set('settings.new_default_image', '')
+            ->set('settings.new_default_icon', 'fas fa-newspaper')
+            ->set('settings.new_default_color', '#fff')
             ->set('settings.node_url_article', 'news/:date_created_year/:date_created_month/:date_created_day/:node_title');
     }
 
@@ -105,20 +119,35 @@ class Installer implements \SoosyzeCore\System\Migration
         $ci->query()
             ->insertInto('node', [
                 'title', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'entity_id'
+                'entity_id', 'sticky'
             ])
             ->values([
-                'Bienvenue sur mon site', 'article', $time, $time, 1, 1
+                'Bienvenue sur mon site', 'article', $time, $time, 1, 1, true
             ])
             ->values([
-                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2
+                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2, false
             ])
+            ->execute();
+
+        /* Création des Alias. */
+        $idFirstNews  = $ci->query()->from('node')->where('entity_id', 1)->where('type', 'article')->fetch()[ 'id' ];
+        $idSecondNews = $ci->query()->from('node')->where('entity_id', 2)->where('type', 'article')->fetch()[ 'id' ];
+
+        $Y = date('Y', $time);
+        $m = date('m', $time);
+        $d = date('d', $time);
+
+        $ci->query()
+            ->insertInto('system_alias_url', [ 'source', 'alias' ])
+            ->values([ "node/$idFirstNews", "news/$Y/$m/$d/bienvenue-sur-mon-site" ])
+            ->values([ "node/$idSecondNews", "news/$Y/$m/$d/lorem-ipsum-dolor-sit-amet" ])
             ->execute();
     }
 
     public function hookInstall(ContainerInterface $ci)
     {
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
@@ -133,8 +162,26 @@ class Installer implements \SoosyzeCore\System\Migration
         }
     }
 
+    public function hookInstallUser(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('User')) {
+            $ci->query()
+                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+                ->values([ 2, 'node.show.published.article' ])
+                ->execute();
+        }
+    }
+
     public function uninstall(ContainerInterface $ci)
     {
+        $nodes = $ci->query()->from('node')->where('type', 'article')->fetchAll();
+        $ci->query()->from('system_alias_url')
+            ->delete();
+        foreach ($nodes as $node) {
+            $ci->query()->orWhere('source', 'node/' . $node[ 'id' ]);
+        }
+        $ci->query()->execute();
+
         $ci->query()->from('node')
             ->delete()
             ->where('type', 'article')
@@ -171,10 +218,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'news%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'news%')
+                        ->fetchAll();
+            });
         }
     }
 
@@ -184,7 +233,7 @@ class Installer implements \SoosyzeCore\System\Migration
             $ci->query()
                 ->from('role_permission')
                 ->delete()
-                ->where('permission_id', 'like', 'news.%')
+                ->where('permission_id', 'like', '%article%')
                 ->execute();
         }
     }

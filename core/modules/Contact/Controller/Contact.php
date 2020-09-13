@@ -9,6 +9,8 @@ use SoosyzeCore\Contact\Form\FormContact;
 
 class Contact extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
@@ -52,9 +54,10 @@ class Contact extends \Soosyze\Controller
                     'title_main' => 'Contact'
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-contact.php', $this->pathViews, [
+                ->make('page.content', 'contact/content-contact-form.php', $this->pathViews, [
                     'form' => $form
-        ]);
+                ])
+                ->override('page', [ 'page-contact.php' ]);
     }
 
     public function formCheck($req)

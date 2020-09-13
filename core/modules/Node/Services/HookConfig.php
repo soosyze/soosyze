@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     protected $nodeTypes = [];
 
@@ -20,7 +20,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         return $form->group('node_default_url-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('node_default_url-legend', t('Url'))
@@ -69,19 +69,28 @@ class HookConfig
     public function validator(&$validator)
     {
         $validator->setRules([
-            'node_default_url' => '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/',
+            'node_default_url' => '!required|string|max:255|regex:/^[-:\w\d_\/]+$/',
             'node_cron'        => 'bool'
         ])->setLabel([
             'node_default_url' => t('Default url'),
             'node_cron'        => t('Default url'),
+        ])->addMessage('node_default_url', [
+            'regex' => [
+                'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+            ]
         ]);
         foreach ($this->nodeTypes as $nodeType) {
-            $validator->addRule('node_url_' . $nodeType[ 'node_type' ], '!required|string|max:255|regex:/^[:a-z0-9-_\/]+/')
-                ->addLabel('node_url_' . $nodeType[ 'node_type' ], t($nodeType[ 'node_type_name' ]));
+            $validator->addRule('node_url_' . $nodeType[ 'node_type' ], '!required|string|max:255|regex:/^[-:\w\d_\/]+$/')
+                ->addLabel('node_url_' . $nodeType[ 'node_type' ], t($nodeType[ 'node_type_name' ]))
+                ->addMessage('meta_url', [
+                    'regex' => [
+                        'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')
+                    ]
+                ]);
         }
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'node_default_url' => $validator->getInput('node_default_url'),
@@ -91,5 +100,13 @@ class HookConfig
         foreach ($this->nodeTypes as $nodeType) {
             $data[ 'node_url_' . $nodeType[ 'node_type' ] ] = $validator->getInput('node_url_' . $nodeType[ 'node_type' ]);
         }
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }

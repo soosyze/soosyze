@@ -48,9 +48,13 @@ class Templating extends \Soosyze\Components\Http\Response
      * @var array
      */
     protected $composer = [];
+    
+    protected $isDarkTheme = false;
 
     public function __construct($core, $config)
     {
+        parent::__construct();
+
         $this->core       = $core;
         $this->config     = $config;
         $this->themesPath = $core->getSetting('themes_path');
@@ -62,7 +66,7 @@ class Templating extends \Soosyze\Components\Http\Response
     {
         $content    = $this->getThemplate()->render();
         $this->body = new \Soosyze\Components\Http\Stream($content);
-
+        
         return parent::__toString();
     }
 
@@ -96,27 +100,35 @@ class Templating extends \Soosyze\Components\Http\Response
             }
         }
 
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets/';
+
         $this->template = $this->createBlock('html.php', $this->pathViews)
             ->addBlock('page', $page)
             ->addVars([
+                'dark'        => $this->isDarkTheme ? 'dark' : '',
                 'title'       => '',
                 'logo'        => '',
                 'favicon'     => '',
                 'description' => '',
                 'keyboard'    => '',
                 'meta'        => '',
-                'styles'      => '',
-                'scripts'     => ''
+                'styles'      => '<link rel="stylesheet" href="' . $vendor . 'css/soosyze.css">',
+                'scripts'     => '<script src="' . $vendor . 'js/script.js">'
+                . '</script><script src="' . $vendor . 'js/soosyze.js"></script>'
             ])
             ->addVars($this->core->getSettings());
     }
 
     public function getTheme($theme = 'theme')
     {
-        $granted                = $this->core->callHook('app.granted', [ 'template.admin' ]);
-        $this->defaultThemeName = $theme === 'theme_admin' && !$granted
-            ? 'theme'
-            : $theme;
+        $granted = $this->core->callHook('app.granted', [ 'template.admin' ]);
+
+        if ($theme === 'theme_admin' && $granted) {
+            $this->defaultThemeName = 'theme_admin';
+            $this->isDarkTheme      = $this->config[ 'settings.theme_admin_dark' ];
+        } else {
+            $this->defaultThemeName = 'theme';
+        }
 
         foreach ($this->themesPath as $path) {
             $dir = $path . '/' . $this->config->get('settings.' . $this->defaultThemeName, '');
@@ -192,11 +204,16 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function override($parent, array $templates)
     {
-        $this->getBlock($parent)->addNamesOverride($templates);
+        $this->getBlock($parent)->setNamesOverride($templates);
 
         return $this;
     }
 
+    /*
+     * @param string $parent
+     *
+     * @return \Soosyze\Components\Template\Template
+     */
     public function getBlock($parent)
     {
         return $this->getThemplate()->getBlockWithParent($parent);
@@ -204,14 +221,19 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function getThemes()
     {
-        $folders = [];
+        $themes = [];
         foreach ($this->themesPath as $path) {
-            if (is_dir($path)) {
-                $folders = array_merge($folders, Util::getFolder($path));
+            foreach (new \DirectoryIterator($path) as $splFile) {
+                $composer = $splFile->getRealPath() . '/composer.json';
+                if (!file_exists($composer)) {
+                    continue;
+                }
+
+                $themes[ $splFile->getBasename() ] = Util::getJson($composer);
             }
         }
 
-        return $folders;
+        return $themes;
     }
 
     /**
@@ -224,7 +246,7 @@ class Templating extends \Soosyze\Components\Http\Response
                     'base_path'  => $this->basePath,
                     'base_theme' => $this->basePath . $this->defaultThemePath . '/'
                 ])
-                ->pathOverride($this->getPathTheme());
+                ->addPathOverride($this->getPathTheme());
     }
 
     public function addBlock($parent, $template, array $vars = [])

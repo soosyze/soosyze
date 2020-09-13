@@ -29,12 +29,29 @@ function search()
         /* Pour l'affichage de la navigation. */
         $(`#nav-${this.id}`).css('display', package_hide);
     });
-    $('#result-search').text(`${number} module(s)`);
+
+    if (number === 0) {
+        $('#form-package').css('display', 'none');
+        $('#package-nothing').css('display', '');
+    } else {
+        $('#form-package').css('display', '');
+        $('#package-nothing').css('display', 'none');
+    }
+
+    $('#result-search').text(
+        number <= 1
+            ? `${number} module`
+            : `${number} modules`
+    );
 }
 
 $('#nav_config li a').click(function () {
     const elemId = $(this).attr('href');
     highlight(elemId);
+});
+
+$('#theme_admin_dark').click(function () {
+    $('body').toggleClass('dark');
 });
 
 function highlight(elemId) {

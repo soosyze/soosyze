@@ -8,6 +8,8 @@ use SoosyzeCore\Node\Form\FormNode;
 
 class Entity extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -31,7 +33,7 @@ class Entity extends \Soosyze\Controller
 
         $content = [];
 
-        $this->container->callHook('entity.create.form.data', [ &$content ]);
+        $this->container->callHook('entity.create.form.data', [ &$content, $node, $entity ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $content = array_merge($content, $_SESSION[ 'inputs' ]);
@@ -49,7 +51,7 @@ class Entity extends \Soosyze\Controller
             ->fields()
             ->actionsEntitySubmit();
 
-        $this->container->callHook('entity.create.form', [ &$form, $content ]);
+        $this->container->callHook('entity.create.form', [ &$form, $content, $node, $entity ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -69,7 +71,7 @@ class Entity extends \Soosyze\Controller
                         ':name' => $entity ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-create.php', $this->pathViews, [
+                ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -117,7 +119,7 @@ class Entity extends \Soosyze\Controller
             }
         }
 
-        $this->container->callHook('entity.store.validator', [ &$validator ]);
+        $this->container->callHook('entity.store.validator', [ &$validator, $node, $entity ]);
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
@@ -125,7 +127,7 @@ class Entity extends \Soosyze\Controller
             foreach ($fieldsEntity as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $fieldsInsert[ $key ] = '';
+                    $fields[ $key ] = '';
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fields[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
@@ -137,18 +139,18 @@ class Entity extends \Soosyze\Controller
 
             $fields[ $node[ 'type' ] . '_id' ] = $data[ $node[ 'type' ] . '_id' ];
 
-            $this->container->callHook('entity.store.before', [ $validator, &$fields ]);
+            $this->container->callHook('entity.store.before', [ $validator, &$fields, $node, $entity ]);
             self::query()
                 ->insertInto('entity_' . $entity, array_keys($fields))
                 ->values($fields)
                 ->execute();
-            $this->container->callHook('entity.store.after', [ $validator ]);
+            $this->container->callHook('entity.store.after', [ $validator, $node, $entity ]);
 
             /* Télécharge et enregistre les fichiers. */
             $idEntity = self::schema()->getIncrement('entity_' . $entity);
             foreach ($fieldsEntity as $value) {
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $this->saveFile($entity, $idNode, $idEntity, $value[ 'field_name' ], $validator);
+                    $this->saveFile($node[ 'type' ], $idNode, $entity, $idEntity, $value[ 'field_name' ], $validator);
                 }
             }
 
@@ -188,7 +190,7 @@ class Entity extends \Soosyze\Controller
         }
 
         $this->container->callHook('entity.edit.form.data', [
-            &$content, $idNode, $entity, $idEntity
+            &$content, $node, $entity, $idEntity
         ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
@@ -208,7 +210,7 @@ class Entity extends \Soosyze\Controller
             ->fields()
             ->actionsEntitySubmit();
 
-        $this->container->callHook('entity.edit.form', [ &$form, $content ]);
+        $this->container->callHook('entity.edit.form', [ &$form, $content, $node, $entity, $idEntity ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -228,7 +230,7 @@ class Entity extends \Soosyze\Controller
                     ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
+                ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [ 'form' => $form ]);
     }
 
     public function update($idNode, $entity, $idEntity, $req)
@@ -241,12 +243,13 @@ class Entity extends \Soosyze\Controller
 
             return new Redirect(
                 self::router()->getRoute('entity.update', [
-                    ':id_node'  => $idNode,
-                    ':entity'   => $entity,
-                    'id_entity' => $idEntity
+                    ':id_node'   => $idNode,
+                    ':entity'    => $entity,
+                    ':id_entity' => $idEntity
                 ])
             );
         }
+
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
@@ -259,6 +262,7 @@ class Entity extends \Soosyze\Controller
         if (!self::node()->getEntity($entity, $idEntity)) {
             return $this->get404($req);
         }
+
         $validator = (new Validator())
             ->setRules([ 'token_entity' => 'token' ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
@@ -272,7 +276,7 @@ class Entity extends \Soosyze\Controller
         }
 
         $this->container->callHook('entity.update.validator', [
-            &$validator, $idNode, $entity, $idEntity
+            &$validator, $node, $entity, $idEntity
         ]);
 
         if ($validator->isValid()) {
@@ -280,10 +284,7 @@ class Entity extends \Soosyze\Controller
             foreach ($fieldsEntity as $value) {
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    unset($fields[ $key ]);
-                    $this->saveFile($entity, $idNode, $idEntity, $key, $validator);
-                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                    unset($fields[ $key ]);
+                    $this->saveFile($node['type'], $idNode, $entity, $idEntity, $key, $validator);
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fields[ $key ] = implode(',', $validator->getInput($key, []));
                 } else {
@@ -292,14 +293,14 @@ class Entity extends \Soosyze\Controller
             }
 
             $this->container->callHook('entity.update.before', [
-                $validator, &$fields, $idNode, $entity, $idEntity
+                $validator, &$fields, $node, $entity, $idEntity
             ]);
             self::query()
                 ->update('entity_' . $entity, $fields)
                 ->where($entity . '_id', '==', $idEntity)
                 ->execute();
             $this->container->callHook('entity.update.after', [
-                $validator, $idNode, $entity, $idEntity
+                $validator, $node, $entity, $idEntity
             ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
@@ -316,25 +317,25 @@ class Entity extends \Soosyze\Controller
 
         return new Redirect(
             self::router()->getRoute('entity.update', [
-                ':id_node'  => $idNode,
-                ':entity'   => $entity,
-                'id_entity' => $idEntity
+                ':id_node'   => $idNode,
+                ':entity'    => $entity,
+                ':id_entity' => $idEntity
             ])
         );
     }
 
-    public function delete($idNode, $entity, $idEntity, $req)
+    public function delete($idNode, $typeEntity, $idEntity, $req)
     {
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
-        if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
+        if (!($fieldNode = self::node()->getFieldRelationByEntity($typeEntity))) {
             return $this->get404($req);
         }
-        if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
+        if (!($fieldsEntity = self::node()->getFieldsEntity($typeEntity))) {
             return $this->get404($req);
         }
-        if (!self::node()->getEntity($entity, $idEntity)) {
+        if (!($entity = self::node()->getEntity($typeEntity, $idEntity))) {
             return $this->get404($req);
         }
 
@@ -345,7 +346,7 @@ class Entity extends \Soosyze\Controller
         /* Si la node est publié. */
         if ($node[ 'node_status_id' ] === 1 && ($rules = self::node()->getRules($fieldNode))) {
             $entitys = self::query()
-                ->from('entity_' . $entity)
+                ->from('entity_' . $typeEntity)
                 ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
                 ->limit(2)
                 ->fetchAll();
@@ -356,13 +357,15 @@ class Entity extends \Soosyze\Controller
                     ->addInput('node_status_id', 1);
             }
         }
-
+        
         if ($validator->isValid()) {
             self::query()
-                ->from('entity_' . $entity)
+                ->from('entity_' . $typeEntity)
                 ->delete()
-                ->where($entity . '_id', '==', $idEntity)
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
+
+            $this->deleteFile($fieldsEntity, $entity);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
@@ -372,39 +375,52 @@ class Entity extends \Soosyze\Controller
         return new Redirect(
             self::router()->getRoute('node.edit', [
                 ':id_node'   => $idNode,
-                ':entity'    => $entity,
+                ':entity'    => $typeEntity,
                 ':id_entity' => $idEntity
             ])
         );
     }
 
-    private function saveFile($type, $idNode, $idEntity, $nameFeld, $validator)
+    private function deleteFile($fieldsEntity, $entity)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$idNode}";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        foreach ($fieldsEntity as $field) {
+            if (!in_array($field[ 'field_type' ], [ 'image', 'file' ])) {
+                continue;
+            }
+
+            $file = $dir = self::core()->getSetting('root', '') . $entity[ $field[ 'field_name' ] ];
+            if (!is_file($file)) {
+                continue;
+            }
+            \unlink($file);
         }
+    }
+
+    private function saveFile($typeNode, $idNode, $typeEntity, $idEntity, $nameField, $validator)
+    {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$typeNode/{$idNode}/$typeEntity";
+
         self::file()
-            ->add($validator->getInput($nameFeld), $validator->getInput("file-name-$nameFeld"))
+            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
             ->setPath($dir)
             ->setResolvePath()
             ->setResolveName()
-            ->callGet(function ($key, $name) use ($type, $idEntity) {
+            ->callGet(function ($key, $name) use ($typeEntity, $idEntity) {
                 return self::query()
-                    ->from('entity_' . $type)
-                    ->where($type . '_id', '==', $idEntity)
+                    ->from('entity_' . $typeEntity)
+                    ->where($typeEntity . '_id', '==', $idEntity)
                     ->fetch();
             })
-            ->callMove(function ($key, $name, $move) use ($type, $idEntity, $nameFeld) {
+            ->callMove(function ($key, $name, $move) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $type, [ $nameFeld => $move ])
-                ->where($type . '_id', '==', $idEntity)
+                ->update('entity_' . $typeEntity, [ $nameField => $move ])
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
             })
-            ->callDelete(function ($key, $name) use ($type, $idEntity, $nameFeld) {
+            ->callDelete(function ($key, $name) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $type, [ $nameFeld => '' ])
-                ->where($type . '_id', '==', $idEntity)
+                ->update('entity_' . $typeEntity, [ $nameField => '' ])
+                ->where($typeEntity . '_id', '==', $idEntity)
                 ->execute();
             })
             ->save();

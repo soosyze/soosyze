@@ -1,0 +1,8 @@
+{
+    "Maximum number of backups": "Nombre maximum de sauvegardes",
+    "The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited": "Le nombre maximum de sauvegardes qui vont être stocké en même temps. Ensuite les plus anciennes seront supprimé. Mettre 0 pour ne pas être limité",
+    "Backup frequency": "Fréquence des sauvegardes",
+    "Leave the value at 0 so that the frequency is not taken into account": "Laisser la valeur à 0 pour que la fréquence ne soit pas prises en compte",
+    "Enable CRON backups": "Activer les sauvegardes CRON",
+    "How to set up the CRON service ?": "Comment configurer le service CRON ?"
+}

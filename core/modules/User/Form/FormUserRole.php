@@ -55,13 +55,20 @@ class FormUserRole extends FormBuilder
     public function weight(&$form)
     {
         $form->group('role_weight-group', 'div', function ($form) {
-            $form->label('role_weight-label', t('Weight'))
-                ->number('role_weight', [
-                    'class' => 'form-control',
-                    'max'   => 50,
-                    'min'   => 1,
-                    'value' => $this->values[ 'role_weight' ]
-            ]);
+            $form->label('role_weight-label', t('Weight'), [
+                    'for'      => 'profil_weight',
+                    'required' => 1
+                ])
+                ->group('role_weight-flex', 'div', function ($form) {
+                    $form->number('role_weight', [
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'max'      => 50,
+                        'min'      => 1,
+                        'required' => 1,
+                        'value'    => $this->values[ 'role_weight' ]
+                    ]);
+                }, [ 'class' => 'form-group-flex' ]);
         }, self::$attrGrp);
 
         return $this;
@@ -137,14 +144,14 @@ class FormUserRole extends FormBuilder
 
     public function submitForm()
     {
-        $this->html('cancel', '<button:attr>:_content</button>', [
+        $this->token('token_role_submit')
+            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+            ->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'
-            ])
-            ->token('token_role_submit')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ]);
 
         return $this;
     }

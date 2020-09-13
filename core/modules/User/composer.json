@@ -15,7 +15,7 @@
             "controller": "SoosyzeCore\\User\\Controller\\User",
             "icon": {
                 "name": "fas fa-user",
-                "background-color": "#c13056",
+                "background-color": "#a32949",
                 "color": "#fff"
             }
         }

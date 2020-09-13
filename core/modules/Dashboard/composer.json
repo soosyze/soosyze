@@ -1,0 +1,23 @@
+{
+    "name": "soosyze-core/dashboard",
+    "type": "soosyze-module",
+    "description": "Site dashboard",
+    "version": "1.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Dashboard\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "Dashboard",
+            "package": "Core",
+            "controller": "SoosyzeCore\\Dashboard\\Controller\\Dashboard",
+            "icon": {
+                "name": "fas fa-tachometer-alt",
+                "background-color": "#2b26b7",
+                "color": "#fff"
+            }
+        }
+    }
+}

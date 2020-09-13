@@ -1,0 +1,21 @@
+{
+    "Backups manager": "Gestionnaire de sauvegardes",
+    "Backups deleted successfuly": "Les sauvegardes ont été effacé avec succès",
+    "Backups delete failed": "La suppression des sauvegardes a échoué",
+    "Backup restored successfuly": "La sauvegarde a été restauré avec succès",
+    "Backup restore failed": "La restauration de la sauvegarde a échoué",
+    "Backup deleted successfuly": "La sauvegarde a été supprimé avec succès",
+    "Backup delete failed": "La suppression de la sauvegarde a échoué",
+    "Backup done successfuly": "Sauvegarde faite avec succès",
+    "Backup failed": "La sauvegarde a échoué",
+    "Create a backup": "Créer une sauvegarde",
+    "Delete all": "Tout supprimer",
+    "Delete all the backups ?": "Supprimer toutes les sauvegardes ?",
+    "Backups": "Sauvegardes",
+    "Backup of the CMS": "Sauvegarde du CMS",
+    "There is no backup yet": "Il n'y a aucune sauvegardes pour le moment",
+    "The number of backup you did and the maximum number available": "Le nombre de sauvegardes faites et le nombre maximum disponible",
+    "Delete the backup ?": "Supprimer la sauvegarde ?",
+    "Restore": "Restaurer",
+    "Restore the backup ?": "Restaurer la sauvegarde ?"
+}

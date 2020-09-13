@@ -1,12 +1,12 @@
 {
     "user": {
         "class": "SoosyzeCore\\User\\Services\\User",
-        "arguments": ["@query", "@router", "@core"],
+        "arguments": ["@core", "@query", "@router"],
         "hooks": {
             "app.granted": "isGranted",
             "app.granted.route": "isGrantedRoute",
             "app.response.before": "hookResponseBefore",
-            "app.response.after": "hookReponseAfter"
+            "app.response.after": "hookResponseAfter"
         }
     },
     "auth": {
@@ -26,7 +26,8 @@
             "user.permission.module": "hookPermission",
             "route.user.permission.admin": "hookPermissionAdminister",
             "route.user.permission.update": "hookPermissionAdminister",
-            "route.user.management.admin": "hookPeopleAdminister",
+            "route.user.admin": "hookPeopleAdminister",
+            "route.user.filter": "hookPeopleAdminister",
             "route.user.role.admin": "hookPeopleAdminister",
             "route.user.role.create": "hookPeopleAdminister",
             "route.user.role.store": "hookPeopleAdminister",
@@ -56,10 +57,7 @@
         "class": "SoosyzeCore\\User\\Services\\HookConfig",
         "arguments": ["@router"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.user.form.generate": "form",
-            "config.update.user.validator": "validator",
-            "config.update.user.before": "before"
+            "config.edit.menu": "menu"
         }
     }
 }

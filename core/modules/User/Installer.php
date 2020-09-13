@@ -5,13 +5,20 @@ namespace SoosyzeCore\User;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -55,15 +62,17 @@ class Installer implements \SoosyzeCore\System\Migration
             });
 
         $ci->query()
-            ->insertInto('role', [ 'role_label', 'role_description', 'role_weight',
-                'role_icon' ])
-            ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane' ])
-            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt' ])
-            ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-wrench' ])
+            ->insertInto('role', [
+                'role_label', 'role_description', 'role_weight', 'role_icon', 'role_color'
+            ])
+            ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane', '#e5941f' ])
+            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt', '#fe4341'  ])
+            ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-crown', '#858eec' ])
             ->execute();
 
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'role.all'])
             ->values([ 3, 'user.permission.manage' ])
             ->values([ 3, 'user.people.manage' ])
             ->values([ 3, 'user.showed' ])
@@ -88,7 +97,8 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.password_length', 8)
             ->set('settings.password_upper', 1)
             ->set('settings.password_digit', 1)
-            ->set('settings.password_special', 1);
+            ->set('settings.password_special', 1)
+            ->set('settings.password_reset_timeout', '1 day');
     }
 
     public function seeders(ContainerInterface $ci)
@@ -108,7 +118,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'user.management.admin', 'fa fa-user', 'User', 'admin/user',
+                    'user.admin', 'fa fa-user', 'User', 'admin/user',
                     'menu-admin', 4, -1
                 ])
                 ->values([
@@ -149,12 +159,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'user%')
-                ->orWhere('link', 'like', 'admin/user%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'user%')
+                        ->fetchAll();
+            });
         }
     }
 }

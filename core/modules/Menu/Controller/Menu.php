@@ -10,6 +10,8 @@ use SoosyzeCore\Menu\Form\FormMenu;
 
 class Menu extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
@@ -17,21 +19,9 @@ class Menu extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function index($req)
+    public function admin($req)
     {
-        if ($menu = self::query()->from('menu')->fetch()) {
-            return $this->show($menu[ 'name' ], $req);
-        }
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
-                    'title_main' => t('Menu')
-                ])
-                ->make('page.content', 'page-not-menu-show.php', $this->pathViews, [
-                    'menu_add'    => self::router()->getRoute('menu.create')
-                ]);
+        return $this->show('menu-main', $req);
     }
 
     public function show($name, $req)
@@ -58,25 +48,17 @@ class Menu extends \Soosyze\Controller
                     'title_main' => t($menu[ 'title' ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-menu-show.php', $this->pathViews, [
-                    'form'        => $form,
-                    'menu'        => $this->renderMenu($name),
-                    'menu_add'    => self::router()->getRoute('menu.create'),
-                    'menu_edit'   => self::router()->getRoute('menu.edit', [
+                ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
+                    'form'              => $form,
+                    'link_create_link'  => self::router()->getRoute('menu.link.create', [
                         ':menu' => $name
                     ]),
-                    'menu_delete' => self::router()->getRoute('menu.delete', [
-                        ':menu' => $name
-                    ]),
-                    'link_add'    => self::router()->getRoute('menu.link.create', [
-                        ':menu' => $name
-                    ]),
-                    'menuName'    => $menu[ 'title' ]
-                ])
-                ->make('content.submenu', 'submenu-menu.php', $this->pathViews, [
-                    'menu' => $this->renderSubMenu(),
-                    'id'   => $name
-        ]);
+                    'link_create_menu'  => self::router()->getRoute('menu.create'),
+                    'menu'              => $this->renderMenu($name),
+                    'menu_name'         => $menu[ 'title' ],
+                    'menu_submenu'      => $this->getMenuSubmenu('menu.show', $menu[ 'name' ]),
+                    'list_menu_submenu' => $this->getListMenuSubmenu($name)
+                ]);
     }
 
     public function check($name, $req)
@@ -153,7 +135,7 @@ class Menu extends \Soosyze\Controller
                     'title_main' => t('Add a menu')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-add.php', $this->pathViews, [
+                ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -227,11 +209,14 @@ class Menu extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
-                    'title_main' => t('Edit a menu')
+                    'title_main' => t('Edit the menu :name', [
+                        ':name' => t($values[ 'title' ])
+                    ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-add.php', $this->pathViews, [
-                    'form' => $form
+                ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'menu_submenu' => $this->getMenuSubmenu('menu.edit', $menu)
         ]);
     }
 
@@ -272,6 +257,43 @@ class Menu extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('menu.edit'));
     }
 
+    public function remove($name, $req)
+    {
+        if (!($menu = self::menu()->getMenu($name)->fetch())) {
+            return $this->get404($req);
+        }
+
+        $this->container->callHook('menu.remove.form.data', [ &$menu, $name ]);
+
+        $form = (new FormBuilder([
+                'method' => 'post',
+                'action' => self::router()->getRoute('menu.delete', [ ':menu' => $name ])
+                ]))
+            ->group('menu-remove-fieldset', 'fieldset', function ($form) {
+                $form->legend('menu-remove-legend', t('Delete menu'))
+                ->html('menu-remove-info', '<p:attr>:_content</p>', [
+                    '_content' => t('Warning ! The deletion of the menu is final.')
+                ]);
+            })
+            ->token('token_menu_remove')
+            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+
+        $this->container->callHook('menu.remove.form', [ &$form, $menu, $name ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Delete the menu :name', [
+                        ':name' => t($menu[ 'title' ])
+                    ])
+                ])
+                ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'menu_submenu' => $this->getMenuSubmenu('menu.remove', $name)
+        ]);
+    }
+
     public function delete($menu, $req)
     {
         if (!self::menu()->getMenu($menu)->fetch()) {
@@ -307,7 +329,7 @@ class Menu extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.delete.after', [ $validator, $menu ]);
 
-            return new Redirect(self::router()->getRoute('menu.index'));
+            return new Redirect(self::router()->getRoute('menu.admin'));
         }
 
         return new Redirect(
@@ -341,23 +363,71 @@ class Menu extends \Soosyze\Controller
         }
 
         return self::template()
-                ->createBlock('menu-show.php', $this->pathViews)
-                ->nameOverride("menu-show-$nameMenu.php")
+                ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
+                ->addNameOverride("menu-show-$nameMenu.php")
                 ->addVars([ 'menu' => $query, 'level' => $level ]);
     }
+    
+    public function getMenuSubmenu($keyRoute, $nameMenu)
+    {
+        $menu = [
+            [
+                'key'        => 'menu.show',
+                'request'    => self::router()->getRequestByRoute('menu.show', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => t('View')
+            ], [
+                'key'        => 'menu.edit',
+                'request'    => self::router()->getRequestByRoute('menu.edit', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'menu.remove',
+                'request'    => self::router()->getRequestByRoute('menu.remove', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
 
-    public function renderSubMenu()
+        $this->container->callHook('menu.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!self::core()->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return self::template()
+                ->createBlock('menu/submenu-menu.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
+    }
+
+    public function getListMenuSubmenu($nameMenu)
     {
         $menus = self::query()
             ->from('menu')
             ->fetchAll();
 
         foreach ($menus as &$menu) {
-            $menu[ 'link_show' ] = self::router()
+            $menu[ 'link' ] = self::router()
                 ->getRoute('menu.show', [ ':menu' => $menu[ 'name' ] ]);
         }
 
-        return $menus;
+        return self::template()
+                ->createBlock('menu/submenu-menu-list.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $nameMenu,
+                    'menu'      => $menus
+        ]);
     }
 
     private function getValidator($req)

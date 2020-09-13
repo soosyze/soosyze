@@ -15,8 +15,8 @@
             "controller": "SoosyzeCore\\Config\\Controller\\Config",
             "icon": {
                 "name": "fas fa-cog",
-                "background-color": "#e5a342",
-                "color": "#fff"
+                "background-color": "#E5A342",
+                "color": "#331E00"
             }
         }
     }

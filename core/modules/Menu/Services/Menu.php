@@ -6,26 +6,29 @@ use Soosyze\Components\Http\Uri;
 
 class Menu
 {
+    protected $alias;
+
+    protected $config;
+
     protected $core;
+
+    protected $pathViews;
+
+    protected $query;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
     protected $router;
 
-    protected $config;
-
-    protected $query;
-
-    protected $pathViews;
-
-    public function __construct($alias, $core, $router, $config, $query)
+    public function __construct($alias, $config, $core, $query, $router)
     {
-        $this->alias     = $alias;
-        $this->core      = $core;
-        $this->router    = $router;
-        $this->config    = $config;
-        $this->query     = $query;
+        $this->alias  = $alias;
+        $this->config = $config;
+        $this->core   = $core;
+        $this->query  = $query;
+        $this->router = $router;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
@@ -40,6 +43,23 @@ class Menu
                 ->from('menu_link')
                 ->where('id', '==', $id)
                 ->fetch();
+    }
+    
+    public function deleteLinks(callable $callable)
+    {
+        $links = $callable();
+
+        foreach ($links as $link) {
+            $this->query
+                ->from('menu_link')
+                ->delete()
+                ->where('id', $link['id'])
+                ->execute();
+            $this->query
+                ->update('menu_link', [ 'parent' => $link[ 'parent' ] ])
+                ->where('parent', $link['id'])
+                ->execute();
+        }
     }
 
     public function getMenu($name)
@@ -132,9 +152,9 @@ class Menu
         return $this->core
                 ->get('template')
                 ->createBlock('menu.php', $this->pathViews)
-                ->nameOverride($nameMenu . '.php')
+                ->addNameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu'  => $this->getGrantedLink($query, $this->core->getRequest()),
+                    'menu'  => $this->getGrantedLink($query),
                     'level' => $level
         ]);
     }
@@ -163,14 +183,14 @@ class Menu
     /**
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
-     * @param array   $query   liens du menu
-     * @param Request $request
+     * @param array $query liens du menu
      *
      * @return array
      */
-    protected function getGrantedLink($query, $request)
+    protected function getGrantedLink($query)
     {
-        $route = $this->router->parseQueryFromRequest();
+        $route   = $this->router->parseQueryFromRequest();
+        $request = $this->core->getRequest()->withMethod('GET');
 
         foreach ($query as $key => &$menu) {
             if (!$menu[ 'key' ]) {
@@ -179,14 +199,14 @@ class Menu
                 continue;
             }
 
-            if ($source = $this->alias->getSource($menu[ 'link' ])) {
-                $menu[ 'link' ] = $source;
+            if (!($source = $this->alias->getSource($menu[ 'link' ]))) {
+                $source = $menu[ 'link' ];
             }
 
             $link = $request->withUri(
                 $this->router->isRewrite()
-                ? $request->getUri()->withPath($menu[ 'link' ])
-                : $request->getUri()->withQuery('q=' . $menu[ 'link' ])
+                ? $request->getUri()->withPath($source)
+                : $request->getUri()->withQuery('q=' . $source)
             );
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */

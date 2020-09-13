@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\FileManager\Services;
 
-class HookConfig
+class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     public function menu(&$menu)
     {
@@ -11,7 +11,7 @@ class HookConfig
         ];
     }
 
-    public function form(&$form, $data)
+    public function form(&$form, $data, $req)
     {
         $form->group('file-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('file-legend', t('Behavior of file transfers'))
@@ -55,10 +55,18 @@ class HookConfig
         ]);
     }
 
-    public function before(&$validator, &$data)
+    public function before(&$validator, &$data, $id)
     {
         $data = [
             'replace_file' => (int) $validator->getInput('replace_file')
         ];
+    }
+
+    public function after(&$validator, $data, $id)
+    {
+    }
+
+    public function files(&$inputsFile)
+    {
     }
 }

@@ -21,4 +21,4 @@ R::get('news.day', 'news/:year/:month/:day:id', 'News@viewDay', [
     ':day'   => '[0-2][1-9]|3[0-1]',
     ':id'    => '(/page/[1-9]\d*)?'
 ]);
-R::get('news.rss', 'news/rss.xml', 'News@viewRss');
+R::get('news.rss', 'feed/news/rss', 'News@viewRss');

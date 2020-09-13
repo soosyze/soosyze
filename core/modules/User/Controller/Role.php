@@ -13,42 +13,6 @@ class Role extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin($req)
-    {
-        $roles = self::query()->from('role')->orderBy('role_weight')->fetchAll();
-        foreach ($roles as &$role) {
-            $role[ 'link_edit' ] = self::router()->getRoute('user.role.edit', [
-                ':id' => $role[ 'role_id' ]
-            ]);
-            if ($role[ 'role_id' ] > 3) {
-                $role[ 'link_remove' ] = self::router()->getRoute('user.role.remove', [
-                    ':id' => $role[ 'role_id' ]
-                ]);
-            }
-        }
-
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            unset($_SESSION[ 'errors_keys' ]);
-        }
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Administer roles')
-                ])
-                ->view('page.messages', $messages)
-                ->make('page.content', 'page-role.php', $this->pathViews, [
-                    'roles'    => $roles,
-                    'link_add' => self::router()->getRoute('user.role.create')
-        ]);
-    }
-
     public function create($req)
     {
         $values = [];
@@ -85,7 +49,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -121,7 +85,7 @@ class Role extends \Soosyze\Controller
                 'role_description' => $validator->getInput('role_description'),
                 'role_weight'      => empty($roleWeight)
                     ? 1
-                    : $roleWeight,
+                    : (int) $roleWeight,
                 'role_color'       => empty($roleColor)
                     ? '#e6e7f4'
                     : strtolower($roleColor),
@@ -185,7 +149,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -200,7 +164,7 @@ class Role extends \Soosyze\Controller
             ->setRules([
                 'role_label'        => 'required|string|max:255|to_htmlsc',
                 'role_description'  => '!required|string|max:255|to_htmlsc',
-                'role_weight'       => 'required|int|between:1,50',
+                'role_weight'       => 'required|between_numeric:1,50',
                 'role_color'        => '!required|colorhex',
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
@@ -219,7 +183,7 @@ class Role extends \Soosyze\Controller
             $value = [
                 'role_label'       => $validator->getInput('role_label'),
                 'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => $validator->getInput('role_weight'),
+                'role_weight'      => (int) $validator->getInput('role_weight'),
                 'role_color'       => $validator->getInput('role_color'),
                 'role_icon'        => $validator->getInput('role_icon')
             ];
@@ -282,7 +246,7 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Deleting the :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-role.php', $this->pathViews, [
+                ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }

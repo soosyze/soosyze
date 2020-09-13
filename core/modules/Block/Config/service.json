@@ -1,21 +1,30 @@
 {
     "block": {
         "class": "SoosyzeCore\\Block\\Services\\Block",
-        "arguments": ["@core"]
+        "arguments": ["@config", "@core"],
+        "hooks": {
+            "block.social": "hookBlockSocial"
+        }
     },
     "block.hook.app": {
         "class": "SoosyzeCore\\Block\\Services\\HookApp",
-        "arguments": ["@template", "@core", "@query", "@user", "@router"],
+        "arguments": ["@core", "@query", "@router", "@template", "@user"],
         "hooks": {
             "app.response.after": "hookResponseAfter"
+        }
+    },
+    "social.hook.config": {
+        "class": "SoosyzeCore\\Block\\Services\\HookConfig",
+        "hooks": {
+            "config.edit.menu": "menu"
         }
     },
     "block.hook.user": {
         "class": "SoosyzeCore\\Block\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.section.admin": "hookBlockAdmin",
-            "route.section.update": "hookBlockAdmin",
+            "route.block.section.admin": "hookBlockAdmin",
+            "route.block.section.update": "hookBlockAdmin",
             "route.block.create": "hookBlockCreated",
             "route.block.store": "hookBlockCreated",
             "route.block.edit": "hookBlockEdited",

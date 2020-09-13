@@ -1,7 +1,7 @@
 {
     "node": {
         "class": "SoosyzeCore\\Node\\Services\\Node",
-        "arguments": ["@query", "@template", "@core"]
+        "arguments": ["@core", "@query", "@template"]
     },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",
@@ -15,22 +15,31 @@
         "class": "SoosyzeCore\\Node\\Services\\HookConfig",
         "arguments": ["@query"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.node.form.generate": "form",
-            "config.update.node.validator": "validator",
-            "config.update.node.before": "before"
+            "config.edit.menu": "menu"
+        }
+    },
+    "node.hook.filemanager": {
+        "class": "SoosyzeCore\\Node\\Services\\HookFileManager",
+        "arguments": ["@core", "@module", "@router"],
+        "hooks": {
+            "node.create.form": "hookNodeCreateForm",
+            "node.edit.form": "hookNodeEditForm",
+            "entity.create.form": "hookEntityForm",
+            "entity.edit.form": "hookEntityForm"
         }
     },
     "node.hook.app": {
         "class": "SoosyzeCore\\Node\\Services\\HookApp",
+        "arguments": ["@core"],
         "hooks": {
-            "node.show.tpl": "hookResponseAfter",
-            "node.edit.response.after": "hookMenuShowResponseAfter"
+            "app.response.after": "hookResponseAfter",
+            "node.show.tpl": "hookNodeShowResponseAfter",
+            "node.edit.response.after": "hookNodeEditResponseAfter"
         }
     },
     "node.hook.url": {
         "class": "SoosyzeCore\\Node\\Services\\HookUrl",
-        "arguments": ["@alias", "@schema", "@query", "@config"],
+        "arguments": ["@alias", "@config", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
@@ -45,7 +54,7 @@
     },
     "node.hook.menu": {
         "class": "SoosyzeCore\\Node\\Services\\HookMenu",
-        "arguments": ["@alias", "@schema", "@query"],
+        "arguments": ["@alias", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
@@ -66,12 +75,15 @@
         "arguments": ["@query"],
         "hooks": {
             "user.permission.module": "hookPermission",
+            "route.node.admin": "hookNodeManager",
+            "route.node.page": "hookNodeManager",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",
             "route.node.clone": "hookNodeClone",
             "route.node.store": "hookNodeCreated",
             "route.node.edit": "hookNodeEdited",
             "route.node.update": "hookNodeEdited",
+            "route.node.remove": "hookNodeDeleted",
             "route.node.delete": "hookNodeDeleted",
             "route.node.add": "hookNodeAdd",
             "route.entity.create": "hookNodeCreated",

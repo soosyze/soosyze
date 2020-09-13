@@ -4,52 +4,86 @@ namespace SoosyzeCore\Block\Services;
 
 class HookApp
 {
-    protected $tpl;
-
     protected $core;
 
     protected $query;
 
+    protected $roles = [];
+
+    protected $router;
+
     protected $user;
 
-    public function __construct($template, $core, $query, $user, $router)
+    protected $tpl;
+
+    public function __construct($core, $query, $router, $template, $user)
     {
-        $this->tpl       = $template;
         $this->core      = $core;
         $this->query     = $query;
-        $this->user      = $user;
         $this->router    = $router;
+        $this->tpl       = $template;
+        $this->user      = $user;
         $this->pathViews = dirname(__DIR__) . '/Views/';
+
+        $this->userCurrent = $this->user->isConnected();
+        
+        if ($this->userCurrent) {
+            $this->roles   = $this->user->getRolesUser($this->userCurrent[ 'user_id' ]);
+            $this->roles[] = [ 'role_id' => 2 ];
+        }
     }
 
     public function hookResponseAfter(
         \Soosyze\Components\Http\ServerRequest $request,
         &$response
     ) {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (
+            !($response instanceof \SoosyzeCore\Template\Services\Templating) ||
+            $response->getStatusCode() !== 200
+        ) {
             return;
         }
 
-        $isAdmin = in_array($this->router->parseQueryFromRequest(), [
-            'admin/section/theme', 'admin/section/theme_admin'
-        ]);
-        $blocks  = $this->getBlocks($request, $isAdmin);
+        $theme   = $this->getNameTheme();
+        $isAdmin = $this->core->callHook('app.granted', [ 'block.administer' ]) && !empty($theme);
 
-        $sections = $this->tpl->getSections();
+        $blocks = $this->getBlocks($isAdmin);
+
+        $sections   = $this->tpl->getSections();
+        $linkCreate = '';
+
         foreach ($sections as $section) {
+            if ($isAdmin) {
+                $linkCreate = $this->router->getRoute('block.create', [
+                    ':theme'   => $theme,
+                    ':section' => $section
+                ]);
+            }
             $response->make('page.' . $section, 'section.php', $this->pathViews, [
                 'section_id'  => $section,
                 'content'     => !empty($blocks[ $section ])
                     ? $blocks[ $section ]
                     : [],
-                'edit'        => $isAdmin,
-                'link_create' => $this->router->getRoute('block.create', [
-                    ':section' => $section ])
+                'is_admin'    => $isAdmin,
+                'link_create' => $linkCreate
             ]);
         }
     }
+    
+    protected function getNameTheme()
+    {
+        $query = $this->router->parseQueryFromRequest();
+        if ($query === 'admin/section/theme') {
+            return 'theme';
+        }
+        if ($query === 'admin/section/theme_admin') {
+            return 'theme_admin';
+        }
 
-    protected function getBlocks($request, $isAdmin)
+        return '';
+    }
+
+    protected function getBlocks($isAdmin)
     {
         $blocks    = $this->query
             ->from('block')
@@ -59,7 +93,7 @@ class HookApp
 
         $out = [];
         foreach ($blocks as $block) {
-            if (!$isAdmin && (!$this->isVisibilityPages($block, $request) || !$this->isVisibilityRoles($block))) {
+            if (!$isAdmin && (!$this->isVisibilityPages($block) || !$this->isVisibilityRoles($block))) {
                 continue;
             }
             if (!empty($block[ 'hook' ])) {
@@ -75,11 +109,14 @@ class HookApp
             }
             if ($isAdmin) {
                 $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', [
-                    ':id' => $block[ 'block_id' ] ]);
+                    ':id' => $block[ 'block_id' ]
+                ]);
                 $block[ 'link_delete' ] = $this->router->getRoute('block.delete', [
-                    ':id' => $block[ 'block_id' ] ]);
-                $block[ 'link_update' ] = $this->router->getRoute('section.update', [
-                    ':id' => $block[ 'block_id' ] ]);
+                    ':id' => $block[ 'block_id' ]
+                ]);
+                $block[ 'link_update' ] = $this->router->getRoute('block.section.update', [
+                    ':id' => $block[ 'block_id' ]
+                ]);
             }
             $out[ $block[ 'section' ] ][] = $block;
         }
@@ -87,14 +124,14 @@ class HookApp
         return $out;
     }
 
-    protected function isVisibilityPages(array $block, $request)
+    protected function isVisibilityPages(array $block)
     {
         $path = $this->router->parseQueryFromRequest();
 
         $visibility = $block[ 'visibility_pages' ];
-        $pages      = $block[ 'pages' ];
+        $pages      = explode(PHP_EOL, $block[ 'pages' ]);
 
-        foreach (explode(PHP_EOL, $pages) as $page) {
+        foreach ($pages as $page) {
             $page = trim($page);
             if ($page === $path) {
                 return $visibility;
@@ -111,19 +148,16 @@ class HookApp
 
     protected function isVisibilityRoles($block)
     {
-        $userCurrent = $this->user->isConnected();
         $rolesBlock  = explode(',', $block[ 'roles' ]);
         $visibility  = $block[ 'visibility_roles' ];
 
         /* S'il n'y a pas d'utilisateur et que l'on demande de suivre les utilisateurs non connectés. */
-        if (!$userCurrent && in_array(1, $rolesBlock)) {
+        if (!$this->userCurrent && in_array(1, $rolesBlock)) {
             return $visibility;
         }
 
-        $roles = $this->user->getRolesUser($userCurrent[ 'user_id' ]);
-
         foreach ($rolesBlock as $analyticsRole) {
-            foreach ($roles as $role) {
+            foreach ($this->roles as $role) {
                 if ($analyticsRole == $role[ 'role_id' ]) {
                     return $visibility;
                 }

@@ -6,44 +6,34 @@ use Soosyze\Components\Util\Util;
 
 class HookMenu
 {
+    protected $profil;
+
     /**
      * @var \Soosyze\Router
      */
     protected $router;
 
-    protected $profil;
-
-    public function __construct($router, $profil)
+    public function __construct($profil, $router)
     {
-        $this->router = $router;
         $this->profil = $profil;
+        $this->router = $router;
     }
 
     public function hookUsersMenu(&$menu, $userId)
     {
-        $profils = $this->profil->getProfilsFileByUser($userId);
-        if (empty($profils)) {
-            return;
-        }
-
-        $path = Util::cleanPath($profils[ 0 ][ 'folder_show' ]);
-        $path = str_replace(':user_id', $userId, $path);
-
         $menu[] = [
-            'link'       => $this->router->getRoute('filemanager.admin', [
-                ':path' => $path
-            ]),
+            'key'        => 'filemanager.admin',
+            'request'    => $this->router->getRequestByRoute('filemanager.admin'),
             'title_link' => t('File')
         ];
     }
 
-    public function hookUsersManagementMenu(&$menu, $user)
+    public function hookUserManagerSubmenu(&$menu)
     {
-        if ($user->isGranted('filemanager.profil.admin')) {
-            $menu[] = [
-                'link'       => $this->router->getRoute('filemanager.profil.admin'),
-                'title_link' => t('Administer file profiles')
-            ];
-        }
+        $menu[] = [
+            'key'        => 'filemanager.profil.admin',
+            'request'    => $this->router->getRequestByRoute('filemanager.profil.admin'),
+            'title_link' => t('Files permissions')
+        ];
     }
 }

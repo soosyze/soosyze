@@ -5,13 +5,20 @@ namespace SoosyzeCore\Node;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -26,12 +33,14 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->boolean('meta_noindex')->valueDefault(false)
                 ->string('meta_title')->valueDefault('')
                 ->integer('node_status_id')->valueDefault(3)
+                ->boolean('sticky')->valueDefault(false)
                 ->string('title')
                 ->string('type', 32);
             })
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
                 $table->string('node_type')
                 ->string('node_type_name')
+                ->string('node_type_icon')
                 ->text('node_type_description');
             })
             ->createTableIfNotExists('node_status', function (TableBuilder $table) {
@@ -66,6 +75,10 @@ class Installer implements \SoosyzeCore\System\Migration
             ->createTableIfNotExists('entity_page', function (TableBuilder $table) {
                 $table->increments('page_id')
                 ->text('body');
+            })
+            ->createTableIfNotExists('entity_page_private', function (TableBuilder $table) {
+                $table->increments('page_private_id')
+                ->text('body');
             });
 
         $ci->query()->insertInto('node_status', [
@@ -78,9 +91,23 @@ class Installer implements \SoosyzeCore\System\Migration
             ->execute();
 
         $ci->query()->insertInto('node_type', [
-                'node_type', 'node_type_name', 'node_type_description'
+                'node_type',
+                'node_type_name',
+                'node_type_description',
+                'node_type_icon'
             ])
-            ->values([ 'page', 'Page', 'Use the pages for your static content.' ])
+            ->values([
+                'page',
+                'Page',
+                'Use the pages for your static content.',
+                'fa fa-file'
+            ])
+            ->values([
+                'page_private',
+                'Private page',
+                'Use private pages for content reserved for your members.',
+                'far fa-file'
+            ])
             ->execute();
 
         $ci->query()->insertInto('field', [
@@ -99,10 +126,12 @@ class Installer implements \SoosyzeCore\System\Migration
                 'field_option'
             ])
             ->values([ 'page', 1, 'Body', 2, '!required|string', '' ])
+            ->values([ 'page_private', 1, 'Body', 2, '!required|string', '' ])
             ->execute();
 
         $ci->config()
             ->set('settings.node_default_url', ':node_type/:node_title')
+            ->set('settings.node_url_page_private', 'page/:node_title')
             ->set('settings.node_cron', false);
     }
 
@@ -112,8 +141,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallUser(ContainerInterface $ci)
@@ -121,12 +150,10 @@ class Installer implements \SoosyzeCore\System\Migration
         if ($ci->module()->has('User')) {
             $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'node.show.not_published' ])
-                ->values([ 3, 'node.show.published' ])
                 ->values([ 3, 'node.administer' ])
-                ->values([ 3, 'node.index' ])
-                ->values([ 2, 'node.show.published' ])
-                ->values([ 1, 'node.show.published' ])
+                ->values([ 2, 'node.show.published.page_private' ])
+                ->values([ 2, 'node.show.published.page' ])
+                ->values([ 1, 'node.show.published.page' ])
                 ->execute();
         }
     }
@@ -139,14 +166,11 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'node.index', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
+                    'node.admin', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
                     2, -1
                 ])
                 ->values([
                     'node.show', null, 'Home', '/', 'menu-main', 1, -1
-                ])
-                ->values([
-                    'node.show', 'fa fa-home', 'Home', '/', 'menu-admin', 1, -1
                 ])
                 ->execute();
 
@@ -162,13 +186,18 @@ class Installer implements \SoosyzeCore\System\Migration
     {
         $types = $ci->query()->from('node_type')->lists('node_type');
         foreach ($types as $type) {
-            $ci->schema()->dropTable('entity_' . $type);
+            $ci->schema()->dropTableIfExists('entity_' . $type);
         }
-        $ci->schema()->dropTable('node_type_field');
-        $ci->schema()->dropTable('field');
-        $ci->schema()->dropTable('node_type');
-        $ci->schema()->dropTable('node');
-        $ci->schema()->dropTable('node_status');
+        $ci->schema()->dropTableIfExists('node_type_field');
+        $ci->schema()->dropTableIfExists('field');
+        $ci->schema()->dropTableIfExists('node_type');
+        $ci->schema()->dropTableIfExists('node');
+        $ci->schema()->dropTableIfExists('node_status');
+        
+        $ci->query()->from('system_alias_url')
+            ->delete()
+            ->where('source', 'like', 'node%')
+            ->execute();
     }
 
     public function hookUninstall(ContainerInterface $ci)
@@ -179,15 +208,16 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        if ($ci->schema()->hasTable('node_menu_link')) {
-            $ci->schema()->dropTable('node_menu_link');
-        }
+        $ci->schema()->dropTableIfExists('node_menu_link');
+
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->orWhere('key', 'like', 'node%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'node%')
+                        ->orWhere('key', 'like', 'entity%')
+                        ->fetchAll();
+            });
         }
     }
 

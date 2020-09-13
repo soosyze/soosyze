@@ -15,7 +15,7 @@ class Permission extends \Soosyze\Controller
     {
         /* Récupère toutes les permissions par module. */
         $modules = [];
-        self::core()->callHook('user.permission.module', [ &$modules ]);
+        $this->container->callHook('user.permission.module', [ &$modules ]);
         ksort($modules);
 
         /* Récupére les pérmissions et role en base de données. */
@@ -34,6 +34,7 @@ class Permission extends \Soosyze\Controller
 
         /* Met en forme les droit utilisateurs. */
         $output = [];
+        $count  = 0;
         foreach ($modules as $keyModule => $module) {
             foreach ($module as $keyPermission => $permission) {
                 $output[ $keyModule ][ $keyPermission ][ 'action' ] = $permission;
@@ -43,6 +44,7 @@ class Permission extends \Soosyze\Controller
                         $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
                     }
                 }
+                $count++;
             }
         }
 
@@ -59,12 +61,13 @@ class Permission extends \Soosyze\Controller
                     'title_main' => t('Administer permissions')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-permission.php', $this->pathViews, [
-                    'link_update' => self::router()->getRoute('user.permission.update'),
-                    'roles'       => $roles,
-                    'colspan'     => count($roles) + 1,
-                    'modules'     => $output
-        ]);
+                ->make('page.content', 'user/content-permission-admin.php', $this->pathViews, [
+                    'count'                => $count,
+                    'link_update'          => self::router()->getRoute('user.permission.update'),
+                    'modules'              => $output,
+                    'roles'                => $roles,
+                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.permission.admin')
+                ]);
     }
 
     public function udpate($req)

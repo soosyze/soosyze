@@ -5,13 +5,19 @@ namespace SoosyzeCore\Block;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -30,14 +36,57 @@ class Installer implements \SoosyzeCore\System\Migration
                 ->string('key_block')->nullable()
                 ->string('options')->nullable();
             });
+
+        $ci->config()->set('settings.icon_socials', [
+            'blogger'    => '',
+            'dribbble'   => '',
+            'facebook'   => '#',
+            'github'     => '',
+            'instagram'  => '#',
+            'linkedin'   => '#',
+            'mastodon'   => '#',
+            'snapchat'   => '',
+            'soundcloud' => '',
+            'spotify'    => '',
+            'steam'      => '',
+            'tumblr'     => '',
+            'twitch'     => '#',
+            'twitter'    => '#',
+            'youtube'    => '#'
+        ]);
     }
 
     public function seeders(ContainerInterface $ci)
     {
         $ci->query()
-            ->insertInto('block', [ 'section', 'title', 'content', 'weight', 'pages' ])
-            ->values([ 'footer', '', '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
-                1, '' ])
+            ->insertInto('block', [
+                'section', 'title',
+                'content',
+                'weight',
+                'visibility_pages', 'pages'
+            ])
+            ->values([
+                'content_footer', '',
+                '<div class="block-report_github">'
+                . '<p>'
+                . '<a href="https://github.com/soosyze/soosyze/issues" '
+                . 'rel="noopener noreferrer" '
+                . 'target="_blank" '
+                . 'title="' . t('Found an bug? Please report it on GitHub.') . '">'
+                . '<i class="fa fa-fw fa-bug" aria-hidden="true"></i> '
+                . t('Report a bug.')
+                . '</a>'
+                . '</p>'
+                . '</div>',
+                50,
+                true, 'admin/%'
+            ])
+            ->values([
+                'footer', '',
+                '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
+                50,
+                false, ''
+            ])
             ->execute();
     }
 
@@ -55,7 +104,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'section.admin', 'fa fa-columns', 'Block', 'admin/section/theme',
+                    'block.section.admin', 'fa fa-columns', 'Block', 'admin/section/theme',
                     'menu-admin', 7, -1
                 ])
                 ->execute();
@@ -89,12 +138,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'admin/section%')
-                ->orWhere('link', 'like', 'admin/block%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'block%')
+                        ->fetchAll();
+            });
         }
     }
 

@@ -9,6 +9,8 @@ use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service.json';
@@ -103,7 +105,7 @@ class ModulesManager extends \Soosyze\Controller
                     'title_main' => t('Modules')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-modules.php', $this->pathViews, [
+                ->make('page.content', 'system/content-modules_manager-admin.php', $this->pathViews, [
                     'module_update'      => self::config()->get('settings.module_update'),
                     'count'              => count($composer),
                     'link_module_check'  => self::router()->getRoute('system.module.check'),
@@ -129,9 +131,7 @@ class ModulesManager extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $data = $validator->getInput('modules')
-            ? $validator->getInput('modules')
-            : [];
+        $data = $validator->getInput('modules', []);
 
         $moduleActive = array_flip(self::module()->listModuleActiveNotRequire());
 
@@ -180,8 +180,10 @@ class ModulesManager extends \Soosyze\Controller
 
         /* Installation */
         foreach ($modules as $title) {
-            $migration                   = self::composer()->getNamespace($title) . 'Installer';
-            $installer                   = new $migration();
+            $migration = self::composer()->getNamespace($title) . 'Installer';
+            $installer = new $migration();
+
+            $installer->boot();
             /* Lance les scripts d'installation (database, configuration...) */
             $installer->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
@@ -190,15 +192,25 @@ class ModulesManager extends \Soosyze\Controller
             $installer->hookInstall($this->container);
             /* Charge le container de nouveaux services. */
             $this->loadContainer($composer[ $title ]);
-            $composer[ $title ][ 'dir' ] = $installer->getDir();
+
+            $composer[ $title ] += [
+                'dir'          => $installer->getDir(),
+                'translations' => $installer->getTranslations()
+            ];
         }
+
+        self::module()->loadTranslations($modules, $composer, true);
 
         /* Lance l'installation des hooks présents dans les modules nouvellement installés. */
         foreach ($modules as $title) {
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
             /* Install les scripts de migrations. */
-            self::migration()->installMigration($composer[ $title ][ 'dir' ] . DS . 'Migrations', $title);
+            self::migration()->installMigration(
+                $composer[ $title ][ 'dir' ] . DS . 'Migrations',
+                $title
+            );
+            
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 
@@ -251,7 +263,7 @@ class ModulesManager extends \Soosyze\Controller
 
         return [];
     }
-
+    
     /**
      * Si un module installé est requis par d'autre module.
      *

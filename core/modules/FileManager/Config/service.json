@@ -1,13 +1,11 @@
 {
     "filemanager": {
         "class": "SoosyzeCore\\FileManager\\Services\\FileManager",
-        "arguments": ["@core", "@router", "@filemanager.hook.user"]
+        "arguments": ["@core", "@filemanager.hook.user", "@router"]
     },
     "fileprofil": {
         "class": "SoosyzeCore\\FileManager\\Services\\FileProfil",
-        "arguments": [
-            "@query"
-        ] 
+        "arguments": ["@query"] 
     },
     "filemanager.filter.iterator": {
         "class": "SoosyzeCore\\FileManager\\Services\\FilterManagerIterator",
@@ -24,32 +22,26 @@
         "class": "SoosyzeCore\\FileManager\\Services\\HookApp",
         "arguments": ["@core"],
         "hooks": {
-            "app.response.after": "hookReponseAfter"
+            "app.response.after": "hookResponseAfter"
         }
     },
     "filemanager.hook.config": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookConfig",
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.filemanager.form.generate": "form",
-            "config.update.filemanager.validator": "validator",
-            "config.update.filemanager.before": "before"
+            "config.edit.menu": "menu"
         }
     },
     "filemanager.hook.menu": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
-        "arguments": [
-            "@router",
-            "@fileprofil"
-        ],
+        "arguments": ["@fileprofil", "@router"],
         "hooks": {
-            "user.menu": "hookUsersMenu",
-            "user.manage.menu": "hookUsersManagementMenu"
+            "user.submenu": "hookUsersMenu",
+            "user.manager.submenu": "hookUserManagerSubmenu"
         }
     },
     "filemanager.hook.user": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookUser",
-        "arguments": ["@user", "@fileprofil"],
+        "arguments": ["@fileprofil", "@user"],
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.filemanager.profil.admin": "hookFileAdmin",
@@ -75,6 +67,13 @@
             "route.filemanager.folder.update": "hookFolderUpdate",
             "route.filemanager.folder.remove": "hookFolderDelete",
             "route.filemanager.folder.delete": "hookFolderDelete"
+        }
+    },
+    "filemanager.hook.role": {
+        "class": "SoosyzeCore\\FileManager\\Services\\HookRole",
+        "arguments": ["@query"],
+        "hooks": {
+            "role.delete.before": "hookRoleDeleteBefore"
         }
     }
 }

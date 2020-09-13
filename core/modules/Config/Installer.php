@@ -4,13 +4,18 @@ namespace SoosyzeCore\Config;
 
 use Psr\Container\ContainerInterface;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
     }
@@ -33,7 +38,7 @@ class Installer implements \SoosyzeCore\System\Migration
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
                 ->values([
-                    'config.index', 'fa fa-cog', 'Configuration', 'admin/config',
+                    'config.admin', 'fa fa-cog', 'Configuration', 'admin/config',
                     'menu-admin', 6, -1
                 ])
                 ->execute();
@@ -63,11 +68,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'admin/config%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'config%')
+                        ->fetchAll();
+            });
         }
     }
 

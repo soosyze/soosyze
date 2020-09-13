@@ -8,14 +8,10 @@ use Soosyze\Components\Http\Stream;
 class User
 {
     /**
-     * @var \QueryBuilder\Services\Query
+     * Les données utilisateur courant ou false.
+     * @var bool|array
      */
-    private $query;
-
-    /**
-     * @var \Soosyze\Router
-     */
-    private $router;
+    private $connect = false;
 
     /**
      * @var \Soosyze\App
@@ -26,7 +22,7 @@ class User
      * La liste des permissions pour l'utilisateur courant.
      * @var array
      */
-    private $granted = [];
+    private $granted     = [];
 
     /**
      * La liste des permissions
@@ -35,16 +31,22 @@ class User
     private $permissions = [];
 
     /**
-     * Les données utilisateur courant ou false.
-     * @var bool|array
+     * @var \QueryBuilder\Services\Query
      */
-    private $connect = false;
+    private $query;
 
-    public function __construct($query, $router, $core)
+    /**
+     * @var \Soosyze\Router
+     */
+    private $router;
+
+    public function __construct($core, $query, $router)
     {
+        $this->core   = $core;
         $this->query  = $query;
         $this->router = $router;
-        $this->core   = $core;
+
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function find($id)
@@ -117,6 +119,15 @@ class User
         return $this->query->from('role')->fetchAll();
     }
 
+    public function getRolesAttribuable()
+    {
+        return $this->query
+            ->from('role')
+            ->where('role_id', '>', 2)
+            ->orderBy('role_weight')
+            ->fetchAll();
+    }
+
     public function getIdRolesUser($idUser)
     {
         $data = $this->query->from('user_role')
@@ -129,6 +140,88 @@ class User
         }
 
         return $out;
+    }
+
+    public function getUserSubmenu($keyRoute, $id)
+    {
+        $menu = [
+            [
+                'key'        => 'user.show',
+                'request'    => $this->router->getRequestByRoute('user.show', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('View')
+            ], [
+                'key'        => 'user.edit',
+                'request'    => $this->router->getRequestByRoute('user.edit', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'user.remove',
+                'request'    => $this->router->getRequestByRoute('user.remove', [
+                    ':id' => $id
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
+
+        $this->core->callHook('user.submenu', [ &$menu, $id ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return $this->core
+                ->get('template')
+                ->createBlock('user/submenu-user.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
+    }
+    
+    public function getUserManagerSubmenu($keyRoute)
+    {
+        $menu = [
+            [
+                'key'        => 'user.admin',
+                'request'    => $this->router->getRequestByRoute('user.admin'),
+                'title_link' => t('Users')
+            ], [
+                'key'        => 'user.role.admin',
+                'request'    => $this->router->getRequestByRoute('user.role.admin'),
+                'title_link' => t('Roles')
+            ], [
+                'key'        => 'user.permission.admin',
+                'request'    => $this->router->getRequestByRoute('user.permission.admin'),
+                'title_link' => t('Permissions')
+            ]
+        ];
+
+        $this->core->callHook('user.manager.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return $this->core
+                ->get('template')
+                ->createBlock('user/submenu-user_manager.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
     }
 
     public function hasPermission($idPermission)
@@ -158,7 +251,11 @@ class User
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
             ->where('user_id', $user[ 'user_id' ])
             ->lists('permission_id');
-
+        $this->granted = array_merge($this->granted, $this->query
+            ->from('role_permission')
+            ->where('role_id', 2)
+            ->lists('permission_id'));
+        
         return in_array($idPermission, $this->granted);
     }
 
@@ -306,7 +403,7 @@ class User
         }
     }
 
-    public function hookReponseAfter($request, &$response)
+    public function hookResponseAfter($request, &$response)
     {
         if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
             $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';

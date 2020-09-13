@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "LICENSE")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4102/badge)](https://bestpractices.coreinfrastructure.org/projects/4102)
 [![Download Soosyze CMS](https://img.shields.io/badge/download-releases%20latest-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Download Soosyze CMS")
 
 * :gb: [README in English](README.md)
@@ -40,7 +41,7 @@ Find us on the networks :
 
 # Installation requirements
 
-## Serveur Web
+## Web Server
 
 | Web server              | Soosyze 1.x   |
 |-------------------------|---------------|
@@ -53,15 +54,15 @@ Find us on the networks :
 
 ## PHP version
 
-| PHP version           | Soosyze 1.x   |
-|-----------------------|---------------|
-| <= 5.3                | ✗ Unsupported |
-| 5.4 / 5.5 / 5.6       | ✓ Supported   |
-| 7.0 / 7.1 / 7.2 / 7.3 | ✓ Supported   |
+| PHP version                 | Soosyze 1.x   |
+|-----------------------------|---------------|
+| <= 5.3                      | ✗ Unsupported |
+| 5.4 / 5.5 / 5.6             | ✓ Supported   |
+| 7.0 / 7.1 / 7.2 / 7.3 / 7.4 | ✓ Supported   |
 
 With PHP 7.x, your performance in terms of memory and performance will increase by 30% to 45%. Your site will be faster and better referenced.
 
-## Required extensions
+## Required PHP extensions
 
 * `date` for the dates format,
 * `fileinfo` for file validation,
@@ -78,19 +79,17 @@ These extensions are usually active by default. But if he missed an error messag
 
 Soosyze (excluding contributor modules) requires 8MB of memory.
 
-## Supported browsers
+## Browsers support
 
-The administration theme is realized with the Bootstrap 3 framework :
-* [Supported browsers](https://getbootstrap.com/docs/3.3/getting-started/#desktop-browsers)
-* [Supported mobile browsers](https://getbootstrap.com/docs/3.3/getting-started/#mobile-devices)
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/samsung-internet/samsung-internet_48x48.png" alt="Samsung" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Samsung | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera |
+| --------- | --------- | --------- | --------- | --------- | --------- | --------- |
+| Edge| last 10 versions| last 10 versions| last 2 versions| last 2 versions| last 2 versions| last 2 versions |
 
 ## Internet connection
 
 The basic themes use the following CNDs:
 
-* Bootstrap 3.4.1,
 * JQuery 3.2.1,
-* JQuery UI 1.12.0,
 * Sortable 1.8.3,
 * Font Awesome 5.8.1
 

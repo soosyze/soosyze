@@ -4,13 +4,19 @@ namespace SoosyzeCore\Contact;
 
 use Psr\Container\ContainerInterface;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
     }
@@ -62,11 +68,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'like', 'contact%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'contact%')
+                        ->fetchAll();
+            });
         }
     }
 

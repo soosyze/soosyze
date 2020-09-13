@@ -17,7 +17,7 @@ class FormFolder extends \Soosyze\Components\Form\FormBuilder
     {
         $this
             ->group('folder-fieldset', 'fieldset', function ($form) {
-                $form->legend('folder-legend', t('Créer un répertoire'))
+                $form->legend('folder-legend', t('Add folder'))
                 ->group('name-group', 'div', function ($form) {
                     $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')

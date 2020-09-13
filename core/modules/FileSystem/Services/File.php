@@ -3,7 +3,6 @@
 namespace SoosyzeCore\FileSystem\Services;
 
 use Psr\Http\Message\UploadedFileInterface;
-use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
@@ -42,6 +41,11 @@ class File
      */
     protected $ext;
 
+    /**
+     * Droits attribués à la création du répertoire.
+     *
+     * @var int
+     */
     protected $mode = 0755;
 
     /**
@@ -67,6 +71,10 @@ class File
 
     protected $basePath = '';
 
+    protected $callGet = null;
+    
+    protected $callDelete = null;
+
     protected $callMove = null;
 
     public function __construct($core)
@@ -78,56 +86,68 @@ class File
 
     public function inputFile($name, &$form, $content = '', $type = 'image')
     {
-        $attr = [
-            'class'      => 'btn btn-danger form-file-reset',
-            'onclick'    => "document.getElementById('file-image-$name').style.display='none';"
-            . "document.getElementById('$name').value='';"
-            . "document.getElementById('file-name-$name').value='';"
-            . "document.getElementById('file-reset-$name').disabled = true;",
-            '_content'   => '✗',
-            'id'         => "file-reset-$name",
-            'type'       => 'button',
-            'aria-label' => 'Supprimer le fichier'
-        ];
+        $this->getThumbnail($form, $type, $name, $content);
 
-        $src = is_file($this->core->getSetting('root', '') . $content)
-            ? $this->basePath . $content
-            : '';
+        $form->group("file-$name-flex", 'div', function ($form) use ($name, $content) {
+            $attr = [
+                'class'      => 'btn btn-danger form-file-reset',
+                'onclick'    => "document.getElementById('file-$name-thumbnail') !== null"
+                . "? document.getElementById('file-$name-thumbnail').style.display='none'"
+                . ': \'\';'
+                . "document.getElementById('$name').value='';"
+                . "document.getElementById('file-$name-name').value='';"
+                . "document.getElementById('file-$name-reset').disabled = true;",
+                '_content'   => '<i class="fa fa-times" aria-hidden="true"></i>',
+                'id'         => "file-$name-reset",
+                'type'       => 'button',
+                'aria-label' => 'Supprimer le fichier',
+                'disabled'   => empty($content)
+            ];
 
-        if (empty($src)) {
-            $attr[ 'disabled' ] = 'disabled';
-        } elseif ($type == 'image') {
-            $form->group("file-image-$name-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-image-$name", '<img:attr/>', [
-                    'alt'   => 'Picture user',
-                    'src'   => $src,
-                    'class' => 'input-file-img img-thumbnail'
-                ]);
-            }, [ 'class' => 'form-group' ]);
-        } else {
-            $form->group("file-$name-group", 'div', function ($form) use ($name, $src) {
-                $form->html("file-image-$name", '<a:attr/><i class="fa fa-download"></i> :_content</a>', [
-                    'href'     => $src,
-                    '_content' => $src
-                ]);
-            }, [ 'class' => 'form-group' ]);
-        }
-
-        $form->group("file-input-$name-flex", 'div', function ($form) use ($name, $content, $attr) {
             $form
-                ->text("file-name-$name", [
-                    'aria-label' => 'visualisation du chemin du fichier',
+                ->text("file-$name-name", [
+                    'aria-label' => t('View the file path'),
                     'class'      => 'form-control form-file-name',
                     'onclick'    => "document.getElementById('$name').click();",
                     'value'      => $content
                 ])
-                ->html("file-reset-$name", '<button:attr>:_content</button>', $attr)
                 ->file($name, [
                     'style'    => 'display:none',
-                    'onchange' => "document.getElementById('file-name-$name').value = this.files[0].name;"
-                    . "document.getElementById('file-reset-$name').disabled = false;"
-            ]);
+                    'onchange' => "document.getElementById('file-$name-name').value = this.files[0].name;"
+                    . "document.getElementById('file-$name-reset').disabled = false;"
+                ])
+                ->html("file-$name-reset", '<button:attr>:_content</button>', $attr);
         }, [ 'class' => 'form-group-flex' ]);
+    }
+
+    public function getThumbnail(&$form, $type, $name, $src)
+    {
+        $src = is_file($this->core->getSetting('root', '') . $src)
+            ? $this->basePath . $src
+            : '';
+
+        if (empty($src)) {
+            return;
+        }
+
+        if ($type === 'image') {
+            $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($name, $src) {
+                $img = '<img alt="Thumbnail" src="' . $src . '" class="input-file-img img-thumbnail img-thumbnail-light"/>';
+                $form->html("file-$name-thumbnail", '<a:attr/>:_content</a>', [
+                    '_content' => $img,
+                    'href'     => $src,
+                    'target'   => '_blank'
+                ]);
+            }, [ 'class' => 'form-group' ]);
+        } else {
+            $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($name, $src) {
+                $form->html("file-$name-thumbnail", '<a:attr/><i class="fa fa-download" aria-hidden="true"></i> :_content</a>', [
+                    '_content' => $src,
+                    'href'     => $src,
+                    'target'   => '_blank'
+                ]);
+            }, [ 'class' => 'form-group' ]);
+        }
     }
 
     public function validImage($name, Validator &$validator)

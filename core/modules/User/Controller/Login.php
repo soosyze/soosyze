@@ -15,7 +15,7 @@ class Login extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function formLogin($url, $req)
+    public function login($url, $req)
     {
         if (self::user()->isConnectUrl($url)) {
             return $this->get404($req);
@@ -59,7 +59,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => t('Log in')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-login.php', $this->pathViews, [
+                ->make('page.content', 'user/content-login-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin', [
                         ':url' => $url
@@ -148,7 +148,7 @@ class Login extends \Soosyze\Controller
                     'title_main' => t('Request a new password')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-relogin.php', $this->pathViews, [
+                ->make('page.content', 'user/content-login-relogin.php', $this->pathViews, [
                     'form'      => $form,
                     'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])
         ]);
@@ -172,9 +172,13 @@ class Login extends \Soosyze\Controller
 
             if ($user) {
                 $token = Util::strRandom();
+                $timeReset = date_create('now ' . self::config()->get('settings.password_reset_timeout'));
 
                 self::query()
-                    ->update('user', [ 'token_forget' => $token ])
+                    ->update('user', [
+                        'token_forget' => $token,
+                        'time_reset'   =>  $timeReset->getTimestamp()
+                    ])
                     ->where('email', $validator->getInput('email'))
                     ->execute();
 
@@ -219,7 +223,15 @@ class Login extends \Soosyze\Controller
 
     public function resetUser($id, $token, $req)
     {
-        if (!($user = self::user()->findActived($id)) && $user[ 'token_forget' ] != $token) {
+        if (!($user = self::user()->find($id))) {
+            return $this->get404($req);
+        }
+        if ($user[ 'token_forget' ] !== $token) {
+            return $this->get404($req);
+        }
+        if ($user['time_reset'] < time()) {
+            $_SESSION[ 'messages' ][ 'errors' ] = t('Password reset timeout');
+
             return $this->get404($req);
         }
 
@@ -228,7 +240,8 @@ class Login extends \Soosyze\Controller
         self::query()
             ->update('user', [
                 'password'     => self::auth()->hash($pwd),
-                'token_forget' => ''
+                'token_forget' => '',
+                'time_reset'   => null
             ])
             ->where('user_id', '==', $id)
             ->execute();

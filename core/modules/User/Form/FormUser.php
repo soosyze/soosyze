@@ -289,19 +289,20 @@ class FormUser extends FormBuilder
         });
     }
 
-    public function fieldsetRoles($roles)
+    public function fieldsetRoles(array $roles)
     {
-        return $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
-            $form->legend('role-legend', t('User Roles'));
-            foreach ($roles as $role) {
-                $attrRole = [
+        return $roles
+            ? $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
+                $form->legend('role-legend', t('User Roles'));
+                foreach ($roles as $role) {
+                    $attrRole = [
                         'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values[ 'roles' ]),
                         'disabled' => $role[ 'role_id' ] <= 2,
                         'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]
                     ];
-                $form->group('role_' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
-                    $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
+                    $form->group('role_' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role, $attrRole) {
+                        $form->checkbox("roles[{$role[ 'role_id' ]}]", $attrRole)
                             ->label(
                                 'role_' . $role[ 'role_id' ] . '-label',
                                 '<span class="ui"></span>'
@@ -311,9 +312,10 @@ class FormUser extends FormBuilder
                                 . t($role[ 'role_label' ]),
                                 [ 'for' => "role_{$role[ 'role_id' ]}" ]
                             );
-                }, self::$attrGrp);
-            }
-        });
+                    }, self::$attrGrp);
+                }
+            })
+        : $this;
     }
 
     /**
@@ -323,7 +325,8 @@ class FormUser extends FormBuilder
      */
     public function submitForm($label = 'Save', $cancel = false)
     {
-        $this->token('token_user_form');
+        $this->token('token_user_form')
+            ->submit('sumbit', t($label), [ 'class' => 'btn btn-success' ]);
         if ($cancel) {
             $this->html('cancel', '<button:attr>:_content</button>', [
                 '_content' => t('Cancel'),
@@ -333,6 +336,6 @@ class FormUser extends FormBuilder
             ]);
         }
 
-        return $this->submit('sumbit', t($label), [ 'class' => 'btn btn-success' ]);
+        return $this;
     }
 }

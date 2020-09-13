@@ -6,29 +6,36 @@ use Soosyze\Components\Http\Redirect;
 
 class HookApp
 {
-    protected $router;
+    protected $alias;
 
     protected $config;
 
-    protected $tpl;
-
     protected $core;
+
+    protected $query;
+
+    protected $router;
+
+    protected $pathViews;
+
+    protected $tpl;
 
     public function __construct(
         $alias,
-        $route,
         $config,
-        $template,
         $core,
-        $query
+        $query,
+        $route,
+        $template
     ) {
         $this->alias  = $alias;
-        $this->router = $route;
         $this->config = $config;
-        $this->tpl    = $template;
         $this->core   = $core;
         $this->query  = $query;
-        $this->views  = dirname(__DIR__) . '/Views/';
+        $this->router = $route;
+        $this->tpl    = $template;
+
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function hookSys(&$request, &$response)
@@ -85,7 +92,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => t('Not Found')
                 ])
-                ->make('page.content', 'page-404.php', $this->views, [
+                ->make('page.content', 'page-404.php', $this->pathViews, [
                     'uri' => $request->getUri()
                 ])
             : $responseNoFound;
@@ -118,7 +125,7 @@ class HookApp
                 ->view('page', [
                     'title_main' => t('Page Forbidden')
                 ])
-                ->make('page.content', 'page-403.php', $this->views, [
+                ->make('page.content', 'page-403.php', $this->pathViews, [
                     'uri' => $request->getUri()
                 ])
             : $responseDenied;
@@ -150,7 +157,7 @@ class HookApp
                 403, 404 ])) {
             $response = $this->tpl
                 ->getTheme()
-                ->make('page', 'page-maintenance.php', $this->views, [
+                ->make('page', 'page-maintenance.php', $this->pathViews, [
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Site under maintenance'),
                 ]);
@@ -158,7 +165,7 @@ class HookApp
             $content = $responseMaintenance->getBlock('page.content');
             $response = $this->tpl
                 ->getTheme()
-                ->make('page', 'page-maintenance.php', $this->views, [
+                ->make('page', 'page-maintenance.php', $this->pathViews, [
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Site under maintenance'),
                 ])
@@ -231,7 +238,7 @@ class HookApp
         if ($this->router->parseQueryFromRequest() === '/' &&
             (!$maintenance ||
             ($maintenance && $granted))) {
-            $response->override('page', [ 'page-front.php' ]);
+            $response->getBlock('page')->setNamesOverride([ 'page-front.php' ]);
         }
     }
 }

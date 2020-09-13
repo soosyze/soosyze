@@ -2,32 +2,67 @@
     table-layout: fixed;
     word-wrap: break-word;
 }
-.dropfile{
+/* Dropfile */
+.filemanager-dropfile {
     font-size: 1.25rem;
-    padding: 3em;
+    padding: 2em;
     outline: 2px dashed #ccc;
-    margin-bottom: 1em;
     text-align: center;
     -webkit-transition: background-color .2s, outline-offset .2s; /* Safari */
     transition: background-color .2s, outline-offset .2s;
 }
-.dropfile .choose{
+.filemanager-dropfile__success {
+    outline: 2px dashed #21ba45;
+}
+.filemanager-dropfile__error {
+    outline: 2px dashed #db2828;
+}
+.filemanager-dropfile .choose {
     color: #0086b3;
     cursor: pointer;
+}
+.filemanager-dropfile__progress {
+    display: inline-block;
+}
+.filemanager-dropfile__progress_bar {
+    background-color: #fff;
+    width: 200px;
+}
+.filemanager-dropfile__progress_bar_complete {
+    height: 5px;
+    background-color: #2185d0;
+    margin-left: auto;
+    margin-right: auto;
+}
+.filemanager-dropfile__success .filemanager-dropfile__progress_bar_complete {
+    background-color: #21ba45;
+}
+.filemanager-dropfile__error .filemanager-dropfile__progress_bar_complete {
+    background-color: #db2828;
+}
+.file-link_show .file-link_show_img {
+    background-repeat: no-repeat;
+    height: 6em;
+    background-size: contain;
+    background-position: center;
+    max-width: 6em;
+}
+.dir-link_show,
+.file-link_show {
+    cursor:pointer;
 }
 .file{
     background-position: center;
     background-repeat: no-repeat;
-    background-size: auto 5em;
+    background-size: contain;
     display:inline-block;
     width: 5em;
     height: 6em;
-    cursor:pointer;
     text-align: center;
 }
 .ext-name{
     position: relative;
-    bottom: -5.1em;
+    bottom: -5.6em;
     color: #fff;
     font-size: .8em;
 }
@@ -37,25 +72,16 @@
 .modal-info{
     word-wrap: break-word;
 }
-.actions-file a,
-.actions-file button{
-    margin-bottom: .5em;
-}
-.actions-file i {
-    width: 1em;
-}
 .modal-visulaize {
-    background-color: #eee;
-    border: 1px solid #ddd;
-    padding: 6px;;
-    text-align: center;
-    vertical-align: middle;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
     min-height: 300px;
 }
-.modal-visulaize .file {
-    width: 100%;
-    height: 300px;
-    background-size:  auto 300px;
+.modal-visulaize.thumbnail {
+    border: 1px solid rgba(86,61,124,.2);
+    padding: 6px;
 }
 .file { background-image: url(./icon/file.svg); }
 .ai, .eps{ background-image: url(./icon/ai.svg); }

@@ -24,7 +24,7 @@ class HookUser
         }
     }
 
-    public function hookConfigIndex()
+    public function hookConfigAdmin()
     {
         $menu  = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);

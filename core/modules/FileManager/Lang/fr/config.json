@@ -1,0 +1,6 @@
+{
+    "Behavior of file transfers": "Comportement des transferts de fichiers",
+    "Replace the file with the new one": "Remplacer le fichier par le nouveau",
+    "Keep the file by renaming the new": "Conserver le fichier en renommant le nouveau",
+    "Keep the file by refusing the new one": "Conserver le fichier en refusant le nouveau"
+}

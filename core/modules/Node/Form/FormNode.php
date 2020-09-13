@@ -13,6 +13,7 @@ class FormNode extends FormBuilder
         'meta_nofollow'    => false,
         'meta_noarchive'   => false,
         'meta_title'       => '',
+        'sticky'           => false,
         'node_status_id'   => 3,
         'date_created'     => ''
     ];
@@ -68,7 +69,7 @@ class FormNode extends FormBuilder
 
     public function make()
     {
-        return $this->title()
+        return $this
                 ->fields()
                 ->seo()
                 ->actionsSubmit();
@@ -77,7 +78,15 @@ class FormNode extends FormBuilder
     public function fields()
     {
         return $this->group('fields-fieldset', 'fieldset', function ($form) {
-            $form->legend('fields-legend', t('Fill in the following fields'));
+            $form->group('title-group', 'div', function ($form) {
+                $form->label('title-label', t('Title of the content'))
+                        ->text('title', [
+                            'class'     => 'form-control',
+                            'maxlength' => 255,
+                            'required'  => 1,
+                            'value'     => $this->content[ 'title' ]
+                    ]);
+            }, self::$attrGrp);
             foreach ($this->fields as $value) {
                 $key                   = $value[ 'field_name' ];
                 /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
@@ -86,7 +95,10 @@ class FormNode extends FormBuilder
                         : '';
                 $this->makeField($form, $value);
             }
-        });
+        }, [
+                'class' => 'tab-pane active fade',
+                'id'    => 'fields-fieldset'
+        ]);
     }
 
     public function makeField(&$form, $value)
@@ -127,6 +139,10 @@ class FormNode extends FormBuilder
                         $this->makeTextarea($form, $key, $value, $options);
 
                         break;
+                    case 'number':
+                        $this->makeNumber($form, $key, $value, $options);
+
+                        break;
                     default:
                         $this->makeInput($form, $key, $value, $options);
 
@@ -135,19 +151,39 @@ class FormNode extends FormBuilder
         }, self::$attrGrp);
     }
 
+    public function makeNumber(&$form, $key, $value, $options)
+    {
+        $default = empty($this->content[ $key ])
+            ? $value[ 'field_default_value' ]
+            : $this->content[ $key ];
+
+        $form->label("$key-label", t($value[ 'field_label' ]), [
+                'data-tooltip' => t($value[ 'field_description' ]),
+                'for'          => $key,
+                'required'     => !empty($value[ 'attr' ][ 'required' ])
+            ])
+            ->group("$key-flex", 'div', function ($form) use ($key, $value, $default) {
+                $form->number($key, [
+                    ':actions' => 1,
+                    'class'    => 'form-control',
+                    'value'    => $default
+                    ] + $value[ 'attr' ]);
+            }, [ 'class' => 'form-group-flex' ]);
+    }
+
     public function makeInput(&$form, $key, $value, $options)
     {
         $type    = $value[ 'field_type' ];
         $default = empty($this->content[ $key ])
             ? $value[ 'field_default_value' ]
             : $this->content[ $key ];
+
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
             ->$type($key, [
-                'class'       => 'form-control',
-                'placeholder' => t($value[ 'field_label' ]),
-                'value'       => $default
+                'class' => 'form-control',
+                'value' => $default
                 ] + $value[ 'attr' ]);
     }
 
@@ -192,37 +228,54 @@ class FormNode extends FormBuilder
         if (isset($options[ 'order_by' ])) {
             $data->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
+
         $subFields = $data->fetchAll();
         $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options) {
             foreach ($subFields as $field) {
                 $idEntity = $field[ "{$key}_id" ];
                 $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field) {
                     if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
-                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt" aria-hidden="true"></i>')
+                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt-v" aria-hidden="true"></i>')
                             ->hidden("{$key}[$idEntity][weight]", [
                                 'value' => $field[ 'weight' ]
                             ])->hidden("{$key}[$idEntity][id]", [
                             'value' => $idEntity
                         ]);
                     }
-                    $form->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
-                            '_content' => '<i class="fa fa-times"></i>',
-                            'class'    => 'btn',
-                            'href'     => $this->router->getRoute('entity.delete', [
+
+                    $content = $field[ $options[ 'field_show' ] ];
+                    if ($this->isShowFile($options, $field)) {
+                        $src     = $field[ $options[ 'field_type_show' ] ];
+                        $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
+                    }
+
+                    $form->html("$key-$idEntity-show", '<a:attr>:_content</a>', [
+                            '_content' => $content,
+                            'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
                         ->html("$key-$idEntity-edit", '<a:attr>:_content</a>', [
+                            '_content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
+                            'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
-                            '_content' => $field[ $options[ 'field_show' ] ]
+                        ])
+                        ->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
+                            '_content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
+                            'class'    => 'btn',
+                            'href'     => $this->router->getRoute('entity.delete', [
+                                ':id_node'   => $this->content[ 'id' ],
+                                ':entity'    => $key,
+                                ':id_entity' => $field[ "{$key}_id" ]
+                            ]),
                     ]);
-                }, [ 'class' => 'sort_weight' ]);
+                }, [ 'class' => 'sort_weight draggable node-draggable_one_to_many' ]);
             }
         }, [ 'class' => $options[ 'sort' ] === 'weight'
                 ? 'nested-sortable form-group'
@@ -235,10 +288,15 @@ class FormNode extends FormBuilder
                         ':id_node' => $this->content[ 'id' ],
                         ':entity'  => $key,
                     ]),
-                    '_content' => '<i class="fa fa-plus"></i> ' . t('Add content')
+                    '_content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
                 ]);
             });
         }
+    }
+    
+    public function isShowFile($options, $field)
+    {
+        return isset($options[ 'field_type_show' ]) && $options[ 'field_type_show' ] === 'image' && is_file($field[ $options[ 'field_type_show' ] ]);
     }
 
     public function makeRadio(&$form, $key, $value, $options)
@@ -253,7 +311,7 @@ class FormNode extends FormBuilder
                         'checked' => $this->content[ $key ] == $keyRadio,
                         'value'   => $keyRadio
                         ] + $value[ 'attr' ])
-                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . $option, [
+                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
                         'for' => "$key-$keyRadio"
                 ]);
             }, self::$attrGrp);
@@ -282,9 +340,8 @@ class FormNode extends FormBuilder
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
             ->textarea($key, $this->content[ $key ], [
-                'class'       => 'form-control editor',
-                'rows'        => 8,
-                'placeholder' => t($value[ 'field_label' ])
+                'class' => 'form-control editor',
+                'rows'  => 8
                 ] + $value[ 'attr' ]);
     }
 
@@ -304,7 +361,7 @@ class FormNode extends FormBuilder
 
     public function seo()
     {
-        return $this->group('seo-group', 'fieldset', function ($form) {
+        return $this->group('seo-fieldset', 'fieldset', function ($form) {
             $form->legend('seo-legend', t('SEO'))
                     ->group('meta_title-group', 'div', function ($form) {
                         $form->label('meta_title-label', t('Title'), [
@@ -315,7 +372,7 @@ class FormNode extends FormBuilder
                             'placeholder' => ':page_title | :site_title',
                             'value'       => $this->content[ 'meta_title' ]
                         ])
-                        ->html('cancel', '<p>:_content</p>', [
+                        ->html('meta_title-info', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)
@@ -327,7 +384,7 @@ class FormNode extends FormBuilder
                             'class' => 'form-control',
                             'rows'  => 3
                         ])
-                        ->html('cancel', '<p>:_content</p>', [
+                        ->html('meta_description-info', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)
@@ -349,15 +406,24 @@ class FormNode extends FormBuilder
                             'for' => 'meta_noarchive'
                         ]);
                     }, self::$attrGrp);
-        });
+        }, [
+                'class' => 'tab-pane fade',
+                'id'    => 'seo-fieldset'
+        ]);
     }
 
     public function actionsSubmit()
     {
         return $this
-                ->group('actions-group', 'fieldset', function ($form) {
+                ->group('publication-fieldset', 'fieldset', function ($form) {
                     $form
-                    ->legend('actions-legend', t('Publication'))
+                    ->legend('publication-legend', t('Publication'))
+                    ->group('sticky-group', 'div', function ($form) {
+                        $form->checkbox('sticky', [ 'checked' => $this->content[ 'sticky' ] ])
+                        ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
+                            'for' => 'sticky'
+                        ]);
+                    }, self::$attrGrp)
                     ->group('date_created-group', 'div', function ($form) {
                         $form->label('date_created-label', t('Publication date'), [
                             'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')
@@ -393,21 +459,32 @@ class FormNode extends FormBuilder
                             }, self::$attrGrpInline);
                         }
                     }, self::$attrGrp);
-                })
+                }, [
+                    'class' => 'tab-pane fade',
+                    'id'    => 'publication-fieldset'
+                ])
                 ->token('token_node')
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                ->group('actions-group', 'fieldset', function ($form) {
+                    $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+                    ->html('cancel', '<button:attr>:_content</button>', [
+                        '_content' => t('Cancel'),
+                        'class'    => 'btn btn-danger',
+                        'onclick'  => 'javascript:history.back();',
+                        'type'     => 'button'
+                    ]);
+                }, self::$attrGrp);
     }
 
     public function actionsEntitySubmit()
     {
         return $this->token('token_entity')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->html('cancel', '<button:attr>:_content</button>', [
                     '_content' => t('Cancel'),
                     'class'    => 'btn btn-danger',
                     'onclick'  => 'javascript:history.back();',
                     'type'     => 'button'
-                ])
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+                ]);
     }
 
     public function rules(&$value)

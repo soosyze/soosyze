@@ -2,6 +2,7 @@
 
 [![Licence](https://img.shields.io/github/license/soosyze/soosyze.svg)](https://github.com/soosyze/soosyze/blob/master/LICENSE "Licence")
 [![PHP from Packagist](https://img.shields.io/badge/php-%3E%3D5.4-blue.svg)](/README.md#version-php "PHP version 5.4 minimum")
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4102/badge)](https://bestpractices.coreinfrastructure.org/projects/4102)
 [![Télécharger Soosyze CMS](https://img.shields.io/badge/download-releases%20latest-blue.svg)](https://github.com/soosyze/soosyze/releases/latest/download/soosyze.zip "Télécharger Soosyze CMS")
 
 * :gb: [README in English](README.md)
@@ -53,15 +54,15 @@ Vous pouvez également nous trouver sur les réseaux :
 
 ## Version PHP
 
-| Version PHP           | Soosyze 1.x    |
-|-----------------------|----------------|
-| <= 5.3                | ✗ Non supporté |
-| 5.4 / 5.5 / 5.6       | ✓ Supporté     |
-| 7.0 / 7.1 / 7.2 / 7.3 | ✓ Supporté     |
+| Version PHP                 | Soosyze 1.x    |
+|-----------------------------|----------------|
+| <= 5.3                      | ✗ Non supporté |
+| 5.4 / 5.5 / 5.6             | ✓ Supporté     |
+| 7.0 / 7.1 / 7.2 / 7.3 / 7.4 | ✓ Supporté     |
 
 En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mémoire et le temps d'exécution de 30% à 45%. Votre site en sera plus rapide et mieux référencé.
 
-## Extensions requises
+## Extensions PHP requises
 
 * `date` pour le format des dates,
 * `fileinfo` pour la validation de fichier,
@@ -80,17 +81,15 @@ Soosyze (hors modules contributeurs) nécessite 8MB de mémoire.
 
 ## Navigateurs supportés
 
-Le thème d'administration est réalisé avec le framework Bootstrap 3 :
-* [Navigateurs supportés](https://getbootstrap.com/docs/3.3/getting-started/#desktop-browsers)
-* [Navigateurs mobiles supportés](https://getbootstrap.com/docs/3.3/getting-started/#mobile-devices)
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/samsung-internet/samsung-internet_48x48.png" alt="Samsung" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Samsung | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera |
+| --------- | --------- | --------- | --------- | --------- | --------- | --------- |
+| Edge| 10 dernières versions| 10 dernières versions| 2 dernières versions| 2 dernières versions| 2 dernières versions| 2 dernières versions |
 
 ## Connexion à internet
 
 Les thèmes de base utilisent les CND suivants :
 
-* Bootstrap 3.4.1,
 * JQuery 3.2.1,
-* JQuery UI 1.12.0,
 * Sortable 1.8.3,
 * Font Awesome 5.8.1
 

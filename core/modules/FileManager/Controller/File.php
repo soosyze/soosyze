@@ -27,6 +27,8 @@ class File extends \Soosyze\Controller
         'mp3'
     ];
 
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -46,13 +48,67 @@ class File extends \Soosyze\Controller
         }
         $data = self::filemanager()->parseFile($spl, $path);
 
+        $visualize = $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext");
+
         return self::template()
-                ->createBlock('modal-show.php', $this->pathViews)
-                ->addBlock('visualize', $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext"))
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-file-show.php', $this->pathViews)
+                ->addBlock('visualize', $visualize['block'])
                 ->addVars([
                     'file'  => $spl,
                     'info'  => $data,
-                    'title' => t('See the file') ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.show', $spl, $path),
+                    'title' => t('See the file'),
+                    'type'  => $visualize[ 'type' ]
+        ]);
+    }
+
+    public function create($path, $req)
+    {
+        $path = Util::cleanPath($path);
+        $max  = $this->get('filemanager.hook.user')->getMaxUpload($path);
+
+        $form = (new FormBuilder([
+                'action'  => self::router()->getRoute('filemanager.file.store', [
+                    ':path' => $path
+                ]),
+                'class'   => 'filemanager-dropfile',
+                'method'  => 'post',
+                'onclick' => 'document.getElementById(\'file\').click();',
+                ]))
+            ->group('file-group', 'div', function ($form) use ($max) {
+                $form->label(
+                    'file-label',
+                    '<div class="filemanager-dropfile__progress">'
+                . '<span class="filemanager-dropfile__progress_percent"></span>'
+                . '<div class="filemanager-dropfile__progress_bar">'
+                . '</div>'
+                . '</div>'
+                . '<div class="filemanager-dropfile__label">'
+                . '<i class="fa fa-download" aria-hidden="true"></i> <span class="choose">'
+                . t('Choose a file')
+                . '</span> '
+                . t('or drag it here.')
+                . '<p><small>'
+                . t('File size is limited to :max per upload', [
+                    ':max' => Util::strFileSizeFormatted($max)
+                ])
+                . '</small></p>'
+                . '</div>'
+                )
+            ->file('file', [
+                'multiple' => 1,
+                'style'    => 'display:none'
+            ]);
+            });
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
+                ->addVars([
+                    'form'  => $form,
+                    'title' => t('Add a new file')
+        ]);
     }
 
     public function store($path, $req)
@@ -61,11 +117,11 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
         if ($req->isMaxSize()) {
-            $output[ 'messages' ][ 'errors' ] = [
+            $out[ 'messages' ][ 'errors' ] = [
                 t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
             ];
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
         $dir    = self::core()->getDir('files_public', 'app/files') . $path;
@@ -76,7 +132,7 @@ class File extends \Soosyze\Controller
         ];
 
         if (!empty($profil[ 'file_extensions_all' ])) {
-            $rules[ 'file' ] .= '|file_extensions:' . implode(',', FileManager::getWhiteList());
+            $rules[ 'file' ] .= '|file_extensions:' . implode(',', FileManager::getExtAllowed());
         } else {
             $rules[ 'file' ] .= '|file_extensions:' . $profil[ 'file_extensions' ];
         }
@@ -90,18 +146,36 @@ class File extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules($rules)
+            ->addLabel('file', t('File'))
+            ->setMessages([
+                'file' => [
+                    'max' => [
+                        'must' => t('File size is limited to :max per upload')
+                    ]
+                ],
+                'folder' => [
+                    'max' => [
+                        'must' => t('You exceed your quota of :max of data authorized in this directory')
+                    ]
+                ]
+            ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
 
         if (is_dir($dir)) {
-            $validator->addInput('folder', self::filemanager()->parseRecursive($dir)[ 'size' ]);
+            $sizeFile   = $validator->getInput('file', 0)
+                ? $validator->getInput('file')->getSize()
+                : 0;
+            $sizefolder = self::filemanager()->parseRecursive($dir)[ 'size' ];
+
+            $validator->addInput('folder', $sizefolder + $sizeFile);
         } else {
             $validator->addInput('folder', 0);
         }
 
         if (!$validator->isValid()) {
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
         $file        = $validator->getInput('file');
@@ -110,9 +184,9 @@ class File extends \Soosyze\Controller
         if (self::config()->get('settings.replace_file') === 2) {
             $serviceFile = self::file()->setResolveName();
         } elseif (self::config()->get('settings.replace_file') === 3 && is_file($dir . '/' . $file->getClientFilename())) {
-            $output[ 'messages' ][ 'errors' ][] = t('An existing file has the same name, you can not replace it');
+            $out[ 'messages' ][ 'errors' ][] = t('An existing file has the same name, you can not replace it');
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
         $serviceFile
@@ -121,9 +195,9 @@ class File extends \Soosyze\Controller
             ->setResolvePath()
             ->saveOne();
 
-        $output[ 'messages' ][ 'success' ][] = t('The file has been uploaded');
+        $out[ 'messages' ][ 'success' ][] = t('The file has been uploaded');
 
-        return $this->json(200, $output);
+        return $this->json(200, $out);
     }
 
     public function edit($path, $name, $ext, $req)
@@ -171,11 +245,14 @@ class File extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
-                    'title' => t('Rename the file'),
+                    'form'  => $form,
                     'info'  => $data,
-                    'form'  => $form ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.edit', $spl, $path),
+                    'title' => t('Rename the file'),
+        ]);
     }
 
     public function update($path, $name, $ext, $req)
@@ -184,47 +261,46 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $fileOld = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($fileOld)) {
-            return $this->get404($req);
-        }
-        $dir = self::core()->getDir('files_public', 'app/files') . $path;
+        $dir         = self::core()->getDir('files_public', 'app/files') . $path;
+        $fileCurrent = "$dir$name$ext";
 
         $validator = (new Validator())
             ->setRules([
-                'name'              => 'required|string|max:255',
                 'dir'               => 'required|dir',
+                'file_current'      => 'required|is_file',
+                'name'              => 'required|string|max:255',
                 'token_file_update' => 'token'
             ])
+            ->addLabel('name', t('Name'))
             ->setInputs($req->getParsedBody())
-            ->addInput('dir', $dir);
+            ->addInput('dir', $dir)
+            ->addInput('file_current', $fileCurrent);
 
-        $output = [];
+        $out = [];
         /* Si les valeur attendues sont les bonnes. */
         if (!$validator->isValid()) {
-            $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-            return $this->json(400, $output);
+            return $this->json(400, $out);
         }
 
-        $folder     = Util::strSlug($validator->getInput('name'));
-        $fileUpdate = "$dir/$folder$ext";
+        $nameUpdate = Util::strSlug($validator->getInput('name'));
+        $fileUpdate = "$dir/$nameUpdate$ext";
 
         /* Si le nouveau nom du fichier est déjà utilisé. */
-        if (!is_file($fileUpdate)) {
-            $folder = Util::strSlug($validator->getInput('name'));
-            rename($fileOld, $fileUpdate);
+        if ($fileCurrent === $fileUpdate || !is_file($fileUpdate)) {
+            rename($fileCurrent, $fileUpdate);
 
-            $output[ 'messages' ][ 'success' ] = [ t('The file has been renamed') ];
+            $out[ 'messages' ][ 'success' ] = [ t('The file has been renamed') ];
 
-            return $this->json(200, $output);
+            return $this->json(200, $out);
         }
 
-        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $output[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the file') ];
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $out[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the file') ];
 
-        return $this->json(400, $output);
+        return $this->json(400, $out);
     }
 
     public function remove($path, $name, $ext, $req)
@@ -260,10 +336,14 @@ class File extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
         return self::template()
-                ->createBlock('modal.php', $this->pathViews)
-                ->addVars([ 'title' => t('Deleting the file'),
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/modal-form.php', $this->pathViews)
+                ->addVars([
+                    'form'  => $form,
                     'info'  => self::filemanager()->parseFile($spl, $path),
-                    'form'  => $form ]);
+                    'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.remove', $spl, $path),
+                    'title' => t('Deleting the file')
+        ]);
     }
 
     public function delete($path, $name, $ext, $req)
@@ -272,31 +352,31 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
-        if (!is_file($file)) {
-            return $this->get404($req);
-        }
+        $dir  = self::core()->getDir('files_public', 'app/files') . $path;
+        $file = "$dir$name$ext";
 
         $validator = (new Validator())
             ->setRules([
                 'dir'               => 'required|dir',
+                'file'              => 'required|is_file',
                 'token_file_delete' => 'token'
             ])
             ->setInputs($req->getParsedBody())
-            ->addInput('dir', self::core()->getDir('files_public', 'app/files') . $path);
+            ->addInput('dir', $dir)
+            ->addInput('file', $file);
 
-        $output = [];
+        $out = [];
         if ($validator->isValid()) {
             unlink($file);
-            $output[ 'messages' ][ 'success' ] = [ t('The file has been deleted') ];
+            $out[ 'messages' ][ 'success' ] = [ t('The file has been deleted') ];
 
-            return $this->json(200, $output);
+            return $this->json(200, $out);
         }
 
-        $output[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $output[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-        return $this->json(400, $output);
+        return $this->json(400, $out);
     }
 
     public function download($path, $name, $ext, $req)
@@ -319,43 +399,60 @@ class File extends \Soosyze\Controller
 
     protected function visualizeFile(array $info, $path)
     {
+        self::template()->getTheme('theme_admin');
+
         if (in_array($info[ 'ext' ], self::$extensionImage)) {
-            return self::template()
-                    ->createBlock('file-show-image.php', $this->pathViews . '/show/')
-                    ->addVars([ 'path' => $path ]);
+            return [
+                'block' => self::template()
+                    ->createBlock('filemanager/modal-file-show_visualize-image.php', $this->pathViews)
+                    ->addVar('path', $path),
+                'type'  => 'img'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionCode)) {
             $code = file_get_contents($path);
 
-            return self::template()
-                    ->createBlock('file-show-code.php', $this->pathViews . '/show/')
+            return [
+                'block' => self::template()
+                    ->createBlock('filemanager/modal-file-show_visualize-code.php', $this->pathViews)
                     ->addVars([
                         'code'      => htmlspecialchars($code),
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type'  => 'code'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionVideo)) {
-            return self::template()
-                    ->createBlock('file-show-video.php', $this->pathViews . '/show/')
+            return [
+                'block' => self::template()
+                    ->createBlock('filemanager/modal-file-show_visualize-video.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type' => 'video'
+            ];
         }
         if (in_array($info[ 'ext' ], self::$extensionAudio)) {
-            return self::template()
-                    ->createBlock('file-show-audio.php', $this->pathViews . '/show/')
+            return [
+                'block' => self::template()
+                    ->createBlock('filemanager/modal-file-show_visualize-audio.php', $this->pathViews)
                     ->addVars([
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
-            ]);
+                    ]),
+                'type'  => 'audio'
+            ];
         }
-        if ($output = self::core()->callHook('filemanager.visualize', [ $info[ 'ext' ] ])) {
-            return $output;
+        if ($out = $this->container->callHook('filemanager.visualize', [ $info[ 'ext' ] ])) {
+            return $out;
         }
 
-        return self::template()
-                ->createBlock('file-show-default.php', $this->pathViews . '/show/')
-                ->addVars([ 'extension' => $info[ 'ext' ] ]);
+        return [
+            'block' => self::template()
+                ->createBlock('filemanager/modal-file-show_visualize-default.php', $this->pathViews)
+                ->addVar('extension', $info[ 'ext' ]),
+            'type'  => 'default'
+        ];
     }
 }

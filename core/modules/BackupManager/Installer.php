@@ -4,13 +4,20 @@ namespace SoosyzeCore\BackupManager;
 
 use Psr\Container\ContainerInterface;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
         /* Création du dossier de backup. */
@@ -40,6 +47,8 @@ Options +FollowSymLinks
 
         $ci->config()
             ->set('settings.max_backups', 30)
+            ->set('settings.backup_frequency', '1 day')
+            ->set('settings.backup_time', 0)
             ->set('settings.backup_cron', false);
     }
 
@@ -71,8 +80,9 @@ Options +FollowSymLinks
                     'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent',
                     'active'
                 ])
-                ->values([ 'backupmanager.index', 'fas fa-file-archive', 'Backups',
-                    'admin/backupmanager/backups', 'menu-admin', 50, -1, true ])
+                ->values([ 'backupmanager.admin', 'fas fa-file-archive', 'Backups',
+                    'admin/backupmanager', 'menu-admin', 50, -1, true
+                ])
                 ->execute();
         }
     }
@@ -86,10 +96,12 @@ Options +FollowSymLinks
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()->from('menu_link')
-                ->delete()
-                ->where('key', 'like', 'backupmanager.%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'backupmanager%')
+                        ->fetchAll();
+            });
         }
     }
 

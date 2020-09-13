@@ -2,16 +2,16 @@
 
 namespace SoosyzeCore\Node\Controller;
 
+use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Http\UploadedFile;
-use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
 class Node extends \Soosyze\Controller
 {
-    public static $limit = 20;
+    protected $pathViews;
 
     public function __construct()
     {
@@ -20,74 +20,18 @@ class Node extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin($req)
-    {
-        return $this->adminPage(1, $req);
-    }
-
-    public function adminPage($page, $req)
-    {
-        $offset = self::$limit * ($page - 1);
-
-        $nodes = self::query()
-            ->from('node')
-            ->orderBy('date_changed', 'desc')
-            ->limit(self::$limit, $offset)
-            ->fetchAll();
-
-        if (!$nodes && $page !== 1) {
-            return $this->get404($req);
-        }
-
-        foreach ($nodes as &$node) {
-            $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_edit' ]   = self::router()->getRoute('node.edit', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_clone' ]  = self::router()->getRoute('node.clone', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-            $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
-                ':id_node' => $node[ 'id' ]
-            ]);
-        }
-
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
-        $queryAll = self::query()
-            ->from('node')
-            ->fetchAll();
-        $link     = self::router()->getRoute('node.page', [], false);
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
-                    'title_main' => t('My contents')
-                ])
-                ->view('page.messages', $messages)
-                ->make('page.content', 'node-admin.php', $this->pathViews, [
-                    'link_add' => self::router()->getRoute('node.add'),
-                    'nodes'    => $nodes,
-                    'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link)
-        ]);
-    }
-
     public function add($req)
     {
         $nodeType = self::query()
             ->from('node_type')
+            ->orderBy('node_type_name')
             ->fetchAll();
 
         foreach ($nodeType as $key => &$value) {
-            $reqGranted = $req->withUri($req->getUri()->withQuery('node/add/' . $value[ 'node_type' ]));
-            if (!self::core()->callHook('app.granted.route', [ $reqGranted ])) {
+            $reqGranted = self::router()->getRequestByRoute('node.create', [
+                ':node' => $value[ 'node_type' ]
+            ]);
+            if (!$this->container->callHook('app.granted.route', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
@@ -101,7 +45,7 @@ class Node extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Add content')
                 ])
-                ->make('page.content', 'node-add.php', $this->pathViews, [
+                ->make('page.content', 'node/content-node-add.php', $this->pathViews, [
                     'node_type' => $nodeType
         ]);
     }
@@ -114,21 +58,22 @@ class Node extends \Soosyze\Controller
 
         $content = [];
 
-        $this->container->callHook('node.create.form.data', [ &$content ]);
+        $this->container->callHook('node.create.form.data', [ &$content, $type ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content += $_SESSION[ 'inputs' ];
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
-            'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post',
+                'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
+                'id'      => 'form-node',
+                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $type, $fields)
             ->make();
 
-        $this->container->callHook('node.create.form', [ &$form, $content ]);
+        $this->container->callHook('node.create.form', [ &$form, $content, $type ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -149,9 +94,11 @@ class Node extends \Soosyze\Controller
                     ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-create.php', $this->pathViews, [
-                    'form' => $form
-        ]);
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
+                    'form'                  => $form,
+                    'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
+                ])
+                ->override('page.content', [ 'node/content-node-form_create.php' ]);
     }
 
     public function store($type, $req)
@@ -177,8 +124,20 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
+            ])
+            ->setLabel([
+                'date_created'     => t('Publication date'),
+                'meta_description' => t('Description'),
+                'meta_noarchive'   => t('Block caching'),
+                'meta_nofollow'    => t('Block link tracking'),
+                'meta_noindex'     => t('Block indexing'),
+                'meta_title'       => t('Title'),
+                'node_status_id'   => t('Publication status'),
+                'sticky'           => t('Pin content'),
+                'title'            => t('Title of the content')
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $type);
@@ -194,7 +153,8 @@ class Node extends \Soosyze\Controller
                     $canPublish = false;
                 }
             } else {
-                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
+                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
             }
             if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                 $files[] = $value[ 'field_name' ];
@@ -216,7 +176,7 @@ class Node extends \Soosyze\Controller
             $validator->addRule('node_status_id', '!accepted');
         }
 
-        $this->container->callHook('node.store.validator', [ &$validator ]);
+        $this->container->callHook('node.store.validator', [ &$validator, $type ]);
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
@@ -252,6 +212,7 @@ class Node extends \Soosyze\Controller
                 'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
+                'sticky'           => (bool) $validator->getInput('sticky'),
                 'node_status_id'   => $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title'),
                 'type'             => $type,
@@ -280,7 +241,7 @@ class Node extends \Soosyze\Controller
             return new Redirect(
                 $fieldsRelation
                 ? self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
-                : self::router()->getRoute('node.index')
+                : self::router()->getRoute('node.admin')
             );
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
@@ -303,14 +264,21 @@ class Node extends \Soosyze\Controller
                     'description' => $node[ 'meta_description' ],
                 ])
                 ->view('page', [
-                    'title_main' => $node[ 'title' ],
+                    'fields'     => $fields,
+                    'node'       => $node,
+                    'title_main' => $node[ 'title' ]
                 ])
-                ->make('page.content', 'node-show.php', $this->pathViews, [
-                    'fields' => $fields,
-                    'node'   => $node
-                ])->override('page.content', [ 'node-show-' . $idNode . '.php', 'node-show-' . $node[ 'type' ] . '.php' ]);
+                ->override('page', [ 'page-node.php' ])
+                ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
+                    'fields'       => $fields,
+                    'node'         => $node,
+                    'node_submenu' => $this->getSubmenuNode($node, 'node.show')
+                ])->override('page.content', [
+                    'node/content-node-show_' . $idNode . '.php',
+                    'node/content-node-show_' . $node[ 'type' ] . '.php'
+                ]);
 
-        self::core()->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
+        $this->container->callHook('node.show.tpl', [ &$tpl, $node, $idNode ]);
 
         return $tpl;
     }
@@ -329,14 +297,15 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.edit.form.data', [ &$content, $idNode ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content += $_SESSION[ 'inputs' ];
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
-            'action'  => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post',
+                'action'  => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
+                'id'      => 'form-node',
+                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $content[ 'type' ], $fields)
             ->make();
 
@@ -359,7 +328,12 @@ class Node extends \Soosyze\Controller
                     'title_main' => t('Edit :title content', [ ':title' => $content[ 'title' ] ])
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'node-edit.php', $this->pathViews, [ 'form' => $form ]);
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
+                    'form'                  => $form,
+                    'node_submenu'          => $this->getSubmenuNode($node, 'node.edit'),
+                    'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
+                ])
+                ->override('page.content', [ 'node/content-node-form_edit.php' ]);
     }
 
     public function update($idNode, $req)
@@ -392,8 +366,20 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => 'bool',
                 'meta_title'       => '!required|string|max:255',
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token'
+            ])
+            ->setLabel([
+                'date_created'     => t('Publication date'),
+                'meta_description' => t('Description'),
+                'meta_noarchive'   => t('Block caching'),
+                'meta_nofollow'    => t('Block link tracking'),
+                'meta_noindex'     => t('Block indexing'),
+                'meta_title'       => t('Title'),
+                'node_status_id'   => t('Publication status'),
+                'sticky'           => t('Pin content'),
+                'title'            => t('Title of the content')
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $node[ 'type' ]);
@@ -416,7 +402,9 @@ class Node extends \Soosyze\Controller
                     }
                 }
             } else {
-                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ]);
+                $validator
+                    ->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
+                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
             }
             if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                 $files[] = $value[ 'field_name' ];
@@ -477,6 +465,7 @@ class Node extends \Soosyze\Controller
                 'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
                 'meta_title'       => $validator->getInput('meta_title'),
                 'node_status_id'   => (int) $validator->getInput('node_status_id'),
+                'sticky'           => (bool) $validator->getInput('sticky'),
                 'title'            => $validator->getInput('title')
             ];
 
@@ -503,6 +492,42 @@ class Node extends \Soosyze\Controller
         );
     }
 
+    public function remove($idNode, $req)
+    {
+        if (!($node = self::node()->byId($idNode))) {
+            return $this->get404($req);
+        }
+
+        $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
+
+        $form = (new FormBuilder([
+                'method' => 'post',
+                'action' => self::router()->getRoute('node.delete', [ ':id_node' => $idNode ])
+                ]))
+            ->group('node-remove-information-fieldset', 'fieldset', function ($form) {
+                $form->legend('node-remove-information-legend', t('Node deletion'))
+                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+                    '_content' => t('Warning ! The deletion of the node is final.')
+                ]);
+            })
+            ->token('token_node_remove')
+            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+
+        $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->view('page', [
+                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
+                ])
+                ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'node_submenu' => $this->getSubmenuNode($node, 'node.delete')
+                ])
+                ->override('page.content', [ 'node/content-node-form_remove.php' ]);
+    }
+
     public function delete($idNode, $req)
     {
         if (!($node = self::node()->byId($idNode))) {
@@ -525,11 +550,18 @@ class Node extends \Soosyze\Controller
                 ->where('id', '==', $idNode)
                 ->execute();
 
-            $this->deleteFile($idNode);
+            $this->deleteFile($node['type'], $idNode);
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
+
+            $_SESSION[ 'messages' ][ 'success' ] = [
+                t('Content :title has been deleted', [':title' => $node['title']])
+            ];
+        } else {
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        return new Redirect(self::router()->getRoute('node.index'));
+        return new Redirect(self::router()->getRoute('node.admin'));
     }
 
     public function cloneNode($idNode, $req)
@@ -545,9 +577,9 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
         if (mb_strlen($node[ 'title' ] . ' clone') > 255) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Le titre du contenu cloner est trop long.' ];
+            $_SESSION[ 'messages' ][ 'errors' ] = [ 'Clone content title is too long' ];
 
-            return new Redirect(self::router()->getRoute('node.index'));
+            return new Redirect(self::router()->getRoute('node.admin'));
         }
 
         $entityClone = $entity;
@@ -563,8 +595,8 @@ class Node extends \Soosyze\Controller
         unset($node[ 'id' ], $node[ 'node_status_id' ]);
         $node[ 'entity_id' ]    = $entityId;
         $node[ 'title' ]        = $node[ 'title' ] . ' clone';
-        $node[ 'date_created' ] = (string) time();
-        $node[ 'date_changed' ] = (string) time();
+        $node[ 'date_created' ] = time();
+        $node[ 'date_changed' ] = time();
 
         self::query()
             ->insertInto('node', array_keys($node))
@@ -577,7 +609,7 @@ class Node extends \Soosyze\Controller
             $fieldName = $value[ 'field_name' ];
             /* Copie ses fichiers. */
             if (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
-                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$nodeId";
+                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId";
                 $file = $entity[ $fieldName ];
 
                 if (!is_file($file)) {
@@ -624,7 +656,7 @@ class Node extends \Soosyze\Controller
                         $fieldName = $file[ 'field_name' ];
                         /* Parcours ses fichiers pour les copier. */
                         if (isset($data[ $fieldName ])) {
-                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$nodeId";
+                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId/{$file['node_type']}";
                             $pathFile = $data[ $fieldName ];
 
                             if (!is_file($pathFile)) {
@@ -656,7 +688,7 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        return new Redirect(self::router()->getRoute('node.index'));
+        return new Redirect(self::router()->getRoute('node.admin'));
     }
 
     public static function getBasename($pathFile)
@@ -664,18 +696,113 @@ class Node extends \Soosyze\Controller
         return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
     }
 
-    private function deleteFile($idNode)
+    public function getSubmenuNode(array $node, $keyRoute)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$idNode}";
+        $menu = [
+            [
+                'key'        => 'node.edit',
+                'request'    => self::router()->getRequestByRoute('node.edit', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'node.delete',
+                'request'    => self::router()->getRequestByRoute('node.remove', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
+
+        $this->container->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
+
+        foreach ($menu as $key => &$link) {
+            if ($this->container->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+                $link[ 'link' ] = $link[ 'request' ]->getUri();
+
+                continue;
+            }
+
+            unset($menu[ $key ]);
+        }
+        if ($menu) {
+            $nodeShow = [
+                'key'        => 'node.show',
+                'request'    => self::router()->getRequestByRoute('node.show', [
+                    ':id_node' => $node[ 'id' ]
+                ]),
+                'title_link' => t('View')
+            ];
+            if ($this->container->callHook('app.granted.route', [ $nodeShow[ 'request' ] ])) {
+                $nodeShow[ 'link' ] = $nodeShow[ 'request' ]->getUri();
+                $menu               = array_merge([ $nodeShow ], $menu);
+            }
+        }
+
+        return self::template()
+                ->createBlock('node/submenu-node.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
+    }
+    
+    public function getNodeFieldsetSubmenu()
+    {
+        $menu = [
+            [
+                'class'      => 'active',
+                'link'       => '#fields-fieldset',
+                'title_link' => t('Content')
+            ], [
+                'class'      => '',
+                'link'       => '#publication-fieldset',
+                'title_link' => t('Publication')
+            ], [
+                'class'      => '',
+                'link'       => '#seo-fieldset',
+                'title_link' => t('SEO')
+            ]
+        ];
+        if (self::module()->has('System')) {
+            $menu[] = [
+                    'class'      => '',
+                    'link'       => '#url-fieldset',
+                    'title_link' => t('Url')
+            ];
+        }
+        if (self::module()->has('Menu')) {
+            $menu[] = [
+                    'class'      => '',
+                    'link'       => '#menu-fieldset',
+                    'title_link' => t('Menu')
+            ];
+        }
+
+        $this->container->callHook('node.fieldset.submenu', [ &$menu ]);
+
+        return self::template()
+                ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
+                ->addVar('menu', $menu);
+    }
+
+    private function deleteFile($type, $idNode)
+    {
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$idNode";
         if (!is_dir($dir)) {
             return;
         }
-        foreach (new \DirectoryIterator($dir) as $file) {
-            if ($file->isDot() || $file->isDir()) {
-                continue;
-            }
-            \unlink($file->getPathname());
+
+        $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+        $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+
+        /* Supprime tous les dossiers et fichiers */
+        foreach ($iterator as $file) {
+            $file->isDir()
+                    ? \rmdir($file)
+                    : \unlink($file);
         }
+        /* Supprime le dossier cible. */
         \rmdir($dir);
     }
 
@@ -725,12 +852,10 @@ class Node extends \Soosyze\Controller
 
     private function saveFile($node, $nameField, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'id' ]}";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'type' ]}/{$node[ 'id' ]}";
+
         self::file()
-            ->add($validator->getInput($nameField), $validator->getInput("file-name-$nameField"))
+            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
             ->setName($nameField)
             ->setPath($dir)
             ->setResolvePath()

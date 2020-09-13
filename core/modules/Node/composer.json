@@ -15,8 +15,8 @@
             "controller": "SoosyzeCore\\Node\\Controller\\Node",
             "icon": {
                 "name": "fa fa-file",
-                "background-color": "#267a2c",
-                "color": "#fff"
+                "background-color": "#7fff88",
+                "color": "#005706"
             }
         }
     },

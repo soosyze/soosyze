@@ -1,30 +1,26 @@
 {
-    "backup.install": {
+    "backupmanager.install": {
         "class": "SoosyzeCore\\BackupManager\\Installer",
         "hooks": {
             "install.menu": "hookInstallMenu",
             "install.user": "hookInstallUser"
         }
     },
-    "backupservice": {
-        "class": "SoosyzeCore\\BackupManager\\Services\\BackupService",
-        "arguments": ["@core", "@router", "@config"]
+    "backupmanager": {
+        "class": "SoosyzeCore\\BackupManager\\Services\\BackupManager",
+        "arguments": ["@config", "@core", "@router"]
     },
-    "backup.hook.config": {
+    "backupmanager.hook.config": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
-        "arguments": ["@config", "@router"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.backupmanager.form.generate": "form",
-            "config.update.backupmanager.validator": "validator",
-            "config.update.backupmanager.before": "before"
+            "config.edit.menu": "menu"
         }
     },
-    "backup.hook.user": {
+    "backupmanager.hook.user": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookUser",
         "hooks": {
             "user.permission.module": "hookPermission",
-            "route.backupmanager.index": "hookBackupManage",
+            "route.backupmanager.admin": "hookBackupManage",
             "route.backupmanager.dobackup": "hookBackupManage",
             "route.backupmanager.delete": "hookBackupManage",
             "route.backupmanager.restore": "hookBackupManage",
@@ -32,9 +28,9 @@
             "route.backupmanager.download": "hookBackupManage"
         }
     },
-    "backup.hook.cron": {
+    "backupmanager.hook.cron": {
         "class": "SoosyzeCore\\BackupManager\\Services\\HookCron",
-        "arguments": ["@backupservice", "@config"],
+        "arguments": ["@backupmanager", "@config"],
         "hooks": {
             "app.cron": "hookAppCron"
         }

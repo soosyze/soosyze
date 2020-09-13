@@ -8,6 +8,8 @@ class FilterManagerIterator extends \FilterIterator
      * @var \SoosyzeCore\FileManager\Services\HookUser
      */
     protected $hookUser;
+    
+    protected $path;
 
     public function __construct($hookUser)
     {
@@ -32,17 +34,17 @@ class FilterManagerIterator extends \FilterIterator
             $name = '/' . $file->getBasename('.' . $file->getExtension());
             $ext  = $file->getExtension();
 
-            if (!in_array($ext, FileManager::getWhiteList())) {
+            if (!in_array($ext, FileManager::getExtAllowed())) {
                 $accept = false;
             } elseif ($file->getBasename() === '.' . $file->getExtension()) {
                 $accept = false;
             } elseif (!$this->hookUser->hookFileShow($this->path, $name, $ext)) {
                 $accept = false;
             }
-        } elseif ($file->isDir() && !$this->hookUser->hookFolderShow($this->path . $file->getBasename())) {
+        } elseif ($file->isDir() && !$this->hookUser->hookFolderShow($this->path . '/' . $file->getBasename())) {
             $accept = false;
         }
-
+        
         return $accept;
     }
 }

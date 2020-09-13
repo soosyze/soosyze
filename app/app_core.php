@@ -2,8 +2,6 @@
 
 use Soosyze\App;
 
-require_once ROOT . '/vendor/soosyze/framework/src/App.php';
-
 class Core extends App
 {
     public function loadServices()

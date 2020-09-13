@@ -5,11 +5,20 @@ namespace SoosyzeCore\System;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
+    }
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/humans_time.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/standard.json');
     }
 
     public function install(ContainerInterface $ci)
@@ -51,7 +60,8 @@ class Installer implements \SoosyzeCore\System\Migration
             ->set('settings.meta_keyboard', '')
             ->set('settings.favicon', '')
             ->set('settings.lang', 'en')
-            ->set('settings.timezone', 'Europe/Paris');
+            ->set('settings.timezone', 'Europe/Paris')
+            ->set('settings.theme_admin_dark', true);
     }
 
     public function seeders(ContainerInterface $ci)
@@ -60,8 +70,8 @@ class Installer implements \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
         $this->hookInstallMenu($ci);
+        $this->hookInstallUser($ci);
     }
 
     public function hookInstallUser(ContainerInterface $ci)
@@ -106,11 +116,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('link', 'admin/modules')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'system%')
+                        ->fetchAll();
+            });
         }
     }
 

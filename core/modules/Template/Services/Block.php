@@ -15,13 +15,4 @@ class Block extends \Soosyze\Components\Template\Template
             ? $this->getBlock($parent)
             : $this;
     }
-
-    public function addNamesOverride(array $names)
-    {
-        foreach ($names as $name) {
-            $this->nameOverride($name);
-        }
-
-        return $this;
-    }
 }

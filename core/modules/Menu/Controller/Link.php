@@ -8,6 +8,8 @@ use SoosyzeCore\Menu\Form\FormLink;
 
 class Link extends \Soosyze\Controller
 {
+    protected $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -51,7 +53,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Add a link')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-add.php', $this->pathViews, [
+                ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -75,7 +77,7 @@ class Link extends \Soosyze\Controller
                 'icon'        => $validator->getInput('icon'),
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => $validator->getInput('target_link'),
+                'target_link' => (bool) $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
                 'weight'      => 1,
                 'parent'      => -1,
@@ -149,7 +151,7 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Edit a link')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'menu-link-edit.php', $this->pathViews, [
+                ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
@@ -174,7 +176,7 @@ class Link extends \Soosyze\Controller
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'query'       => $infoUrlOrRoute[ 'query' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => $validator->getInput('target_link')
+                'target_link' => (bool) $validator->getInput('target_link')
             ];
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
@@ -206,7 +208,7 @@ class Link extends \Soosyze\Controller
 
     public function delete($name, $id, $req)
     {
-        if (!self::menu()->find($id)) {
+        if (!($linkMenu = self::menu()->find($id))) {
             return $this->get404($req);
         }
 
@@ -221,11 +223,11 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $this->container->callHook('menu.link.delete.before', [ $validator, $id ]);
-            self::query()
-                ->from('menu_link')
-                ->delete()
-                ->where('id', '==', $id)
-                ->execute();
+
+            self::menu()->deleteLinks(function () use ($linkMenu) {
+                return [ $linkMenu ];
+            });
+
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 
@@ -241,7 +243,7 @@ class Link extends \Soosyze\Controller
                     'title_link'      => 'required|string|max:255|to_htmlsc',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
-                    'target_link'     => 'required|inArray:_blank,_self,_parent,_top',
+                    'target_link'     => 'bool',
                     'token_link_form' => 'required|token'
                 ])
                 ->setLabel([

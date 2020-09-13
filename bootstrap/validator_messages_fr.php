@@ -42,24 +42,32 @@ return [
         'not'  => 'Le champ :label ne doit pas être une date.'
     ],
     'date_after'              => [
+        'must'      => 'Le champ :label doit être une date.',
+        'not'       => 'Le champ :label ne doit pas être une date.',
         'after'     => 'Le champ :label doit être une date supérieur au :dateafter.',
         'not_after' => 'Le champ :label ne doit pas être une date supérieur au :dateafter.'
     ],
     'date_after_or_equal'     => [
+        'must'      => 'Le champ :label doit être une date.',
+        'not'       => 'Le champ :label ne doit pas être une date.',
         'after'     => 'Le champ :label doit être une supérieur ou égale au :dateafter.',
         'not_after' => 'Le champ :label ne doit pas être une date supérieur ou égale au :dateafter.'
     ],
     'date_before'             => [
+        'must'       => 'Le champ :label doit être une date.',
+        'not'        => 'Le champ :label ne doit pas être une date.',
         'before'     => 'Le champ :label doit être une date inférieur au :datebefore.',
         'not_before' => 'Le champ :label ne doit pas être une date inferieur au :datebefore.'
     ],
     'date_before_or_equal'    => [
+        'must'      => 'Le champ :label doit être une date.',
+        'not'       => 'Le champ :label ne doit pas être une date.',
         'after'     => 'Le champ :label doit être une inferieur ou égale au :dateafter.',
         'not_after' => 'Le champ :label ne doit pas être une date inferieur ou égale au :dateafter.'
     ],
     'date_format'             => [
-        'format'     => 'Le champ :label doit être une date au format :datebefore.',
-        'not_format' => 'Le champ :label ne doit pas être une date au format :datebefore.'
+        'must' => 'Le champ :label doit être une date au format :format.',
+        'not'  => 'Le champ :label ne doit pas être une date au format :format.'
     ],
     'dir'                     => [
         'must' => 'Le champ :label doit être un chemin valide.',
@@ -186,6 +194,14 @@ return [
     'ressource'               => [
         'must' => 'La valeur du champ :label doit être une ressource.',
         'not'  => 'La valeur du champ :label ne doit pas être une ressource.'
+    ],
+    'route'                   => [
+        'must' => 'La valeur du champ :label doit être une route.',
+        'not'  => 'La valeur du champ :label ne doit pas être une route.'
+    ],
+    'route_or_url'            => [
+        'must' => 'La valeur du champ :label doit être un lien ou une route.',
+        'not'  => 'La valeur du champ :label ne doit pas être un lien ou une route.'
     ],
     'size'                    => [
         'size'         => 'La valeur du champ :label doit être de type entier, flottant, chaine de caractère, tableau, fichier ou ressource.',

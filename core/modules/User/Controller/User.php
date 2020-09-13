@@ -46,13 +46,11 @@ class User extends \Soosyze\Controller
                     'title_main' => $user[ 'username' ]
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'page-user-show.php', $this->pathViews, [
-                    'user'  => $user,
-                    'roles' => self::user()->getRolesUser($id)
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                ->make('page.content', 'user/content-user-show.php', $this->pathViews, [
+                    'roles'        => self::user()->getRolesUser($id),
+                    'user'         => $user,
+                    'user_submenu' => self::user()->getUserSubmenu('user.show', $id)
+                ]);
     }
 
     public function create()
@@ -65,7 +63,14 @@ class User extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $roles = self::query()->from('role')->where('role_id', '>', 1)->fetchAll();
+        $roles = self::user()->getRolesAttribuable();
+        if (!$this->container->callHook('app.granted', [ 'role.all' ])) {
+            foreach ($roles as $key => $role) {
+                if (!$this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
+                    unset($roles[ $key ]);
+                }
+            }
+        }
 
         $form = (new FormUser([
             'method'  => 'post',
@@ -98,12 +103,10 @@ class User extends \Soosyze\Controller
                     'title_main' => t('User creation')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => []
-        ]);
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'user_submenu' => ''
+                ]);
     }
 
     public function store($req)
@@ -170,7 +173,7 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
-        $validatorRoles = $this->validRole($validator);
+        $validatorRoles = $this->validRole($validator->getInput('roles', []));
 
         if ($validator->isValid() && $validatorRoles->isValid()) {
             $data = [
@@ -204,7 +207,7 @@ class User extends \Soosyze\Controller
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
-            return new Redirect(self::router()->getRoute('user.management.admin'));
+            return new Redirect(self::router()->getRoute('user.admin'));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
@@ -235,15 +238,25 @@ class User extends \Soosyze\Controller
             ->fieldsetInformations()
             ->fieldsetProfil()
             ->fieldsetPassword();
-
+   
         if (self::user()->isGranted('user.permission.manage')) {
-            $roles     = self::query()->from('role')->where('role_id', '>', 1)->orderBy('role_weight')->fetchAll();
             $rolesUser = self::user()->getIdRolesUser($id);
-            $form->setValues([ 'roles' => $rolesUser ])
-                ->fieldsetActived()
-                ->fieldsetRoles($roles);
+            $form->fieldsetActived();
         }
-        $form->submitForm();
+
+        $roles = self::user()->getRolesAttribuable();
+        if (!$this->container->callHook('app.granted', [ 'role.all' ])) {
+            foreach ($roles as $key => $role) {
+                if (!$this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
+                    unset($roles[ $key ]);
+                }
+            }
+        }
+
+        $rolesUser = self::user()->getIdRolesUser($id);
+        $form->setValues([ 'roles' => $rolesUser ])
+            ->fieldsetRoles($roles)
+            ->submitForm();
 
         $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);
 
@@ -264,12 +277,10 @@ class User extends \Soosyze\Controller
                     'title_main' => t('Editing a user')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'user_submenu' => self::user()->getUserSubmenu('user.edit', $id)
+                ]);
     }
 
     public function update($id, $req)
@@ -365,16 +376,13 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
-        $grantedRole = self::user()->isGranted('user.people.manage');
-
-        /* Ajoute la règle pour le tableau de roles si l'utilisateur à le droit de les modifier. */
         $isValid = $validator->isValid();
-
-        if ($grantedRole) {
-            /* Valide les données du tableau de rôles */
-            $validatorRole = $this->validRole($validator);
+        
+        /* Valide les données du tableau de rôles */
+        if (!$validator->hasError('roles')) {
+            $validatorRole = $this->validRole($validator->getInput('roles', []));
             /* Ajoute à la validation générale la validation des rôles. */
-            $isValid       &= $validatorRole->isValid();
+            $isValid &= $validatorRole->isValid();
         }
 
         if ($isValid) {
@@ -402,9 +410,7 @@ class User extends \Soosyze\Controller
             ]);
             self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
 
-            if ($grantedRole) {
-                $this->updateRole($validator, $id);
-            }
+            $this->updateRole($validator, $id);
 
             $this->savePicture($id, $validator);
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
@@ -422,12 +428,8 @@ class User extends \Soosyze\Controller
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors() + $validatorRole->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        if ($grantedRole) {
-            $_SESSION[ 'messages' ][ 'errors' ] += $validatorRole->getKeyErrors();
-        }
 
         return new Redirect($route);
     }
@@ -444,9 +446,9 @@ class User extends \Soosyze\Controller
             'method' => 'post',
             'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
             ]))
-            ->group('user-edit-information-fieldset', 'fieldset', function ($form) {
-                $form->legend('user-edit-information-legend', t('Account deletion'))
-                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
+            ->group('user-remove-info-fieldset', 'fieldset', function ($form) {
+                $form->legend('user-remove-info-legend', t('Account deletion'))
+                ->html('user-remove-info', '<p:attr>:_content</p>', [
                     '_content' => t('Warning ! The deletion of the user account is final.')
                 ]);
             })
@@ -461,12 +463,10 @@ class User extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Delete :name account', [ ':name' => $user[ 'username' ] ])
                 ])
-                ->make('page.content', 'form-user.php', $this->pathViews, [
-                    'form' => $form
-                ])
-                ->make('content.menu_user', 'submenu-user.php', $this->pathViews, [
-                    'menu' => $this->getMenuUser($id)
-        ]);
+                ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
+                    'form'         => $form,
+                    'user_submenu' => self::user()->getUserSubmenu('user.remove', $id)
+                ]);
     }
 
     public function delete($id, $req)
@@ -481,7 +481,14 @@ class User extends \Soosyze\Controller
                 'token_user_remove' => 'token'
             ])
             ->setInputs($req->getParsedBody())
-            ->addInput('id', $id);
+            ->addInput('id', $id)
+            ->setMessages([
+                'id' => [
+                    'equal' => [
+                        'not' => t('You cannot delete the site administrator account')
+                    ]
+                ]
+            ]);
 
         $this->container->callHook('user.delete.validator', [ &$validator, $user,
             $id ]);
@@ -497,81 +504,72 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }
 
-        return new Redirect(self::router()->getRoute('user.management.admin'));
+        return new Redirect(self::router()->getRoute('user.admin'));
     }
 
-    protected function validRole(Validator $validator)
+    protected function validRole(array $roles = [])
     {
         $validatorRoles = new Validator();
-        if ($validator->hasError('roles')) {
-            $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
-            foreach ($validator->getInput('roles', []) as $key => $role) {
-                $validatorRoles
-                    ->addRule($key, 'int|inarray:' . $listRoles)
-                    ->addLabel($key, t($role))
-                    ->addInput($key, $key);
-            }
+        $listRoles = implode(',', $this->getRoleByPermission());
+
+        foreach ($roles as $key => $role) {
+            $validatorRoles
+                ->addRule($key, 'int|inarray:' . $listRoles)
+                ->addLabel($key, t($role))
+                ->addInput($key, $key);
         }
-        $this->container->callHook('user.update.validator', [ &$validatorRoles ]);
+
+        $this->container->callHook('user.update.role.validator', [ &$validatorRoles ]);
 
         return $validatorRoles;
+    }
+    
+    protected function getRoleByPermission()
+    {
+        $roles   = self::user()->getRolesAttribuable();
+        $roleAll = $this->container->callHook('app.granted', [ 'role.all' ]);
+
+        $in = [];
+        foreach ($roles as $role) {
+            if ($roleAll || $this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
+                $in[] = $role[ 'role_id' ];
+            }
+        }
+        
+        return $in;
     }
 
     protected function updateRole($validator, $idUser)
     {
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
 
+        $in = $this->getRoleByPermission();
+        
         self::query()
             ->from('user_role')
             ->where('user_id', '==', $idUser)
+            ->in('role_id', $in)
             ->delete()
             ->execute();
 
-        self::query()
-            ->insertInto('user_role', [ 'user_id', 'role_id' ])
-            ->values([ $idUser, 2 ]);
+        self::query()->insertInto('user_role', [ 'user_id', 'role_id' ]);
+
         foreach (array_keys($validator->getInput('roles', [])) as $idRole) {
             self::query()->values([ $idUser, $idRole ]);
         }
+
         self::query()->execute();
 
         $this->container->callHook('user.update.role.after', [ $validator, $idUser ]);
     }
 
-    protected function getMenuUser($id)
-    {
-        $menu[]    = [
-            'title_link' => t('View'),
-            'link'       => self::router()->getRoute('user.show', [ ':id' => $id ])
-        ];
-        $isGranted = self::user()->isGranted('user.people.manage');
-        if ($isGranted || self::user()->isGranted('user.edited')) {
-            $menu[] = [
-                'title_link' => t('Edit'),
-                'link'       => self::router()->getRoute('user.edit', [ ':id' => $id ])
-            ];
-        }
-        if ($isGranted || self::user()->isGranted('user.deleted')) {
-            $menu[] = [
-                'title_link' => t('Delete'),
-                'link'       => self::router()->getRoute('user.remove', [ ':id' => $id ])
-            ];
-        }
-
-        self::core()->callHook('user.menu', [ &$menu, $id ]);
-
-        return $menu;
-    }
-
     private function savePicture($id, $validator)
     {
         $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/user/$id";
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
         $key = 'picture';
+
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-name-$key"))
+            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
             ->setPath($dir)
             ->setResolvePath()

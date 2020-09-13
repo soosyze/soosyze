@@ -5,11 +5,11 @@
     },
     "composer": {
         "class": "SoosyzeCore\\System\\Services\\Composer",
-        "arguments": ["@module", "@core"]
+        "arguments": ["@core", "@module"]
     },
     "module": {
         "class": "SoosyzeCore\\System\\Services\\Modules",
-        "arguments": ["@query", "@core"]
+        "arguments": ["@query", "@translate"]
     },
     "migration": {
         "class": "SoosyzeCore\\System\\Services\\Migration",
@@ -17,7 +17,7 @@
     },
     "system.hook.app": {
         "class": "SoosyzeCore\\System\\Services\\HookApp",
-        "arguments": ["@alias", "@router", "@config", "@template", "@core", "@query"],
+        "arguments": ["@alias", "@config", "@core", "@query", "@router", "@template"],
         "hooks": {
             "app.response.before": "hookSys",
             "app.403": "hooks403",
@@ -43,20 +43,9 @@
     },
     "system.hook.config": {
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
-        "arguments": ["@router", "@template", "@file", "@translate"],
+        "arguments": ["@file", "@router", "@template", "@translate"],
         "hooks": {
-            "config.edit.menu": "menu",
-            "config.edit.system.form.generate": "form",
-            "config.update.system.validator": "validator",
-            "config.update.system.before": "before",
-            "config.update.system.files": "files"
-        }
-    },
-    "system.hook.cron": {
-        "class": "SoosyzeCore\\System\\Services\\HookCron",
-        "arguments": ["@schema", "@migration", "@config"],
-        "hooks": {
-            "app.cron": "hookCron"
+            "config.edit.menu": "menu"
         }
     }
 }

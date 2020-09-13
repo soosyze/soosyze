@@ -5,13 +5,20 @@ namespace SoosyzeCore\FileManager;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer implements \SoosyzeCore\System\Migration
+class Installer extends \SoosyzeCore\System\Migration
 {
     public function getDir()
     {
         return __DIR__;
     }
-
+    
+    public function boot()
+    {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+    }
+    
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -46,6 +53,7 @@ class Installer implements \SoosyzeCore\System\Migration
     {
         $ci->query()
             ->insertInto('profil_file', [
+                'profil_file_id',
                 'folder_show',
                 'folder_show_sub',
                 'profil_weight',
@@ -63,13 +71,14 @@ class Installer implements \SoosyzeCore\System\Migration
                 'file_extensions'
             ])
             ->values([
-                '/',
+                1,
+                '/user/:user_id',
                 true,
                 1,
                 true,
                 true,
                 true,
-                100,
+                20,
                 true,
                 true,
                 true,
@@ -80,28 +89,86 @@ class Installer implements \SoosyzeCore\System\Migration
                 ''
             ])
             ->values([
-                '/user/:user_id',
+                2,
+                '/node',
                 true,
                 2,
                 false,
                 false,
                 false,
                 10,
-                true,
-                true,
-                true,
-                true,
-                true,
-                1,
                 false,
-                'jpg,jpeg,gif,png,pdf'
+                false,
+                false,
+                false,
+                false,
+                1,
+                true,
+                ''
+            ])
+            ->values([
+                3,
+                '/node/',
+                true,
+                3,
+                true,
+                true,
+                true,
+                10,
+                true,
+                true,
+                false,
+                true,
+                true,
+                0,
+                true,
+                ''
+            ])
+            ->values([
+                4,
+                '/dowload',
+                true,
+                4,
+                false,
+                false,
+                false,
+                10,
+                false,
+                false,
+                false,
+                true,
+                false,
+                1,
+                true,
+                ''
+            ])
+            ->values([
+                5,
+                '/',
+                true,
+                5,
+                true,
+                true,
+                true,
+                0,
+                true,
+                true,
+                true,
+                true,
+                true,
+                0,
+                true,
+                ''
             ])
             ->execute();
 
         $ci->query()
             ->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ])
-            ->values([ 1, 3 ])
-            ->values([ 2, 2 ])
+            ->values([ 1, 2 ])
+            ->values([ 2, 3 ])
+            ->values([ 3, 2 ])
+            ->values([ 4, 1 ])
+            ->values([ 5, 3 ])
             ->execute();
     }
 
@@ -151,11 +218,12 @@ class Installer implements \SoosyzeCore\System\Migration
     public function hookUninstallMenu(ContainerInterface $ci)
     {
         if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->from('menu_link')
-                ->delete()
-                ->where('key', 'like', 'filemanager.%')
-                ->execute();
+            $ci->menu()->deleteLinks(function () use ($ci) {
+                return $ci->query()
+                        ->from('menu_link')
+                        ->where('key', 'like', 'filemanager%')
+                        ->fetchAll();
+            });
         }
     }
 

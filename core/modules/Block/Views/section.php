@@ -1,10 +1,14 @@
-<?php if ($edit || !empty($content)): ?>
+<?php if (!empty($content) || $is_admin): ?>
+
 <div class="section">
+    <?php if ($is_admin): ?>
+
     <div class="block-sortable" data-id="<?php echo $section_id; ?>">
+    <?php endif; ?>
     <?php foreach ($content as $block): ?>
 
         <div class="block <?php echo $block[ 'class' ]; ?>">
-            <?php if ($edit) : ?>
+            <?php if ($is_admin) : ?>
 
             <span class="block-actions">
                 <i title="<?php echo t('Edit'); ?>"
@@ -32,9 +36,9 @@
         </div>
     <?php endforeach; ?>
 
-    </div>
-    <?php if ($edit) : ?>
+    <?php if ($is_admin) : ?>
 
+    </div>
     <button class="btn btn-success block-create"
             data-toogle="modal"
             data-target="#modal_block"
