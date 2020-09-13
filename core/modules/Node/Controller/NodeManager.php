@@ -23,7 +23,7 @@ class NodeManager extends \Soosyze\Controller
 
     public function page($page, $req)
     {
-        $nodes = $this->getNodes($page)->fetchAll();
+        $nodes = $this->getNodes($page)->where('node_status_id', '!=', 4)->fetchAll();
 
         if (!$nodes && $page !== 1) {
             return $this->get404($req);

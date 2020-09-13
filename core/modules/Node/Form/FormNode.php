@@ -372,7 +372,7 @@ class FormNode extends FormBuilder
                             'placeholder' => ':page_title | :site_title',
                             'value'       => $this->content[ 'meta_title' ]
                         ])
-                        ->html('cancel', '<p>:_content</p>', [
+                        ->html('meta_title-info', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)
@@ -384,7 +384,7 @@ class FormNode extends FormBuilder
                             'class' => 'form-control',
                             'rows'  => 3
                         ])
-                        ->html('cancel', '<p>:_content</p>', [
+                        ->html('meta_description-info', '<p>:_content</p>', [
                             '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)

@@ -70,8 +70,7 @@ class Install extends \Soosyze\Controller
             ? date_default_timezone_get()
             : 'Europe/Paris'
         ];
-        if( isset($_SESSION[ 'inputs' ][ 'main' ]) )
-        {
+        if (isset($_SESSION[ 'inputs' ][ 'main' ])) {
             $values = array_merge($values, $_SESSION[ 'inputs' ][ 'main' ]);
         }
 

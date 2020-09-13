@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="hidden" id="filter_node">
+<div class="hidden filter-area" id="filter_node">
     <div class="row">
         <form action="<?php echo $action_filter; ?>" method="get" id="form_filter_node">
             <div class="col-md-6">

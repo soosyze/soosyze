@@ -107,10 +107,16 @@ class Migration
         $this->query->insertInto('migration', [ 'migration', 'extension' ]);
 
         foreach ($callbacks as $callback) {
-            call_user_func_array(
-                $callback[ 'callback' ][ 'up' ],
-                [ $this->schema, $query ]
-            );
+            try {
+                call_user_func_array(
+                    $callback[ 'callback' ][ 'up' ],
+                    [ $this->schema, $query ]
+                );
+            } catch (\Exception $e) {
+                echo $e;
+                exit();
+            }
+            $query->init();
             $this->query->values([
                 $callback[ 'migration' ], $callback[ 'extension' ]
             ]);

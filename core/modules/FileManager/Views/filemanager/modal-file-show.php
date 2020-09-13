@@ -14,15 +14,13 @@
         </div>
         <div class="col-md-6">
             <div class="modal-info">
-            <h3><?php echo $info[ 'name' ]; ?><span class="extension">.<?php echo $info[ 'ext' ]; ?></span></h3>
-            <p>
-                <span data-tooltip="<?php echo $info[ 'size_octet' ]; ?> octets">
+                <h3><?php echo $info[ 'name' ]; ?><span class="extension">.<?php echo $info[ 'ext' ]; ?></span></h3>
+                <p data-tooltip="<?php echo $info[ 'size_octet' ]; ?> octets">
                     <i class="fa fa-weight-hanging" aria-hidden="true"></i> <?php echo $info[ 'size' ]; ?>
-                </span>
-                <span data-tooltip="<?php echo t('Creation date'); ?>">
+                </p>
+                <p data-tooltip="<?php echo t('Creation date'); ?>">
                     <i class="fa fa-clock" aria-hidden="true"></i> <?php echo $info[ 'time' ]; ?>
-                </span>
-            </p>
+                </p>
             </div>
         </div>
     </div>

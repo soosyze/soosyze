@@ -56,7 +56,8 @@ class Contact extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'contact/content-contact-form.php', $this->pathViews, [
                     'form' => $form
-        ]);
+                ])
+                ->override('page', [ 'page-contact.php' ]);
     }
 
     public function formCheck($req)

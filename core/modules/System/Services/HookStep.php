@@ -98,8 +98,7 @@ class HookStep
             'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]) ]));
 
         foreach (array_keys($profils) as $key) {
-            $form->group("profil_$key-group", 'div', function ( $form ) use ( $key, $content )
-            {
+            $form->group("profil_$key-group", 'div', function ($form) use ($key, $content) {
                 $form->radio('profil', [
                     'id'      => "profil_$key",
                     'checked' => $key === $content[ 'profil' ],

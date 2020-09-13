@@ -109,7 +109,7 @@
                     <nav>
                         <ul class="nav nav-pills nav-stacked">
                             <?php $i = 1; ?>
-                            <?php foreach( $steps as $key => $step ): ?>
+                            <?php foreach ($steps as $key => $step): ?>
                                 <li class="step <?php
                                 echo $key === $step_active
                                     ? 'active'
@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="cadre">
-                        <?php if( !empty($section[ 'messages' ]) ): ?>
+                        <?php if (!empty($section[ 'messages' ])): ?>
                             <?php echo $section[ 'messages' ]; ?>
                         <?php endif; ?>
                         <?php echo $section[ 'page' ]; ?>

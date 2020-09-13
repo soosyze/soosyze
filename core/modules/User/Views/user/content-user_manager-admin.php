@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="hidden" id="filter_user">
+<div class="hidden filter-area" id="filter_user">
     <div class="row">
         <form action="<?php echo $link_filter_user; ?>" method="get" id="form_filter_user">
             <div class="col-md-3">
