@@ -24,8 +24,11 @@ class BackupController extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        
-        $backups = self::backupmanager()->listBackups();
+
+        $backups = [];
+        if ($isRepository = self::backupmanager()->isRepository()) {
+            $backups = self::backupmanager()->listBackups();
+        }
         $doBackupRoute = count($backups) > 0
             ? self::router()->getRoute('backupmanager.delete.all')
             : null;
@@ -37,11 +40,13 @@ class BackupController extends \Soosyze\Controller
                     'title_main' => t('Backups manager')
                 ])
                 ->view('page.messages', $messages)
-                ->make('page.content', 'backupmanager\content-backup-admin.php', $this->pathViews, [
+                ->make('page.content', 'backupmanager/content-backup-admin.php', $this->pathViews, [
                     'backups'          => $backups,
-                    'max_backups'      => self::config()->get('settings.max_backups'),
+                    'delete_all_route' => $doBackupRoute,
                     'do_backup_route'  => self::router()->getRoute('backupmanager.dobackup'),
-                    'delete_all_route' => $doBackupRoute
+                    'is_repository'    => $isRepository,
+                    'name_repository'  => self::backupmanager()->getRepository(),
+                    'max_backups'      => self::config()->get('settings.max_backups')
         ]);
     }
 

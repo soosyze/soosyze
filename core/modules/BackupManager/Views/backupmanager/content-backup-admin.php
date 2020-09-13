@@ -74,6 +74,19 @@
                 </td>
             <tr>
         <?php endforeach; ?>
+        <?php elseif (!$is_repository): ?>
+
+            <tr>
+                <td colspan="4" class="alert alert-warning">
+                    <div class="content-nothing">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        <p><?php
+                            echo t('The :name directory must be created to store the backups', [
+                               ':name' => $name_repository
+                            ]) ?></p>
+                        </div>
+                    </td>
+            </tr>
         <?php else: ?>
 
             <tr>

@@ -254,7 +254,9 @@ input:read-only {
     border-color: #80bdff;
     outline: 0;
 }
-
+select.form-control {
+    padding: .2em .8em;
+}
 
 /* --------------------------- */
 /* -------- FORM FLEX -------- */
@@ -891,8 +893,6 @@ label[data-tooltip]:before {
 .nav {
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
     padding: 0;
     margin:  0 0 1em 0;
     list-style: none;

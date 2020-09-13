@@ -1,7 +1,7 @@
 {
     "alias": {
         "class": "SoosyzeCore\\System\\Services\\Alias",
-        "arguments": ["@query"]
+        "arguments": ["@config", "@query"]
     },
     "composer": {
         "class": "SoosyzeCore\\System\\Services\\Composer",

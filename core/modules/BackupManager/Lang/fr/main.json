@@ -17,5 +17,6 @@
     "The number of backup you did and the maximum number available": "Le nombre de sauvegardes faites et le nombre maximum disponible",
     "Delete the backup ?": "Supprimer la sauvegarde ?",
     "Restore": "Restaurer",
-    "Restore the backup ?": "Restaurer la sauvegarde ?"
+    "Restore the backup ?": "Restaurer la sauvegarde ?",
+    "The :name directory must be created to store the backups": "Le répertoire :name doit être créé pour stocker les sauvegardes"
 }

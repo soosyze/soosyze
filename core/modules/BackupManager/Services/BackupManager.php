@@ -33,8 +33,21 @@ class BackupManager
         $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups');
     }
 
+    public function isRepository()
+    {
+        return is_dir($this->repository);
+    }
+    
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
     public function listBackups()
     {
+        if (!$this->isRepository()) {
+            return [];
+        }
         $backups = [];
         foreach (new \DirectoryIterator($this->repository) as $file) {
             if ($file->isDot() || $file->getExtension() !== 'zip' || !preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $file->getFilename())) {
@@ -119,7 +132,11 @@ class BackupManager
     private function getFreshZip()
     {
         $maxBackups = $this->config->get('settings.max_backups');
-        $dir        = scandir($this->repository, SCANDIR_SORT_ASCENDING);
+        if (!$this->isRepository()) {
+            return false;
+        }
+
+        $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
 
         if ($maxBackups && count($dir) - 2 >= $maxBackups) {
             if (preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[ 2 ])) {

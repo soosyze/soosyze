@@ -168,6 +168,7 @@ class Installer extends \SoosyzeCore\System\Migration
             $ci->query()
                 ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
                 ->values([ 2, 'node.show.published.article' ])
+                ->values([ 1, 'node.show.published.article' ])
                 ->execute();
         }
     }

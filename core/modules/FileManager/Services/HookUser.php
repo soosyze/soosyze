@@ -57,7 +57,7 @@ class HookUser
 
     public function hookFileShow($path, $name, $ext, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         if (empty($right)) {
             return false;
@@ -68,7 +68,7 @@ class HookUser
 
     public function hookFileStore($path, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         return !empty($right[ 'file_store' ]);
     }
@@ -80,7 +80,7 @@ class HookUser
         $req = null,
         $user = null
     ) {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         if (empty($right[ 'file_update' ])) {
             return false;
@@ -96,7 +96,7 @@ class HookUser
         $req = null,
         $user = null
     ) {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         return !empty($right[ 'file_clipboard' ]);
     }
@@ -108,7 +108,7 @@ class HookUser
         $req = null,
         $user = null
     ) {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         if (empty($right[ 'file_delete' ])) {
             return false;
@@ -124,7 +124,7 @@ class HookUser
         $req = null,
         $user = null
     ) {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         if (empty($right[ 'file_download' ])) {
             return false;
@@ -136,34 +136,34 @@ class HookUser
     public function hookFolderAdmin($req = null, $user = null)
     {
         $profils = $this->profil->getProfilsFileByUser($user[ 'user_id' ]);
-
+        
         return !empty($profils);
     }
 
     public function hookFolderShow($path, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         return !empty($right);
     }
 
     public function hookFolderStore($path, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         return !empty($right[ 'folder_store' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
     public function hookFolderUpdate($path, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
         
         return !empty($right[ 'folder_update' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
     public function hookFolderDelete($path, $req = null, $user = null)
     {
-        $right = $this->getRight($path, $user[ 'user_id' ]);
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
     }

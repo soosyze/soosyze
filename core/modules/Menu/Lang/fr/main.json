@@ -24,5 +24,6 @@
     "Delete the menu :name": "Supprimer le menu :name",
     "Warning ! The deletion of the menu is final.": "Attention ! La suppression du menu est définitive.",
     "Menu to display": "Menu à afficher",
-    "Return to site": "Retour au site"
+    "Return to site": "Retour au site",
+    "Open in a new window": "Ouvrir dans une nouvelle fenêtre"
 }

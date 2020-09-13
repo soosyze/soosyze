@@ -23,7 +23,7 @@
             </div>
         </th>
         <td data-title="<?php echo t('Creation date'); ?>">
-            <?php echo utf8_encode(strftime('%a %e %b %Y, %H:%M', $node[ 'date_created' ])); ?>
+            <?php echo strftime('%a %e %b %Y, %H:%M', $node[ 'date_created' ]); ?>
 
         </td>
         <td data-title="<?php echo t('Actions'); ?>" class="text-right">
