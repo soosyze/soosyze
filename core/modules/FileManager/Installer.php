@@ -47,6 +47,11 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->integer('role_id');
             });
         $ci->config()->set('settings.replace_file', 1);
+        
+        $dir = $ci->core()->getDir('files_public', 'app/files');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
     }
 
     public function seeders(ContainerInterface $ci)

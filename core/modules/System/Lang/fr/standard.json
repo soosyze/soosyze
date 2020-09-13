@@ -67,6 +67,7 @@
     "Requires": "Requiert",
     "Reset": "Réinitialiser",
     "Return": "Retour",
+    "Back to site": "Retour au site",
     "Save": "Enregistrer",
     "Saved configuration": "Configuration Enregistrée",
     "Search": "Rechercher",
@@ -92,5 +93,6 @@
     "View": "Voir",
     "Weight": "Poids",
     "Y/m/d": "m/d/Y",
-    "The site is currently under maintenance. Thank you for your understanding.": "Le site est actuellement en maintenance. Merci de votre compréhension."
+    "The site is currently under maintenance. Thank you for your understanding.": "Le site est actuellement en maintenance. Merci de votre compréhension.",
+    "No results were found for your search.": "Aucun résultat n'a été trouvé pour votre recherche."
 }

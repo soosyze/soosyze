@@ -56,11 +56,10 @@ $('#theme_admin_dark').click(function () {
 
 function highlight(elemId) {
     var elem = $(elemId);
-    elem.css("backgroundColor", "#fff"); // hack for Safari
-    elem.animate({backgroundColor: '#e1e4e8'}, 0);
+    elem.toggleClass('highlight');
     setTimeout(function () {
-        $(elemId).animate({backgroundColor: "transparent"}, 500)
-    }, 300);
+        elem.toggleClass('highlight');
+    }, 500);
 }
 
 $(function () {

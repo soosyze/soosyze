@@ -27,7 +27,7 @@
                         <ul>
                             <li>
                                 <a href="<?php echo $base_path; ?>">
-                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <?php echo t('Back to site'); ?>
 
                                 </a>
                             </li>
@@ -53,7 +53,7 @@
                     <ul>
                         <li>
                             <a href="<?php echo $base_path; ?>">
-                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <?php echo t('Back to site'); ?>
 
                             </a>
                         </li>

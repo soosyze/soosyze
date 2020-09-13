@@ -275,7 +275,7 @@ class FormNode extends FormBuilder
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                     ]);
-                }, [ 'class' => 'sort_weight draggable node-draggable_one_to_many' ]);
+                }, [ 'class' => 'sort_weight draggable draggable-verticale node-draggable_one_to_many' ]);
             }
         }, [ 'class' => $options[ 'sort' ] === 'weight'
                 ? 'nested-sortable form-group'

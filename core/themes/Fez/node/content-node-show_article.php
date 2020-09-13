@@ -6,7 +6,7 @@
 </div>
 <div class="article_date_time">
     <i class="fa fa-calendar-alt"></i> 
-    <?php echo utf8_encode(strftime('%d %B, %Y', $node[ 'date_created' ])); ?>
+    <?php echo strftime('%d %B, %Y', $node[ 'date_created' ]); ?>
     -
     <i class="fa fa-clock"></i> 
     ~<?php echo $fields[ 'reading_time' ][ 'field_value' ] . ' ' . t('minute(s)'); ?>

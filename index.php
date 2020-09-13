@@ -3,7 +3,7 @@
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', __DIR__ . DS);
 
-//$config[ 'debug' ] = true;
+$config[ 'debug' ] = true;
 require_once 'bootstrap/requirements.php';
 require_once 'bootstrap/debug.php';
 require_once 'bootstrap/autoload.php';

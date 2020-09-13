@@ -4,11 +4,14 @@ namespace SoosyzeCore\System\Services;
 
 class Alias
 {
+    protected $config;
+
     protected $query;
 
-    public function __construct($query)
+    public function __construct($config, $query)
     {
-        $this->query = $query;
+        $this->config = $config;
+        $this->query  = $query;
     }
 
     public function getAlias($source, $default = null)
@@ -22,6 +25,12 @@ class Alias
 
     public function getSource($alias, $default = null)
     {
+        if ($alias === '/') {
+            return empty($this->config[ 'settings.path_index' ])
+                ? $default
+                : $this->config[ 'settings.path_index' ];
+        }
+
         $source = $this->query->from('system_alias_url')->where('alias', $alias)->fetch();
 
         return empty($source)

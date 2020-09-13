@@ -32,14 +32,10 @@
     display: block;
     position: relative;
 }
-.menu_main ul li:hover > a {
-    color: #eee;
-}
 .menu_main ul li:hover > ul {
     display: block;
 }
 .menu_main ul li.active > a {
-    border-bottom: 3px solid #fff;
     color: #fff;
 }
 .menu_main ul li.parent > a:after {
@@ -115,6 +111,9 @@
 #wrapper_navigation .menu_main {
     margin-bottom: -1px;
 }
+#wrapper_navigation .menu_main ul ul li:hover > a {
+    background-color: rgba(255, 255, 255, .1);
+}
 #wrapper_navigation.lite .menu_main ul li.parent > a::after {
     background-color: #333;
 }
@@ -129,7 +128,6 @@
 }
 #wrapper_navigation.lite .menu_main ul li.active > a {
     border-bottom-color: #333;
-    color: #333;
 }
 #wrapper_navigation.lite #toogle_menu {
     color: #333;

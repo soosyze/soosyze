@@ -87,6 +87,14 @@ code {
     background-color: rgba(86,61,124,.15);
     margin-bottom: 1em;
 }
+fieldset.modules.highlight,
+fieldset.package.highlight {
+    background-color: rgba(128, 128, 128, .2);
+}
+fieldset.modules,
+fieldset.package {
+    transition: background-color .5s;
+}
 /* ---------- Sortable ----------- */
 .nested-sortable {
     list-style-type: none;
@@ -116,8 +124,14 @@ code {
     background: #e1e4e8;
     opacity: .5;
 }
+.draggable.draggable-verticale .fa-arrows-alt-v{
+    margin-right: 1em;
+}
 
-
+.node-draggable_one_to_many {
+    margin-top: -2px;
+    padding-left: 1em;
+}
 /* --------------------------- */
 /* ---------- LAYOUT --------- */
 /* --------------------------- */
