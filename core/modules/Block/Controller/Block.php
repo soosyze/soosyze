@@ -70,11 +70,7 @@ class Block extends \Soosyze\Controller
                     ->getTheme('theme_admin')
                     ->createBlock($block[ 'tpl' ], $block[ 'path' ]);
 
-                $keyBlock = empty($block[ 'key_block' ])
-                    ? $key
-                    : $block[ 'key_block' ];
-
-                $content = $this->container->callHook('block.' . $keyBlock, [
+                $content = $this->container->callHook('block.' . $block[ 'hook' ], [
                     $tpl,
                     empty($block[ 'options' ])
                     ? []
@@ -94,8 +90,10 @@ class Block extends \Soosyze\Controller
             });
         }
 
-        $form->token("token_$section")
-            ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
+        $form->group('submit-group', 'div', function ($form) use ($section) {
+            $form->token("token_$section")
+                ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
+        });
 
         $this->container->callHook('block.create.form', [ &$form, $data ]);
 
@@ -215,7 +213,7 @@ class Block extends \Soosyze\Controller
             });
 
         if ($data[ 'hook' ]) {
-            $this->container->callHook("block.{$data[ 'key_block' ]}.edit.form", [ &$form, $data, $id ]);
+            $this->container->callHook("block.{$data[ 'hook' ]}.edit.form", [ &$form, $data, $id ]);
         }
 
         $form->group('page-fieldset', 'fieldset', function ($form) use ($data) {
@@ -345,7 +343,7 @@ class Block extends \Soosyze\Controller
             );
 
         if ($block[ 'hook' ]) {
-            $this->container->callHook("block.{$block[ 'key_block' ]}.update.validator", [ &$validator, $id ]);
+            $this->container->callHook("block.{$block[ 'hook' ]}.update.validator", [ &$validator, $id ]);
         }
         $this->container->callHook('block.update.validator', [ &$validator, $id ]);
 
@@ -375,7 +373,7 @@ class Block extends \Soosyze\Controller
             ];
             
             if ($block[ 'hook' ]) {
-                $this->container->callHook("block.{$block[ 'key_block' ]}.update.before", [
+                $this->container->callHook("block.{$block[ 'hook' ]}.update.before", [
                     &$validator, &$values, $id
                 ]);
             }
@@ -389,7 +387,7 @@ class Block extends \Soosyze\Controller
                 ->execute();
 
             if ($block[ 'hook' ]) {
-                $this->container->callHook("block.{$block[ 'key_block' ]}.update.after", [
+                $this->container->callHook("block.{$block[ 'hook' ]}.update.after", [
                     &$validator, $id
                 ]);
             }

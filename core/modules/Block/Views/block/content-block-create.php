@@ -16,7 +16,9 @@
     </div>
     <?php endforeach; ?>
 
+    <div class="col-md-4">
+        <?php echo $form->form_group('submit-group'); ?>
+
+    </div>
 </div>
-<?php echo $form->form_input("token_$section"); ?>
-<?php echo $form->form_input('submit'); ?>
 <?php echo $form->form_close(); ?>

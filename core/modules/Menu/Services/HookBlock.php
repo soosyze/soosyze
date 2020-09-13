@@ -14,15 +14,15 @@ class HookBlock
     public function hookCreateFormData(array &$blocks)
     {
         $menus = $this->menu->getAllMenu();
-
+        
         foreach ($menus as $menu) {
             $blocks[ "menu.{$menu[ 'name' ]}" ] = [
-                'hook'      => 'menu',
-                'key_block' => 'menu',
-                'options'   => [ 'name' => $menu[ 'name' ] ],
-                'path'      => $this->menu->getPathViews(),
+            'hook'      => 'menu',
+            'key_block' => "menu.{$menu[ 'name' ]}",
+            'options'   => [ 'name' => $menu[ 'name' ] ],
+            'path'      => $this->menu->getPathViews(),
                 'title'     => t($menu[ 'title' ]),
-                'tpl'       => "components/block/menu_{$menu[ 'name' ]}.php"
+                'tpl'       => "components/block/menu-{$menu[ 'name' ]}.php"
             ];
         }
     }
@@ -31,7 +31,7 @@ class HookBlock
     {
         if ($menu = $this->menu->renderMenu($options[ 'name' ])) {
             return $menu->setName('components/block/menu.php')
-                    ->addNamesOverride([ 'components/block/menu-menu_' . $options[ 'name' ] ]);
+                    ->setNamesOverride([ "components/block/menu-{$options[ 'name' ]}.php" ]);
         }
     }
 

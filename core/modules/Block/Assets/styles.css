@@ -36,7 +36,6 @@
 .block-list {
     overflow-y: auto;
     padding: 1em;
-    width: 100%;
 }
 .block-item {
     margin-bottom: 1em;
