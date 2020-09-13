@@ -61,16 +61,15 @@ document.querySelectorAll('.ext').forEach(function (el) {
 $(document).delegate('#modal_filemanager input[name="submit"]', 'click', function (evt) {
     evt.preventDefault();
     const $formModal = $(this).parent('form');
-    const $modal = $(this).closest('.modal');
     $.ajax({
         url: $formModal.attr('action'),
         type: $formModal.attr('method'),
         data: $formModal.serialize(),
         dataType: 'json',
         success: function () {
-            $modal.toggleClass('modal-open');
             var action = $('#table-file').data('link_show');
             updateManager(action);
+            closeModal.call(evt.target, evt);
         },
         error: function (data) {
             renderMessage('.modal-messages', data.responseJSON);
