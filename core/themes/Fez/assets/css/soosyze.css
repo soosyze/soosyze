@@ -245,7 +245,7 @@ input:read-only {
     border: 1px solid rgba(34,36,38,.15);
     border-radius: 4px;
     display: block;
-    font-size: 1em;
+    font-size: 18px;
     height: 38px;
     padding: .5em .8em;
     width: 100%;
@@ -815,7 +815,6 @@ label[data-tooltip]:before {
     padding: .7em 1em;
     text-align: center;
     text-decoration: none;
-    white-space: nowrap;
 }
 .btn.btn-primary,
 .btn.btn-success,

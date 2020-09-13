@@ -13,7 +13,6 @@
         <meta name="keywords" content="<?php echo $keyboard; ?>"/>
         <meta name="generator" content="<?php echo $generator; ?>"/>
         <?php echo $meta; ?>
-        <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/normalize.css">
@@ -34,10 +33,7 @@
             <img style="opacity: .5;" src="<?php echo $base_theme; ?>assets/files/arrow.svg" alt="Scroll to top" role="button" width="40"/>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/jquery-ui-multi-date-picker@1.6.5/dist/jquery-ui.multidatespicker.min.js"></script>
         <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
         <?php echo $scripts; ?>
 

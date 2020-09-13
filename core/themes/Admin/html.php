@@ -9,9 +9,10 @@
         <meta name="keywords" content="<?php echo $keyboard; ?>"/>
         <meta name="generator" content="<?php echo $generator; ?>"/>
         <?php echo $meta; ?>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <?php echo $styles; ?>
+
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/soosyze.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/styles.css">
@@ -27,11 +28,10 @@
             <img style="opacity: .5;" src="<?php echo $base_theme; ?>assets/files/arrow.svg" alt="Scroll to top" width="40"/>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
         <?php echo $scripts; ?>
-        <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
 
+        <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
     </body>
 </html>

@@ -26,7 +26,7 @@
                     <div class="navbar-nav">
                         <ul>
                             <li>
-                                <a href="/">
+                                <a href="<?php echo $base_path; ?>">
                                     <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
 
                                 </a>
@@ -52,7 +52,7 @@
                 <div class="navbar-nav">
                     <ul>
                         <li>
-                            <a href="/">
+                            <a href="<?php echo $base_path; ?>">
                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i><?php echo t('Return site'); ?>
 
                             </a>

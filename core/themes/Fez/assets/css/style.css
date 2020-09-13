@@ -158,7 +158,6 @@ img {
 }
 .card__content {
     flex: 1;
-    font-family: "Lora",serif;
     overflow: hidden;
 }
 .card__content,

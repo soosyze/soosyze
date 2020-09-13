@@ -1,5 +1,4 @@
-body {  
-    font-family: "Open Sans","Segoe UI","Helvetica",sans-serif;
+body {
     padding: 0;
     margin: 0;
     margin-top: 2em;
@@ -82,6 +81,11 @@ code {
     display: none;
     position: fixed;
     right: 25px;
+}
+.filter-area {
+    padding: 1em 1em 0em;
+    background-color: rgba(86,61,124,.15);
+    margin-bottom: 1em;
 }
 /* ---------- Sortable ----------- */
 .nested-sortable {
@@ -166,12 +170,6 @@ code {
     .admin-wrapper .content-wrapper {
         max-width: 1200px;
     }
-}
-.admin-wrapper .sidebar-wrapper {
-    flex: 1 1 auto;
-    min-height: 100vh;
-    overflow: hidden;
-    pointer-events: none;
 }
 .admin-wrapper .content {
     padding: 2em;
