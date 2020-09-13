@@ -552,6 +552,13 @@ class Node extends \Soosyze\Controller
 
             $this->deleteFile($node['type'], $idNode);
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
+
+            $_SESSION[ 'messages' ][ 'success' ] = [
+                t('Content :title has been deleted', [':title' => $node['title']])
+            ];
+        } else {
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
         return new Redirect(self::router()->getRoute('node.admin'));
