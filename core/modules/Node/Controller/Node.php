@@ -756,15 +756,21 @@ class Node extends \Soosyze\Controller
                 'title_link' => t('Content')
             ], [
                 'class'      => '',
-                'link'       => '#seo-fieldset',
-                'title_link' => t('SEO')
-            ], [
-                'class'      => '',
                 'link'       => '#publication-fieldset',
                 'title_link' => t('Publication')
+            ], [
+                'class'      => '',
+                'link'       => '#seo-fieldset',
+                'title_link' => t('SEO')
             ]
         ];
-        
+        if (self::module()->has('System')) {
+            $menu[] = [
+                    'class'      => '',
+                    'link'       => '#url-fieldset',
+                    'title_link' => t('Url')
+            ];
+        }
         if (self::module()->has('Menu')) {
             $menu[] = [
                     'class'      => '',

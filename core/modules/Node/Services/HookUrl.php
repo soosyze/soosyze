@@ -46,16 +46,22 @@ class HookUrl
 
     public function hookCreateForm($form, $data)
     {
-        $form->after('seo-legend', function ($form) use ($data) {
-            $form->group('meta_url-group', 'div', function ($form) use ($data) {
-                $form->label('meta_url-label', t('Url'), [
-                    'data-tooltip' => t('Leave blank to automatically generate your URL')
-                ])->text('meta_url', [
-                    'class'       => 'form-control',
-                    'placeholder' => 'page/titre-de-mon-contenu',
-                    'value'       => $data[ 'meta_url' ]
-                ]);
-            }, [ 'class' => 'form-group' ]);
+        $form->before('seo-fieldset', function ($form) use ($data) {
+            $form->group('url-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('meta_url', t('URL alias'))
+                    ->group('meta_url-group', 'div', function ($form) use ($data) {
+                        $form->label('meta_url-label', t('Url'), [
+                            'data-tooltip' => t('Leave blank to automatically generate your URL')
+                        ])->text('meta_url', [
+                            'class'       => 'form-control',
+                            'placeholder' => 'page/titre-de-mon-contenu',
+                            'value'       => $data[ 'meta_url' ]
+                        ]);
+                    }, [ 'class' => 'form-group' ]);
+            }, [
+                'class' => 'tab-pane fade',
+                'id'    => 'url-fieldset'
+            ]);
         });
     }
 
