@@ -47,12 +47,5 @@
         "hooks": {
             "config.edit.menu": "menu"
         }
-    },
-    "system.hook.cron": {
-        "class": "SoosyzeCore\\System\\Services\\HookCron",
-        "arguments": ["@config", "@migration", "@schema"],
-        "hooks": {
-            "app.cron": "hookCron"
-        }
     }
 }

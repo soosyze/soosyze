@@ -6,8 +6,8 @@ use Queryflatfile\TableBuilder;
 
 return [
     'up' => function (Schema $sch, Request $req) {
-        $sch->alterTable('menu_link', function (TableBuilder $table) {
-            $table->boolean('target_link')->valueDefault(false)->modify();
+        $sch->alterTable('node', function (TableBuilder $table) {
+            $table->boolean('sticky')->valueDefault(false);
         });
     }
 ];
