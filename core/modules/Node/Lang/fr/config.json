@@ -1,4 +1,5 @@
 {
+    "URL alias":"Alias d'Url",
     "Default url": "Url par défaut",
     "The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).": "Le champ: label doit contenir des variables autorisées, des caractères alphanumériques, des barres obliques (/), des tirets (-) ou des traits de soulignement (_).",
     "Applies to all types of content if the templates below are empty": "S'applique à tous les types de contenu si les modèles ci-dessous sont vides",

@@ -105,7 +105,7 @@ class Installer extends \SoosyzeCore\System\Migration
             ->values([
                 'page_private',
                 'Private page',
-                'Use the private pages for content reserved for your members.',
+                'Use private pages for content reserved for your members.',
                 'far fa-file'
             ])
             ->execute();

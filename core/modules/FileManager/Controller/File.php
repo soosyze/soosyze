@@ -90,8 +90,8 @@ class File extends \Soosyze\Controller
                 . '</span> '
                 . t('or drag it here.')
                 . '<p><small>'
-                . t('File size is limited to :size per upload', [
-                    ':size' => Util::strFileSizeFormatted($max)
+                . t('File size is limited to :max per upload', [
+                    ':max' => Util::strFileSizeFormatted($max)
                 ])
                 . '</small></p>'
                 . '</div>'
@@ -150,7 +150,7 @@ class File extends \Soosyze\Controller
             ->setMessages([
                 'file' => [
                     'max' => [
-                        'must' => t('File size is limited to :size per upload')
+                        'must' => t('File size is limited to :max per upload')
                     ]
                 ],
                 'folder' => [

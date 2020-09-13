@@ -55,7 +55,7 @@
     "Add a new file": "Ajouter un nouveau fichier",
     "Total size / maximum data quota": "Taille totale / quota de données maximum",
     "Total size": "Taille totale",
-    "File size is limited to :size per upload": "La taille du fichier est limitée à :size par envoi",
+    "File size is limited to :max per upload": "La taille du fichier est limitée à :max par envoi",
     "You exceed your quota of :max of data authorized in this directory": "Vous dépassez votre quota de :max de données autorisé dans ce répertoire",
     "<root>": "<racine>",
     "It must start with a `\\` and may consist of alphanumeric characters `[a-z0-9]`, slashes `\\`, hyphens `-` and underscores `_`": "Il doit commencer par un `\\` et peut-être composé de caractères alphanumériques `[a-z0-9]`, de slash `\\`, de tirets `-` et d'underscores `_`",
