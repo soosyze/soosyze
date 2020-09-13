@@ -23,9 +23,6 @@ class Folder extends \Soosyze\Controller
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path"
         );
-        if (!$spl->isDir()) {
-            return $this->get404($req);
-        }
 
         $values = [];
         if (isset($_SESSION[ 'inputs' ])) {

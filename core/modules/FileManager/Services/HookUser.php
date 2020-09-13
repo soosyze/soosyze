@@ -156,14 +156,14 @@ class HookUser
 
     public function hookFolderUpdate($path, $req = null, $user = null)
     {
-        $right = $this->getRight(dirname($path), $user[ 'user_id' ]);
+        $right = $this->getRight($path, $user[ 'user_id' ]);
         
         return !empty($right[ 'folder_update' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
     public function hookFolderDelete($path, $req = null, $user = null)
     {
-        $right = $this->getRight(dirname($path), $user[ 'user_id' ]);
+        $right = $this->getRight($path, $user[ 'user_id' ]);
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
     }
