@@ -9,29 +9,27 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
          */
         $app = \Core::getInstance();
 
-        $isRewrite = $app->get('router')->isRewrite();
-        $uri  = \Soosyze\Components\Http\Uri::create(($isRewrite
+        $isRewrite  = $app->get('router')->isRewrite();
+        $uri        = \Soosyze\Components\Http\Uri::create(($isRewrite
                 ? ''
                 : '?q=') . $value);
         $linkSource = $app->get('router')->parseQueryFromRequest(
             $app->getRequest()->withUri($uri)
         );
 
-        if ($linkSource === '/') {
-            $linkSource = $app->get('config')->get('settings.path_index', '/');
-        }
         $linkSource = $app->get('alias')->getSource($linkSource, $linkSource);
 
         $uriSource = \Soosyze\Components\Http\Uri::create($linkSource);
         $uriSource = $uriSource->withQuery('q=' . $uriSource->getPath());
-        
-        $isRoute     = $app->get('router')->parse(
+
+        $isRoute = $app->get('router')->parse(
             $app->getRequest()
-            ->withUri($uriSource)
-            ->withMethod('get')
+                ->withUri($uriSource)
+                ->withMethod('get')
         );
-        
-        if (!$isRoute && $not) {
+
+        if( !$isRoute && $not )
+        {
             $this->addReturn($key, 'must');
         }
     }
