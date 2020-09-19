@@ -34,7 +34,7 @@ $(function () {
         }
     });
     /* SCROLL TO */
-    $('a').click(function () {
+    $('#wrapper_navigation a').click(function () {
         var page = $(this).attr('href');
         var fragment = page.substring(page.lastIndexOf('#'));
 
