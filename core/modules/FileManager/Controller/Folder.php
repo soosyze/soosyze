@@ -56,12 +56,10 @@ class Folder extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([
                 'name'         => 'required|string|max:255',
-                'dir'          => 'required|dir',
                 'token_folder' => 'token'
             ])
             ->addLabel('name', t('Name'))
-            ->setInputs($req->getParsedBody())
-            ->addInput('dir', $dir);
+            ->setInputs($req->getParsedBody());
 
         $out = [];
         if (!$validator->isValid()) {
@@ -153,8 +151,7 @@ class Folder extends \Soosyze\Controller
         $dirUpdate = dirname($dir) . "/$folder";
 
         /* Si le nouveau nom du répertoire est déjà utilisé. */
-        if (!is_dir($dirUpdate)) {
-            $folder = Util::strSlug($validator->getInput('name'));
+        if ($dir === $dirUpdate || !is_dir($dirUpdate)) {
             rename($dir, $dirUpdate);
 
             $out[ 'messages' ][ 'success' ] = [ t('The directory is renamed') ];
