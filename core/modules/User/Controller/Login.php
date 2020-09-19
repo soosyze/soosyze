@@ -43,7 +43,7 @@ class Login extends \Soosyze\Controller
             $formbuilder->legend('login-legend', t('User login'));
             $form->email($formbuilder)
                 ->passwordCurrent($formbuilder);
-        })->submitForm(t('Log in'));
+        })->submitForm(t('Sign in'));
 
         $this->container->callHook('login.form', [ &$form, $values ]);
 
@@ -56,7 +56,7 @@ class Login extends \Soosyze\Controller
         return self::template()
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Log in')
+                    'title_main' => t('Sign in')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-login-login.php', $this->pathViews, [
