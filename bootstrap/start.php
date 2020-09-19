@@ -1,7 +1,12 @@
 <?php
 
 /* Démarrage de la session. */
-session_start();
+if (session_id() === '') {
+    @session_start([
+        'cookie_httponly' => true,
+        'cookie_secure'   => true
+    ]);
+}
 
 /* Définit par défaut la timezone. polyfills */
 if (!ini_get('date.timezone')) {
