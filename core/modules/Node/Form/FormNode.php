@@ -230,10 +230,11 @@ class FormNode extends FormBuilder
         }
 
         $subFields = $data->fetchAll();
-        $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options) {
+        $dir = $this->router->getBasePath();
+        $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options, $dir) {
             foreach ($subFields as $field) {
                 $idEntity = $field[ "{$key}_id" ];
-                $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field) {
+                $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field, $dir) {
                     if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
                         $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt-v" aria-hidden="true"></i>')
                             ->hidden("{$key}[$idEntity][weight]", [
@@ -245,7 +246,7 @@ class FormNode extends FormBuilder
 
                     $content = $field[ $options[ 'field_show' ] ];
                     if ($this->isShowFile($options, $field)) {
-                        $src     = $field[ $options[ 'field_type_show' ] ];
+                        $src     = $dir . $field[ $options[ 'field_type_show' ] ];
                         $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
                     }
 
