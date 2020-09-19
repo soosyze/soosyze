@@ -253,7 +253,7 @@ class Login extends \Soosyze\Controller
 
     protected function getRedirectLogin($req)
     {
-        if (!($redirect = self::config()->get('settings.connect_redirect', ''))) {
+        if (($redirect = self::config()->get('settings.connect_redirect', ''))) {
             return (string) self::router()->makeRoute($redirect);
         }
 
