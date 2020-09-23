@@ -33,6 +33,17 @@ body {
     line-height: 1.5;
     text-align: left;
 }
+pre {
+    overflow: auto;
+}
+code, pre {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #0e1014;
+    color: #9baec8;
+    padding: .2em .4em;
+}
 .container,
 .container-fluid {
     margin-left: auto;

@@ -20,12 +20,6 @@ a {
 a:hover {
     text-decoration: underline;
 }
-code {
-    border-radius: 3px;
-    padding: .2em .4em;
-    background: #0e1014;
-    color: #9baec8;
-}
 .sidebar-header,
 .drawer-header {
     display: flex;
