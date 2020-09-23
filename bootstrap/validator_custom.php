@@ -28,8 +28,7 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
                 ->withMethod('get')
         );
 
-        if( !$isRoute && $not )
-        {
+        if (!$isRoute && $not) {
             $this->addReturn($key, 'must');
         }
     }

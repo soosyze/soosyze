@@ -16,7 +16,7 @@
     </div>
     <?php endforeach; ?>
 
-    <div class="col-md-4">
+    <div class="col-md-12">
         <?php echo $form->form_group('submit-group'); ?>
 
     </div>

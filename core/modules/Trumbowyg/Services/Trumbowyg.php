@@ -75,7 +75,7 @@ class Trumbowyg
                                     "div": "div"
                                 },
                                 tagsToKeep: ["hr", "img", "embed", "iframe", "i"],
-                                tagsToRemove: ["script", "link"],
+                                tagsToRemove: ["applet", "embed", "form", "input", "link", "option",  "script", "select", "textarea"]
                             });
                         }
                     </script>';

@@ -15,14 +15,18 @@ $(function () {
     var textarea = document.querySelectorAll('textarea');
     textarea.forEach((el) => {
         if (el.maxLength > 0) {
-            $('<div class="maxlength_show">' + el.value.length + '/' + el.maxLength + '<div>').appendTo(el.parentNode);
+            $('<div class="maxLength_show"><span class="maxLength_value">' + el.value.length + '</span>/' + el.maxLength + '<div>').appendTo(el.parentNode);
         }
     });
-    $('textarea').keyup(function () {
+    $('textarea, .trumbowyg').keyup(function () {
         $this = $(this);
+        const length = $this.val().length
+                ? $this.val().length
+                : $this.find('.trumbowyg-editor').html().length;
+
         $this.parent()
-                .find('.maxlength_show')
-                .html('<div class="maxlength_show">' + $this.val().length + '/' + $this.attr('maxLength') + '<div>');
+                .find('.maxLength_value')
+                .html(length);
     });
 
     /* INPUT ICON RENDER */
