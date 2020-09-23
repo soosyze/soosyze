@@ -434,9 +434,7 @@ class FormNode extends FormBuilder
                             'class'       => 'form-control',
                             'maxlength'   => 19,
                             'placeholder' => t('YYYY-MM-DD Hours:Minutes:Seconds'),
-                            'value'       => is_numeric($this->content[ 'date_created' ])
-                            ? date('Y-m-d H:i:s', (int) $this->content[ 'date_created' ])
-                            : $this->content[ 'date_created' ]
+                            'value'       => $this->getDateCreated()
                         ]);
                     }, self::$attrGrp)
                     ->label('date_created-label', t('Publication status'))
@@ -513,5 +511,16 @@ class FormNode extends FormBuilder
                 $value[ 'attr' ][ 'min' ] = (int) $matches[ 2 ];
             }
         }
+    }
+    
+    protected function getDateCreated()
+    {
+        if (empty($this->content[ 'date_created' ])) {
+            return date('Y-m-d H:i:s', time());
+        }
+
+        return is_numeric($this->content[ 'date_created' ])
+            ? date('Y-m-d H:i:s', (int) $this->content[ 'date_created' ])
+            : $this->content[ 'date_created' ];
     }
 }
