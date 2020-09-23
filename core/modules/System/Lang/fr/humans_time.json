@@ -1,4 +1,6 @@
 {
+    "minute": "minute",
+    "minutes": "minutes",
     "%s years": "%s ans",
     "%s years": "%s an",
     "%s years ago": "il y a %s ans",
