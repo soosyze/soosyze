@@ -114,6 +114,9 @@
 #wrapper_navigation .menu_main ul ul li:hover > a {
     background-color: rgba(255, 255, 255, .1);
 }
+#wrapper_navigation .menu_main ul li.depth-1.active > a {
+    border-bottom: 3px solid #fff;
+}
 #wrapper_navigation.lite .menu_main ul li.parent > a::after {
     background-color: #333;
 }
@@ -126,8 +129,8 @@
 #wrapper_navigation.lite .menu_main ul ul a {
     color: #fff;
 }
-#wrapper_navigation.lite .menu_main ul li.active > a {
-    border-bottom-color: #333;
+#wrapper_navigation.lite .menu_main ul li.depth-1.active > a {
+    border-bottom: 3px solid #333;
 }
 #wrapper_navigation.lite #toogle_menu {
     color: #333;
