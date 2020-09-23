@@ -126,7 +126,7 @@ class Node extends \Soosyze\Controller
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
                 'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
-                'token_node'       => 'token'
+                'token_node'       => 'token:3600'
             ])
             ->setLabel([
                 'date_created'     => t('Publication date'),
@@ -360,15 +360,15 @@ class Node extends \Soosyze\Controller
         /* Test les champs par defauts de la node. */
         $validator = (new Validator())
             ->setRules([
-                'meta_description' => '!required|string|max:512',
-                'meta_noarchive'   => 'bool',
-                'meta_nofollow'    => 'bool',
-                'meta_noindex'     => 'bool',
-                'meta_title'       => '!required|string|max:255',
-                'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
-                'sticky'           => 'bool',
-                'title'            => 'required|string|max:255|to_htmlsc',
-                'token_node'       => 'token'
+                'meta_description'      => '!required|string|max:512',
+                'meta_noarchive'        => 'bool',
+                'meta_nofollow'         => 'bool',
+                'meta_noindex'          => 'bool',
+                'meta_title'            => '!required|string|max:255',
+                'node_status_id'        => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'                => 'bool',
+                'title'                 => 'required|string|max:255|to_htmlsc',
+                'token_node_' . $idNode => 'token:3600'
             ])
             ->setLabel([
                 'date_created'     => t('Publication date'),

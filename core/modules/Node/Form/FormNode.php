@@ -15,7 +15,8 @@ class FormNode extends FormBuilder
         'meta_title'       => '',
         'sticky'           => false,
         'node_status_id'   => 3,
-        'date_created'     => ''
+        'date_created'     => '',
+        'id'               => null
     ];
 
     protected static $fieldRules = [
@@ -464,7 +465,11 @@ class FormNode extends FormBuilder
                     'class' => 'tab-pane fade',
                     'id'    => 'publication-fieldset'
                 ])
-                ->token('token_node')
+                ->token(
+                    empty($this->content[ 'id' ])
+                    ? 'token_node'
+                    : 'token_node_' . $this->content[ 'id' ]
+                )
                 ->group('actions-group', 'fieldset', function ($form) {
                     $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                     ->html('cancel', '<button:attr>:_content</button>', [
