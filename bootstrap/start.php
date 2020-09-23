@@ -1,11 +1,19 @@
 <?php
 
+  ini_set('magic_quotes_runtime', '0');
+
+  /*
+   * @see https://www.php.net/manual/en/session.security.php
+   */
+  ini_set('session.use_cookies', '1');
+  ini_set('session.use_only_cookies', '1');
+  ini_set('session.use_trans_sid', '0');
+  ini_set('session.cache_limiter', '');
+  ini_set('session.cookie_httponly', '1');
+  
 /* Démarrage de la session. */
 if (session_id() === '') {
-    @session_start([
-        'cookie_httponly' => true,
-        'cookie_secure'   => true
-    ]);
+    session_start();
 }
 
 /* Définit par défaut la timezone. polyfills */
@@ -19,7 +27,7 @@ $app = \Core::getInstance($req);
 
 $app->setSettings([
     'root'                => ROOT,
-
+    /* Chemin des fichiers de configurations. */
     'config'              => 'app/config',
     /* Chemin des fichiers public. */
     'files_public'        => 'app/files',
