@@ -64,8 +64,7 @@ function handlerFatal()
     global $config;
 
     if ($config[ 'debug' ] && ($error = error_get_last())) {
-        extract($error);
-        handlerError($type, $message, $file, $line);
+        handlerError($error['type'], $error['message'], $error['file'], $error['line']);
     }
 }
 
