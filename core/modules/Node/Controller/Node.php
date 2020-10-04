@@ -594,7 +594,7 @@ class Node extends \Soosyze\Controller
         /* Construit la node */
         unset($node[ 'id' ], $node[ 'node_status_id' ]);
         $node[ 'entity_id' ]    = $entityId;
-        $node[ 'title' ]        = $node[ 'title' ] . ' clone';
+        $node[ 'title' ]        .= ' clone';
         $node[ 'date_created' ] = time();
         $node[ 'date_changed' ] = time();
 
