@@ -14,9 +14,8 @@ $home = isset($_SERVER[ 'HOME' ])
     : null;
 /* Home for Windows */
 if (empty($home) && isset($_SERVER[ 'HOMEDRIVE' ], $_SERVER[ 'HOMEPATH' ])) {
-    $home = rtrim($_SERVER[ 'HOMEDRIVE' ] . $_SERVER[ 'HOMEPATH' ], '\\/');
+    $home = rtrim(htmlspecialchars($_SERVER[ 'HOMEDRIVE' ] . $_SERVER[ 'HOMEPATH' ]), '\\/');
 }
-
 /* Construit une requête dédié à PHP CLI. */
 $uri = new Soosyze\Components\Http\Uri('http', $home, '/', 80, '');
 $req = new Soosyze\Components\Http\ServerRequest(
