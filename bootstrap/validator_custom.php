@@ -46,11 +46,11 @@ class RouteOrUrlValue extends \RouteValue
 {
     protected function test($key, $value, $arg, $not = true)
     {
-        $isRoute = !(new \RouteValue)
+        $isRoute = !(new \RouteValue())
             ->hydrate('route', $key, $arg, $not)
             ->execute($value)
             ->hasErrors();
-        $isLink = !(new \Soosyze\Components\Validator\Rules\Url)
+        $isLink = !(new \Soosyze\Components\Validator\Rules\Url())
             ->hydrate('url', $key, $arg, $not)
             ->execute($value)
             ->hasErrors();

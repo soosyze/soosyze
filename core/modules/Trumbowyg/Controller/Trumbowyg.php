@@ -25,7 +25,7 @@ class Trumbowyg extends \Soosyze\Controller
 
         $files = $req->getUploadedFiles();
 
-        $validator = (new Validator)
+        $validator = (new Validator())
             ->addRule('image', 'image|max:1Mb')
             ->setInputs($files);
 

@@ -189,7 +189,7 @@ class Login extends \Soosyze\Controller
                 $message  = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser:') . "\n";
                 $message  .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . '</a>';
 
-                $email = (new Email)
+                $email = (new Email())
                     ->from(self::config()->get('settings.email'))
                     ->to($user[ 'email' ])
                     ->subject(t('New Password'))

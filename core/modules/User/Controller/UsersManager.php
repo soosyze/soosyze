@@ -47,7 +47,7 @@ class UsersManager extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $validator = (new Validator)
+        $validator = (new Validator())
             ->setRules([
                 'actived'   => '!required|between_numeric:0,1',
                 'firstname' => '!required|string|max:255',

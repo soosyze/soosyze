@@ -72,7 +72,7 @@ class NodeManager extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $validator = (new Validator)
+        $validator = (new Validator())
             ->setRules([
                 'title'          => '!required|string|max:255',
                 'types'          => '!required|array',

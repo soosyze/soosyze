@@ -185,7 +185,7 @@ class Register extends \Soosyze\Controller
         $message .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . "</a><br>\n";
         $message .= t('This link can only be used once.');
 
-        $mail = (new Email)
+        $mail = (new Email())
             ->from(self::config()->get('settings.email'))
             ->to($from)
             ->subject(t('User registration'))

@@ -432,7 +432,7 @@ class Menu extends \Soosyze\Controller
 
     private function getValidator($req)
     {
-        return (new Validator)
+        return (new Validator())
                 ->setRules([
                     'title'       => 'required|string|max:255|!equal:create',
                     'description' => 'required|string|max:255'
