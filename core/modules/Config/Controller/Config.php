@@ -19,7 +19,7 @@ class Config extends \Soosyze\Controller
 
     public function admin($req)
     {
-        if (($menu = $this->getMenuConfig()) && count($menu)) {
+        if (($menu = $this->getMenuConfig()) && !empty($menu)) {
             return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
         }
 

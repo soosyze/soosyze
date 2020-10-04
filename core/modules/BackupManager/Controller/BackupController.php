@@ -29,9 +29,9 @@ class BackupController extends \Soosyze\Controller
         if ($isRepository = self::backupmanager()->isRepository()) {
             $backups = self::backupmanager()->listBackups();
         }
-        $doBackupRoute = count($backups) > 0
-            ? self::router()->getRoute('backupmanager.delete.all')
-            : null;
+        $doBackupRoute = empty($backups)
+            ? null
+            : self::router()->getRoute('backupmanager.delete.all');
 
         return self::template()
                 ->getTheme('theme_admin')
