@@ -9,7 +9,7 @@
 
     <div class="col-md-4 block-item search_item">
         <h3 class="search_text"><?php echo $block[ 'title' ]; ?></h3>
-        <label class="block-body" for="<?php echo "key_block-$key"; ?>">
+        <label class="block-body" for="key_block-<?php echo $key; ?>">
             <?php echo $form->form_group("key_block-$key-group"); ?>
 
         </label>

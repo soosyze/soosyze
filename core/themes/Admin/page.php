@@ -12,8 +12,8 @@
         <div class="drawer-dialog">
             <div class="drawer-content">
                 <div class="drawer-header drawer-header">
-                    <img class="header_logo" src="<?php echo $base_path . '/logo.svg'; ?>" alt="Logo light mode">
-                    <img class="header_logo_dark" src="<?php echo $base_path . '/logo_dark.svg'; ?>" alt="Logo dark mode">
+                    <img class="header_logo" src="<?php echo $base_path; ?>/logo.svg" alt="Logo light mode">
+                    <img class="header_logo_dark" src="<?php echo $base_path; ?>/logo_dark.svg" alt="Logo dark mode">
 
                     <h2>Soosyze</h2>
 
@@ -45,8 +45,8 @@
         <div class="sidebar-wrapper__inner">
             <div class="sidebar">
                 <div class="sidebar-header">
-                    <img class="header_logo" src="<?php echo $base_path . '/logo.svg'; ?>" alt="Logo light mode">
-                    <img class="header_logo_dark" src="<?php echo $base_path . '/logo_dark.svg'; ?>" alt="Logo dark mode">
+                    <img class="header_logo" src="<?php echo $base_path; ?>/logo.svg" alt="Logo light mode">
+                    <img class="header_logo_dark" src="<?php echo $base_path; ?>/logo_dark.svg" alt="Logo dark mode">
                     <h2>Soosyze</h2>
                 </div>
                 <div class="navbar-nav">
