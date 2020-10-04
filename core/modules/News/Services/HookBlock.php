@@ -62,7 +62,7 @@ class HookBlock
         foreach ($data as $value) {
             $year = date('Y', $value[ 'date_created' ]);
             if (isset($output[ $year ])) {
-                $output[ $year ][ 'number' ]++;
+                ++$output[ $year ][ 'number' ];
 
                 continue;
             }

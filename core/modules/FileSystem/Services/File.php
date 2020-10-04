@@ -295,7 +295,7 @@ class File
         }
         $i = 1;
         while (is_file("{$this->dir}/{$this->name}_{$i}.{$this->ext}")) {
-            $i++;
+            ++$i;
         }
 
         return "{$this->dir}/{$this->name}_{$i}.{$this->ext}";

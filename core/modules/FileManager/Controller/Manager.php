@@ -96,7 +96,7 @@ class Manager extends \Soosyze\Controller
             foreach ($iterator as $file) {
                 try {
                     if ($file->isDir()) {
-                        $nbDir++;
+                        ++$nbDir;
                         $spl     = self::filemanager()->parseDir($file, "$path/", $file->getBasename());
                         $size    += $spl[ 'size_octet' ];
                         $files[] = $spl;
@@ -108,7 +108,7 @@ class Manager extends \Soosyze\Controller
             foreach ($iterator as $file) {
                 try {
                     if ($file->isFile()) {
-                        $nbFile++;
+                        ++$nbFile;
                         $spl     = self::filemanager()->parseFile($file, $path);
                         $size    += $spl[ 'size_octet' ];
                         $files[] = $spl;

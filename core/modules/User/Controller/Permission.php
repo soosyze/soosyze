@@ -44,7 +44,7 @@ class Permission extends \Soosyze\Controller
                         $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
                     }
                 }
-                $count++;
+                ++$count;
             }
         }
 
