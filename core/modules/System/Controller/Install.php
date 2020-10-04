@@ -185,7 +185,7 @@ class Install extends \Soosyze\Controller
     {
         /* Installation */
         $composer = [];
-        $profil    = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
+        $profil    = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
 
         $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
 
@@ -300,7 +300,7 @@ class Install extends \Soosyze\Controller
             ->set('settings.rewrite_engine', false)
             ->set('settings.lang', $lang);
 
-        $profil = $_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ];
+        $profil = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
         $this->container->callHook("step.install.finish.$profil", [ $this->container ]);
 
         $path = self::config()->getPath();
