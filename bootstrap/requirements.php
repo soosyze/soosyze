@@ -74,9 +74,9 @@ class Requiement
                 ? 'two'
                 : 'one';
             $html  .= "<tr class='$class {$value[ 'type' ]}'>";
-            if ('error' == $value[ 'type' ]) {
+            if ($value[ 'type' ] === 'error') {
                 $html .= '<th>✗</th>';
-            } elseif ('warning' == $value[ 'type' ]) {
+            } elseif ($value[ 'type' ] === 'warning') {
                 $html .= '<th>!</th>';
             } else {
                 $html .= '<th>✓</th>';
@@ -180,9 +180,9 @@ class Requiement
             return;
         }
         $memory = ini_get('memory_limit');
-        if (false === $memory) {
+        if ($memory === false) {
             $this->addReturn('memory', 'warning', 'PHP memory limit', 'La configuration memory_limit n\'existe pas.');
-        } elseif (null === $memory) {
+        } elseif ($memory === null) {
             $this->addReturn('memory', 'warning', 'PHP memory limit', 'La configuration memory_limit est vide.');
         }
     }

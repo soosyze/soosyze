@@ -58,7 +58,7 @@ class HookApp
 
         if (
             $this->config->get('settings.maintenance') &&
-            'user/login' !== $path &&
+            $path !== 'user/login' &&
             !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
             $response = $response->withStatus(503);
         }

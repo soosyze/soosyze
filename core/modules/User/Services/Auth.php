@@ -24,7 +24,7 @@ class Auth
      */
     public function login($email, $password)
     {
-        if ('' == session_id()) {
+        if (session_id() == '') {
             session_start([
                 'cookie_httponly' => true,
                 'cookie_secure'   => true,

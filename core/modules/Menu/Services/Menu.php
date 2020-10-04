@@ -216,7 +216,7 @@ class Menu
                 continue;
             }
 
-            $menu[ 'link_active' ] = 0 === strpos($route, $menu[ 'link' ])
+            $menu[ 'link_active' ] = strpos($route, $menu[ 'link' ]) === 0
                 ? 'active'
                 : '';
 
