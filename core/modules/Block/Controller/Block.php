@@ -35,7 +35,7 @@ class Block extends \Soosyze\Controller
                 ->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
 
             $block[ 'content' ] .= (string) $this->container->callHook(
-                'block.' . $block[ 'key_block' ],
+                'block.' . $block[ 'hook' ],
                 [ $tpl, $this->getOptions($block) ]
             );
         }
