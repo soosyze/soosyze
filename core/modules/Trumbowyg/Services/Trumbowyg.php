@@ -35,20 +35,23 @@ class Trumbowyg
                     function addEditor() {
                             $.trumbowyg.svgPath = "' . $vendor . 'dist/icons.svg";
                             $("textarea.editor").trumbowyg({
-                                autogrow: true,
                                 lang: "fr",
                                 btnsDef: {
                                     // Create a new dropdown
                                     image: {
                                         dropdown: ["insertImage", "upload", "noembed"],
                                         ico: "insertImage"
+                                    },
+                                    customFormatting: {
+                                        dropdown: ["p", "blockquote", "h2", "h3", "h4"],
+                                        ico: "p"
                                     }
                                 },
                                 // Redefine the button pane
                                 btns: [
                                     ["viewHTML"],
                                     ["undo", "redo"], // Only supported in Blink browsers
-                                    ["formatting"],
+                                    ["customFormatting", "removeformat"],
                                     ["preformatted"],
                                     ["emoji"],
                                     ["strong", "em", "del"],
@@ -58,7 +61,6 @@ class Trumbowyg
                                     ["justifyLeft", "justifyCenter", "justifyRight", "justifyFull"],
                                     ["unorderedList", "orderedList"],
                                     ["horizontalRule"],
-                                    ["removeformat"],
                                     ["fullscreen"]
                                 ],
                                 imageWidthModalEdit: true,

@@ -105,7 +105,7 @@ class Templating extends \Soosyze\Components\Http\Response
         $this->template = $this->createBlock('html.php', $this->pathViews)
             ->addBlock('page', $page)
             ->addVars([
-                'dark'        => $this->isDarkTheme ? 'dark' : '',
+                'dark'        => $this->isDarkTheme ? 'dark trumbowyg-dark' : '',
                 'title'       => '',
                 'logo'        => '',
                 'favicon'     => '',

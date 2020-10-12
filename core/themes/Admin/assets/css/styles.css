@@ -476,6 +476,12 @@ fieldset.package {
 .trumbowyg-modal-box label input {
     color: #666;
 }
+.trumbowyg-editor pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
 /* ---------- block ----------- */
 .block-report_github {
     text-align: right;

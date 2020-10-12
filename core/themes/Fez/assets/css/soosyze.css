@@ -44,6 +44,9 @@ code, pre {
     color: #9baec8;
     padding: .2em .4em;
 }
+pre code {
+    padding: 0;
+}
 .container,
 .container-fluid {
     margin-left: auto;
