@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\BackupManager\Services;
 
-class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
+final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     public function menu(&$menu)
     {

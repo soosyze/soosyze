@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Services;
 
-class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
+final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     protected $nodeTypes = [];
 

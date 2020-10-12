@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Block\Services;
 
-class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
+final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
     public $socials = [
         'blogger'    => 'Blogger',
