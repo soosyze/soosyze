@@ -223,48 +223,7 @@ img {
     margin: 0px auto;
     margin-bottom: 1.5em;
 }
-/* --------------------------- */
-/* -------- PAGINATION ------- */
-/* --------------------------- */
-.pagination {
-    border-radius: 4px;
-    display: inline-block;
-    padding-left: 0;
-    margin: 20px 0;
-    margin-bottom: 20px;
-    margin-top: 20px;
-}
-.pagination > li {
-    display: inline;
-}
-.pagination > li > a, 
-.pagination > li > span {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-top-color: rgb(221, 221, 221);
-    border-right-color: rgb(221, 221, 221);
-    border-bottom-color: rgb(221, 221, 221);
-    border-left-color: rgb(221, 221, 221);
-    color: #337ab7;
-    float: left;
-    line-height: 1.42857143;
-    margin-left: -1px;
-    padding: 6px 12px;
-    position: relative;
-    text-decoration: none;
-}
-.pagination > .active > a, 
-.pagination > .active > a:focus, 
-.pagination > .active > a:hover, 
-.pagination > .active > span, 
-.pagination > .active > span:focus, 
-.pagination > .active > span:hover {
-    background-color: #337ab7;
-    border-color: #337ab7;
-    color: #fff;
-    cursor: default;
-    z-index: 3;
-}
+
 
 /* --------------------------- */
 /* ---------- ROLE ----------- */

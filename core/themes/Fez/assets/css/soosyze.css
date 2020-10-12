@@ -985,6 +985,49 @@ label[data-tooltip]:before {
 
 
 /* --------------------------- */
+/* -------- PAGINATION ------- */
+/* --------------------------- */
+.pagination {
+    border-radius: 4px;
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.pagination > li {
+    display: inline;
+}
+.pagination > li > a, 
+.pagination > li > span {
+    background-color: rgba(86,61,124,.15);
+    border-color: rgba(86,61,124,.2);
+    color: #337ab7;
+    float: left;
+    font-weight: 600;
+    line-height: 1.42857143;
+    margin-left: -1px;
+    padding: 12px 18px;
+    position: relative;
+    text-decoration: none;
+}
+.pagination > .active > a, 
+.pagination > .active > a:focus, 
+.pagination > .active > a:hover, 
+.pagination > .active > span, 
+.pagination > .active > span:focus, 
+.pagination > .active > span:hover {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+    cursor: default;
+}
+.dark .pagination > li > a, 
+.dark .pagination > li > span {
+    color: #fff;
+}
+
+/* --------------------------- */
 /* -------- DARK THEME ------- */
 /* --------------------------- */
 body.dark {
