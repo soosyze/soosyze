@@ -61,12 +61,12 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->query()
             ->insertInto('block', [
                 'section', 'title',
-                'content',
-                'weight',
-                'visibility_pages', 'pages'
+                'weight', 'visibility_pages', 'pages',
+                'content'
             ])
             ->values([
                 'content_footer', '',
+                50, true, 'admin/%',
                 '<div class="block-report_github">'
                 . '<p>'
                 . '<a href="https://github.com/soosyze/soosyze/issues" '
@@ -77,15 +77,12 @@ class Installer extends \SoosyzeCore\System\Migration
                 . t('Report a bug.')
                 . '</a>'
                 . '</p>'
-                . '</div>',
-                50,
-                true, 'admin/%'
+                . '</div>'
             ])
             ->values([
                 'footer', '',
+                50, false, '',
                 '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
-                50,
-                false, ''
             ])
             ->execute();
     }

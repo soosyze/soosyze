@@ -8,12 +8,12 @@ return [
         $req
             ->insertInto('block', [
                 'section', 'title',
-                'content',
-                'weight',
-                'visibility_pages', 'pages'
+                'weight', 'visibility_pages', 'pages',
+                'content'
             ])
             ->values([
                 'content_footer', '',
+                50, true, 'admin/%',
                 '<div class="block-report_github">'
                 . '<p>'
                 . '<a href="https://github.com/soosyze/soosyze/issues" '
@@ -24,9 +24,7 @@ return [
                 . t('Report a bug.')
                 . '</a>'
                 . '</p>'
-                . '</div>',
-                50,
-                true, 'admin/%'
+                . '</div>'
             ])
             ->execute();
     }

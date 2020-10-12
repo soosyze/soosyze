@@ -36,9 +36,9 @@ class Installer extends \SoosyzeCore\System\Migration
         if ($ci->module()->has('Menu')) {
             $ci->query()
                 ->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'menu', 'weight', 'parent'
+                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
                 ])
-                ->values([ 'contact', 'Contact', 'contact', 'menu-main', 50, -1 ])
+                ->values([ 'contact', '', 'Contact', 'contact', 'menu-main', 50, -1 ])
                 ->execute();
         }
     }

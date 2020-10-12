@@ -296,22 +296,23 @@ class HookStep
             ->values([ 'node/7', 'page/about' ])
             ->execute();
 
-        $columns = [ 'key', 'menu', 'icon', 'link', 'weight', 'parent', 'title_link' ];
+        $columns = [ 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent' ];
 
         $idMenuBasic    = $this->lastInsertId('menu_link', $columns, [
-            'node.show', 'menu-main', 'fa fa-bolt', 'page/basic', 1, 7, 'Basic'
+            'node.show', 'fa fa-bolt', 'Basic', 'page/basic', 'menu-main', 1, 7
         ]);
         $idMenuStandard = $this->lastInsertId('menu_link', $columns, [
-            'node.show', 'menu-main', 'fa fa-anchor', 'page/standard', 2, 7, 'Standard'
+            'node.show', 'fa fa-anchor', 'Standard', 'page/standard', 'menu-main',
+            2, 7
         ]);
         $idMenuPremium  = $this->lastInsertId('menu_link', $columns, [
-            'node.show', 'menu-main', 'fa fa-gem', 'page/premium', 3, 7, 'Premium'
+            'node.show', 'fa fa-gem', 'Premium', 'page/premium', 'menu-main', 3, 7
         ]);
         $this->lastInsertId('menu_link', $columns, [
-            'node.show', 'menu-main', '', 'news', 2, -1, 'Blog'
+            'node.show', '', 'Blog', 'news', 'menu-main', 2, -1
         ]);
         $idMenuAbout    = $this->lastInsertId('menu_link', $columns, [
-            'node.show', 'menu-main', '', 'page/about', 3, -1, 'About'
+            'node.show', '', 'About', 'page/about', 'menu-main', 3, -1
         ]);
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
@@ -450,8 +451,8 @@ class HookStep
 
         $idMenuAbout = $this->lastInsertId(
             'menu_link',
-            [ 'key', 'title_link', 'link', 'menu', 'weight', 'parent' ],
-            [ 'node.show', 'About', 'page/about', 'menu-main', 3, -1 ]
+            [ 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent' ],
+            [ 'node.show', '', 'About', 'page/about', 'menu-main', 3, -1 ]
         );
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
@@ -519,25 +520,25 @@ class HookStep
             ->values([ 'node/' . $idNodeProject4, 'project/4' ])
             ->execute();
 
-        $columnsMenuLink = [ 'key', 'menu', 'link', 'weight', 'parent', 'title_link' ];
+        $columnsMenuLink = [ 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent' ];
 
         $idMenuEducation = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'education', 3, -1, 'Education'
+            'node.show', '', 'Education', 'education', 'menu-main', 3, -1
         ]);
         $idMenuProjects  = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'project', 3, -1, 'Projects'
+            'node.show', '', 'Projects', 'project', 'menu-main', 3, -1
         ]);
         $idMenuProject1  = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'project/1', 4, $idMenuProjects, 'Project 1'
+            'node.show', '', 'Project 1', 'project/1', 'menu-main', 4, $idMenuProjects
         ]);
         $idMenuProject2  = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'project/2', 5, $idMenuProjects, 'Project 2'
+            'node.show', '', 'Project 2', 'project/2', 'menu-main', 5, $idMenuProjects
         ]);
         $idMenuProject3  = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'project/3', 6, $idMenuProjects, 'Project 3'
+            'node.show', '', 'Project 3', 'project/3', 'menu-main', 6, $idMenuProjects
         ]);
         $idMenuProject4  = $this->lastInsertId('menu_link', $columnsMenuLink, [
-            'node.show', 'menu-main', 'project/4', 7, $idMenuProjects, 'Project 4'
+            'node.show', '', 'Project 4', 'project/4', 'menu-main', 7, $idMenuProjects
         ]);
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
