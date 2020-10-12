@@ -224,6 +224,9 @@ class Templating extends \Soosyze\Components\Http\Response
         $themes = [];
         foreach ($this->themesPath as $path) {
             foreach (new \DirectoryIterator($path) as $splFile) {
+                if (!$splFile->isDir() || $splFile->isDot()) {
+                    continue;
+                }
                 $composer = $splFile->getRealPath() . '/composer.json';
                 if (!file_exists($composer)) {
                     continue;
