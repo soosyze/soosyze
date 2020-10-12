@@ -186,7 +186,9 @@ class HookApp
         $metaTitle       = $this->config->get('settings.meta_title', 'Soosyze CMS');
         $metaDescription = $this->config->get('settings.meta_description', '');
         $metaKeyboard    = $this->config->get('settings.meta_keyboard', '');
-        $favicon         = $this->config->get('settings.favicon', '');
+        $favicon         = $this->config->get('settings.favicon', '')
+            ? $this->router->getBasePath() . $this->config->get('settings.favicon')
+            : '';
         $logo            = $this->config->get('settings.logo', '');
         $maintenance     = $this->config->get('settings.maintenance', false);
 
