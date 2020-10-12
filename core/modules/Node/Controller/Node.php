@@ -737,8 +737,13 @@ class Node extends \Soosyze\Controller
                 'title_link' => t('View')
             ];
             if ($this->container->callHook('app.granted.route', [ $nodeShow[ 'request' ] ])) {
-                $nodeShow[ 'link' ] = $nodeShow[ 'request' ]->getUri();
-                $menu               = array_merge([ $nodeShow ], $menu);
+                $nodeShow[ 'link' ] = self::router()->makeRoute(
+                    'node/' . $node[ 'id' ] === self::config()->get('settings.path_index')
+                        ? ''
+                        : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
+                );
+
+                $menu = array_merge([ $nodeShow ], $menu);
             }
         }
 

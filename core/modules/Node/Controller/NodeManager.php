@@ -109,9 +109,11 @@ class NodeManager extends \Soosyze\Controller
         $nodeAdminister = $this->container->callHook('app.granted', [ 'node.administer' ]);
 
         foreach ($nodes as &$node) {
-            $node[ 'link_view' ]   = self::router()->getRoute('node.show', [
-                ':id_node' => $node[ 'id' ]
-            ]);
+            $node[ 'link_view' ]   = self::router()->makeRoute(
+                'node/' . $node[ 'id' ] === self::config()->get('settings.path_index')
+                    ? ''
+                    : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
+            );
             if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.edited.' . $node[ 'type' ] ])) {
                 $node[ 'link_edit' ] = self::router()->getRoute('node.edit', [
                     ':id_node' => $node[ 'id' ]
