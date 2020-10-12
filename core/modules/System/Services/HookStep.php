@@ -397,7 +397,7 @@ class HookStep
                 2,
                 'news.month', 'news.month',
                 '',
-                true, '/' . PHP_EOL . 'new/%'
+                true, '/' . PHP_EOL . 'new%'
             ])
             ->execute();
     }
