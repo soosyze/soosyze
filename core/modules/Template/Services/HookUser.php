@@ -6,7 +6,7 @@ class HookUser
 {
     public function hookPermission(&$permission)
     {
-        $permission[ 'Template' ][ 'template.admin' ] = t('Use the admin theme');
+        $permission[ 'Template' ][ 'template.admin' ] = 'Use the admin theme';
     }
 
     public function hookInstallUser($ci)

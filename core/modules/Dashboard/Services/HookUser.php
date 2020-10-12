@@ -7,7 +7,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Dashboard' ] = [
-            'dashboard.administer' => t('Use the dashboard')
+            'dashboard.administer' => 'Use the dashboard'
         ];
     }
 

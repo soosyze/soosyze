@@ -8,7 +8,7 @@
     <?php foreach ($blocks as $key => $block): ?>
 
     <div class="col-md-4 block-item search_item">
-        <h3 class="search_text"><?php echo $block[ 'title' ]; ?></h3>
+        <h3 class="search_text"><?php echo t($block[ 'title' ]); ?></h3>
         <label class="block-body" for="key_block-<?php echo $key; ?>">
             <?php echo $form->form_group("key_block-$key-group"); ?>
 

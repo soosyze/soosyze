@@ -7,10 +7,10 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Block' ] = [
-            'block.administer' => t('See the block administration page'),
-            'block.created'    => t('Create a new block'),
-            'block.edited'     => t('Edit blocks'),
-            'block.deleted'    => t('Delete blocks')
+            'block.administer' => 'See the block administration page',
+            'block.created'    => 'Create a new block',
+            'block.edited'     => 'Edit blocks',
+            'block.deleted'    => 'Delete blocks'
         ];
     }
 

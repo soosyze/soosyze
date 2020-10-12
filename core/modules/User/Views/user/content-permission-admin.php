@@ -56,8 +56,8 @@
                     <tbody>
                         <?php foreach ($module as $key => $permission): ?>
 
-                        <tr id="<?php echo $key ?>" class="permission"  data-title="<?php echo $permission[ 'action' ]; ?>">
-                            <th><?php echo $permission[ 'action' ] ?></th>
+                        <tr id="<?php echo $key ?>" class="permission"  data-title="<?php echo t($permission[ 'name' ]); ?>">
+                            <th><?php echo t($permission[ 'name' ]); ?></th>
                             <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
                             <?php $name = $role . '[' . $key . ']' ?>
 

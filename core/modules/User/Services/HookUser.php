@@ -23,17 +23,18 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'User' ] = [
-            'user.people.manage'     => t('Administer users'),
-            'user.permission.manage' => t('Administer permissions'),
-            'user.showed'            => t('View user profiles'),
-            'user.edited'            => t('Edit your user account'),
-            'user.deleted'           => t('Delete your user account'),
+            'user.people.manage'     => 'Administer users',
+            'user.permission.manage' => 'Administer permissions',
+            'user.showed'            => 'View user profiles',
+            'user.edited'            => 'Edit your user account',
+            'user.deleted'           => 'Delete your user account',
         ];
-        $permission[ 'User role' ][ 'role.all' ] = t('Assign all roles');
+        $permission[ 'User role' ][ 'role.all' ] = 'Assign all roles';
         foreach ($this->user->getRolesAttribuable() as $role) {
-            $permission[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = t('Assign the role :name', [
-                ':name' => $role[ 'role_label' ]
-            ]);
+            $permission[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = [
+                'name' => 'Assign the role :name',
+                'attr' => [ ':name' => $role[ 'role_label' ] ]
+            ];
         }
     }
 

@@ -19,20 +19,20 @@ class HookUser
         $nodeTypes = $this->query->from('node_type')->fetchAll();
 
         $permission[ 'Node' ] = [
-            'node.administer'         => t('Override access control to content'),
-            'node.manager'            => t('Go to the content overview page'),
-            'node.show.published'     => t('View any published content'),
-            'node.show.not_published' => t('View any unpublished content'),
+            'node.administer'         => 'Override access control to content',
+            'node.manager'            => 'Go to the content overview page',
+            'node.show.published'     => 'View any published content',
+            'node.show.not_published' => 'View any unpublished content',
         ];
 
         foreach ($nodeTypes as $nodeType) {
             $permission[ 'Node ' . $nodeType[ 'node_type_name' ] ] = [
-                'node.show.published.' . $nodeType[ 'node_type' ]      => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View published content'),
-                'node.show.not_published.' . $nodeType[ 'node_type' ] => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('View unpublished content'),
-                'node.created.' . $nodeType[ 'node_type' ]            => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Create new content'),
-                'node.cloned.' . $nodeType[ 'node_type' ]             => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Clone any content'),
-                'node.edited.' . $nodeType[ 'node_type' ]             => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Edit any content'),
-                'node.deleted.' . $nodeType[ 'node_type' ]            => '<i>' . $nodeType[ 'node_type_name' ] . '</i> : ' . t('Delete any content')
+                'node.show.published.' . $nodeType[ 'node_type' ]     => 'View published content',
+                'node.show.not_published.' . $nodeType[ 'node_type' ] => 'View unpublished content',
+                'node.created.' . $nodeType[ 'node_type' ]            => 'Create new content',
+                'node.cloned.' . $nodeType[ 'node_type' ]             => 'Clone any content',
+                'node.edited.' . $nodeType[ 'node_type' ]             => 'Edit any content',
+                'node.deleted.' . $nodeType[ 'node_type' ]            => 'Delete any content'
             ];
         }
     }

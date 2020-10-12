@@ -17,11 +17,11 @@ class HookBlock
         
         foreach ($menus as $menu) {
             $blocks[ "menu.{$menu[ 'name' ]}" ] = [
-            'hook'      => 'menu',
-            'key_block' => "menu.{$menu[ 'name' ]}",
-            'options'   => [ 'name' => $menu[ 'name' ] ],
-            'path'      => $this->menu->getPathViews(),
-                'title'     => t($menu[ 'title' ]),
+                'hook'      => 'menu',
+                'key_block' => "menu.{$menu[ 'name' ]}",
+                'options'   => [ 'name' => $menu[ 'name' ] ],
+                'path'      => $this->menu->getPathViews(),
+                'title'     => $menu[ 'title' ],
                 'tpl'       => "components/block/menu-{$menu[ 'name' ]}.php"
             ];
         }

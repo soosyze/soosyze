@@ -137,7 +137,7 @@ class Block extends \Soosyze\Controller
 
             $values = [
                 'section'          => $section,
-                'title'            => $block[ 'title' ],
+                'title'            => t($block[ 'title' ]),
                 'content'          => $content,
                 'weight'           => 1,
                 'visibility_roles' => true,

@@ -46,7 +46,7 @@ class HookUser
     public function hookPermission(&$profil)
     {
         $profil[ 'FileManager' ] = [
-            'filemanager.profil.admin' => t('Administer file permissions')
+            'filemanager.profil.admin' => 'Administer file permissions'
         ];
     }
 

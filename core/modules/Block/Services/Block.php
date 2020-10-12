@@ -22,63 +22,63 @@ class Block
         $blocks = [
             'button'  => [
                 'path'  => $this->pathViews,
-                'title' => t('Text with button'),
+                'title' => 'Text with button',
                 'tpl'   => 'components/block/block-button.php'
             ],
             'card_ui' => [
                 'path'  => $this->pathViews,
-                'title' => t('Simple UI card'),
+                'title' => 'Simple UI card',
                 'tpl'   => 'components/block/block-card_ui.php'
             ],
             'code'    => [
                 'path'  => $this->pathViews,
-                'title' => t('Code'),
+                'title' => 'Code',
                 'tpl'   => 'components/block/block-code.php'
             ],
             'contact' => [
                 'path'  => $this->pathViews,
-                'title' => t('Contact'),
+                'title' => 'Contact',
                 'tpl'   => 'components/block/block-contact.php'
             ],
             'gallery' => [
                 'path'  => $this->pathViews,
-                'title' => t('Picture Gallery'),
+                'title' => 'Picture Gallery',
                 'tpl'   => 'components/block/block-gallery.php'
             ],
             'img'     => [
                 'path'  => $this->pathViews,
-                'title' => t('Image and text'),
+                'title' => 'Image and text',
                 'tpl'   => 'components/block/block-img.php'
             ],
             'map'     => [
                 'path'  => $this->pathViews,
-                'title' => t('Map'),
+                'title' => 'Map',
                 'tpl'   => 'components/block/block-map.php'
             ],
             'video'   => [
                 'path'  => $this->pathViews,
-                'title' => t('Video'),
+                'title' => 'Video',
                 'tpl'   => 'components/block/block-peertube.php'
             ],
             'social'  => [
                 'path'  => $this->pathViews,
-                'title' => t('Social networks'),
+                'title' => 'Social networks',
                 'tpl'   => 'components/block/block-social.php',
                 'hook'  => 'social'
             ],
             'table'   => [
                 'path'  => $this->pathViews,
-                'title' => t('Table'),
+                'title' => 'Table',
                 'tpl'   => 'components/block/block-table.php'
             ],
             'text'    => [
                 'path'  => $this->pathViews,
-                'title' => t('Simple text'),
+                'title' => 'Simple text',
                 'tpl'   => 'components/block/block-text.php'
             ],
             'three'   => [
                 'path'  => $this->pathViews,
-                'title' => t('3 columns'),
+                'title' => '3 columns',
                 'tpl'   => 'components/block/block-three.php'
             ]
         ];

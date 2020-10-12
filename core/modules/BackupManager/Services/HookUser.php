@@ -7,7 +7,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Backups' ] = [
-            'backups.manage' => t('Manage the backups')
+            'backups.manage' => 'Manage the backups'
         ];
     }
 

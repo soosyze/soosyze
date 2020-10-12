@@ -37,12 +37,14 @@ class Permission extends \Soosyze\Controller
         $count  = 0;
         foreach ($modules as $keyModule => $module) {
             foreach ($module as $keyPermission => $permission) {
-                $output[ $keyModule ][ $keyPermission ][ 'action' ] = $permission;
+                $output[ $keyModule ][ $keyPermission ][ 'name' ] = isset($permission[ 'name' ])
+                    ? t($permission[ 'name' ], isset($permission['attr']) ? $permission['attr'] : [])
+                    : $permission;
                 foreach ($roles as $role) {
-                    $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = '';
-                    if (isset($permissionsByRole[ $keyPermission ]) && in_array($role[ 'role_id' ], $permissionsByRole[ $keyPermission ])) {
-                        $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] = 'checked';
-                    }
+                    $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] =
+                        isset($permissionsByRole[ $keyPermission ]) && in_array($role[ 'role_id' ], $permissionsByRole[ $keyPermission ])
+                            ? 'checked'
+                            : '';
                 }
                 ++$count;
             }

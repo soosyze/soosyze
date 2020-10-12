@@ -7,7 +7,7 @@ class HookUser
     public function hookPermission(&$permission)
     {
         $permission[ 'Trumbowyg' ] = [
-            'trumbowyg.upload' => t('Use image upload')
+            'trumbowyg.upload' => 'Use image upload'
         ];
     }
 
