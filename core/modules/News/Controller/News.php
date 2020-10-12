@@ -91,7 +91,7 @@ class News extends \Soosyze\Controller
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => $years ]);
-        $this->link        = self::router()->getRoute('news.years', [ ':year' => $years ], false);
+        $this->link        = self::router()->getRoute('news.years.page', [ ':year' => $years ], false);
 
         return $this->renderNews($page, $req);
     }
@@ -101,8 +101,8 @@ class News extends \Soosyze\Controller
         $date              = $month . '/01/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
-        $this->titleMain   = t('Articles from :date', [ ':date' => date('M Y', $this->dateCurrent) ]);
-        $this->link        = self::router()->getRoute('news.month', [
+        $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%B %Y', $this->dateCurrent) ]);
+        $this->link        = self::router()->getRoute('news.month.page', [
             ':year'  => $years,
             ':month' => $month
             ], false);
@@ -115,8 +115,8 @@ class News extends \Soosyze\Controller
         $date              = $month . '/' . $day . '/' . $years;
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
-        $this->titleMain   = t('Articles from :date', [ ':date' => date('d M Y', $this->dateCurrent) ]);
-        $this->link        = self::router()->getRoute('news.day', [
+        $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%d %B %Y', $this->dateCurrent) ]);
+        $this->link        = self::router()->getRoute('news.day.page', [
             ':year'  => $years,
             ':month' => $month,
             ':day'   => $day
@@ -139,7 +139,14 @@ class News extends \Soosyze\Controller
 
         foreach ($items as &$item) {
             $item[ 'field' ] = self::node()->makeFieldsById('article', $item[ 'entity_id' ]);
-            $item[ 'link' ]  = self::router()->getRoute('node.show', [ ':id_node' => $item[ 'id' ] ]);
+
+            if ($alias = self::alias()->getAlias('node/' . $item[ 'id' ])) {
+                $item[ 'link' ] = self::router()->makeRoute($alias);
+            } else {
+                $item[ 'link' ] = self::router()->getRoute('node.show', [
+                    ':id_node' => $item[ 'id' ]
+                ]);
+            }
         }
         unset($item);
         
@@ -172,27 +179,29 @@ class News extends \Soosyze\Controller
         $page = !empty($page)
             ? substr(strrchr($page, '/'), 1)
             : 1;
-
+        
         self::$limit = self::config()->get('settings.news_pagination', 6);
-        $offset      = self::$limit * ($page - 1);
-        $news        = $this->getNews($this->dateCurrent, $this->dateNext, $offset);
+
+        $offset = self::$limit * ($page - 1);
+        $news   = $this->getNews($this->dateCurrent, $this->dateNext, $offset);
 
         $isCurrent = (time() >= $this->dateCurrent && time() <= $this->dateNext);
 
-        $default = '';
-        if (!$news) {
-            if ($page == 1 && $isCurrent) {
-                $default = t('No articles for the moment');
-            } else {
-                return $this->get404($req);
-            }
+        $default = t('No articles for the moment');
+        if (!$news && !($page == 1 && $isCurrent)) {
+            return $this->get404($req);
         }
 
         foreach ($news as &$new) {
-            $new[ 'link_view' ] = self::router()->getRoute('node.show', [
-                ':id_node' => $new[ 'id' ]
-            ]);
             $new[ 'field' ]     = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
+            
+            if ($alias = self::alias()->getAlias('node/' . $new[ 'id' ])) {
+                $new[ 'link_view' ] = self::router()->makeRoute($alias);
+            } else {
+                $new[ 'link_view' ] = self::router()->getRoute('node.show', [
+                    ':id_node' => $new[ 'id' ]
+                ]);
+            }
         }
         unset($new);
 

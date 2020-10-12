@@ -101,15 +101,13 @@ class Installer extends \SoosyzeCore\System\Migration
             ->insertInto('entity_article', [ 'image', 'summary', 'body', 'reading_time' ])
             ->values([
                 'https://picsum.photos/id/1/650/300',
-                '<p>Un article se met en valeur par un résumé qui décrit brièvement '
-                . 'son contenu avec un nombre de caractères limité (maximum 255 caractères).</p>',
+                '<p>Un article se met en valeur par un résumé qui décrit brièvement son contenu avec un nombre de caractères limité (maximum 255 caractères).</p>',
                 (new Template('article_1.php', $this->pathContent))->render(),
                 1
             ])
             ->values([
                 'https://picsum.photos/id/11/650/300',
-                '<p>Consectetur adipiscing elit. Etiam orci nulla, dignissim eu hendrerit ullamcorper, blandit et arcu. '
-                . 'Vivamus imperdiet, felis eget suscipit pellentesque, est tortor rutrum tortor.</p>',
+                '<p>Consectetur adipiscing elit. Etiam orci nulla, dignissim eu hendrerit ullamcorper, blandit et arcu.</p>',
                 (new Template('article_2.php', $this->pathContent))->render(),
                 1
             ])

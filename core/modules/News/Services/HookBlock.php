@@ -92,7 +92,9 @@ class HookBlock
             $year  = date('Y', $value[ 'date_created' ]);
             $month = date('m', $value[ 'date_created' ]);
 
-            if (!isset($output[ $year ])) {
+            if (isset($output[ $year ])) {
+                ++$output[ $year ][ 'number' ];
+            } else {
                 $output[ $year ] = [
                     'number' => 1,
                     'year'   => $year,
@@ -103,22 +105,26 @@ class HookBlock
                 ];
             }
 
-            if (!isset($output[ $year ][ 'months' ][ $month ])) {
+            if (isset($output[ $year ][ 'months' ][ $month ])) {
+                ++$output[ $year ][ 'months' ][ $month ][ 'number' ];
+            } else {
                 $output[ $year ][ 'months' ][ $month ] = [
                     'number' => 1,
                     'year'   => $year,
-                    'month'  => date('M', $value[ 'date_created' ]),
+                    'month'  => strftime('%b', $value[ 'date_created' ]),
                     'link'   => $this->router->getRoute('news.month', [
                         ':year'  => $year,
                         ':month' => $month,
                         ':id'    => ''
                     ])
                 ];
-            } else {
-                $output[ $year ][ 'number' ]++;
-                $output[ $year ][ 'months' ][ $month ][ 'number' ]++;
             }
         }
+        $output[ 'all' ] = [
+            'number' => count($data),
+            'year'   => t('All'),
+            'link'   => $this->router->getRoute('news.index')
+        ];
 
         return $tpl->addVar('years', $output);
     }
