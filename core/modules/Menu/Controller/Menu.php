@@ -361,6 +361,7 @@ class Menu extends \Soosyze\Controller
 
             $link[ 'link' ] = self::menu()->rewiteUri($link);
         }
+        unset($link);
 
         return self::template()
                 ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
@@ -421,6 +422,7 @@ class Menu extends \Soosyze\Controller
             $menu[ 'link' ] = self::router()
                 ->getRoute('menu.show', [ ':menu' => $menu[ 'name' ] ]);
         }
+        unset($menu);
 
         return self::template()
                 ->createBlock('menu/submenu-menu-list.php', $this->pathViews)

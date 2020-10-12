@@ -152,6 +152,7 @@ class HookBlock
                 ]);
             }
         }
+        unset($value);
 
         return $tpl->addVars([
                 'is_link_more' => $isMore,

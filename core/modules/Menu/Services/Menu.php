@@ -148,6 +148,7 @@ class Menu
             $menu[ 'title_link' ] = t($menu[ 'title_link' ]);
             $menu[ 'submenu' ]    = $this->renderMenu($nameMenu, $menu[ 'id' ], $level + 1);
         }
+        unset($menu);
 
         return $this->core
                 ->get('template')
@@ -222,6 +223,7 @@ class Menu
 
             $menu[ 'link' ] = $this->rewiteUri($menu);
         }
+        unset($menu);
 
         return $query;
     }

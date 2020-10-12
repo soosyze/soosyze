@@ -62,6 +62,8 @@ class News extends \Soosyze\Controller
                 ]);
             }
         }
+        unset($value);
+
         $queryAll = self::query()
             ->from('node')
             ->where('node_status_id', 1)
@@ -139,6 +141,7 @@ class News extends \Soosyze\Controller
             $item[ 'field' ] = self::node()->makeFieldsById('article', $item[ 'entity_id' ]);
             $item[ 'link' ]  = self::router()->getRoute('node.show', [ ':id_node' => $item[ 'id' ] ]);
         }
+        unset($item);
         
         $lastBuildDate = isset($items[0]['date_created'])
             ? $items[0]['date_created']
@@ -191,6 +194,7 @@ class News extends \Soosyze\Controller
             ]);
             $new[ 'field' ]     = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
         }
+        unset($new);
 
         $nodesAll = $this->getNewsAll($this->dateCurrent, $this->dateNext);
 

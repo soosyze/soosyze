@@ -217,6 +217,7 @@ class FileManager
             }
             $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
+        unset($link);
 
         return $this->core
                 ->get('template')
@@ -256,6 +257,7 @@ class FileManager
             }
             $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
+        unset($link);
 
         return $this->core
                 ->get('template')

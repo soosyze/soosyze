@@ -128,6 +128,7 @@ class NodeManager extends \Soosyze\Controller
                 ]);
             }
         }
+        unset($node);
     }
     
     protected function getNodes($page)

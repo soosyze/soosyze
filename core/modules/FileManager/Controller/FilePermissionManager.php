@@ -41,6 +41,7 @@ class FilePermissionManager extends \Soosyze\Controller
                 }, [ 'class' => 'form-group-flex' ]);
             });
         }
+        unset($profil);
         $form->token('token_profil_form')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 

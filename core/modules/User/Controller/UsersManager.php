@@ -97,5 +97,6 @@ class UsersManager extends \Soosyze\Controller
             ]);
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);
         }
+        unset($user);
     }
 }

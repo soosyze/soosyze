@@ -47,6 +47,8 @@ class RoleManager extends \Soosyze\Controller
                 }, [ 'class' => 'form-group-flex' ]);
             });
         }
+        unset($role);
+
         $form->token('token_role_form')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 

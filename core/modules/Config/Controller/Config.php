@@ -162,6 +162,7 @@ class Config extends \Soosyze\Controller
             }
             unset($menu[ $key ]);
         }
+        unset($link);
 
         return $menu;
     }

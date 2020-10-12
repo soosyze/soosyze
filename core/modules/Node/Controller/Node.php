@@ -38,6 +38,7 @@ class Node extends \Soosyze\Controller
                 ':node' => $value[ 'node_type' ]
             ]);
         }
+        unset($value);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -725,6 +726,8 @@ class Node extends \Soosyze\Controller
 
             unset($menu[ $key ]);
         }
+        unset($link);
+        
         if ($menu) {
             $nodeShow = [
                 'key'        => 'node.show',

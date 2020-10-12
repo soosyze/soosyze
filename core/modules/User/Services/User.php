@@ -176,6 +176,7 @@ class User
             }
             $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
+        unset($link);
 
         return $this->core
                 ->get('template')
@@ -214,6 +215,7 @@ class User
             }
             $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
+        unset($link);
 
         return $this->core
                 ->get('template')
