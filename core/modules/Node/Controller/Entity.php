@@ -48,7 +48,7 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $entity, $fieldsEntity)
-            ->fields()
+            ->fieldsEntity()
             ->actionsEntitySubmit();
 
         $this->container->callHook('entity.create.form', [ &$form, $content, $node, $entity ]);
@@ -207,7 +207,7 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->content($content, $entity, $fieldsEntity)
-            ->fields()
+            ->fieldsEntity()
             ->actionsEntitySubmit();
 
         $this->container->callHook('entity.edit.form', [ &$form, $content, $node, $entity, $idEntity ]);

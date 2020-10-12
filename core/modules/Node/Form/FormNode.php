@@ -102,6 +102,23 @@ class FormNode extends FormBuilder
         ]);
     }
 
+    public function fieldsEntity()
+    {
+        return $this->group('fields-fieldset', 'fieldset', function ($form) {
+            foreach ($this->fields as $value) {
+                $key                   = $value[ 'field_name' ];
+                /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
+                $this->content[ $key ] = isset($this->content[ $key ])
+                        ? $this->content[ $key ]
+                        : '';
+                $this->makeField($form, $value);
+            }
+        }, [
+                'class' => 'tab-pane active fade',
+                'id'    => 'fields-fieldset'
+        ]);
+    }
+
     public function makeField(&$form, $value)
     {
         $key = $value[ 'field_name' ];
