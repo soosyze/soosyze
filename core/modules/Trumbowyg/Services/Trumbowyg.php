@@ -27,6 +27,7 @@ class Trumbowyg
         $script .= '<script src="' . $vendor . 'dist/plugins/upload/trumbowyg.upload.min.js"></script>
                         <script src="' . $vendor . 'dist/plugins/noembed/trumbowyg.noembed.min.js"></script>
                         <script src="' . $vendor . 'dist/plugins/preformatted/trumbowyg.preformatted.min.js"></script>
+                        <script src="' . $vendor . 'dist/plugins/emoji/trumbowyg.emoji.min.js"></script>
 			<script>
                         $(function(){
                         addEditor();
@@ -49,6 +50,7 @@ class Trumbowyg
                                     ["undo", "redo"], // Only supported in Blink browsers
                                     ["formatting"],
                                     ["preformatted"],
+                                    ["emoji"],
                                     ["strong", "em", "del"],
                                     ["superscript", "subscript"],
                                     ["link"],
@@ -80,6 +82,7 @@ class Trumbowyg
                         }
                     </script>';
         $style  .= '<link rel="stylesheet" href="' . $vendor . 'dist/ui/trumbowyg.min.css">
+                    <link rel="stylesheet" href="' . $vendor . 'dist/plugins/emoji/ui/trumbowyg.emoji.min.css">
                         <style>
                         .trumbowyg-editor[contenteditable=true]:empty::before{
                             content: attr(placeholder);
