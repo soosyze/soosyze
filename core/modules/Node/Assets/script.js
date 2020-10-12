@@ -55,6 +55,12 @@ $(function () {
 
                 $(`ul a[href="#${idPane}"]`).css("color", "inherit");
             });
+            $(this).find('.trumbowyg-textarea').each(function () {
+
+                if (this.checkValidity() === false || $(this).hasClass('is-invalid')) {
+                    $(this).closest(`.trumbowyg-box`).css("border-color", "red");
+                }
+            });
         });
     };
 
