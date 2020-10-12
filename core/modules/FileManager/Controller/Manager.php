@@ -101,12 +101,6 @@ class Manager extends \Soosyze\Controller
                         $size    += $spl[ 'size_octet' ];
                         $files[] = $spl;
                     }
-                } catch (\Exception $e) {
-                    continue;
-                }
-            }
-            foreach ($iterator as $file) {
-                try {
                     if ($file->isFile()) {
                         ++$nbFile;
                         $spl     = self::filemanager()->parseFile($file, $path);
@@ -117,6 +111,16 @@ class Manager extends \Soosyze\Controller
                     continue;
                 }
             }
+            
+            usort($files, function ($a, $b) {
+                if ($a['ext'] === $b['ext']) {
+                    return 0;
+                }
+
+                return ($a['ext'] === 'dir')
+                    ? -1
+                    : 1;
+            });
         }
 
         return self::template()

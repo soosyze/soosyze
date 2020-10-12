@@ -115,7 +115,7 @@
                                     ? 'active'
                                     : '';
                                 ?>">
-                                    <span class="step-number"><?php echo $i++; ?>.</span>
+                                    <span class="step-number"><?php echo ++$i; ?>.</span>
                                     <span class="step-title"><?php echo $step[ 'title' ]; ?></span>
                                 </li>
                             <?php endforeach; ?>

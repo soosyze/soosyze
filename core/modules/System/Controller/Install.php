@@ -156,9 +156,9 @@ class Install extends \Soosyze\Controller
                 $this->installModule();
 
                 return $this->installFinish();
-            } else {
-                $route = self::router()->getRoute('install.step', [ ':id' => $next[ 'key' ] ]);
             }
+
+            $route = self::router()->getRoute('install.step', [ ':id' => $next[ 'key' ] ]);
         }
 
         return new Redirect($route);
@@ -329,6 +329,6 @@ class Install extends \Soosyze\Controller
             if (key($array) === $position) {
                 break;
             }
-        } while (next($array));
+        } while (next($array) !== false);
     }
 }

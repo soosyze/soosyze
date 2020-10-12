@@ -204,9 +204,9 @@ class Login extends \Soosyze\Controller
                     return new Redirect(self::router()->getRoute('user.login', [
                             ':url' => $url
                     ]));
-                } else {
-                    $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
                 }
+
+                $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
             } else {
                 $_SESSION[ 'messages' ][ 'errors' ] = [ t('Sorry, this email is not recognized.') ];
             }

@@ -113,8 +113,7 @@ class Migration
                     [ $this->schema, $query ]
                 );
             } catch (\Exception $e) {
-                echo $e;
-                exit();
+                throw $e;
             }
             $query->init();
             $this->query->values([

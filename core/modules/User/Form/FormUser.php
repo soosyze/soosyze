@@ -265,10 +265,11 @@ class FormUser extends FormBuilder
                 $special = 1;
             }
 
-            $content = '<li data-pattern=".{' . $length . ',}">' . t('Minimum length') . " : $length</li>"
-                . '<li data-pattern="(?=.*[A-Z]){' . $upper . ',}">' . t('Number of uppercase characters') . " : $upper</li>"
-                . '<li data-pattern="(?=.*\d){' . $digit . ',}">' . t('Number of numeric characters') . " : $digit</li>"
-                . '<li data-pattern="(?=.*\W){' . $special . ',}">' . t('Number of special characters') . " : $special</li>";
+            $content = '<li data-pattern=".{' . $length . ',}">' . t('Minimum length') . ' : ' . $length . '</li>'
+                . '<li data-pattern="(?=.*[A-Z]){' . $upper . ',}">' . t('Number of uppercase characters') . ' : ' . $upper . '</li>'
+                . '<li data-pattern="(?=.*\d){' . $digit . ',}">' . t('Number of numeric characters') . ' : ' . $digit . '</li>'
+                . '<li data-pattern="(?=.*\W){' . $special . ',}">' . t('Number of special characters') . ' : ' . $special . '</li>';
+
             $form->html('password_policy', '<ul:attr>:_content</ul>', [
                 '_content' => $content,
             ]);
@@ -296,7 +297,7 @@ class FormUser extends FormBuilder
                 $form->legend('role-legend', t('User Roles'));
                 foreach ($roles as $role) {
                     $attrRole = [
-                        'checked'  => $role[ 'role_id' ] <= 2 || key_exists($role[ 'role_id' ], $this->values[ 'roles' ]),
+                        'checked'  => $role[ 'role_id' ] <= 2 || isset($this->values[ 'roles' ][ $role[ 'role_id' ] ]),
                         'disabled' => $role[ 'role_id' ] <= 2,
                         'id'       => "role_{$role[ 'role_id' ]}",
                         'value'    => $role[ 'role_label' ]

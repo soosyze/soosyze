@@ -182,13 +182,13 @@ function parseArg($args)
          * __PHP_Incomplete_Class lorsque vous utilisez des objets en session
          * si vous déclarez vos classes avant session_start().
          */
-        elseif (is_object($arg) || $arg instanceof \__PHP_Incomplete_Class) {
+        elseif ($arg instanceof \stdClass || $arg instanceof \__PHP_Incomplete_Class) {
             $html .= '<span class="arg-object">' . get_class($arg) . '</span>, ';
         } elseif (is_numeric($arg)) {
             $html .= '<span class="arg-numeric">' . $arg . '</span>, ';
         } elseif (is_bool($arg)) {
             $html .= '<span class="arg-bool">' . ($arg ? 'true' : 'false') . '</span>, ';
-        } elseif (is_null($arg)) {
+        } elseif ($arg === null) {
             $html .= '<span class="arg-null">null</span>, ';
         } elseif (is_resource($arg)) {
             $html .= '<span class="arg-resource">' . get_resource_type($arg) . '</span>, ';

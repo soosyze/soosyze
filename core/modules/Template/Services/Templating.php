@@ -252,7 +252,7 @@ class Templating extends \Soosyze\Components\Http\Response
                 ->addPathOverride($this->getPathTheme());
     }
 
-    public function addBlock($parent, $template, array $vars = [])
+    public function addBlock($parent, Block $template, array $vars = [])
     {
         if ($template !== null) {
             $template->addVars($vars);

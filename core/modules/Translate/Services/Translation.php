@@ -6,8 +6,6 @@ class Translation extends \Soosyze\Config
 {
     protected $lang;
 
-    protected $dir;
-
     protected $iso639_1 = [
         'aa'  => 'Afar',
         'ab'  => 'Abkhazian',
@@ -200,13 +198,13 @@ class Translation extends \Soosyze\Config
 
     public function __construct(\ArrayAccess $config, $dir, $langDefault = 'en')
     {
+        parent::__construct($dir);
         $this->lang = isset($config[ 'settings.lang' ])
             ? $config[ 'settings.lang' ]
             : $langDefault;
         if (isset($_SESSION[ 'lang' ]) && !in_array($_SESSION[ 'lang' ], $this->iso639_1)) {
             $this->lang = $_SESSION[ 'lang' ];
         }
-        parent::__construct($dir);
     }
 
     public function t($str, array $vars = [])
@@ -248,10 +246,6 @@ class Translation extends \Soosyze\Config
 
     protected function prepareKey($strKey)
     {
-        if (!is_string($strKey) || $strKey === '') {
-            throw new \InvalidArgumentException('The key must be a non-empty string.');
-        }
-
         return [ $this->lang, $strKey ];
     }
 }

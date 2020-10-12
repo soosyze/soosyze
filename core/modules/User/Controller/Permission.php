@@ -101,16 +101,17 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if ($diffCreate = array_diff_key($newPermission, $permission)) {
-            self::query()->insertInto('role_permission', [ 'role_id', 'permission_id' ]);
-            foreach ($diffCreate as $create) {
-                if (!self::user()->hasPermission($create)) {
-                    continue;
-                }
+        if (!($diffCreate = array_diff_key($newPermission, $permission))) {
+            return null;
+        }
+        
+        self::query()->insertInto('role_permission', [ 'role_id', 'permission_id' ]);
+        foreach ($diffCreate as $create) {
+            if (self::user()->hasPermission($create)) {
                 self::query()->values([ $idRole, $create ]);
             }
-            self::query()->execute();
         }
+        self::query()->execute();
     }
 
     protected function deletePermission(
@@ -118,16 +119,17 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if (!($diffDelete = array_diff_key($permission, $newPermission))) {
+        if (($diffDelete = array_diff_key($permission, $newPermission))) {
             return null;
         }
-        self::query()->from('role_permission')->delete();
-        foreach ($diffDelete as $delete) {
-            self::query()->orWhere(function ($query) use ($idRole, $delete) {
-                $query->where('role_id', '==', $idRole)
-                    ->where('permission_id', '==', $delete);
-            });
-        }
-        self::query()->execute();
+        
+        self::query()->from('role_permission')->delete()
+            ->where('role_id', '==', $idRole)
+            ->where(function ($query) use ($diffDelete) {
+                foreach ($diffDelete as $delete) {
+                    $query->orWhere('permission_id', '==', $delete);
+                }
+            })
+            ->execute();
     }
 }

@@ -20,11 +20,10 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
         $linkSource = $app->get('alias')->getSource($linkSource, $linkSource);
 
         $uriSource = \Soosyze\Components\Http\Uri::create($linkSource);
-        $uriSource = $uriSource->withQuery('q=' . $uriSource->getPath());
 
         $isRoute = $app->get('router')->parse(
             $app->getRequest()
-                ->withUri($uriSource)
+                ->withUri($uriSource->withQuery('q=' . $uriSource->getPath()))
                 ->withMethod('get')
         );
 

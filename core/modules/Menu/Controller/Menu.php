@@ -81,7 +81,7 @@ class Menu extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($links as $link) {
                 $linkUpdate = [
-                    'active' => (bool) ($validator->getInput("active-{$link[ 'id' ]}") === 'on'),
+                    'active' => $validator->getInput("active-{$link[ 'id' ]}") === 'on',
                     'parent' => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
                     'weight' => (int) $validator->getInput("weight-{$link[ 'id' ]}")
                 ];

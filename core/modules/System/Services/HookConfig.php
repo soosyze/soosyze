@@ -319,7 +319,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function files(&$inputFiles)
+    public function files(&$inputsFile)
     {
         $inputFiles = [ 'logo', 'favicon' ];
     }

@@ -401,7 +401,7 @@ class User extends \Soosyze\Controller
             }
 
             /* En cas de modification du mot de passe. */
-            if ($isUpdateMdp = $validator->getInput('password_new') != '') {
+            if (($isUpdateMdp = $validator->getInput('password_new')) !== '') {
                 $value[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
             }
 

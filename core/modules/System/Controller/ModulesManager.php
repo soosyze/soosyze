@@ -18,7 +18,7 @@ class ModulesManager extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function edit($r)
+    public function edit()
     {
         /* Récupère les modules en base de données. */
         $data = self::module()->listModuleActive();
@@ -51,7 +51,7 @@ class ModulesManager extends \Soosyze\Controller
                         $isRequired[]       = htmlspecialchars($require);
                         $attr[ 'disabled' ] = 'disabled';
                     } elseif (!self::composer()->validVersion($version, $data[ $require ][ 'version' ], true)) {
-                        $isRequired[]       = htmlspecialchars($require . " (v$version)");
+                        $isRequired[]       = htmlspecialchars("$require (v$version)");
                         $attr[ 'disabled' ] = 'disabled';
                     }
                 }

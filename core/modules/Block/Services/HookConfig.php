@@ -4,7 +4,7 @@ namespace SoosyzeCore\Block\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    public $socials = [
+    protected $socials = [
         'blogger'    => 'Blogger',
         'codepen'    => 'Codepen',
         'discord'    => 'Discord',

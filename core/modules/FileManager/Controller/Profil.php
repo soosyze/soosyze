@@ -372,7 +372,7 @@ class Profil extends \Soosyze\Controller
             'file_clipboard'      => (bool) $validator->getInput('file_clipboard'),
             'file_size'           => (int) $validator->getInput('file_size'),
             'file_extensions_all' => (bool) $validator->getInput('file_extensions_all'),
-            'file_extensions'     => (bool) !$validator->getInput('file_extensions_all')
+            'file_extensions'     => !$validator->getInput('file_extensions_all')
             ? implode(',', $validator->getInput('file_extensions', []))
             : ''
         ];

@@ -19,15 +19,9 @@ class Requiement
 
     protected $warning;
 
-    protected $requiements;
+    protected $requiements = array();
 
-    protected $tests;
-
-    public function __construct()
-    {
-        $this->requiements = array();
-        $this->tests       = array();
-    }
+    protected $tests = array();
 
     public function __toString()
     {

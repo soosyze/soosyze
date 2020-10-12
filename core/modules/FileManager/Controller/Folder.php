@@ -21,7 +21,7 @@ class Folder extends \Soosyze\Controller
         }
 
         $spl = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path"
+            self::core()->getDir('files_public', 'app/files') . $path
         );
 
         $values = [];
@@ -92,7 +92,7 @@ class Folder extends \Soosyze\Controller
 
         $path = Util::cleanPath($path);
         $spl  = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path"
+            self::core()->getDir('files_public', 'app/files') . $path
         );
         if (!$spl->isDir()) {
             return $this->get404($req);
@@ -172,7 +172,7 @@ class Folder extends \Soosyze\Controller
         }
 
         $spl = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path"
+            self::core()->getDir('files_public', 'app/files') . $path
         );
         if (!$spl->isDir()) {
             return $this->get404($req);

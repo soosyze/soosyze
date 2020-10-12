@@ -57,7 +57,7 @@ class Block extends \Soosyze\Controller
             ])
         ]);
 
-        foreach ($data as $key => &$block) {
+        foreach ($data as $key => $block) {
             if (empty($block[ 'hook' ])) {
                 $content = self::template()
                     ->getTheme('theme_admin')

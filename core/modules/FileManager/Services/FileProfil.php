@@ -22,22 +22,20 @@ class FileProfil
 
     public function getProfil($userId)
     {
-        if ($userId === null) {
-            $profils = $this->query->from('role')
+        $profils = $userId === null
+            ? $this->query->from('role')
                 ->leftJoin('profil_file_role', 'role_id', 'role.role_id')
                 ->rightJoin('profil_file', 'profil_file_id', 'profil_file.profil_file_id')
                 ->where('role_id', '==', 1)
                 ->orderBy('profil_weight', 'desc')
-                ->fetchAll();
-        } else {
-            $profils = $this->query->from('user_role')
+                ->fetchAll()
+            : $this->query->from('user_role')
                 ->leftJoin('role', 'role_id', 'role.role_id')
                 ->leftJoin('profil_file_role', 'role_id', 'role.role_id')
                 ->rightJoin('profil_file', 'profil_file_id', 'profil_file.profil_file_id')
                 ->where('user_id', '==', $userId)
                 ->orderBy('profil_weight', 'desc')
                 ->fetchAll();
-        }
 
         $out = [];
         foreach ($profils as $key => $profil) {

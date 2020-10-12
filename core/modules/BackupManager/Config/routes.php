@@ -2,7 +2,7 @@
 
 use Soosyze\Components\Router\Route as R;
 
-const FILE_PATTERN = '2[\d]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][\d]|3[01])T([01][\d]|2[0-3])-[0-5][\d]-[0-5][\d]';
+define('FILE_PATTERN', '2[\d]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][\d]|3[01])T([01][\d]|2[0-3])-[0-5][\d]-[0-5][\d]');
 
 R::useNamespace('SoosyzeCore\BackupManager\Controller');
 

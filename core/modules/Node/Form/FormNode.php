@@ -195,7 +195,7 @@ class FormNode extends FormBuilder
         ]);
         foreach ($options as $keyRadio => $option) {
             $form->group("$keyRadio-group", 'div', function ($form) use ($key, $keyRadio, $value, $option) {
-                $form->checkbox($key . "[$keyRadio]", [
+                $form->checkbox("{$key}[$keyRadio]", [
                         'id'      => "$key-$keyRadio",
                         'checked' => in_array($keyRadio, explode(',', $this->content[ $key ])),
                         'value'   => $keyRadio

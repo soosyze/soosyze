@@ -127,15 +127,13 @@ class File extends \Soosyze\Controller
         $dir    = self::core()->getDir('files_public', 'app/files') . $path;
         $profil = $this->get('filemanager.hook.user')->getRight($path);
         $rules  = [
-            'file'   => 'required',
+            'file'   => 'required|file_extensions:',
             'folder' => '!required',
         ];
 
-        if (!empty($profil[ 'file_extensions_all' ])) {
-            $rules[ 'file' ] .= '|file_extensions:' . implode(',', FileManager::getExtAllowed());
-        } else {
-            $rules[ 'file' ] .= '|file_extensions:' . $profil[ 'file_extensions' ];
-        }
+        $rules[ 'file' ] .= !empty($profil[ 'file_extensions_all' ])
+            ? implode(',', FileManager::getExtAllowed())
+            : $profil[ 'file_extensions' ];
 
         if (!empty($profil[ 'file_size' ])) {
             $rules[ 'file' ] .= '|max:' . $profil[ 'file_size' ] . 'mb';

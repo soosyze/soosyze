@@ -88,7 +88,7 @@ class FileManager
 
     public function parseDir(\SplFileInfo $dir, $path, $name = '')
     {
-        $info = $this->parseRecursive($dir->getPathname());
+        $info = self::parseRecursive($dir->getPathname());
 
         return [
             'ext'        => 'dir',
@@ -340,7 +340,7 @@ class FileManager
         return $actions;
     }
 
-    public function parseRecursive($dir)
+    public static function parseRecursive($dir)
     {
         $dirIterator = new \RecursiveDirectoryIterator($dir);
         $iterator    = new \RecursiveIteratorIterator($dirIterator);

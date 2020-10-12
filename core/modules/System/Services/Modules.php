@@ -10,7 +10,7 @@ class Modules
      * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     protected $query;
-    
+
     protected $translate;
 
     public function __construct($query, $translate)
