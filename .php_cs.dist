@@ -78,8 +78,6 @@ return PhpCsFixer\Config::create()
             'no_unneeded_curly_braces'                   => true,
             /* Supprime les parenthèses superflus. */
             'no_unneeded_control_parentheses'            => true,
-            /* Une class final ne doit pas avoir de méthodes finales. */
-            'no_unneeded_final_method'                   => true,
             /* Ordonne les éléments des class. */
             'ordered_class_elements'                     => true,
             /* Ordonne les imports (use). */
