@@ -215,12 +215,12 @@ class Node
             } elseif ($value[ 'field_type' ] === 'one_to_many') {
                 $option = json_decode($value[ 'field_option' ], true);
 
-                $out[ $key ][ 'field_value' ]   = '';
+                $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $option);
                 $out[ $key ][ 'field_display' ] = $this->tpl
                     ->getTheme()
                     ->createBlock('node/content-entity-show.php', $this->pathViews)
                     ->addVars([
-                        'entities' => $this->makeFieldsByEntity($key, $data, $option)
+                        'entities' => $out[ $key ][ 'field_value' ]
                     ])
                     ->addNamesOverride([ 'node/content-entity_' . $value[ 'field_name' ] . '-show.php' ]);
 

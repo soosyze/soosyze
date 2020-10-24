@@ -119,7 +119,7 @@ class Permission extends \Soosyze\Controller
         array $permission,
         array $newPermission
     ) {
-        if (($diffDelete = array_diff_key($permission, $newPermission))) {
+        if (!($diffDelete = array_diff_key($permission, $newPermission))) {
             return null;
         }
         

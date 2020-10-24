@@ -176,9 +176,9 @@ class News extends \Soosyze\Controller
 
     protected function renderNews($page, $req)
     {
-        $page = !empty($page)
-            ? substr(strrchr($page, '/'), 1)
-            : 1;
+        $page = empty($page)
+            ? 1
+            : substr(strrchr($page, '/'), 1);
         
         self::$limit = self::config()->get('settings.news_pagination', 6);
 

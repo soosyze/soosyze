@@ -48,7 +48,7 @@ class HookApp
                 : '404';
         }
         $path = $this->alias->getSource($path, $path);
-
+        
         $request = $request
             ->withUri(
                 $this->router->isRewrite()
