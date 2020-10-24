@@ -372,6 +372,7 @@ fieldset.package {
     border-radius: 30px;
     display: inline-block;
     padding: 2px 10px;
+    text-align: center;
 }
 .node_type-badge__page {
     background-color: #7fff88;
@@ -393,7 +394,10 @@ fieldset.package {
     background-color: #f6ffa8;
     color: #4e5700;
 }
-
+.node_type-badge__documentation {
+    background-color: #a8beff;
+    color: #001a66;
+}
 
 /* --------------------------- */
 /* ---------- USER ----------- */

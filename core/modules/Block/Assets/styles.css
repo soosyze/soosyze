@@ -25,6 +25,7 @@
     padding: 6px 15px;
     position: absolute;
     right: 0;
+    z-index: 1;
 }
 .block-actions .fa {
     color: #fff;
