@@ -26,9 +26,11 @@ class HookApp
 
     public function hookMenuShowResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
-            $script = $response->getBlock('this')->getVar('scripts');
-            $script .= '<script>
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
+        }
+        $script = $response->getBlock('this')->getVar('scripts');
+        $script .= '<script>
             $().ready(function () {
                 var nestedSortables = [].slice.call($(\'.nested-sortable\'));
 
@@ -62,9 +64,8 @@ class HookApp
             });
             </script>';
 
-            $response->view('this', [
-                'scripts' => $script
-            ]);
-        }
+        $response->view('this', [
+            'scripts' => $script
+        ]);
     }
 }

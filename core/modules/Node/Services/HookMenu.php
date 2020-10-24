@@ -195,6 +195,10 @@ class HookMenu
 
     public function getForm($request, &$response)
     {
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
+        }
+
         $script = $response->getBlock('this')->getVar('scripts');
         $script .= '<script>
                 function toggle (id) {

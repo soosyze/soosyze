@@ -16,12 +16,14 @@ class HookApp
 
     public function hookResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
-            $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Node/Assets/script.js';
-            $script = $response->getBlock('this')->getVar('scripts');
-            $script .= '<script src="' . $vendor . '"></script>';
-            $response->view('this', [ 'scripts' => $script ]);
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
         }
+
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Node/Assets/script.js';
+        $script = $response->getBlock('this')->getVar('scripts');
+        $script .= '<script src="' . $vendor . '"></script>';
+        $response->view('this', [ 'scripts' => $script ]);
     }
 
     public function hookNodeShowResponseAfter($response, $node)
@@ -50,9 +52,12 @@ class HookApp
 
     public function hookNodeEditResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
-            $script = $response->getBlock('this')->getVar('scripts');
-            $script .= '<script>
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
+        }
+
+        $script = $response->getBlock('this')->getVar('scripts');
+        $script .= '<script>
             $().ready(function () {
                 var nestedSortables = [].slice.call($(\'.nested-sortable\'));
 
@@ -85,9 +90,8 @@ class HookApp
             });
             </script>';
 
-            $response->view('this', [
-                'scripts' => $script
-            ]);
-        }
+        $response->view('this', [
+            'scripts' => $script
+        ]);
     }
 }

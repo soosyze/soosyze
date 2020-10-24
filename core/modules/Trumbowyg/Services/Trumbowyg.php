@@ -17,6 +17,10 @@ class Trumbowyg
 
     public function getEditor($request, &$response)
     {
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
+        }
+
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/Trumbowyg/vendor/';
         $script = $response->getBlock('this')->getVar('scripts');
         $style  = $response->getBlock('this')->getVar('styles');

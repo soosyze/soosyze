@@ -407,11 +407,13 @@ class User
 
     public function hookResponseAfter($request, &$response)
     {
-        if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
-            $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';
-            $script = $response->getBlock('this')->getVar('scripts');
-            $script .= '<script src="' . $vendor . '"></script>';
-            $response->view('this', [ 'scripts' => $script ]);
+        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+            return;
         }
+        
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';
+        $script = $response->getBlock('this')->getVar('scripts');
+        $script .= '<script src="' . $vendor . '"></script>';
+        $response->view('this', [ 'scripts' => $script ]);
     }
 }
