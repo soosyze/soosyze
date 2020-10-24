@@ -5,7 +5,7 @@ $require    = $requiement
     ->versionPhp('5.4')
     ->memoryLimit(8)
     ->extensions(array(
-        'date', 'fileinfo', 'filter', 'gd', 'json', 'mbstring', 'session', 'zip'
+        'date', 'fileinfo', 'filter', 'gd', 'json', 'mbstring', 'openssl', 'session', 'zip'
     ));
 
 if (!$require->isValid()) {

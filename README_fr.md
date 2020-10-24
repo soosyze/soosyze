@@ -70,6 +70,7 @@ En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mé
 * `gd` pour le traitement d'image,
 * `json` pour sauvegarder les données et les configurations,
 * `mbstring` pour vos emails,
+* `openssl` pour interroger des ressources ou flux en HTTPS,
 * `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre,
 * `zip` pour créer des sauvegarde et le restaurer en cas d'erreur.
 
