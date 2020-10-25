@@ -23,7 +23,9 @@ class NodeManager extends \Soosyze\Controller
 
     public function page($page, $req)
     {
-        $nodes = $this->getNodes($page)->where('node_status_id', '!=', 4)->fetchAll();
+        $nodes = $this->getNodes($req, $page)
+            ->where('node_status_id', '!=', 4)
+            ->fetchAll();
 
         if (!$nodes && $page !== 1) {
             return $this->get404($req);
@@ -45,8 +47,30 @@ class NodeManager extends \Soosyze\Controller
         $linkAdd        = $this->container->callHook('app.granted.route', [ $requestNodeAdd ])
             ? $requestNodeAdd->getUri()
             : null;
+        
+        $get     = $req->getQueryParams();
+        $orderBy = !empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
+                'date_changed', 'node_status_id'
+            ])
+            ? $get[ 'order_by' ]
+            : null;
 
-        $link = self::router()->getRoute('node.page', [], false);
+        $sort = isset($get[ 'sort' ]) && $get[ 'sort' ] !== 'desc'
+            ? 'asc'
+            : 'desc';
+
+        $sortInverse = $sort === 'asc'
+            ? 'desc'
+            : 'asc';
+
+        $link = self::router()
+            ->getRequestByRoute('node.page', [], false)
+            ->getUri()
+            ->withQuery(
+                $orderBy === null
+            ? ''
+            : "order_by=$orderBy&sort=$sort"
+            );
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -56,13 +80,19 @@ class NodeManager extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
-                    'action_filter'         => self::router()->getRoute('node.filter'),
-                    'link_add'              => $linkAdd,
-                    'link_index'            => self::router()->getRoute('node.admin'),
-                    'link_search_status'    => self::router()->getRoute('node.status.search'),
-                    'link_search_node_type' => self::router()->getRoute('node.type.search'),
-                    'nodes'                 => $nodes,
-                    'paginate'              => new Paginator(count($queryAll), self::$limit, $page, $link)
+                    'action_filter'          => self::router()->getRoute('node.filter'),
+                    'link_add'               => $linkAdd,
+                    'link_index'             => self::router()->getRoute('node.admin'),
+                    'link_search_status'     => self::router()->getRoute('node.status.search'),
+                    'link_search_node_type'  => self::router()->getRoute('node.type.search'),
+                    'link_date_changed_sort' => self::router()->getRequestByRoute('node.admin')->getUri()
+                    ->withQuery("order_by=date_changed&sort=$sortInverse"),
+                    'link_status_sort'       => self::router()->getRequestByRoute('node.admin')->getUri()
+                    ->withQuery("order_by=node_status_id&sort=$sortInverse"),
+                    'nodes'                  => $nodes,
+                    'order_by'               => $orderBy,
+                    'paginate'               => new Paginator(count($queryAll), self::$limit, $page, (string) $link),
+                    'is_sort_asc'            => $sort === 'asc'
         ]);
     }
 
@@ -80,7 +110,7 @@ class NodeManager extends \Soosyze\Controller
             ])
             ->setInputs($req->getQueryParams());
 
-        $nodes = $this->getNodes(1);
+        $nodes = $this->getNodes($req, 1);
 
         if ($validator->getInput('title', '')) {
             $nodes->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
@@ -133,17 +163,18 @@ class NodeManager extends \Soosyze\Controller
         unset($node);
     }
     
-    protected function getNodes($page)
+    protected function getNodes(\Psr\Http\Message\ServerRequestInterface $req, $page)
     {
         $query = clone self::query();
         $nodes = $query->from('node')
             ->leftJoin('node_type', 'type', 'node_type.node_type');
 
         if ($this->container->callHook('app.granted', [ 'node.administer' ])) {
-            return $nodes
-                    ->orderBy('sticky', 'desc')
-                    ->orderBy('date_changed', 'desc')
-                    ->limit(self::$limit, self::$limit * ($page - 1));
+            $nodes
+                ->orderBy('sticky', 'desc')
+                ->limit(self::$limit, self::$limit * ($page - 1));
+
+            return $this->sortNode($req, $nodes);
         }
 
         $publish    = $this->container->callHook('app.granted', [ 'node.show.published' ]);
@@ -174,10 +205,27 @@ class NodeManager extends \Soosyze\Controller
                 $nodes->where('type', '!=', $type[ 'node_type' ]);
             }
         }
+        
+        $nodes->orderBy('sticky', 'desc')
+            ->limit(self::$limit, self::$limit * ($page - 1));
 
-        return $nodes
-                ->orderBy('sticky', 'desc')
-                ->orderBy('date_changed', 'desc')
-                ->limit(self::$limit, self::$limit * ($page - 1));
+        return $this->sortNode($req, $nodes);
+    }
+    
+    protected function sortNode($req, $nodes)
+    {
+        $get = $req->getQueryParams();
+
+        if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
+                'date_changed', 'node_status_id'
+            ])) {
+            $sort = isset($get[ 'sort' ]) && $get[ 'sort' ] === 'desc'
+                ? 'desc'
+                : 'asc';
+            
+            return $nodes->orderBy($get[ 'order_by' ], $sort);
+        }
+
+        return $nodes->orderBy('date_changed', 'desc');
     }
 }

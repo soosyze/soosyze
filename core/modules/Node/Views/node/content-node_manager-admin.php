@@ -71,9 +71,33 @@
         <thead>
             <tr class="form-head">
                 <th><?php echo t('Name'); ?></th>
-                <th><?php echo t('Creation date'); ?></th>
+                <th>
+                    <?php if (empty($order_by)): ?>
+                        <a href="<?php echo $link_date_changed_sort; ?>" title="<?php echo t('Ascending'); ?>">
+                            <?php echo t('Creation date'); ?> <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                        </a>
+                    <?php elseif ($order_by === 'date_changed'): ?>
+                        <a href="<?php echo $link_date_changed_sort; ?>" title="<?php echo t($is_sort_asc ? 'Ascending' : 'Descending'); ?>">
+                            <?php echo t('Creation date'); ?> <i class="fa <?php echo $is_sort_asc ? 'fa-arrow-up' : 'fa fa-arrow-down'; ?>" aria-hidden="true"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo $link_date_changed_sort; ?>" title="<?php echo t('Ascending'); ?>">
+                            <?php echo t('Creation date'); ?>
+                        </a>
+                    <?php endif; ?>
+                </th>
                 <th class="text-right"><?php echo t('Actions'); ?></th>
-                <th><?php echo t('Status'); ?></th>
+                <th>
+                    <?php if ($order_by === 'node_status_id'): ?>
+                        <a href="<?php echo $link_status_sort; ?>" title="<?php echo t($is_sort_asc ? 'Ascending' : 'Descending'); ?>">
+                            <?php echo t('Status'); ?> <i class="fa <?php echo $is_sort_asc ? 'fa-arrow-up' : 'fa fa-arrow-down'; ?>" aria-hidden="true"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo $link_status_sort; ?>" title="<?php echo t('Ascending'); ?>">
+                            <?php echo t('Status'); ?>
+                        </a>
+                    <?php endif; ?>
+                </th>
             </tr>
         </thead>
         <tbody>
