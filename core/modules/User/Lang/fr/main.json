@@ -59,5 +59,7 @@
     "I have read and accept your terms of service (Required)": "J'ai lu et j'accepte vos conditions d'utilisation (Obligatoire)",
     "Read the terms of service": "Lire les conditions générales d'utilisation",
     "I have read and accept your privacy policy (Required)": "J'ai lu et j'accepte votre politique de confidentialité (Obligatoire)",
-    "Read the privacy policy": "Lire la politique de confidentialité"
+    "Read the privacy policy": "Lire la politique de confidentialité",
+    ":count user": ":count utilisateur",
+    ":count users": ":count utilisateurs"
 }

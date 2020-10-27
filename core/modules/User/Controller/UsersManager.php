@@ -22,10 +22,6 @@ class UsersManager extends \Soosyze\Controller
 
     public function admin($req)
     {
-        $users = self::user()->getUsers();
-
-        $this->hydrateUsersLinks($users);
-
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
@@ -45,7 +41,6 @@ class UsersManager extends \Soosyze\Controller
                     'link_create_user'     => self::router()->getRoute('user.create'),
                     'link_filter_user'     => self::router()->getRoute('user.filter'),
                     'link_user_admin'      => self::router()->getRoute('user.admin'),
-                    'users'                => $users,
                     'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.admin')
                 ])
                 ->addBlock('content.table', $this->filterPage(1, $req));
@@ -73,35 +68,117 @@ class UsersManager extends \Soosyze\Controller
 
         self::query()->from('user');
 
+        $params = [];
         if (in_array($validator->getInput('actived'), [ '0', 0, '1', 1 ], true)) {
+            $params[ 'actived' ] = $validator->getInput('actived');
             self::query()->where('actived', (bool) $validator->getInput('actived'));
         }
-        self::query()->where(function ($query) use ($validator) {
+        self::query()->where(function ($query) use ($validator, &$params) {
             if ($validator->getInput('firstname', '')) {
+                $params[ 'firstname' ] = $validator->getInput('firstname');
                 $query->orWhere('firstname', 'ilike', '%' . $validator->getInput('firstname') . '%');
             }
             if ($validator->getInput('name', '')) {
+                $params[ 'name' ] = $validator->getInput('name');
                 $query->orWhere('name', 'ilike', '%' . $validator->getInput('name') . '%');
             }
             if ($validator->getInput('username', '')) {
+                $params[ 'username' ] = $validator->getInput('username');
                 $query->orWhere('username', 'ilike', '%' . $validator->getInput('username') . '%');
             }
         });
 
+        $paramsActivedSort       = $params;
+        $paramsUsernameSort      = $params;
+        $paramsTimeAccessSort    = $params;
+        $paramsTimeInstalledSort = $params;
+
+        $this->sortUser(self::query(), $req);
+
         $data = self::query()->fetchAll();
+
         $countData = count($data);
         $users     = array_slice($data, self::$limit * ($page - 1), self::$limit);
 
         $this->hydrateUsersLinks($users);
 
+        list($orderBy, $sort, $sortInverse, $isSortAsc) = $this->getSortParams($req);
+        $params[ 'order_by' ] = $orderBy;
+        $params[ 'sort' ]     = $sort;
+
+        /* Liens */
         $linkPagination = self::router()->getRequestByRoute('user.filter.page', [], false)->getUri();
+        $linkSort       = self::router()->getRequestByRoute('user.filter')->getUri();
+
+        if ($params) {
+            $linkPagination = $linkPagination->withQuery(
+                self::router()->isRewrite()
+                ? http_build_query($params)
+                : $linkPagination->getQuery() . '&' . http_build_query($params)
+            );
+        }
+
+        $parseQuery = [];
+
+        parse_str($linkSort->getQuery(), $parseQuery);
+        $route = self::router()->isRewrite()
+            ? null
+            : $parseQuery[ 'q' ];
+
+        $paramsActivedSort += [
+            'q'        => $route,
+            'order_by' => 'actived',
+            'sort'     => $sortInverse
+        ];
+
+        $paramsTimeAccessSort += [
+            'q'        => $route,
+            'order_by' => 'time_access',
+            'sort'     => $sortInverse
+        ];
+
+        $paramsTimeInstalledSort += [
+            'q'        => $route,
+            'order_by' => 'time_installed',
+            'sort'     => $sortInverse
+        ];
+
+        $paramsUsernameSort += [
+            'q'        => $route,
+            'order_by' => 'username',
+            'sort'     => $sortInverse
+        ];
 
         return self::template()
                 ->createBlock('user/table-user.php', $this->pathViews)
                 ->addVars([
-                    'paginate' => new Paginator($countData, self::$limit, $page, $linkPagination),
-                    'users'    => $users
+                    'count'                    => $countData,
+                    'is_sort_asc'              => $isSortAsc,
+                    'link_actived_sort'        => $linkSort->withQuery(http_build_query($paramsActivedSort)),
+                    'link_username_sort'       => $linkSort->withQuery(http_build_query($paramsUsernameSort)),
+                    'link_time_access_sort'    => $linkSort->withQuery(http_build_query($paramsTimeAccessSort)),
+                    'link_time_installed_sort' => $linkSort->withQuery(http_build_query($paramsTimeInstalledSort)),
+                    'order_by'                 => $orderBy,
+                    'paginate'                 => new Paginator($countData, self::$limit, $page, $linkPagination),
+                    'users'                    => $users
         ]);
+    }
+
+    protected function sortUser($users, $req)
+    {
+        $get = $req->getQueryParams();
+
+        if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
+                'actived', 'time_access', 'time_installed', 'username'
+            ])) {
+            $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
+                ? 'desc'
+                : 'asc';
+
+            return $users->orderBy($get[ 'order_by' ], $sort);
+        }
+
+        return $users->orderBy('time_access', 'desc');
     }
 
     protected function hydrateUsersLinks(&$users)
@@ -119,5 +196,26 @@ class UsersManager extends \Soosyze\Controller
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);
         }
         unset($user);
+    }
+
+    protected function getSortParams($req)
+    {
+        $get = $req->getQueryParams();
+
+        $orderBy = !empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
+                'actived', 'time_access', 'time_installed', 'username'
+            ])
+            ? $get[ 'order_by' ]
+            : null;
+
+        $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
+            ? 'desc'
+            : 'asc';
+
+        $sortInverse = $sort === 'asc'
+            ? 'desc'
+            : 'asc';
+
+        return [ $orderBy, $sort, $sortInverse, $sort === 'asc' ];
     }
 }
