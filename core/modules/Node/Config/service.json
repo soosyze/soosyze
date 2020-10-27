@@ -1,7 +1,7 @@
 {
     "node": {
         "class": "SoosyzeCore\\Node\\Services\\Node",
-        "arguments": ["@core", "@query", "@template"]
+        "arguments": ["@config", "@core", "@query", "@template"]
     },
     "node.install": {
         "class": "SoosyzeCore\\Node\\Installer",

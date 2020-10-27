@@ -28,6 +28,42 @@ $(function () {
             }
         });
     });
+    $(document).delegate('#modal_node input[name="submit"]', 'click', function (evt) {
+        evt.preventDefault();
+        const $formModal = $(this).parent('form');
+        $.ajax({
+            url: $formModal.attr('action'),
+            type: $formModal.attr('method'),
+            data: $formModal.serialize(),
+            dataType: 'json',
+            success: function () {
+                var action = $('#table-file').data('link_show');
+                updateManager(action);
+                closeModal.call(evt.target, evt);
+            },
+            error: function (data) {
+                renderMessage('.modal-messages', data.responseJSON);
+            }
+        });
+    });
+    /**
+     * Evenement des bouton d'actions.
+     */
+    $(document).delegate('.actions-node .btn-action-remove', 'click', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        const link = evt.currentTarget.href;
+        $.ajax({
+            url: link,
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('.modal-content').html(data);
+                renderMessage('.modal-messages', data);
+            }
+        });
+    });
 
     $('#form-node .tab-pane').each(function () {
         let idPane = $(this).attr("id");

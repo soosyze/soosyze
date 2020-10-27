@@ -16,8 +16,10 @@ R::get('node.edit', 'admin/node/:id_node/edit', 'Node@edit', [ ':id_node' => '\d
 R::get('node.clone', 'admin/node/:id_node/clone', 'Node@cloneNode', [ ':id_node' => '\d+' ]);
 R::post('node.update', 'admin/node/:id_node/edit', 'Node@update', [ ':id_node' => '\d+' ]);
 R::get('node.remove', 'admin/node/:id_node/remove', 'Node@remove', [ ':id_node' => '\d+' ]);
-R::get('node.delete', 'admin/node/:id_node/delete', 'Node@delete', [ ':id_node' => '\d+' ]);
 R::post('node.delete', 'admin/node/:id_node/delete', 'Node@delete', [ ':id_node' => '\d+' ]);
+
+R::get('node.api.remove', 'api/node/:id_node/remove', 'NodeApi@remove', [ ':id_node' => '\d+' ]);
+R::post('node.api.delete', 'api/node/:id_node/delete', 'NodeApi@delete', [ ':id_node' => '\d+' ]);
 
 R::get('entity.create', 'admin/node/:id_node/:entity', 'Entity@create', [
     ':id_node' => '\d+',

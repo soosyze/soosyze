@@ -174,7 +174,7 @@ class NodeManager extends \Soosyze\Controller
                 ]);
             }
             if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.deleted.' . $node[ 'type' ] ])) {
-                $node[ 'link_delete' ] = self::router()->getRoute('node.delete', [
+                $node[ 'link_remove' ] = self::router()->getRoute('node.api.remove', [
                     ':id_node' => $node[ 'id' ]
                 ]);
             }

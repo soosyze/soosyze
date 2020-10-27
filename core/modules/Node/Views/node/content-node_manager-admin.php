@@ -67,3 +67,9 @@
 </div>
 
 <div class="node-table"><?php echo $section[ 'table' ]; ?></div>
+
+<div id="modal_node" class="modal" aria-label="<?php echo t('File actions window'); ?>">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
+    </div>
+</div>

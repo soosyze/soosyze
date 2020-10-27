@@ -509,7 +509,7 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $pathsSettings = $this->getPathSettings();
+        $pathsSettings = self::node()->getPathSettings();
 
         $useInPath = null;
         foreach ($pathsSettings as $value) {
@@ -568,7 +568,7 @@ class Node extends \Soosyze\Controller
             ])
             ->setInputs([ 'id' => $idNode ] + $req->getParsedBody());
 
-        $pathsSettings = $this->getPathSettings();
+        $pathsSettings = self::node()->getPathSettings();
 
         foreach ($pathsSettings as $value) {
             if (!empty($value[ 'path' ]) && self::alias()->getSource($value[ 'path' ], $value[ 'path' ]) === 'node/' . $idNode) {
@@ -849,48 +849,6 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
-    }
-
-    protected function getPathSettings()
-    {
-        return [
-            [
-                'key'      => 'settings.path_index',
-                'path'     => self::config()->get('settings.path_index'),
-                'title'    => 'Default homepage',
-                'required' => 1
-            ],
-            [
-                'key'   => 'settings.path_no_found',
-                'path'  => self::config()->get('settings.path_no_found'),
-                'title' => 'Page 404 by default (page not found)'
-            ],
-            [
-                'key'   => 'settings.path_access_denied',
-                'path'  => self::config()->get('settings.path_access_denied'),
-                'title' => 'Page 403 by default (access denied)'
-            ],
-            [
-                'key'   => 'settings.path_maintenance',
-                'path'  => self::config()->get('settings.path_maintenance'),
-                'title' => 'Default maintenance page'
-            ],
-            [
-                'key'   => 'settings.connect_redirect',
-                'path'  => self::config()->get('settings.connect_redirect'),
-                'title' => 'Redirect page after connection'
-            ],
-            [
-                'key'   => 'settings.rgpd_page',
-                'path'  => self::config()->get('settings.rgpd_page'),
-                'title' => 'GDPR Page'
-            ],
-            [
-                'key'   => 'settings.terms_of_service_page',
-                'path'  => self::config()->get('settings.terms_of_service_page'),
-                'title' => 'Terms page'
-            ]
-        ];
     }
 
     private function deleteFile($type, $idNode)

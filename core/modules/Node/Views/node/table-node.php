@@ -71,7 +71,7 @@
                     <?php echo strftime('%a %e %b %Y, %H:%M', $node[ 'date_changed' ]); ?>
 
                 </td>
-                <td data-title="<?php echo t('Actions'); ?>" class="text-right">
+                <td data-title="<?php echo t('Actions'); ?>" class="text-right actions-node">
                     <div class="btn-group" role="group" aria-label="action">
                         <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
                             <i class="far fa-eye" aria-hidden="true"></i> <?php echo t('View'); ?></a>
@@ -83,11 +83,12 @@
 
                         <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?></a>
-                        <?php endif; if (isset($node[ 'link_delete' ])): ?>
+                        <?php endif; if (isset($node[ 'link_remove' ])): ?>
 
-                        <a href="<?php echo $node[ 'link_delete' ]; ?>"
-                           class="btn btn-action"
-                           onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
+                        <a href="<?php echo $node[ 'link_remove' ]; ?>"
+                           class="btn btn-action btn-action-remove"
+                           data-toogle="modal"
+                           data-target="#modal_node">
                             <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?></a>
                         <?php endif; ?>
 

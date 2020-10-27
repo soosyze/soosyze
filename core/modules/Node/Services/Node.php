@@ -4,6 +4,8 @@ namespace SoosyzeCore\Node\Services;
 
 class Node
 {
+    protected $config;
+    
     protected $core;
 
     protected $pathViews;
@@ -15,11 +17,12 @@ class Node
      */
     protected $tpl;
 
-    public function __construct($core, $query, $tpl)
+    public function __construct($config, $core, $query, $tpl)
     {
-        $this->core  = $core;
-        $this->query = $query;
-        $this->tpl   = $tpl;
+        $this->config = $config;
+        $this->core   = $core;
+        $this->query  = $query;
+        $this->tpl    = $tpl;
 
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
@@ -167,6 +170,48 @@ class Node
         }
 
         return $out;
+    }
+    
+    public function getPathSettings()
+    {
+        return [
+            [
+                'key'      => 'settings.path_index',
+                'path'     => $this->config->get('settings.path_index'),
+                'title'    => 'Default homepage',
+                'required' => 1
+            ],
+            [
+                'key'   => 'settings.path_no_found',
+                'path'  => $this->config->get('settings.path_no_found'),
+                'title' => 'Page 404 by default (page not found)'
+            ],
+            [
+                'key'   => 'settings.path_access_denied',
+                'path'  => $this->config->get('settings.path_access_denied'),
+                'title' => 'Page 403 by default (access denied)'
+            ],
+            [
+                'key'   => 'settings.path_maintenance',
+                'path'  => $this->config->get('settings.path_maintenance'),
+                'title' => 'Default maintenance page'
+            ],
+            [
+                'key'   => 'settings.connect_redirect',
+                'path'  => $this->config->get('settings.connect_redirect'),
+                'title' => 'Redirect page after connection'
+            ],
+            [
+                'key'   => 'settings.rgpd_page',
+                'path'  => $this->config->get('settings.rgpd_page'),
+                'title' => 'GDPR Page'
+            ],
+            [
+                'key'   => 'settings.terms_of_service_page',
+                'path'  => $this->config->get('settings.terms_of_service_page'),
+                'title' => 'Terms page'
+            ]
+        ];
     }
 
     private function makeFields($type, array $fields, array $data)
