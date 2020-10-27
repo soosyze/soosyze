@@ -13,6 +13,8 @@ class UsersManager extends \Soosyze\Controller
 
     protected $isAdmin = false;
 
+    protected $username = '';
+
     protected $pathViews;
 
     public function __construct()
@@ -84,6 +86,7 @@ class UsersManager extends \Soosyze\Controller
             }
             if ($validator->getInput('username', '')) {
                 $params[ 'username' ] = $validator->getInput('username');
+                $this->username       = $validator->getInput('username');
                 $query->orWhere('username', 'ilike', '%' . $validator->getInput('username') . '%');
             }
         });
@@ -194,6 +197,7 @@ class UsersManager extends \Soosyze\Controller
                 ':id' => $user[ 'user_id' ]
             ]);
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);
+            $user[ 'username' ]    = $this->highlight($this->username, $user[ 'username' ]);
         }
         unset($user);
     }
@@ -217,5 +221,12 @@ class UsersManager extends \Soosyze\Controller
             : 'asc';
 
         return [ $orderBy, $sort, $sortInverse, $sort === 'asc' ];
+    }
+
+    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
+    {
+        return $needle === ''
+            ? $haystack
+            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 }
