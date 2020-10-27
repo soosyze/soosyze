@@ -15,6 +15,8 @@ class NodeManager extends \Soosyze\Controller
 
     protected $pathViews;
 
+    protected $title = '';
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -80,6 +82,7 @@ class NodeManager extends \Soosyze\Controller
         $params = [];
         if ($validator->getInput('title', '')) {
             $params[ 'title' ] = $validator->getInput('title');
+            $this->title = $validator->getInput('title');
             $query->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
         }
         if ($validator->getInput('types', [])) {
@@ -139,6 +142,7 @@ class NodeManager extends \Soosyze\Controller
         return self::template()
                 ->createBlock('node/table-node.php', $this->pathViews)
                 ->addVars([
+                    'count'                  => $countData,
                     'is_admin'               => $this->admin,
                     'is_sort_asc'            => $isSortAsc,
                     'link_date_changed_sort' => $linkSort->withQuery(http_build_query($paramsDateChangedSort)),
@@ -174,8 +178,16 @@ class NodeManager extends \Soosyze\Controller
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
+            $node[ 'title' ] = $this->highlight($this->title, $node[ 'title' ]);
         }
         unset($node);
+    }
+
+    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
+    {
+        return $needle === ''
+            ? $haystack
+            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 
     protected function getNodes(

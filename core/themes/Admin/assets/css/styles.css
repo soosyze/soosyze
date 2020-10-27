@@ -61,6 +61,10 @@ a:hover {
     font-size: 3em;
     margin-bottom: .5em;
 }
+.highlight{
+    background-color: #ffff00;
+    color: #000;
+}
 #breadcrumb li.crumb {
     background-image: url('../files/breadcrumb.svg');
     background-repeat: no-repeat;

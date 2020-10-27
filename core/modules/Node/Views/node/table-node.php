@@ -1,5 +1,10 @@
 
 <fieldset class="responsive">
+
+    <?php if ($count >= 1): ?>
+        <legend><?php echo t($count > 1 ? ':count contents' : ':count content', [':count' => $count]); ?></legend>
+    <?php endif; ?>
+
     <table class="table table-hover table-striped table-responsive node_manager-table">
         <thead>
             <tr class="form-head">

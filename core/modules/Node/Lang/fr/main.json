@@ -39,5 +39,7 @@
     "Warning ! The deletion of the node is final.": "Attention ! La suppression du contenu est définitive.",
     "Private page": "Page privée",
     "Use private pages for content reserved for your members.": "Utilisez les pages privées pour les contenus réservés à vos membres.",
-    "Content :title has been deleted": "Le contenu :title a été supprimé"
+    "Content :title has been deleted": "Le contenu :title a été supprimé",
+    ":count contents": ":count contenus",
+    ":count content": ":count contenu"
 }
