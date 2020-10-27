@@ -2,12 +2,12 @@
 
 namespace SoosyzeCore\Node\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Http\UploadedFile;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
+use SoosyzeCore\Node\Form\FormNodeDelete;
 
 class Node extends \Soosyze\Controller
 {
@@ -502,22 +502,44 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $content = [];
+
+        if (isset($_SESSION[ 'inputs' ])) {
+            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            unset($_SESSION[ 'inputs' ]);
+        }
+
+        $pathsSettings = $this->getPathSettings();
+
+        $useInPath = null;
+        foreach ($pathsSettings as $value) {
+            if (!empty($value[ 'path' ]) && self::alias()->getSource($value[ 'path' ], $value[ 'path' ]) === 'node/' . $idNode) {
+                $useInPath = $value;
+
+                break;
+            }
+        }
+
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $form = (new FormBuilder([
+        $form = (new FormNodeDelete([
                 'method' => 'post',
                 'action' => self::router()->getRoute('node.delete', [ ':id_node' => $idNode ])
                 ]))
-            ->group('node-remove-information-fieldset', 'fieldset', function ($form) {
-                $form->legend('node-remove-information-legend', t('Node deletion'))
-                ->html('system-favicon-info-dimensions', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the node is final.')
-                ]);
-            })
-            ->token('token_node_remove')
-            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->setValues($content, $useInPath)
+            ->makeFields();
 
         $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
+
+        $messages = [];
+        if (isset($_SESSION[ 'messages' ])) {
+            $messages = $_SESSION[ 'messages' ];
+            unset($_SESSION[ 'messages' ]);
+        }
+        if (isset($_SESSION[ 'errors_keys' ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
+            unset($_SESSION[ 'errors_keys' ]);
+        }
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -525,6 +547,7 @@ class Node extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'         => $form,
                     'node_submenu' => $this->getSubmenuNode($node, 'node.delete')
@@ -539,8 +562,29 @@ class Node extends \Soosyze\Controller
         }
 
         $validator = (new Validator())
-            ->setRules([ 'id' => 'required' ])
-            ->setInputs([ 'id' => $idNode ]);
+            ->setRules([
+                'id'    => 'required',
+                'files' => 'bool'
+            ])
+            ->setInputs([ 'id' => $idNode ] + $req->getParsedBody());
+
+        $pathsSettings = $this->getPathSettings();
+
+        foreach ($pathsSettings as $value) {
+            if (!empty($value[ 'path' ]) && self::alias()->getSource($value[ 'path' ], $value[ 'path' ]) === 'node/' . $idNode) {
+                $not = empty($value[ 'required' ])
+                    ? ''
+                    : '!';
+
+                $validator
+                    ->addRule('path', $not . 'required|route')
+                    ->addInput('path_key', $value[ 'key' ])
+                    ->addRule('path_key', $not . 'required|string')
+                    ->addLabel('path', t('New path for') . ' ' . t($value[ 'title' ]));
+
+                break;
+            }
+        }
 
         $this->container->callHook('node.delete.validator', [ &$validator, $idNode ]);
 
@@ -554,18 +598,28 @@ class Node extends \Soosyze\Controller
                 ->where('id', '==', $idNode)
                 ->execute();
 
-            $this->deleteFile($node['type'], $idNode);
+            if ((bool) $validator->getInput('files')) {
+                $this->deleteFile($node[ 'type' ], $idNode);
+            }
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [
-                t('Content :title has been deleted', [':title' => $node['title']])
+                t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ])
             ];
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+            
+            if ($validator->getInput('path')) {
+                var_dump($validator->getInput('path_key'), $validator->getInput('path'));
+                self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
+            }
+
+            return new Redirect(self::router()->getRoute('node.admin'));
         }
 
-        return new Redirect(self::router()->getRoute('node.admin'));
+        $_SESSION[ 'inputs' ]               = $validator->getInputs();
+        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return new Redirect(self::router()->getRoute('node.remove', [ ':id_node' => $idNode ]));
     }
 
     public function cloneNode($idNode, $req)
@@ -795,6 +849,48 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
+    }
+
+    protected function getPathSettings()
+    {
+        return [
+            [
+                'key'      => 'settings.path_index',
+                'path'     => self::config()->get('settings.path_index'),
+                'title'    => 'Default homepage',
+                'required' => 1
+            ],
+            [
+                'key'   => 'settings.path_no_found',
+                'path'  => self::config()->get('settings.path_no_found'),
+                'title' => 'Page 404 by default (page not found)'
+            ],
+            [
+                'key'   => 'settings.path_access_denied',
+                'path'  => self::config()->get('settings.path_access_denied'),
+                'title' => 'Page 403 by default (access denied)'
+            ],
+            [
+                'key'   => 'settings.path_maintenance',
+                'path'  => self::config()->get('settings.path_maintenance'),
+                'title' => 'Default maintenance page'
+            ],
+            [
+                'key'   => 'settings.connect_redirect',
+                'path'  => self::config()->get('settings.connect_redirect'),
+                'title' => 'Redirect page after connection'
+            ],
+            [
+                'key'   => 'settings.rgpd_page',
+                'path'  => self::config()->get('settings.rgpd_page'),
+                'title' => 'GDPR Page'
+            ],
+            [
+                'key'   => 'settings.terms_of_service_page',
+                'path'  => self::config()->get('settings.terms_of_service_page'),
+                'title' => 'Terms page'
+            ]
+        ];
     }
 
     private function deleteFile($type, $idNode)

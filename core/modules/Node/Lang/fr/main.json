@@ -41,5 +41,8 @@
     "Use private pages for content reserved for your members.": "Utilisez les pages privées pour les contenus réservés à vos membres.",
     "Content :title has been deleted": "Le contenu :title a été supprimé",
     ":count contents": ":count contenus",
-    ":count content": ":count contenu"
+    ":count content": ":count contenu",
+    "This content is used in the configuration as": "Ce contenu est utilisé dans la configuration comme",
+    "Delete files with their contents": "Supprimer les fichiers avec leur contenu",
+    "New path for": "Nouveau chemin pour"
 }
