@@ -115,6 +115,14 @@ var increment = function (evt) {
     }
 };
 
+function strHighlight(needle, haystack, highlight = 'highlight') {
+    var regEx = new RegExp(needle, "gi");
+
+    return haystack.replace(regEx, function (a, b) {
+        return `<span class="${highlight}">${a}</span>`;
+    });
+}
+
 /* EVENT DELEDATE */
 document.addEventListener('click', function (evt) {
     for (var target = evt.target; target && target !== this; target = target.parentNode) {

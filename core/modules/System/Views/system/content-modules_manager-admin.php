@@ -73,7 +73,7 @@
                         <td data-title="<?php echo t('Module'); ?>">
                             <div class="form-group">
                             <?php echo $form->form_input("modules[{$module[ 'title' ]}]"); ?>
-                            <?php echo $form->form_label($module[ 'title' ]); ?>
+                            <?php echo $form->form_label($module[ 'title' ], [ 'class' => 'str-search' ]); ?>
 
                             </div>
                             

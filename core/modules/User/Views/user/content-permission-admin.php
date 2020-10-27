@@ -57,7 +57,7 @@
                         <?php foreach ($module as $key => $permission): ?>
 
                         <tr id="<?php echo $key ?>" class="permission"  data-title="<?php echo t($permission[ 'name' ]); ?>">
-                            <th><?php echo t($permission[ 'name' ]); ?></th>
+                            <th class="str-search"><?php echo t($permission[ 'name' ]); ?></th>
                             <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
                             <?php $name = $role . '[' . $key . ']' ?>
 
@@ -100,6 +100,9 @@
                 $(this).css('display', '');
 
                 if (reg.test($(this).data('title'))) {
+                    const str = strHighlight(search, $(this).data('title'));
+                    $(this).find('.str-search').html(str);
+
                     number++;
                     package_hide = '';
                 } else {

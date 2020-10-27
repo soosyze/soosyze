@@ -19,6 +19,9 @@ function search()
                     $(this).css('display', 'none');
                     return;
                 }
+                const str = strHighlight(search, $(this).data('title'));
+                $(this).find('.str-search').html(`<span class="ui"></span> ${str}`);
+
                 number++;
                 package_hide = '';
             } else {
