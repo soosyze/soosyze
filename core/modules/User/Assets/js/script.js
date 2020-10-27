@@ -20,7 +20,7 @@ $().ready(function () {
         });
     }
 
-    $('#form_filter_user').on('keyup change', debounce(function () {
+    $('#form_filter_user').on('input', debounce(function () {
         const $this = $(this);
 
         $.ajax({
@@ -29,10 +29,24 @@ $().ready(function () {
             data: $this.serialize(),
             dataType: 'html',
             success: function (data) {
-                $('tbody').replaceWith(data);
+                $('.user-table').html(data);
             }
         });
     }, 250));
+    /* Requête à partir de la pagination ou du trie. */
+    $(document).delegate('.user-table .pagination a, .user-table a.sort', 'click', function (evt) {
+        evt.preventDefault();
+        const $this = $(this);
+
+        $.ajax({
+            url: $this.attr('href'),
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('.user-table').html(data);
+            }
+        });
+    });
 });
 
 function togglePassword(button, idPasswordInput) {

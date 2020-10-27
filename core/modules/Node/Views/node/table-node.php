@@ -1,6 +1,5 @@
 
 <fieldset class="responsive">
-
     <?php if ($count >= 1): ?>
         <legend><?php echo t($count > 1 ? ':count contents' : ':count content', [':count' => $count]); ?></legend>
     <?php endif; ?>
@@ -19,7 +18,7 @@
                         <?php echo t('Publishing date'); ?> <i class="fa <?php echo $is_sort_asc ? 'fa-sort-amount-up-alt' : 'fa-sort-amount-down'; ?>" aria-hidden="true"></i>
                     </a>
                 <?php else: ?>
-                    <a href="<?php echo $link_date_changed_sort; ?>">
+                    <a href="<?php echo $link_date_changed_sort; ?>" class="sort">
                         <?php echo t('Publishing date'); ?>
                     </a>
                 <?php endif; ?>

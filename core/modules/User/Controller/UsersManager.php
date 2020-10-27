@@ -2,10 +2,17 @@
 
 namespace SoosyzeCore\User\Controller;
 
+use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
 
 class UsersManager extends \Soosyze\Controller
 {
+    protected static $limit = 20;
+
+    protected static $page = 1;
+
+    protected $isAdmin = false;
+
     protected $pathViews;
 
     public function __construct()
@@ -13,7 +20,7 @@ class UsersManager extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin()
+    public function admin($req)
     {
         $users = self::user()->getUsers();
 
@@ -24,6 +31,8 @@ class UsersManager extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
+
+        $this->isAdmin = true;
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -38,12 +47,18 @@ class UsersManager extends \Soosyze\Controller
                     'link_user_admin'      => self::router()->getRoute('user.admin'),
                     'users'                => $users,
                     'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.admin')
-                ]);
+                ])
+                ->addBlock('content.table', $this->filterPage(1, $req));
     }
 
     public function filter($req)
     {
-        if (!$req->isAjax()) {
+        return $this->filterPage(1, $req);
+    }
+
+    public function filterPage($page, $req)
+    {
+        if (!$req->isAjax() && !$this->isAdmin) {
             return $this->get404($req);
         }
 
@@ -73,14 +88,20 @@ class UsersManager extends \Soosyze\Controller
             }
         });
 
-        $users = self::query()->fetchAll();
+        $data = self::query()->fetchAll();
+        $countData = count($data);
+        $users     = array_slice($data, self::$limit * ($page - 1), self::$limit);
 
         $this->hydrateUsersLinks($users);
 
+        $linkPagination = self::router()->getRequestByRoute('user.filter.page', [], false)->getUri();
+
         return self::template()
-                ->getTheme('theme_admin')
-                ->createBlock('user/filter-user.php', $this->pathViews)
-                ->addVars([ 'users' => $users ]);
+                ->createBlock('user/table-user.php', $this->pathViews)
+                ->addVars([
+                    'paginate' => new Paginator($countData, self::$limit, $page, $linkPagination),
+                    'users'    => $users
+        ]);
     }
 
     protected function hydrateUsersLinks(&$users)

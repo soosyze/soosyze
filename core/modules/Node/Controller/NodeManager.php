@@ -77,7 +77,7 @@ class NodeManager extends \Soosyze\Controller
             ])
             ->setInputs($req->getQueryParams());
 
-        $query = $this->getNodes($req, $page);
+        $query = $this->getNodes($req);
 
         $params = [];
         if ($validator->getInput('title', '')) {
@@ -190,10 +190,8 @@ class NodeManager extends \Soosyze\Controller
             : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 
-    protected function getNodes(
-        \Psr\Http\Message\ServerRequestInterface $req,
-        $page
-    ) {
+    protected function getNodes(\Psr\Http\Message\ServerRequestInterface $req)
+    {
         $query = clone self::query();
         $nodes = $query->from('node')
             ->leftJoin('node_type', 'type', 'node_type.node_type');
