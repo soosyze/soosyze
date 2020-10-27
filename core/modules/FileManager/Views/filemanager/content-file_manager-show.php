@@ -36,7 +36,7 @@
                     <th>&nbsp;</th>
                     <th><?php echo t('Name'); ?></th>
                     <th><?php echo t('Size'); ?></th>
-                    <th><?php echo t('Creation date'); ?></th>
+                    <th><?php echo t('Publishing date'); ?></th>
                     <th><?php echo t('Actions'); ?></th>
                 </tr>
             </thead>
@@ -70,7 +70,7 @@
                 <td data-title="<?php echo t('Size'); ?>">
                     <span data-tooltip="<?php echo $file[ 'size_octet' ]; ?> octets"><?php echo $file[ 'size' ]; ?></span>
                 </td>
-                <td data-title="<?php echo t('Creation date'); ?>">
+                <td data-title="<?php echo t('Publishing date'); ?>">
                     <?php echo $file[ 'time' ]; ?>
 
                 </td>

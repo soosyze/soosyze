@@ -9,6 +9,10 @@ class NodeManager extends \Soosyze\Controller
 {
     protected static $limit = 20;
 
+    protected static $page = 1;
+
+    protected $admin       = false;
+
     protected $pathViews;
 
     public function __construct()
@@ -18,59 +22,22 @@ class NodeManager extends \Soosyze\Controller
 
     public function admin($req)
     {
-        return $this->page(1, $req);
-    }
-
-    public function page($page, $req)
-    {
-        $nodes = $this->getNodes($req, $page)
-            ->where('node_status_id', '!=', 4)
-            ->fetchAll();
-
-        if (!$nodes && $page !== 1) {
-            return $this->get404($req);
-        }
-
-        $this->hydrateNodesLinks($nodes);
-
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
 
-        $queryAll = self::query()
-            ->from('node')
-            ->fetchAll();
-        
         $requestNodeAdd = self::router()->getRequestByRoute('node.add');
         $linkAdd        = $this->container->callHook('app.granted.route', [ $requestNodeAdd ])
             ? $requestNodeAdd->getUri()
             : null;
-        
-        $get     = $req->getQueryParams();
-        $orderBy = !empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
-                'date_changed', 'node_status_id'
-            ])
-            ? $get[ 'order_by' ]
-            : null;
 
-        $sort = isset($get[ 'sort' ]) && $get[ 'sort' ] !== 'desc'
-            ? 'asc'
-            : 'desc';
+        /* Liens */
+        $linkIndex  = self::router()->getRequestByRoute('node.admin')->getUri();
+        $linkFilter = self::router()->getRequestByRoute('node.filter')->getUri();
 
-        $sortInverse = $sort === 'asc'
-            ? 'desc'
-            : 'asc';
-
-        $link = self::router()
-            ->getRequestByRoute('node.page', [], false)
-            ->getUri()
-            ->withQuery(
-                $orderBy === null
-            ? ''
-            : "order_by=$orderBy&sort=$sort"
-            );
+        $this->admin = true;
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -80,25 +47,23 @@ class NodeManager extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
-                    'action_filter'          => self::router()->getRoute('node.filter'),
-                    'link_add'               => $linkAdd,
-                    'link_index'             => self::router()->getRoute('node.admin'),
-                    'link_search_status'     => self::router()->getRoute('node.status.search'),
-                    'link_search_node_type'  => self::router()->getRoute('node.type.search'),
-                    'link_date_changed_sort' => self::router()->getRequestByRoute('node.admin')->getUri()
-                    ->withQuery("order_by=date_changed&sort=$sortInverse"),
-                    'link_status_sort'       => self::router()->getRequestByRoute('node.admin')->getUri()
-                    ->withQuery("order_by=node_status_id&sort=$sortInverse"),
-                    'nodes'                  => $nodes,
-                    'order_by'               => $orderBy,
-                    'paginate'               => new Paginator(count($queryAll), self::$limit, $page, (string) $link),
-                    'is_sort_asc'            => $sort === 'asc'
-        ]);
+                    'action_filter'         => $linkFilter,
+                    'link_add'              => $linkAdd,
+                    'link_index'            => $linkIndex,
+                    'link_search_status'    => self::router()->getRoute('node.status.search'),
+                    'link_search_node_type' => self::router()->getRoute('node.type.search'),
+                ])
+                ->addBlock('content.table', $this->filterPage(1, $req));
     }
 
     public function filter($req)
     {
-        if (!$req->isAjax()) {
+        return $this->filterPage(1, $req);
+    }
+
+    public function filterPage($page, $req)
+    {
+        if (!$req->isAjax() && !$this->admin) {
             return $this->get404($req);
         }
 
@@ -110,27 +75,77 @@ class NodeManager extends \Soosyze\Controller
             ])
             ->setInputs($req->getQueryParams());
 
-        $nodes = $this->getNodes($req, 1);
+        $query = $this->getNodes($req, $page);
 
+        $params = [];
         if ($validator->getInput('title', '')) {
-            $nodes->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
+            $params[ 'title' ] = $validator->getInput('title');
+            $query->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
         }
         if ($validator->getInput('types', [])) {
-            $nodes->in('type', $validator->getInput('types'));
+            $params[ 'types' ] = $validator->getInput('types');
+            $query->in('type', $validator->getInput('types'));
         }
         if ($validator->getInput('node_status_id', [])) {
-            $nodes->in('node_status_id', $validator->getInput('node_status_id'));
+            $params[ 'node_status_id' ] = $validator->getInput('node_status_id');
+            $query->in('node_status_id', $validator->getInput('node_status_id'));
         }
 
-        $data = $nodes->fetchAll();
+        $paramsDateChangedSort = $params;
+        $paramsStatusSort      = $params;
 
-        $this->hydrateNodesLinks($data);
+        /* Met en forme les donnes du tableau. */
+        $data      = $query->fetchAll();
+        $countData = count($data);
+        $nodes     = array_slice($data, self::$limit * ($page - 1), self::$limit);
+
+        $this->hydrateNodesLinks($nodes);
+
+        list($orderBy, $sort, $sortInverse, $isSortAsc) = $this->getSortParams($req);
+        $params[ 'order_by' ] = $orderBy;
+        $params[ 'sort' ]     = $sort;
+
+        /* Liens */
+        $linkPagination = self::router()->getRequestByRoute('node.filter.page', [], false)->getUri();
+        $linkSort       = self::router()->getRequestByRoute('node.filter')->getUri();
+
+        if ($params) {
+            $linkPagination = $linkPagination->withQuery(
+                self::router()->isRewrite()
+                ? http_build_query($params)
+                : $linkPagination->getQuery() . '&' . http_build_query($params)
+            );
+        }
+
+        $parseQuery = [];
+
+        parse_str($linkSort->getQuery(), $parseQuery);
+        $route = self::router()->isRewrite()
+            ? null
+            : $parseQuery[ 'q' ];
+
+        $paramsDateChangedSort += [
+            'q'        => $route,
+            'order_by' => 'date_changed',
+            'sort'     => $sortInverse
+        ];
+
+        $paramsStatusSort += [
+            'q'        => $route,
+            'order_by' => 'node_status_id',
+            'sort'     => $sortInverse
+        ];
 
         return self::template()
-                ->getTheme('theme_admin')
-                ->createBlock('node/filter-node.php', $this->pathViews)
+                ->createBlock('node/table-node.php', $this->pathViews)
                 ->addVars([
-                    'nodes' => $data
+                    'is_admin'               => $this->admin,
+                    'is_sort_asc'            => $isSortAsc,
+                    'link_date_changed_sort' => $linkSort->withQuery(http_build_query($paramsDateChangedSort)),
+                    'link_status_sort'       => $linkSort->withQuery(http_build_query($paramsStatusSort)),
+                    'nodes'                  => $nodes,
+                    'order_by'               => $orderBy,
+                    'paginate'               => new Paginator($countData, self::$limit, $page, $linkPagination)
         ]);
     }
 
@@ -139,10 +154,10 @@ class NodeManager extends \Soosyze\Controller
         $nodeAdminister = $this->container->callHook('app.granted', [ 'node.administer' ]);
 
         foreach ($nodes as &$node) {
-            $node[ 'link_view' ]   = self::router()->makeRoute(
+            $node[ 'link_view' ] = self::router()->makeRoute(
                 'node/' . $node[ 'id' ] === self::config()->get('settings.path_index')
-                    ? ''
-                    : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
+                ? ''
+                : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
             );
             if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.edited.' . $node[ 'type' ] ])) {
                 $node[ 'link_edit' ] = self::router()->getRoute('node.edit', [
@@ -150,7 +165,7 @@ class NodeManager extends \Soosyze\Controller
                 ]);
             }
             if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.cloned.' . $node[ 'type' ] ])) {
-                $node[ 'link_clone' ]  = self::router()->getRoute('node.clone', [
+                $node[ 'link_clone' ] = self::router()->getRoute('node.clone', [
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
@@ -162,18 +177,16 @@ class NodeManager extends \Soosyze\Controller
         }
         unset($node);
     }
-    
-    protected function getNodes(\Psr\Http\Message\ServerRequestInterface $req, $page)
-    {
+
+    protected function getNodes(
+        \Psr\Http\Message\ServerRequestInterface $req,
+        $page
+    ) {
         $query = clone self::query();
         $nodes = $query->from('node')
             ->leftJoin('node_type', 'type', 'node_type.node_type');
 
         if ($this->container->callHook('app.granted', [ 'node.administer' ])) {
-            $nodes
-                ->orderBy('sticky', 'desc')
-                ->limit(self::$limit, self::$limit * ($page - 1));
-
             return $this->sortNode($req, $nodes);
         }
 
@@ -183,10 +196,10 @@ class NodeManager extends \Soosyze\Controller
         $nodeTypes = self::query()->from('node_type')->fetchAll();
         foreach ($nodeTypes as $type) {
             $typePublish    = $publish || $this->container->callHook('app.granted', [
-                'node.show.published.' . $type[ 'node_type' ]
+                    'node.show.published.' . $type[ 'node_type' ]
             ]);
             $typeNotPublish = $notPublish || $this->container->callHook('app.granted', [
-                'node.show.not_published.' . $type[ 'node_type' ]
+                    'node.show.not_published.' . $type[ 'node_type' ]
             ]);
 
             if ($typePublish || $typeNotPublish) {
@@ -205,27 +218,47 @@ class NodeManager extends \Soosyze\Controller
                 $nodes->where('type', '!=', $type[ 'node_type' ]);
             }
         }
-        
-        $nodes->orderBy('sticky', 'desc')
-            ->limit(self::$limit, self::$limit * ($page - 1));
 
         return $this->sortNode($req, $nodes);
     }
-    
+
     protected function sortNode($req, $nodes)
     {
         $get = $req->getQueryParams();
 
+        $nodes->orderBy('sticky', 'desc');
+
         if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
                 'date_changed', 'node_status_id'
             ])) {
-            $sort = isset($get[ 'sort' ]) && $get[ 'sort' ] === 'desc'
+            $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
                 ? 'desc'
                 : 'asc';
-            
+
             return $nodes->orderBy($get[ 'order_by' ], $sort);
         }
 
         return $nodes->orderBy('date_changed', 'desc');
+    }
+
+    protected function getSortParams($req)
+    {
+        $get = $req->getQueryParams();
+
+        $orderBy = !empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
+                'date_changed', 'node_status_id'
+            ])
+            ? $get[ 'order_by' ]
+            : null;
+
+        $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
+            ? 'desc'
+            : 'asc';
+
+        $sortInverse = $sort === 'asc'
+            ? 'desc'
+            : 'asc';
+
+        return [ $orderBy, $sort, $sortInverse, $sort === 'asc' ];
     }
 }

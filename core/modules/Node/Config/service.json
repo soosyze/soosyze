@@ -76,7 +76,8 @@
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.node.admin": "hookNodeManager",
-            "route.node.page": "hookNodeManager",
+            "route.filter": "hookNodeManager",
+            "route.filter.page": "hookNodeManager",
             "route.node.show": "hookNodeSow",
             "route.node.create": "hookNodeCreated",
             "route.node.clone": "hookNodeClone",

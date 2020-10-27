@@ -5,8 +5,8 @@ use Soosyze\Components\Router\Route as R;
 R::useNamespace('SoosyzeCore\Node\Controller');
 
 R::get('node.admin', 'admin/node', 'NodeManager@admin');
-R::get('node.page', 'admin/node/:id', 'NodeManager@page', [ ':id' => '[1-9]\d*' ]);
 R::get('node.filter', 'node/filter', 'NodeManager@filter');
+R::get('node.filter.page', 'node/filter/:id', 'NodeManager@filterPage', [ ':id' => '[1-9]\d*' ]);
 
 R::get('node.add', 'admin/node/add', 'Node@add');
 R::get('node.show', 'node/:id_node', 'Node@show', [ ':id_node' => '\d+' ]);

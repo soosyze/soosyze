@@ -18,7 +18,7 @@
                 <p data-tooltip="<?php echo $info[ 'size_octet' ]; ?> octets">
                     <i class="fa fa-weight-hanging" aria-hidden="true"></i> <?php echo $info[ 'size' ]; ?>
                 </p>
-                <p data-tooltip="<?php echo t('Creation date'); ?>">
+                <p data-tooltip="<?php echo t('Publishing date'); ?>">
                     <i class="fa fa-clock" aria-hidden="true"></i> <?php echo $info[ 'time' ]; ?>
                 </p>
             </div>
