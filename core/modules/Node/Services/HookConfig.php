@@ -13,6 +13,14 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             ->fetchAll();
     }
 
+    public function defaultValues()
+    {
+        return [
+            'node_default_url' => '',
+            'node_cron'        => ''
+        ];
+    }
+
     public function menu(&$menu)
     {
         $menu[ 'node' ] = [

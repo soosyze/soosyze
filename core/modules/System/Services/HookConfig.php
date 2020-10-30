@@ -20,6 +20,28 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $this->translate = $translate;
     }
 
+    public function defaultValues()
+    {
+        return [
+            'lang'               => '',
+            'timezone'           => '',
+            'maintenance'        => '',
+            'rewrite_engine'     => '',
+            'theme'              => '',
+            'theme_admin'        => '',
+            'theme_admin_dark'   => '',
+            'logo'               => '',
+            'path_index'         => '',
+            'path_access_denied' => '',
+            'path_no_found'      => '',
+            'path_maintenance'   => '',
+            'meta_title'         => '',
+            'meta_description'   => '',
+            'meta_keyboard'      => '',
+            'favicon'            => ''
+        ];
+    }
+
     public function menu(&$menu)
     {
         $menu[ 'system' ] = [

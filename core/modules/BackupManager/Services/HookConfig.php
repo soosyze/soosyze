@@ -4,6 +4,15 @@ namespace SoosyzeCore\BackupManager\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    public function defaultValues()
+    {
+        return [
+            'max_backups'      => 0,
+            'backup_cron'      => '',
+            'backup_frequency' => ''
+        ];
+    }
+
     public function menu(&$menu)
     {
         $menu[ 'backupmanager' ] = [
@@ -25,9 +34,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ':actions' => 1,
                             'class'    => 'form-control',
                             'min'      => 0,
-                            'value'    => $data[ 'max_backups' ] > 0
-                                ? $data[ 'max_backups' ]
-                                : 0
+                            'value'    => $data[ 'max_backups' ]
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ])

@@ -4,6 +4,8 @@ namespace SoosyzeCore\Config\Services;
 
 interface ConfigInterface
 {
+    public function defaultValues();
+
     public function menu(&$menu);
 
     public function form(&$form, $data, $req);

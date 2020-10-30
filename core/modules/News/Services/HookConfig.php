@@ -11,6 +11,15 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $this->file = $file;
     }
 
+    public function defaultValues()
+    {
+        return [
+            'new_default_icon'  => '',
+            'new_default_image' => '',
+            'news_pagination'   => 6
+        ];
+    }
+    
     public function menu(&$menu)
     {
         $menu[ 'news' ] = [

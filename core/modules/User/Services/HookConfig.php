@@ -11,6 +11,27 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $this->router = $router;
     }
 
+    public function defaultValues()
+    {
+        return [
+            'user_register'          => '',
+            'user_relogin'           => '',
+            'terms_of_service_show'  => '',
+            'terms_of_service_page'  => '',
+            'rgpd_show'              => '',
+            'rgpd_page'              => '',
+            'connect_url'            => '',
+            'connect_redirect'       => '',
+            'password_show'          => '',
+            'password_policy'        => '',
+            'password_length'        => '',
+            'password_upper'         => '',
+            'password_digit'         => '',
+            'password_special'       => '',
+            'password_reset_timeout' => ''
+        ];
+    }
+
     public function menu(&$menu)
     {
         $menu[ 'user' ] = [

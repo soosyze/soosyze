@@ -24,6 +24,16 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         'twitter'    => 'Twitter',
         'youtube'    => 'Youtube'
     ];
+    
+    public function defaultValues()
+    {
+        $out = [];
+        foreach (array_keys($this->socials) as $social) {
+            $out['icon_socials'][$social] = '';
+        }
+
+        return $out;
+    }
 
     public function menu(&$menu)
     {
@@ -46,9 +56,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ])
                             ->text($key, [
                                 'class' => 'form-control',
-                                'value' => isset($data['icon_socials'][ $key ])
-                                    ? $data['icon_socials'][ $key ]
-                                    : ''
+                                'value' => $data['icon_socials'][ $key ]
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);

@@ -99,7 +99,13 @@ class Config extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $data = self::config()->get('settings');
+        $config = $this->container->get("$id.hook.config");
+
+        /* Replace les valeurs par défaut si la données et présente dans la config. */
+        $data = array_replace_recursive(
+            $config->defaultValues(),
+            self::config()->get('settings')
+        );
 
         $this->container->callHook("config.edit.$id.form.data", [ &$data, $id ]);
         if (isset($_SESSION[ 'inputs' ])) {
@@ -113,7 +119,6 @@ class Config extends \Soosyze\Controller
             'enctype' => 'multipart/form-data'
         ]);
 
-        $config = $this->container->get("$id.hook.config");
         $config->form($form, $data, $req);
 
         $form->token('token_' . $id . '_config')

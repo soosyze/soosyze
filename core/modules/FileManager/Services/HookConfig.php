@@ -4,6 +4,13 @@ namespace SoosyzeCore\FileManager\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    public function defaultValues()
+    {
+        return [
+            'replace_file' => 1
+        ];
+    }
+
     public function menu(&$menu)
     {
         $menu[ 'filemanager' ] = [
