@@ -86,7 +86,10 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'    => 1,
                             'value'       => $data[ 'connect_redirect' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
+                    }, [ 'class' => 'form-group-flex' ])
+                    ->html('connect_redirect-info', '<p>:_content</p>', [
+                        '_content' => t('Variables allowed') . ' <code>:user_id</code>'
+                    ]);
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('user_register-fieldset', 'fieldset', function ($form) use ($data) {
@@ -263,7 +266,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'rgpd_show'              => 'bool',
             'rgpd_page'              => '!required_without:rgpd_show|route',
             'connect_url'            => '!required|string|min:10|regex:/^[\d\w\-]+$/',
-            'connect_redirect'       => 'required|route',
+            'connect_redirect'       => 'required|string|max:512',
             'password_show'          => 'bool',
             'password_policy'        => 'bool',
             'password_length'        => 'min_numeric:8',

@@ -88,7 +88,7 @@ class Login extends \Soosyze\Controller
         }
 
         if ($user = self::user()->isConnected()) {
-            $route = $this->getRedirectLogin($req);
+            $route = $this->getRedirectLogin($user);
         } else {
             $_SESSION[ 'inputs' ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ 'errors' ] = [ t('E-mail or password not recognized.') ];
@@ -250,10 +250,12 @@ class Login extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('user.edit', [ ':id' => $id ]));
     }
 
-    protected function getRedirectLogin($req)
+    protected function getRedirectLogin($user)
     {
         if (($redirect = self::config()->get('settings.connect_redirect', ''))) {
-            return (string) self::router()->makeRoute($redirect);
+            $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);
+
+            return self::router()->makeRoute($redirect);
         }
 
         return self::router()->getRoute('user.account');
