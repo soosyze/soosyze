@@ -21,8 +21,7 @@
         "chat": "https://discord.gg/parFfTt"
     },
     "require": {
-        "php": ">=5.4",
-        "ircmaxell/password-compat": "1.0.*",
+        "php": ">=5.5",
         "soosyze/framework": "~2.1",
         "soosyze/queryflatfile": "~1.2",
         "paragonie/random_compat": "<9.99",
