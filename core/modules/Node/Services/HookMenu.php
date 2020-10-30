@@ -67,8 +67,9 @@ class HookMenu
                     $form->legend('menu-legend', t('Menu'))
                         ->group('active-group', 'div', function ($form) use ($data) {
                             $form->checkbox('active', [
-                                'checked' => $data[ 'active' ],
-                                'onclick' => 'toggle("menu_toogle")'
+                                'checked'      => $data[ 'active' ],
+                                'data-dismiss' => 'toogle',
+                                'data-target'  => '#menu_toogle',
                             ])
                             ->label('active-label', '<span class="ui"></span> ' . t('Add a link in the menu'), [
                                 'for' => 'active'
@@ -85,9 +86,9 @@ class HookMenu
                             }, [ 'class' => 'form-group' ]);
                         }, [
                             'id'    => 'menu_toogle',
-                            'style' => !$data[ 'active' ]
-                                ? 'display:none'
-                                : ''
+                            'class' => $data[ 'active' ]
+                                ? 'active'
+                                : 'hidden'
                     ]);
                 }, [
                     'class' => 'tab-pane fade',
