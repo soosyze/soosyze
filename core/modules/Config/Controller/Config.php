@@ -61,11 +61,15 @@ class Config extends \Soosyze\Controller
         $validator->addRule('token_' . $id . '_config', 'token');
 
         if ($validator->isValid()) {
+            $fileConfig = empty($menu[ $id ][ 'config' ])
+                ? 'settings'
+                : $menu[ $id ][ 'config' ];
+
             $data = [];
 
             $config->before($validator, $data, $id);
             foreach ($data as $key => $value) {
-                self::config()->set('settings.' . $key, $value);
+                self::config()->set("$fileConfig.$key", $value);
             }
             foreach ($inputsFile as $file) {
                 $this->saveFile($file, $validator);
@@ -104,7 +108,9 @@ class Config extends \Soosyze\Controller
         /* Replace les valeurs par défaut si la données et présente dans la config. */
         $data = array_replace_recursive(
             $config->defaultValues(),
-            self::config()->get('settings')
+            self::config()->get(empty($menu[ $id ][ 'config' ])
+                ? 'settings'
+                : $menu[ $id ][ 'config' ], [])
         );
 
         $this->container->callHook("config.edit.$id.form.data", [ &$data, $id ]);
