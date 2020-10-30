@@ -289,7 +289,8 @@ class Install extends \Soosyze\Controller
             ->execute();
 
         self::config()
-            ->set('settings.email', $data[ 'email' ])
+            ->set('mailer.email', $data[ 'email' ])
+            ->set('mailer.driver', 'mail')
             ->set('settings.time_installed', time())
             ->set('settings.lang', 'en')
             ->set('settings.timezone', $timezone)

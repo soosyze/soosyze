@@ -22,7 +22,8 @@ $autoload->setPrefix([
     'Psr\Http\Message'        => $vendor . 'psr/http-message/src',
     'Psr\Container'           => $vendor . 'psr/container/src',
     'Soosyze'                 => $vendor . 'soosyze/framework/src',
-    'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http'
+    'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http',
+    'PHPMailer\PHPMailer'     => $vendor . 'phpmailer/phpmailer/src'
 ])->setMap([
     ROOT . 'core/modules',
     ROOT . 'app/modules'

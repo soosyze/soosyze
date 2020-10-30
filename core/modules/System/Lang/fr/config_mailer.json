@@ -1,0 +1,12 @@
+{
+    "E-mail of the site": "E-mail du site",
+    "E-mail used for the general configuration, for your contacts, the recovery of your password ...": "E-mail utilisé pour la configuration générale, pour vos contacts, la récupération de votre mot de passe...",
+    "SMTP Configuration": "Configuration SMTP",
+    "Host Address": "Adresse de l'hôte",
+    "Host Port": "Port de l'hôte",
+    "Encryption Protocol": "Chiffrement",
+    "Serveur Username": "Nom d'utilisateur du serveur",
+    "Server Password": "Mot de passe du serveur",
+    "": "Sélectionner un driver",
+    "Driver": "Driver"
+}

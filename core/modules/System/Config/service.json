@@ -47,5 +47,11 @@
         "hooks": {
             "config.edit.menu": "menu"
         }
+    },
+    "mailer.hook.config": {
+        "class": "SoosyzeCore\\System\\Services\\HookConfigMailer",
+        "hooks": {
+            "config.edit.menu": "menu"
+        }
     }
 }

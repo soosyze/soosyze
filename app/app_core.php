@@ -47,6 +47,12 @@ class Core extends App
                     __DIR__ . '/lang',
                     'en'
                 ]
+            ],
+            'mailer'        => [
+                'class'     => 'SoosyzeCore\\Mailer\\Services\\Mailer',
+                'arguments' => [
+                    '@config'
+                ]
             ]
         ];
     }

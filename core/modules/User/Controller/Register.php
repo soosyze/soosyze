@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\User\Controller;
 
-use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
@@ -185,8 +184,8 @@ class Register extends \Soosyze\Controller
         $message .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . "</a><br>\n";
         $message .= t('This link can only be used once.');
 
-        $mail = (new Email())
-            ->from(self::config()->get('settings.email'))
+        $mail = self::mailer()
+            ->from(self::config()->get('mailer.email'))
             ->to($from)
             ->subject(t('User registration'))
             ->message($message)

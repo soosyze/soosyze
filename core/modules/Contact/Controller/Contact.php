@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\Contact\Controller;
 
-use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Contact\Form\FormContact;
@@ -86,9 +85,9 @@ class Contact extends \Soosyze\Controller
             $inputs = $validator->getInputs();
 
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
-            $mail = (new Email())
+            $mail = self::mailer()
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
-                ->to(self::config()->get('settings.email'))
+                ->to(self::config()->get('mailer.email'))
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ]);
 

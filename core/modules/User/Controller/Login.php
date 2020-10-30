@@ -2,7 +2,6 @@
 
 namespace SoosyzeCore\User\Controller;
 
-use Soosyze\Components\Email\Email;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
@@ -189,14 +188,14 @@ class Login extends \Soosyze\Controller
                 $message  = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser:') . "\n";
                 $message  .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . '</a>';
 
-                $email = (new Email())
-                    ->from(self::config()->get('settings.email'))
+                $mail = self::mailer()
+                    ->from(self::config()->get('mailer.email'))
                     ->to($user[ 'email' ])
                     ->subject(t('New Password'))
                     ->message($message)
                     ->isHtml(true);
 
-                if ($email->send()) {
+                if ($mail->send()) {
                     $_SESSION[ 'messages' ][ 'success' ] = [
                         t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
                     ];

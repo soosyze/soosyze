@@ -97,17 +97,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         })
                 ->group('information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes, $optionThemesAdmin) {
                     $form->legend('information-legend', t('Information'))
-                    ->group('email-group', 'div', function ($form) use ($data) {
-                        $form->label('email-label', t('E-mail of the site'), [
-                            'data-tooltip' => t('E-mail used for the general configuration, for your contacts, the recovery of your password ...')
-                        ])
-                        ->email('email', [
-                            'class'       => 'form-control',
-                            'required'    => 1,
-                            'placeholder' => t('E-mail'),
-                            'value'       => $data[ 'email' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
                     ->group('maintenance-group', 'div', function ($form) use ($data) {
                         $form->checkbox('maintenance', [
                             'checked' => $data[ 'maintenance' ]
@@ -285,7 +274,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $validator->setRules([
             'lang'               => 'required|inarray:' . $langs,
             'timezone'           => 'required|timezone',
-            'email'              => 'required|email|max:254|to_htmlsc',
             'maintenance'        => '!required|bool',
             'rewrite_engine'     => 'bool',
             'theme'              => 'required|string',
@@ -303,7 +291,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ])->setLabel([
             'lang'               => t('Language'),
             'timezone'           => t('Timezone'),
-            'email'              => t('E-mail of the site'),
             'maintenance'        => t('Put the site in maintenance'),
             'rewrite_engine'     => t('Make the URLs clean'),
             'theme'              => t('Website theme'),
@@ -325,7 +312,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $data = [
             'lang'               => $validator->getInput('lang'),
             'timezone'           => $validator->getInput('timezone'),
-            'email'              => $validator->getInput('email'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
             'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
             'theme'              => $validator->getInput('theme'),
