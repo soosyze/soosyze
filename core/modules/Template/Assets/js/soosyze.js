@@ -37,6 +37,21 @@ var openTab = function (evt) {
     document.querySelector(target.getAttribute("href")).classList.add('active');
 };
 
+var openSelect = function (evt) {
+    evt.preventDefault();
+    const tabContent = document.getElementsByClassName("select-pane");
+
+    for (var i = 0; i < tabContent.length; i++) {
+        tabContent[i].classList.remove('active');
+    }
+
+    const pane = document.querySelector('#' + evt.target.value);
+    if (pane) {
+        pane.classList.add('active');
+    }
+};
+
+
 /* --------------------------- */
 /* ---------- DRAWER --------- */
 /* --------------------------- */
@@ -157,6 +172,14 @@ document.addEventListener('click', function (evt) {
     }
 }, false);
 
+document.addEventListener('change', function (evt) {
+    for (var target = evt.target; target && target !== this; target = target.parentNode) {
+        if (target.matches('[data-toogle="select"]')) {
+            openSelect.call(target, evt);
+            break;
+        }
+    }
+}, false);
 
 /* EVENT GLOBAL */
 window.addEventListener('click', (evt) => {
