@@ -21,6 +21,20 @@ $(function () {
     }
 });
 
+$(document).delegate('#form_filter_file', 'input', debounce(function () {
+    const $this = $(this);
+ 
+    $.ajax({
+        url: $this.attr('action'),
+        type: $this.attr('method'),
+        data: $this.serialize(),
+        dataType: 'html',
+        success: function (data) {
+            $('#table-file').html(data);
+        }
+    });
+}, 250));
+
 /* COPY CLIPBOARD */
 $(document).delegate('.copy-clipboard', 'click', function (evt) {
     evt.preventDefault();

@@ -3,6 +3,7 @@
 namespace SoosyzeCore\FileManager\Controller;
 
 use Soosyze\Components\Util\Util;
+use Soosyze\Components\Validator\Validator;
 
 class Manager extends \Soosyze\Controller
 {
@@ -35,7 +36,7 @@ class Manager extends \Soosyze\Controller
             
             /* Si le profil trouvé permet d'être vu. */
             if ($this->get('filemanager.hook.user')->hookFolderShow($path)) {
-                $filemanager = $this->getFileManager($path);
+                $filemanager = $this->getFileManager($path, $req);
 
                 break;
             }
@@ -60,16 +61,97 @@ class Manager extends \Soosyze\Controller
                     'title_main' => t('File manager')
                 ])
                 ->make('page.content', 'page-manager.php', $this->pathViews, [
-                    'filemanager' => $this->getFileManager($path)
+                    'filemanager' => $this->getFileManager($path, $req)
                 ])->override('page', [ 'page-filemanager-public.php', 'page-fuild.php' ]);
     }
 
     public function show($path, $req)
     {
-        return $this->getFileManager($path);
+        return $this->getFileManager($path, $req);
     }
 
-    private function getFileManager($path)
+    public function filter($path, $req)
+    {
+        $path = Util::cleanPath('/' . $path);
+
+        $validator = (new Validator())
+            ->setRules([
+                'name' => '!required|string|max:255'
+            ])
+            ->setInputs($req->getQueryParams());
+
+        $params = [ 'name' => '' ];
+        if ($validator->getInput('name', '')) {
+            $params[ 'name' ] = preg_quote($validator->getInput('name'));
+        }
+
+        $filesPublic = self::core()->getDir('files_public', 'app/files') . $path;
+
+        $files  = [];
+        $nbDir  = 0;
+        $size   = 0;
+        $nbFile = 0;
+
+        if (is_dir($filesPublic)) {
+            $dirIterator = new \DirectoryIterator($filesPublic);
+            $iterator    = $this->get('filemanager.filter.iterator')->load($path, $dirIterator);
+            foreach ($iterator as $file) {
+                try {
+                    $spl = $file->isDir()
+                        ? self::filemanager()->parseDir($file, "$path/", $file->getBasename())
+                        : self::filemanager()->parseFile($file, $path);
+
+                    if (isset($params[ 'name' ])) {
+                        if (!preg_match('/' . $params[ 'name' ] . '/i', $spl[ 'name' ])) {
+                            continue;
+                        }
+                        $spl[ 'name' ] = $this->highlight($params[ 'name' ], $spl[ 'name' ]);
+                    }
+                    $file->isDir()
+                            ? ++$nbDir
+                            : ++$nbFile;
+
+                    $files[] = $spl;
+                    $size    += $spl[ 'size_octet' ];
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            usort($files, function ($a, $b) {
+                if ($a['ext'] === $b['ext']) {
+                    return 0;
+                }
+
+                return ($a['ext'] === 'dir')
+                    ? -1
+                    : 1;
+            });
+        }
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('filemanager/table-files.php', $this->pathViews)
+                ->addVars([
+                    'files'               => $files,
+                    'link_show'           => self::router()->getRoute('filemanager.show', [
+                        ':path' => $path
+                    ]),
+                    'nb_dir'              => $nbDir,
+                    'nb_file'             => $nbFile,
+                    'profil'              => $this->get('filemanager.hook.user')->getRight($path),
+                    'size_all'            => Util::strFileSizeFormatted($size)
+                ]);
+    }
+
+    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
+    {
+        return $needle === ''
+            ? $haystack
+            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
+    }
+
+    private function getFileManager($path, $req)
     {
         $path = Util::cleanPath('/' . $path);
 
@@ -84,62 +166,35 @@ class Manager extends \Soosyze\Controller
             ]),
         ]);
         
-        $filesPublic = self::core()->getDir('files_public', 'app/files') . $path;
-        $files       = [];
-        $nbDir       = 0;
-        $size        = 0;
-        $nbFile      = 0;
-
-        if (is_dir($filesPublic)) {
-            $dirIterator = new \DirectoryIterator($filesPublic);
-            $iterator    = $this->get('filemanager.filter.iterator')->load($path, $dirIterator);
-            foreach ($iterator as $file) {
-                try {
-                    if ($file->isDir()) {
-                        ++$nbDir;
-                        $spl     = self::filemanager()->parseDir($file, "$path/", $file->getBasename());
-                        $size    += $spl[ 'size_octet' ];
-                        $files[] = $spl;
-                    }
-                    if ($file->isFile()) {
-                        ++$nbFile;
-                        $spl     = self::filemanager()->parseFile($file, $path);
-                        $size    += $spl[ 'size_octet' ];
-                        $files[] = $spl;
-                    }
-                } catch (\Exception $e) {
-                    continue;
-                }
-            }
-            
-            usort($files, function ($a, $b) {
-                if ($a['ext'] === $b['ext']) {
-                    return 0;
-                }
-
-                return ($a['ext'] === 'dir')
-                    ? -1
-                    : 1;
-            });
-        }
+        $form = (new \Soosyze\Components\Form\FormBuilder([
+                'action' => self::router()->getRoute('filemanager.filter', [
+                    ':path' => $path
+                ]),
+                'id'     => 'form_filter_file',
+                'method' => 'get'
+            ]))
+            ->group('name-group', 'div', function ($form) {
+                $form->text('name', [
+                    'autofocus'   => 1,
+                    'class'       => 'form-control',
+                    'placeholder' => t('Search for items in the directory')
+                ]);
+            }, [ 'class' => 'form-group' ]);
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/content-file_manager-show.php', $this->pathViews)
                 ->addVars([
-                    'files'               => $files,
+                    'form'                => $form,
                     'granted_file_create' => $this->get('filemanager.hook.user')->hookFileStore($path),
                     'link_show'           => self::router()->getRoute('filemanager.show', [
                         ':path' => $path
                     ]),
                     'link_file_create'    => self::router()->getRoute('filemanager.file.create', [
                         ':path' => $path
-                    ]),
-                    'nb_dir'              => $nbDir,
-                    'nb_file'             => $nbFile,
-                    'profil'              => $this->get('filemanager.hook.user')->getRight($path),
-                    'size_all'            => Util::strFileSizeFormatted($size)
+                    ])
                 ])
-                ->addBlock('breadcrumb', $breadcrumb);
+                ->addBlock('breadcrumb', $breadcrumb)
+                ->addBlock('table', $this->filter($path, $req));
     }
 }

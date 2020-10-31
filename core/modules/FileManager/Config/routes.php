@@ -17,6 +17,7 @@ R::post('filemanager.profil.delete', 'admin/user/permission/filemanager/:id/dele
 R::get('filemanager.admin', 'admin/filemanager/show', 'Manager@admin');
 R::get('filemanager.public', 'filemanager/public:path', 'Manager@showPublic', [ ':path' => '(/[-\w]+){0,255}' ]);
 R::get('filemanager.show', 'filemanager/show:path', 'Manager@show', [ ':path' => '(/[-\w]+){0,255}' ]);
+R::get('filemanager.filter', 'filemanager/filter:path', 'Manager@filter', [ ':path' => '(/[-\w]+){0,255}' ]);
 
 R::get('filemanager.file.show', 'filemanager/file:path:name:ext', 'File@show', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
 R::get('filemanager.file.create', 'filemanager/file:path', 'File@create', [ ':path' => '(/[-\w]+){0,255}' ]);
