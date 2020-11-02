@@ -5,6 +5,11 @@ namespace SoosyzeCore\Menu\Form;
 class FormLink extends \Soosyze\Components\Form\FormBuilder
 {
     protected $isRewrite = false;
+    
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    protected $router;
 
     protected $values = [
         'title_link'  => '',
@@ -16,6 +21,12 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
     ];
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
+    
+    public function __construct($attr, $router)
+    {
+        parent::__construct($attr);
+        $this->router = $router;
+    }
 
     public function setValues($value)
     {
@@ -50,7 +61,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 ->group('link-group', 'div', function ($form) {
                     $form->label('link-label', t('Link'))
                     ->text('link', [
-                        'class'       => 'form-control',
+                        'class'       => 'form-control api_route',
+                        'data-link'   => $this->router->getRoute('api.route'),
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
                         'value'       => $this->values[ 'link' ] .

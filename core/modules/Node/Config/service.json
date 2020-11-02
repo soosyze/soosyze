@@ -37,6 +37,13 @@
             "node.edit.response.after": "hookNodeEditResponseAfter"
         }
     },
+    "node.hook.api.route": {
+        "class": "SoosyzeCore\\Node\\Services\\HookApiRoute",
+        "arguments": ["@alias", "@query", "@router"],
+        "hooks": {
+            "api.route": "hookApiRoute"
+        }
+    },
     "node.hook.url": {
         "class": "SoosyzeCore\\Node\\Services\\HookUrl",
         "arguments": ["@alias", "@config", "@query", "@schema"],

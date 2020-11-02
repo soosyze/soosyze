@@ -523,3 +523,20 @@ fieldset.package {
 .dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: #2185d0;
 }
+
+.api_route-list {
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+    width: 100%;
+    border: 1px solid #bbb;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.api_route-list li {
+    padding: 6px 18px;
+}
+.api_route-list li:hover {
+    background-color: #eee;
+}

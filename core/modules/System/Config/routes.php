@@ -9,3 +9,5 @@ R::post('system.module.update', 'admin/modules', 'ModulesManager@update');
 
 R::get('system.module.check', 'admin/modules/check', 'ModulesUpdater@check');
 R::get('system.module.updater', 'admin/modules/updater', 'ModulesUpdater@updater');
+
+R::get('api.route', 'api/route', 'RouteApi@index');

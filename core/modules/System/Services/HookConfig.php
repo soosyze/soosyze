@@ -163,11 +163,12 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ])
                             ->text('path_index', [
                                 'class'       => 'form-control',
+                                'data-link'   => $this->router->getRoute('api.route'),
                                 'required'    => 1,
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_index' ]
                             ]);
-                        }, [ 'class' => 'form-group-flex' ]);
+                        }, [ 'class' => 'form-group-flex api_route' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('path_access_denied-group', 'div', function ($form) use ($data) {
                         $form->label('path_access_denied-label', t('Page 403 by default (access denied)'), [
@@ -181,10 +182,11 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ])
                             ->text('path_access_denied', [
                                 'class'       => 'form-control',
+                                'data-link'   => $this->router->getRoute('api.route'),
                                 'placeholder' => t('Example: user/login'),
                                 'value'       => $data[ 'path_access_denied' ]
                             ]);
-                        }, [ 'class' => 'form-group-flex' ]);
+                        }, [ 'class' => 'form-group-flex api_route' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('path_no_found-group', 'div', function ($form) use ($data) {
                         $form->label('path_no_found-label', t('Page 404 by default (page not found)'), [
@@ -198,10 +200,11 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ])
                             ->text('path_no_found', [
                                 'class'       => 'form-control',
+                                'data-link'   => $this->router->getRoute('api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_no_found' ]
                             ]);
-                        }, [ 'class' => 'form-group-flex' ]);
+                        }, [ 'class' => 'form-group-flex api_route' ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('path_maintenance-group', 'div', function ($form) use ($data) {
                         $form->label('path_maintenance-label', t('Default maintenance page'), [
@@ -214,10 +217,11 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ])
                             ->text('path_maintenance', [
                                 'class'       => 'form-control',
+                                'data-link'   => $this->router->getRoute('api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_maintenance' ]
                             ]);
-                        }, [ 'class' => 'form-group-flex' ]);
+                        }, [ 'class' => 'form-group-flex api_route' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('metadata-fieldset', 'fieldset', function ($form) use ($data) {

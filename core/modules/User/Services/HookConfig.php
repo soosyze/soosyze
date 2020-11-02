@@ -81,12 +81,13 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
+                            'data-link'   => $this->router->getRoute('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => '',
                             'required'    => 1,
                             'value'       => $data[ 'connect_redirect' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ])
+                    }, [ 'class' => 'form-group-flex api_route' ])
                     ->html('connect_redirect-info', '<p>:_content</p>', [
                         '_content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
@@ -120,11 +121,12 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ])
                         ->text('terms_of_service_page', [
                             'class'       => 'form-control',
+                            'data-link'   => $this->router->getRoute('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'terms_of_service_page' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
+                    }, [ 'class' => 'form-group-flex api_route' ]);
                 }, [ 'class' => 'form-group' ])
                 /* RGPD */
                 ->group('rgpd_show-group', 'div', function ($form) use ($data) {
@@ -144,11 +146,12 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
+                            'data-link'   => $this->router->getRoute('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'rgpd_page' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
+                    }, [ 'class' => 'form-group-flex api_route' ]);
                 }, [ 'class' => 'form-group' ]);
             })
             ->group('password-fieldset', 'fieldset', function ($form) use ($data) {

@@ -13,6 +13,12 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
+    public function __construct($attr, $router)
+    {
+        parent::__construct($attr);
+        $this->router = $router;
+    }
+
     public function setValues(array $values, $useInPath)
     {
         $this->values    = array_merge($this->values, $values);
@@ -39,14 +45,14 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
             if ($this->useInPath) {
                 $form->group('path-group', 'div', function ($form) {
-                    $form
-                            ->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]))
+                    $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]))
                             ->text('path', [
-                                'class'       => 'form-control',
+                                'class'       => 'form-control api_route',
                                 'maxlength'   => 512,
                                 'placeholder' => t('Example: node/1'),
                                 'required'    => !empty($this->useInPath[ 'required' ]),
                                 'value'       => $this->values[ 'path' ]
+                                'data-link'    => $this->router->getRoute('api.route'),
                             ]);
                 }, [ 'class' => 'form-group' ]);
             }

@@ -30,7 +30,7 @@ class Link extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
-        $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormLink([ 'method' => 'post', 'action' => $action ], self::router()))
             ->setValues($values)
             ->makeFields();
 
@@ -127,7 +127,7 @@ class Link extends \Soosyze\Controller
             ':id'   => $id
         ]);
 
-        $form = (new FormLink([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormLink([ 'method' => 'post', 'action' => $action ], self::router()))
             ->setValues($values)
             ->setRewrite(self::router()->isRewrite())
             ->makeFields();

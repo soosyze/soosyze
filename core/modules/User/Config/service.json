@@ -19,6 +19,13 @@
             "install.menu": "hookInstallMenu"
         }
     },
+    "user.hook.api.route": {
+        "class": "SoosyzeCore\\User\\Services\\HookApiRoute",
+        "arguments": ["@config", "@router"],
+        "hooks": {
+            "api.route": "hookApiRoute"
+        }
+    },
     "user.hook.user": {
         "class": "SoosyzeCore\\User\\Services\\HookUser",
         "arguments": ["@config", "@user"],
