@@ -509,6 +509,8 @@ class Node extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
+        $content[ 'current_path' ] = self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
+
         $pathsSettings = self::node()->getPathSettings();
 
         $useInPath = null;
@@ -571,19 +573,30 @@ class Node extends \Soosyze\Controller
         $pathsSettings = self::node()->getPathSettings();
 
         foreach ($pathsSettings as $value) {
-            if (!empty($value[ 'path' ]) && self::alias()->getSource($value[ 'path' ], $value[ 'path' ]) === 'node/' . $idNode) {
-                $not = empty($value[ 'required' ])
-                    ? ''
-                    : '!';
-
-                $validator
-                    ->addRule('path', $not . 'required|route')
-                    ->addInput('path_key', $value[ 'key' ])
-                    ->addRule('path_key', $not . 'required|string')
-                    ->addLabel('path', t('New path for') . ' ' . t($value[ 'title' ]));
-
-                break;
+            if (empty($value[ 'path' ]) && self::alias()->getSource($value[ 'path' ], $value[ 'path' ]) !== 'node/' . $idNode) {
+                continue;
             }
+
+            $not = empty($value[ 'required' ])
+                ? ''
+                : '!';
+            
+            $currentAlias = self::alias()->getalias('node/' . $idNode, 'node/' . $idNode);
+
+            $validator
+                ->addRule('path', $not . "required|route|!equal:$currentAlias|!equal:node/$idNode")
+                ->addInput('path_key', $value[ 'key' ])
+                ->addRule('path_key', $not . 'required|string')
+                ->addLabel('path', t('New path for') . ' ' . t($value[ 'title' ]))
+                ->setMessages([
+                    'path' => [
+                        'equal' => [
+                            'not' => t('You cannot enter the URL of the content that is going to be deleted.')
+                        ]
+                    ]
+                ]);
+
+            break;
         }
 
         $this->container->callHook('node.delete.validator', [ &$validator, $idNode ]);

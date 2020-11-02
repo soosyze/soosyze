@@ -44,5 +44,6 @@
     ":count content": ":count contenu",
     "This content is used in the configuration as": "Ce contenu est utilisé dans la configuration comme",
     "Delete files with their contents": "Supprimer les fichiers avec leur contenu",
-    "New path for": "Nouveau chemin pour"
+    "New path for": "Nouveau chemin pour",
+    "You cannot enter the URL of the content that is going to be deleted.": "Vous ne pouvez pas saisir l'URL du contenu qui va être supprimé."
 }

@@ -4,9 +4,15 @@ namespace SoosyzeCore\Node\Form;
 
 class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 {
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    protected $router;
+
     protected $values = [
-        'path'  => '',
-        'files' => 1
+        'current_path' => '',
+        'files'        => 1,
+        'path'         => ''
     ];
 
     protected $useInPath;
@@ -46,13 +52,24 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
             if ($this->useInPath) {
                 $form->group('path-group', 'div', function ($form) {
                     $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]))
-                            ->text('path', [
-                                'class'       => 'form-control api_route',
-                                'maxlength'   => 512,
-                                'placeholder' => t('Example: node/1'),
-                                'required'    => !empty($this->useInPath[ 'required' ]),
-                                'value'       => $this->values[ 'path' ]
-                                'data-link'    => $this->router->getRoute('api.route'),
+                            ->group('rgpd_page-flex', 'div', function ($form) {
+                                $form->html('base_path', '<span:attr>:_content</span>', [
+                                    '_content' => $this->router->makeRoute(''),
+                                    'id'       => ''
+                                ])
+                                ->text('path', [
+                                    'class'        => 'form-control api_route',
+                                    'data-exclude' => $this->values[ 'current_path' ],
+                                    'data-link'    => $this->router->getRoute('api.route'),
+                                    'maxlength'    => 512,
+                                    'placeholder'  => t('Example: node/1'),
+                                    'required'     => !empty($this->useInPath[ 'required' ]),
+                                    'value'        => $this->values[ 'path' ]
+                                ]);
+                            }, [ 'class' => 'form-group-flex api_route' ])
+                            ->html('result', '<ul:attr></ul>', [
+                                'class'       => 'api_route-list hidden',
+                                'data-target' => '#path'
                             ]);
                 }, [ 'class' => 'form-group' ]);
             }
@@ -69,7 +86,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                         );
             }, [ 'class' => 'form-group' ]);
         })
-        ->token('token_node_remove')
-        ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+                ->token('token_node_remove')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
     }
 }
