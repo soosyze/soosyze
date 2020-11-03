@@ -40,7 +40,7 @@
     },
     "menu.hook.block": {
         "class": "SoosyzeCore\\Menu\\Services\\HookBlock",
-        "arguments": ["@menu"],
+        "arguments": ["@menu", "@router"],
         "hooks": {
             "block.create.form.data": "hookCreateFormData",
             "block.menu": "hookBlockMenu",

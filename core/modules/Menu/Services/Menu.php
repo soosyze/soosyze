@@ -129,6 +129,43 @@ class Menu
             'fragment' => $uri->getFragment(),
         ];
     }
+    
+    public function renderMenuSelect($nameMenu, $parent = -1, $level = 1)
+    {
+        $query = $this->query
+            ->from('menu_link')
+            ->where('active', '==', 1)
+            ->where('menu', $nameMenu)
+            ->where('parent', '==', $parent)
+            ->orderBy('weight')
+            ->fetchAll();
+
+        if (empty($query)) {
+            return [];
+        }
+
+        $options = $level === 1
+            ? [ [ 'value' => -1, 'label' => '« ' . t('Root') . ' »' ] ]
+            : [];
+
+        $space = str_repeat('│··· ', $level - 1);
+        $count = count($query) - 1;
+
+        foreach ($query as $key => $menu) {
+            $seperator = $count === $key
+                ? '└─ '
+                : '├─ ';
+
+            $options[] = [
+                'value' => $menu[ 'id' ],
+                'label' => $space . $seperator . t($menu[ 'title_link' ])
+            ];
+
+            $options = array_merge($options, $this->renderMenuSelect($nameMenu, $menu[ 'id' ], $level + 1));
+        }
+
+        return $options;
+    }
 
     public function renderMenu($nameMenu, $parent = -1, $level = 1)
     {

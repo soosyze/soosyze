@@ -21,3 +21,24 @@ var debounce = function (func, wait, immediate) {
         }
     };
 };
+
+/* Rempli une liste de sélection dynamiquement à partir du choix d' une première liste. */
+$(document).delegate('select.ajax-control', 'change', function () {
+    const $selectCurrent = $(this)[0];
+    const $selectTarget = $($(this).data('target'));
+    const $optionSelected = $selectCurrent.options[$selectCurrent.selectedIndex];
+    const $link = $($optionSelected).data('link');
+
+    $.ajax({
+        url: $link,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let html = '';
+            data.forEach(function (value) {
+                html += `<option value="${value.value}">${value.label}</option>`;
+            });
+            $selectTarget.html(html);
+        }
+    });
+});
