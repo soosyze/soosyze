@@ -4,6 +4,12 @@ namespace SoosyzeCore\FileManager\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    const REPLACE_WITH = 1;
+
+    const KEEP_RENAME = 2;
+
+    const KEEP_REFUSE = 3;
+
     public function defaultValues()
     {
         return [
@@ -27,7 +33,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'checked'  => $data[ 'replace_file' ] === 1,
                         'id'       => 'replace_file_1',
                         'required' => 1,
-                        'value'    => 1
+                        'value'    => self::REPLACE_WITH
                     ])->label('replace_file-label', t('Replace the file with the new one'), [
                         'for' => 'replace_file_1'
                     ]);
@@ -37,7 +43,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'checked'  => $data[ 'replace_file' ] === 2,
                         'id'       => 'replace_file_2',
                         'required' => 1,
-                        'value'    => 2
+                        'value'    => self::KEEP_RENAME
                     ])->label('replace_file-label', t('Keep the file by renaming the new'), [
                         'for' => 'replace_file_2'
                     ]);
@@ -47,7 +53,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'checked'  => $data[ 'replace_file' ] === 3,
                         'id'       => 'replace_file_3',
                         'required' => 1,
-                        'value'    => 3
+                        'value'    => self::KEEP_REFUSE
                     ])->label('replace_file-label', t('Keep the file by refusing the new one'), [
                         'for' => 'replace_file_3'
                     ]);
