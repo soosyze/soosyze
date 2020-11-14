@@ -11,11 +11,10 @@ class Query extends \Queryflatfile\Request
         $request   = (string) $this;
         $timeStart = microtime(true);
         $output    = parent::fetchAll();
-        $timeEnd   = microtime(true);
 
         $this->listRequest[] = [
             'request' => $request,
-            'time'    => $timeEnd - $timeStart
+            'time'    => microtime(true) - $timeStart
         ];
 
         return $output;

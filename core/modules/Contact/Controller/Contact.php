@@ -99,6 +99,7 @@ class Contact extends \Soosyze\Controller
             if ($mail->send()) {
                 $_SESSION[ 'messages' ][ 'success' ] = [ t('Your message has been sent.') ];
             } else {
+                $_SESSION[ 'inputs' ]               = $validator->getInputs();
                 $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
             }
         } else {
@@ -107,8 +108,6 @@ class Contact extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        $route = self::router()->getRoute('contact');
-
-        return new Redirect($route);
+        return new Redirect(self::router()->getRoute('contact'));
     }
 }

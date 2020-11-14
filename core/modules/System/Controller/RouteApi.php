@@ -6,6 +6,10 @@ class RouteApi extends \Soosyze\Controller
 {
     public function index($req)
     {
+        if (!$req->isAjax()) {
+            return $this->get404($req);
+        }
+
         $get = $req->getQueryParams();
         
         $search = empty($get[ 'title' ])

@@ -50,6 +50,7 @@ class Config extends \Soosyze\Controller
         }
 
         $validator = (new Validator())
+            ->addRule('token_' . $id . '_config', 'token')
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
         $inputsFile = [];
 
@@ -57,8 +58,6 @@ class Config extends \Soosyze\Controller
 
         $config->validator($validator);
         $config->files($inputsFile);
-
-        $validator->addRule('token_' . $id . '_config', 'token');
 
         if ($validator->isValid()) {
             $fileConfig = empty($menu[ $id ][ 'config' ])
@@ -165,8 +164,7 @@ class Config extends \Soosyze\Controller
 
         $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
         foreach ($menu as $key => &$link) {
-            $manage = $this->container->callHook('app.granted', [ $key . '.config.manage' ]);
-            if ($all || $manage) {
+            if ($all || $this->container->callHook('app.granted', [ $key . '.config.manage' ])) {
                 $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $key ]);
 
                 continue;

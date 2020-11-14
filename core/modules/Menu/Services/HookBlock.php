@@ -25,7 +25,7 @@ class HookBlock
             $blocks[ "menu.{$menu[ 'name' ]}" ] = [
                 'hook'      => 'menu',
                 'key_block' => "menu.{$menu[ 'name' ]}",
-                'options'   => [ 'name' => $menu[ 'name' ], 'parent' => -1 ],
+                'options'   => [ 'name' => $menu[ 'name' ], 'parent' => -1, 'level' => 0 ],
                 'path'      => $this->menu->getPathViews(),
                 'title'     => $menu[ 'title' ],
                 'tpl'       => "components/block/menu-{$menu[ 'name' ]}.php"

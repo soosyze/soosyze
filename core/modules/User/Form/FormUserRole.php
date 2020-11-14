@@ -164,7 +164,7 @@ class FormUserRole extends FormBuilder
                     '_content' => t('Warning ! The deletion of the role is final.')
                 ]);
         })->token('token_role_delete')
-            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         return $this;
     }

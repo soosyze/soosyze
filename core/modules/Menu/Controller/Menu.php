@@ -276,7 +276,7 @@ class Menu extends \Soosyze\Controller
                 ]);
             })
             ->token('token_menu_remove')
-            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         $this->container->callHook('menu.remove.form', [ &$form, $menu, $name ]);
 

@@ -57,13 +57,13 @@ class BackupManager
                 'date'          => \date_create_from_format(self::DATE_FORMAT, str_replace('soosyzecms.zip', '', $file->getFilename())),
                 'size'          => $file->getSize(),
                 'download_link' => $this->router->getRoute('backupmanager.download', [
-                    ':file' => str_replace(self::SUFFIX, '', $file->getFilename())
-                ]),
+                    ':file' => strtr($file->getFilename(), [ self::SUFFIX => '' ])
+            ]),
                 'restore_link'  => $this->router->getRoute('backupmanager.restore', [
-                    ':file' => str_replace(self::SUFFIX, '', $file->getFilename())
+                    ':file' => strtr($file->getFilename(), [ self::SUFFIX => '' ])
                 ]),
                 'delete_link'   => $this->router->getRoute('backupmanager.delete', [
-                    ':file' => str_replace(self::SUFFIX, '', $file->getFilename())
+                    ':file' => strtr($file->getFilename(), [ self::SUFFIX => '' ])
                 ])
             ];
         }

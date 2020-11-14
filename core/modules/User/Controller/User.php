@@ -453,7 +453,7 @@ class User extends \Soosyze\Controller
                 ]);
             })
             ->token('token_user_remove')
-            ->submit('sumbit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         $this->container->callHook('user.remove.form', [ &$form, $user, $id ]);
 

@@ -90,7 +90,7 @@
 
                             <br><?php echo t('Is required by'); ?> 
                             <span class="module-is_required_for_module">
-                                <?php echo implode(',', $module[ 'isRequiredForModule' ]); ?>
+                                <?php echo implode(', ', $module[ 'isRequiredForModule' ]); ?>
 
                             </span>
                             <?php endif; ?>

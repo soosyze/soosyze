@@ -37,8 +37,6 @@ $(function () {
             data: $formModal.serialize(),
             dataType: 'json',
             success: function () {
-                var action = $('#table-file').data('link_show');
-                updateManager(action);
                 closeModal.call(evt.target, evt);
             },
             error: function (data) {
