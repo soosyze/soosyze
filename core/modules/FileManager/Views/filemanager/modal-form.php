@@ -10,6 +10,8 @@
             <?php if (!empty($menu)): echo $menu; endif; ?>
 
             <?php echo $form; ?>
+
+            <?php if (!empty($is_progress)): ?><div id="filemanager-dropfile__progress_cards"></div><?php endif; ?>
         </div>
     </div>
 </div>

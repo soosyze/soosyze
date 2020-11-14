@@ -318,6 +318,18 @@ class File
         return "{$this->path}/{$filename}.{$this->ext}";
     }
 
+    /**
+     * Le chemin absolu du répertoire dans lequel fichiers sont envoyés.
+     *
+     * @return string
+     */
+    public function getMovePathAbsolute()
+    {
+        $filename = $this->getName();
+
+        return "{$this->basePath}{$this->path}/{$filename}.{$this->ext}";
+    }
+
     protected function getThumbnail($name, &$form, $filePath, $type)
     {
         $src = is_file($this->root . $filePath)

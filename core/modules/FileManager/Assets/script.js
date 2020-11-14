@@ -23,7 +23,7 @@ $(function () {
 
 $(document).delegate('#form_filter_file', 'input', debounce(function () {
     const $this = $(this);
- 
+
     $.ajax({
         url: $this.attr('action'),
         type: $this.attr('method'),
@@ -150,7 +150,7 @@ $(document).delegate('#folder_create', 'click', function (evt) {
 $(document).delegate('#file_create', 'click', function (evt) {
     evt.preventDefault();
     const link = $(this).data('link');
-    
+
     $.ajax({
         url: link,
         type: 'GET',
@@ -162,9 +162,14 @@ $(document).delegate('#file_create', 'click', function (evt) {
     });
 });
 
-$(document).delegate('.filemanager-dropfile #file', 'change', function (evt) {
+$(document).delegate('.filemanager-dropfile #files', 'change', function (evt) {
     const $form = $('.filemanager-dropfile');
-    uploadFile($form);
+
+    $.each($(".filemanager-dropfile input[type='file']")[0].files, function (i, file) {
+        var data = new FormData();
+        data.append('file', file);
+        uploadFile($form, data);
+    });
 });
 
 /**
@@ -183,79 +188,97 @@ function dropFile() {
         const droppedFiles = evt.originalEvent.dataTransfer.files;
         $form.find('input[type="file"]').prop('files', droppedFiles);
         evt.preventDefault();
-        uploadFile($form);
+
+        $.each($(".filemanager-dropfile input[type='file']")[0].files, function (i, file) {
+            var data = new FormData();
+            data.append('file', file);
+            uploadFile($form, data);
+        });
+        $form.css('outline-offset', '0px');
     });
 }
 
-function uploadFile($form) {
-    const data = new FormData($form.get(0));
-    const action = $form.attr("action");
+function uploadFile($form, data) {
+    const $percent = document.createElement('span');
+    $percent.className = 'filemanager-dropfile__progress_percent';
+
+    const $progressComplete = document.createElement('div');
+    $progressComplete.className = 'filemanager-dropfile__progress_bar_complete';
+
+    const $progress = document.createElement('div');
+    $progress.className = 'filemanager-dropfile__progress_bar';
+    $progress.appendChild($progressComplete);
+
+    const $progressRender = document.createElement('div');
+    $progressRender.className = 'filemanager-dropfile__progress_render';
+
+    const $fileShowNew = document.createElement('div');
+    $fileShowNew.className = 'filemanager-dropfile__progress';
+    $fileShowNew.appendChild($progressRender);
+    $fileShowNew.appendChild($percent);
+    $fileShowNew.appendChild($progress);
 
     $.ajax({
         xhr: function () {
-            $(".filemanager-dropfile__label").hide();
-            $(".filemanager-dropfile__progress_bar")
-                    .append('<div class="filemanager-dropfile__progress_bar_complete"></div>');
-            $(".filemanager-dropfile__progress").show();
-
+            $('#filemanager-dropfile__progress_cards').prepend($fileShowNew);
 
             var xhr = new window.XMLHttpRequest();
 
             xhr.upload.addEventListener("progress", function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = Math.floor((evt.loaded / evt.total) * 100);
-                    $(".filemanager-dropfile__progress_percent").html(percentComplete + '%');
-                    $(".filemanager-dropfile__progress_bar_complete").width(percentComplete + '%');
+                    $percent.innerHTML = percentComplete + '%';
+                    $progressComplete.style.width = percentComplete + '%';
                 }
             }, false);
             return xhr;
         },
-        url: action,
+        url: $form.attr("action"),
         type: 'POST',
         data: data,
         dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,
-        complete: function () {
-            setTimeout(function () {
-                $form.removeClass('filemanager-dropfile__success');
-                $form.removeClass('filemanager-dropfile__error');
-                $form.css('outline-offset', '0px');
-                $(".filemanager-dropfile__progress").hide();
-                $(".filemanager-dropfile__label").show();
-                $(".filemanager-dropfile__progress_bar_complete").remove();
-            }, 1000);
-        },
-        success: function () {
-            $form.addClass('filemanager-dropfile__success');
-            $(".filemanager-dropfile__progress_percent").html('Complete !');
+        success: function (data) {
+            $progressRender.title = `${data.name}.${data.ext}`;
+
+            if (data.type === 'image') {
+                $progressRender.style.backgroundImage = `url(${data.link_file})`;
+            } else {
+                const $fileIcon = document.createElement('span');
+                $fileIcon.className = `file ${data.ext}`;
+
+                const $fileIconName = document.createElement('span');
+                $fileIconName.className = 'ext-name';
+                $fileIconName.innerHTML = data.ext;
+
+                const $fileName = document.createElement('div');
+                $fileName.innerHTML = `${data.name}.<span class="ext">${data.ext}</span>`;
+
+                $fileIcon.appendChild($fileIconName);
+                $progressRender.appendChild($fileIcon);
+                $progressRender.appendChild($fileName);
+            }
+
+            $percent.innerHTML = data.messages.type;
+            $fileShowNew.classList.add('filemanager-dropfile__success');
+
             var action = $('#table-file').data('link_show');
             updateManager(action);
         },
         error: function (data) {
-            $form.addClass('filemanager-dropfile__error');
-            $(".filemanager-dropfile__progress_percent").html('Error !');
-            renderMessage('.modal-messages', data.responseJSON);
+            $fileShowNew.classList.add('filemanager-dropfile__error');
+
+            Object.entries(data.responseJSON.messages.errors).forEach(function ([key, val]) {
+                const $message = document.createElement('p');
+                $message.innerHTML = val;
+                $progressRender.prepend($message);
+            });
+
+            $percent.innerHTML = data.responseJSON.messages.type;
         }
     });
-}
-
-
-function renderMessage(selector, data) {
-    $(selector).html('');
-    if (data.messages != null && data.messages.success != null) {
-        $.each(data.messages.success, function (key, val) {
-            $(selector).append(`<div class="alert alert-success" role="alert"><p>${val}</p></div>`);
-        });
-    } else if (data.messages !== undefined && data.messages.errors !== undefined) {
-        $.each(data.messages.errors, function (key, val) {
-            $(selector).append(`<div class="alert alert-danger" role="alert"><p>${val}</p></div>`);
-        });
-        $.each(data.errors_keys, function (key, val) {
-            $(`.modal #${val}`).css('border-color', '#f00');
-        });
-    }
 }
 
 /**

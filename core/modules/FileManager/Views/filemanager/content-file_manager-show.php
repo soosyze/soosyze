@@ -15,7 +15,7 @@
                         data-link="<?php echo $link_file_create; ?>"
                         data-toogle="modal"
                         data-target="#modal_filemanager">
-                        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add file'); ?>
+                        <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add files'); ?>
 
                     </button>
                 <?php endif; ?>

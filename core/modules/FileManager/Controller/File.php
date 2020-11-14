@@ -8,6 +8,7 @@ use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Services\FileManager;
+use SoosyzeCore\FileManager\Services\HookConfig;
 
 class File extends \Soosyze\Controller
 {
@@ -74,40 +75,36 @@ class File extends \Soosyze\Controller
                 ]),
                 'class'   => 'filemanager-dropfile',
                 'method'  => 'post',
-                'onclick' => 'document.getElementById(\'file\').click();',
+                'onclick' => 'document.getElementById(\'files\').click();',
                 ]))
             ->group('file-group', 'div', function ($form) use ($max) {
                 $form->label(
                     'file-label',
-                    '<div class="filemanager-dropfile__progress">'
-                . '<span class="filemanager-dropfile__progress_percent"></span>'
-                . '<div class="filemanager-dropfile__progress_bar">'
-                . '</div>'
-                . '</div>'
-                . '<div class="filemanager-dropfile__label">'
-                . '<i class="fa fa-download" aria-hidden="true"></i> <span class="choose">'
-                . t('Choose a file')
-                . '</span> '
-                . t('or drag it here.')
-                . '<p><small>'
-                . t('File size is limited to :max per upload', [
-                    ':max' => Util::strFileSizeFormatted($max)
-                ])
-                . '</small></p>'
-                . '</div>'
+                    '<div class="filemanager-dropfile__label">'
+                    . '<i class="fa fa-download" aria-hidden="true"></i> '
+                    . '<span class="choose">' . t('Choose files') . '</span> '
+                    . t('or drag them here.')
+                    . '<p><small>'
+                    . t('Files size is limited to :max per upload', [
+                        ':max' => Util::strFileSizeFormatted($max)
+                    ])
+                    . '</small></p>'
+                    . '</div>'
                 )
-            ->file('file', [
-                'multiple' => 1,
-                'style'    => 'display:none'
-            ]);
+                ->file('file[]', [
+                    'id' => 'files',
+                    'multiple' => 1,
+                    'style'    => 'display:none'
+                ]);
             });
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
-                    'form'  => $form,
-                    'title' => t('Add a new file')
+                    'is_progress' => 1,
+                    'form'        => $form,
+                    'title'       => t('Add a new file')
         ]);
     }
 
@@ -117,11 +114,14 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
         if ($req->isMaxSize()) {
-            $out[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-
-            return $this->json(400, $out);
+            return $this->json(400, [
+                'messages' => [
+                    'type'   => t('Error'),
+                    'errors' => [
+                        t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                    ]
+                ]
+            ]);
         }
 
         $dir    = self::core()->getDir('files_public', 'app/files') . $path;
@@ -171,28 +171,49 @@ class File extends \Soosyze\Controller
         }
 
         if (!$validator->isValid()) {
-            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return $this->json(400, $out);
+            return $this->json(400, [
+                'messages' => [
+                    'type'   => t('Error'),
+                    'errors' => $validator->getKeyErrors()
+                ]
+            ]);
         }
 
-        $file        = $validator->getInput('file');
+        $file = $validator->getInput('file');
+
+        $filename = Util::strSlug(pathinfo($file->getClientFilename(), PATHINFO_FILENAME));
+        $ext      = Util::getFileExtension($file->getClientFilename());
+
         $serviceFile = self::file()
             ->add($file)
             ->setPath($path)
-            ->setResolvePath();
+            ->isResolvePath();
 
-        if (self::config()->get('settings.replace_file') === 2) {
-            $serviceFile = $serviceFile->setResolveName();
-        } elseif (self::config()->get('settings.replace_file') === 3 && is_file($dir . '/' . $file->getClientFilename())) {
-            $out[ 'messages' ][ 'errors' ][] = t('An existing file has the same name, you can not replace it');
-
-            return $this->json(400, $out);
+        if (self::config()->get('settings.replace_file') === HookConfig::KEEP_RENAME) {
+            $serviceFile = $serviceFile->isResolveName();
+        } elseif (self::config()->get('settings.replace_file') === HookConfig::KEEP_REFUSE && is_file("$dir/$filename.$ext")) {
+            return $this->json(400, [
+                'messages' => [
+                    'type'   => t('Error'),
+                    'errors' => [ t('An existing file has the same name, you can not replace it') ]
+                ]
+            ]);
         }
 
         $serviceFile->saveOne();
 
-        $out[ 'messages' ][ 'success' ][] = t('The file has been uploaded');
+        $out = [
+            'ext'       => $ext,
+            'link_file' => $serviceFile->getMovePathAbsolute(),
+            'messages'  => [
+                'type'    => t('Success'),
+                'success' => [ t('The file has been uploaded') ]
+            ],
+            'name'      => $serviceFile->getName(),
+            'type'      => in_array($ext, self::$extensionImage)
+                ? 'image'
+                : 'file'
+        ];
 
         return $this->json(200, $out);
     }

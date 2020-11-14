@@ -1,87 +1,36 @@
+/* table file */
 #table-file {
     table-layout: fixed;
     word-wrap: break-word;
 }
-/* Dropfile */
-.filemanager-dropfile {
-    font-size: 1.25rem;
-    padding: 2em;
-    outline: 2px dashed #ccc;
-    text-align: center;
-    -webkit-transition: background-color .2s, outline-offset .2s; /* Safari */
-    transition: background-color .2s, outline-offset .2s;
-}
-.filemanager-dropfile__success {
-    outline: 2px dashed #21ba45;
-}
-.filemanager-dropfile__error {
-    outline: 2px dashed #db2828;
-}
-.filemanager-dropfile .choose {
-    color: #0086b3;
-    cursor: pointer;
-}
-.filemanager-dropfile__progress {
-    display: inline-block;
-}
-.filemanager-dropfile__progress_bar {
-    background-color: #fff;
-    width: 200px;
-}
-.filemanager-dropfile__progress_bar_complete {
-    height: 5px;
-    background-color: #2185d0;
-    margin-left: auto;
-    margin-right: auto;
-}
-.filemanager-dropfile__success .filemanager-dropfile__progress_bar_complete {
-    background-color: #21ba45;
-}
-.filemanager-dropfile__error .filemanager-dropfile__progress_bar_complete {
-    background-color: #db2828;
-}
 .file-link_show .file-link_show_img {
     background-repeat: no-repeat;
-    height: 6em;
     background-size: contain;
     background-position: center;
+    height: 6em;
     max-width: 6em;
 }
 .dir-link_show,
 .file-link_show {
-    cursor:pointer;
+    cursor: pointer;
 }
-.file{
+.file {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    display:inline-block;
-    width: 5em;
     height: 6em;
+    display:inline-block;
     text-align: center;
+    width: 5em;
 }
-.ext-name{
-    position: relative;
+.ext-name {
     bottom: -5.6em;
     color: #fff;
     font-size: .8em;
+    position: relative;
 }
 .ext{
     color: #bbb;
-}
-.modal-info{
-    word-wrap: break-word;
-}
-.modal-visulaize {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
-}
-.modal-visulaize.thumbnail {
-    border: 1px solid rgba(86,61,124,.2);
-    padding: 6px;
 }
 .file { background-image: url(./icon/file.svg); }
 .ai, .eps{ background-image: url(./icon/ai.svg); }
@@ -96,3 +45,70 @@
 .xml, .xhtml, .html{ background-image: url(./icon/xhtml.svg); }
 .ods, .xlsx, .xls, .csv{ background-image: url(./icon/xls.svg); }
 .zip, .gzip, .tar, .rar{ background-image: url(./icon/zip.svg); }
+
+/* Dropfile */
+.filemanager-dropfile {
+    font-size: 1.25rem;
+    padding: 2em;
+    outline: 2px dashed #ccc;
+    text-align: center;
+    -webkit-transition: background-color .2s, outline-offset .2s; /* Safari */
+    transition: background-color .2s, outline-offset .2s;
+}
+.filemanager-dropfile .choose {
+    color: #0086b3;
+    cursor: pointer;
+}
+
+/* Modal file */
+.modal-info{
+    word-wrap: break-word;
+}
+.modal-visulaize {
+    min-height: 300px;
+}
+
+/* Upload files */
+#filemanager-dropfile__progress_cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.filemanager-dropfile__progress {
+    border: 1px solid #eaeaea;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+    min-width: 12em;
+    word-break: break-word;
+}
+.filemanager-dropfile__progress_render {
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 200px;
+    position: relative;
+    text-align: center;
+}
+.filemanager-dropfile__progress_percent {
+    margin-left: 6px;
+}
+.filemanager-dropfile__progress_bar {
+    background-color: #fff;
+}
+.filemanager-dropfile__progress_bar_complete {
+    background-color: #2185d0;
+    height: 5px;
+}
+.filemanager-dropfile__success .filemanager-dropfile__progress_bar_complete {
+    background-color: #21ba45;
+}
+.filemanager-dropfile__error .filemanager-dropfile__progress_bar_complete {
+    background-color: #db2828;
+}
