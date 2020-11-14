@@ -565,19 +565,18 @@ class User extends \Soosyze\Controller
 
     private function savePicture($id, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/user/$id";
         $key = 'picture';
 
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
-            ->setPath($dir)
-            ->setResolvePath()
+            ->setPath("/user/$id")
+            ->isResolvePath()
             ->callGet(function ($key, $name) use ($id) {
                 return self::user()->find($id)[ $key ];
             })
-            ->callMove(function ($key, $name, $move) use ($id, $dir) {
-                self::query()->update('user', [ $key => "$dir/$name" ])->where('user_id', '==', $id)->execute();
+            ->callMove(function ($key, $name, $move) use ($id) {
+                self::query()->update('user', [ $key => $move ])->where('user_id', '==', $id)->execute();
             })
             ->callDelete(function ($key, $name) use ($id) {
                 self::query()->update('user', [ $key => '' ])->where('user_id', '==', $id)->execute();

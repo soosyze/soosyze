@@ -398,13 +398,11 @@ class Entity extends \Soosyze\Controller
 
     private function saveFile($typeNode, $idNode, $typeEntity, $idEntity, $nameField, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$typeNode/{$idNode}/$typeEntity";
-
         self::file()
             ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
-            ->setPath($dir)
-            ->setResolvePath()
-            ->setResolveName()
+            ->setPath("/node/$typeNode/{$idNode}/$typeEntity")
+            ->isResolvePath()
+            ->isResolveName()
             ->callGet(function ($key, $name) use ($typeEntity, $idEntity) {
                 return self::query()
                     ->from('entity_' . $typeEntity)

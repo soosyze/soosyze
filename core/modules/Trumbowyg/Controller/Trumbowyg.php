@@ -30,20 +30,19 @@ class Trumbowyg extends \Soosyze\Controller
             ->setInputs($files);
 
         if ($validator->isValid()) {
-            $image = $validator->getInput('image');
-            $path  = self::core()->getSettingEnv('files_public', 'app/files') . '/upload';
-            $link  = self::file()
-                ->add($image)
-                ->setPath($path)
-                ->setResolvePath()
-                ->setResolveName()
-                ->saveOne();
-
             $data = [
                 'success' => true,
-                'link'    => '/' . $link,
                 'status'  => 200
             ];
+            self::file()
+                ->add($validator->getInput('image'))
+                ->setPath('/upload')
+                ->isResolvePath()
+                ->isResolveName()
+                ->callMove(function ($name, $fileName, $move) use (&$data) {
+                    $data['link'] = '/' . $move;
+                })
+                ->saveOne();
         } else {
             $data = [
                 'message' => 'uploadError',

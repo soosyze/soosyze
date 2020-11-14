@@ -4,14 +4,50 @@ namespace SoosyzeCore\FileSystem\Services;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Util\Util;
-use Soosyze\Components\Validator\Validator;
 
 class File
 {
     /**
-     * @var \Soosyze\App
+     * Racine du l'URL.
+     *
+     * @var string
      */
-    protected $core;
+    protected $basePath = '';
+
+    /**
+     * Fonction de suppression des données du fichier.
+     *
+     * @var callable|null
+     */
+    protected $callDelete = null;
+
+    /**
+     * Fonction de récupération des données du fichier.
+     *
+     * @var callable|null
+     */
+    protected $callGet = null;
+    
+    /**
+     * Fonction de déplacement des données du fichier.
+     *
+     * @var callable|null
+     */
+    protected $callMove = null;
+
+    /**
+     * Le répertoire d'envoie.
+     *
+     * @var string
+     */
+    protected $dir = null;
+
+    /**
+     * L'extension du fichier a déplacer.
+     *
+     * @var string
+     */
+    protected $ext;
 
     /**
      * Le fichier à déplacer.
@@ -28,18 +64,11 @@ class File
     protected $fileHidden;
 
     /**
-     * Le nom du fichier à déplacer.
+     * Si le répertoire doit-être corrigé.
      *
-     * @var string
+     * @var bool
      */
-    protected $name;
-
-    /**
-     * L'extension du fichier a déplacer.
-     *
-     * @var string
-     */
-    protected $ext;
+    protected $isResolveDir = false;
 
     /**
      * Droits attribués à la création du répertoire.
@@ -49,46 +78,49 @@ class File
     protected $mode = 0755;
 
     /**
-     * Si le répertoire doit-être corrigé.
-     *
-     * @var bool
-     */
-    protected $resolveDir = false;
-
-    /**
-     * Si le nom de fichier doit-être corrigé.
+     * Le nom du fichier à déplacer.
      *
      * @var string
      */
-    protected $resolveName = false;
+    protected $name;
 
     /**
-     * Le répertoire d'envoie.
+     * Le nouveau nom du fichier à déplacer si corrigé.
      *
      * @var string
      */
-    protected $dir = null;
+    protected $nameResolved;
 
-    protected $basePath = '';
-
-    protected $callGet = null;
+    /**
+     * Le chemin d'envoie.
+     *
+     * @var string
+     */
+    protected $path = null;
     
-    protected $callDelete = null;
+    /**
+     * Le répertoire racine.
+     *
+     * @var string
+     */
+    protected $root;
 
-    protected $callMove = null;
-
+    /**
+     * @param \Soosyze\App $core
+     */
     public function __construct($core)
     {
-        $this->core     = $core;
-        $this->basePath = $this->core->getRequest()->getBasePath();
-        $this->dir      = $this->core->getDir('files_public', 'app/files');
+        $this->basePath = $core->getRequest()->getBasePath();
+        $this->dir      = $core->getDir('files_public', 'app/files');
+        $this->path     = $core->getSettingEnv('files_public', 'app/files');
+        $this->root     = $core->getSetting('root', '');
     }
 
-    public function inputFile($name, &$form, $content = '', $type = 'image')
+    public function inputFile($name, &$form, $filePath = '', $type = 'image')
     {
-        $this->getThumbnail($name, $form, $content, $type);
+        $this->getThumbnail($name, $form, $filePath, $type);
 
-        $form->group("file-$name-flex", 'div', function ($form) use ($name, $content) {
+        $form->group("file-$name-flex", 'div', function ($form) use ($name, $filePath) {
             $attr = [
                 'class'      => 'btn btn-danger form-file-reset',
                 'onclick'    => "document.getElementById('file-$name-thumbnail') !== null"
@@ -101,7 +133,7 @@ class File
                 'id'         => "file-$name-reset",
                 'type'       => 'button',
                 'aria-label' => 'Supprimer le fichier',
-                'disabled'   => empty($content)
+                'disabled'   => empty($filePath)
             ];
 
             $form
@@ -109,7 +141,7 @@ class File
                     'aria-label' => t('View the file path'),
                     'class'      => 'form-control form-file-name',
                     'onclick'    => "document.getElementById('$name').click();",
-                    'value'      => $content
+                    'value'      => $filePath
                 ])
                 ->file($name, [
                     'style'    => 'display:none',
@@ -120,20 +152,13 @@ class File
         }, [ 'class' => 'form-group-flex' ]);
     }
 
-    public function validImage($name, Validator &$validator)
-    {
-        $validator->addIntput("file-reset-$name", '');
-    }
-
     public function add(UploadedFileInterface $file, $fileHidden = '')
     {
         $clone             = clone $this;
         $clone->file       = $file;
         $clone->fileHidden = $fileHidden;
-        $ClientFilename    = $file->getClientFilename();
-        $clone->ext        = Util::getFileExtension($ClientFilename);
-        $name              = pathinfo($ClientFilename, PATHINFO_FILENAME);
-        $clone->name       = Util::strSlug($name);
+        $clone->ext        = Util::getFileExtension($file->getClientFilename());
+        $clone->name       = Util::strSlug(pathinfo($file->getClientFilename(), PATHINFO_FILENAME));
 
         return $clone;
     }
@@ -146,39 +171,40 @@ class File
         return $clone;
     }
 
-    public function setPath($path = null)
+    public function setPath($path)
     {
-        $clone      = clone $this;
-        $clone->dir = $path === null
-            ? $this->core->getSettingEnv('files_public', 'app/files')
-            : $path;
+        $clone       = clone $this;
+        $clone->dir  .= $path;
+        $clone->path .= $path;
 
         return $clone;
     }
 
-    public function setBasePath($basePath = null)
+    public function isResolvePath($resolve = true, $mode = 0755)
     {
-        $clone           = clone $this;
-        $clone->basePath = $basePath === null
-            ? $this->core->getRequest()->getBasePath()
-            : $basePath;
+        $clone               = clone $this;
+        $clone->isResolveDir = $resolve;
+        $clone->mode         = $mode;
 
         return $clone;
     }
 
-    public function setResolvePath($resolve = true, $mode = 0755)
+    public function isResolveName()
     {
-        $clone             = clone $this;
-        $clone->resolveDir = $resolve;
-        $clone->mode       = $mode;
+        if (!$this->name) {
+            throw new \Exception('To resolve the file name, the file must be present.');
+        }
 
-        return $clone;
-    }
+        $clone = clone $this;
+        $file  = "{$this->dir}/{$this->name}.{$this->ext}";
 
-    public function setResolveName($resolve = true)
-    {
-        $clone              = clone $this;
-        $clone->resolveName = $resolve;
+        if (is_file($file)) {
+            $i = 1;
+            while (is_file("{$this->dir}/{$this->name}_{$i}.{$this->ext}")) {
+                ++$i;
+            }
+            $clone->nameResolved = "{$this->name}_{$i}";
+        }
 
         return $clone;
     }
@@ -210,90 +236,113 @@ class File
     public function save()
     {
         if (!($this->file instanceof UploadedFileInterface)) {
-            return;
+            throw new Exception('A file must be present to be saved.');
         }
+
         if ($this->file->getError() === UPLOAD_ERR_OK) {
             $this->resolveDir();
-            $move = $this->resolveName();
-
+            $move = $this->getMoveDir();
             $this->file->moveTo($move);
-            call_user_func_array($this->callMove, [ $this->name, "{$this->name}.{$this->ext}",
-                $move ]);
+
+            call_user_func_array($this->callMove, [
+                $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
+            ]);
         } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
-            $file = call_user_func_array($this->callGet, [ $this->name, "{$this->name}.{$this->ext}" ]);
+            $file = call_user_func_array($this->callGet, [
+                $this->name, "{$this->name}.{$this->ext}"
+            ]);
+
             if (empty($this->fileHidden) && $file) {
-                call_user_func_array($this->callDelete, [ $this->name, "{$this->name}.{$this->ext}",
-                    $file ]);
+                call_user_func_array($this->callDelete, [
+                    $this->name, "{$this->name}.{$this->ext}", $file
+                ]);
+
                 if (file_exists($file)) {
                     unlink($file);
                 }
             }
         }
+        
+        return $this;
     }
 
     public function saveOne()
     {
         if (!($this->file instanceof UploadedFileInterface)) {
-            return '';
+            throw new Exception('A file must be present to be saved.');
         }
+
         if ($this->file->getError() === UPLOAD_ERR_OK) {
             $this->resolveDir();
-            $move = $this->resolveName();
+            $move = $this->getMoveDir();
             $this->file->moveTo($move);
+
             if ($this->callMove) {
                 call_user_func_array($this->callMove, [
-                    $this->name, "{$this->name}.{$this->ext}", $move
+                    $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
                 ]);
             }
-
-            return $move;
         }
+
+        return $this;
+    }
+    
+    public function getName()
+    {
+        return $this->nameResolved
+            ? $this->nameResolved
+            : $this->name;
     }
 
-    protected function getThumbnail($name, &$form, $content, $type)
+    /**
+     * Le répertoire du serveur dans lequel les fichiers sont envoyés.
+     *
+     * @return string
+     */
+    public function getMoveDir()
     {
-        $src = is_file($this->core->getSetting('root', '') . $content)
-            ? $this->basePath . $content
+        $filename = $this->getName();
+
+        return "{$this->dir}/{$filename}.{$this->ext}";
+    }
+
+    /**
+     * Le chemin relatif du répertoire dans lequel fichiers sont envoyés.
+     *
+     * @return string
+     */
+    public function getMovePath()
+    {
+        $filename = $this->getName();
+
+        return "{$this->path}/{$filename}.{$this->ext}";
+    }
+
+    protected function getThumbnail($name, &$form, $filePath, $type)
+    {
+        $src = is_file($this->root . $filePath)
+            ? $this->basePath . $filePath
             : '';
 
         if (empty($src)) {
             return;
         }
 
-        if ($type === 'image') {
-            $src = '<img alt="Thumbnail" src="' . $src . '" class="input-file-img img-thumbnail img-thumbnail-light"/>';
-            $html = '<a:attr/>:_content</a>';
-        } else {
-            $html = '<a:attr/><i class="fa fa-download" aria-hidden="true"></i> :_content</a>';
-        }
+        $content = $type === 'image'
+            ? '<div class="img-thumbnail img-thumbnail-light"><a href="' . $src . '"/><img alt="Thumbnail" src="' . $src . '" class="img-responsive"/></a></div>'
+            : '<a href="' . $src . '"/><i class="fa fa-download" aria-hidden="true"></i> ' . $src . '</a>';
 
-        $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($name, $src, $html) {
-            $form->html("file-$name-thumbnail", $html, [
-                '_content' => $src,
-                'href'     => $src,
-                'target'   => '_blank'
+        $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($content, $name) {
+            $form->html("file-$name-thumbnail", '<div:attr>:_content</div>', [
+                '_content' => $content
             ]);
         }, [ 'class' => 'form-group' ]);
     }
 
     protected function resolveDir()
     {
-        if ($this->resolveDir && !is_dir($this->dir)) {
+        if ($this->isResolveDir && !is_dir($this->dir)) {
             mkdir($this->dir, $this->mode, true);
         }
-    }
-
-    protected function resolveName()
-    {
-        $file = "{$this->dir}/{$this->name}.{$this->ext}";
-        if (!$this->resolveName || !is_file($file)) {
-            return $file;
-        }
-        $i = 1;
-        while (is_file("{$this->dir}/{$this->name}_{$i}.{$this->ext}")) {
-            ++$i;
-        }
-
-        return "{$this->dir}/{$this->name}_{$i}.{$this->ext}";
     }
 }

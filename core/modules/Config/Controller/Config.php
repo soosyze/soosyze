@@ -180,18 +180,16 @@ class Config extends \Soosyze\Controller
 
     private function saveFile($key, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . '/config';
-
         self::file()
             ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
             ->setName($key)
-            ->setPath($dir)
-            ->setResolvePath()
+            ->setPath('/config')
+            ->isResolvePath()
             ->callGet(function ($key, $name) {
                 return self::config()->get("settings.$key");
             })
-            ->callMove(function ($key, $name, $move) use ($dir) {
-                self::config()->set("settings.$key", "$dir/$name");
+            ->callMove(function ($key, $name, $move) {
+                self::config()->set("settings.$key", $move);
             })
             ->callDelete(function ($key, $name) {
                 self::config()->set("settings.$key", '');

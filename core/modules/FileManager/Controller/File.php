@@ -177,21 +177,20 @@ class File extends \Soosyze\Controller
         }
 
         $file        = $validator->getInput('file');
-        $serviceFile = self::file();
+        $serviceFile = self::file()
+            ->add($file)
+            ->setPath($path)
+            ->setResolvePath();
 
         if (self::config()->get('settings.replace_file') === 2) {
-            $serviceFile = self::file()->setResolveName();
+            $serviceFile = $serviceFile->setResolveName();
         } elseif (self::config()->get('settings.replace_file') === 3 && is_file($dir . '/' . $file->getClientFilename())) {
             $out[ 'messages' ][ 'errors' ][] = t('An existing file has the same name, you can not replace it');
 
             return $this->json(400, $out);
         }
 
-        $serviceFile
-            ->add($file)
-            ->setPath($dir)
-            ->setResolvePath()
-            ->saveOne();
+        $serviceFile->saveOne();
 
         $out[ 'messages' ][ 'success' ][] = t('The file has been uploaded');
 

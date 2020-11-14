@@ -680,7 +680,6 @@ class Node extends \Soosyze\Controller
             $fieldName = $value[ 'field_name' ];
             /* Copie ses fichiers. */
             if (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
-                $dir  = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId";
                 $file = $entity[ $fieldName ];
 
                 if (!is_file($file)) {
@@ -693,9 +692,9 @@ class Node extends \Soosyze\Controller
                 );
                 self::file()
                     ->add($upload)
-                    ->setPath($dir)
-                    ->setResolvePath()
-                    ->setResolveName()
+                    ->setPath("/node/$type/$nodeId")
+                    ->isResolvePath()
+                    ->isResolveName()
                     ->callMove(function ($key, $name, $move) use ($type, $entityId, $fieldName) {
                         self::query()
                         ->update('entity_' . $type, [ $fieldName => $move ])
@@ -727,7 +726,6 @@ class Node extends \Soosyze\Controller
                         $fieldName = $file[ 'field_name' ];
                         /* Parcours ses fichiers pour les copier. */
                         if (isset($data[ $fieldName ])) {
-                            $dir      = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$nodeId/{$file['node_type']}";
                             $pathFile = $data[ $fieldName ];
 
                             if (!is_file($pathFile)) {
@@ -740,9 +738,9 @@ class Node extends \Soosyze\Controller
 
                             self::file()
                                 ->add($upload)
-                                ->setPath($dir)
-                                ->setResolvePath()
-                                ->setResolveName()
+                                ->setPath("/node/$type/$nodeId/{$file['node_type']}")
+                                ->isResolvePath()
+                                ->isResolveName()
                                 ->callMove(function ($key, $name, $move) use (&$data, $fieldName) {
                                     $data[ $fieldName ] = $move;
                                 })
@@ -930,13 +928,11 @@ class Node extends \Soosyze\Controller
 
     private function saveFile($node, $nameField, $validator)
     {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/{$node[ 'type' ]}/{$node[ 'id' ]}";
-
         self::file()
             ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
             ->setName($nameField)
-            ->setPath($dir)
-            ->setResolvePath()
+            ->setPath("/node/{$node[ 'type' ]}/{$node[ 'id' ]}")
+            ->isResolvePath()
             ->callGet(function ($key, $name) use ($node) {
                 return self::query()
                     ->from('entity_' . $node[ 'type' ])
