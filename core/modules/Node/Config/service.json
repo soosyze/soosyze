@@ -65,12 +65,10 @@
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
             "node.create.form": "hookCreateForm",
-            "node.create.response.after": "getForm",
             "node.store.validator": "hookStoreValidator",
             "node.store.after": "hookStoreValid",
             "node.edit.form.data": "hookEditFormData",
             "node.edit.form": "hookCreateForm",
-            "node.edit.response.after": "getForm",
             "node.update.validator": "hookStoreValidator",
             "node.update.after": "hookUpdateValid",
             "node.delete.after": "hookDeleteValid",

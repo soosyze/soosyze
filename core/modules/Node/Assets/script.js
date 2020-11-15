@@ -80,8 +80,6 @@ $(function () {
 
                 return false;
             }
-
-            $(`ul a[href="#${idPane}"]`).css("color", "inherit");
         });
     });
 
@@ -103,8 +101,6 @@ $(function () {
 
                     return false;
                 }
-
-                $(`ul a[href="#${idPane}"]`).css("color", "inherit");
             });
             $(this).find('.trumbowyg-textarea').each(function () {
 
