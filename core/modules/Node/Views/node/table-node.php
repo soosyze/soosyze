@@ -9,6 +9,17 @@
             <tr class="form-head">
                 <th><?php echo t('Name'); ?></th>
                 <th>
+                <?php if ($order_by === 'type'): ?>
+                    <a href="<?php echo $link_type_sort; ?>" title="<?php echo t($is_sort_asc ? 'Ascending' : 'Descending'); ?>" class="sort">
+                        <?php echo t('Type'); ?> <i class="fa <?php echo $is_sort_asc ? 'fa-sort-amount-up-alt' : 'fa-sort-amount-down'; ?>" aria-hidden="true"></i>
+                    </a>
+                <?php else: ?>
+                    <a href="<?php echo $link_type_sort; ?>" class="sort">
+                        <?php echo t('Type'); ?>
+                    </a>
+                <?php endif; ?>
+                </th>
+                <th>
                 <?php if (empty($order_by)): ?>
                     <a href="<?php echo $link_date_changed_sort; ?>" title="<?php echo t('Descending'); ?>" class="sort">
                         <?php echo t('Publishing date'); ?> <i class="fa fa-sort-amount-down" aria-hidden="true"></i>
@@ -60,12 +71,12 @@
                     <?php echo $node[ 'title' ]; ?>
                     <?php endif; ?>
 
-                    <div>
-                        <small class="node_type-badge node_type-badge__<?php echo $node['type']; ?>">
-                            <i class="<?php echo $node['node_type_icon']; ?>"></i> <?php echo t($node['node_type_name']); ?>
-                        </small>
-                    </div>
                 </th>
+                <td data-title="<?php echo t('Type'); ?>">
+                    <small class="node_type-badge node_type-badge__<?php echo $node['type']; ?>">
+                        <i class="<?php echo $node['node_type_icon']; ?>"></i> <?php echo t($node['node_type_name']); ?>
+                    </small>
+                </td>
                 <td data-title="<?php echo t('Publishing date'); ?>">
                     <?php echo strftime('%a %e %b %Y, %H:%M', $node[ 'date_changed' ]); ?>
 

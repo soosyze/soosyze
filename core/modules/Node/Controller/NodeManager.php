@@ -96,6 +96,7 @@ class NodeManager extends \Soosyze\Controller
 
         $paramsDateChangedSort = $params;
         $paramsStatusSort      = $params;
+        $paramsTypeSort        = $params;
 
         /* Met en forme les donnes du tableau. */
         $data      = $query->fetchAll();
@@ -139,6 +140,12 @@ class NodeManager extends \Soosyze\Controller
             'sort'     => $sortInverse
         ];
 
+        $paramsTypeSort += [
+            'q'        => $route,
+            'order_by' => 'type',
+            'sort'     => $sortInverse
+        ];
+
         return self::template()
                 ->createBlock('node/table-node.php', $this->pathViews)
                 ->addVars([
@@ -147,6 +154,7 @@ class NodeManager extends \Soosyze\Controller
                     'is_sort_asc'            => $isSortAsc,
                     'link_date_changed_sort' => $linkSort->withQuery(http_build_query($paramsDateChangedSort)),
                     'link_status_sort'       => $linkSort->withQuery(http_build_query($paramsStatusSort)),
+                    'link_type_sort'         => $linkSort->withQuery(http_build_query($paramsTypeSort)),
                     'nodes'                  => $nodes,
                     'order_by'               => $orderBy,
                     'paginate'               => new Paginator($countData, self::$limit, $page, $linkPagination)
@@ -239,7 +247,7 @@ class NodeManager extends \Soosyze\Controller
         $nodes->orderBy('sticky', 'desc');
 
         if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
-                'date_changed', 'node_status_id'
+                'date_changed', 'node_status_id', 'type'
             ])) {
             $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
                 ? 'desc'
@@ -256,7 +264,7 @@ class NodeManager extends \Soosyze\Controller
         $get = $req->getQueryParams();
 
         $orderBy = !empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
-                'date_changed', 'node_status_id'
+                'date_changed', 'node_status_id', 'type'
             ])
             ? $get[ 'order_by' ]
             : null;

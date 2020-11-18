@@ -377,6 +377,7 @@ fieldset.package {
     display: inline-block;
     padding: 2px 10px;
     text-align: center;
+    white-space: nowrap;
 }
 .node_type-badge__page {
     background-color: #7fff88;
