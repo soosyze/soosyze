@@ -33,7 +33,6 @@
         "arguments": ["@core"],
         "hooks": {
             "app.response.after": "hookResponseAfter",
-            "node.show.tpl": "hookNodeShowResponseAfter",
             "node.edit.response.after": "hookNodeEditResponseAfter"
         }
     },

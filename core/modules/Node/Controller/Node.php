@@ -259,10 +259,18 @@ class Node extends \Soosyze\Controller
         }
         $fields = self::node()->makeFieldsById($node[ 'type' ], $node[ 'entity_id' ]);
 
+        $messages = [];
+        if ($node[ 'node_status_id' ] != 1) {
+            $messages = [
+                'infos' => [ t('This content is not published') ]
+            ];
+        }
+
         $tpl = self::template()
                 ->view('this', [
                     'title'       => $node[ 'meta_title' ],
                     'description' => $node[ 'meta_description' ],
+                    'meta'        => $this->getMetaRobots($node)
                 ])
                 ->view('page', [
                     'fields'     => $fields,
@@ -273,6 +281,7 @@ class Node extends \Soosyze\Controller
                     'page-node-show_' . $node[ 'type' ] . '.php',
                     'page-node.php'
                 ])
+                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields'       => $fields,
                     'node'         => $node,
@@ -861,7 +870,25 @@ class Node extends \Soosyze\Controller
                 ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
     }
-    
+
+    protected function getMetaRobots($node)
+    {
+        $robots = '';
+        if ($node[ 'meta_noindex' ]) {
+            $robots .= 'noindex,';
+        }
+        if ($node[ 'meta_nofollow' ]) {
+            $robots .= 'nofollow,';
+        }
+        if ($node[ 'meta_noarchive' ]) {
+            $robots .= 'noarchive,';
+        }
+
+        return $robots
+            ? '<meta name="robots" content="' . substr($robots, 0, -1) . '">' . PHP_EOL
+            : '';
+    }
+
     private function updateWeightEntity(array $field, array $data)
     {
         $options = json_decode($field[ 'field_option' ], true);
