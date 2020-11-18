@@ -30,5 +30,6 @@
     "Add a block": "Ajouter un bloc",
     "Static and dynamic content block manager": "Gestionnaire de blocs de contenu statiques et dynamiques",
     "Report a bug.": "Signaler un bug.",
-    "Found an bug? Please report it on GitHub.": "Vous avez trouvé un bug? Veuillez le signaler sur GitHub."
+    "Found an bug? Please report it on GitHub.": "Vous avez trouvé un bug? Veuillez le signaler sur GitHub.",
+    "No content available for this block": "Aucun contenu disponible pour ce bloc"
 }

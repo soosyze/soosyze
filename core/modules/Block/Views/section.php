@@ -31,7 +31,14 @@
                 <h2><?php echo $block[ 'title' ]; ?></h2>
             </header>
             <?php endif; ?>
-            <?php echo $block[ 'content' ]; ?>
+
+            <?php if (empty($block['content'])): ?>
+                <div class="block-content-disabled">
+                    <?php echo t('No content available for this block'); ?>
+                </div>
+            <?php else: ?>
+                <?php echo $block[ 'content' ]; ?>
+            <?php endif; ?>
 
         </div>
     <?php endforeach; ?>
