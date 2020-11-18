@@ -603,7 +603,7 @@ class Node extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $this->container->callHook('node.delete.before', [ $validator, $idNode ]);
-            $this->deleteRelation($node);
+            self::node()->deleteRelation($node);
 
             self::query()
                 ->from('node')
@@ -612,7 +612,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
 
             if ((bool) $validator->getInput('files')) {
-                $this->deleteFile($node[ 'type' ], $idNode);
+                self::node()->deleteFile($node[ 'type' ], $idNode);
             }
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
 
@@ -861,55 +861,7 @@ class Node extends \Soosyze\Controller
                 ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
     }
-
-    private function deleteFile($type, $idNode)
-    {
-        $dir = self::core()->getSettingEnv('files_public', 'app/files') . "/node/$type/$idNode";
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
-        $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
-
-        /* Supprime tous les dossiers et fichiers */
-        foreach ($iterator as $file) {
-            $file->isDir()
-                    ? \rmdir($file)
-                    : \unlink($file);
-        }
-        /* Supprime le dossier cible. */
-        \rmdir($dir);
-    }
-
-    private function deleteRelation($node)
-    {
-        /* Suppression des relations */
-        $entity = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
-
-        $relationNode = self::query()
-            ->from('node_type_field')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $node[ 'type' ])
-            ->where('field_type', 'one_to_many')
-            ->fetchAll();
-        foreach ($relationNode as $relation) {
-            $options = json_decode($relation[ 'field_option' ], true);
-            self::query()
-                ->from($options[ 'relation_table' ])
-                ->delete()
-                ->where($options[ 'foreign_key' ], $entity[ $options[ 'local_key' ] ])
-                ->execute();
-        }
-
-        /* Supression du contenu. */
-        self::query()
-            ->from('entity_' . $node[ 'type' ])
-            ->delete()
-            ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
-            ->execute();
-    }
-
+    
     private function updateWeightEntity(array $field, array $data)
     {
         $options = json_decode($field[ 'field_option' ], true);

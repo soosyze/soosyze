@@ -121,7 +121,7 @@ class NodeApi extends \Soosyze\Controller
         $out = [];
         if ($validator->isValid()) {
             $this->container->callHook('node.delete.before', [ $validator, $idNode ]);
-            $this->deleteRelation($node);
+            self::node()->deleteRelation($node);
 
             self::query()
                 ->from('node')
@@ -130,12 +130,11 @@ class NodeApi extends \Soosyze\Controller
                 ->execute();
 
             if ((bool) $validator->getInput('files')) {
-                $this->deleteFile($node[ 'type' ], $idNode);
+                self::node()->deleteFile($node[ 'type' ], $idNode);
             }
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
 
             if ($validator->getInput('path')) {
-                var_dump($validator->getInput('path_key'), $validator->getInput('path'));
                 self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
             }
             

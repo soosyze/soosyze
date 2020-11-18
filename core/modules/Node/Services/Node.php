@@ -138,6 +138,54 @@ class Node
                 ->fetchAll();
     }
 
+    public function deleteRelation($node)
+    {
+        /* Suppression des relations */
+        $entity = $this->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+
+        $relationNode = $this->query
+            ->from('node_type_field')
+            ->leftJoin('field', 'field_id', 'field.field_id')
+            ->where('node_type', $node[ 'type' ])
+            ->where('field_type', 'one_to_many')
+            ->fetchAll();
+        foreach ($relationNode as $relation) {
+            $options = json_decode($relation[ 'field_option' ], true);
+            $this->query
+                ->from($options[ 'relation_table' ])
+                ->delete()
+                ->where($options[ 'foreign_key' ], $entity[ $options[ 'local_key' ] ])
+                ->execute();
+        }
+
+        /* Supression du contenu. */
+        $this->query
+            ->from('entity_' . $node[ 'type' ])
+            ->delete()
+            ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+            ->execute();
+    }
+    
+    public function deleteFile($type, $idNode)
+    {
+        $dir = $this->core->getSettingEnv('files_public', 'app/files') . "/node/$type/$idNode";
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+        $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+
+        /* Supprime tous les dossiers et fichiers */
+        foreach ($iterator as $file) {
+            $file->isDir()
+                    ? \rmdir($file)
+                    : \unlink($file);
+        }
+        /* Supprime le dossier cible. */
+        \rmdir($dir);
+    }
+    
     public function isMaxEntity($entity, $foreignKey, $idNode, $count)
     {
         if ($count === 0) {
