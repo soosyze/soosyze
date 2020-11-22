@@ -11,6 +11,17 @@
             "uninstall.menu": "hookUninstallMenu"
         }
     },
+    "node.hook.block": {
+        "class": "SoosyzeCore\\Node\\Services\\HookBlock",
+        "arguments": ["@alias", "@node", "@query", "@router"],
+        "hooks": {
+            "block.create.form.data": "hookCreateFormData",
+            "block.node.next_previous": "hookBlockNextPrevious",
+            "block.node.next_previous.edit.form": "hookNodeNextPreviousEditForm",
+            "block.node.next_previous.update.validator": "hookNodeNextPreviousUpdateValidator",
+            "block.node.next_previous.update.before": "hookNodeNextPreviousUpdateBefore"
+        }
+    },
     "node.hook.config": {
         "class": "SoosyzeCore\\Node\\Services\\HookConfig",
         "arguments": ["@query"],

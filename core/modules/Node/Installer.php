@@ -14,6 +14,7 @@ class Installer extends \SoosyzeCore\System\Migration
     
     public function boot()
     {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
@@ -202,8 +203,20 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
+        $this->hookUninstallBlock($ci);
         $this->hookUninstallMenu($ci);
         $this->hookUninstallUser($ci);
+    }
+
+    public function hookUninstallBlock(ContainerInterface $ci)
+    {
+        if ($ci->module()->has('Block')) {
+            $ci->query()
+                ->from('block')
+                ->delete()
+                ->where('hook', 'like', 'node.%')
+                ->execute();
+        }
     }
 
     public function hookUninstallMenu(ContainerInterface $ci)

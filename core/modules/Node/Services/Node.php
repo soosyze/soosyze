@@ -16,6 +16,8 @@ class Node
      * @var \SoosyzeCore\Template\Services\Templating
      */
     protected $tpl;
+    
+    protected $nodeCurrent = null;
 
     public function __construct($config, $core, $query, $tpl)
     {
@@ -76,6 +78,16 @@ class Node
                 ->where('field_show', true)
                 ->orderby('field_weight')
                 ->fetchAll();
+    
+    }
+
+    public function getCurrentNode($idNode = null)
+    {
+        if (!$this->nodeCurrent && $idNode !== null) {
+            $this->nodeCurrent = $this->byId($idNode);
+        }
+
+        return $this->nodeCurrent;
     }
 
     public function byId($idNode)

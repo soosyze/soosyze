@@ -254,7 +254,7 @@ class Node extends \Soosyze\Controller
 
     public function show($idNode, $req)
     {
-        if (!($node = self::node()->byId($idNode))) {
+        if (!($node = self::node()->getCurrentNode($idNode))) {
             return $this->get404($req);
         }
         $fields = self::node()->makeFieldsById($node[ 'type' ], $node[ 'entity_id' ]);

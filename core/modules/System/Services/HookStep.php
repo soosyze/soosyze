@@ -379,25 +379,37 @@ class HookStep
                 true, '/'
             ])
             ->values([
+                'content_footer', '',
+                2,
+                'node.next_previous', 'node.next_previous',
+                json_encode([
+                    'display'       => 'meta-title',
+                    'next_text'     => 'Next :node_type_name',
+                    'previous_text' => 'Previous :node_type_name',
+                    'type'          => 'article'
+                ]),
+                true, 'news/%/%/%/%'
+            ])
+            ->values([
                 'sidebar', '',
                 1,
                 'social', 'social',
                 '',
-                true, '/' . PHP_EOL . 'new'
+                true, '/' . PHP_EOL . 'news'
             ])
             ->values([
                 'footer', '',
                 1,
                 'social', 'social',
                 '',
-                false, '/' . PHP_EOL . 'new' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
+                false, '/' . PHP_EOL . 'news' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
                 'sidebar', t('Archives by months'),
                 2,
                 'news.month', 'news.month',
                 '',
-                true, '/' . PHP_EOL . 'new%'
+                true, '/' . PHP_EOL . 'news%'
             ])
             ->execute();
     }
@@ -421,13 +433,37 @@ class HookStep
 
         $ci->query()
             ->insertInto('block', [
-                'section', 'title', 'weight', 'content', 'hook', 'key_block'
+                'section', 'title',
+                'weight',
+                'hook', 'key_block',
+                'options',
+                'visibility_pages', 'pages'
             ])
             ->values([
-                'sidebar', t('Archives by months'), 1, '', 'news.month', 'news.month'
+                'content_footer', '',
+                2,
+                'node.next_previous', 'node.next_previous',
+                json_encode([
+                    'display'       => 'meta-title',
+                    'next_text'     => 'Next :node_type_name',
+                    'previous_text' => 'Previous :node_type_name',
+                    'type'          => 'article'
+                ]),
+                true, 'news/%/%/%/%'
             ])
             ->values([
-                'footer_first', t('Follow us'), 1, '', 'social', 'social'
+                'sidebar', t('Archives by months'),
+                1,
+                'news.month', 'news.month',
+                '[]',
+                false, 'admin/%' . PHP_EOL . 'user/%'
+            ])
+            ->values([
+                'footer_first', t('Follow us'),
+                1,
+                'social', 'social',
+                '[]',
+                false, 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->execute();
 

@@ -224,6 +224,33 @@ img {
     margin-bottom: 1.5em;
 }
 
+/* Navigation */
+.post-nav {
+    border-top: 1px solid #eee;
+    padding-top: 1em; 
+}
+.post-nav a {
+    display: flex;
+    text-decoration: none;
+}
+.post-nav a:hover .post-nav-title {
+    text-decoration: underline;
+}
+.post-nav__next {
+    text-align: right
+}
+.post-nav-meta {
+    display: block;
+    opacity: .5;
+    text-transform: uppercase;
+}
+.post-nav__next .post-nav__arrow {
+    margin-left: 1em;
+}
+.post-nav__previous .post-nav__arrow {
+    margin-right: 1em;
+}
+
 
 /* --------------------------- */
 /* ---------- ROLE ----------- */
