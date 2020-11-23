@@ -4,10 +4,19 @@ namespace SoosyzeCore\News\Services;
 
 class HookBlock
 {
+    /**
+     * @var \SoosyzeCore\System\Services\Alias
+     */
     protected $alias;
 
+    /**
+     * @var \SoosyzeCore\Node\Services\Node
+     */
     protected $node;
 
+    /**
+     * @var string
+     */
     protected $pathViews;
 
     /**
@@ -15,6 +24,9 @@ class HookBlock
      */
     protected $query;
 
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
     protected $router;
 
     public function __construct($alias, $node, $query, $router)
@@ -29,19 +41,14 @@ class HookBlock
 
     public function hookNewShow(array &$blocks)
     {
-        $blocks[ 'news.year' ]  = [
-            'hook'  => 'news.year',
-            'path'  => $this->pathViews,
-            'title' => 'Archives by years',
-            'tpl'   => 'components/block/news-year.php'
+        $blocks[ 'news.archive' ] = [
+            'hook'    => 'news.archive',
+            'options' => [ 'expand' => false ],
+            'path'    => $this->pathViews,
+            'title'   => 'Archives',
+            'tpl'     => 'components/block/news-archive.php'
         ];
-        $blocks[ 'news.month' ] = [
-            'hook'  => 'news.month',
-            'path'  => $this->pathViews,
-            'title' => 'Archives by months',
-            'tpl'   => 'components/block/news-month.php'
-        ];
-        $blocks[ 'news.last' ]  = [
+        $blocks[ 'news.last' ]    = [
             'hook'    => 'news.last',
             'options' => [ 'limit' => 3, 'offset' => 0, 'more' => true ],
             'path'    => $this->pathViews,
@@ -50,42 +57,19 @@ class HookBlock
         ];
     }
 
-    public function hookBlockNewsYear($tpl)
+    public function hookBlockNewsArchive($tpl, array $options)
     {
         $data = $this->query
             ->from('node')
             ->where('node_status_id', '==', 1)
             ->where('type', 'article')
             ->fetchAll();
-
-        $output = [];
-        foreach ($data as $value) {
-            $year = date('Y', $value[ 'date_created' ]);
-            if (isset($output[ $year ])) {
-                ++$output[ $year ][ 'number' ];
-
-                continue;
-            }
-            $output[ $year ] = [
-                'number' => 1,
-                'year'   => $year,
-                'link'   => $this->router->getRoute('news.years', [
-                    ':year' => $year,
-                    ':id'   => ''
-                ])
-            ];
-        }
-
-        return $tpl->addVar('archive', $output);
-    }
-
-    public function hookBlockNewsMonth($tpl)
-    {
-        $data = $this->query
-            ->from('node')
-            ->where('node_status_id', '==', 1)
-            ->where('type', 'article')
-            ->fetchAll();
+        
+        $query = $this->router->parseQueryFromRequest();
+        $param = $this->router->parseParam('news/:year:id', $query, [
+            ':year' => '\d{4}',
+            ':id'   => '(/page/[1-9]\d*)?'
+        ]);
 
         $output = [];
         foreach ($data as $value) {
@@ -103,6 +87,10 @@ class HookBlock
                         ':id'   => ''
                     ])
                 ];
+            }
+
+            if (empty($options['expand']) && (empty($param[0]) || $param[0] != $year)) {
+                continue;
             }
 
             if (isset($output[ $year ][ 'months' ][ $month ])) {
@@ -127,6 +115,36 @@ class HookBlock
         ];
 
         return $tpl->addVar('years', $output);
+    }
+
+    public function hookBlockNewsArchiveEditForm(&$form, $data)
+    {
+        $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
+            $form->legend('new-legend', t('News setting'))
+                ->group('limit-group', 'div', function ($form) use ($data) {
+                    $form->checkbox('expand', [
+                        'class'   => 'form-control',
+                        'checked' => $data[ 'options' ][ 'expand' ]
+                    ])
+                    ->label('limit-label', '<span class="ui"></span>' . t('Expand archives per month'), [
+                        'for' => 'expand'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+        });
+    }
+
+    public function hookNewsBlockArchiveUpdateValidator(&$validator)
+    {
+        $validator
+            ->addRule('expand', 'bool')
+            ->addLabel('expand', t('Expand archives per month'));
+    }
+
+    public function hookNewsArchiveUpdateBefore($validator, &$values, $id)
+    {
+        $values[ 'options' ] = json_encode([
+            'expand'   => (bool) $validator->getInput('expand')
+        ]);
     }
 
     public function hookBlockNewsLast($tpl, array $options)
@@ -172,7 +190,7 @@ class HookBlock
     public function hookBlockNewsLastEditForm(&$form, $data)
     {
         $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('limit-legend', t('News setting'))
+            $form->legend('new-legend', t('News setting'))
                 ->group('limit-group', 'div', function ($form) use ($data) {
                     $options = [
                         [ 'value' => 1, 'label' => 1 ],
@@ -213,7 +231,8 @@ class HookBlock
         $validator
             ->addRule('limit', 'required|inarray:1,2,3,4')
             ->addRule('offset', 'required|numeric|min_numeric:0')
-            ->addRule('more', 'bool')
+            ->addRule('more', 'bool');
+        $validator
             ->addLabel('limit', t('Nombre de news à afficher'))
             ->addLabel('offset', t('Décalage'))
             ->addLabel('more', t('Ajouter un lien "plus" en bas de l\'affichage'));

@@ -32,8 +32,10 @@
         "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
             "block.create.form.data": "hookNewShow",
-            "block.news.year": "hookBlockNewsYear",
-            "block.news.month": "hookBlockNewsMonth",
+            "block.news.archive": "hookBlockNewsArchive",
+            "block.news.archive.edit.form": "hookBlockNewsArchiveEditForm",
+            "block.news.archive.update.validator": "hookNewsBlockArchiveUpdateValidator",
+            "block.news.archive.update.before": "hookNewsArchiveUpdateBefore",
             "block.news.last": "hookBlockNewsLast",
             "block.news.last.edit.form": "hookBlockNewsLastEditForm",
             "block.news.last.update.validator": "hookBlockNewsLastUpdateValidator",
