@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\News\Services;
 
+use Soosyze\Components\Form\FormBuilder;
+
 class HookBlock
 {
     /**
@@ -41,20 +43,106 @@ class HookBlock
 
     public function hookNewShow(array &$blocks)
     {
-        $blocks[ 'news.archive' ] = [
+        $blocks[ 'news.archive' ]        = [
             'hook'    => 'news.archive',
             'options' => [ 'expand' => false ],
             'path'    => $this->pathViews,
             'title'   => 'Archives',
             'tpl'     => 'components/block/news-archive.php'
         ];
-        $blocks[ 'news.last' ]    = [
+        $blocks[ 'news.archive.select' ] = [
+            'hook'  => 'news.archive.select',
+            'path'  => $this->pathViews,
+            'title' => 'Archives',
+            'tpl'   => 'components/block/news-archive_select.php'
+        ];
+        $blocks[ 'news.last' ]           = [
             'hook'    => 'news.last',
             'options' => [ 'limit' => 3, 'offset' => 0, 'more' => true ],
             'path'    => $this->pathViews,
             'title'   => 'Last News',
             'tpl'     => 'components/block/news-last.php'
         ];
+    }
+
+    public function hookBlockNewsArchiveSelect($tpl, array $options)
+    {
+        $data = $this->query
+            ->from('node')
+            ->where('node_status_id', '==', 1)
+            ->where('type', 'article')
+            ->fetchAll();
+
+        $query = $this->router->parseQueryFromRequest();
+        $paramMonth = $this->router->parseParam('news/:year/:month:id', $query, [
+            ':year'  => '\d{4}',
+            ':month' => '0[1-9]|1[0-2]',
+            ':id'    => '(/page/[1-9]\d*)?'
+        ]);
+        $paramYear = $this->router->parseParam('news/:year:id', $query, [
+            ':year'  => '\d{4}',
+            ':id'    => '(/page/[1-9]\d*)?'
+        ]);
+
+        $optionsSelect[] = [
+            'label' => t('-- Select --'),
+            'value' => $this->router->getRoute('news.index')
+        ];
+        foreach ($data as $value) {
+            $year  = date('Y', $value[ 'date_created' ]);
+            $month = date('m', $value[ 'date_created' ]);
+
+            if (!isset($optionsSelect[ $year ])) {
+                $optionsSelect[ $year ] = [
+                    'label' => $year,
+                    'value' => [
+                        $year => [
+                            'label' => t('All :year', [ ':year' => $year ]),
+                            'value' => $this->router->getRoute('news.years', [
+                                ':year' => $year,
+                                ':id'   => ''
+                            ])
+                        ]
+                    ]
+                ];
+            }
+
+            if (isset($optionsSelect[ $year ][ 'value' ][ $month ])) {
+                continue;
+            }
+
+            $optionsSelect[ $year ][ 'value' ][ $month ] = [
+                'label' => strftime('%b', $value[ 'date_created' ]),
+                'value' => $this->router->getRoute('news.month', [
+                    ':year'  => $year,
+                    ':month' => $month,
+                    ':id'    => ''
+                ])
+            ];
+        }
+
+        $selected = '#';
+        if (!empty($paramMonth)) {
+            $selected = $this->router->getRoute('news.month', [
+                ':year'  => $paramMonth[ 0 ],
+                ':month' => $paramMonth[ 1 ],
+                ':id'    => ''
+            ]);
+        } elseif (!empty($paramYear)) {
+            $selected = $this->router->getRoute('news.years', [
+                ':year' => $paramYear[ 0 ],
+                ':id'   => ''
+            ]);
+        }
+
+        $form = (new FormBuilder([ 'method' => 'get', 'action' => '#' ]))
+            ->select('archives', $optionsSelect, [
+            'class'     => 'form-control',
+            'onchange'  => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);',
+            ':selected' => $selected,
+        ]);
+
+        return $tpl->addVar('form', $form);
     }
 
     public function hookBlockNewsArchive($tpl, array $options)

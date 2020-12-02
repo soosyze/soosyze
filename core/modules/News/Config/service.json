@@ -32,6 +32,7 @@
         "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
             "block.create.form.data": "hookNewShow",
+            "block.news.archive.select": "hookBlockNewsArchiveSelect",
             "block.news.archive": "hookBlockNewsArchive",
             "block.news.archive.edit.form": "hookBlockNewsArchiveEditForm",
             "block.news.archive.update.validator": "hookNewsBlockArchiveUpdateValidator",
