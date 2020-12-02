@@ -83,9 +83,9 @@ class Block extends \Soosyze\Controller
                         'id'    => "key_block-$key",
                         'value' => $key
                     ])
-                    ->html('key_block-label', '<div:attr>:_content</div>', [
+                    ->html('key_block-label', '<div:attr>:content</div>', [
                         'class'    => 'block-content',
-                        '_content' => $content
+                        ':content' => $content
                 ]);
             });
         }
@@ -247,8 +247,8 @@ class Block extends \Soosyze\Controller
                         'placeholder' => 'admin' . PHP_EOL . 'admin/%',
                         'rows'        => 5
                     ])
-                    ->html('info-variable_allowed', '<p>:_content</p>', [
-                        '_content' => t('Variables allowed') . ' <code>%</code>'
+                    ->html('info-variable_allowed', '<p>:content</p>', [
+                        ':content' => t('Variables allowed') . ' <code>%</code>'
                     ]);
                 }, [ 'class' => 'form-group' ]);
         })
@@ -332,7 +332,7 @@ class Block extends \Soosyze\Controller
                 'roles'            => '!required|array',
                 "token_block_$id"  => 'token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'title'   => t('Title'),
                 'content' => t('Content'),
                 'pages'   => t('List of pages'),

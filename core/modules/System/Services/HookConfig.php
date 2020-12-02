@@ -81,17 +81,17 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ->group('lang-group', 'div', function ($form) use ($data, $optionLang) {
                         $form->label('lang-label', t('Language'))
                         ->select('lang', $optionLang, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'lang' ]
+                            'class'     => 'form-control',
+                            'required'  => 1,
+                            ':selected' => $data[ 'lang' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('timezone-group', 'div', function ($form) use ($data, $optionTimezone) {
                         $form->label('timezone-label', t('Timezone'))
                         ->select('timezone', $optionTimezone, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'timezone' ]
+                            'class'     => 'form-control',
+                            'required'  => 1,
+                            ':selected' => $data[ 'timezone' ]
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
@@ -118,17 +118,17 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     $form->group('theme-group', 'div', function ($form) use ($data, $optionThemes) {
                         $form->label('theme-label', t('Website theme'))
                         ->select('theme', $optionThemes, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'theme' ]
+                            'class'     => 'form-control',
+                            'required'  => 1,
+                            ':selected' => $data[ 'theme' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('theme_admin-group', 'div', function ($form) use ($data, $optionThemesAdmin) {
                         $form->label('theme_admin-label', t('Website administration theme'))
                         ->select('theme_admin', $optionThemesAdmin, [
-                            'class'    => 'form-control',
-                            'required' => 1,
-                            'selected' => $data[ 'theme_admin' ]
+                            'class'     => 'form-control',
+                            'required'  => 1,
+                            ':selected' => $data[ 'theme_admin' ]
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('theme_admin_dark-group', 'div', function ($form) use ($data) {
@@ -157,9 +157,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'     => true
                         ])
                         ->group('path_index-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:attr>:_content</span>', [
-                                '_content' => $this->router->makeRoute(''),
-                                'id'       => ''
+                            $form->html('base_path', '<span:attr>:content</span>', [
+                                ':content' => $this->router->makeRoute('')
                             ])
                             ->text('path_index', [
                                 'class'       => 'form-control',
@@ -176,9 +175,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'for'          => 'path_access_denied'
                         ])
                         ->group('path_access_denied-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:attr>:_content</span>', [
-                                '_content' => $this->router->makeRoute(''),
-                                'id'       => ''
+                            $form->html('base_path', '<span:attr>:content</span>', [
+                                ':content' => $this->router->makeRoute('')
                             ])
                             ->text('path_access_denied', [
                                 'class'       => 'form-control',
@@ -194,9 +192,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'for'          => 'path_no_found'
                         ])
                         ->group('path_no_found-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path', '<span:attr>:_content</span>', [
-                                '_content' => $this->router->makeRoute(''),
-                                'id'       => ''
+                            $form->html('base_path', '<span:attr>:content</span>', [
+                                ':content' => $this->router->makeRoute('')
                             ])
                             ->text('path_no_found', [
                                 'class'       => 'form-control',
@@ -212,8 +209,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'for'          => 'path_maintenance'
                         ])
                         ->group('path_maintenance-flex', 'div', function ($form) use ($data) {
-                            $form->html('base_path_maintenance', '<span:attr>:_content</span>', [
-                                '_content' => $this->router->makeRoute(''),
+                            $form->html('base_path_maintenance', '<span:attr>:content</span>', [
+                                ':content' => $this->router->makeRoute(''),
                             ])
                             ->text('path_maintenance', [
                                 'class'       => 'form-control',
@@ -263,10 +260,10 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'for'          => 'favicon'
                         ]);
                         $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
-                        $form->html('favicon-info-size', '<p:attr>:_content</p>', [
-                            '_content' => t('The file must weigh less than 100 KB.')
-                        ])->html('favicon-info-dimensions', '<p:attr>:_content</p>', [
-                            '_content' => t('The width and height min and max: 16px and 310px.')
+                        $form->html('favicon-info-size', '<p:attr>:content</p>', [
+                            ':content' => t('The file must weigh less than 100 KB.')
+                        ])->html('favicon-info-dimensions', '<p:attr>:content</p>', [
+                            ':content' => t('The width and height min and max: 16px and 310px.')
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 });
@@ -292,7 +289,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'meta_description'   => 'required|string|max:256|to_htmlsc',
             'meta_keyboard'      => '!required|string|to_htmlsc',
             'favicon'            => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
-        ])->setLabel([
+        ])->setLabels([
             'lang'               => t('Language'),
             'timezone'           => t('Timezone'),
             'maintenance'        => t('Put the site in maintenance'),

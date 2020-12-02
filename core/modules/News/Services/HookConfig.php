@@ -70,12 +70,12 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required' => 1,
                             'value'    => $data[ 'new_default_icon' ]
                         ])
-                        ->html('new_default_icon-btn', '<button:attr>:_content</button>', [
-                            '_content'     => '<i class="' . $data[ 'new_default_icon' ] . '" aria-hidden="true"></i>',
-                            'aria-label'   => t('Rendering'),
-                            'class'        => 'btn render_icon',
-                            'type'         => 'button',
-                            'data-tooltip' => t('Rendering')
+                        ->html('new_default_icon-btn', '<button:attr>:content</button>', [
+                            ':content'      => '<i class="' . $data[ 'new_default_icon' ] . '" aria-hidden="true"></i>',
+                            'aria-label'    => t('Rendering'),
+                            'class'         => 'btn render_icon',
+                            'type'          => 'button',
+                            'data-tooltip'  => t('Rendering')
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);
@@ -88,7 +88,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'new_default_icon'  => 'required|string|fontawesome:solid,brands',
             'new_default_image' => '!required|image|max:200Kb',
             'news_pagination'   => 'required|between_numeric:1,50'
-        ])->setLabel([
+        ])->setLabels([
             'new_default_icon'  => t('Icone par défaut'),
             'new_default_image' => t('Image par défaut'),
             'news_pagination'   => t('Number of articles per page')

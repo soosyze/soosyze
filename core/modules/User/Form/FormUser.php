@@ -138,8 +138,8 @@ class FormUser extends FormBuilder
                         'for' => 'terms_of_service'
                     ]);
             }, self::$attrGrp)
-                ->html('terms_of_service-info', '<p><a :attr>:_content</a></p>', [
-                    '_content' => t('Read the terms of service'),
+                ->html('terms_of_service-info', '<p><a :attr>:content</a></p>', [
+                    ':content' => t('Read the terms of service'),
                     'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
                     'target'   => '_blank'
             ]);
@@ -151,8 +151,8 @@ class FormUser extends FormBuilder
                         'for' => 'rgpd'
                     ]);
             }, self::$attrGrp)
-                ->html('rgpd-info', '<p><a :attr>:_content</a></p>', [
-                    '_content' => t('Read the privacy policy'),
+                ->html('rgpd-info', '<p><a :attr>:content</a></p>', [
+                    ':content' => t('Read the privacy policy'),
                     'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
                     'target'   => '_blank'
             ]);
@@ -196,11 +196,11 @@ class FormUser extends FormBuilder
                 ->group("$id-flex", 'div', function ($form) use ($id, $attr) {
                     $form->password($id, [ 'class' => 'form-control' ] + $attr);
                     if ($this->config && $this->config->get('settings.password_show', true)) {
-                        $form->html("{$id}_show", '<button:attr>:_content</button>', [
+                        $form->html("{$id}_show", '<button:attr>:content</button>', [
                             'class'        => 'btn btn-toogle-password',
                             'onclick'      => "togglePassword(this, '$id')",
                             'type'         => 'button',
-                            '_content'     => '<i class="fa fa-eye eyeIcon" aria-hidden="true"></i>',
+                            ':content'     => '<i class="fa fa-eye eyeIcon" aria-hidden="true"></i>',
                             'data-tooltip' => t('Show/Hide password'),
                             'aria-label'   => t('Show/Hide password')
                         ]);
@@ -270,8 +270,8 @@ class FormUser extends FormBuilder
                 . '<li data-pattern="(?=.*\d){' . $digit . ',}">' . t('Number of numeric characters') . ' : ' . $digit . '</li>'
                 . '<li data-pattern="(?=.*\W){' . $special . ',}">' . t('Number of special characters') . ' : ' . $special . '</li>';
 
-            $form->html('password_policy', '<ul:attr>:_content</ul>', [
-                '_content' => $content,
+            $form->html('password_policy', '<ul:attr>:content</ul>', [
+                ':content' => $content,
             ]);
         }
 
@@ -329,8 +329,8 @@ class FormUser extends FormBuilder
         $this->token('token_user_form')
             ->submit('submit', t($label), [ 'class' => 'btn btn-success' ]);
         if ($cancel) {
-            $this->html('cancel', '<button:attr>:_content</button>', [
-                '_content' => t('Cancel'),
+            $this->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'

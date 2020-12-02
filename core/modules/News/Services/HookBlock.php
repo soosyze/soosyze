@@ -201,10 +201,10 @@ class HookBlock
 
                     $form->label('limit-label', t('Number of news to display'))
                     ->select('limit', $options, [
-                        'class'    => 'form-control',
-                        'max'      => 4,
-                        'min'      => 1,
-                        'selected' => $data[ 'options' ][ 'limit' ]
+                        'class'     => 'form-control',
+                        'max'       => 4,
+                        'min'       => 1,
+                        ':selected' => $data[ 'options' ][ 'limit' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('offset-group', 'div', function ($form) use ($data) {

@@ -246,7 +246,7 @@ class Link extends \Soosyze\Controller
                     'target_link'     => 'bool',
                     'token_link_form' => 'required|token'
                 ])
-                ->setLabel([
+                ->setLabels([
                     'title_link'  => t('Link title'),
                     'link'        => t('Link'),
                     'icon'        => t('Icon'),

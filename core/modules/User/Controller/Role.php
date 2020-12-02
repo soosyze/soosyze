@@ -65,7 +65,7 @@ class Role extends \Soosyze\Controller
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'role_label'       => t('Name'),
                 'role_description' => t('Description'),
                 'role_weight'      => t('Weight'),
@@ -169,7 +169,7 @@ class Role extends \Soosyze\Controller
                 'role_icon'         => '!required|max:255|fontawesome:solid,brands',
                 'token_role_submit' => 'required|token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'role_label'       => t('Name'),
                 'role_description' => t('Description'),
                 'role_weight'      => t('Weight'),

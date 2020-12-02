@@ -3,6 +3,7 @@
 namespace SoosyzeCore\Node\Controller;
 
 use Soosyze\Components\Paginate\Paginator;
+use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
 class NodeManager extends \Soosyze\Controller
@@ -186,16 +187,9 @@ class NodeManager extends \Soosyze\Controller
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
-            $node[ 'title' ] = $this->highlight($this->title, $node[ 'title' ]);
+            $node[ 'title' ] = Util::strHighlight($this->title, $node[ 'title' ]);
         }
         unset($node);
-    }
-
-    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
-    {
-        return $needle === ''
-            ? $haystack
-            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 
     protected function getNodes(\Psr\Http\Message\ServerRequestInterface $req)

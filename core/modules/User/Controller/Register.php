@@ -94,7 +94,7 @@ class Register extends \Soosyze\Controller
                 'terms_of_service' => 'required_with:is_terms_of_service',
                 'token_user_form'  => 'required|token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'username'         => t('User name'),
                 'email'            => t('E-mail'),
                 'password_new'     => t('New Password'),

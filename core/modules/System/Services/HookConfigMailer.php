@@ -52,7 +52,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'class'       => 'form-control',
                         'data-toogle' => 'select',
                         'required'    => 1,
-                        'selected'    => $data[ 'driver' ]
+                        ':selected'   => $data[ 'driver' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -83,8 +83,8 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         [ 'value' => 'ssl', 'label' => 'SSL (Secure Sockets Layer)' ],
                         [ 'value' => 'tls', 'label' => 'TLS (Transport Layer Security)' ]
                         ], [
-                        'class'    => 'form-control',
-                        'selected' => $data[ 'smtp_encryption' ]
+                        'class'     => 'form-control',
+                        ':selected' => $data[ 'smtp_encryption' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('smtp_username-group', 'div', function ($form) use ($data) {
@@ -136,7 +136,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
         }
 
         $validator->setRules($rules)
-            ->setLabel($labels);
+            ->setLabels($labels);
     }
 
     public function before(&$validator, &$data, $id)

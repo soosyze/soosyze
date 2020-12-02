@@ -52,8 +52,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             ]);
                 }, [ 'class' => 'form-group' ]);
             }
-            $form->html('node_default_url-info', '<p>:_content</p>', [
-                        '_content' => t('Variables allowed for all') .
+            $form->html('node_default_url-info', '<p>:content</p>', [
+                        ':content' => t('Variables allowed for all') .
                         ' <code>:date_created_year</code>, <code>:date_created_month</code>, <code>:date_created_day</code>, ' .
                         '<code>:node_id</code>, <code>:node_title</code>, <code>:node_type</code>'
                     ]);
@@ -67,8 +67,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ]);
                     }, [ 'class' => 'form-group' ])
                     ->group('cron_info-group', 'div', function ($form) {
-                        $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:_content</a>', [
-                            '_content' => t('How to set up the CRON service ?')
+                        $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:content</a>', [
+                            ':content' => t('How to set up the CRON service ?')
                         ]);
                     }, [ 'class' => 'form-group' ]);
                 });
@@ -79,7 +79,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $validator->setRules([
             'node_default_url' => '!required|string|max:255|regex:/^[-:\w\d_\/]+$/',
             'node_cron'        => 'bool'
-        ])->setLabel([
+        ])->setLabels([
             'node_default_url' => t('Default url'),
             'node_cron'        => t('Default url'),
         ])->addMessage('node_default_url', [

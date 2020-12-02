@@ -81,15 +81,15 @@ class Install extends \Soosyze\Controller
             ->group('lang-group', 'div', function ($form) use ($values, $optionLang) {
                 $form->label('lang-label', t('Language'))
                 ->select('lang', $optionLang, [
-                    'class'    => 'form-control',
-                    'selected' => $values[ 'lang' ]
+                    'class'     => 'form-control',
+                    ':selected' => $values[ 'lang' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->group('timezone-group', 'div', function ($form) use ($values, $optionTimezone) {
                 $form->label('timezone-label', t('Timezone'))
                 ->select('timezone', $optionTimezone, [
-                    'class'    => 'form-control',
-                    'selected' => $values[ 'timezone' ]
+                    'class'     => 'form-control',
+                    ':selected' => $values[ 'timezone' ]
                 ]);
             }, [ 'class' => 'form-group' ])
             ->token('token_install');

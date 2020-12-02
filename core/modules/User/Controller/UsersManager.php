@@ -3,6 +3,7 @@
 namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Paginate\Paginator;
+use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
 class UsersManager extends \Soosyze\Controller
@@ -197,7 +198,7 @@ class UsersManager extends \Soosyze\Controller
                 ':id' => $user[ 'user_id' ]
             ]);
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);
-            $user[ 'username' ]    = $this->highlight($this->username, $user[ 'username' ]);
+            $user[ 'username' ]    = Util::strHighlight($this->username, $user[ 'username' ]);
         }
         unset($user);
     }
@@ -221,12 +222,5 @@ class UsersManager extends \Soosyze\Controller
             : 'asc';
 
         return [ $orderBy, $sort, $sortInverse, $sort === 'asc' ];
-    }
-
-    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
-    {
-        return $needle === ''
-            ? $haystack
-            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 }

@@ -38,13 +38,13 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
         return $this->group('info-fieldset', 'fieldset', function ($form) {
             $form->legend('info-legend', t('Node deletion'))
                     ->group('info-group', 'div', function ($form) {
-                        $form->html('info', '<p:attr>:_content</p>', [
-                            '_content' => t('Warning ! The deletion of the node is final.')
+                        $form->html('info', '<p:attr>:content</p>', [
+                            ':content' => t('Warning ! The deletion of the node is final.')
                         ]);
 
                         if ($this->useInPath) {
-                            $form->html('info_path', '<p:attr>:_content</p>', [
-                                '_content' => t('This content is used in the configuration as') . ' : <b>' . t($this->useInPath[ 'title' ]) . '</b>'
+                            $form->html('info_path', '<p:attr>:content</p>', [
+                                ':content' => t('This content is used in the configuration as') . ' : <b>' . t($this->useInPath[ 'title' ]) . '</b>'
                             ]);
                         }
                     }, [ 'class' => 'alert alert-warning' ]);
@@ -53,8 +53,8 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                 $form->group('path-group', 'div', function ($form) {
                     $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]))
                             ->group('rgpd_page-flex', 'div', function ($form) {
-                                $form->html('base_path', '<span:attr>:_content</span>', [
-                                    '_content' => $this->router->makeRoute(''),
+                                $form->html('base_path', '<span:attr>:content</span>', [
+                                    ':content' => $this->router->makeRoute(''),
                                     'id'       => ''
                                 ])
                                 ->text('path', [

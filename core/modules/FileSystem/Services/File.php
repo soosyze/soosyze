@@ -129,7 +129,7 @@ class File
                 . "document.getElementById('$name').value='';"
                 . "document.getElementById('file-$name-name').value='';"
                 . "document.getElementById('file-$name-reset').disabled = true;",
-                '_content'   => '<i class="fa fa-times" aria-hidden="true"></i>',
+                ':content'   => '<i class="fa fa-times" aria-hidden="true"></i>',
                 'id'         => "file-$name-reset",
                 'type'       => 'button',
                 'aria-label' => 'Supprimer le fichier',
@@ -148,7 +148,7 @@ class File
                     'onchange' => "document.getElementById('file-$name-name').value = this.files[0].name;"
                     . "document.getElementById('file-$name-reset').disabled = false;"
                 ])
-                ->html("file-$name-reset", '<button:attr>:_content</button>', $attr);
+                ->html("file-$name-reset", '<button:attr>:content</button>', $attr);
         }, [ 'class' => 'form-group-flex' ]);
     }
 
@@ -345,8 +345,8 @@ class File
             : '<a href="' . $src . '"/><i class="fa fa-download" aria-hidden="true"></i> ' . $src . '</a>';
 
         $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($content, $name) {
-            $form->html("file-$name-thumbnail", '<div:attr>:_content</div>', [
-                '_content' => $content
+            $form->html("file-$name-thumbnail", '<div:attr>:content</div>', [
+                ':content' => $content
             ]);
         }, [ 'class' => 'form-group' ]);
     }

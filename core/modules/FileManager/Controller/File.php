@@ -344,8 +344,8 @@ class File extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) use ($name, $ext) {
                 $form->legend('folder-legend', t('Deleting the file'))
-                ->html('folder-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the @name file is final.', [
+                ->html('folder-info', '<p:attr>:content</p>', [
+                    ':content' => t('Warning ! The deletion of the @name file is final.', [
                         '@name' => "$name$ext"
                     ])
                 ]);

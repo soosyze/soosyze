@@ -37,8 +37,8 @@ class HookFileManager
                     . '</div>'
                     . '</div>';
 
-                $form->html('files-manager', '<div:attr>:_content</div>', [
-                        '_content' => $response,
+                $form->html('files-manager', '<div:attr>:content</div>', [
+                        ':content' => $response,
                         'class'    => 'row',
                         'id'       => 'filemanager'
                 ]);
@@ -85,8 +85,8 @@ class HookFileManager
 
         $form->append('fields-fieldset', function ($form) use ($response) {
             $form->group('files-group', 'div', function ($form) use ($response) {
-                $form->html('files-manager', '<div:attr>:_content</div>', [
-                        '_content' => $response,
+                $form->html('files-manager', '<div:attr>:content</div>', [
+                        ':content' => $response,
                         'class'    => 'row',
                         'id'       => 'filemanager'
                 ]);

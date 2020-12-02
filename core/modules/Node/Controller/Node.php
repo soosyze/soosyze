@@ -129,7 +129,7 @@ class Node extends \Soosyze\Controller
                 'title'            => 'required|string|max:255|to_htmlsc',
                 'token_node'       => 'token:3600'
             ])
-            ->setLabel([
+            ->setLabels([
                 'date_created'     => t('Publication date'),
                 'meta_description' => t('Description'),
                 'meta_noarchive'   => t('Block caching'),
@@ -383,7 +383,7 @@ class Node extends \Soosyze\Controller
                 'title'                 => 'required|string|max:255|to_htmlsc',
                 'token_node_' . $idNode => 'token:3600'
             ])
-            ->setLabel([
+            ->setLabels([
                 'date_created'     => t('Publication date'),
                 'meta_description' => t('Description'),
                 'meta_noarchive'   => t('Block caching'),

@@ -231,8 +231,8 @@ class FormNode extends FormBuilder
             'data-tooltip' => t($value[ 'field_description' ])
         ]);
         if (!isset($this->content[ 'entity_id' ])) {
-            $form->html('add-' . $key, '<div:attr><p>:_content</p></div>', [
-                '_content' => t('Save your content before you can add items'),
+            $form->html('add-' . $key, '<div:attr><p>:content</p></div>', [
+                ':content' => t('Save your content before you can add items'),
                 'class'    => 'block-content-disabled',
                 'style'    => 'cursor:not-allowed'
             ]);
@@ -268,16 +268,16 @@ class FormNode extends FormBuilder
                         $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
                     }
 
-                    $form->html("$key-$idEntity-show", '<a:attr>:_content</a>', [
-                            '_content' => $content,
+                    $form->html("$key-$idEntity-show", '<a:attr>:content</a>', [
+                            ':content' => $content,
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
-                        ->html("$key-$idEntity-edit", '<a:attr>:_content</a>', [
-                            '_content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
+                        ->html("$key-$idEntity-edit", '<a:attr>:content</a>', [
+                            ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
                             'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->content[ 'id' ],
@@ -285,8 +285,8 @@ class FormNode extends FormBuilder
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
-                        ->html("$key-$idEntity-delete", '<a:attr>:_content</a>', [
-                            '_content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
+                        ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
+                            ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
                             'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.delete', [
                                 ':id_node'   => $this->content[ 'id' ],
@@ -302,12 +302,12 @@ class FormNode extends FormBuilder
 
         if (!isset($value[ 'attr' ][ 'max' ]) || $value[ 'attr' ][ 'max' ] > count($subFields)) {
             $form->group("add-$key-group", 'div', function ($form) use ($key) {
-                $form->html('add-' . $key, '<a:attr>:_content</a>', [
+                $form->html('add-' . $key, '<a:attr>:content</a>', [
                     'href'     => $this->router->getRoute('entity.create', [
                         ':id_node' => $this->content[ 'id' ],
                         ':entity'  => $key,
                     ]),
-                    '_content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
+                    ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
                 ]);
             });
         }
@@ -391,8 +391,8 @@ class FormNode extends FormBuilder
                             'placeholder' => ':page_title | :site_title',
                             'value'       => $this->content[ 'meta_title' ]
                         ])
-                        ->html('meta_title-info', '<p>:_content</p>', [
-                            '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                        ->html('meta_title-info', '<p>:content</p>', [
+                            ':content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_description-group', 'div', function ($form) {
@@ -403,8 +403,8 @@ class FormNode extends FormBuilder
                             'class' => 'form-control',
                             'rows'  => 3
                         ])
-                        ->html('meta_description-info', '<p>:_content</p>', [
-                            '_content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
+                        ->html('meta_description-info', '<p>:content</p>', [
+                            ':content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_noindex-group', 'div', function ($form) {
@@ -487,8 +487,8 @@ class FormNode extends FormBuilder
                 )
                 ->group('actions-group', 'fieldset', function ($form) {
                     $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-                    ->html('cancel', '<button:attr>:_content</button>', [
-                        '_content' => t('Cancel'),
+                    ->html('cancel', '<button:attr>:content</button>', [
+                        ':content' => t('Cancel'),
                         'class'    => 'btn btn-danger',
                         'onclick'  => 'javascript:history.back();',
                         'type'     => 'button'
@@ -500,8 +500,8 @@ class FormNode extends FormBuilder
     {
         return $this->token('token_entity')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-                ->html('cancel', '<button:attr>:_content</button>', [
-                    '_content' => t('Cancel'),
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
                     'class'    => 'btn btn-danger',
                     'onclick'  => 'javascript:history.back();',
                     'type'     => 'button'

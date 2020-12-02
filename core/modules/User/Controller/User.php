@@ -147,7 +147,7 @@ class User extends \Soosyze\Controller
                 'roles'            => '!required|array',
                 'token_user_form'  => 'token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'username'         => t('User name'),
                 'email'            => t('E-mail'),
                 'picture'          => t('Picture'),
@@ -318,7 +318,7 @@ class User extends \Soosyze\Controller
                 'roles'            => '!required|array',
                 'token_user_form'  => 'required|token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'username'         => t('User name'),
                 'email'            => t('E-mail'),
                 'picture'          => t('Picture'),
@@ -448,8 +448,8 @@ class User extends \Soosyze\Controller
             ]))
             ->group('user-remove-info-fieldset', 'fieldset', function ($form) {
                 $form->legend('user-remove-info-legend', t('Account deletion'))
-                ->html('user-remove-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the user account is final.')
+                ->html('user-remove-info', '<p:attr>:content</p>', [
+                    ':content' => t('Warning ! The deletion of the user account is final.')
                 ]);
             })
             ->token('token_user_remove')

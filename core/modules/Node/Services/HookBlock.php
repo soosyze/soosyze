@@ -89,15 +89,15 @@ class HookBlock
                 ->group('node-group', 'div', function ($form) use ($data) {
                     $form->label('type-label', t('Content type'))
                     ->select('type', $this->getOptionsType(), [
-                        'class'    => 'form-control',
-                        'selected' => $data[ 'options' ][ 'type' ]
+                        'class'     => 'form-control',
+                        ':selected' => $data[ 'options' ][ 'type' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('display-group', 'div', function ($form) use ($data) {
                     $form->label('display-label', t('Display type'))
                     ->select('display', $this->getOptionsDisplay(), [
-                        'class'    => 'form-control',
-                        'selected' => $data[ 'options' ][ 'display' ]
+                        'class'     => 'form-control',
+                        ':selected' => $data[ 'options' ][ 'display' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('previous_text-group', 'div', function ($form) use ($data) {
@@ -108,8 +108,8 @@ class HookBlock
                         'value'    => t($data[ 'options' ][ 'previous_text' ])
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->html('previous_text-info', '<p>:_content</p>', [
-                    '_content' => t('Variables allowed') .
+                ->html('previous_text-info', '<p>:content</p>', [
+                    ':content' => t('Variables allowed') .
                     ' <code>:node_type_name</code>'
                 ])
                 ->group('next_text-group', 'div', function ($form) use ($data) {
@@ -120,8 +120,8 @@ class HookBlock
                         'value'    => t($data[ 'options' ][ 'next_text' ])
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->html('next_text-info', '<p>:_content</p>', [
-                    '_content' => t('Variables allowed') .
+                ->html('next_text-info', '<p>:content</p>', [
+                    ':content' => t('Variables allowed') .
                     ' <code>:node_type_name</code>'
             ]);
         });

@@ -50,9 +50,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 $form->group("$key-group", 'div', function ($form) use ($data, $key, $social) {
                     $form->label("$key-label", $social, [ 'for' => $key ])
                         ->group("$key-flex", 'div', function ($form) use ($data, $key) {
-                            $form->html("$key-icon", '<span:attr>:_content</span>', [
-                                '_content' => '<i class="fab fa-' . $key . '" aria-hidden="true"></i>',
-                                'id'       => ''
+                            $form->html("$key-icon", '<span:attr>:content</span>', [
+                                ':content' => '<i class="fab fa-' . $key . '" aria-hidden="true"></i>'
                             ])
                             ->text($key, [
                                 'class' => 'form-control',
@@ -69,7 +68,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         foreach (array_keys($this->socials) as $key) {
             $validator->addRule($key, '!required|route_or_url');
         }
-        $validator->setLabel($this->socials);
+        $validator->setLabels($this->socials);
     }
 
     public function before(&$validator, &$data, $id)

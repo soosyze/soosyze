@@ -213,8 +213,8 @@ class Profil extends \Soosyze\Controller
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete files permission'))
-                ->html('folder-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the files permission is final.')
+                ->html('folder-info', '<p:attr>:content</p>', [
+                    ':content' => t('Warning ! The deletion of the files permission is final.')
                 ]);
             })
             ->token('token_file_permission')
@@ -334,7 +334,7 @@ class Profil extends \Soosyze\Controller
                     ]
                 ]
             ])
-            ->setLabel([
+            ->setLabels([
                 'folder_show'     => t('Directory path'),
                 'folder_show_sub' => t('Sub directories included'),
                 'profil_weight'   => t('Weight'),

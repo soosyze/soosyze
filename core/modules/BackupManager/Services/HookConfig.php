@@ -50,8 +50,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_frequency-info-group', 'div', function ($form) {
-                    $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
-                        '_content' => t('Relative PHP Date Formats')
+                    $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:content</a>', [
+                        ':content' => t('Relative PHP Date Formats')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('backup_cron-group', 'div', function ($form) use ($data) {
@@ -61,8 +61,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('cron_info-group', 'div', function ($form) {
-                    $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:_content</a>', [
-                        '_content' => t('How to set up the CRON service ?')
+                    $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:content</a>', [
+                        ':content' => t('How to set up the CRON service ?')
                     ]);
                 }, [ 'class' => 'form-group' ]);
             });
@@ -74,7 +74,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'max_backups'      => 'min:0',
             'backup_cron'      => 'bool',
             'backup_frequency' => '!required|string'
-        ])->setLabel([
+        ])->setLabels([
             'max_backups'      => t('Maximum number of backups'),
             'backup_cron'      => t('Enable CRON backups'),
             'backup_frequency' => t('Fréquence des sauvegardes')

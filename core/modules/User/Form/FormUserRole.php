@@ -84,8 +84,8 @@ class FormUserRole extends FormBuilder
                         'pattern' => '#([a-fA-F0-9]{6})',
                         'value'   => $this->values[ 'role_color' ]
                     ])
-                    ->html('role_color-btn', '<button:attr>:_content</button>', [
-                        '_content'     => '<i class="fa fa-sync" aria-hidden="true"></i>',
+                    ->html('role_color-btn', '<button:attr>:content</button>', [
+                        ':content'     => '<i class="fa fa-sync" aria-hidden="true"></i>',
                         'aria-label'   => t('Random color'),
                         'class'        => 'btn',
                         'id'           => 'role_color_btn',
@@ -115,8 +115,8 @@ class FormUserRole extends FormBuilder
                         'maxlength'   => 255,
                         'placeholder' => 'fa fa-home',
                         'value'       => $this->values[ 'role_icon' ],
-                    ])->html('role_icon-btn', '<button:attr>:_content</button>', [
-                        '_content'     => '<i class="' . $this->values[ 'role_icon' ] . '" aria-hidden="true"></i>',
+                    ])->html('role_icon-btn', '<button:attr>:content</button>', [
+                        ':content'     => '<i class="' . $this->values[ 'role_icon' ] . '" aria-hidden="true"></i>',
                         'aria-label'   => t('Rendering'),
                         'class'        => 'btn render_icon',
                         'type'         => 'button',
@@ -146,8 +146,8 @@ class FormUserRole extends FormBuilder
     {
         $this->token('token_role_submit')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->html('cancel', '<button:attr>:_content</button>', [
-                '_content' => t('Cancel'),
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'
@@ -160,8 +160,8 @@ class FormUserRole extends FormBuilder
     {
         $this->group('role-fieldset', 'fieldset', function ($form) {
             $form->legend('role-legend', t('Delete role'))
-                ->html('role-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the role is final.')
+                ->html('role-info', '<p:attr>:content</p>', [
+                    ':content' => t('Warning ! The deletion of the role is final.')
                 ]);
         })->token('token_role_delete')
             ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);

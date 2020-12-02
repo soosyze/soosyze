@@ -52,8 +52,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         'required' => 1
                     ])
                     ->group('profil_weight-flex', 'div', function ($form) {
-                        $form->html('cancel', '<span:attr>:_content</span>', [
-                            '_content' => t('<root>')
+                        $form->html('cancel', '<span:attr>:content</span>', [
+                            ':content' => t('<root>')
                         ])
                         ->text('folder_show', [
                             'class'    => 'form-control',
@@ -61,8 +61,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'value'    => $this->values[ 'folder_show' ]
                         ]);
                     }, [ 'class' => 'form-group-flex' ])
-                    ->html('cancel', '<p>:_content</p>', [
-                        '_content' => t('Variables allowed') . ' <code>:user_id</code>'
+                    ->html('cancel', '<p>:content</p>', [
+                        ':content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('folder_show_sub-group', 'div', function ($form) {
@@ -139,8 +139,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'class' => 'form-control',
                             'min'   => 0,
                             'value' => $this->values[ 'folder_size' ]
-                        ])->html('folder_size-unit', '<span:attr>:_content</span>', [
-                            '_content'     => 'Mo',
+                        ])->html('folder_size-unit', '<span:attr>:content</span>', [
+                            ':content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
@@ -188,13 +188,13 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'class' => 'form-control',
                             'min'   => 0,
                             'value' => $this->values[ 'file_size' ]
-                        ])->html('file_size-unit', '<span:attr>:_content</span>', [
-                            '_content'     => 'Mo',
+                        ])->html('file_size-unit', '<span:attr>:content</span>', [
+                            ':content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
                     }, [ 'class' => 'form-group-flex' ])
-                    ->html('cancel', '<p>:_content</p>', [
-                        '_content' => t('Maximum size per file upload allowed by your server: :size', [
+                    ->html('cancel', '<p>:content</p>', [
+                        ':content' => t('Maximum size per file upload allowed by your server: :size', [
                             ':size' => Util::strFileSizeFormatted(Util::getOctetUploadLimit())
                         ])
                     ]);
@@ -225,8 +225,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
             })
             ->token('token_file_permission')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->html('cancel', '<button:attr>:_content</button>', [
-                '_content' => t('Cancel'),
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
                 'class'    => 'btn btn-danger',
                 'onclick'  => 'javascript:history.back();',
                 'type'     => 'button'

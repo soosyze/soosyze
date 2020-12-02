@@ -97,8 +97,8 @@ class HookMenu
                         $form->group('menu_title-group', 'div', function ($form) use ($data) {
                             $form->label('menu_title-label', t('Menu title'))
                             ->select('menu_title', $this->getOptions(), [
-                                'class'    => 'form-control',
-                                'selected' => $data[ 'menu_title' ]
+                                'class'     => 'form-control',
+                                ':selected' => $data[ 'menu_title' ]
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('title_link-group', 'div', function ($form) use ($data) {

@@ -70,7 +70,7 @@ class Contact extends \Soosyze\Controller
                 'copy'          => 'bool',
                 'token_contact' => 'required|token'
             ])
-            ->setLabel([
+            ->setLabels([
                 'name'    => t('Name'),
                 'email'   => t('E-mail'),
                 'object'  => t('Object'),

@@ -55,11 +55,10 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'for'          => 'connect_url'
                     ])
                     ->group('connect_url-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:attr>:_content</span>', [
-                            '_content' => $this->router->getRoute('user.login', [
+                        $form->html('base_path', '<span:attr>:content</span>', [
+                            ':content' => $this->router->getRoute('user.login', [
                                 ':url' => ''
-                            ]),
-                            'id'       => ''
+                            ])
                         ])
                         ->text('connect_url', [
                             'class'       => 'form-control',
@@ -75,9 +74,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'required' => 1
                     ])
                     ->group('connect_redirect-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:attr>:_content</span>', [
-                            '_content' => $this->router->makeRoute(''),
-                            'id'       => ''
+                        $form->html('base_path', '<span:attr>:content</span>', [
+                            ':content' => $this->router->makeRoute('')
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
@@ -88,8 +86,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'       => $data[ 'connect_redirect' ]
                         ]);
                     }, [ 'class' => 'form-group-flex api_route' ])
-                    ->html('connect_redirect-info', '<p>:_content</p>', [
-                        '_content' => t('Variables allowed') . ' <code>:user_id</code>'
+                    ->html('connect_redirect-info', '<p>:content</p>', [
+                        ':content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -115,9 +113,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'data-tooltip' => t('End-User License Agreement (EULA)')
                     ])
                     ->group('terms_of_service_page-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:attr>:_content</span>', [
-                            '_content' => $this->router->makeRoute(''),
-                            'id'       => ''
+                        $form->html('base_path', '<span:attr>:content</span>', [
+                            ':content' => $this->router->makeRoute('')
                         ])
                         ->text('terms_of_service_page', [
                             'class'       => 'form-control',
@@ -140,9 +137,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         'data-tooltip' => t('General Data Protection Regulation (GDPR)')
                     ])
                     ->group('rgpd_page-flex', 'div', function ($form) use ($data) {
-                        $form->html('base_path', '<span:attr>:_content</span>', [
-                            '_content' => $this->router->makeRoute(''),
-                            'id'       => ''
+                        $form->html('base_path', '<span:attr>:content</span>', [
+                            ':content' => $this->router->makeRoute('')
                         ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
@@ -172,8 +168,8 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_reset_timeout-info-group', 'div', function ($form) {
-                    $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:_content</a>', [
-                        '_content' => t('Relative PHP Date Formats')
+                    $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:content</a>', [
+                        ':content' => t('Relative PHP Date Formats')
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('password_show-group', 'div', function ($form) use ($data) {
@@ -277,7 +273,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'password_digit'         => 'min_numeric:1',
             'password_special'       => 'min_numeric:1',
             'password_reset_timeout' => '!required_without:user_relogin|required|string|max:255|equal:@is_date_time_valid'
-        ])->setLabel([
+        ])->setLabels([
             'user_register'          => t('Registration'),
             'user_relogin'           => t('Open password recovery'),
             'terms_of_service_show'  => t('Activate the Terms'),

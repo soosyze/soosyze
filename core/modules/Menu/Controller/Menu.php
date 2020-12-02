@@ -271,8 +271,8 @@ class Menu extends \Soosyze\Controller
                 ]))
             ->group('menu-remove-fieldset', 'fieldset', function ($form) {
                 $form->legend('menu-remove-legend', t('Delete menu'))
-                ->html('menu-remove-info', '<p:attr>:_content</p>', [
-                    '_content' => t('Warning ! The deletion of the menu is final.')
+                ->html('menu-remove-info', '<p:attr>:content</p>', [
+                    ':content' => t('Warning ! The deletion of the menu is final.')
                 ]);
             })
             ->token('token_menu_remove')
@@ -439,7 +439,7 @@ class Menu extends \Soosyze\Controller
                     'title'       => 'required|string|max:255|!equal:create',
                     'description' => 'required|string|max:255'
                 ])
-                ->setLabel([
+                ->setLabels([
                     'title'       => t('Menu title'),
                     'description' => t('Description')
                 ])

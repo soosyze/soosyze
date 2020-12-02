@@ -65,9 +65,9 @@ class HookBlock
                     ->select('name', $options, [
                         'class'       => 'form-control ajax-control',
                         'data-target' => 'select[name="parent"]',
-                        'min'         => 1,
                         'max'         => 4,
-                        'selected'    => $data[ 'options' ][ 'name' ]
+                        'min'         => 1,
+                        ':selected'   => $data[ 'options' ][ 'name' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('parent-group', 'div', function ($form) use ($data) {
