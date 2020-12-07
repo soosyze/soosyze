@@ -414,8 +414,8 @@ class HookStep
             ->values([
                 'sidebar', t('Archives by months'),
                 2,
-                'news.month', 'news.month',
-                '',
+                'news.archive', 'news.archive',
+                json_encode([ 'expand' => false ]),
                 true, '/' . PHP_EOL . 'news%'
             ])
             ->execute();
@@ -461,8 +461,8 @@ class HookStep
             ->values([
                 'sidebar', t('Archives by months'),
                 1,
-                'news.month', 'news.month',
-                '[]',
+                'news.archive', 'news.archive',
+                json_encode([ 'expand' => false ]),
                 false, 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
