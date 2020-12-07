@@ -76,6 +76,7 @@ class Link extends \Soosyze\Controller
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
                 'link'        => $infoUrlOrRoute[ 'link' ],
+                'link_router' => $infoUrlOrRoute[ 'link_router' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'target_link' => (bool) $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
@@ -174,6 +175,7 @@ class Link extends \Soosyze\Controller
                 'title_link'  => $validator->getInput('title_link'),
                 'icon'        => $validator->getInput('icon'),
                 'link'        => $infoUrlOrRoute[ 'link' ],
+                'link_router' => $infoUrlOrRoute[ 'link_router' ],
                 'query'       => $infoUrlOrRoute[ 'query' ],
                 'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'target_link' => (bool) $validator->getInput('target_link')

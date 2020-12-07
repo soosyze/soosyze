@@ -79,16 +79,29 @@ class Menu extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
+            $updateParents = [];
             foreach ($links as $link) {
                 $linkUpdate = [
-                    'active' => $validator->getInput("active-{$link[ 'id' ]}") === 'on',
-                    'parent' => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
-                    'weight' => (int) $validator->getInput("weight-{$link[ 'id' ]}")
+                    'active'       => $validator->getInput("active-{$link[ 'id' ]}") === 'on',
+                    'has_children' => false,
+                    'parent'       => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
+                    'weight'       => (int) $validator->getInput("weight-{$link[ 'id' ]}")
                 ];
 
                 self::query()
                     ->update('menu_link', $linkUpdate)
                     ->where('id', $link[ 'id' ])
+                    ->execute();
+                
+                if ($linkUpdate['parent'] >= 1 && !in_array($linkUpdate['parent'], $updateParents)) {
+                    $updateParents[] = $linkUpdate['parent'];
+                }
+            }
+            /* Mise à jour des parents. */
+            foreach ($updateParents as $parent) {
+                self::query()
+                    ->update('menu_link', [ 'has_children' => true ])
+                    ->where('id', $parent)
                     ->execute();
             }
 
@@ -353,7 +366,9 @@ class Menu extends \Soosyze\Controller
                 ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'link_delete' ] = self::router()
                 ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
-            $link[ 'submenu' ]     = $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1);
+            $link[ 'submenu' ]     = $link['has_children' ]
+                ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
+                : null;
 
             if (!$link[ 'key' ]) {
                 continue;

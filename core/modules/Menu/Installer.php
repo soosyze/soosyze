@@ -31,6 +31,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->string('key')->nullable()
                 ->string('icon')->nullable()
                 ->string('link')
+                ->string('link_router')->nullable()
                 ->string('query')->nullable()
                 ->string('fragment')->nullable()
                 ->string('title_link')
@@ -38,6 +39,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->string('menu')
                 ->integer('weight')->valueDefault(1)
                 ->integer('parent')
+                ->boolean('has_children')->valueDefault(false)
                 ->boolean('active')->valueDefault(true);
             });
 

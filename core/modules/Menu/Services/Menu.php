@@ -89,10 +89,11 @@ class Menu
     {
         if (filter_var($link, FILTER_VALIDATE_URL)) {
             return [
-                'key'      => '',
-                'link'     => $link,
-                'query'    => '',
-                'fragment' => '',
+                'key'         => '',
+                'link'        => $link,
+                'link_router' => null,
+                'query'       => '',
+                'fragment'    => '',
             ];
         }
 
@@ -109,10 +110,7 @@ class Menu
             $uri = $uri->withQuery(http_build_query($result));
         }
 
-        $linkSource = $uri->getPath() === '/'
-            ? $this->config->get('settings.path_index', '/')
-            : $uri->getPath();
-        $linkSource = $this->alias->getSource($linkSource, $linkSource);
+        $linkSource = $this->alias->getSource($uri->getPath(), $uri->getPath());
 
         $uriSource = $isRewrite
             ? $uri->withPath($linkSource)
@@ -121,12 +119,15 @@ class Menu
         $route = $this->router->parse($request->withUri($uriSource)->withMethod('get'));
 
         return [
-            'key'      => isset($route[ 'key' ])
-            ? $route[ 'key' ]
-            : '',
-            'link'     => $uri->getPath(),
-            'query'    => $uri->getQuery(),
-            'fragment' => $uri->getFragment(),
+            'key'         => isset($route[ 'key' ])
+                ? $route[ 'key' ]
+                : '',
+            'link'        => $uri->getPath(),
+            'link_router' => isset($route[ 'key' ])
+                ? $route[ 'path' ]
+                : '',
+            'query'       => $uri->getQuery(),
+            'fragment'    => $uri->getFragment(),
         ];
     }
     
@@ -161,7 +162,12 @@ class Menu
                 'label' => $space . $seperator . t($menu[ 'title_link' ])
             ];
 
-            $options = array_merge($options, $this->renderMenuSelect($nameMenu, $menu[ 'id' ], $level + 1));
+            $options = array_merge(
+                $options,
+                ($menu[ 'has_children' ]
+                    ? $this->renderMenuSelect($nameMenu, $menu[ 'id' ], $level + 1)
+                    : [])
+            );
         }
 
         return $options;
@@ -181,11 +187,13 @@ class Menu
             return null;
         }
 
-        foreach ($query as &$menu) {
-            $menu[ 'title_link' ] = t($menu[ 'title_link' ]);
-            $menu[ 'submenu' ]    = $this->renderMenu($nameMenu, $menu[ 'id' ], $level + 1);
+        foreach ($query as &$link) {
+            $link[ 'title_link' ] = t($link[ 'title_link' ]);
+            $link[ 'submenu' ]    = $link['has_children']
+                ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
+                : null;
         }
-        unset($menu);
+        unset($link);
 
         return $this->core
                 ->get('template')
@@ -237,14 +245,14 @@ class Menu
                 continue;
             }
 
-            if (!($source = $this->alias->getSource($menu[ 'link' ]))) {
-                $source = $menu[ 'link' ];
-            }
+            $linkRouter = $menu[ 'link_router' ]
+                ? $menu[ 'link_router' ]
+                : $menu[ 'link' ];
 
             $link = $request->withUri(
                 $this->router->isRewrite()
-                ? $request->getUri()->withPath($source)
-                : $request->getUri()->withQuery('q=' . $source)
+                ? $request->getUri()->withPath($linkRouter)
+                : $request->getUri()->withQuery('q=' . $linkRouter)
             );
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
