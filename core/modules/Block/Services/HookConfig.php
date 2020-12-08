@@ -24,7 +24,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         'twitter'    => 'Twitter',
         'youtube'    => 'Youtube'
     ];
-    
+
     public function defaultValues()
     {
         $out = [];

@@ -26,7 +26,7 @@ class HookApp
         $this->pathViews = dirname(__DIR__) . '/Views/';
 
         $this->userCurrent = $this->user->isConnected();
-        
+
         if ($this->userCurrent) {
             $this->roles   = $this->user->getRolesUser($this->userCurrent[ 'user_id' ]);
             $this->roles[] = [ 'role_id' => 2 ];
@@ -69,7 +69,7 @@ class HookApp
             ]);
         }
     }
-    
+
     protected function getNameTheme()
     {
         $query = $this->router->parseQueryFromRequest();

@@ -149,7 +149,7 @@ class News extends \Soosyze\Controller
             }
         }
         unset($item);
-        
+
         $lastBuildDate = isset($items[0]['date_created'])
             ? $items[0]['date_created']
             : '';
@@ -179,7 +179,7 @@ class News extends \Soosyze\Controller
         $page = empty($page)
             ? 1
             : substr(strrchr($page, '/'), 1);
-        
+
         self::$limit = self::config()->get('settings.news_pagination', 6);
 
         $offset = self::$limit * ($page - 1);

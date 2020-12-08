@@ -2,8 +2,6 @@
 
 namespace SoosyzeCore\FileManager\Services;
 
-use Soosyze\Components\Util\Util;
-
 class HookMenu
 {
     protected $profil;

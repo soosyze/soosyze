@@ -282,7 +282,7 @@ function uploadFile($form, data) {
 }
 
 /**
- * 
+ *
  * @param {type} action
  * @returns {undefined}
  */

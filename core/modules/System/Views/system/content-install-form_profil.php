@@ -16,7 +16,7 @@
 
             </div>
         </div>
-    
+
         <?php if ($i % 2 === 1): echo '</div>'; endif; ?>
         <?php ++$i; ?>
     <?php endforeach; ?>

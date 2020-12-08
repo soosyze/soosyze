@@ -5,7 +5,7 @@
     },
     "fileprofil": {
         "class": "SoosyzeCore\\FileManager\\Services\\FileProfil",
-        "arguments": ["@query"] 
+        "arguments": ["@query"]
     },
     "filemanager.filter.iterator": {
         "class": "SoosyzeCore\\FileManager\\Services\\FilterManagerIterator",

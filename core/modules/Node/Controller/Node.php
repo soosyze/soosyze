@@ -589,7 +589,7 @@ class Node extends \Soosyze\Controller
             $not = empty($value[ 'required' ])
                 ? ''
                 : '!';
-            
+
             $currentAlias = self::alias()->getalias('node/' . $idNode, 'node/' . $idNode);
 
             $validator
@@ -628,7 +628,7 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ] = [
                 t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ])
             ];
-            
+
             if ($validator->getInput('path')) {
                 var_dump($validator->getInput('path_key'), $validator->getInput('path'));
                 self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
@@ -804,7 +804,7 @@ class Node extends \Soosyze\Controller
             unset($menu[ $key ]);
         }
         unset($link);
-        
+
         if ($menu) {
             $nodeShow = [
                 'key'        => 'node.show',
@@ -831,7 +831,7 @@ class Node extends \Soosyze\Controller
                     'menu'      => $menu
         ]);
     }
-    
+
     public function getNodeFieldsetSubmenu()
     {
         $menu = [

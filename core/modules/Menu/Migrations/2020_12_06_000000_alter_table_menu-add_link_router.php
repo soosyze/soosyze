@@ -9,9 +9,9 @@ return [
         $sch->alterTable('menu_link', function (TableBuilder $table) {
             $table->string('link_router')->nullable();
         });
-        
+
         $links = $req->from('menu_link')->isNotNull('key')->fetchAll();
-        
+
         foreach ($links as $link) {
             $alias = $req->from('system_alias_url')
                 ->where('alias', $link[ 'link' ])

@@ -37,7 +37,7 @@ class BackupManager
     {
         return is_dir($this->repository);
     }
-    
+
     public function getRepository()
     {
         return $this->repository;

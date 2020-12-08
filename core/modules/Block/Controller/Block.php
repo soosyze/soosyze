@@ -371,7 +371,7 @@ class Block extends \Soosyze\Controller
                 'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
                 'roles'            => implode(',', $idRoles)
             ];
-            
+
             if ($block[ 'hook' ]) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.before", [
                     &$validator, &$values, $id
@@ -418,7 +418,7 @@ class Block extends \Soosyze\Controller
     {
         return self::query()->from('block')->where('block_id', '==', $id)->fetch();
     }
-    
+
     protected function getOptions($block, $default = [])
     {
         return empty($block[ 'options' ])

@@ -17,7 +17,7 @@
                 data-tooltip="<?php echo t('Add folder'); ?>"
                 data-toogle="modal"
                 data-target="#modal_filemanager">
-                <i class="fa fa-plus" aria-hidden="true"></i> 
+                <i class="fa fa-plus" aria-hidden="true"></i>
 
             </a>
         </li>

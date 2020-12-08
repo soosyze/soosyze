@@ -5,7 +5,7 @@ namespace SoosyzeCore\Menu\Form;
 class FormLink extends \Soosyze\Components\Form\FormBuilder
 {
     protected $isRewrite = false;
-    
+
     /**
      * @var \Soosyze\Components\Router\Router
      */
@@ -21,7 +21,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
     ];
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
-    
+
     public function __construct($attr, $router)
     {
         parent::__construct($attr);

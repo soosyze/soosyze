@@ -210,7 +210,7 @@ class ModulesManager extends \Soosyze\Controller
                 $composer[ $title ][ 'dir' ] . DS . 'Migrations',
                 $title
             );
-            
+
             $this->container->callHook('install.' . $title, [ $this->container ]);
         }
 

@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-3 sticky">
         <?php echo $list_menu_submenu; ?>
-        
+
         <a href="<?php echo $link_create_menu; ?>" class="btn btn-primary">
             <i class="fa fa-plus" aria-hidden="true"></i> <?php echo t('Add a menu'); ?>
         </a>

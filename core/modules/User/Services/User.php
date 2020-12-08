@@ -186,7 +186,7 @@ class User
                     'menu'      => $menu
         ]);
     }
-    
+
     public function getUserManagerSubmenu($keyRoute)
     {
         $menu = [
@@ -257,7 +257,7 @@ class User
             ->from('role_permission')
             ->where('role_id', 2)
             ->lists('permission_id'));
-        
+
         return in_array($idPermission, $this->granted);
     }
 
@@ -410,7 +410,7 @@ class User
         if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
             return;
         }
-        
+
         $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';
         $script = $response->getBlock('this')->getVar('scripts');
         $script .= '<script src="' . $vendor . '"></script>';

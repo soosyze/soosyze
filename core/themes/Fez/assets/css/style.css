@@ -8,7 +8,7 @@
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
 }
-body {  
+body {
     color: rgba(0,0,0,.8);
     font-family: "Open Sans","Segoe UI","Helvetica",Calibri,Arial,sans-serif;
     font-size: 1.2rem;
@@ -90,7 +90,7 @@ img {
     justify-content: space-between;
     margin-bottom: 0;
 }
-#wrapper_navigation.page .nav-flex-left, 
+#wrapper_navigation.page .nav-flex-left,
 #wrapper_navigation.page .nav-flex-right {
     align-items: center;
     display: flex;
@@ -227,7 +227,7 @@ img {
 /* Navigation */
 .post-nav {
     border-top: 1px solid #eee;
-    padding-top: 1em; 
+    padding-top: 1em;
 }
 .post-nav a {
     display: flex;

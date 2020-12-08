@@ -5,7 +5,7 @@ namespace SoosyzeCore\Node\Services;
 class Node
 {
     protected $config;
-    
+
     protected $core;
 
     protected $pathViews;
@@ -16,7 +16,7 @@ class Node
      * @var \SoosyzeCore\Template\Services\Templating
      */
     protected $tpl;
-    
+
     protected $nodeCurrent = null;
 
     public function __construct($config, $core, $query, $tpl)
@@ -177,7 +177,7 @@ class Node
             ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
             ->execute();
     }
-    
+
     public function deleteFile($type, $idNode)
     {
         $dir = $this->core->getSettingEnv('files_public', 'app/files') . "/node/$type/$idNode";
@@ -197,7 +197,7 @@ class Node
         /* Supprime le dossier cible. */
         \rmdir($dir);
     }
-    
+
     public function isMaxEntity($entity, $foreignKey, $idNode, $count)
     {
         if ($count === 0) {
@@ -231,7 +231,7 @@ class Node
 
         return $out;
     }
-    
+
     public function getPathSettings()
     {
         return [

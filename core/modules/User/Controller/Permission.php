@@ -104,7 +104,7 @@ class Permission extends \Soosyze\Controller
         if (!($diffCreate = array_diff_key($newPermission, $permission))) {
             return null;
         }
-        
+
         self::query()->insertInto('role_permission', [ 'role_id', 'permission_id' ]);
         foreach ($diffCreate as $create) {
             if (self::user()->hasPermission($create)) {
@@ -122,7 +122,7 @@ class Permission extends \Soosyze\Controller
         if (!($diffDelete = array_diff_key($permission, $newPermission))) {
             return null;
         }
-        
+
         self::query()->from('role_permission')->delete()
             ->where('role_id', '==', $idRole)
             ->where(function ($query) use ($diffDelete) {

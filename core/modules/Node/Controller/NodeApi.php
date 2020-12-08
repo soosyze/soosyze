@@ -75,7 +75,6 @@ class NodeApi extends \Soosyze\Controller
         if (!$req->isAjax()) {
             return $this->get404($req);
         }
-
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
@@ -97,7 +96,7 @@ class NodeApi extends \Soosyze\Controller
             $not = empty($value[ 'required' ])
                 ? ''
                 : '!';
-            
+
             $currentAlias = self::alias()->getalias('node/' . $idNode, 'node/' . $idNode);
 
             $validator
@@ -137,11 +136,11 @@ class NodeApi extends \Soosyze\Controller
             if ($validator->getInput('path')) {
                 self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
             }
-            
+
             $out[ 'messages' ][ 'success' ] = [
                 t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ])
             ];
-            
+
             return $this->json(200, $out);
         }
 

@@ -5,7 +5,7 @@ namespace SoosyzeCore\Menu\Services;
 class HookBlock
 {
     protected $menu;
-    
+
     /**
      * @var \Soosyze\Components\Router\Router
      */
@@ -20,7 +20,7 @@ class HookBlock
     public function hookCreateFormData(array &$blocks)
     {
         $menus = $this->menu->getAllMenu();
-        
+
         foreach ($menus as $menu) {
             $blocks[ "menu.{$menu[ 'name' ]}" ] = [
                 'hook'      => 'menu',

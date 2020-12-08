@@ -29,7 +29,7 @@
                 </button>
             </div>
         </div>
-        
+
         <?php echo $form; ?>
 
         <?php echo $section[ 'table' ]; ?>

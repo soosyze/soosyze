@@ -59,12 +59,10 @@ class FileProfil
     public function getIdRolesUser($profilId)
     {
         $data = $this->getRolesUserByProfil($profilId);
-        $out  = [];
-        foreach ($data as $value) {
-            $out[] = $value[ 'role_id' ];
-        }
 
-        return $out;
+        return $data
+            ? array_column($data, 'role_id')
+            : [];
     }
 
     public function getProfilsFileByUser($userId)
@@ -73,7 +71,7 @@ class FileProfil
             return $this->profil[ $userId ];
         }
         $this->profil[ $userId ] = $this->getProfil($userId);
-        
+
         return $this->profil[ $userId ];
     }
 }

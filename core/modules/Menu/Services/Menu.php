@@ -44,7 +44,7 @@ class Menu
                 ->where('id', '==', $id)
                 ->fetch();
     }
-    
+
     public function deleteLinks(callable $callable)
     {
         $links = $callable();
@@ -130,7 +130,7 @@ class Menu
             'fragment'    => $uri->getFragment(),
         ];
     }
-    
+
     public function renderMenuSelect($nameMenu, $parent = -1, $level = 1)
     {
         $query = $this->query

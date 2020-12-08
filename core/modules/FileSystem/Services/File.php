@@ -27,7 +27,7 @@ class File
      * @var callable|null
      */
     protected $callGet = null;
-    
+
     /**
      * Fonction de déplacement des données du fichier.
      *
@@ -97,7 +97,7 @@ class File
      * @var string
      */
     protected $path = null;
-    
+
     /**
      * Le répertoire racine.
      *
@@ -262,7 +262,7 @@ class File
                 }
             }
         }
-        
+
         return $this;
     }
 
@@ -286,7 +286,7 @@ class File
 
         return $this;
     }
-    
+
     public function getName()
     {
         return $this->nameResolved

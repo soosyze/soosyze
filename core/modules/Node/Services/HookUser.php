@@ -54,7 +54,7 @@ class HookUser
     public function hookNodeSow($idNode)
     {
         $node = $this->getNode($idNode);
-        
+
         return $node
             ? [
                 'node.administer',
@@ -102,7 +102,7 @@ class HookUser
             ? [ 'node.administer', 'node.deleted.' . $node[ 'type' ] ]
             : '';
     }
-    
+
     public function getNode($idNode)
     {
         return $this->query

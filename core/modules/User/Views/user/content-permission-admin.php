@@ -6,7 +6,7 @@
         <div class="form-group">
             <div id="result-search" style="height: 2em;"><?php echo $count; ?> permissions</div>
             <div class="form-group">
-                <input 
+                <input
                     type="text"
                     id="search"
                     class="form-control"
@@ -32,7 +32,7 @@
 
     <div class="col-md-9">
         <form method="post" action="<?php echo $link_update ?>" id="form-permission">
-            
+
             <?php foreach ($modules as $key => $module): ?>
             <fieldset id="<?php echo \Soosyze\Components\Util\Util::strSlug($key); ?>" class="modules responsive">
                 <legend><?php echo t($key); ?></legend>
@@ -114,7 +114,7 @@
             /* Pour l'affichage de la navigation. */
             $(`#nav-${this.id}`).css('display', package_hide);
         });
-        
+
         if(number === 0) {
             $('#form-permission').css('display', 'none');
             $('#permission-nothing').css('display', '');

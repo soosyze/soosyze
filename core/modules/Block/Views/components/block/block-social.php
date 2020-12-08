@@ -12,6 +12,6 @@
     </li>
     <?php endif; ?>
 <?php endforeach; ?>
- 
+
 </ul>
 <?php endif; ?>

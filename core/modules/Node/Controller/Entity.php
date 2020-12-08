@@ -357,7 +357,7 @@ class Entity extends \Soosyze\Controller
                     ->addInput('node_status_id', 1);
             }
         }
-        
+
         if ($validator->isValid()) {
             self::query()
                 ->from('entity_' . $typeEntity)

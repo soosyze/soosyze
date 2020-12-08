@@ -57,7 +57,7 @@ class HookApp
                     if (id === undefined) {
                         id = -1;
                     }
-                    
+
                     $(idMenu).children(".sort_weight").each(function () {
                         $(this).children(\'input[name*="weight"]\').val(weight);
                         weight++;

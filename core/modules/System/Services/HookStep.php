@@ -319,7 +319,7 @@ class HookStep
         $idMenuAbout    = $this->lastInsertId('menu_link', self::$columnsMenu, [
             'node.show', '', 'About', 'page/about', 'menu-main', 'node/7', 3, -1
         ]);
-        
+
         $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', 7)->execute();
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])

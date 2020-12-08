@@ -33,7 +33,7 @@ class Manager extends \Soosyze\Controller
             $path = str_replace(':user_id', $user[ 'user_id' ], $path);
             /* Si le profil est mal écrit. */
             $path = Util::strSlug($path, '-', '\/');
-            
+
             /* Si le profil trouvé permet d'être vu. */
             if ($this->get('filemanager.hook.user')->hookFolderShow($path)) {
                 $filemanager = $this->getFileManager($path, $req);
@@ -52,7 +52,7 @@ class Manager extends \Soosyze\Controller
                     'filemanager' => $filemanager
                 ])->override('page', [ 'page-fuild.php' ]);
     }
-    
+
     public function showPublic($path, $req)
     {
         return self::template()
@@ -165,7 +165,7 @@ class Manager extends \Soosyze\Controller
                 ':path' => $path
             ]),
         ]);
-        
+
         $form = (new \Soosyze\Components\Form\FormBuilder([
                 'action' => self::router()->getRoute('filemanager.filter', [
                     ':path' => $path

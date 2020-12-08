@@ -32,7 +32,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="node_type"><?php echo t('Type of content'); ?></label>
-                    <select 
+                    <select
                         name="types[]"
                         class="form-control select-ajax-multiple"
                         id="node_type"
@@ -45,7 +45,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="node_status_id"><?php echo t('Status'); ?></label>
-                    <select 
+                    <select
                         name="node_status_id[]"
                         class="form-control select-ajax-multiple"
                         id="node_status_id"

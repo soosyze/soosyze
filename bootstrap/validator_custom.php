@@ -53,7 +53,7 @@ class RouteOrUrlValue extends \RouteValue
             ->hydrate('url', $key, $arg, $not)
             ->execute($value)
             ->hasErrors();
-        
+
         if (!($isRoute || $isLink) && $not) {
             $this->addReturn($key, 'must');
         }

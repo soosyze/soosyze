@@ -136,7 +136,7 @@ class HookUser
     public function hookFolderAdmin($req = null, $user = null)
     {
         $profils = $this->profil->getProfilsFileByUser($user[ 'user_id' ]);
-        
+
         return !empty($profils);
     }
 
@@ -157,7 +157,7 @@ class HookUser
     public function hookFolderUpdate($path, $req = null, $user = null)
     {
         $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
-        
+
         return !empty($right[ 'folder_update' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
@@ -167,7 +167,7 @@ class HookUser
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
     }
-    
+
     public function getMaxUpload($path)
     {
         $profil = $this->getRight($path);

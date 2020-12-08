@@ -11,11 +11,11 @@ class RouteApi extends \Soosyze\Controller
         }
 
         $get = $req->getQueryParams();
-        
+
         $search = empty($get[ 'title' ])
             ? ''
             : $get[ 'title' ];
-        
+
         $exclude = empty($get[ 'exclude' ])
             ? ''
             : $get[ 'exclude' ];

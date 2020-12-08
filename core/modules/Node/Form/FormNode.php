@@ -312,7 +312,7 @@ class FormNode extends FormBuilder
             });
         }
     }
-    
+
     public function isShowFile($options, $field)
     {
         return isset($options[ 'field_type_show' ]) && $options[ 'field_type_show' ] === 'image' && is_file($field[ $options[ 'field_type_show' ] ]);
@@ -529,7 +529,7 @@ class FormNode extends FormBuilder
             }
         }
     }
-    
+
     protected function getDateCreated()
     {
         if (empty($this->content[ 'date_created' ])) {

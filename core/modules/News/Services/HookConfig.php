@@ -19,7 +19,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'news_pagination'   => 6
         ];
     }
-    
+
     public function menu(&$menu)
     {
         $menu[ 'news' ] = [

@@ -154,10 +154,10 @@ class FileManager
                 ])
             ];
         }
-        
+
         return $actions;
     }
-    
+
     public function getFileSubmenu($keyRoute, \SplFileInfo $file, $path)
     {
         $name = '/' . $file->getBasename('.' . $file->getExtension());
@@ -203,7 +203,7 @@ class FileManager
                 'title_link' => t('Copy')
             ];
         }
-        
+
         $this->core->callHook('filemanager.file.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
@@ -274,7 +274,7 @@ class FileManager
         $actions = [];
         $name    = '/' . $file->getBasename('.' . $file->getExtension());
         $ext     = $file->getExtension();
-        
+
         if ($this->hookUser->hookFileShow($path, $name, $ext)) {
             $actions[] = [
                 'type'       => 'button',

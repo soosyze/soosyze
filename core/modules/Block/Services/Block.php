@@ -5,9 +5,9 @@ namespace SoosyzeCore\Block\Services;
 class Block
 {
     protected $config;
-    
+
     protected $core;
-    
+
     protected $pathViews;
 
     public function __construct($config, $core)
@@ -87,7 +87,7 @@ class Block
 
         return $blocks;
     }
-    
+
     public function hookBlockSocial($tpl, array $options)
     {
         return $tpl->addVar(

@@ -1013,7 +1013,7 @@ label[data-tooltip]:before {
 .pagination > li {
     display: inline;
 }
-.pagination > li > a, 
+.pagination > li > a,
 .pagination > li > span {
     background-color: rgba(86,61,124,.15);
     border-color: rgba(86,61,124,.2);
@@ -1026,18 +1026,18 @@ label[data-tooltip]:before {
     position: relative;
     text-decoration: none;
 }
-.pagination > .active > a, 
-.pagination > .active > a:focus, 
-.pagination > .active > a:hover, 
-.pagination > .active > span, 
-.pagination > .active > span:focus, 
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
 .pagination > .active > span:hover {
     background-color: #337ab7;
     border-color: #337ab7;
     color: #fff;
     cursor: default;
 }
-.dark .pagination > li > a, 
+.dark .pagination > li > a,
 .dark .pagination > li > span {
     color: #fff;
 }

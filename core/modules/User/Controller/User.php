@@ -238,7 +238,7 @@ class User extends \Soosyze\Controller
             ->fieldsetInformations()
             ->fieldsetProfil()
             ->fieldsetPassword();
-   
+
         if (self::user()->isGranted('user.permission.manage')) {
             $rolesUser = self::user()->getIdRolesUser($id);
             $form->fieldsetActived();
@@ -377,7 +377,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
         $isValid = $validator->isValid();
-        
+
         /* Valide les données du tableau de rôles */
         if (!$validator->hasError('roles')) {
             $validatorRole = $this->validRole($validator->getInput('roles', []));
@@ -523,7 +523,7 @@ class User extends \Soosyze\Controller
 
         return $validatorRoles;
     }
-    
+
     protected function getRoleByPermission()
     {
         $roles   = self::user()->getRolesAttribuable();
@@ -535,7 +535,7 @@ class User extends \Soosyze\Controller
                 $in[] = $role[ 'role_id' ];
             }
         }
-        
+
         return $in;
     }
 
@@ -544,7 +544,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
 
         $in = $this->getRoleByPermission();
-        
+
         self::query()
             ->from('user_role')
             ->where('user_id', '==', $idUser)

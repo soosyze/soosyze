@@ -152,7 +152,7 @@ class HookBlock
             ->where('node_status_id', '==', 1)
             ->where('type', 'article')
             ->fetchAll();
-        
+
         $query = $this->router->parseQueryFromRequest();
         $param = $this->router->parseParam('news/:year:id', $query, [
             ':year' => '\d{4}',

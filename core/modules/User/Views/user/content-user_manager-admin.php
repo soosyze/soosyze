@@ -1,7 +1,7 @@
 
 <?php echo $user_manager_submenu; ?>
 
-<div class="nav-flex">   
+<div class="nav-flex">
     <div class="nav-flex-left">
         <button class="btn btn-default" data-dismiss="toogle" data-target="#filter_user">
             <i class="fa fa-filter" aria-hidden="true"></i> <?php echo t('Filter'); ?>
@@ -50,7 +50,7 @@
             </div>
         </form>
     </div>
-    
+
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">

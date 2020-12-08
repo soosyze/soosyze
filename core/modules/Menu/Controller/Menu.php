@@ -92,7 +92,7 @@ class Menu extends \Soosyze\Controller
                     ->update('menu_link', $linkUpdate)
                     ->where('id', $link[ 'id' ])
                     ->execute();
-                
+
                 if ($linkUpdate['parent'] >= 1 && !in_array($linkUpdate['parent'], $updateParents)) {
                     $updateParents[] = $linkUpdate['parent'];
                 }
@@ -383,7 +383,7 @@ class Menu extends \Soosyze\Controller
                 ->addNameOverride("menu-show-$nameMenu.php")
                 ->addVars([ 'menu' => $query, 'level' => $level ]);
     }
-    
+
     public function getMenuSubmenu($keyRoute, $nameMenu)
     {
         $menu = [

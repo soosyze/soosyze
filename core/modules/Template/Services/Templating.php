@@ -48,7 +48,7 @@ class Templating extends \Soosyze\Components\Http\Response
      * @var array
      */
     protected $composer = [];
-    
+
     protected $isDarkTheme = false;
 
     public function __construct($core, $config)
@@ -66,7 +66,7 @@ class Templating extends \Soosyze\Components\Http\Response
     {
         $content    = $this->getThemplate()->render();
         $this->body = new \Soosyze\Components\Http\Stream($content);
-        
+
         return parent::__toString();
     }
 

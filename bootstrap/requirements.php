@@ -39,7 +39,7 @@ class Requiement
             .table-trace td{border-left: #FFF 3px solid;}
             .table-trace tr:hover td,
             .table-trace tr:hover th{background-color: #272822;}
-            .table-trace th, 
+            .table-trace th,
             .table-trace td{padding: 10px;}
             .two th,
             .two td{background-color: #E9E9E9;}

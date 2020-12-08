@@ -8,7 +8,7 @@ class FilterManagerIterator extends \FilterIterator
      * @var \SoosyzeCore\FileManager\Services\HookUser
      */
     protected $hookUser;
-    
+
     protected $path;
 
     public function __construct($hookUser)
@@ -44,7 +44,7 @@ class FilterManagerIterator extends \FilterIterator
         } elseif ($file->isDir() && !$this->hookUser->hookFolderShow($this->path . '/' . $file->getBasename())) {
             $accept = false;
         }
-        
+
         return $accept;
     }
 }

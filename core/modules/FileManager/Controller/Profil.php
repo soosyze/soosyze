@@ -172,7 +172,7 @@ class Profil extends \Soosyze\Controller
 
         if ($isValid) {
             $data = $this->getData($validator);
-            
+
             $this->container->callHook('filemanager.profil.update.before', [
                 $validator, &$data, $id
             ]);

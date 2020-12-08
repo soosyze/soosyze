@@ -35,7 +35,7 @@ class Trumbowyg
 			<script>
                         $(function(){
                         addEditor();
-                    }); 
+                    });
                     function addEditor() {
                             $.trumbowyg.svgPath = "' . $vendor . 'dist/icons.svg";
                             $("textarea.editor").trumbowyg({
