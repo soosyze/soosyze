@@ -11,14 +11,14 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         return __DIR__;
     }
-    
+
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
-    
+
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -66,13 +66,13 @@ class Installer extends \SoosyzeCore\System\Migration
                 'role_label', 'role_description', 'role_weight', 'role_icon', 'role_color'
             ])
             ->values([ 'User not logged in', 'Role required by the system', 1, 'fas fa-paper-plane', '#e5941f' ])
-            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt', '#fe4341'  ])
+            ->values([ 'User logged in', 'Role required by the system', 2, 'fas fa-bolt', '#fe4341' ])
             ->values([ 'Administrator', 'Role required by the system', 3, 'fas fa-crown', '#858eec' ])
             ->execute();
 
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'role.all'])
+            ->values([ 3, 'role.all' ])
             ->values([ 3, 'user.permission.manage' ])
             ->values([ 3, 'user.people.manage' ])
             ->values([ 3, 'user.showed' ])
@@ -107,38 +107,38 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($ci);
+        if ($ci->module()->has('Menu')) {
+            $this->hookInstallMenu($ci);
+        }
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->insertInto('menu_link', [
-                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
-                ])
-                ->values([
-                    'user.admin', 'fa fa-user', 'User', 'admin/user',
-                    'menu-admin', 4, -1
-                ])
-                ->values([
-                    'user.account', null, 'My account', 'user/account', 'menu-user',
-                    1, -1
-                ])
-                ->values([
-                    'user.login', null, 'Sign in', 'user/login', 'menu-user', 2,
-                    -1
-                ])
-                ->values([
-                    'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout',
-                    'menu-user', 3, -1
-                ])
-                ->values([
-                    'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register',
-                    'menu-user', 4, -1
-                ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+            ])
+            ->values([
+                'user.admin', 'fa fa-user', 'User', 'admin/user',
+                'menu-admin', 4, -1
+            ])
+            ->values([
+                'user.account', null, 'My account', 'user/account', 'menu-user',
+                1, -1
+            ])
+            ->values([
+                'user.login', null, 'Sign in', 'user/login', 'menu-user', 2,
+                -1
+            ])
+            ->values([
+                'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout',
+                'menu-user', 3, -1
+            ])
+            ->values([
+                'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register',
+                'menu-user', 4, -1
+            ])
+            ->execute();
     }
 
     public function uninstall(ContainerInterface $ci)
@@ -153,18 +153,18 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
-        $this->hookUninstallMenu($ci);
+        if ($ci->module()->has('Menu')) {
+            $this->hookUninstallMenu($ci);
+        }
     }
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->menu()->deleteLinks(function () use ($ci) {
-                return $ci->query()
-                        ->from('menu_link')
-                        ->where('key', 'like', 'user%')
-                        ->fetchAll();
-            });
-        }
+        $ci->menu()->deleteLinks(function () use ($ci) {
+            return $ci->query()
+                    ->from('menu_link')
+                    ->where('key', 'like', 'user%')
+                    ->fetchAll();
+        });
     }
 }

@@ -144,31 +144,31 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($ci);
-        $this->hookInstallUser($ci);
+        if ($ci->module()->has('Menu')) {
+            $this->hookInstallMenu($ci);
+        }
+        if ($ci->module()->has('User')) {
+            $this->hookInstallUser($ci);
+        }
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
-                ])
-                ->values([ 'news.index', 'Blog', 'news', 'menu-main', 3, -1, false ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
+            ])
+            ->values([ 'news.index', 'Blog', 'news', 'menu-main', 3, -1, false ])
+            ->execute();
     }
 
     public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 2, 'node.show.published.article' ])
-                ->values([ 1, 'node.show.published.article' ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 2, 'node.show.published.article' ])
+            ->values([ 1, 'node.show.published.article' ])
+            ->execute();
     }
 
     public function uninstall(ContainerInterface $ci)
@@ -198,42 +198,42 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
-        $this->hookUninstallBlock($ci);
-        $this->hookUninstallMenu($ci);
-        $this->hookUninstallUser($ci);
+        if ($ci->module()->has('Block')) {
+            $this->hookUninstallBlock($ci);
+        }
+        if ($ci->module()->has('Menu')) {
+            $this->hookUninstallMenu($ci);
+        }
+        if ($ci->module()->has('User')) {
+            $this->hookUninstallUser($ci);
+        }
     }
 
     public function hookUninstallBlock(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Block')) {
-            $ci->query()
-                ->from('block')
-                ->delete()
-                ->where('hook', 'like', 'news.%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('block')
+            ->delete()
+            ->where('hook', 'like', 'news.%')
+            ->execute();
     }
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->menu()->deleteLinks(function () use ($ci) {
-                return $ci->query()
-                        ->from('menu_link')
-                        ->where('key', 'like', 'news%')
-                        ->fetchAll();
-            });
-        }
+        $ci->menu()->deleteLinks(function () use ($ci) {
+            return $ci->query()
+                    ->from('menu_link')
+                    ->where('key', 'like', 'news%')
+                    ->fetchAll();
+        });
     }
 
     public function hookUninstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->from('role_permission')
-                ->delete()
-                ->where('permission_id', 'like', '%article%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('role_permission')
+            ->delete()
+            ->where('permission_id', 'like', '%article%')
+            ->execute();
     }
 }

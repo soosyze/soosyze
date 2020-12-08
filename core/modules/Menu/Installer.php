@@ -11,13 +11,13 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         return __DIR__;
     }
-    
+
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
-    
+
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -77,17 +77,17 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
+        if ($ci->module()->has('User')) {
+            $this->hookInstallUser($ci);
+        }
     }
 
     public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'menu.administer' ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'menu.administer' ])
+            ->execute();
     }
 
     public function uninstall(ContainerInterface $ci)
@@ -98,29 +98,29 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
-        $this->hookUninstallBlock($ci);
-        $this->hookUninstallUser($ci);
+        if ($ci->module()->has('Block')) {
+            $this->hookUninstallBlock($ci);
+        }
+        if ($ci->module()->has('User')) {
+            $this->hookUninstallUser($ci);
+        }
     }
 
     public function hookUninstallBlock(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Block')) {
-            $ci->query()
-                ->from('block')
-                ->delete()
-                ->where('hook', 'like', 'menu.%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('block')
+            ->delete()
+            ->where('hook', 'like', 'menu.%')
+            ->execute();
     }
 
     public function hookUninstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->from('role_permission')
-                ->delete()
-                ->where('permission_id', 'like', 'menu.%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('role_permission')
+            ->delete()
+            ->where('permission_id', 'like', 'menu.%')
+            ->execute();
     }
 }

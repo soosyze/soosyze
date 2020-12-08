@@ -11,14 +11,14 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         return __DIR__;
     }
-    
+
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
-    
+
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -47,7 +47,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->integer('role_id');
             });
         $ci->config()->set('settings.replace_file', 1);
-        
+
         $dir = $ci->core()->getDir('files_public', 'app/files');
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
@@ -179,33 +179,33 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallUser($ci);
-        $this->hookInstallMenu($ci);
+        if ($ci->module()->has('User')) {
+            $this->hookInstallUser($ci);
+        }
+        if ($ci->module()->has('Menu')) {
+            $this->hookInstallMenu($ci);
+        }
     }
 
     public function hookInstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'filemanager.profil.admin' ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'filemanager.profil.admin' ])
+            ->execute();
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->insertInto('menu_link', [
-                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
-                ])
-                ->values([
-                    'filemanager.admin', 'fa fa-folder', 'File', 'admin/filemanager/show',
-                    'menu-admin', 50, -1
-                ])
-                ->execute();
-        }
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+            ])
+            ->values([
+                'filemanager.admin', 'fa fa-folder', 'File', 'admin/filemanager/show',
+                'menu-admin', 50, -1
+            ])
+            ->execute();
     }
 
     public function uninstall(ContainerInterface $ci)
@@ -216,30 +216,30 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
-        $this->hookUninstallMenu($ci);
-        $this->hookUninstallUser($ci);
+        if ($ci->module()->has('Menu')) {
+            $this->hookUninstallMenu($ci);
+        }
+        if ($ci->module()->has('User')) {
+            $this->hookUninstallUser($ci);
+        }
     }
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->menu()->deleteLinks(function () use ($ci) {
-                return $ci->query()
-                        ->from('menu_link')
-                        ->where('key', 'like', 'filemanager%')
-                        ->fetchAll();
-            });
-        }
+        $ci->menu()->deleteLinks(function () use ($ci) {
+            return $ci->query()
+                    ->from('menu_link')
+                    ->where('key', 'like', 'filemanager%')
+                    ->fetchAll();
+        });
     }
 
     public function hookUninstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->from('role_permission')
-                ->delete()
-                ->where('permission_id', 'like', 'filemanager.%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('role_permission')
+            ->delete()
+            ->where('permission_id', 'like', 'filemanager.%')
+            ->execute();
     }
 }

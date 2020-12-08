@@ -11,7 +11,7 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         return __DIR__;
     }
-    
+
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
@@ -19,7 +19,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
-    
+
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
@@ -142,45 +142,45 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookInstall(ContainerInterface $ci)
     {
-        $this->hookInstallMenu($ci);
-        $this->hookInstallUser($ci);
-    }
-
-    public function hookInstallUser(ContainerInterface $ci)
-    {
+        if ($ci->module()->has('Menu')) {
+            $this->hookInstallMenu($ci);
+        }
         if ($ci->module()->has('User')) {
-            $ci->query()
-                ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-                ->values([ 3, 'node.administer' ])
-                ->values([ 2, 'node.show.published.page_private' ])
-                ->values([ 2, 'node.show.published.page' ])
-                ->values([ 1, 'node.show.published.page' ])
-                ->execute();
+            $this->hookInstallUser($ci);
         }
     }
 
     public function hookInstallMenu(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $ci->query()
-                ->insertInto('menu_link', [
-                    'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
-                ])
-                ->values([
-                    'node.admin', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
-                    2, -1
-                ])
-                ->values([
-                    'node.show', null, 'Home', '/', 'menu-main', 1, -1
-                ])
-                ->execute();
+        $ci->query()
+            ->insertInto('menu_link', [
+                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+            ])
+            ->values([
+                'node.admin', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
+                2, -1
+            ])
+            ->values([
+                'node.show', null, 'Home', '/', 'menu-main', 1, -1
+            ])
+            ->execute();
 
-            $ci->schema()
-                ->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
-                    $table->integer('node_id')
-                    ->integer('menu_link_id');
-                });
-        }
+        $ci->schema()
+            ->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
+                $table->integer('node_id')
+                ->integer('menu_link_id');
+            });
+    }
+
+    public function hookInstallUser(ContainerInterface $ci)
+    {
+        $ci->query()
+            ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            ->values([ 3, 'node.administer' ])
+            ->values([ 2, 'node.show.published.page_private' ])
+            ->values([ 2, 'node.show.published.page' ])
+            ->values([ 1, 'node.show.published.page' ])
+            ->execute();
     }
 
     public function uninstall(ContainerInterface $ci)
@@ -194,7 +194,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->schema()->dropTableIfExists('node_type');
         $ci->schema()->dropTableIfExists('node');
         $ci->schema()->dropTableIfExists('node_status');
-        
+
         $ci->query()->from('system_alias_url')
             ->delete()
             ->where('source', 'like', 'node%')
@@ -203,20 +203,24 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstall(ContainerInterface $ci)
     {
-        $this->hookUninstallBlock($ci);
+        if ($ci->module()->has('Block')) {
+            $this->hookUninstallBlock($ci);
+        }
+
         $this->hookUninstallMenu($ci);
-        $this->hookUninstallUser($ci);
+
+        if ($ci->module()->has('User')) {
+            $this->hookUninstallUser($ci);
+        }
     }
 
     public function hookUninstallBlock(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Block')) {
-            $ci->query()
-                ->from('block')
-                ->delete()
-                ->where('hook', 'like', 'node.%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('block')
+            ->delete()
+            ->where('hook', 'like', 'node.%')
+            ->execute();
     }
 
     public function hookUninstallMenu(ContainerInterface $ci)
@@ -236,12 +240,10 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function hookUninstallUser(ContainerInterface $ci)
     {
-        if ($ci->module()->has('User')) {
-            $ci->query()
-                ->from('role_permission')
-                ->delete()
-                ->where('permission_id', 'like', 'node%')
-                ->execute();
-        }
+        $ci->query()
+            ->from('role_permission')
+            ->delete()
+            ->where('permission_id', 'like', 'node%')
+            ->execute();
     }
 }
