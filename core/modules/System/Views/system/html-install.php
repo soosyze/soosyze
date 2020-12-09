@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -108,7 +108,7 @@
                     </div>
                     <nav>
                         <ul class="nav nav-pills nav-stacked">
-                            <?php $i = 1; ?>
+                            <?php $i = 0; ?>
                             <?php foreach ($steps as $key => $step): ?>
                                 <li class="step <?php
                                 echo $key === $step_active
@@ -121,8 +121,6 @@
                             <?php endforeach; ?>
                         </ul>
                     </nav>
-                    <hr>
-                    <?php echo $form; ?>
                 </div>
                 <div class="col-md-6">
                     <div class="cadre">
@@ -140,10 +138,5 @@
                 </div>
             </div>
         </div>
-        <script>
-            document.getElementById('form_lang').addEventListener('change', function () {
-                this.submit();
-            });
-        </script>
     </body>
 </html>

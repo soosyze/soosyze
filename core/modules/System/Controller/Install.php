@@ -2,11 +2,9 @@
 
 namespace SoosyzeCore\System\Controller;
 
-use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
-use Soosyze\Components\Validator\Validator;
 
 class Install extends \Soosyze\Controller
 {
@@ -56,44 +54,6 @@ class Install extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $optionLang         = self::translate()->getLang();
-        $optionLang[ 'en' ] = [ 'value' => 'en', 'label' => 'English' ];
-
-        $optionTimezone = [];
-        foreach (timezone_identifiers_list() as $value) {
-            $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
-        }
-
-        $values = [
-            'lang'     => 'en',
-            'timezone' => date_default_timezone_get()
-            ? date_default_timezone_get()
-            : 'Europe/Paris'
-        ];
-        if (isset($_SESSION[ 'inputs' ][ 'main' ])) {
-            $values = array_merge($values, $_SESSION[ 'inputs' ][ 'main' ]);
-        }
-
-        $form = (new FormBuilder([
-            'method' => 'post',
-            'action' => self::router()->getRoute('install.language', [ ':id' => $id ]),
-            'id'     => 'form_lang' ]))
-            ->group('lang-group', 'div', function ($form) use ($values, $optionLang) {
-                $form->label('lang-label', t('Language'))
-                ->select('lang', $optionLang, [
-                    'class'     => 'form-control',
-                    ':selected' => $values[ 'lang' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->group('timezone-group', 'div', function ($form) use ($values, $optionTimezone) {
-                $form->label('timezone-label', t('Timezone'))
-                ->select('timezone', $optionTimezone, [
-                    'class'     => 'form-control',
-                    ':selected' => $values[ 'timezone' ]
-                ]);
-            }, [ 'class' => 'form-group' ])
-            ->token('token_install');
-
         $messages = [
             'errors'   => [], 'warnings' => [],
             'infos'    => [], 'success'  => []
@@ -111,33 +71,10 @@ class Install extends \Soosyze\Controller
                 ->addBlock('page', $blockPage)
                 ->addBlock('messages', $blockMessages)
                 ->addVars([
-                    'lang'        => $values[ 'lang' ],
-                    'form'        => $form,
                     'steps'       => $steps,
                     'step_active' => $id
                 ])
                 ->render();
-    }
-
-    public function language($id, $req)
-    {
-        $langs     = implode(',', array_keys(self::translate()->getLang())) . ',en';
-        $validator = (new Validator())
-            ->setRules([
-                'lang'          => 'inarray:' . $langs,
-                'timezone'      => 'required|timezone',
-                'token_install' => 'token'
-            ])
-            ->setInputs($req->getParsedBody());
-
-        if ($validator->isValid()) {
-            $_SESSION[ 'lang' ]   = $validator->getInput('lang');
-            $_SESSION[ 'inputs' ][ 'main' ] = $validator->getInputs();
-        } else {
-            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
-        }
-
-        return new Redirect(self::router()->getRoute('install.step', [ ':id' => $id ]));
     }
 
     public function stepCheck($id, $req)
@@ -217,6 +154,9 @@ class Install extends \Soosyze\Controller
         );
 
         foreach ($this->modules as $title => $namespace) {
+            /* Charge la version du coeur à ses modules. */
+            $composer[$title]['version'] = $this->container->get('module')->getVersionCore();
+
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
             /* Install les scripts de migrations. */
@@ -257,13 +197,9 @@ class Install extends \Soosyze\Controller
 
     private function installFinish()
     {
-        $save     = $_SESSION[ 'inputs' ][ 'user' ];
-        $lang     = isset($_SESSION[ 'lang' ])
-            ? $_SESSION[ 'lang' ]
-            : 'en';
-        $timezone = isset($_SESSION[ 'timezone' ])
-            ? $_SESSION[ 'lang' ]
-            : 'Europe/Paris';
+        $saveLanguage = $_SESSION[ 'inputs' ][ 'language' ];
+        $save         = $_SESSION[ 'inputs' ][ 'user' ];
+
         $data     = [
             'username'         => $save[ 'username' ],
             'email'            => $save[ 'email' ],
@@ -272,7 +208,7 @@ class Install extends \Soosyze\Controller
             'name'             => $save[ 'name' ],
             'actived'          => true,
             'time_installed'   => (string) time(),
-            'timezone'         => $timezone,
+            'timezone'         => $saveLanguage['timezone'],
             'rgpd'             => true,
             'terms_of_service' => true
         ];
@@ -292,14 +228,13 @@ class Install extends \Soosyze\Controller
             ->set('mailer.email', $data[ 'email' ])
             ->set('mailer.driver', 'mail')
             ->set('settings.time_installed', time())
-            ->set('settings.lang', 'en')
-            ->set('settings.timezone', $timezone)
+            ->set('settings.lang', $saveLanguage['lang'])
+            ->set('settings.timezone', $saveLanguage['timezone'])
             ->set('settings.theme', 'Fez')
             ->set('settings.theme_admin', 'Admin')
             ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
-            ->set('settings.rewrite_engine', false)
-            ->set('settings.lang', $lang);
+            ->set('settings.rewrite_engine', false);
 
         $profil = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
         $this->container->callHook("step.install.finish.$profil", [ $this->container ]);

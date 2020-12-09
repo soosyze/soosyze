@@ -19,6 +19,11 @@ class HookStep
     protected $router;
 
     /**
+     * @var \SoosyzeCore\Translate\Services\Translation
+     */
+    protected $translate;
+
+    /**
      * @var string
      */
     protected $pathViews;
@@ -35,23 +40,31 @@ class HookStep
         'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
     ];
 
-    public function __construct($core, $router)
+
+    public function __construct($core, $router, $translate)
     {
-        $this->core        = $core;
-        $this->router      = $router;
+        $this->core      = $core;
+        $this->router    = $router;
+        $this->translate = $translate;
+
         $this->pathViews   = dirname(__DIR__) . '/Views/system/';
         $this->pathContent = dirname(__DIR__) . '/Views/install/';
     }
 
     public function hookStep(&$step)
     {
-        $step[ 'profil' ] = [
+        $step[ 'language' ] = [
             'weight' => 1,
+            'title'  => t('Choose language'),
+            'key'    => 'language'
+        ];
+        $step[ 'profil' ] = [
+            'weight' => 2,
             'title'  => t('Installation profile'),
             'key'    => 'profil'
         ];
         $step[ 'user' ]   = [
-            'weight' => 1,
+            'weight' => 3,
             'title'  => t('User profile'),
             'key'    => 'user'
         ];
@@ -136,6 +149,84 @@ class HookStep
 
         if ($validator->isValid()) {
             $_SESSION[ 'inputs' ][ $id ] = [ 'profil' => $validator->getInput('profil') ];
+        } else {
+            $_SESSION[ 'inputs' ][ $id ]               = $validator->getInputs();
+            $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
+            $_SESSION[ 'errors_keys' ][ $id ]          = $validator->getKeyInputErrors();
+        }
+    }
+
+    public function hookLanguage($id)
+    {
+        $optionLang         =  $this->translate->getLang();
+        $optionLang[ 'en' ] = [ 'value' => 'en', 'label' => 'English' ];
+
+        $optionTimezone = [];
+        foreach (timezone_identifiers_list() as $value) {
+            $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
+        }
+
+        $values = [
+            'lang'     => 'en',
+            'timezone' => date_default_timezone_get()
+            ? date_default_timezone_get()
+            : 'Europe/Paris'
+        ];
+
+        if (isset($_SESSION[ 'inputs' ][ $id ])) {
+            $values = array_merge($values, $_SESSION[ 'inputs' ][ $id ]);
+        }
+
+        $form = (new FormBuilder([
+                'method' => 'post',
+                'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]),
+                'id'     => 'form_lang'
+                ]))
+            ->group('fieldset', 'fieldset', function ($form) use ($values, $optionLang, $optionTimezone) {
+                $form->legend('legend', t('Choose language'))
+                ->group('lang-group', 'div', function ($form) use ($values, $optionLang) {
+                    $form->label('lang-label', t('Language'))
+                    ->select('lang', $optionLang, [
+                        'class'     => 'form-control',
+                        ':selected' => $values[ 'lang' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('timezone-group', 'div', function ($form) use ($values, $optionTimezone) {
+                    $form->label('timezone-label', t('Timezone'))
+                    ->select('timezone', $optionTimezone, [
+                        'class'     => 'form-control',
+                        ':selected' => $values[ 'timezone' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+            })
+            ->token('token_step_install')
+            ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
+
+        if (isset($_SESSION[ 'errors_keys' ][ $id ])) {
+            $form->addAttrs($_SESSION[ 'errors_keys' ][ $id ], [ 'class' => 'is-invalid' ]);
+            unset($_SESSION[ 'errors_keys' ][ $id ]);
+        }
+
+        return (new Template('page-install.php', $this->pathViews))
+                ->addVars([ 'form' => $form ]);
+    }
+
+    public function hookLanguageCheck($id, $req)
+    {
+        $langs     = implode(',', array_keys($this->translate->getLang())) . ',en';
+        $validator = (new Validator())
+            ->setRules([
+                'lang'     => 'required|inarray:' . $langs,
+                'timezone' => 'required|timezone'
+            ])
+            ->setInputs($req->getParsedBody());
+
+        if ($validator->isValid()) {
+            $_SESSION[ 'lang' ]          = $validator->getInput('lang');
+            $_SESSION[ 'inputs' ][ $id ] = [
+                'lang'     => $validator->getInput('lang'),
+                'timezone' => $validator->getInput('timezone')
+            ];
         } else {
             $_SESSION[ 'inputs' ][ $id ]               = $validator->getInputs();
             $_SESSION[ 'messages' ][ $id ][ 'errors' ] = $validator->getKeyErrors();
