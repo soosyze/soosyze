@@ -1,0 +1,56 @@
+body.dark {
+    background-color: #282c37;
+}
+h1 {
+    color: #fff;
+    margin: 0;
+}
+.container{
+    padding-top: 1em;
+}
+.wrapper-main {
+    background-color: #1f232b;
+    color: #fff;
+    padding: 2em;
+}
+a.footer {
+    color: #fff;
+    text-decoration: none;
+}
+.logo-name {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+}
+.logo-name img {
+    height: 40px;
+    margin-right: 10px;
+    width: auto;
+}
+.profil-item {
+    margin-bottom: 15px;
+    text-align: center;
+}
+.step-number {
+    font-size: 1.2em;
+    font-weight: 700;
+}
+.nav .step-inactive {
+    display: block;
+    padding: .6em 1em;
+    text-decoration: none;
+}
+.nav .step-active {
+    background-color: #fff;
+    color: #21244f;
+}
+.radio-button label {
+    border: 1px solid #fff;
+}
+.radio-button label:hover {
+    background-color: rgba(255, 255,255,.5);
+}
+.radio-button [type="radio"]:checked ~ label {
+    background-color: #fff;
+    color: #333;
+}

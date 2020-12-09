@@ -40,6 +40,13 @@ class HookStep
         'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
     ];
 
+    /**
+     * @var string[]
+     */
+    protected static $columnsNode = [
+        'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
+        'title'
+    ];
 
     public function __construct($core, $router, $translate)
     {
@@ -129,11 +136,12 @@ class HookStep
             }, [ 'class' => 'radio-button' ]);
         }
         $form->token('token_step_install')
-            ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Next →'), [ 'class' => 'btn btn-primary' ]);
 
-        return (new Template('content-install-form_profil.php', $this->pathViews))->addVars([
-                'form'    => $form,
-                'profils' => $profils
+        return (new Template('content-install-form_profil.php', $this->pathViews))
+                ->addVars([
+                    'form'    => $form,
+                    'profils' => $profils
         ]);
     }
 
@@ -200,7 +208,7 @@ class HookStep
                 }, [ 'class' => 'form-group' ]);
             })
             ->token('token_step_install')
-            ->submit('submit', t('Next'), [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Next →'), [ 'class' => 'btn btn-primary' ]);
 
         if (isset($_SESSION[ 'errors_keys' ][ $id ])) {
             $form->addAttrs($_SESSION[ 'errors_keys' ][ $id ], [ 'class' => 'is-invalid' ]);
@@ -208,7 +216,7 @@ class HookStep
         }
 
         return (new Template('page-install.php', $this->pathViews))
-                ->addVars([ 'form' => $form ]);
+                ->addVar('form', $form);
     }
 
     public function hookLanguageCheck($id, $req)
@@ -236,7 +244,7 @@ class HookStep
 
     public function hookUser($id)
     {
-        $content = [
+        $values = [
             'username'         => '',
             'email'            => '',
             'name'             => '',
@@ -246,64 +254,64 @@ class HookStep
         ];
 
         if (isset($_SESSION[ 'inputs' ][ $id ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ][ $id ]);
+            $values = array_merge($values, $_SESSION[ 'inputs' ][ $id ]);
         }
 
         $form = (new FormBuilder([
             'method' => 'post',
             'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ])
             ]))
-            ->group('fieldset', 'fieldset', function ($form) use ($content) {
+            ->group('fieldset', 'fieldset', function ($form) use ($values) {
                 $form->legend('legend', t('User profile'))
-                ->group('username-group', 'div', function ($form) use ($content) {
+                ->group('username-group', 'div', function ($form) use ($values) {
                     $form->label('username-label', t('User name'))
                     ->text('username', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
                         'required'  => 1,
-                        'value'     => $content[ 'username' ]
+                        'value'     => $values[ 'username' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('email-group', 'div', function ($form) use ($content) {
+                ->group('email-group', 'div', function ($form) use ($values) {
                     $form->label('email-label', t('E-mail'))
                     ->email('email', [
                         'class'       => 'form-control',
                         'maxlength'   => 254,
                         'placeholder' => t('example@mail.com'),
                         'required'    => 1,
-                        'value'       => $content[ 'email' ]
+                        'value'       => $values[ 'email' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('name-group', 'div', function ($form) use ($content) {
+                ->group('name-group', 'div', function ($form) use ($values) {
                     $form->label('name-label', t('Last name'))
                     ->text('name', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
-                        'value'     => $content[ 'name' ]
+                        'value'     => $values[ 'name' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('firstname-group', 'div', function ($form) use ($content) {
+                ->group('firstname-group', 'div', function ($form) use ($values) {
                     $form->label('firstname-label', t('First name'))
                     ->text('firstname', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
-                        'value'     => $content[ 'firstname' ]
+                        'value'     => $values[ 'firstname' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('password-group', 'div', function ($form) use ($content) {
+                ->group('password-group', 'div', function ($form) use ($values) {
                     $form->label('password-label', t('Password'))
                     ->password('password', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $content[ 'password' ]
+                        'value'    => $values[ 'password' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('password_confirm-group', 'div', function ($form) use ($content) {
+                ->group('password_confirm-group', 'div', function ($form) use ($values) {
                     $form->label('password_confirm-label', t('Confirmation of the new password'))
                     ->password('password_confirm', [
                         'class'    => 'form-control',
                         'required' => 1,
-                        'value'    => $content[ 'password_confirm' ]
+                        'value'    => $values[ 'password_confirm' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -316,7 +324,7 @@ class HookStep
         }
 
         return (new Template('page-install.php', $this->pathViews))
-                ->addVars([ 'form' => $form ]);
+                ->addVar('form', $form);
     }
 
     public function hookUserCheck($id, $req)
@@ -373,10 +381,7 @@ class HookStep
 
         $time = (string) time();
         $ci->query()
-            ->insertInto('node', [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'title'
-            ])
+            ->insertInto('node', self::$columnsNode)
             ->values([ 1, 'page', $time, $time, 1, t('Site') ]) // id = 3
             ->values([ 2, 'page', $time, $time, 1, t('Basic') ])
             ->values([ 3, 'page', $time, $time, 1, t('Standard') ])
@@ -460,7 +465,7 @@ class HookStep
             ])
             ->execute();
 
-        /* block hook. */
+        /* Block hook. */
         $ci->query()
             ->insertInto('block', [
                 'section', 'title',
@@ -574,7 +579,7 @@ class HookStep
 
         $idNodeAbout = $this->lastInsertId(
             'node',
-            [ 'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id', 'title' ],
+            self::$columnsNode,
             [ 1, 'page', $time, $time, 1, t('About') ]
         );
 
@@ -615,31 +620,26 @@ class HookStep
             ->execute();
 
         $time = (string) time();
-        
-        $columns = [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'title'
-            ];
 
-        $idNodeSite      = $this->lastInsertId('node', $columns, [
+        $idNodeSite      = $this->lastInsertId('node', self::$columnsNode, [
             1, 'page', $time, $time, 1, t('Site')
         ]);
-        $idNodeEducation = $this->lastInsertId('node', $columns, [
+        $idNodeEducation = $this->lastInsertId('node', self::$columnsNode, [
             2, 'page', $time, $time, 1, t('Education')
         ]);
-        $idNodeProjects  = $this->lastInsertId('node', $columns, [
+        $idNodeProjects  = $this->lastInsertId('node', self::$columnsNode, [
             3, 'page', $time, $time, 1, t('Projects')
         ]);
-        $idNodeProject1  = $this->lastInsertId('node', $columns, [
+        $idNodeProject1  = $this->lastInsertId('node', self::$columnsNode, [
             4, 'page', $time, $time, 1, t('Project 1')
         ]);
-        $idNodeProject2  = $this->lastInsertId('node', $columns, [
+        $idNodeProject2  = $this->lastInsertId('node', self::$columnsNode, [
             5, 'page', $time, $time, 1, t('Project 2')
         ]);
-        $idNodeProject3  = $this->lastInsertId('node', $columns, [
+        $idNodeProject3  = $this->lastInsertId('node', self::$columnsNode, [
             6, 'page', $time, $time, 1, t('Project 3')
         ]);
-        $idNodeProject4  = $this->lastInsertId('node', $columns, [
+        $idNodeProject4  = $this->lastInsertId('node', self::$columnsNode, [
             6, 'page', $time, $time, 1, t('Project 4')
         ]);
 
@@ -718,12 +718,7 @@ class HookStep
 
         $time = (string) time();
 
-        $columns = [
-                'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'title'
-            ];
-
-        $idNodeSite = $this->lastInsertId('node', $columns, [
+        $idNodeSite = $this->lastInsertId('node', self::$columnsNode, [
             1, 'page', $time, $time, 1, 'Ipsum sed adipiscing'
         ]);
 

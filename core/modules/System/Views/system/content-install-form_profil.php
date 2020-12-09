@@ -11,7 +11,7 @@
             <div class="profil-item">
                 <h3><?php echo $profil[ 'title' ]; ?></h3>
                 <p><?php echo $profil['description']; ?></p>
-                <img src="<?php echo $profil[ 'img' ]; ?>" src="<?php echo $profil[ 'img' ]; ?>">
+                <img src="<?php echo $profil[ 'img' ]; ?>" alt="<?php echo $profil[ 'title' ]; ?>" class="img-responsive">
                 <?php echo $form->form_group("profil_$key-group"); ?>
 
             </div>

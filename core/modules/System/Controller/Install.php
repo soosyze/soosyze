@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\System\Controller;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
@@ -35,7 +36,7 @@ class Install extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/system/';
     }
 
-    public function index($req)
+    public function index(ServerRequestInterface $req)
     {
         if (!($steps = $this->getSteps())) {
             return $this->get404($req);
@@ -48,7 +49,7 @@ class Install extends \Soosyze\Controller
         return $this->get404($req);
     }
 
-    public function step($id, \Soosyze\Components\Http\ServerRequest $req)
+    public function step($id, ServerRequestInterface $req)
     {
         if (!($steps = $this->getSteps()) || !isset($steps[ $id ])) {
             return $this->get404($req);
@@ -71,13 +72,16 @@ class Install extends \Soosyze\Controller
                 ->addBlock('page', $blockPage)
                 ->addBlock('messages', $blockMessages)
                 ->addVars([
-                    'steps'       => $steps,
-                    'step_active' => $id
+                    'router'        => self::router(),
+                    'steps'         => $steps,
+                    'step_active'   => $id,
+                    'style_install' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/install.css',
+                    'style_soosyze' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/soosyze.css'
                 ])
                 ->render();
     }
 
-    public function stepCheck($id, $req)
+    public function stepCheck($id, ServerRequestInterface $req)
     {
         if (!($steps = $this->getSteps()) || !isset($steps[ $id ])) {
             return $this->get404($req);
