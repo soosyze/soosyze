@@ -23,8 +23,7 @@
             </tr>
         </thead>
         <tbody class="nested-sortable-file_permission" id="main_sortable">
-        <?php if ($profils): ?>
-            <?php foreach ($profils as $profil): ?>
+        <?php if ($profils): foreach ($profils as $profil): ?>
 
             <tr>
                 <th class="draggable draggable-verticale" data-title="<?php echo t('Directory'); ?>">
@@ -106,8 +105,7 @@
                     </div>
                 </td>
             </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
+            <?php endforeach; else: ?>
 
             <tr>
                 <td colspan="6" class="alert alert-info">

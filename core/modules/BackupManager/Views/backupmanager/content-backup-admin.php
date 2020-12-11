@@ -33,8 +33,7 @@
             </tr>
         </thead>
         <tbody>
-        <?php if (!empty($backups)) : ?>
-        <?php foreach ($backups as $i => $backup) : ?>
+        <?php if (!empty($backups)): foreach ($backups as $i => $backup): ?>
 
             <tr>
                 <th>#<?php echo $i + 1; ?></th>
@@ -73,8 +72,7 @@
                     </div>
                 </td>
             <tr>
-        <?php endforeach; ?>
-        <?php elseif (!$is_repository): ?>
+        <?php endforeach; elseif (!$is_repository): ?>
 
             <tr>
                 <td colspan="4" class="alert alert-warning">

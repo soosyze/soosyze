@@ -1,7 +1,6 @@
 
 <ol <?php echo $level === 1 ? 'id="main_sortable"' : ''; ?> class="nested-sortable">
-<?php if ($menu): ?>
-    <?php foreach ($menu as $link): ?>
+<?php if ($menu): foreach ($menu as $link): ?>
 
     <li class="link-item draggable">
         <div class="link-title">
@@ -29,7 +28,6 @@
         <?php echo $link[ 'submenu' ]; ?>
 
     </li>
-    <?php endforeach; ?>
-<?php endif; ?>
+    <?php endforeach; endif; ?>
 
 </ol>

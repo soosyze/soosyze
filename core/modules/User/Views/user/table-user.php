@@ -58,8 +58,7 @@
             </tr>
         </thead>
         <tbody>
-        <?php if ($users): ?>
-            <?php foreach ($users as $user): ?>
+        <?php if ($users): foreach ($users as $user): ?>
 
             <tr>
                 <td data-title="<?php echo t('Username'); ?>">
@@ -90,8 +89,7 @@
                     </a>
                 </td>
             </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
+            <?php endforeach; else: ?>
 
             <tr>
                 <td colspan="6" class="alert alert-info">

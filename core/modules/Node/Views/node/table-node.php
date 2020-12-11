@@ -49,8 +49,7 @@
             </tr>
         </thead>
         <tbody>
-        <?php if ($nodes): ?>
-            <?php foreach ($nodes as $node): ?>
+        <?php if ($nodes): foreach ($nodes as $key => $node): ?>
 
             <tr>
                 <th>
@@ -137,8 +136,7 @@
 
                 </td>
             </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
+            <?php endforeach; else: ?>
 
             <tr>
                 <td colspan="5" class="alert alert-info">
