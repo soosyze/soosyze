@@ -1,7 +1,6 @@
 /* table file */
 #table-file {
-    table-layout: fixed;
-    word-wrap: break-word;
+    white-space: nowrap;
 }
 .file-link_show .file-link_show_img {
     background-repeat: no-repeat;
@@ -111,4 +110,26 @@
 }
 .filemanager-dropfile__error .filemanager-dropfile__progress_bar_complete {
     background-color: #db2828;
+}
+#table-file td.file-name {
+    position: relative;
+    width: 100%;
+}
+#table-file td.file-name .wrapper {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: flex;
+}
+#table-file td.file-name .name-text {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    padding-right: 1em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 0;
+}
+#table-file td.file-name .inner-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

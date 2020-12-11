@@ -33,8 +33,12 @@
         <?php endif; ?>
 
         <td class="file-name" data-title="<?php echo t('Name'); ?>">
-            <?php echo $file[ 'name' ]; ?><?php if ($file[ 'ext' ] !== 'dir'): ?><span class="ext">.<?php echo $file[ 'ext' ]; ?></span><?php endif; ?>
-
+            <span class="wrapper">
+                <span class="name-text">
+                    <span class="inner-text"><?php echo $file[ 'name' ]; ?></span>
+                    <?php if ($file[ 'ext' ] !== 'dir'): ?><span class="ext">.<?php echo $file[ 'ext' ]; ?></span><?php endif; ?>
+                </span>
+            </span>
         </td>
         <td data-title="<?php echo t('Size'); ?>">
             <span data-tooltip="<?php echo $file[ 'size_octet' ]; ?> octets"><?php echo $file[ 'size' ]; ?></span>
