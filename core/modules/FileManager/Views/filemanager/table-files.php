@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-    <?php if ($files): foreach ($files as $file): ?>
+    <?php if ($files): foreach ($files as $key => $file): ?>
 
     <tr>
         <?php if ($file[ 'type' ] === 'dir'): ?>
@@ -43,21 +43,30 @@
             <?php echo $file[ 'time' ]; ?>
 
         </td>
-        <td class="actions-file">
-            <div class="btn-actions" role="group" aria-label="action">
-                <?php foreach ($file[ 'actions' ] as $action): ?>
+        <td class="actions-file" role="group" aria-label="action" data-title="<?php echo t('Actions'); ?>">
+            <div class="btn-group" role="group" aria-label="action">
+                <div class="dropdown">
+                    <button class="btn" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    </button>
 
-                <a class="btn btn-action <?php echo $action[ 'class' ]; ?>"
-                    href="<?php echo $action[ 'link' ]; ?>"
-                    <?php if ($action[ 'class' ] === 'mod'): ?>
-                    data-toogle="modal"
-                    data-target="#modal_filemanager"
-                    <?php endif; ?>
-                    data-tooltip="<?php echo $action[ 'title_link' ]; ?>">
-                    <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i>
-                </a>
-                <?php endforeach; ?>
+                    <ul id="btn-<?php echo $key; ?>" class="dropdown-menu dropdown-menu-right">
+                        <?php foreach ($file[ 'actions' ] as $action): ?>
 
+                        <li>
+                            <a class="btn btn-action dropdown-item <?php echo $action[ 'class' ]; ?>"
+                                href="<?php echo $action[ 'link' ]; ?>"
+                                <?php if ($action[ 'class' ] === 'mod'): ?>
+                                data-toogle="modal"
+                                data-target="#modal_filemanager"
+                                <?php endif; ?>>
+                                <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i> <?php echo $action[ 'title_link' ]; ?>
+                            </a>
+                        </li>
+                        <?php endforeach; ?>
+
+                    </ul>
+                </div>
             </div>
         </td>
     </tr><?php endforeach; else: ?>

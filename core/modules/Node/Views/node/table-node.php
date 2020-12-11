@@ -60,17 +60,11 @@
                         <i class="fa fa-thumbtack" aria-hidden="true"></i>
                     </span>
                     <?php endif; ?>
-                    <?php if (isset($node[ 'link_edit' ])): ?>
 
-                    <a href="<?php echo $node[ 'link_edit' ]; ?>">
+                    <a href="<?php echo $node[ 'link_view' ]; ?>">
                         <?php echo $node[ 'title' ]; ?>
 
                     </a>
-                    <?php else: ?>
-
-                    <?php echo $node[ 'title' ]; ?>
-                    <?php endif; ?>
-
                 </th>
                 <td data-title="<?php echo t('Type'); ?>">
                     <small class="node_type-badge node_type-badge__<?php echo $node['type']; ?>">
@@ -83,25 +77,39 @@
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right actions-node">
                     <div class="btn-group" role="group" aria-label="action">
-                        <a href=" <?php echo $node[ 'link_view' ]; ?>" class="btn btn-action" target="_blank">
-                            <i class="far fa-eye" aria-hidden="true"></i> <?php echo t('View'); ?></a>
-                        <?php if (isset($node[ 'link_clone' ])): ?>
+                        <?php if (isset($node[ 'link_edit' ])): ?>
 
-                        <a href=" <?php echo $node[ 'link_clone' ]; ?>" class="btn btn-action">
-                            <i class="fa fa-copy" aria-hidden="true"></i> <?php echo t('Clone'); ?></a>
-                        <?php endif; if (isset($node[ 'link_edit' ])): ?>
-
-                        <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action">
-                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?></a>
-                        <?php endif; if (isset($node[ 'link_remove' ])): ?>
-
-                        <a href="<?php echo $node[ 'link_remove' ]; ?>"
-                           class="btn btn-action btn-action-remove"
-                           data-toogle="modal"
-                           data-target="#modal_node">
-                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?></a>
+                        <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action dropdown-item">
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+                        </a>
                         <?php endif; ?>
 
+                        <div class="dropdown">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
+
+                            <ul id="btn-<?php echo $key; ?>" class="dropdown-menu dropdown-menu-right">
+                            <?php if (isset($node[ 'link_clone' ])): ?>
+
+                            <li>
+                                <a href=" <?php echo $node[ 'link_clone' ]; ?>" class="btn btn-action dropdown-item">
+                                    <i class="fa fa-copy" aria-hidden="true"></i> <?php echo t('Clone'); ?>
+                                </a>
+                            </li>
+                            <?php endif; if (isset($node[ 'link_remove' ])): ?>
+
+                            <li>
+                                <a href="<?php echo $node[ 'link_remove' ]; ?>"
+                                   class="btn btn-action btn-action-remove dropdown-item"
+                                   data-toogle="modal"
+                                   data-target="#modal_node">
+                                    <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            </ul>
+                        </div>
                     </div>
                 </td>
                 <td data-title="<?php echo t('Status'); ?>">

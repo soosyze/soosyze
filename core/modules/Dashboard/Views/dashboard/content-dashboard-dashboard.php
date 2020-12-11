@@ -1,12 +1,23 @@
 <div class="nav-flex">
     <div class="nav-flex-right btn-group">
-        <a href="<?php echo $link_trans; ?>" class="btn btn-default">
-            <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
-        </a>
+        <div class="dropdown">
+            <button class="btn btn-default" data-toogle="dropdown" data-target="#myDropdown">
+                <?php echo t('Actions'); ?> <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+            </button>
 
-        <a href="<?php echo $link_cron; ?>" class="btn btn-primary">
-            <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Execute the cron task'); ?>
-        </a>
+            <ul id="myDropdown" class="dropdown-menu dropdown-menu-right">
+                <li>
+                    <a href="<?php echo $link_trans; ?>" class="btn dropdown-item">
+                        <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $link_cron; ?>" class="btn dropdown-item">
+                        <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Execute the cron task'); ?>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
