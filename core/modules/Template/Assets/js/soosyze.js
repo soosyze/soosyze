@@ -1,4 +1,25 @@
 /* --------------------------- */
+/* -------- DROPDOWN --------- */
+/* --------------------------- */
+
+var openDropdown = function () {
+    console.log('open', this);
+    const target = document.querySelector(this.getAttribute("data-target"));
+
+    target.classList.toggle('show');
+};
+
+var closeDropdown = function (evt) {
+    console.log('close');
+    const dropdowns = document.querySelectorAll(".dropdown-menu.show");
+
+    for (let i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].classList.remove('show');
+    }
+};
+
+
+/* --------------------------- */
 /* --------- DISSIM ---------- */
 /* --------------------------- */
 
@@ -153,6 +174,9 @@ document.addEventListener('click', function (evt) {
         } else if (target.matches('[data-dismiss="drawer"]')) {
             closeDrawer.call(target, evt);
             break;
+        } else if (target.matches('[data-toogle="dropdown"]')) {
+            openDropdown.call(target, evt);
+            break;
         } else if (target.matches('[data-toogle="tab"]')) {
             openTab.call(target, evt);
             break;
@@ -187,5 +211,8 @@ window.addEventListener('click', (evt) => {
         closeDrawer(evt);
     } else if (evt.target.classList.contains('modal')) {
         closeModal(evt);
+    } else if (!evt.target.matches('[data-toogle="dropdown"]') &&
+            !evt.target.parentNode.matches('[data-toogle="dropdown"]')) {
+        closeDropdown(evt);
     }
 });
