@@ -321,7 +321,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function files(&$inputsFile)
     {
-        $inputFiles = [ 'logo', 'favicon' ];
+        $inputsFile = [ 'logo', 'favicon' ];
     }
 
     public function after(&$validator, $data, $id)
