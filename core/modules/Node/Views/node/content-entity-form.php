@@ -1,7 +1,5 @@
 
-<?php if (!empty($node_submenu)): ?>
-    <?php echo $node_submenu; ?>
-<?php endif; ?>
+<?php echo not_empty_or($node_submenu); ?>
 
 <div class="row">
     <?php if (!empty($node_fieldset_submenu)): ?>

@@ -7,11 +7,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="modal-messages"></div>
-            <?php if (!empty($menu)): echo $menu; endif; ?>
+            <?php echo not_empty_or($menu); ?>
 
             <?php echo $form; ?>
 
-            <?php if (!empty($is_progress)): ?><div id="filemanager-dropfile__progress_cards"></div><?php endif; ?>
+            <?php echo if_or(!empty($is_progress), '<div id="filemanager-dropfile__progress_cards"></div>'); ?>
+
         </div>
     </div>
 </div>

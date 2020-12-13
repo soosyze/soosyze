@@ -68,11 +68,7 @@
                     </tr>
                     <tr>
                         <th><?php echo t('Environment'); ?></th>
-                        <td><?php
-                            echo empty($config[ 'debug' ])
-                                ? 'Production'
-                                : 'Debug';
-                            ?>
+                        <td><?php echo if_or(empty($config[ 'debug' ]), 'Debug', 'Production'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -153,11 +149,8 @@
                                 file_uploads <i class="fa fa-info-circle" aria-hidden="true"></i>
                             </span>
                         </th>
-                        <td><?php
-                            echo ini_get('file_uploads')
-                                ? '<i class="fa fa-check" aria-hidden="true"></i>'
-                                : '<i class="fa fa-times" aria-hidden="true"></i>';
-                            ?>
+                        <td>
+                            <i class="fa fa-<?php echo if_or(ini_get('file_uploads'), 'check', 'times'); ?>" aria-hidden="true"></i>
                         </td>
                     </tr>
                     <tr>

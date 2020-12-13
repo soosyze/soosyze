@@ -26,9 +26,9 @@
                 <div class="article_date_time">
                     <?php echo strftime('%d %B %Y', $item[ 'date_created' ]); ?>
                     -
-                    ~<?php echo $item[ 'field' ][ 'reading_time' ][ 'field_value' ] . ' ' . ($item[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1
-                        ? t('minute')
-                        : t('minutes')); ?>
+                    ~<?php echo $new[ 'field' ][ 'reading_time' ][ 'field_value' ]
+                        . ' '
+                        . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                 </div>
                 <?php echo $item[ 'field' ][ 'body' ][ 'field_display' ]; ?>
 

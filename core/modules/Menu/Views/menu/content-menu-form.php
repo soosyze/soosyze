@@ -1,6 +1,4 @@
 
-<?php if (isset($menu_submenu)): ?>
-    <?php echo $menu_submenu; ?>
-<?php endif; ?>
+<?php echo isset_or($menu_submenu); ?>
 
 <?php echo $form; ?>

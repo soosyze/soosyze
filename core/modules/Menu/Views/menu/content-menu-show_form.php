@@ -1,18 +1,18 @@
 
-<ol <?php echo $level === 1 ? 'id="main_sortable"' : ''; ?> class="nested-sortable">
+<ol<?php echo if_or($level === 1, ' id="main_sortable"'); ?> class="nested-sortable">
 <?php if ($menu): foreach ($menu as $link): ?>
 
     <li class="link-item draggable">
         <div class="link-title">
             <i class="fa fa-arrows-alt" aria-hidden="true"></i>
-            <a href="<?php echo $link[ 'link' ]; ?>"<?php if ($link[ 'target_link' ]): ?> target="_blank" rel="noopener noreferrer" <?php endif; ?>>
+            <a href="<?php echo $link[ 'link' ]; ?>"<?php echo if_or($link[ 'target_link' ], ' target="_blank" rel="noopener noreferrer"'); ?>>
                 <?php echo !empty($link['icon']) ? "<i class='{$link['icon']}' aria-hidden='true'></i> " : ''; ?><?php echo $link[ 'title_link' ]; ?>
 
             </a>
         </div>
         <div class="link-actions">
             <span>
-                <input type="checkbox" name="active-<?php echo $link[ 'id' ]; ?>" id="active-<?php echo $link[ 'id' ]; ?>" <?php echo $link[ 'active' ] ? 'checked' : ''; ?>>
+                <input type="checkbox" name="active-<?php echo $link[ 'id' ]; ?>" id="active-<?php echo $link[ 'id' ]; ?>" <?php echo if_or($link[ 'active' ], 'checked'); ?>>
                 <label for="active-<?php echo $link[ 'id' ]; ?>"><span class="ui"></span> <?php echo t('Active'); ?></label>
             </span>
             <a class="btn btn-action" href="<?php echo $link[ 'link_edit' ]; ?>">

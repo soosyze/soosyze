@@ -5,7 +5,7 @@
     <ul class="nav nav-tabs">
         <?php foreach ($menu as $link): ?>
 
-        <li <?php if ($link[ 'key' ] === $key_route): ?>class="active"<?php endif; ?>>
+        <li<?php echo if_or($link[ 'key' ] === $key_route, ' class="active"'); ?>>
             <a href="<?php echo $link[ 'link' ] ?>"><?php echo $link[ 'title_link' ]; ?></a>
         </li>
         <?php endforeach; ?>

@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="modal-messages"></div>
-            <?php if (!empty($menu)): echo $menu; endif; ?>
+            <?php echo not_empty_or($menu); ?>
+
         </div>
         <div class="col-md-6">
             <div class="modal-visulaize <?php echo $type; ?>-thumbnail"><?php echo $section[ 'visualize' ]; ?></div>

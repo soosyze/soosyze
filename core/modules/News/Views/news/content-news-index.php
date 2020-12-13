@@ -42,9 +42,9 @@
                             <?php echo strftime('%d %B %Y', $new[ 'date_created' ]); ?>
                             -
                             <i class="fa fa-clock"></i> 
-                            ~<?php echo $new[ 'field' ][ 'reading_time' ][ 'field_value' ] . ' ' . ($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1
-                                        ? t('minute')
-                                        : t('minutes')); ?>
+                            ~<?php echo $new[ 'field' ][ 'reading_time' ][ 'field_value' ]
+                                . ' '
+                                . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                         </span>
                     </div>
                 </div>

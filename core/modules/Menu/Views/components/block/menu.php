@@ -2,14 +2,12 @@
 <ul>
     <?php foreach ($menu as $link): ?>
 
-    <li class="<?php echo $link[ 'link_active' ]; ?> <?php if (!empty($link[ 'submenu' ])): echo 'parent'; endif; ?>">
-        <a href="<?php echo $link[ 'link' ]; ?>"<?php if ($link[ 'target_link' ]): ?> target="_blank" rel="noopener noreferrer" <?php endif; ?>>
-            <?php echo !empty($link['icon']) ? "<i class='{$link['icon']}' aria-hidden='true'></i> " : ''; ?><?php echo $link[ 'title_link' ]; ?>
+    <li class="<?php echo $link[ 'link_active' ]; ?> <?php echo if_or($link[ 'submenu' ], 'parent'); ?>">
+        <a href="<?php echo $link[ 'link' ]; ?>"<?php echo if_or($link[ 'target_link' ], ' target="_blank" rel="noopener noreferrer"'); ?>>
+            <?php echo if_or(!empty($link['icon']), "<i class='{$link['icon']}' aria-hidden='true'></i> ") . $link[ 'title_link' ]; ?>
 
         </a>
-        <?php if (!empty($link[ 'submenu' ])): ?>
-            <?php echo $link[ 'submenu' ]; ?>
-        <?php endif; ?>
+        <?php echo not_empty_or($link[ 'submenu' ]); ?>
 
     </li>
     <?php endforeach; ?>

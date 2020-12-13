@@ -3,7 +3,7 @@
     <ul class="nav nav-pills">
         <?php foreach ($menu as $link): ?>
 
-        <li class="<?php if ($link[ 'name' ] === $key_route): ?>active<?php endif; ?>">
+        <li<?php echo if_or($link[ 'name' ] === $key_route, ' class="active"'); ?>>
             <a href="<?php echo $link[ 'link' ]; ?>"><?php echo t($link[ 'title' ]); ?></a>
         </li>
         <?php endforeach; ?>

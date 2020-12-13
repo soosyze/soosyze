@@ -36,7 +36,8 @@
             <span class="wrapper">
                 <span class="name-text">
                     <span class="inner-text"><?php echo $file[ 'name' ]; ?></span>
-                    <?php if ($file[ 'ext' ] !== 'dir'): ?><span class="ext">.<?php echo $file[ 'ext' ]; ?></span><?php endif; ?>
+                    <?php echo if_or($file[ 'ext' ] !== 'dir', "<span class='ext'>{$file[ 'ext' ]}</span>"); ?>
+
                 </span>
             </span>
         </td>
@@ -102,12 +103,12 @@
             <?php if ($profil[ 'folder_store' ] || $profil[ 'file_store' ]): ?>
 
                 <span data-tooltip="<?php echo t('Total size / maximum data quota'); ?>">
-                    <?php echo $size_all; ?>
-                    <?php if ($profil[ 'folder_size' ] === 0): ?>
-                        / <i class="fa fa-infinity" aria-hidden="true"></i>
-                    <?php else: ?>
-                        / <?php echo $profil[ 'folder_size' ]; ?>Mo
-                    <?php endif; ?>
+                <?php echo $size_all; ?> / 
+                <?php echo if_or(
+                    $profil[ 'folder_size' ],
+                    "{$profil[ 'folder_size' ]} Mo",
+                    '<i class="fa fa-infinity" aria-hidden="true"></i>'
+                ); ?>
 
                 </span>
             <?php else: ?>
