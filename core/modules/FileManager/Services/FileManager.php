@@ -58,7 +58,7 @@ class FileManager
         return self::$extAllowed;
     }
 
-    public function getBreadcrumb($path)
+    public function getBreadcrumb($path, $keyRoute = 'filemanager.show')
     {
         $path     = rtrim($path, '/');
         $nextPath = '';
@@ -73,7 +73,7 @@ class FileManager
                 'title_link' => empty($value)
                 ? '<i class="fa fa-home" aria-hidden="true"></i> ' . t('Home')
                 : $value,
-                'link'       => $this->router->getRoute('filemanager.show', [
+                'link'       => $this->router->getRoute($keyRoute, [
                     ':path' => Util::cleanPath($nextPath)
                 ]),
                 'active'     => ''
@@ -86,13 +86,13 @@ class FileManager
         return $breadcrumb;
     }
 
-    public function parseDir(\SplFileInfo $dir, $path, $name = '')
+    public function parseDir(\SplFileInfo $dir, $path, $name = '', $keyRoute = 'filemanager.show')
     {
         $info = self::parseRecursive($dir->getPathname());
 
         return [
             'ext'        => 'dir',
-            'link_show'  => $this->router->getRoute('filemanager.show', [
+            'link_show'  => $this->router->getRoute($keyRoute, [
                 ':path' => Util::cleanPath("$path/" . $dir->getBasename())
             ]),
             'name'       => $dir->getBasename(),
@@ -192,6 +192,13 @@ class FileManager
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => t('Download')
+            ], [
+                'class'      => 'mod',
+                'key'        => 'filemanager.file.copy',
+                'request'    => $this->router->getRequestByRoute('filemanager.copy.admin', [
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => t('Deplace or copy')
             ],
         ];
 
@@ -200,7 +207,7 @@ class FileManager
                 'class'      => 'copy-clipboard',
                 'key'        => '',
                 'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
-                'title_link' => t('Copy')
+                'title_link' => t('Copy link')
             ];
         }
 
@@ -332,8 +339,21 @@ class FileManager
                 'type'       => 'button',
                 'icon'       => 'fa fa-copy',
                 'class'      => 'copy-clipboard',
-                'title_link' => t('Copy'),
+                'title_link' => t('Copy link'),
                 'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename()
+            ];
+        }
+        if ($this->hookUser->hookFileCopy($path, $name, $ext)) {
+            $actions[] = [
+                'type'       => 'button',
+                'icon'       => 'fa fa-copy',
+                'class'      => 'mod',
+                'title_link' => t('Deplace or copy'),
+                'link'       => $this->router->getRoute('filemanager.copy.admin', [
+                    ':path' => $path,
+                    ':name' => $name,
+                    ':ext'  => '.' . $ext
+                ])
             ];
         }
 

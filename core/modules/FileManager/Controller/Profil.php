@@ -320,6 +320,7 @@ class Profil extends \Soosyze\Controller
                 'file_delete'           => 'bool',
                 'file_download'         => 'bool',
                 'file_clipboard'        => 'bool',
+                'file_copy'             => 'bool',
                 'file_size'             => '!required|numeric|min_numeric:0',
                 'file_extensions_all'   => 'bool',
                 'file_extensions'       => '!required|array',
@@ -370,6 +371,7 @@ class Profil extends \Soosyze\Controller
             'file_delete'         => (bool) $validator->getInput('file_delete'),
             'file_download'       => (bool) $validator->getInput('file_download'),
             'file_clipboard'      => (bool) $validator->getInput('file_clipboard'),
+            'file_copy'           => (bool) $validator->getInput('file_copy'),
             'file_size'           => (int) $validator->getInput('file_size'),
             'file_extensions_all' => (bool) $validator->getInput('file_extensions_all'),
             'file_extensions'     => !$validator->getInput('file_extensions_all')

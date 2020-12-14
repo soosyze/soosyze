@@ -14,6 +14,7 @@ R::post('filemanager.profil.update', 'admin/user/permission/filemanager/:id/edit
 R::get('filemanager.profil.remove', 'admin/user/permission/filemanager/:id/delete', 'Profil@remove', [ ':id' => '\d+' ]);
 R::post('filemanager.profil.delete', 'admin/user/permission/filemanager/:id/delete', 'Profil@delete', [ ':id' => '\d+' ]);
 
+/* Affichage du filemanager complet. */
 R::get('filemanager.admin', 'admin/filemanager/show', 'Manager@admin');
 R::get('filemanager.public', 'filemanager/public:path', 'Manager@showPublic', [ ':path' => '(/[-\w]+){0,255}' ]);
 R::get('filemanager.show', 'filemanager/show:path', 'Manager@show', [ ':path' => '(/[-\w]+){0,255}' ]);
@@ -27,6 +28,11 @@ R::post('filemanager.file.update', 'filemanager/file:path:name:ext/edit', 'File@
 R::get('filemanager.file.remove', 'filemanager/file:path:name:ext/delete', 'File@remove', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
 R::post('filemanager.file.delete', 'filemanager/file:path:name:ext/delete', 'File@delete', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
 R::get('filemanager.file.download', 'filemanager/download:path:name:ext', 'File@download', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
+
+/* Affichage du filemanager uniquement les répertoires. */
+R::get('filemanager.copy.admin', 'filemanager/copy:path:name:ext', 'FileCopy@admin', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
+R::post('filemanager.copy.update', 'filemanager/copy:path:name:ext', 'FileCopy@update', [ ':path' => '(/[-\w]+){0,255}', ':name' => '/[-\w ]{1,255}', ':ext' => '\.[a-zA-Z0-9]{1,10}' ]);
+R::get('filemanager.copy.show', 'filemanager/copy:path', 'FileCopy@show', [ ':path' => '(/[-\w]+){0,255}' ]);
 
 R::get('filemanager.folder.create', 'filemanager/folder:path/create', 'Folder@create', [ ':path' => '(/[-\w]+){0,255}' ]);
 R::post('filemanager.folder.store', 'filemanager/folder:path/store', 'Folder@store', [ ':path' => '(/[-\w]+){0,255}' ]);

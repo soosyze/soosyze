@@ -21,6 +21,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
         'file_delete'         => false,
         'file_download'       => true,
         'file_clipboard'      => true,
+        'file_copy'           => true,
         'file_size'           => 1,
         'file_extensions_all' => false,
         'file_extensions'     => []
@@ -176,6 +177,12 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     $form->checkbox('file_clipboard', [ 'checked' => $this->values[ 'file_clipboard' ] ])
                     ->label('file_clipboard-label', '<i class="ui"></i><i class="fa fa-copy" aria-hidden="true"></i> ' . t('Copy link'), [
                         'for' => 'file_clipboard'
+                    ]);
+                }, [ 'class' => 'form-group col-sm-4' ])
+                ->group('file_copy-group', 'div', function ($form) {
+                    $form->checkbox('file_copy', [ 'checked' => $this->values[ 'file_copy' ] ])
+                    ->label('file_copy-label', '<i class="ui"></i><i class="fa fa-copy" aria-hidden="true"></i> ' . t('Deplace or copy'), [
+                        'for' => 'file_copy'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('file_size-group', 'div', function ($form) {

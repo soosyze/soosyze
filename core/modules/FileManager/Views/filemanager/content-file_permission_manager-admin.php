@@ -82,6 +82,10 @@
 
                     <i class="fa fa-copy" aria-hidden="true"> <?php echo t('Copy link'); ?></i><br>
                 <?php endif; ?>
+                <?php if ($profil[ 'file_copy' ]): ?>
+
+                    <i class="fa fa-copy" aria-hidden="true"> <?php echo t('Deplace or copy'); ?></i><br>
+                <?php endif; ?>
                 </td>
                 <td data-title="<?php echo t('Weight'); ?>">
                     <?php echo $form->form_group("profil_{$profil[ 'profil_file_id' ]}-group"); ?>

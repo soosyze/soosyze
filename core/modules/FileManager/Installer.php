@@ -37,6 +37,7 @@ class Installer extends \SoosyzeCore\System\Migration
                 ->boolean('file_delete')->valueDefault(false)
                 ->boolean('file_download')->valueDefault(true)
                 ->boolean('file_clipboard')->valueDefault(true)
+                ->boolean('file_copy')->valueDefault(true)
                 ->integer('file_size')->valueDefault(1)
                 ->boolean('file_extensions_all')->valueDefault(false)
                 ->text('file_extensions')->valueDefault('');

@@ -101,6 +101,18 @@ class HookUser
         return !empty($right[ 'file_clipboard' ]);
     }
 
+    public function hookFileCopy(
+        $path,
+        $name,
+        $ext,
+        $req = null,
+        $user = null
+    ) {
+        $right = $this->getRight($path, empty($user[ 'user_id' ]) ? null : $user[ 'user_id' ]);
+
+        return !empty($right[ 'file_copy' ]);
+    }
+
     public function hookFileDelete(
         $path,
         $name,

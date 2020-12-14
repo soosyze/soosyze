@@ -72,17 +72,19 @@ document.querySelectorAll('.ext').forEach(function (el) {
 /**
  * Ajoute les événements des action (voir, modifier, supprimer) de fichiers.
  */
-$(document).delegate('#modal_filemanager input[name="submit"]', 'click', function (evt) {
+$(document).delegate('#modal_filemanager input[type="submit"]', 'click', function (evt) {
     evt.preventDefault();
-    const $formModal = $(this).parent('form');
+    const $form = $(this).closest('form');
+    const target = $('.filemanager');
+
     $.ajax({
-        url: $formModal.attr('action'),
-        type: $formModal.attr('method'),
-        data: $formModal.serialize(),
+        url: $form.attr('action'),
+        type: $form.attr('method'),
+        data: $form.serialize(),
         dataType: 'json',
         success: function () {
             var action = $('#table-file').data('link_show');
-            updateManager(action);
+            updateManager(action, target);
             closeModal.call(evt.target, evt);
         },
         error: function (data) {
@@ -112,7 +114,8 @@ $(document).delegate('.actions-file .mod', 'click', function (evt) {
  */
 $(document).delegate('.dir-link_show', 'click', function (evt) {
     evt.preventDefault();
-    updateManager($(this).data('link_show'));
+    const target = $(this).closest('.filemanager');
+    updateManager($(this).data('link_show'), target);
 });
 /**
  * Evenement pour l'affichage des fichier (icone).
@@ -218,6 +221,7 @@ function uploadFile($form, data) {
     $fileShowNew.appendChild($percent);
     $fileShowNew.appendChild($progress);
 
+    const target = $('.filemanager');
     $.ajax({
         xhr: function () {
             $('#filemanager-dropfile__progress_cards').prepend($fileShowNew);
@@ -265,7 +269,7 @@ function uploadFile($form, data) {
             $fileShowNew.classList.add('filemanager-dropfile__success');
 
             var action = $('#table-file').data('link_show');
-            updateManager(action);
+            updateManager(action, target);
         },
         error: function (data) {
             $fileShowNew.classList.add('filemanager-dropfile__error');
@@ -286,13 +290,13 @@ function uploadFile($form, data) {
  * @param {type} action
  * @returns {undefined}
  */
-function updateManager(action) {
+function updateManager(action, target) {
     $.ajax({
         url: action,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
-            $('#filemanager').html(data);
+            target.html(data);
         }
     });
 }
