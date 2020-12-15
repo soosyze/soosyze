@@ -6,6 +6,7 @@
     "E-mail used for the general configuration, for your contacts, the recovery of your password ...": "E-mail utilisé pour la configuration générale, pour vos contacts, la récupération de votre mot de passe...",
     "Put the site in maintenance": "Mettre le site en maintenance",
     "Make the URLs clean": "Rendre les URLs propres",
+    "Your server does not determine whether clean URLs can be enabled.": "Votre serveur ne permet pas de déterminer si les URLs propres peuvent être activées.",
     "Website theme": "Thème du site",
     "Website administration theme": "Thème d'administration du site",
     "Activate the dark mode for the administrator theme if available": "Activer le mode sombre pour le thème administrateur si disponible",

@@ -104,18 +104,25 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ->label('maintenance-label', '<i class="ui" aria-hidden="true"></i> ' . t('Put the site in maintenance'), [
                             'for' => 'maintenance'
                         ]);
-                    }, [ 'class' => 'form-group' ]);
-                    if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
-                        $form->group('rewrite_engine-group', 'div', function ($form) use ($data) {
-                            $form->checkbox('rewrite_engine', [
-                                'checked' => $data[ 'rewrite_engine' ]
-                            ])
-                            ->label('rewrite_engine-label', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
+                    }, [ 'class' => 'form-group' ])
+                    ->group('rewrite_engine-group', 'div', function ($form) use ($data) {
+                        $isModeRewrite = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
+
+                        $form->checkbox('rewrite_engine', [
+                            'checked'  => $data[ 'rewrite_engine' ],
+                            'disabled' => !$isModeRewrite
+                        ])
+                        ->label('rewrite_engine-label', '<i class="ui" aria-hidden="true"></i> ' . t('Make the URLs clean'), [
                                 'for' => 'rewrite_engine'
+                        ]);
+                        if (!$isModeRewrite) {
+                            $form->html('rewrite_engine-info', '<p:attr>:content</p>', [
+                                ':content' => t('Your server does not determine whether clean URLs can be enabled.'),
+                                'style'    => 'color: red;'
                             ]);
-                        }, [ 'class' => 'form-group' ]);
-                    }
-                    $form->group('theme-group', 'div', function ($form) use ($data, $optionThemes) {
+                        }
+                    }, [ 'class' => 'form-group' ])
+                    ->group('theme-group', 'div', function ($form) use ($data, $optionThemes) {
                         $form->label('theme-label', t('Website theme'))
                         ->select('theme', $optionThemes, [
                             'class'     => 'form-control',
