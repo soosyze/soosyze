@@ -4,6 +4,7 @@ namespace SoosyzeCore\Block\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Block\Form\FormBlock;
 
 class Block extends \Soosyze\Controller
 {
@@ -179,123 +180,22 @@ class Block extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('block.update', [ ':id' => $data[ 'block_id' ] ]);
-        $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
-            ->group('block-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('block-legend', t('Edit block'))
-                ->group('title-group', 'div', function ($form) use ($data) {
-                    $form->label('title-label', t('Title'))
-                    ->text('title', [
-                        'class'       => 'form-control',
-                        'maxlength'   => 255,
-                        'placeholder' => 'Titre',
-                        'value'       => $data[ 'title' ]
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('content-group', 'div', function ($form) use ($data) {
-                    $form->label('content-label', t('Content'), [
-                        'for' => 'content'
-                    ])
-                    ->textarea('content', $data[ 'content' ], [
-                        'class'       => 'form-control editor',
-                        'placeholder' => '<p>Hello World!</p>',
-                        'rows'        => 8
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('class-group', 'div', function ($form) use ($data) {
-                    $form->label('class-label', t('Class CSS'))
-                    ->text('class', [
-                        'class'       => 'form-control',
-                        'placeholder' => 'text-center',
-                        'value'       => $data[ 'class' ]
-                    ]);
-                }, [ 'class' => 'form-group' ]);
+        $form = (new FormBlock([
+                'method' => 'post',
+                'action' => self::router()->getRoute('block.update', [
+                    ':id' => $data[ 'block_id' ]
+                ])
+            ]))
+            ->setValues($data, $id, self::user()->getRoles())
+            ->makeFields();
+
+        if (!empty($data[ 'hook' ])) {
+            $form->after('block-fieldset', function ($form) use ($data, $id) {
+                self::core()->callHook("block.{$data[ 'hook' ]}.edit.form", [
+                    &$form, $data, $id
+                ]);
             });
-
-        if ($data[ 'hook' ]) {
-            $this->container->callHook("block.{$data[ 'hook' ]}.edit.form", [ &$form, $data, $id ]);
         }
-
-        $form->group('page-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('page-legend', t('Visibility by pages'))
-                ->group('visibility_pages_1-group', 'div', function ($form) use ($data) {
-                    $form->radio('visibility_pages', [
-                        'checked'  => !$data[ 'visibility_pages' ],
-                        'id'       => 'visibility_pages_1',
-                        'required' => 1,
-                        'value'    => 0
-                    ])->label('visibility_pages-label', '<i class="fa fa-eye-slash" aria-hidden="true"></i> ' . t('Hide the block on the pages listed'), [
-                        'for' => 'visibility_pages_1'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('visibility_pages_2-group', 'div', function ($form) use ($data) {
-                    $form->radio('visibility_pages', [
-                        'checked'  => $data[ 'visibility_pages' ],
-                        'id'       => 'visibility_pages_2',
-                        'required' => 1,
-                        'value'    => 1
-                    ])->label('visibility_pages-label', '<i class="fa fa-eye" aria-hidden="true"></i> ' . t('Display the block on the pages listed'), [
-                        'for' => 'visibility_pages_2'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('pages-group', 'div', function ($form) use ($data) {
-                    $form->label('pages-label', t('List of pages'), [
-                        'data-tooltip' => t('Enter a path by line. The "%" character is a wildcard character that specifies all characters.')
-                    ])
-                    ->textarea('pages', $data[ 'pages' ], [
-                        'class'       => 'form-control',
-                        'placeholder' => 'admin' . PHP_EOL . 'admin/%',
-                        'rows'        => 5
-                    ])
-                    ->html('info-variable_allowed', '<p>:content</p>', [
-                        ':content' => t('Variables allowed') . ' <code>%</code>'
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-        })
-            ->group('roles-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('roles-legend', t('Visibility by roles'))
-                ->group('visibility_roles_1-group', 'div', function ($form) use ($data) {
-                    $form->radio('visibility_roles', [
-                        'checked'  => !$data[ 'visibility_roles' ],
-                        'id'       => 'visibility_roles_1',
-                        'required' => 1,
-                        'value'    => 0
-                    ])->label('visibility_roles-label', '<i class="fa fa-eye-slash" aria-hidden="true"></i> ' . t('Hide block to selected roles'), [
-                        'for' => 'visibility_roles_1'
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('visibility_roles_2-group', 'div', function ($form) use ($data) {
-                    $form->radio('visibility_roles', [
-                        'checked'  => $data[ 'visibility_roles' ],
-                        'id'       => 'visibility_roles_2',
-                        'required' => 1,
-                        'value'    => 1
-                    ])->label('visibility_roles-label', '<i class="fa fa-eye" aria-hidden="true"></i> ' . t('Show block with selected roles'), [
-                        'for' => 'visibility_roles_2'
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-                foreach (self::user()->getRoles() as $role) {
-                    $form->group("role_{$role[ 'role_id' ]}-group", 'div', function ($form) use ($data, $role) {
-                        $form->checkbox("roles[{$role[ 'role_id' ]}]", [
-                            'checked' => in_array($role[ 'role_id' ], $data[ 'roles' ]),
-                            'id'      => "role_{$role[ 'role_id' ]}",
-                            'value'   => $role[ 'role_label' ]
-                        ])
-                        ->label(
-                            'role_' . $role[ 'role_id' ] . '-label',
-                            '<span class="ui"></span>'
-                            . '<span class="badge-role" style="background-color: ' . $role[ 'role_color' ] . '">'
-                            . '<i class="' . $role[ 'role_icon' ] . '" aria-hidden="true"></i>'
-                            . '</span> '
-                            . t($role[ 'role_label' ]),
-                            [ 'for' => "role_{$role[ 'role_id' ]}" ]
-                        );
-                    }, [ 'class' => 'form-group' ]);
-                }
-            })
-            ->token("token_block_$id")
-            ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->submit('submit_cancel', t('Cancel'), [ 'class' => 'btn btn-default' ]);
 
         $this->container->callHook('block.edit.form', [ &$form, $data, $id ]);
 
