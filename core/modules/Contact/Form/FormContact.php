@@ -2,9 +2,7 @@
 
 namespace SoosyzeCore\Contact\Form;
 
-use Soosyze\Components\Form\FormBuilder;
-
-class FormContact extends FormBuilder
+class FormContact extends \Soosyze\Components\Form\FormBuilder
 {
     protected $values = [
         'name'    => '',
@@ -15,7 +13,7 @@ class FormContact extends FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function setValues($values)
+    public function setValues(array $values)
     {
         $this->values = array_merge($this->values, $values);
 

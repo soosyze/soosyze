@@ -269,11 +269,9 @@ class HookMenu
     protected function getListNamesMenu()
     {
         $menus = $this->query->from('menu')->fetchAll();
-
-        $names = [];
-        foreach ($menus as $menu) {
-            $names[] = $menu[ 'name' ];
-        }
+        $names = $menus
+            ? array_column($menus, 'name')
+            : [];
 
         return implode(',', $names);
     }

@@ -94,12 +94,6 @@ class Templating extends \Soosyze\Components\Http\Response
             ->addBlock('main_menu')
             ->addBlock('second_menu');
 
-        if (!empty($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'blocks' ])) {
-            foreach ($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'blocks' ] as $newBlock) {
-                $page->addBlock($newBlock);
-            }
-        }
-
         $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets/';
 
         $this->template = $this->createBlock('html.php', $this->pathViews)
@@ -235,6 +229,7 @@ class Templating extends \Soosyze\Components\Http\Response
                 $themes[ $splFile->getBasename() ] = Util::getJson($composer);
             }
         }
+        ksort($themes);
 
         return $themes;
     }

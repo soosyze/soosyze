@@ -2,9 +2,7 @@
 
 namespace SoosyzeCore\User\Form;
 
-use Soosyze\Components\Form\FormBuilder;
-
-class FormUserRole extends FormBuilder
+class FormUserRole extends \Soosyze\Components\Form\FormBuilder
 {
     protected $values = [
         'role_label'       => '',
@@ -16,7 +14,7 @@ class FormUserRole extends FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function setValues($values)
+    public function setValues(array $values)
     {
         $this->values = array_merge($this->values, $values);
 

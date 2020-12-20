@@ -85,14 +85,12 @@ class HookBlock
     public function hookMenuUpdateValidator(&$validator, $id)
     {
         $menus = $this->menu->getAllMenu();
-
-        $listName = [];
-        foreach ($menus as $menu) {
-            $listName[] = $menu[ 'name' ];
-        }
+        $names = $menus
+            ? array_column($menus, 'name')
+            : [];
 
         $validator
-            ->addRule('name', 'required|inarray:' . implode(',', $listName))
+            ->addRule('name', 'required|inarray:' . implode(',', $names))
             ->addRule('parent', 'required|numeric')
             ->addLabel('name', t('Menu to display'))
             ->addLabel('parent', t('Menu to display'));

@@ -9,6 +9,8 @@ use SoosyzeCore\FileManager\Form\FormFolder;
 
 class Folder extends \Soosyze\Controller
 {
+    private $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

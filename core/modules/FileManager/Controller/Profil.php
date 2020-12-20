@@ -10,6 +10,8 @@ use SoosyzeCore\FileManager\Services\FileManager;
 
 class Profil extends \Soosyze\Controller
 {
+    private $pathViews;
+
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

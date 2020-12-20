@@ -22,15 +22,15 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function __construct($attr, $router)
+    public function __construct(array $attr, $router)
     {
         parent::__construct($attr);
         $this->router = $router;
     }
 
-    public function setValues($value)
+    public function setValues(array $values)
     {
-        $this->values = array_merge($this->values, $value);
+        $this->values = array_merge($this->values, $values);
 
         return $this;
     }

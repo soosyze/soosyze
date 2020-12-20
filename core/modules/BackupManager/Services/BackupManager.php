@@ -167,8 +167,7 @@ class BackupManager
             }
             if ($file->isDir()) {
                 /* Ne prend pas en compte les dossiers comme .git */
-                $ext = $file->getExtension();
-                if (empty($ext)) {
+                if (empty($file->getExtension())) {
                     $zip = $this->zipRecursivly($file->getPathname(), $zip);
                 }
             } else {

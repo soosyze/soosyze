@@ -11,7 +11,7 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function setValues($values)
+    public function setValues(array $values)
     {
         $this->values = array_merge($this->values, $values);
 

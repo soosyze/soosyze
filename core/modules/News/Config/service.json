@@ -31,7 +31,7 @@
         "class": "SoosyzeCore\\News\\Services\\HookBlock",
         "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
-            "block.create.form.data": "hookNewShow",
+            "block.create.form.data": "hookCreateFormData",
             "block.news.archive.select": "hookBlockNewsArchiveSelect",
             "block.news.archive": "hookBlockNewsArchive",
             "block.news.archive.edit.form": "hookBlockNewsArchiveEditForm",

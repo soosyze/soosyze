@@ -2,9 +2,7 @@
 
 namespace SoosyzeCore\User\Form;
 
-use Soosyze\Components\Form\FormBuilder;
-
-class FormUser extends FormBuilder
+class FormUser extends \Soosyze\Components\Form\FormBuilder
 {
     protected $values = [
         'username'         => '',
@@ -23,14 +21,14 @@ class FormUser extends FormBuilder
 
     protected static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function __construct(array $attributes, $file = null, $config = null)
+    public function __construct(array $attr, $file = null, $config = null)
     {
-        parent::__construct($attributes);
+        parent::__construct($attr);
         $this->file   = $file;
         $this->config = $config;
     }
 
-    public function setValues($values)
+    public function setValues(array $values)
     {
         $this->values = array_merge($this->values, $values);
 

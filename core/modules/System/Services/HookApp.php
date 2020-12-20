@@ -41,12 +41,6 @@ class HookApp
     public function hookSys(&$request, &$response)
     {
         $path = $this->router->parseQueryFromRequest();
-
-        if ($path === '/') {
-            $path = $this->config->get('settings.path_index')
-                ? $this->config->get('settings.path_index')
-                : '404';
-        }
         $path = $this->alias->getSource($path, $path);
 
         $request = $request

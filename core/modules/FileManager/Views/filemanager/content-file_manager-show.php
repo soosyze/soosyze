@@ -1,7 +1,5 @@
 
 <div class="col-md-12">
-    <div class="dropfile-messages"></div>
-
     <div class="responsive">
         <div class="nav-flex">
             <div class="nav-flex-left">

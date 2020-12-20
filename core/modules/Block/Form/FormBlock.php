@@ -28,7 +28,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
 
     private static $attrGrp = [ 'class' => 'form-group' ];
 
-    public function setValues($value, $id, $rolesUser)
+    public function setValues(array $values, $id, $rolesUser)
     {
         $this->values    = array_merge($this->values, $value);
         $this->id        = $id;

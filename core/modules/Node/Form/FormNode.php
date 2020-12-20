@@ -2,11 +2,9 @@
 
 namespace SoosyzeCore\Node\Form;
 
-use Soosyze\Components\Form\FormBuilder;
-
-class FormNode extends FormBuilder
+class FormNode extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $content = [
+    protected $values = [
         'title'            => '',
         'meta_description' => '',
         'meta_noindex'     => false,
@@ -46,29 +44,29 @@ class FormNode extends FormBuilder
     protected $config;
 
     public function __construct(
-        array $attributes,
+        array $attr,
         $file,
         $query,
         $router,
         $config
     ) {
-        parent::__construct($attributes);
+        parent::__construct($attr);
         $this->file   = $file;
         $this->query  = $query;
         $this->router = $router;
         $this->config = $config;
     }
 
-    public function content($content, $type, $fields)
+    public function setValues(array $values, $type, $fields)
     {
-        $this->content = array_merge($this->content, $content);
+        $this->values = array_merge($this->values, $values);
         $this->type    = $type;
         $this->fields  = $fields;
 
         return $this;
     }
 
-    public function make()
+    public function makeFields()
     {
         return $this
                 ->fields()
@@ -85,14 +83,14 @@ class FormNode extends FormBuilder
                             'class'     => 'form-control',
                             'maxlength' => 255,
                             'required'  => 1,
-                            'value'     => $this->content[ 'title' ]
+                            'value'     => $this->values[ 'title' ]
                     ]);
             }, self::$attrGrp);
             foreach ($this->fields as $value) {
                 $key                   = $value[ 'field_name' ];
                 /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
-                $this->content[ $key ] = isset($this->content[ $key ])
-                        ? $this->content[ $key ]
+                $this->values[ $key ] = isset($this->values[ $key ])
+                        ? $this->values[ $key ]
                         : '';
                 $this->makeField($form, $value);
             }
@@ -108,8 +106,8 @@ class FormNode extends FormBuilder
             foreach ($this->fields as $value) {
                 $key                   = $value[ 'field_name' ];
                 /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
-                $this->content[ $key ] = isset($this->content[ $key ])
-                        ? $this->content[ $key ]
+                $this->values[ $key ] = isset($this->values[ $key ])
+                        ? $this->values[ $key ]
                         : '';
                 $this->makeField($form, $value);
             }
@@ -138,7 +136,7 @@ class FormNode extends FormBuilder
                         $form->label("$key-label", t($value[ 'field_label' ]), [
                             'data-tooltip' => t($value[ 'field_description' ])
                         ]);
-                        $this->file->inputFile($key, $form, $this->content[ $key ], $value[ 'field_type' ]);
+                        $this->file->inputFile($key, $form, $this->values[ $key ], $value[ 'field_type' ]);
 
                         break;
                     case 'one_to_many':
@@ -171,9 +169,9 @@ class FormNode extends FormBuilder
 
     public function makeNumber(&$form, $key, $value, $options)
     {
-        $default = empty($this->content[ $key ])
+        $default = empty($this->values[ $key ])
             ? $value[ 'field_default_value' ]
-            : $this->content[ $key ];
+            : $this->values[ $key ];
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ]),
@@ -192,9 +190,9 @@ class FormNode extends FormBuilder
     public function makeInput(&$form, $key, $value, $options)
     {
         $type    = $value[ 'field_type' ];
-        $default = empty($this->content[ $key ])
+        $default = empty($this->values[ $key ])
             ? $value[ 'field_default_value' ]
-            : $this->content[ $key ];
+            : $this->values[ $key ];
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
@@ -214,7 +212,7 @@ class FormNode extends FormBuilder
             $form->group("$keyRadio-group", 'div', function ($form) use ($key, $keyRadio, $value, $option) {
                 $form->checkbox("{$key}[$keyRadio]", [
                         'id'      => "$key-$keyRadio",
-                        'checked' => in_array($keyRadio, explode(',', $this->content[ $key ])),
+                        'checked' => in_array($keyRadio, explode(',', $this->values[ $key ])),
                         'value'   => $keyRadio
                     ])
                     ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
@@ -230,7 +228,7 @@ class FormNode extends FormBuilder
             'required'     => !empty($value[ 'attr' ][ 'required' ]),
             'data-tooltip' => t($value[ 'field_description' ])
         ]);
-        if (!isset($this->content[ 'entity_id' ])) {
+        if (!isset($this->values[ 'entity_id' ])) {
             $form->html('add-' . $key, '<div:attr><p>:content</p></div>', [
                 ':content' => t('Save your content before you can add items'),
                 'class'    => 'block-content-disabled',
@@ -242,7 +240,7 @@ class FormNode extends FormBuilder
 
         $data = $this->query
             ->from($options[ 'relation_table' ])
-            ->where($options[ 'foreign_key' ], $this->content[ 'entity_id' ]);
+            ->where($options[ 'foreign_key' ], $this->values[ 'entity_id' ]);
         if (isset($options[ 'order_by' ])) {
             $data->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
         }
@@ -271,7 +269,7 @@ class FormNode extends FormBuilder
                     $form->html("$key-$idEntity-show", '<a:attr>:content</a>', [
                             ':content' => $content,
                             'href'     => $this->router->getRoute('entity.edit', [
-                                ':id_node'   => $this->content[ 'id' ],
+                                ':id_node'   => $this->values[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
@@ -280,7 +278,7 @@ class FormNode extends FormBuilder
                             ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
                             'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.edit', [
-                                ':id_node'   => $this->content[ 'id' ],
+                                ':id_node'   => $this->values[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
@@ -289,7 +287,7 @@ class FormNode extends FormBuilder
                             ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
                             'class'    => 'btn',
                             'href'     => $this->router->getRoute('entity.delete', [
-                                ':id_node'   => $this->content[ 'id' ],
+                                ':id_node'   => $this->values[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
@@ -304,7 +302,7 @@ class FormNode extends FormBuilder
             $form->group("add-$key-group", 'div', function ($form) use ($key) {
                 $form->html('add-' . $key, '<a:attr>:content</a>', [
                     'href'     => $this->router->getRoute('entity.create', [
-                        ':id_node' => $this->content[ 'id' ],
+                        ':id_node' => $this->values[ 'id' ],
                         ':entity'  => $key,
                     ]),
                     ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
@@ -327,7 +325,7 @@ class FormNode extends FormBuilder
             $form->group("$keyRadio-group", 'div', function ($form) use ($key, $value, $keyRadio, $option) {
                 $form->radio($key, [
                         'id'      => "$key-$keyRadio",
-                        'checked' => $this->content[ $key ] == $keyRadio,
+                        'checked' => $this->values[ $key ] == $keyRadio,
                         'value'   => $keyRadio
                         ] + $value[ 'attr' ])
                     ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
@@ -342,7 +340,7 @@ class FormNode extends FormBuilder
         $selectOptions = [];
         foreach ($options as $keyOption => $option) {
             $selectOptions[ $keyOption ] = [ 'label' => $option, 'value' => $keyOption ];
-            if ($keyOption == $this->content[ $key ]) {
+            if ($keyOption == $this->values[ $key ]) {
                 $selectOptions[ $keyOption ][ 'selected' ] = 1;
             }
         }
@@ -358,7 +356,7 @@ class FormNode extends FormBuilder
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
-            ->textarea($key, $this->content[ $key ], [
+            ->textarea($key, $this->values[ $key ], [
                 'class' => 'form-control editor',
                 'rows'  => 8
                 ] + $value[ 'attr' ]);
@@ -373,7 +371,7 @@ class FormNode extends FormBuilder
                         'maxlength'   => 255,
                         'required'    => 1,
                         'placeholder' => t('Title of the content'),
-                        'value'       => $this->content[ 'title' ]
+                        'value'       => $this->values[ 'title' ]
                 ]);
         }, self::$attrGrp);
     }
@@ -389,7 +387,7 @@ class FormNode extends FormBuilder
                         ->text('meta_title', [
                             'class'       => 'form-control',
                             'placeholder' => ':page_title | :site_title',
-                            'value'       => $this->content[ 'meta_title' ]
+                            'value'       => $this->values[ 'meta_title' ]
                         ])
                         ->html('meta_title-info', '<p>:content</p>', [
                             ':content' => t('Variables allowed') . ' <code>:page_title</code>, <code>:site_title</code>, <code>:site_description</code>'
@@ -399,7 +397,7 @@ class FormNode extends FormBuilder
                         $form->label('meta_description-label', t('Description'), [
                             'data-tooltip' => t('Leave blank to use the default site description')
                         ])
-                        ->textarea('meta_description', $this->content[ 'meta_description' ], [
+                        ->textarea('meta_description', $this->values[ 'meta_description' ], [
                             'class' => 'form-control',
                             'rows'  => 3
                         ])
@@ -408,19 +406,19 @@ class FormNode extends FormBuilder
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_noindex-group', 'div', function ($form) {
-                        $form->checkbox('meta_noindex', [ 'checked' => $this->content[ 'meta_noindex' ] ])
+                        $form->checkbox('meta_noindex', [ 'checked' => $this->values[ 'meta_noindex' ] ])
                         ->label('meta_noindex-label', '<span class="ui"></span> ' . t('Block indexing') . ' <code>noindex</code>', [
                             'for' => 'meta_noindex'
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_nofollow-group', 'div', function ($form) {
-                        $form->checkbox('meta_nofollow', [ 'checked' => $this->content[ 'meta_nofollow' ] ])
+                        $form->checkbox('meta_nofollow', [ 'checked' => $this->values[ 'meta_nofollow' ] ])
                         ->label('meta_nofollow-label', '<span class="ui"></span> ' . t('Block link tracking') . ' <code>nofollow</code>', [
                             'for' => 'meta_nofollow'
                         ]);
                     }, self::$attrGrp)
                     ->group('meta_noarchive-group', 'div', function ($form) {
-                        $form->checkbox('meta_noarchive', [ 'checked' => $this->content[ 'meta_noarchive' ] ])
+                        $form->checkbox('meta_noarchive', [ 'checked' => $this->values[ 'meta_noarchive' ] ])
                         ->label('meta_noarchive-label', '<span class="ui"></span> ' . t('Block caching') . ' <code>noarchive</code>', [
                             'for' => 'meta_noarchive'
                         ]);
@@ -438,7 +436,7 @@ class FormNode extends FormBuilder
                     $form
                     ->legend('publication-legend', t('Publication'))
                     ->group('sticky-group', 'div', function ($form) {
-                        $form->checkbox('sticky', [ 'checked' => $this->content[ 'sticky' ] ])
+                        $form->checkbox('sticky', [ 'checked' => $this->values[ 'sticky' ] ])
                         ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
                             'for' => 'sticky'
                         ]);
@@ -465,7 +463,7 @@ class FormNode extends FormBuilder
                             $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
                                 $form->radio('node_status_id', [
                                     'id'      => "node_status_id-{$value[ 'node_status_id' ]}",
-                                    'checked' => $this->content[ 'node_status_id' ] == $value[ 'node_status_id' ],
+                                    'checked' => $this->values[ 'node_status_id' ] == $value[ 'node_status_id' ],
                                     'class'   => 'radio-button',
                                     'value'   => $value[ 'node_status_id' ]
                                 ])
@@ -481,9 +479,9 @@ class FormNode extends FormBuilder
                     'id'    => 'publication-fieldset'
                 ])
                 ->token(
-                    empty($this->content[ 'id' ])
+                    empty($this->values[ 'id' ])
                     ? 'token_node'
-                    : 'token_node_' . $this->content[ 'id' ]
+                    : 'token_node_' . $this->values[ 'id' ]
                 )
                 ->group('actions-group', 'fieldset', function ($form) {
                     $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
@@ -532,12 +530,12 @@ class FormNode extends FormBuilder
 
     protected function getDateCreated()
     {
-        if (empty($this->content[ 'date_created' ])) {
+        if (empty($this->values[ 'date_created' ])) {
             return date('Y-m-d H:i:s', time());
         }
 
-        return is_numeric($this->content[ 'date_created' ])
-            ? date('Y-m-d H:i:s', (int) $this->content[ 'date_created' ])
-            : $this->content[ 'date_created' ];
+        return is_numeric($this->values[ 'date_created' ])
+            ? date('Y-m-d H:i:s', (int) $this->values[ 'date_created' ])
+            : $this->values[ 'date_created' ];
     }
 }

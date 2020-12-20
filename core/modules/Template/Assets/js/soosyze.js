@@ -3,14 +3,12 @@
 /* --------------------------- */
 
 var openDropdown = function () {
-    console.log('open', this);
     const target = document.querySelector(this.getAttribute("data-target"));
 
     target.classList.toggle('show');
 };
 
 var closeDropdown = function (evt) {
-    console.log('close');
     const dropdowns = document.querySelectorAll(".dropdown-menu.show");
 
     for (let i = 0; i < dropdowns.length; i++) {
@@ -35,6 +33,7 @@ var alert = function (evt) {
     alert.classList.toggle('hidden');
 };
 
+
 /* --------------------------- */
 /* ----------- TAB ----------- */
 /* --------------------------- */
@@ -44,11 +43,11 @@ var openTab = function (evt) {
     const tabContent = document.getElementsByClassName("tab-pane");
     const tabLinks = document.getElementsByClassName("tab-links");
 
-    for (var i = 0; i < tabContent.length; i++) {
+    for (let i = 0; i < tabContent.length; i++) {
         tabContent[i].classList.remove('active');
     }
 
-    for (var i = 0; i < tabLinks.length; i++) {
+    for (let i = 0; i < tabLinks.length; i++) {
         tabLinks[i].classList.remove('active');
     }
 
@@ -62,7 +61,7 @@ var openSelect = function (evt) {
     evt.preventDefault();
     const tabContent = document.getElementsByClassName("select-pane");
 
-    for (var i = 0; i < tabContent.length; i++) {
+    for (let i = 0; i < tabContent.length; i++) {
         tabContent[i].classList.remove('active');
     }
 
@@ -91,6 +90,7 @@ var closeDrawer = function (evt) {
     document.querySelector("body").style.overflow = 'visible';
 };
 
+
 /* --------------------------- */
 /* ---------- MODAL ---------- */
 /* --------------------------- */
@@ -108,6 +108,7 @@ var closeModal = function (evt) {
     modal.classList.toggle('modal-open');
     document.querySelector("body").style.overflow = 'visible';
 };
+
 
 /* --------------------------- */
 /* ------- INPUT NUMBER ------ */
@@ -161,7 +162,7 @@ function strHighlight(needle, haystack, highlight = 'highlight') {
 
 /* EVENT DELEDATE */
 document.addEventListener('click', function (evt) {
-    for (var target = evt.target; target && target !== this; target = target.parentNode) {
+    for (let target = evt.target; target && target !== this; target = target.parentNode) {
         if (target.matches('[data-toogle="modal"]')) {
             openModal.call(target, evt);
             break;
@@ -197,7 +198,7 @@ document.addEventListener('click', function (evt) {
 }, false);
 
 document.addEventListener('change', function (evt) {
-    for (var target = evt.target; target && target !== this; target = target.parentNode) {
+    for (let target = evt.target; target && target !== this; target = target.parentNode) {
         if (target.matches('[data-toogle="select"]')) {
             openSelect.call(target, evt);
             break;

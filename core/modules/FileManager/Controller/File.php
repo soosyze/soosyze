@@ -202,7 +202,7 @@ class File extends \Soosyze\Controller
 
         $serviceFile->saveOne();
 
-        $out = [
+        return $this->json(200, [
             'ext'       => $ext,
             'link_file' => $serviceFile->getMovePathAbsolute(),
             'messages'  => [
@@ -213,9 +213,7 @@ class File extends \Soosyze\Controller
             'type'      => in_array($ext, self::$extensionImage)
                 ? 'image'
                 : 'file'
-        ];
-
-        return $this->json(200, $out);
+        ]);
     }
 
     public function edit($path, $name, $ext, $req)

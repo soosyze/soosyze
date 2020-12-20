@@ -1,6 +1,5 @@
 <?php
 
-use Queryflatfile\Request;
 use Queryflatfile\Schema;
 use Queryflatfile\TableBuilder;
 

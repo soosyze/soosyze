@@ -163,7 +163,7 @@ class Modules
      */
     public function loadTranslations(array $modules, array $composer, $crushed = false)
     {
-        $path         = $this->transalte->getPath();
+        $path = $this->transalte->getPath();
 
         $strTranslations = [];
 

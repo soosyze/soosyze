@@ -364,8 +364,9 @@ class FileManager
     {
         $dirIterator = new \RecursiveDirectoryIterator($dir);
         $iterator    = new \RecursiveIteratorIterator($dirIterator);
-        $size        = 0;
-        $time        = 0;
+
+        $size = 0;
+        $time = 0;
 
         $iterator->rewind();
         foreach ($iterator as $file) {

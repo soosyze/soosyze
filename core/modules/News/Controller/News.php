@@ -193,8 +193,8 @@ class News extends \Soosyze\Controller
         }
 
         foreach ($news as &$new) {
-            $new[ 'field' ]     = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
-            
+            $new[ 'field' ] = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
+
             if ($alias = self::alias()->getAlias('node/' . $new[ 'id' ])) {
                 $new[ 'link_view' ] = self::router()->makeRoute($alias);
             } else {

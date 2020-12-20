@@ -41,7 +41,7 @@ class HookBlock
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function hookNewShow(array &$blocks)
+    public function hookCreateFormData(array &$blocks)
     {
         $blocks[ 'news.archive' ]        = [
             'hook'    => 'news.archive',
@@ -177,7 +177,7 @@ class HookBlock
                 ];
             }
 
-            if (empty($options['expand']) && (empty($param[0]) || $param[0] != $year)) {
+            if (empty($options[ 'expand' ]) && (empty($param[ 0 ]) || $param[ 0 ] != $year)) {
                 continue;
             }
 
@@ -231,7 +231,7 @@ class HookBlock
     public function hookNewsArchiveUpdateBefore($validator, &$values, $id)
     {
         $values[ 'options' ] = json_encode([
-            'expand'   => (bool) $validator->getInput('expand')
+            'expand' => (bool) $validator->getInput('expand')
         ]);
     }
 

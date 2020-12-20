@@ -1,16 +1,16 @@
 <?php
 
-  ini_set('magic_quotes_runtime', '0');
+ini_set('magic_quotes_runtime', '0');
 
-  /*
-   * @see https://www.php.net/manual/en/session.security.php
-   */
-  ini_set('session.use_cookies', '1');
-  ini_set('session.use_only_cookies', '1');
-  ini_set('session.use_trans_sid', '0');
-  ini_set('session.cache_limiter', '');
-  ini_set('session.cookie_httponly', '1');
-  
+/*
+ * @see https://www.php.net/manual/en/session.security.php
+ */
+ini_set('session.use_cookies', '1');
+ini_set('session.use_only_cookies', '1');
+ini_set('session.use_trans_sid', '0');
+ini_set('session.cache_limiter', '');
+ini_set('session.cookie_httponly', '1');
+
 /* Démarrage de la session. */
 if (session_id() === '') {
     session_start();
