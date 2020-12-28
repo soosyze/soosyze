@@ -30,7 +30,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
 
     public function setValues(array $values, $id, $rolesUser)
     {
-        $this->values    = array_merge($this->values, $value);
+        $this->values    = array_merge($this->values, $values);
         $this->id        = $id;
         $this->rolesUser = $rolesUser;
 
