@@ -56,8 +56,8 @@ Vous pouvez également nous trouver sur les réseaux :
 
 | Version PHP                 | Soosyze 1.x    |
 |-----------------------------|----------------|
-| <= 5.3                      | ✗ Non supporté |
-| 5.4 / 5.5 / 5.6             | ✓ Supporté     |
+| <= 5.4                      | ✗ Non supporté |
+| 5.5 / 5.6                   | ✓ Supporté     |
 | 7.0 / 7.1 / 7.2 / 7.3 / 7.4 | ✓ Supporté     |
 
 En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mémoire et le temps d'exécution de 30% à 45%. Votre site en sera plus rapide et mieux référencé.

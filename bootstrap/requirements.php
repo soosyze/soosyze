@@ -2,7 +2,7 @@
 
 $requiement = new Requiement();
 $require    = $requiement
-    ->versionPhp('5.4')
+    ->versionPhp('5.5')
     ->memoryLimit(8)
     ->extensions(array(
         'date', 'fileinfo', 'filter', 'gd', 'json', 'mbstring', 'openssl', 'session', 'zip'
