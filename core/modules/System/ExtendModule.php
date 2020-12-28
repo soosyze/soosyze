@@ -4,7 +4,7 @@ namespace SoosyzeCore\System;
 
 use Psr\Container\ContainerInterface;
 
-abstract class Migration
+abstract class ExtendModule
 {
     private $translations = [];
 

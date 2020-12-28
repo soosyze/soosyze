@@ -1,11 +1,16 @@
 {
     "name": "soosyze-core/admin",
     "type": "soosyze-theme",
-    "description": "Thème dédié à l'administration, utilisant la bibliothèque d'affichage Bootstrap 3, avec un menu horizontal fixe sur plusieurs niveaux.",
-    "version": "1.0",
+    "description": "Thème dédié à l'administration.",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Theme\\Admin\\": "/"
+        }
+    },
     "extra": {
-        "soosyze-theme": {
-            "name": "Admin",
+        "soosyze": {
+            "title": "Admin",
             "sections": [
                 "header",
                 "sidebar",

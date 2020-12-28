@@ -13,8 +13,8 @@
         "class": "SoosyzeCore\\User\\Services\\Auth",
         "arguments": ["@query"]
     },
-    "user.install": {
-        "class": "SoosyzeCore\\User\\Installer",
+    "user.extend": {
+        "class": "SoosyzeCore\\User\\Extend",
         "hooks": {
             "install.menu": "hookInstallMenu"
         }

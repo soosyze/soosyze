@@ -19,10 +19,15 @@ class Modules
         $this->transalte = $translate;
     }
 
+    public function getVersionCore()
+    {
+        return '1.0.0-beta2.4';
+    }
+
     /**
      * Si le module est installé.
      *
-     * @param string $title Nom du module.
+     * @param string $title Titre du module.
      *
      * @return array
      */
@@ -69,25 +74,16 @@ class Modules
         return array_unique($output);
     }
 
-    public function listModuleActive(array $columns = [])
-    {
-        $modules = $this->query
-            ->select($columns)
-            ->from('module_active')
-            ->fetchAll();
-
-        $out = [];
-        foreach ($modules as $value) {
-            $out[ $value[ 'title' ] ] = $value;
-        }
-
-        return $out;
-    }
-
-    public function listModuleActiveNotRequire(array $columns = [])
+    public function listModuleActive()
     {
         return $this->query
-                ->select($columns)
+            ->from('module_active')
+            ->fetchAll();
+    }
+
+    public function listModuleActiveNotRequire()
+    {
+        return $this->query
                 ->from('module_active')
                 ->leftJoin('module_require', 'title', 'module_require.title_required')
                 ->isNull('title_module')
@@ -157,19 +153,18 @@ class Modules
     /**
      * Installe les fichiers de traduction.
      *
-     * @param array $modules  Liste des noms de modules à installer
-     * @param array $composer Liste de tous les fichiers composer
-     * @param bool  $crushed  Si la mise à jour de la traduction ne prend pas en compte existante.
+     * @param array $composers Liste de tous les fichiers composer
+     * @param bool  $crushed   Si la mise à jour de la traduction ne prend pas en compte existante.
      */
-    public function loadTranslations(array $modules, array $composer, $crushed = false)
+    public function loadTranslations(array $composers, $crushed = true)
     {
         $path = $this->transalte->getPath();
 
         $strTranslations = [];
 
         /* Réuni tous les fichiers de traductions par langues */
-        foreach ($modules as $title) {
-            foreach ($composer[ $title ][ 'translations' ] as $lang => $translations) {
+        foreach ($composers as $composer) {
+            foreach ($composer[ 'translations' ] as $lang => $translations) {
                 foreach ($translations as $translation) {
                     if (isset($strTranslations[ $lang ])) {
                         $strTranslations[ $lang ] += Util::getJson($translation);

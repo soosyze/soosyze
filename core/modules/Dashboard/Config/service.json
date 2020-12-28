@@ -3,8 +3,8 @@
         "class": "SoosyzeCore\\Dashboard\\Services\\Dashboard",
         "arguments": ["@config", "@core"]
     },
-    "dashboard.install": {
-        "class": "SoosyzeCore\\Dashboard\\Installer",
+    "dashboard.extend": {
+        "class": "SoosyzeCore\\Dashboard\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

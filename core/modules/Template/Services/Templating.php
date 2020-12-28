@@ -213,27 +213,6 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this->getThemplate()->getBlockWithParent($parent);
     }
 
-    public function getThemes()
-    {
-        $themes = [];
-        foreach ($this->themesPath as $path) {
-            foreach (new \DirectoryIterator($path) as $splFile) {
-                if (!$splFile->isDir() || $splFile->isDot()) {
-                    continue;
-                }
-                $composer = $splFile->getRealPath() . '/composer.json';
-                if (!file_exists($composer)) {
-                    continue;
-                }
-
-                $themes[ $splFile->getBasename() ] = Util::getJson($composer);
-            }
-        }
-        ksort($themes);
-
-        return $themes;
-    }
-
     /**
      * @return Block
      */
@@ -276,8 +255,8 @@ class Templating extends \Soosyze\Components\Http\Response
             $this->loadComposer();
         }
 
-        return !empty($this->composer[ 'extra' ][ 'soosyze-theme' ][ 'sections' ])
-            ? $this->composer[ 'extra' ][ 'soosyze-theme' ][ 'sections' ]
+        return !empty($this->composer[ 'extra' ][ 'soosyze' ][ 'sections' ])
+            ? $this->composer[ 'extra' ][ 'soosyze' ][ 'sections' ]
             : [];
     }
 

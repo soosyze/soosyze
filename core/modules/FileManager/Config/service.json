@@ -11,8 +11,8 @@
         "class": "SoosyzeCore\\FileManager\\Services\\FilterManagerIterator",
         "arguments": ["@filemanager.hook.user"]
     },
-    "filemanager.install": {
-        "class": "SoosyzeCore\\FileManager\\Installer",
+    "filemanager.extend": {
+        "class": "SoosyzeCore\\FileManager\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

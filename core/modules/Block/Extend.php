@@ -5,7 +5,7 @@ namespace SoosyzeCore\Block;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer extends \SoosyzeCore\System\Migration
+class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir()
     {

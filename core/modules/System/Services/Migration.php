@@ -41,15 +41,15 @@ class Migration
     {
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
         $migrationsInstalled = $this->query->from('migration')->lists('migration');
-        $allComposer         = $this->composer->getAllComposer();
+        $composers           = $this->composer->getModuleComposers();
 
-        foreach ($titleModulesActive as $titleModule) {
-            if (!isset($allComposer[ $titleModule ])) {
+        foreach ($titleModulesActive as $title) {
+            if (!isset($composers[ $title ])) {
                 continue;
             }
+            $extendClass = $this->composer->getExtendClass($title, $composers);
 
-            $installer = $this->composer->getNamespace($titleModule) . 'Installer';
-            $dir       = (new $installer)->getDir() . DS . 'Migrations';
+            $dir = (new $extendClass)->getDir() . DS . 'Migrations';
             if (!\is_dir($dir)) {
                 continue;
             }
@@ -74,18 +74,20 @@ class Migration
     {
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
         $migrationsInstalled = $this->query->from('migration')->lists('migration');
-        $allComposer         = $this->composer->getAllComposer();
+        $composers           = $this->composer->getModuleComposers();
 
         $callbacks = [];
-        foreach ($titleModulesActive as $titleModule) {
-            if (!isset($allComposer[ $titleModule ])) {
+        foreach ($titleModulesActive as $title) {
+            if (!isset($composers[ $title ])) {
                 continue;
             }
-            $installer = $this->composer->getNamespace($titleModule) . 'Installer';
-            $dir       = (new $installer)->getDir() . DS . 'Migrations';
+            $extendClass = $this->composer->getExtendClass($title, $composers);
+
+            $dir = (new $extendClass)->getDir() . DS . 'Migrations';
             if (!\is_dir($dir)) {
                 continue;
             }
+
             foreach (new \DirectoryIterator($dir) as $fileInfo) {
                 if (
                     !$fileInfo->isFile() ||
@@ -96,7 +98,7 @@ class Migration
 
                 $callbacks[ $fileInfo->getBasename('.php') ] = [
                     'migration' => $fileInfo->getBasename('.php'),
-                    'extension' => $titleModule,
+                    'extension' => $title,
                     'callback'  => include_once $fileInfo->getRealPath()
                 ];
             }

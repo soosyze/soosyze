@@ -1,8 +1,8 @@
 {
-    "name": "soosyze-extension/trumbowyg",
+    "name": "soosyze-core/trumbowyg",
     "type": "soosyze-module",
     "description": "Rich text editor for your content.",
-    "version": "1.0",
+    "version": "1.0.0",
     "autoload": {
         "psr-4": {
             "SoosyzeCore\\Trumbowyg\\": "/"

@@ -73,11 +73,11 @@ class HookApp
     protected function getNameTheme()
     {
         $query = $this->router->parseQueryFromRequest();
-        if ($query === 'admin/section/theme') {
-            return 'theme';
+        if ($query === 'admin/theme/public/section') {
+            return 'public';
         }
-        if ($query === 'admin/section/theme_admin') {
-            return 'theme_admin';
+        if ($query === 'admin/theme/admin/section') {
+            return 'admin';
         }
 
         return '';

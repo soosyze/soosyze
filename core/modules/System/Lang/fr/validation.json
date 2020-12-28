@@ -1,0 +1,13 @@
+{
+    "The installation scripts for the :title extension do not exist.": "Les scripts d'installation de l'extension :title n'existe pas.",
+    "The :title install class does not implement the extend interface.": "La classe d'installation: name n'implémente pas l'interface d'extension.",
+    "The PHP :version version of your server does not allow the installation of module :title.": "La version PHP :version de votre serveur ne permet pas l'installation du module :title.",
+    "Module :title requires PHP extension :ext_name": "Le module :title nécessite l'extension PHP :ext_name",
+    "Module :title requires PHP library :ext_name (:version_ext)": "Le module :title nécessite la bibliothèque PHP :ext_name (:version_ext)",
+    "The :title module source files (:version) do not exist.": "Les fichiers sources de module :title (:version) n'existe pas.",
+    "The :title1 (:version) module required by :title2 is not installed.": "Le module :title1 (:version) requis par :title2 n'est pas installé.",
+    "The :title1 module require the :title2 (:version) module, currently (:version_current).": "Le module :title1 require le module :title2 (:version), actuellement (:version_current).",
+    "The information on the controllers of the :title module does not exist.": "Les informations sur les contrôleurs du module :title n'existe pas.",
+    "The :label of the :title module is not found by the autoloader.": "Le contrôleur :label du module :title n'est pas trouvé par l'autoloader.",
+    "The :title module information does not exist.": "Les informations du module :title n'existes pas."
+}

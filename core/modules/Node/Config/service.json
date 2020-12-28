@@ -3,8 +3,8 @@
         "class": "SoosyzeCore\\Node\\Services\\Node",
         "arguments": ["@config", "@core", "@query", "@template"]
     },
-    "node.install": {
-        "class": "SoosyzeCore\\Node\\Installer",
+    "node.extend": {
+        "class": "SoosyzeCore\\Node\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu",

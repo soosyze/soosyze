@@ -5,7 +5,7 @@ namespace SoosyzeCore\System;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
-class Installer extends \SoosyzeCore\System\Migration
+class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir()
     {
@@ -14,12 +14,19 @@ class Installer extends \SoosyzeCore\System\Migration
 
     public function boot()
     {
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config_mailer.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/humans_time.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/standard.json');
+        $translations = [
+            'config',
+            'config_mailer',
+            'humans_time',
+            'main',
+            'permission',
+            'standard',
+            'theme',
+            'validation'
+        ];
+        foreach ($translations as $name) {
+            $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$name.json");
+        }
     }
 
     public function install(ContainerInterface $ci)
@@ -89,6 +96,10 @@ class Installer extends \SoosyzeCore\System\Migration
                 'system.module.edit', 'fa fa-th-large', 'Modules', 'admin/modules',
                 'menu-admin', 5, -1
             ])
+            ->values([
+                'system.theme.edit', 'fa fa-th-large', 'Themes', 'admin/theme',
+                'menu-admin', 6, -1
+            ])
             ->execute();
     }
 
@@ -97,6 +108,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'system.module.manage' ])
+            ->values([ 3, 'system.theme.manage' ])
             ->values([ 3, 'system.config.maintenance' ])
             ->execute();
     }

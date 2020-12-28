@@ -3,8 +3,8 @@
         "class": "SoosyzeCore\\Menu\\Services\\Menu",
         "arguments": ["@alias", "@config", "@core", "@query", "@router"]
     },
-    "menu.install": {
-        "class": "SoosyzeCore\\Menu\\Installer",
+    "menu.extend": {
+        "class": "SoosyzeCore\\Menu\\Extend",
         "hooks": {
             "install.user": "hookInstallUser"
         }

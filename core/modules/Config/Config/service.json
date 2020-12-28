@@ -9,8 +9,8 @@
             "route.config.update": "hookConfigManage"
         }
     },
-    "config.install": {
-        "class": "SoosyzeCore\\Config\\Installer",
+    "config.extend": {
+        "class": "SoosyzeCore\\Config\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

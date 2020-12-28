@@ -59,26 +59,30 @@ class Dashboard extends \Soosyze\Controller
 
         return new Redirect(self::router()->getRoute('dashboard.index'));
     }
-    
+
     public function updateTranslations($req)
     {
-        $modules  = array_keys(self::module()->listModuleActive());
-        $composer = self::composer()->getAllComposer();
+        $extensions   = array_column(self::module()->listModuleActive(), 'title');
+        $extensions[] = self::config()->get('settings.theme');
+        $extensions[] = self::config()->get('settings.theme_admin');
 
-        $composerActive = [];
-        foreach ($modules as $title) {
-            $migration = self::composer()->getNamespace($title) . 'Installer';
-            $installer = new $migration();
-            
-            $installer->boot();
+        $composers = self::composer()->getModuleComposers() + self::composer()->getThemeComposers();
 
-            $composerActive[ $title ] = $composer[ $title ] + [
-                'dir'          => $installer->getDir(),
-                'translations' => $installer->getTranslations()
+        $composersActive = [];
+        foreach ($extensions as $title) {
+            $extendClass = self::composer()->getExtendClass($title, $composers);
+            $extend      = new $extendClass();
+
+            $extend->boot();
+
+            $composersActive[ $title ] = $composers[ $title ] + [
+                'dir'          => $extend->getDir(),
+                'translations' => $extend->getTranslations()
             ];
         }
 
-        self::module()->loadTranslations($modules, $composerActive);
+        self::module()->loadTranslations($composersActive);
+
         $_SESSION[ 'messages' ][ 'success' ] = [ t('The translation files have been updated') ];
 
         return new Redirect(self::router()->getRoute('dashboard.index'));

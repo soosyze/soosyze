@@ -1,8 +1,8 @@
 
 <div class="block-content-disabled">
     <p><?php echo $content; ?></p>
-    <a href="<?php echo $link_theme_admin; ?>" class="btn btn-primary"><?php echo t('Website administration theme'); ?></a>
     <a href="<?php echo $link_theme; ?>" class="btn btn-primary"><?php echo t('Website theme'); ?></a>
+    <a href="<?php echo $link_theme_admin; ?>" class="btn btn-primary"><?php echo t('Website administration theme'); ?></a>
 </div>
 
 <div id="modal_block" class="modal" role="dialog" aria-label="<?php echo t('Block creation window.'); ?>">

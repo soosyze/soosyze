@@ -56,35 +56,32 @@
                         <th>&nbsp;</th>
                         <th><?php echo t('Module'); ?></th>
                         <th><?php echo t('Version'); ?></th>
-                        <th><?php echo t('Actions'); ?></th>
+                        <th><?php echo t('Links'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($modules as $module): ?>
+                    <?php foreach ($modules as $name => $module): ?>
 
                     <tr id="<?php echo $module[ 'title' ]; ?>" class="module" data-title="<?php echo $module[ 'title' ]; ?>">
                         <td class="th">
                             <div class="module-icon" style="background-color:<?php echo $module['icon']['background-color']; ?>">
-                                <i class="<?php echo $module['icon']['name']; ?>" 
-                                   style="color:<?php echo $module['icon']['color']; ?>" 
+                                <i class="<?php echo $module['icon']['name']; ?>"
+                                   style="color:<?php echo $module['icon']['color']; ?>"
                                    aria-hidden="true"></i>
                             </div>
                         </td>
                         <td data-title="<?php echo t('Module'); ?>">
                             <div class="form-group">
-                            <?php echo $form->form_input("modules[{$module[ 'title' ]}]"); ?>
-                            <?php echo $form->form_label($module[ 'title' ], [ 'class' => 'str-search' ]); ?>
+                            <?php echo $form->form_input("modules[$name]"); ?>
+                            <?php echo $form->form_label($name, [ 'class' => 'str-search' ]); ?>
 
                             </div>
-                            
+
                             <?php echo t($module[ 'description' ]); ?>
                             <?php if (!empty($module[ 'isRequired' ])): ?>
 
-                            <br><?php echo t('Requires'); ?> 
-                            <span class="module-is_required">
-                                <?php echo implode(',', $module[ 'isRequired' ]); ?>
-
-                            </span>
+                                <br><?php echo t('Requires'); ?> 
+                                <?php echo implode(', ', $module[ 'isRequired' ]); ?>
                             <?php endif; ?>
                             <?php if (!empty($module[ 'isRequiredForModule' ])): ?>
 
@@ -99,9 +96,9 @@
                         <td data-title="<?php echo t('Version'); ?>"><?php echo $module[ 'version' ]; ?></td>
                         <?php if (!empty($module['support'])): ?>
 
-                        <td data-title="<?php echo t('Actions'); ?>">
-                            <a class="btn btn-action" href="<?php echo $module['support']; ?>" target="_blank">
-                                <i class="fas fa-question" aria-hidden="true"></i> <?php echo t('Help'); ?>
+                        <td data-title="<?php echo t('Links'); ?>">
+                            <a class="btn btn-action" href="<?php echo $module['support']; ?>" target="_blank" data-tooltip="<?php echo t('Documentation'); ?>">
+                                <i class="fa fa-book" aria-hidden="true"></i>
                             </a>
                         </td>
                         <?php else: ?>

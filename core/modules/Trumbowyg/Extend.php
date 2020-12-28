@@ -4,7 +4,7 @@ namespace SoosyzeCore\Trumbowyg;
 
 use Psr\Container\ContainerInterface;
 
-class Installer extends \SoosyzeCore\System\Migration
+class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir()
     {

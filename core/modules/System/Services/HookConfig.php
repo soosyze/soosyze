@@ -8,15 +8,12 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     protected $router;
 
-    protected $template;
-
     protected $translate;
 
-    public function __construct($file, $router, $template, $translate)
+    public function __construct($file, $router, $translate)
     {
         $this->file      = $file;
         $this->router    = $router;
-        $this->template  = $template;
         $this->translate = $translate;
     }
 
@@ -27,18 +24,13 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'timezone'           => '',
             'maintenance'        => '',
             'rewrite_engine'     => '',
-            'theme'              => '',
-            'theme_admin'        => '',
-            'theme_admin_dark'   => '',
-            'logo'               => '',
             'path_index'         => '',
             'path_access_denied' => '',
             'path_no_found'      => '',
             'path_maintenance'   => '',
             'meta_title'         => '',
             'meta_description'   => '',
-            'meta_keyboard'      => '',
-            'favicon'            => ''
+            'meta_keyboard'      => ''
         ];
     }
 
@@ -51,23 +43,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function form(&$form, $data, $req)
     {
-        $optionThemes      = [];
-        $optionThemesAdmin = [];
-
-        $composers = $this->template->getThemes();
-
-        foreach ($composers as $key => $composer) {
-            $theme = [
-                'value' => $key,
-                'label' => $key
-            ];
-            if (empty($composer[ 'extra' ][ 'soosyze-theme' ][ 'options' ][ 'admin' ])) {
-                $optionThemes[] = $theme;
-            } else {
-                $optionThemesAdmin[] = $theme;
-            }
-        }
-
         $optionTimezone = [];
         foreach (timezone_identifiers_list() as $value) {
             $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
@@ -95,7 +70,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                         ]);
                     }, [ 'class' => 'form-group' ]);
         })
-                ->group('information-fieldset', 'fieldset', function ($form) use ($data, $optionThemes, $optionThemesAdmin) {
+                ->group('information-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('information-legend', t('Information'))
                     ->group('maintenance-group', 'div', function ($form) use ($data) {
                         $form->checkbox('maintenance', [
@@ -121,38 +96,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'style'    => 'color: red;'
                             ]);
                         }
-                    }, [ 'class' => 'form-group' ])
-                    ->group('theme-group', 'div', function ($form) use ($data, $optionThemes) {
-                        $form->label('theme-label', t('Website theme'))
-                        ->select('theme', $optionThemes, [
-                            'class'     => 'form-control',
-                            'required'  => 1,
-                            ':selected' => $data[ 'theme' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('theme_admin-group', 'div', function ($form) use ($data, $optionThemesAdmin) {
-                        $form->label('theme_admin-label', t('Website administration theme'))
-                        ->select('theme_admin', $optionThemesAdmin, [
-                            'class'     => 'form-control',
-                            'required'  => 1,
-                            ':selected' => $data[ 'theme_admin' ]
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('theme_admin_dark-group', 'div', function ($form) use ($data) {
-                        $form->checkbox('theme_admin_dark', [
-                            'checked' => $data[ 'theme_admin_dark' ]
-                        ])
-                        ->label('theme_admin_dark-label', '<i class="ui" aria-hidden="true"></i> ' . t('Activate the dark mode for the administrator theme if available'), [
-                            'for' => 'theme_admin_dark'
-                        ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('logo-group', 'div', function ($form) use ($data) {
-                        $form->label('logo-label', t('Logo'), [
-                            'class'        => 'control-label',
-                            'data-tooltip' => '200ko maximum.',
-                            'for'          => 'logo'
-                        ]);
-                        $this->file->inputFile('logo', $form, $data[ 'logo' ]);
                     }, [ 'class' => 'form-group' ]);
                 })
                 ->group('path-fieldset', 'fieldset', function ($form) use ($data) {
@@ -259,19 +202,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                             'placeholder' => t('Word1, Word2, Word3 ...'),
                             'value'       => $data[ 'meta_keyboard' ]
                         ]);
-                    }, [ 'class' => 'form-group' ])
-                    ->group('group-favicon', 'div', function ($form) use ($data) {
-                        $form->label('favicon-label', t('Favicon'), [
-                            'class'        => 'control-label',
-                            'data-tooltip' => t('Image to the left of the title of your browser window.'),
-                            'for'          => 'favicon'
-                        ]);
-                        $this->file->inputFile('favicon', $form, $data[ 'favicon' ]);
-                        $form->html('favicon-info-size', '<p:attr>:content</p>', [
-                            ':content' => t('The file must weigh less than 100 KB.')
-                        ])->html('favicon-info-dimensions', '<p:attr>:content</p>', [
-                            ':content' => t('The width and height min and max: 16px and 310px.')
-                        ]);
                     }, [ 'class' => 'form-group' ]);
                 });
     }
@@ -284,10 +214,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'timezone'           => 'required|timezone',
             'maintenance'        => '!required|bool',
             'rewrite_engine'     => 'bool',
-            'theme'              => 'required|string',
-            'theme_admin'        => 'required|string',
-            'theme_admin_dark'   => 'bool',
-            'logo'               => '!required|image|max:200Kb',
             'path_index'         => 'route',
             'path_access_denied' => '!required|route',
             'path_no_found'      => '!required|route',
@@ -295,23 +221,18 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'meta_title'         => 'required|string|max:64|to_htmlsc',
             'meta_description'   => 'required|string|max:256|to_htmlsc',
             'meta_keyboard'      => '!required|string|to_htmlsc',
-            'favicon'            => '!required|image:png,ico|image_dimensions_height:16,310|image_dimensions_width:16,310|max:100Kb'
         ])->setLabels([
             'lang'               => t('Language'),
             'timezone'           => t('Timezone'),
             'maintenance'        => t('Put the site in maintenance'),
             'rewrite_engine'     => t('Make the URLs clean'),
-            'theme'              => t('Website theme'),
-            'theme_admin'        => t('Website administration theme'),
-            'logo'               => t('Logo'),
             'path_index'         => t('Default page'),
             'path_access_denied' => t('Page 403 by default (access denied)'),
             'path_no_found'      => t('Page 404 by default (page not found)'),
             'path_maintenance'   => t('Page de maintenance par défaut'),
             'meta_title'         => t('Website title'),
             'meta_description'   => t('Description'),
-            'meta_keyboard'      => t('Keywords'),
-            'favicon'            => t('Favicon')
+            'meta_keyboard'      => t('Keywords')
         ]);
     }
 
@@ -322,9 +243,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             'timezone'           => $validator->getInput('timezone'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
             'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
-            'theme'              => $validator->getInput('theme'),
-            'theme_admin'        => $validator->getInput('theme_admin'),
-            'theme_admin_dark'   => (bool) $validator->getInput('theme_admin_dark'),
             'path_index'         => $validator->getInput('path_index'),
             'path_access_denied' => $validator->getInput('path_access_denied'),
             'path_no_found'      => $validator->getInput('path_no_found'),
@@ -337,7 +255,6 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 
     public function files(&$inputsFile)
     {
-        $inputsFile = [ 'logo', 'favicon' ];
     }
 
     public function after(&$validator, $data, $id)

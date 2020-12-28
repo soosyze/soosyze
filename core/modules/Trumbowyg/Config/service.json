@@ -1,6 +1,6 @@
 {
     "trumbowyg.install": {
-        "class": "SoosyzeCore\\Trumbowyg\\Installer",
+        "class": "SoosyzeCore\\Trumbowyg\\Extend",
         "hooks": {
             "install.user": "hookInstallUser"
         }

@@ -2,9 +2,15 @@
     "name": "soosyze-core/bootstrap3",
     "type": "soosyze-theme",
     "description": "Thème standard utilisant la bibliothèque d'affichage Bootstrap 3, avec un menu horizontal fixe sur plusieurs niveaux.",
-    "version": "1.0",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Theme\\Bootstrap3\\": "/"
+        }
+    },
     "extra": {
-        "soosyze-theme": {
+        "soosyze": {
+            "title": "Bootstrap3",
             "sections": [
                 "header",
                 "sidebar",

@@ -22,7 +22,7 @@ class Section extends \Soosyze\Controller
         $scripts .= '<script src="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/scripts.js"></script>';
 
         return self::template()
-                ->getTheme($theme)
+                ->getTheme($theme === 'admin' ? 'theme_admin' : 'theme')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-columns" aria-hidden="true"></i>',
                     'title_main' => t('Editing blocks')
@@ -34,10 +34,10 @@ class Section extends \Soosyze\Controller
                 ->make('page.content', 'block/content-section-admin.php', $this->pathViews, [
                     'content'          => t('View and edit your site\'s display on the following topics.'),
                     'link_theme'       => self::router()->getRoute('block.section.admin', [
-                        ':theme' => 'theme'
+                        ':theme' => 'public'
                     ]),
                     'link_theme_admin' => self::router()->getRoute('block.section.admin', [
-                        ':theme' => 'theme_admin'
+                        ':theme' => 'admin'
                     ])
         ]);
     }

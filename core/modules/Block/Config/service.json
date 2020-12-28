@@ -32,8 +32,8 @@
             "route.block.delete": "hookBlockDeleted"
         }
     },
-    "block.install": {
-        "class": "SoosyzeCore\\Block\\Installer",
+    "block.extend": {
+        "class": "SoosyzeCore\\Block\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"

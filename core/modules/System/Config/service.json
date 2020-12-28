@@ -5,7 +5,10 @@
     },
     "composer": {
         "class": "SoosyzeCore\\System\\Services\\Composer",
-        "arguments": ["@core", "@module"]
+        "arguments": ["@core", "@module", "@semver"]
+    },
+    "semver": {
+        "class": "SoosyzeCore\\System\\Services\\Semver"
     },
     "module": {
         "class": "SoosyzeCore\\System\\Services\\Modules",
@@ -26,8 +29,8 @@
             "app.response.after": "hookResponseAfter"
         }
     },
-    "system.install": {
-        "class": "SoosyzeCore\\System\\Installer",
+    "system.extend": {
+        "class": "SoosyzeCore\\System\\Extend",
         "hooks": {
             "install.user": "hookInstallUser",
             "install.menu": "hookInstallMenu"
@@ -38,12 +41,17 @@
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.system.module.edit": "hookModuleManage",
-            "route.system.module.update": "hookModuleManage"
+            "route.system.module.update": "hookModuleManage",
+            "route.system.theme.index": "hookThemeManage",
+            "route.system.theme.admin": "hookThemeManage",
+            "route.system.theme.active": "hookThemeManage",
+            "route.system.theme.edit": "hookThemeManage",
+            "route.system.theme.update": "hookThemeManage"
         }
     },
     "system.hook.config": {
         "class": "SoosyzeCore\\System\\Services\\HookConfig",
-        "arguments": ["@file", "@router", "@template", "@translate"],
+        "arguments": ["@file", "@router", "@translate"],
         "hooks": {
             "config.edit.menu": "menu"
         }

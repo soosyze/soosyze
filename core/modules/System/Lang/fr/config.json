@@ -7,10 +7,7 @@
     "Put the site in maintenance": "Mettre le site en maintenance",
     "Make the URLs clean": "Rendre les URLs propres",
     "Your server does not determine whether clean URLs can be enabled.": "Votre serveur ne permet pas de déterminer si les URLs propres peuvent être activées.",
-    "Website theme": "Thème du site",
-    "Website administration theme": "Thème d'administration du site",
     "Activate the dark mode for the administrator theme if available": "Activer le mode sombre pour le thème administrateur si disponible",
-    "Logo": "Logo",
     "Default page": "Page par défaut",
     "Default homepage": "Page d’accueil par défaut",
     "Content link displayed on your site's homepage.": "Lien du contenu affiché en page d’accueil de votre site.",
@@ -28,9 +25,5 @@
     "Description": "Description",
     "Help your SEO and appears in the search engines.": "Aide votre référencement et apparaît dans les moteurs de recherche.",
     "Keywords": "Mots-clés",
-    "Word1, Word2, Word3 ...": "Mot1, Mot2, Mot3...",
-    "Favicon": "Favicon",
-    "Image to the left of the title of your browser window.": "Image à gauche du titre de la fenêtre de votre navigateur.",
-    "The file must weigh less than 100 KB.": "Le fichier doit peser moins de 100 Ko.",
-    "The width and height min and max: 16px and 310px.": "La largeur et hauteur min et max : 16px et 310px."
+    "Word1, Word2, Word3 ...": "Mot1, Mot2, Mot3..."
 }

@@ -1,6 +1,6 @@
 {
-    "news.install": {
-        "class": "SoosyzeCore\\News\\Installer",
+    "news.extend": {
+        "class": "SoosyzeCore\\News\\Extend",
         "hooks": {
             "install.menu": "hookInstallMenu",
             "install.user": "hookInstallUser"

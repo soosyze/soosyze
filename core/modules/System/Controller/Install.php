@@ -29,6 +29,14 @@ class Install extends \Soosyze\Controller
         'Trumbowyg'   => 'SoosyzeCore\\Trumbowyg\\'
     ];
 
+    /**
+     * Liste des thèmes à installer.
+     */
+    private $themes = [
+        'Fez'   => 'SoosyzeCore\\Theme\\Fez\\',
+        'Admin' => 'SoosyzeCore\\Theme\\Admin\\'
+    ];
+
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
@@ -95,6 +103,7 @@ class Install extends \Soosyze\Controller
             $this->position($steps, $id);
             if (($next = next($steps)) === false && key($steps) === null) {
                 $this->installModule();
+                $this->installThemes();
 
                 return $this->installFinish();
             }
@@ -124,38 +133,34 @@ class Install extends \Soosyze\Controller
 
     private function installModule()
     {
-        /* Installation */
         $composer = [];
         $profil    = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
 
         $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
 
         foreach ($this->modules as $title => $namespace) {
-            $migration = $namespace . 'Installer';
-            $installer = new $migration();
+            $extendClass = $namespace . 'Extend';
 
-            $installer->boot();
+            $extend = new $extendClass();
+
+            $extend->boot();
             /* Lance les scripts d'installation (database, configuration...) */
-            $installer->install($this->container);
+            $extend->install($this->container);
             /* Lance les scripts de remplissages de la base de données. */
-            $installer->seeders($this->container);
+            $extend->seeders($this->container);
 
-            $composer[ $title ] = Util::getJson($installer->getDir() . '/composer.json');
+            $composer[ $title ] = Util::getJson($extend->getDir() . '/composer.json');
 
             $composer[ $title ] += [
-                'dir'          => $installer->getDir(),
-                'translations' => $installer->getTranslations()
+                'dir'          => $extend->getDir(),
+                'translations' => $extend->getTranslations()
             ];
 
             /* Charge le container des nouveaux services. */
             $this->loadContainer($composer[ $title ]);
         }
 
-        self::module()->loadTranslations(
-            array_keys($this->modules),
-            $composer,
-            true
-        );
+        self::module()->loadTranslations($composer);
 
         foreach ($this->modules as $title => $namespace) {
             /* Charge la version du coeur à ses modules. */
@@ -177,9 +182,36 @@ class Install extends \Soosyze\Controller
             ->insertInto('module_require', [
                 'title_module', 'title_required', 'version'
             ])
-            ->values([ 'Core', 'System', '1.0' ])
-            ->values([ 'Core', 'User', '1.0' ])
+            ->values([ 'Core', 'System', '1.0.0' ])
+            ->values([ 'Core', 'User', '1.0.0' ])
             ->execute();
+    }
+
+    private function installThemes()
+    {
+        $composer = [];
+
+        foreach ($this->themes as $title => $namespace) {
+            $extendClass = $namespace . 'Extend';
+
+            $extend = new $extendClass();
+
+            $extend->boot();
+
+            $composer[ $title ] = Util::getJson($extend->getDir() . '/composer.json');
+
+            $composer[ $title ] += [
+                'dir'          => $extend->getDir(),
+                'translations' => $extend->getTranslations()
+            ];
+        }
+
+        self::module()->loadTranslations($composer);
+
+        self::config()
+            ->set('settings.theme', 'Fez')
+            ->set('settings.theme_admin', 'Admin')
+            ->set('settings.logo', '');
     }
 
     private function installMigration($dir, $title)
@@ -234,9 +266,6 @@ class Install extends \Soosyze\Controller
             ->set('settings.time_installed', time())
             ->set('settings.lang', $saveLanguage['lang'])
             ->set('settings.timezone', $saveLanguage['timezone'])
-            ->set('settings.theme', 'Fez')
-            ->set('settings.theme_admin', 'Admin')
-            ->set('settings.logo', '')
             ->set('settings.key_cron', Util::strRandom(50))
             ->set('settings.rewrite_engine', false);
 

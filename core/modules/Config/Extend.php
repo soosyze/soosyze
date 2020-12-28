@@ -1,10 +1,10 @@
 <?php
 
-namespace SoosyzeCore\Contact;
+namespace SoosyzeCore\Config;
 
 use Psr\Container\ContainerInterface;
 
-class Installer extends \SoosyzeCore\System\Migration
+class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir()
     {
@@ -14,7 +14,6 @@ class Installer extends \SoosyzeCore\System\Migration
     public function boot()
     {
         $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
     }
 
     public function install(ContainerInterface $ci)
@@ -41,7 +40,10 @@ class Installer extends \SoosyzeCore\System\Migration
             ->insertInto('menu_link', [
                 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
-            ->values([ 'contact', '', 'Contact', 'contact', 'menu-main', 50, -1 ])
+            ->values([
+                'config.admin', 'fa fa-cog', 'Configuration', 'admin/config',
+                'menu-admin', 6, -1
+            ])
             ->execute();
     }
 
@@ -49,9 +51,7 @@ class Installer extends \SoosyzeCore\System\Migration
     {
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'contact.main' ])
-            ->values([ 2, 'contact.main' ])
-            ->values([ 1, 'contact.main' ])
+            ->values([ 3, 'config.manage' ])
             ->execute();
     }
 
@@ -74,7 +74,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->menu()->deleteLinks(function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
-                    ->where('key', 'like', 'contact%')
+                    ->where('key', 'like', 'config%')
                     ->fetchAll();
         });
     }
@@ -84,7 +84,7 @@ class Installer extends \SoosyzeCore\System\Migration
         $ci->query()
             ->from('role_permission')
             ->delete()
-            ->where('permission_id', 'like', 'contact.%')
+            ->where('permission_id', 'like', 'config.%')
             ->execute();
     }
 }
