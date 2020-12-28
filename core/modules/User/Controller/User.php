@@ -4,6 +4,7 @@ namespace SoosyzeCore\User\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
+use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
 
@@ -22,7 +23,7 @@ class User extends \Soosyze\Controller
             return $this->show($user[ 'user_id' ], $req);
         }
 
-        return new \Soosyze\Components\Http\Response(403);
+        return new Response(403);
     }
 
     public function show($id, $req)

@@ -3,6 +3,7 @@
 namespace SoosyzeCore\System\Services;
 
 use Soosyze\Components\Http\Redirect;
+use SoosyzeCore\Template\Services\Templating;
 
 class HookApp
 {
@@ -173,7 +174,7 @@ class HookApp
 
     public function hookResponseAfter($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
 

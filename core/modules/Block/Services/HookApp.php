@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\Block\Services;
 
+use SoosyzeCore\Template\Services\Templating;
+
 class HookApp
 {
     protected $core;
@@ -33,14 +35,9 @@ class HookApp
         }
     }
 
-    public function hookResponseAfter(
-        \Soosyze\Components\Http\ServerRequest $request,
-        &$response
-    ) {
-        if (
-            !($response instanceof \SoosyzeCore\Template\Services\Templating) ||
-            $response->getStatusCode() !== 200
-        ) {
+    public function hookResponseAfter($request, &$response)
+    {
+        if (!($response instanceof Templating) || $response->getStatusCode() !== 200) {
             return;
         }
 

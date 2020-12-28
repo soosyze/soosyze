@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\Menu\Services;
 
+use SoosyzeCore\Template\Services\Templating;
+
 class HookApp
 {
     protected $menu;
@@ -26,7 +28,7 @@ class HookApp
 
     public function hookMenuShowResponseAfter($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
         $script = $response->getBlock('this')->getVar('scripts');

@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\Template\Services;
 
+use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 
 class Templating extends \Soosyze\Components\Http\Response
@@ -65,7 +66,7 @@ class Templating extends \Soosyze\Components\Http\Response
     public function __toString()
     {
         $content    = $this->getThemplate()->render();
-        $this->body = new \Soosyze\Components\Http\Stream($content);
+        $this->body = new Stream($content);
 
         return parent::__toString();
     }

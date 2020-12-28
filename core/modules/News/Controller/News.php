@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\News\Controller;
 
+use Soosyze\Components\Http\Response;
+use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Paginate\Paginator;
 
 class News extends \Soosyze\Controller
@@ -154,7 +156,7 @@ class News extends \Soosyze\Controller
             ? $items[0]['date_created']
             : '';
 
-        $stream = new \Soosyze\Components\Http\Stream(
+        $stream = new Stream(
             self::template()
                 ->createBlock('news/page-news-rss.php', $this->pathViews)
                 ->addVars([
@@ -168,7 +170,7 @@ class News extends \Soosyze\Controller
         ])
         );
 
-        return (new \Soosyze\Components\Http\Response(200, $stream))
+        return (new Response(200, $stream))
                 ->withHeader('Content-Type', 'application/rss+xml; charset=utf-8')
                 ->withHeader('Content-Length', $stream->getSize())
                 ->withHeader('Content-Disposition', 'attachment; filename=rss.xml');

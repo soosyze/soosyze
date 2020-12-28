@@ -4,6 +4,7 @@ namespace SoosyzeCore\User\Services;
 
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
+use SoosyzeCore\Template\Services\Templating;
 
 class User
 {
@@ -407,7 +408,7 @@ class User
 
     public function hookResponseAfter($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
 

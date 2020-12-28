@@ -3,6 +3,7 @@
 namespace SoosyzeCore\Block\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Block\Form\FormBlock;
 
@@ -160,7 +161,7 @@ class Block extends \Soosyze\Controller
             $this->container->callHook('block.store.after', [ $validator, $values ]);
         }
 
-        return new \Soosyze\Components\Http\Redirect(
+        return new Redirect(
             self::router()->getRoute('block.section.admin', [ ':theme' => $theme ])
         );
     }

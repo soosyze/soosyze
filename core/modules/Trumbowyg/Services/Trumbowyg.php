@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\Trumbowyg\Services;
 
+use SoosyzeCore\Template\Services\Templating;
+
 class Trumbowyg
 {
     /**
@@ -17,7 +19,7 @@ class Trumbowyg
 
     public function getEditor($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
 

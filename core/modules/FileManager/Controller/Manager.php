@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\FileManager\Controller;
 
+use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
@@ -168,7 +169,7 @@ class Manager extends \Soosyze\Controller
             ]),
         ]);
 
-        $form = (new \Soosyze\Components\Form\FormBuilder([
+        $form = (new FormBuilder([
                 'action' => self::router()->getRoute('filemanager.filter', [
                     ':path' => $path
                 ]),
