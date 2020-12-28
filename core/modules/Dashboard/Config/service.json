@@ -15,7 +15,7 @@
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.dashboard.index": "hookDashboardAdminister",
-            "route.dashboard.about": "hookDashboardAdminister",
+            "route.dashboard.info": "hookDashboardAdminister",
             "route.dashboard.cron": "hookDashboardAdminister",
             "route.dashboard.trans": "hookDashboardAdminister"
         }

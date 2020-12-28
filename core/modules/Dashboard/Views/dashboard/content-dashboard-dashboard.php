@@ -165,7 +165,7 @@
                 <tfoot>
                     <tr>
                         <th colspan="2">
-                            <a href="<?php echo $link_about; ?>"><?php echo t('More information about the server'); ?></a>
+                            <a href="<?php echo $link_info; ?>"><?php echo t('More information about the server'); ?></a>
                         </th>
                     </tr>
                 </tfoot>

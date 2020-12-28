@@ -31,7 +31,7 @@ class Dashboard extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
-                    'link_about'  => self::router()->getRoute('dashboard.about'),
+                    'link_info'   => self::router()->getRoute('dashboard.info'),
                     'link_cron'   => self::router()->getRoute('dashboard.cron'),
                     'link_trans'  => self::router()->getRoute('dashboard.trans'),
                     'size_backup' => self::dashboard()->getSizeBackups(),
@@ -40,15 +40,22 @@ class Dashboard extends \Soosyze\Controller
         ]);
     }
 
-    public function about($req)
+    public function info($req)
     {
+        ob_start();
+        phpinfo();
+        $info = ob_get_contents();
+        ob_end_clean();
+
         return self::template()
                 ->getTheme('theme_admin')
-                ->view('page', [
-                    'icon'       => '<i class="fas fa-tachometer-alt" aria-hidden="true"></i>',
-                    'title_main' => t('About')
-                ])
-                ->make('page.content', 'dashboard/content-dashboard-about.php', $this->pathViews);
+                ->make('page.content', 'dashboard/content-dashboard-info.php', $this->pathViews, [
+                    'info' => str_replace(
+                        'module_Zend Optimizer',
+                        'module_Zend_Optimizer',
+                        preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info)
+                    )
+        ]);
     }
 
     public function cron($req)
