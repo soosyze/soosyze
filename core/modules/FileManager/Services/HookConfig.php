@@ -13,7 +13,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
     public function defaultValues()
     {
         return [
-            'replace_file' => 1
+            'replace_file' => self::REPLACE_WITH
         ];
     }
 
@@ -30,7 +30,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
             $form->legend('file-legend', t('Behavior of file transfers'))
                 ->group('replace_file_1-group', 'div', function ($form) use ($data) {
                     $form->radio('replace_file', [
-                        'checked'  => $data[ 'replace_file' ] === 1,
+                        'checked'  => $data[ 'replace_file' ] === self::REPLACE_WITH,
                         'id'       => 'replace_file_1',
                         'required' => 1,
                         'value'    => self::REPLACE_WITH
@@ -40,7 +40,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('replace_file_2-group', 'div', function ($form) use ($data) {
                     $form->radio('replace_file', [
-                        'checked'  => $data[ 'replace_file' ] === 2,
+                        'checked'  => $data[ 'replace_file' ] === self::KEEP_RENAME,
                         'id'       => 'replace_file_2',
                         'required' => 1,
                         'value'    => self::KEEP_RENAME
@@ -50,7 +50,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('replace_file_3-group', 'div', function ($form) use ($data) {
                     $form->radio('replace_file', [
-                        'checked'  => $data[ 'replace_file' ] === 3,
+                        'checked'  => $data[ 'replace_file' ] === self::KEEP_REFUSE,
                         'id'       => 'replace_file_3',
                         'required' => 1,
                         'value'    => self::KEEP_REFUSE
