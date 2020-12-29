@@ -35,8 +35,7 @@
     "block.extend": {
         "class": "SoosyzeCore\\Block\\Extend",
         "hooks": {
-            "install.user": "hookInstallUser",
-            "install.menu": "hookInstallMenu"
+            "install.user": "hookInstallUser"
         }
     }
 }
