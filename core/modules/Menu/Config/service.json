@@ -10,7 +10,7 @@
         }
     },
     "menu.hook.user": {
-        "class": "SoosyzeCore\\Menu\\Services\\HookUser",
+        "class": "SoosyzeCore\\Menu\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.menu.link.create": "hookMenuAdminister",
@@ -30,7 +30,7 @@
         }
     },
     "menu.hook.app": {
-        "class": "SoosyzeCore\\Menu\\Services\\HookApp",
+        "class": "SoosyzeCore\\Menu\\Hook\\App",
         "arguments": ["@menu"],
         "hooks": {
             "app.response.after": "hookResponseAfter",
@@ -39,7 +39,7 @@
         }
     },
     "menu.hook.block": {
-        "class": "SoosyzeCore\\Menu\\Services\\HookBlock",
+        "class": "SoosyzeCore\\Menu\\Hook\\Block",
         "arguments": ["@menu", "@router"],
         "hooks": {
             "block.create.form.data": "hookCreateFormData",

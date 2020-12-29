@@ -19,7 +19,7 @@
         "arguments": ["@composer", "@config", "@query", "@schema"]
     },
     "system.hook.app": {
-        "class": "SoosyzeCore\\System\\Services\\HookApp",
+        "class": "SoosyzeCore\\System\\Hook\\App",
         "arguments": ["@alias", "@config", "@core", "@query", "@router", "@template"],
         "hooks": {
             "app.response.before": "hookSys",
@@ -37,7 +37,7 @@
         }
     },
     "system.hook.user": {
-        "class": "SoosyzeCore\\System\\Services\\HookUser",
+        "class": "SoosyzeCore\\System\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.system.module.edit": "hookModuleManage",
@@ -50,14 +50,14 @@
         }
     },
     "system.hook.config": {
-        "class": "SoosyzeCore\\System\\Services\\HookConfig",
+        "class": "SoosyzeCore\\System\\Hook\\Config",
         "arguments": ["@file", "@router", "@translate"],
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "mailer.hook.config": {
-        "class": "SoosyzeCore\\System\\Services\\HookConfigMailer",
+        "class": "SoosyzeCore\\System\\Hook\\ConfigMailer",
         "hooks": {
             "config.edit.menu": "menu"
         }

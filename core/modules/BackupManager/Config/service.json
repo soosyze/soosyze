@@ -11,13 +11,13 @@
         "arguments": ["@config", "@core", "@router"]
     },
     "backupmanager.hook.config": {
-        "class": "SoosyzeCore\\BackupManager\\Services\\HookConfig",
+        "class": "SoosyzeCore\\BackupManager\\Hook\\Config",
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "backupmanager.hook.user": {
-        "class": "SoosyzeCore\\BackupManager\\Services\\HookUser",
+        "class": "SoosyzeCore\\BackupManager\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.backupmanager.admin": "hookBackupManage",
@@ -29,7 +29,7 @@
         }
     },
     "backupmanager.hook.cron": {
-        "class": "SoosyzeCore\\BackupManager\\Services\\HookCron",
+        "class": "SoosyzeCore\\BackupManager\\Hook\\Cron",
         "arguments": ["@backupmanager", "@config"],
         "hooks": {
             "app.cron": "hookAppCron"

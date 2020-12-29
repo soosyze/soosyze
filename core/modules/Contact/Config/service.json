@@ -7,7 +7,7 @@
         }
     },
     "contact.hook.user": {
-        "class": "SoosyzeCore\\Contact\\Services\\HookUser",
+        "class": "SoosyzeCore\\Contact\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.contact": "hookContact",

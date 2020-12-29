@@ -7,20 +7,20 @@
         }
     },
     "block.hook.app": {
-        "class": "SoosyzeCore\\Block\\Services\\HookApp",
+        "class": "SoosyzeCore\\Block\\Hook\\App",
         "arguments": ["@core", "@query", "@router", "@template", "@user"],
         "hooks": {
             "app.response.after": "hookResponseAfter"
         }
     },
     "social.hook.config": {
-        "class": "SoosyzeCore\\Block\\Services\\HookConfig",
+        "class": "SoosyzeCore\\Block\\Hook\\Config",
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "block.hook.user": {
-        "class": "SoosyzeCore\\Block\\Services\\HookUser",
+        "class": "SoosyzeCore\\Block\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.block.section.admin": "hookBlockAdmin",

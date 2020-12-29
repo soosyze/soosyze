@@ -7,7 +7,7 @@
         }
     },
     "news.hook.user": {
-        "class": "SoosyzeCore\\News\\Services\\HookUser",
+        "class": "SoosyzeCore\\News\\Hook\\User",
         "hooks": {
             "route.news.index": "hookNewShow",
             "route.news.page": "hookNewShow",
@@ -21,14 +21,14 @@
         }
     },
     "news.hook.config": {
-        "class": "SoosyzeCore\\News\\Services\\HookConfig",
+        "class": "SoosyzeCore\\News\\Hook\\Config",
         "arguments": ["@file"],
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "news.hook.block": {
-        "class": "SoosyzeCore\\News\\Services\\HookBlock",
+        "class": "SoosyzeCore\\News\\Hook\\Block",
         "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
             "block.create.form.data": "hookCreateFormData",
@@ -44,7 +44,7 @@
         }
     },
     "news.hook.node": {
-        "class": "SoosyzeCore\\News\\Services\\HookNode",
+        "class": "SoosyzeCore\\News\\Hook\\Node",
         "arguments": ["@config"],
         "hooks": {
             "node.makefields": "hookNodeShowBefore",

@@ -33,7 +33,7 @@ class FileManager
     private $core;
 
     /**
-     * @var \SoosyzeCore\FileManager\Services\HookUser
+     * @var \SoosyzeCore\FileManager\Hook\User
      */
     private $hookUser;
 

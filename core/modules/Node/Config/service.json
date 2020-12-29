@@ -12,7 +12,7 @@
         }
     },
     "node.hook.block": {
-        "class": "SoosyzeCore\\Node\\Services\\HookBlock",
+        "class": "SoosyzeCore\\Node\\Hook\\Block",
         "arguments": ["@alias", "@node", "@query", "@router"],
         "hooks": {
             "block.create.form.data": "hookCreateFormData",
@@ -23,14 +23,14 @@
         }
     },
     "node.hook.config": {
-        "class": "SoosyzeCore\\Node\\Services\\HookConfig",
+        "class": "SoosyzeCore\\Node\\Hook\\Config",
         "arguments": ["@query"],
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "node.hook.filemanager": {
-        "class": "SoosyzeCore\\Node\\Services\\HookFileManager",
+        "class": "SoosyzeCore\\Node\\Hook\\FileManager",
         "arguments": ["@core", "@module", "@router"],
         "hooks": {
             "node.create.form": "hookNodeCreateForm",
@@ -40,7 +40,7 @@
         }
     },
     "node.hook.app": {
-        "class": "SoosyzeCore\\Node\\Services\\HookApp",
+        "class": "SoosyzeCore\\Node\\Hook\\App",
         "arguments": ["@core"],
         "hooks": {
             "app.response.after": "hookResponseAfter",
@@ -48,14 +48,14 @@
         }
     },
     "node.hook.api.route": {
-        "class": "SoosyzeCore\\Node\\Services\\HookApiRoute",
+        "class": "SoosyzeCore\\Node\\Hook\\ApiRoute",
         "arguments": ["@alias", "@query", "@router"],
         "hooks": {
             "api.route": "hookApiRoute"
         }
     },
     "node.hook.url": {
-        "class": "SoosyzeCore\\Node\\Services\\HookUrl",
+        "class": "SoosyzeCore\\Node\\Hook\\Url",
         "arguments": ["@alias", "@config", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
@@ -70,7 +70,7 @@
         }
     },
     "node.hook.menu": {
-        "class": "SoosyzeCore\\Node\\Services\\HookMenu",
+        "class": "SoosyzeCore\\Node\\Hook\\Menu",
         "arguments": ["@alias", "@query", "@schema"],
         "hooks": {
             "node.create.form.data": "hookCreateFormData",
@@ -86,7 +86,7 @@
         }
     },
     "node.hook.user": {
-        "class": "SoosyzeCore\\Node\\Services\\HookUser",
+        "class": "SoosyzeCore\\Node\\Hook\\User",
         "arguments": ["@query"],
         "hooks": {
             "user.permission.module": "hookPermission",
@@ -112,7 +112,7 @@
         }
     },
     "node.hook.cron": {
-        "class": "SoosyzeCore\\Node\\Services\\HookCron",
+        "class": "SoosyzeCore\\Node\\Hook\\Cron",
         "arguments": ["@config", "@query"],
         "hooks": {
             "app.cron": "hookCron"

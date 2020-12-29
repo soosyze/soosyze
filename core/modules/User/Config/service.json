@@ -20,14 +20,14 @@
         }
     },
     "user.hook.api.route": {
-        "class": "SoosyzeCore\\User\\Services\\HookApiRoute",
+        "class": "SoosyzeCore\\User\\Hook\\ApiRoute",
         "arguments": ["@config", "@router"],
         "hooks": {
             "api.route": "hookApiRoute"
         }
     },
     "user.hook.user": {
-        "class": "SoosyzeCore\\User\\Services\\HookUser",
+        "class": "SoosyzeCore\\User\\Hook\\User",
         "arguments": ["@config", "@user"],
         "hooks": {
             "user.permission.module": "hookPermission",
@@ -61,7 +61,7 @@
         }
     },
     "user.hook.config": {
-        "class": "SoosyzeCore\\User\\Services\\HookConfig",
+        "class": "SoosyzeCore\\User\\Hook\\Config",
         "arguments": ["@router"],
         "hooks": {
             "config.edit.menu": "menu"

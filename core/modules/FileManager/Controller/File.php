@@ -7,8 +7,8 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\FileManager\Hook\Config;
 use SoosyzeCore\FileManager\Services\FileManager;
-use SoosyzeCore\FileManager\Services\HookConfig;
 
 class File extends \Soosyze\Controller
 {
@@ -189,9 +189,9 @@ class File extends \Soosyze\Controller
             ->setPath($path)
             ->isResolvePath();
 
-        if (self::config()->get('settings.replace_file') === HookConfig::KEEP_RENAME) {
+        if (self::config()->get('settings.replace_file') === Config::KEEP_RENAME) {
             $serviceFile = $serviceFile->isResolveName();
-        } elseif (self::config()->get('settings.replace_file') === HookConfig::KEEP_REFUSE && is_file("$dir/$filename.$ext")) {
+        } elseif (self::config()->get('settings.replace_file') === Config::KEEP_REFUSE && is_file("$dir/$filename.$ext")) {
             return $this->json(400, [
                 'messages' => [
                     'type'   => t('Error'),

@@ -19,20 +19,20 @@
         }
     },
     "filemanager.hook.app": {
-        "class": "SoosyzeCore\\FileManager\\Services\\HookApp",
+        "class": "SoosyzeCore\\FileManager\\Hook\\App",
         "arguments": ["@core"],
         "hooks": {
             "app.response.after": "hookResponseAfter"
         }
     },
     "filemanager.hook.config": {
-        "class": "SoosyzeCore\\FileManager\\Services\\HookConfig",
+        "class": "SoosyzeCore\\FileManager\\Hook\\Config",
         "hooks": {
             "config.edit.menu": "menu"
         }
     },
     "filemanager.hook.menu": {
-        "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
+        "class": "SoosyzeCore\\FileManager\\Hook\\Menu",
         "arguments": ["@router"],
         "hooks": {
             "user.submenu": "hookUsersMenu",
@@ -40,7 +40,7 @@
         }
     },
     "filemanager.hook.user": {
-        "class": "SoosyzeCore\\FileManager\\Services\\HookUser",
+        "class": "SoosyzeCore\\FileManager\\Hook\\User",
         "arguments": ["@fileprofil", "@user"],
         "hooks": {
             "user.permission.module": "hookPermission",
@@ -73,7 +73,7 @@
         }
     },
     "filemanager.hook.role": {
-        "class": "SoosyzeCore\\FileManager\\Services\\HookRole",
+        "class": "SoosyzeCore\\FileManager\\Hook\\Role",
         "arguments": ["@query"],
         "hooks": {
             "role.delete.before": "hookRoleDeleteBefore"

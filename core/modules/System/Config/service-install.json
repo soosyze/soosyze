@@ -7,7 +7,7 @@
         }
     },
     "install.hook.install": {
-        "class": "SoosyzeCore\\System\\Services\\HookStep",
+        "class": "SoosyzeCore\\System\\Hook\\Step",
         "arguments": ["@core", "@router", "@translate"],
         "hooks": {
             "step": "hookStep",

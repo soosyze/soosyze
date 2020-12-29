@@ -5,7 +5,7 @@ namespace SoosyzeCore\FileManager\Services;
 class FilterManagerIterator extends \FilterIterator
 {
     /**
-     * @var \SoosyzeCore\FileManager\Services\HookUser
+     * @var \SoosyzeCore\FileManager\Hook\User
      */
     private $hookUser;
 

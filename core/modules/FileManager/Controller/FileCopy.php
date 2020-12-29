@@ -5,7 +5,7 @@ namespace SoosyzeCore\FileManager\Controller;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\FileManager\Services\HookConfig;
+use SoosyzeCore\FileManager\Hook\Config;
 
 class FileCopy extends \Soosyze\Controller
 {
@@ -165,9 +165,9 @@ class FileCopy extends \Soosyze\Controller
         }
 
         $fileTarget = "$dirTarget$name$ext";
-        if (self::config()->get('settings.replace_file') === HookConfig::KEEP_RENAME) {
+        if (self::config()->get('settings.replace_file') === Config::KEEP_RENAME) {
             $fileTarget = $this->isResolveName($dirTarget, $name, $ext);
-        } elseif (self::config()->get('settings.replace_file') === HookConfig::KEEP_REFUSE && is_file($fileTarget)) {
+        } elseif (self::config()->get('settings.replace_file') === Config::KEEP_REFUSE && is_file($fileTarget)) {
             return $this->json(400, [
                     'messages' => [
                         'type'   => t('Error'),

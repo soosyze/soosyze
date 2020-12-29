@@ -11,7 +11,7 @@
         }
     },
     "dashboard.hook.user": {
-        "class": "SoosyzeCore\\Dashboard\\Services\\HookUser",
+        "class": "SoosyzeCore\\Dashboard\\Hook\\User",
         "hooks": {
             "user.permission.module": "hookPermission",
             "route.dashboard.index": "hookDashboardAdminister",
