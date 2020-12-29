@@ -4,12 +4,15 @@ namespace SoosyzeCore\Dashboard\Services;
 
 class Dashboard
 {
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
     /**
-     * @var \Core
+     * @var \Soosyze\App
      */
-    protected $core;
+    private $core;
 
     public function __construct($config, $core)
     {

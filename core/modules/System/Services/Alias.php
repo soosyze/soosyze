@@ -4,9 +4,15 @@ namespace SoosyzeCore\System\Services;
 
 class Alias
 {
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $query;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
     public function __construct($config, $query)
     {

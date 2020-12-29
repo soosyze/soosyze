@@ -13,22 +13,31 @@ class BackupManager
 
     const SUFFIX = 'soosyzecms.zip';
 
-    protected $core;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $router;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $config;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
+    /**
+     * @var string
+     */
     private $repository;
 
-    public function __construct(
-        $config,
-        \Soosyze\App $core,
-        \Soosyze\Components\Router\Router $router
-    ) {
+    public function __construct($config, $core, $router)
+    {
+        $this->config = $config;
         $this->core   = $core;
         $this->router = $router;
-        $this->config = $config;
 
         $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups');
     }

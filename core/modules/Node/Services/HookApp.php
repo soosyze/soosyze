@@ -7,7 +7,7 @@ class HookApp
     /**
      * @var \Soosyze\App
      */
-    protected $core;
+    private $core;
 
     public function __construct($core)
     {

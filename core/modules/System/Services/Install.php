@@ -6,7 +6,10 @@ use Soosyze\Components\Http\Redirect;
 
 class Install
 {
-    protected $router;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
     public function __construct($router)
     {

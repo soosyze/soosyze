@@ -7,22 +7,22 @@ use Soosyze\Components\Util\Util;
 class HookUrl
 {
     /**
-     * @var \Queryflatfile\Schema
+     * @var \SoosyzeCore\System\Services\Alias
      */
     private $alias;
 
     /**
-     * @var \Queryflatfile\Schema
+     * @var \Soosyze\Config
      */
     private $config;
 
     /**
-     * @var \Queryflatfile\Request
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;
 
     /**
-     * @var \Queryflatfile\Schema
+     * @var \SoosyzeCore\QueryBuilder\Services\Schema
      */
     private $schema;
 

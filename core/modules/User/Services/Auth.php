@@ -5,7 +5,7 @@ namespace SoosyzeCore\User\Services;
 class Auth
 {
     /**
-     * @var \QueryBuilder\Services\Query
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;
 

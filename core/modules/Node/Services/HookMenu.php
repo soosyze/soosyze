@@ -10,7 +10,7 @@ class HookMenu
     const MENU_DEFAULT = 'menu-main';
 
     /**
-     * @var \SoosyzeCore\System\\Services\Alias
+     * @var \SoosyzeCore\System\Services\Alias
      */
     private $alias;
 
@@ -22,12 +22,12 @@ class HookMenu
     private $isMenu;
 
     /**
-     * @var \Queryflatfile\Request
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;
 
     /**
-     * @var \Queryflatfile\Schema
+     * @var \SoosyzeCore\QueryBuilder\Services\Schema
      */
     private $schema;
 

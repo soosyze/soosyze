@@ -6,9 +6,15 @@ use Soosyze\Components\Util\Util;
 
 class HookUser
 {
-    protected $profil;
+    /**
+     * @var FileProfil
+     */
+    private $profil;
 
-    protected $user;
+    /**
+     * @var \SoosyzeCore\User\Services\User
+     */
+    private $user;
 
     public function __construct($profil, $user)
     {

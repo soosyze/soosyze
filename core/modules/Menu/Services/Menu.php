@@ -6,20 +6,35 @@ use Soosyze\Components\Http\Uri;
 
 class Menu
 {
-    protected $alias;
+    /**
+     * @var \SoosyzeCore\System\Services\Alias
+     */
+    private $alias;
 
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $pathViews;
+    /**
+     * @var string
+     */
+    private $pathViews;
 
-    protected $query;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
     public function __construct($alias, $config, $core, $query, $router)
     {

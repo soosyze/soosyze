@@ -5,7 +5,7 @@ namespace SoosyzeCore\User\Services;
 class HookApiRoute
 {
     /**
-     * @var \Soosyze\Components\Router\Router
+     * @var \Soosyze\Config
      */
     private $config;
 

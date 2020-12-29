@@ -4,12 +4,15 @@ namespace SoosyzeCore\Menu\Services;
 
 class HookBlock
 {
-    protected $menu;
+    /**
+     * @var Menu
+     */
+    private $menu;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
     public function __construct($menu, $router)
     {

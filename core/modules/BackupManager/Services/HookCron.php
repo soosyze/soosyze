@@ -4,11 +4,17 @@ namespace SoosyzeCore\BackupManager\Services;
 
 class HookCron
 {
+    /**
+     * @var BackupManager
+     */
     private $backupManager;
 
+    /**
+     * @var \Soosyze\Config
+     */
     private $config;
 
-    public function __construct(BackupManager $backupManager, $config)
+    public function __construct($backupManager, $config)
     {
         $this->backupManager = $backupManager;
         $this->config        = $config;

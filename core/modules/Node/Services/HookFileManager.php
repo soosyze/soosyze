@@ -6,8 +6,14 @@ use Soosyze\Components\Form\FormBuilder;
 
 class HookFileManager
 {
+    /**
+     * @var \Soosyze\App
+     */
     private $core;
 
+    /**
+     * @var bool
+     */
     private $hasFileManager;
 
     /**

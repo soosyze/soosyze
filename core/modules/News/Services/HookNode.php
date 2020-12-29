@@ -4,6 +4,9 @@ namespace SoosyzeCore\News\Services;
 
 class HookNode
 {
+    /**
+     * @var \Soosyze\Config
+     */
     private $config;
 
     public function __construct($config)

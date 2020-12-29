@@ -4,20 +4,37 @@ namespace SoosyzeCore\Node\Services;
 
 class Node
 {
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $pathViews;
+    /**
+     * Les données du contenu courant.
+     *
+     * @var array|null
+     */
+    private $nodeCurrent = null;
 
-    protected $query;
+    /**
+     * @var string
+     */
+    private $pathViews;
+
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
     /**
      * @var \SoosyzeCore\Template\Services\Templating
      */
-    protected $tpl;
-
-    protected $nodeCurrent = null;
+    private $tpl;
 
     public function __construct($config, $core, $query, $tpl)
     {

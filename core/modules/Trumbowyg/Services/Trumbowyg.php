@@ -9,7 +9,12 @@ class Trumbowyg
     /**
      * @var \Soosyze\App
      */
-    protected $core;
+    private $core;
+
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
     public function __construct($core, $router)
     {

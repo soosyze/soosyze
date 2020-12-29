@@ -7,22 +7,22 @@ class Migration
     /**
      * @var Composer
      */
-    protected $composer;
+    private $composer;
 
     /**
      * @var \Soosyze\Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
-    protected $query;
+    private $query;
 
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Schema
      */
-    protected $schema;
+    private $schema;
 
     public function __construct($composer, $config, $query, $schema)
     {

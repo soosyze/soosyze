@@ -4,7 +4,10 @@ namespace SoosyzeCore\News\Services;
 
 class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    protected $file;
+    /**
+     * @var \SoosyzeCore\FileSystem\Services\File
+     */
+    private $file;
 
     public function __construct($file)
     {

@@ -9,31 +9,6 @@ use Soosyze\Components\Validator\Validator;
 class HookStep
 {
     /**
-     * @var \Soosyze\App
-     */
-    protected $core;
-
-    /**
-     * @var \Soosyze\Router
-     */
-    protected $router;
-
-    /**
-     * @var \SoosyzeCore\Translate\Services\Translation
-     */
-    protected $translate;
-
-    /**
-     * @var string
-     */
-    protected $pathViews;
-
-    /**
-     * @var string
-     */
-    protected $pathContent;
-
-    /**
      * @var string[]
      */
     protected static $columnsMenu = [
@@ -47,6 +22,31 @@ class HookStep
         'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
         'title'
     ];
+
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
+
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
+
+    /**
+     * @var \SoosyzeCore\Translate\Services\Translation
+     */
+    private $translate;
+
+    /**
+     * @var string
+     */
+    private $pathViews;
+
+    /**
+     * @var string
+     */
+    private $pathContent;
 
     public function __construct($core, $router, $translate)
     {

@@ -4,16 +4,13 @@ namespace SoosyzeCore\FileManager\Services;
 
 class HookMenu
 {
-    protected $profil;
-
     /**
-     * @var \Soosyze\Router
+     * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
-    public function __construct($profil, $router)
+    public function __construct($router)
     {
-        $this->profil = $profil;
         $this->router = $router;
     }
 

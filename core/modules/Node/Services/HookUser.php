@@ -5,7 +5,7 @@ namespace SoosyzeCore\Node\Services;
 class HookUser
 {
     /**
-     * @var \Queryflatfile\Request
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;
 

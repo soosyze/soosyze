@@ -4,6 +4,9 @@ namespace SoosyzeCore\Node\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    /**
+     * @var array
+     */
     protected $nodeTypes = [];
 
     public function __construct($query)

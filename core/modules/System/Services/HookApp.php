@@ -7,19 +7,40 @@ use SoosyzeCore\Template\Services\Templating;
 
 class HookApp
 {
-    protected $alias;
+    /**
+     * @var \SoosyzeCore\System\Services\Alias
+     */
+    private $alias;
 
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $query;
+    /**
+     * @var string
+     */
+    private $pathViews;
 
-    protected $router;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
-    protected $pathViews;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
-    protected $tpl;
+    /**
+     * @var Templating
+     */
+    private $tpl;
 
     public function __construct(
         $alias,

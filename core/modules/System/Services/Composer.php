@@ -6,7 +6,6 @@ use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\System\ExtendModule;
 use SoosyzeCore\System\ExtendTheme;
-use SoosyzeCore\System\Migration;
 
 class Composer
 {
@@ -15,33 +14,33 @@ class Composer
     const TYPE_THEME = 'soosyze-theme';
 
     /**
-     * @var \Core
+     * @var \Soosyze\App
      */
-    protected $core;
+    private $core;
 
     /**
      * @var Modules
      */
-    protected $module;
+    private $module;
 
     /**
      * Les données des fichiers composer des modules.
      *
      * @var array
      */
-    protected $moduleComposers = [];
+    private $moduleComposers = [];
 
     /**
      * @var \Composer\Semver\Semver
      */
-    protected $semver;
+    private $semver;
 
     /**
      * Les données des fichiers composer des themes.
      *
      * @var array
      */
-    protected $themeComposers = [];
+    private $themeComposers = [];
 
     public function __construct($core, $module, $semver)
     {

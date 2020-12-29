@@ -33,7 +33,7 @@
     },
     "filemanager.hook.menu": {
         "class": "SoosyzeCore\\FileManager\\Services\\HookMenu",
-        "arguments": ["@fileprofil", "@router"],
+        "arguments": ["@router"],
         "hooks": {
             "user.submenu": "hookUsersMenu",
             "user.manager.submenu": "hookUserManagerSubmenu"

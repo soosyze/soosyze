@@ -6,31 +6,56 @@ use SoosyzeCore\Template\Services\Templating;
 
 class HookApp
 {
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $query;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
-    protected $roles = [];
+    /**
+     * @var string
+     */
+    private $pathViews;
 
-    protected $router;
+    /**
+     * @var array
+     */
+    private $roles = [];
 
-    protected $user;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
-    protected $tpl;
+    /**
+     * @var Templating
+     */
+    private $tpl;
+
+    /**
+     * Données de l'utilisateur courant.
+     *
+     * @var array|null
+     */
+    private $userCurrent;
 
     public function __construct($core, $query, $router, $template, $user)
     {
-        $this->core      = $core;
-        $this->query     = $query;
-        $this->router    = $router;
-        $this->tpl       = $template;
-        $this->user      = $user;
+        $this->core   = $core;
+        $this->query  = $query;
+        $this->router = $router;
+        $this->tpl    = $template;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
 
-        $this->userCurrent = $this->user->isConnected();
+        $this->userCurrent = $user->isConnected();
 
         if ($this->userCurrent) {
-            $this->roles   = $this->user->getRolesUser($this->userCurrent[ 'user_id' ]);
+            $this->roles   = $user->getRolesUser($this->userCurrent[ 'user_id' ]);
             $this->roles[] = [ 'role_id' => 2 ];
         }
     }

@@ -9,9 +9,12 @@ class Modules
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
-    protected $query;
+    private $query;
 
-    protected $translate;
+    /**
+     * @var \SoosyzeCore\Translate\Services\Translation
+     */
+    private $translate;
 
     public function __construct($query, $translate)
     {

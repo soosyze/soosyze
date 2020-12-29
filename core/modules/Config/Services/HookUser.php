@@ -4,7 +4,10 @@ namespace SoosyzeCore\Config\Services;
 
 class HookUser
 {
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
     public function __construct($core)
     {

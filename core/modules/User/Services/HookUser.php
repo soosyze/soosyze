@@ -7,12 +7,12 @@ class HookUser
     /**
      * @var \Soosyze\Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var User
      */
-    protected $user;
+    private $user;
 
     public function __construct($config, $user)
     {

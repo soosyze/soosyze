@@ -4,11 +4,20 @@ namespace SoosyzeCore\System\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    protected $file;
+    /**
+     * @var \SoosyzeCore\Filesystem\Services\File
+     */
+    private $file;
 
-    protected $router;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
-    protected $translate;
+    /**
+     * @var \SoosyzeCore\Translate\Services\Translation
+     */
+    private $translate;
 
     public function __construct($file, $router, $translate)
     {

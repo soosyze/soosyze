@@ -4,11 +4,20 @@ namespace SoosyzeCore\Block\Services;
 
 class Block
 {
-    protected $config;
+    /**
+     * @var \Soosyze\Config
+     */
+    private $config;
 
-    protected $core;
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
 
-    protected $pathViews;
+    /**
+     * @var string
+     */
+    private $pathViews;
 
     public function __construct($config, $core)
     {

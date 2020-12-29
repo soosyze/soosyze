@@ -4,9 +4,15 @@ namespace SoosyzeCore\FileManager\Services;
 
 class FileProfil
 {
-    protected $profil = [];
+    /**
+     * @var array
+     */
+    private $profil = [];
 
-    protected $query;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
     public function __construct($query)
     {

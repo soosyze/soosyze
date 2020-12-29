@@ -10,6 +10,7 @@ class User
 {
     /**
      * Les données utilisateur courant ou false.
+     *
      * @var bool|array
      */
     private $connect = false;
@@ -32,12 +33,12 @@ class User
     private $permissions = [];
 
     /**
-     * @var \QueryBuilder\Services\Query
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;
 
     /**
-     * @var \Soosyze\Router
+     * @var \Soosyze\Components\Router\Router
      */
     private $router;
 

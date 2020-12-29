@@ -9,27 +9,27 @@ class HookBlock
     /**
      * @var \SoosyzeCore\System\Services\Alias
      */
-    protected $alias;
+    private $alias;
 
     /**
      * @var \SoosyzeCore\Node\Services\Node
      */
-    protected $node;
+    private $node;
 
     /**
      * @var string
      */
-    protected $pathViews;
+    private $pathViews;
 
     /**
-     * @var \Queryflatfile\Request
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
-    protected $query;
+    private $query;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
     public function __construct($alias, $node, $query, $router)
     {

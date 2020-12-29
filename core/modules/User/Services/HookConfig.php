@@ -4,7 +4,10 @@ namespace SoosyzeCore\User\Services;
 
 final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
 {
-    protected $router;
+    /**
+     * @var \Soosyze\Components\Router\Router
+     */
+    private $router;
 
     public function __construct($router)
     {

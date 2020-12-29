@@ -4,7 +4,10 @@ namespace SoosyzeCore\FileManager\Services;
 
 class HookRole
 {
-    protected $query;
+    /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Query
+     */
+    private $query;
 
     public function __construct($query)
     {

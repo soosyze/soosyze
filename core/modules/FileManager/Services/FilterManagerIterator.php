@@ -7,9 +7,12 @@ class FilterManagerIterator extends \FilterIterator
     /**
      * @var \SoosyzeCore\FileManager\Services\HookUser
      */
-    protected $hookUser;
+    private $hookUser;
 
-    protected $path;
+    /**
+     * @var string
+     */
+    private $path;
 
     public function __construct($hookUser)
     {

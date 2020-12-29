@@ -37,10 +37,13 @@ class FileManager
      */
     private $hookUser;
 
+    /**
+     * @var string
+     */
     private $pathViews;
 
     /**
-     * @var \Soosyze\Router
+     * @var \Soosyze\Components\Router\Router
      */
     private $router;
 

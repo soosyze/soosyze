@@ -6,7 +6,10 @@ use SoosyzeCore\Template\Services\Templating;
 
 class HookApp
 {
-    protected $menu;
+    /**
+     * @var Menu
+     */
+    private $menu;
 
     public function __construct($menu)
     {
