@@ -72,22 +72,20 @@ class HookApp
         $blocks = $this->getBlocks($isAdmin);
 
         $sections   = $this->tpl->getSections();
-        $linkCreate = '';
 
         foreach ($sections as $section) {
-            if ($isAdmin) {
-                $linkCreate = $this->router->getRoute('block.create', [
-                    ':theme'   => $theme,
-                    ':section' => $section
-                ]);
-            }
             $response->make('page.' . $section, 'section.php', $this->pathViews, [
                 'section_id'  => $section,
                 'content'     => !empty($blocks[ $section ])
                     ? $blocks[ $section ]
                     : [],
                 'is_admin'    => $isAdmin,
-                'link_create' => $linkCreate
+                'link_create' => $isAdmin
+                    ? $this->router->getRoute('block.create', [
+                        ':theme'   => $theme,
+                        ':section' => $section
+                    ])
+                    : ''
             ]);
         }
     }
@@ -107,10 +105,11 @@ class HookApp
 
     protected function getBlocks($isAdmin)
     {
-        $blocks    = $this->query
+        $blocks = $this->query
             ->from('block')
             ->orderBy('weight')
             ->fetchAll();
+
         $listBlock = $this->core->get('block')->getBlocks();
 
         $out = [];
@@ -168,7 +167,7 @@ class HookApp
         return !$visibility;
     }
 
-    protected function isVisibilityRoles($block)
+    protected function isVisibilityRoles(array $block)
     {
         $rolesBlock  = explode(',', $block[ 'roles' ]);
         $visibility  = $block[ 'visibility_roles' ];

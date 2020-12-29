@@ -44,7 +44,7 @@ class HookBlock
         }
     }
 
-    public function hookMenuEditFormData(&$form, $data)
+    public function hookMenuEditForm(&$form, $data)
     {
         $menus = $this->menu->getAllMenu();
 
