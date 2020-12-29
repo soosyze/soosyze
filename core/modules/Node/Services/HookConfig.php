@@ -24,14 +24,14 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function menu(&$menu)
+    public function menu(array &$menu)
     {
         $menu[ 'node' ] = [
             'title_link' => 'Node'
         ];
     }
 
-    public function form(&$form, $data, $req)
+    public function form(&$form, array $data, $req)
     {
         return $form->group('node_default_url-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('node_default_url-legend', t('Url'))
@@ -101,7 +101,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         }
     }
 
-    public function before(&$validator, &$data, $id)
+    public function before(&$validator, array &$data, $id)
     {
         $data = [
             'node_default_url' => $validator->getInput('node_default_url'),
@@ -113,11 +113,11 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         }
     }
 
-    public function after(&$validator, $data, $id)
+    public function after(&$validator, array $data, $id)
     {
     }
 
-    public function files(&$inputsFile)
+    public function files(array &$inputsFile)
     {
     }
 }

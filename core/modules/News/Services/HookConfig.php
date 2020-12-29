@@ -23,14 +23,14 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function menu(&$menu)
+    public function menu(array &$menu)
     {
         $menu[ 'news' ] = [
             'title_link' => 'News'
         ];
     }
 
-    public function form(&$form, $data, $req)
+    public function form(&$form, array $data, $req)
     {
         $form->group('news_pagination-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news_pagination-legend', t('Settings'))
@@ -98,7 +98,7 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ]);
     }
 
-    public function before(&$validator, &$data, $id)
+    public function before(&$validator, array &$data, $id)
     {
         $data = [
             'new_default_icon' => $validator->getInput('new_default_icon'),
@@ -106,11 +106,11 @@ class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function after(&$validator, $data, $id)
+    public function after(&$validator, array $data, $id)
     {
     }
 
-    public function files(&$inputsFile)
+    public function files(array &$inputsFile)
     {
         $inputsFile = [ 'new_default_image' ];
     }

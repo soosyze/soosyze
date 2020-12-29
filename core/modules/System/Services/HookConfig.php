@@ -262,7 +262,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function files(&$inputsFile)
+    public function files(array &$inputsFile)
     {
     }
 

@@ -35,14 +35,14 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         return $out;
     }
 
-    public function menu(&$menu)
+    public function menu(array &$menu)
     {
         $menu[ 'social' ] = [
             'title_link' => 'Social networks'
         ];
     }
 
-    public function form(&$form, $data, $req)
+    public function form(&$form, array $data, $req)
     {
         $form->group('social-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('social-legend', t('Social networks'));
@@ -71,7 +71,7 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         $validator->setLabels($this->socials);
     }
 
-    public function before(&$validator, &$data, $id)
+    public function before(&$validator, array &$data, $id)
     {
         $data[ 'icon_socials' ] = [];
         foreach (array_keys($this->socials) as $key) {
@@ -81,11 +81,11 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         }
     }
 
-    public function after(&$validator, $data, $id)
+    public function after(&$validator, array $data, $id)
     {
     }
 
-    public function files(&$inputsFile)
+    public function files(array &$inputsFile)
     {
     }
 }

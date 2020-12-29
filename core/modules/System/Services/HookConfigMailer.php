@@ -17,7 +17,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function menu(&$menu)
+    public function menu(array &$menu)
     {
         $menu[ 'mailer' ] = [
             'title_link' => 'Email',
@@ -25,7 +25,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function form(&$form, $data, $req)
+    public function form(&$form, array $data, $req)
     {
         $form->group('information-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('information-legend', t('Information'))
@@ -139,7 +139,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
             ->setLabels($labels);
     }
 
-    public function before(&$validator, &$data, $id)
+    public function before(&$validator, array &$data, $id)
     {
         $data = [
             'email'           => $validator->getInput('email'),
@@ -156,7 +156,7 @@ class HookConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
     {
     }
 
-    public function after(&$validator, $data, $id)
+    public function after(&$validator, array $data, $id)
     {
     }
 }

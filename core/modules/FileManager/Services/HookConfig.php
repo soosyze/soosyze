@@ -17,14 +17,14 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ];
     }
 
-    public function menu(&$menu)
+    public function menu(array &$menu)
     {
         $menu[ 'filemanager' ] = [
             'title_link' => 'File'
         ];
     }
 
-    public function form(&$form, $data, $req)
+    public function form(&$form, array $data, $req)
     {
         $form->group('file-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('file-legend', t('Behavior of file transfers'))
@@ -68,18 +68,18 @@ final class HookConfig implements \SoosyzeCore\Config\Services\ConfigInterface
         ]);
     }
 
-    public function before(&$validator, &$data, $id)
+    public function before(&$validator, array &$data, $id)
     {
         $data = [
             'replace_file' => (int) $validator->getInput('replace_file')
         ];
     }
 
-    public function after(&$validator, $data, $id)
+    public function after(&$validator, array $data, $id)
     {
     }
 
-    public function files(&$inputsFile)
+    public function files(array &$inputsFile)
     {
     }
 }
