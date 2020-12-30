@@ -11,7 +11,7 @@ class Dashboard extends \Soosyze\Controller
     public function __construct()
     {
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
-        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/services.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 

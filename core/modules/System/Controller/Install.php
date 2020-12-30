@@ -39,7 +39,7 @@ class Install extends \Soosyze\Controller
 
     public function __construct()
     {
-        $this->pathServices = dirname(__DIR__) . '/Config/service-install.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/services-install.php';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes-install.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/system/';
     }
@@ -288,7 +288,7 @@ class Install extends \Soosyze\Controller
             return;
         }
 
-        $this->container->addServices(Util::getJson($path));
+        $this->container->addServices(include_once $path);
     }
 
     private function position(array &$array, $position)

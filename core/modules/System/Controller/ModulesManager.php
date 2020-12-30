@@ -4,7 +4,6 @@ namespace SoosyzeCore\System\Controller;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Redirect;
-use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
@@ -13,7 +12,7 @@ class ModulesManager extends \Soosyze\Controller
 
     public function __construct()
     {
-        $this->pathServices = dirname(__DIR__) . '/Config/service.json';
+        $this->pathServices = dirname(__DIR__) . '/Config/services.php';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
@@ -319,6 +318,6 @@ class ModulesManager extends \Soosyze\Controller
             return;
         }
 
-        $this->container->addServices(Util::getJson($path));
+        $this->container->addServices(include_once $path);
     }
 }
