@@ -45,7 +45,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Creating a role')
                 ])
                 ->view('page.messages', $messages)
@@ -145,7 +145,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
@@ -242,7 +242,7 @@ class Role extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Remove :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)

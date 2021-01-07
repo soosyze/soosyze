@@ -67,7 +67,7 @@ class RoleManager extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Administer roles')
                 ])
                 ->view('page.messages', $messages)
