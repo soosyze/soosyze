@@ -22,9 +22,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot()
     {
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
+        foreach ([ 'block', 'config', 'main' ] as $file) {
+            $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
+        }
     }
 
     public function install(ContainerInterface $ci)
@@ -41,13 +41,15 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 'node_type',
                 'node_type_name',
                 'node_type_description',
-                'node_type_icon'
+                'node_type_icon',
+                'node_type_color'
             ])
             ->values([
                 'node_type'             => 'article',
                 'node_type_name'        => 'Article',
                 'node_type_description' => 'Use articles for your news and blog posts.',
-                'node_type_icon'        => 'fas fa-newspaper'
+                'node_type_icon'        => 'fas fa-newspaper',
+                'node_type_color'       => '#ddd'
             ])
             ->execute();
 

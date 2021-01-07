@@ -14,8 +14,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot()
     {
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+        foreach ([ 'main', 'permission' ] as $file) {
+            $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
+        }
     }
 
     public function install(ContainerInterface $ci)

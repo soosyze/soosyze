@@ -14,10 +14,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot()
     {
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/block.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/config.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
-        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/permission.json');
+        foreach ([ 'block', 'config', 'main', 'permission' ] as $file) {
+            $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
+        }
     }
 
     public function install(ContainerInterface $ci)
@@ -36,7 +35,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->integer('node_status_id')->valueDefault(3)
                 ->boolean('sticky')->valueDefault(false)
                 ->string('title')
-                ->string('type', 32);
+                ->string('type', 32)
+                ->integer('user_id')->nullable();
             })
             ->createTableIfNotExists('node_type', function (TableBuilder $table) {
                 $table->string('node_type')
