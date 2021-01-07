@@ -40,6 +40,19 @@ class Menu
         $this->isMenu = $this->schema->hasTable('menu');
     }
 
+    public function hookNodeFieldsetSubmenu(array &$menu)
+    {
+        if (!$this->isMenu) {
+            return;
+        }
+
+        $menu[] = [
+            'class'      => '',
+            'link'       => '#menu-fieldset',
+            'title_link' => t('Menu')
+        ];
+    }
+
     public function hookCreateFormData(array &$data)
     {
         if (!$this->isMenu) {

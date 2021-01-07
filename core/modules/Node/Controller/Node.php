@@ -847,22 +847,12 @@ class Node extends \Soosyze\Controller
                 'class'      => '',
                 'link'       => '#seo-fieldset',
                 'title_link' => t('SEO')
+            ], [
+                'class'      => '',
+                'link'       => '#url-fieldset',
+                'title_link' => t('Url')
             ]
         ];
-        if (self::module()->has('System')) {
-            $menu[] = [
-                    'class'      => '',
-                    'link'       => '#url-fieldset',
-                    'title_link' => t('Url')
-            ];
-        }
-        if (self::module()->has('Menu')) {
-            $menu[] = [
-                    'class'      => '',
-                    'link'       => '#menu-fieldset',
-                    'title_link' => t('Menu')
-            ];
-        }
 
         $this->container->callHook('node.fieldset.submenu', [ &$menu ]);
 
