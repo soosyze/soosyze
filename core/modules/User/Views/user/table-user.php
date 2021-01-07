@@ -58,7 +58,7 @@
             </tr>
         </thead>
         <tbody>
-        <?php if ($users): foreach ($users as $user): ?>
+        <?php if ($users): foreach ($users as $key => $user): ?>
 
             <tr>
                 <td data-title="<?php echo t('Username'); ?>">
@@ -80,13 +80,25 @@
                     <?php echo $user[ 'time_access' ] ? date('d/m/Y', $user[ 'time_access' ]) : t('Never'); ?>
 
                 </td>
-                <td data-title="<?php echo t('Actions'); ?>">
-                    <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
-                        <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
-                    </a>
-                    <a class="btn btn-action" href="<?php echo $user[ 'link_remove' ] ?>">
-                        <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
-                    </a>
+                <td class="cell-actions" data-title="<?php echo t('Actions'); ?>">
+                    <div class="btn-group" role="group" aria-label="action">
+                        <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
+                            <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
+
+                            <ul id="btn-<?php echo $key; ?>" class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="btn btn-action dropdown-item" href="<?php echo $user[ 'link_remove' ] ?>">
+                                       <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </td>
             </tr>
             <?php endforeach; else: ?>

@@ -93,6 +93,9 @@ fieldset.modules,
 fieldset.package {
     transition: background-color .5s;
 }
+.cell-actions {
+    min-width: 185px;
+}
 /* ---------- Sortable ----------- */
 .nested-sortable {
     list-style-type: none;

@@ -74,7 +74,7 @@
                     <?php echo strftime('%a %e %b %Y, %H:%M', $node[ 'date_changed' ]); ?>
 
                 </td>
-                <td data-title="<?php echo t('Actions'); ?>" class="text-right actions-node">
+                <td data-title="<?php echo t('Actions'); ?>" class="text-right cell-actions">
                     <div class="btn-group" role="group" aria-label="action">
                         <?php if (isset($node[ 'link_edit' ])): ?>
 
@@ -82,7 +82,7 @@
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
                         </a>
                         <?php endif; ?>
-
+                        <?php if (isset($node[ 'link_clone' ]) || isset($node[ 'link_remove' ])): ?>
                         <div class="dropdown">
                             <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
                                 <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
@@ -109,6 +109,7 @@
                             <?php endif; ?>
                             </ul>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </td>
                 <td data-title="<?php echo t('Status'); ?>">

@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody id="main_sortable" class="nested-sortable-role">
-            <?php foreach ($roles as $role): ?>
+            <?php foreach ($roles as $key => $role): ?>
 
             <tr>
                 <th class="draggable draggable-verticale">
@@ -36,18 +36,27 @@
                 <td data-title="<?php echo t('Weight'); ?>">
                     <?php echo $form->form_group("role_{$role[ 'role_id' ]}-group"); ?>
 
-                <td data-title="<?php echo t('Actions'); ?>">
-                    <div class="btn-actions" role="group" aria-label="action">
+                <td class="cell-actions" data-title="<?php echo t('Actions'); ?>">
+                    <div class="btn-group" role="group" aria-label="action">
                         <a class="btn btn-action" href="<?php echo $role[ 'link_edit' ]; ?>">
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
 
                         </a>
                         <?php if (isset($role[ 'link_remove' ])): ?>
+                        <div class="dropdown">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>" type="button">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
 
-                        <a class="btn btn-action" href="<?php echo $role[ 'link_remove' ]; ?>">
-                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
+                            <ul id="btn-<?php echo $key; ?>" class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="btn btn-action dropdown-item" href="<?php echo $role[ 'link_remove' ]; ?>">
+                                        <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
 
-                        </a>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         <?php endif; ?>
 
                     </div>
