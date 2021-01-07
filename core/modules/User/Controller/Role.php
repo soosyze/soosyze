@@ -243,7 +243,7 @@ class Role extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Deleting the :name role', [ ':name' => $data[ 'role_label' ] ])
+                    'title_main' => t('Remove :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [

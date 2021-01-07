@@ -157,12 +157,21 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
     public function generateDelete()
     {
         $this->group('role-fieldset', 'fieldset', function ($form) {
-            $form->legend('role-legend', t('Delete role'))
-                ->html('role-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the role is final.')
-                ]);
-        })->token('token_role_delete')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            $form->legend('role-legend', t('Role deletion'))
+                ->group('info-group', 'div', function ($form) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the role is final.')
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
+        })
+            ->token('token_role_delete')
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
+                'class'    => 'btn btn-default',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ]);
 
         return $this;
     }

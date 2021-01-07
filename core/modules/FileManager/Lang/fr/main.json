@@ -6,7 +6,7 @@
     "All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.": "Tous les caractères non alphanumériques ou les traits d'union seront remplacés par un trait de soulignement (_) ou leur équivalent non accentué.",
     "The file has been renamed": "Le fichier a été renommé",
     "You can not use this name to rename the file": "Vous ne pouvez pas utiliser ce nom pour renommer le fichier",
-    "Deleting the file": "Suppression du fichier",
+    "Delete file": "Supprimer le fichier",
     "Warning ! The deletion of the @name file is final.": "Attention ! La suppression du fichier @name est définitive.",
     "The file has been deleted": "Le fichier a été supprimé",
     "Create a new directory": "Créer un nouveau répertoire",

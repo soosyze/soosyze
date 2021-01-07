@@ -182,17 +182,21 @@ class Folder extends \Soosyze\Controller
         $values = self::filemanager()->parseDir($spl, $path);
 
         $form = (new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.folder.delete', [ ':path' => $path ]),
-            'method' => 'post',
+                'action' => self::router()->getRoute('filemanager.folder.delete', [
+                    ':path' => $path
+                ]),
+                'method' => 'post',
             ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete directory'))
-                ->html('folder-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the directory and its contents is final.')
-                ]);
+                ->group('info-group', 'div', function ($form) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the directory and its contents is final.')
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
             })
             ->token('token_folder_delete')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         return self::template()
                 ->getTheme('theme_admin')

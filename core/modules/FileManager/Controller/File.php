@@ -340,16 +340,18 @@ class File extends \Soosyze\Controller
             ]),
             'method' => 'post',
             ]))
-            ->group('folder-fieldset', 'fieldset', function ($form) use ($name, $ext) {
-                $form->legend('folder-legend', t('Deleting the file'))
-                ->html('folder-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the @name file is final.', [
-                        '@name' => "$name$ext"
-                    ])
-                ]);
+            ->group('file-fieldset', 'fieldset', function ($form) use ($name, $ext) {
+                $form->legend('file-legend', t('Delete file'))
+                ->group('info-group', 'div', function ($form) use ($name, $ext) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the @name file is final.', [
+                            '@name' => "$name$ext"
+                        ])
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
             })
             ->token('token_file_delete')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -358,7 +360,7 @@ class File extends \Soosyze\Controller
                     'form'  => $form,
                     'info'  => self::filemanager()->parseFile($spl, $path),
                     'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.remove', $spl, $path),
-                    'title' => t('Deleting the file')
+                    'title' => t('Delete file')
         ]);
     }
 

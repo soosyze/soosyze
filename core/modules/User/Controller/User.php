@@ -444,17 +444,25 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.remove.form.data', [ &$user, $id ]);
 
         $form = (new FormBuilder([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
-            ]))
-            ->group('user-remove-info-fieldset', 'fieldset', function ($form) {
-                $form->legend('user-remove-info-legend', t('Account deletion'))
-                ->html('user-remove-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the user account is final.')
-                ]);
+                'method' => 'post',
+                'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
+                ]))
+            ->group('user-fieldset', 'fieldset', function ($form) {
+                $form->legend('user-legend', t('Account deletion'))
+                ->group('info-group', 'div', function ($form) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the user account is final.')
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
             })
             ->token('token_user_remove')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
+                'class'    => 'btn btn-default',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ]);
 
         $this->container->callHook('user.remove.form', [ &$form, $user, $id ]);
 

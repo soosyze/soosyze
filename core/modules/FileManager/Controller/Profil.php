@@ -208,19 +208,27 @@ class Profil extends \Soosyze\Controller
         }
 
         $form = (new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.profil.delete', [
-                ':id' => $id
-            ]),
-            'method' => 'post',
-            ]))
-            ->group('folder-fieldset', 'fieldset', function ($form) {
-                $form->legend('folder-legend', t('Delete files permission'))
-                ->html('folder-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the files permission is final.')
-                ]);
+                'action' => self::router()->getRoute('filemanager.profil.delete', [
+                    ':id' => $id
+                ]),
+                'method' => 'post',
+                ]))
+            ->group('profil-fieldset', 'fieldset', function ($form) {
+                $form->legend('profil-legend', t('Delete files permission'))
+                ->group('info-group', 'div', function ($form) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the files permission is final.')
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
             })
             ->token('token_file_permission')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
+                'class'    => 'btn btn-default',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {

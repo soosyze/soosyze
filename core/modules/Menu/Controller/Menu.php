@@ -282,14 +282,22 @@ class Menu extends \Soosyze\Controller
                 'method' => 'post',
                 'action' => self::router()->getRoute('menu.delete', [ ':menu' => $name ])
                 ]))
-            ->group('menu-remove-fieldset', 'fieldset', function ($form) {
-                $form->legend('menu-remove-legend', t('Delete menu'))
-                ->html('menu-remove-info', '<p:attr>:content</p>', [
-                    ':content' => t('Warning ! The deletion of the menu is final.')
-                ]);
+            ->group('menu-fieldset', 'fieldset', function ($form) {
+                $form->legend('menu-legend', t('Menu deletion'))
+                ->group('info-group', 'div', function ($form) {
+                    $form->html('info', '<p:attr>:content</p>', [
+                        ':content' => t('Warning ! The deletion of the menu is final.')
+                    ]);
+                }, [ 'class' => 'alert alert-warning' ]);
             })
             ->token('token_menu_remove')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+            ->html('cancel', '<button:attr>:content</button>', [
+                ':content' => t('Cancel'),
+                'class'    => 'btn btn-default',
+                'onclick'  => 'javascript:history.back();',
+                'type'     => 'button'
+            ]);
 
         $this->container->callHook('menu.remove.form', [ &$form, $menu, $name ]);
 

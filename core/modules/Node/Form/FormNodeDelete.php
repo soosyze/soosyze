@@ -35,8 +35,8 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
     public function makeFields()
     {
-        return $this->group('info-fieldset', 'fieldset', function ($form) {
-            $form->legend('info-legend', t('Node deletion'))
+        return $this->group('node-fieldset', 'fieldset', function ($form) {
+            $form->legend('node-legend', t('Node deletion'))
                     ->group('info-group', 'div', function ($form) {
                         $form->html('info', '<p:attr>:content</p>', [
                             ':content' => t('Warning ! The deletion of the node is final.')
@@ -51,8 +51,11 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
             if ($this->useInPath) {
                 $form->group('path-group', 'div', function ($form) {
-                    $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]))
-                            ->group('rgpd_page-flex', 'div', function ($form) {
+                    $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]), [
+                                'for'      => 'path',
+                                'required' => !empty($this->useInPath[ 'required' ])
+                            ])
+                            ->group('path-flex-group', 'div', function ($form) {
                                 $form->html('base_path', '<span:attr>:content</span>', [
                                     ':content' => $this->router->makeRoute(''),
                                     'id'       => ''
