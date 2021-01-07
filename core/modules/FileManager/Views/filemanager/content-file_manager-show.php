@@ -28,8 +28,6 @@
             </div>
         </div>
 
-        <?php echo $form; ?>
-
         <?php echo $section[ 'table' ]; ?>
     </div>
 </div>

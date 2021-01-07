@@ -7,7 +7,7 @@
     background-size: contain;
     background-position: center;
     height: 6em;
-    max-width: 6em;
+    width: 6em;
 }
 .dir-link_show,
 .file-link_show {

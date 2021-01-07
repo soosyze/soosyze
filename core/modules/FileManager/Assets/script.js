@@ -25,7 +25,7 @@ $(document).delegate('#form_filter_file', 'input', debounce(function () {
     const $this = $(this);
 
     $.ajax({
-        url: $this.attr('action'),
+        url: $('#table-file').data('link_search'),
         type: $this.attr('method'),
         data: $this.serialize(),
         dataType: 'html',

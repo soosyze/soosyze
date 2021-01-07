@@ -1,6 +1,11 @@
 
 <div class="row">
     <?php if ($filemanager): ?>
+    <div class="col-md-12">
+
+        <?php echo $form; ?>
+    </div>
+
     <div class="filemanager">
         <?php echo $filemanager; ?>
 

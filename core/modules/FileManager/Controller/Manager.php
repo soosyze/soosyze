@@ -45,6 +45,21 @@ class Manager extends \Soosyze\Controller
             }
         }
 
+        $form = (new FormBuilder([
+                'action' => self::router()->getRoute('filemanager.filter', [
+                    ':path' => Util::cleanPath('/' . $path)
+                ]),
+                'id'     => 'form_filter_file',
+                'method' => 'get'
+            ]))
+            ->group('name-group', 'div', function ($form) {
+                $form->text('name', [
+                    'autofocus'   => 1,
+                    'class'       => 'form-control',
+                    'placeholder' => t('Search for items in the directory')
+                ]);
+            }, [ 'class' => 'form-group' ]);
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -52,7 +67,8 @@ class Manager extends \Soosyze\Controller
                     'title_main' => t('File manager')
                 ])
                 ->make('page.content', 'filemanager/content-file_manager-admin.php', $this->pathViews, [
-                    'filemanager' => $filemanager
+                    'filemanager' => $filemanager,
+                    'form'        => $form
                 ])->override('page', [ 'page-fuild.php' ]);
     }
 
@@ -108,7 +124,7 @@ class Manager extends \Soosyze\Controller
                         if (!preg_match('/' . $params[ 'name' ] . '/i', $spl[ 'name' ])) {
                             continue;
                         }
-                        $spl[ 'name' ] = $this->highlight($params[ 'name' ], $spl[ 'name' ]);
+                        $spl[ 'name' ] = Util::strHighlight($params[ 'name' ], $spl[ 'name' ]);
                     }
                     $file->isDir()
                             ? ++$nbDir
@@ -136,7 +152,10 @@ class Manager extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/table-files.php', $this->pathViews)
                 ->addVars([
-                    'files'               => $files,
+                    'files'       => $files,
+                    'link_search' => self::router()->getRoute('filemanager.filter', [
+                        ':path' => $path
+                    ]),
                     'link_show'           => self::router()->getRoute('filemanager.show', [
                         ':path' => $path
                     ]),
@@ -145,13 +164,6 @@ class Manager extends \Soosyze\Controller
                     'profil'              => $this->get('filemanager.hook.user')->getRight($path),
                     'size_all'            => Util::strFileSizeFormatted($size)
                 ]);
-    }
-
-    protected function highlight($needle, $haystack, $classHighlight = 'highlight')
-    {
-        return $needle === ''
-            ? $haystack
-            : preg_replace('/' . preg_quote($needle, '/') . '/i', "<span class='$classHighlight'>$0</span>", $haystack);
     }
 
     private function getFileManager($path, $req)
@@ -169,26 +181,10 @@ class Manager extends \Soosyze\Controller
             ]),
         ]);
 
-        $form = (new FormBuilder([
-                'action' => self::router()->getRoute('filemanager.filter', [
-                    ':path' => $path
-                ]),
-                'id'     => 'form_filter_file',
-                'method' => 'get'
-            ]))
-            ->group('name-group', 'div', function ($form) {
-                $form->text('name', [
-                    'autofocus'   => 1,
-                    'class'       => 'form-control',
-                    'placeholder' => t('Search for items in the directory')
-                ]);
-            }, [ 'class' => 'form-group' ]);
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/content-file_manager-show.php', $this->pathViews)
                 ->addVars([
-                    'form'                => $form,
                     'granted_file_create' => $this->get('filemanager.hook.user')->hookFileStore($path),
                     'link_show'           => self::router()->getRoute('filemanager.show', [
                         ':path' => $path
