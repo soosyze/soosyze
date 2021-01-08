@@ -90,6 +90,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->config()
+            ->set('settings.new_title', 'Articles')
             ->set('settings.news_pagination', 6)
             ->set('settings.new_default_image', '')
             ->set('settings.new_default_icon', 'fas fa-newspaper')

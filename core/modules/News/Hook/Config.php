@@ -19,7 +19,8 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
         return [
             'new_default_icon'  => '',
             'new_default_image' => '',
-            'news_pagination'   => 6
+            'news_pagination'   => 6,
+            'new_title'         => 'Articles'
         ];
     }
 
@@ -34,6 +35,13 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     {
         $form->group('news_pagination-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news_pagination-legend', t('Settings'))
+                ->group('new_title-group', 'div', function ($form) use ($data) {
+                    $form->label('new_title-group', t('Blog title'))
+                    ->text('new_title', [
+                        'class' => 'form-control',
+                        'value' => $data[ 'new_title' ]
+                    ]);
+                }, [ 'class' => 'form-group' ])
                 ->group('news_pagination-group', 'div', function ($form) use ($data) {
                     $form->label('news_pagination-group', t('Number of articles per page'), [
                         'for'      => 'news_pagination',
@@ -90,11 +98,13 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
         $validator->setRules([
             'new_default_icon'  => 'required|string|fontawesome:solid,brands',
             'new_default_image' => '!required|image|max:200Kb',
-            'news_pagination'   => 'required|between_numeric:1,50'
+            'news_pagination'   => 'required|between_numeric:1,50',
+            'new_title'        => 'required|string|max:255'
         ])->setLabels([
             'new_default_icon'  => t('Icone par défaut'),
             'new_default_image' => t('Image par défaut'),
-            'news_pagination'   => t('Number of articles per page')
+            'news_pagination'   => t('Number of articles per page'),
+            'news_title'        => t('Title blog')
         ]);
     }
 
@@ -102,7 +112,8 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     {
         $data = [
             'new_default_icon' => $validator->getInput('new_default_icon'),
-            'news_pagination'  => (int) $validator->getInput('news_pagination')
+            'news_pagination'  => (int) $validator->getInput('news_pagination'),
+            'new_title'        => $validator->getInput('new_title')
         ];
     }
 

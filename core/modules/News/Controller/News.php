@@ -77,7 +77,7 @@ class News extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => 'Articles'
+                    'title_main' => t(self::config()->get('settings.new_title'))
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $query,
