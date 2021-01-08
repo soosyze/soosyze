@@ -150,7 +150,8 @@ class Role extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
-                    'form' => $form
+                    'form'         => $form,
+                    'role_submenu' => $this->getRoleSubmenu('user.role.edit', $id)
         ]);
     }
 
@@ -247,7 +248,8 @@ class Role extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
-                    'form' => $form
+                    'form'         => $form,
+                    'role_submenu' => $this->getRoleSubmenu('user.role.remove', $id)
         ]);
     }
 
@@ -292,5 +294,45 @@ class Role extends \Soosyze\Controller
     private function find($id)
     {
         return self::query()->from('role')->where('role_id', '==', $id)->fetch();
+    }
+
+    private function getRoleSubmenu($keyRoute, $idRole)
+    {
+        $menu = [
+            [
+                'key'        => 'user.role.edit',
+                'request'    => self::router()->getRequestByRoute('user.role.edit', [
+                    ':id' => $idRole
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'user.role.remove',
+                'request'    => self::router()->getRequestByRoute('user.role.remove', [
+                    ':id' => $idRole
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
+
+        $this->container->callHook('user.role.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!self::user()->isGrantedRoute($link[ 'request' ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+        unset($link);
+
+        return self::template()
+                ->createBlock('user/submenu-user_manager.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => count($menu) === 1
+                        ? []
+                        : $menu
+        ]);
     }
 }

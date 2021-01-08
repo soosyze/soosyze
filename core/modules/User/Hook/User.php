@@ -130,4 +130,14 @@ class User
 
         return empty($user) && $this->config->get('settings.user_relogin');
     }
+
+    public function hookRoleDeleted($idRole)
+    {
+        /* Si le role est requis par le système, alors la suppression est interdite. */
+        if (in_array($idRole, [ 1, 2, 3 ])) {
+            return false;
+        }
+
+        return 'user.people.manage';
+    }
 }
