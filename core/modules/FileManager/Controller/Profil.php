@@ -145,7 +145,8 @@ class Profil extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
-                    'form' => $form
+                    'form'               => $form,
+                    'permission_submenu' => $this->getPermissionSubmenu('filemanager.profil.edit', $id)
         ]);
     }
 
@@ -244,7 +245,8 @@ class Profil extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
-                    'form' => $form
+                    'form'               => $form,
+                    'permission_submenu' => $this->getPermissionSubmenu('filemanager.profil.remove', $id)
         ]);
     }
 
@@ -388,5 +390,45 @@ class Profil extends \Soosyze\Controller
             ? implode(',', $validator->getInput('file_extensions', []))
             : ''
         ];
+    }
+
+    private function getPermissionSubmenu($keyRoute, $idPermission)
+    {
+        $menu = [
+            [
+                'key'        => 'filemanager.profil.edit',
+                'request'    => self::router()->getRequestByRoute('filemanager.profil.edit', [
+                    ':id' => $idPermission
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'key'        => 'filemanager.profil.remove',
+                'request'    => self::router()->getRequestByRoute('filemanager.profil.remove', [
+                    ':id' => $idPermission
+                ]),
+                'title_link' => t('Delete')
+            ]
+        ];
+
+        $this->container->callHook('user.role.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!self::user()->isGrantedRoute($link[ 'request' ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+        unset($link);
+
+        return self::template()
+                ->createBlock('filemanager/submenu-permission.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => count($menu) === 1
+                    ? []
+                    : $menu
+        ]);
     }
 }
