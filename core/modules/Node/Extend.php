@@ -176,9 +176,17 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
+            /* Admin */
             ->values([ 3, 'node.administer' ])
+            ->values([ 3, 'node.user.edit' ])
+            /* Utilisateur */
+            ->values([ 2, 'node.show.own' ])
+            ->values([ 2, 'node.cloned.own' ])
+            ->values([ 2, 'node.edited.own' ])
+            ->values([ 2, 'node.deleted.own' ])
             ->values([ 2, 'node.show.published.page_private' ])
             ->values([ 2, 'node.show.published.page' ])
+            /* Non utilisateur. */
             ->values([ 1, 'node.show.published.page' ])
             ->execute();
     }

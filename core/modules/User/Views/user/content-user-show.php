@@ -31,16 +31,12 @@
         <div class="user-bio"><?php echo $user[ 'bio' ]; ?></div>
     </div>
     <div class="col-sm-9">
-        <fieldset>
-            <legend><?php echo t('Roles'); ?></legend>
+        <div class="user-content">
+        <?php foreach ($content_user as $content): ?>
 
-            <?php foreach ($roles as $role): ?>
+            <?php echo $content; ?>
+        <?php endforeach; ?>
 
-            <span data-tooltip="<?php echo t($role[ 'role_label' ]); ?>" class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">
-                <i class="<?php echo $role['role_icon']; ?>" aria-hidden="true"></i>
-            </span>
-            <?php endforeach; ?>
-
-        </fieldset>
+        </div>
     </div>
 </div>

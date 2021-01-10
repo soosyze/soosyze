@@ -5,6 +5,10 @@ return [
         'class' => 'SoosyzeCore\Node\Services\Node',
         'arguments' => ['@config', '@core', '@query', '@template']
     ],
+    'nodeuser' => [
+        'class' => 'SoosyzeCore\Node\Services\NodeUser',
+        'arguments' => ['@alias', '@config', '@node.hook.user', '@query', '@router', '@user']
+    ],
     'node.extend' => [
         'class' => 'SoosyzeCore\Node\Extend',
         'hooks' => [
@@ -111,6 +115,14 @@ return [
             'route.entity.edit' => 'hookNodeEdited',
             'route.entity.update' => 'hookNodeEdited',
             'route.entity.delete' => 'hookNodeDeleted'
+        ]
+    ],
+    'node.hook.nodeuser' => [
+        'class' => 'SoosyzeCore\Node\Hook\NodeUser',
+        'arguments' => ['@config', "@node", '@nodeuser', '@query', '@router', '@template', '@user'],
+        'hooks' => [
+            'user.show' => 'hookUserShow',
+            'user.delete.after' => 'hookUserDeleteAfter'
         ]
     ],
     'node.hook.cron' => [

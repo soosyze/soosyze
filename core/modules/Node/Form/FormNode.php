@@ -14,7 +14,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         'sticky'           => false,
         'node_status_id'   => 3,
         'date_created'     => '',
-        'id'               => null
+        'id'               => null,
+        'user_id'          => null
     ];
 
     protected static $fieldRules = [
@@ -42,6 +43,20 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
     protected $router;
 
     protected $config;
+
+    /**
+     * Les données de l'utilisateur possèdant le contenu.
+     *
+     * @var array|null
+     */
+    private $userCurrent = null;
+
+    /**
+     * Si l'utilisateur du contenu est modifiable.
+     *
+     * @var bool
+     */
+    private $isDisabledUserCurrent = true;
 
     public function __construct(
         array $attr,
@@ -71,7 +86,22 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         return $this
                 ->fields()
                 ->seo()
+                ->fieldsetUser()
                 ->actionsSubmit();
+    }
+
+    public function setUserCurrent(array $userCurrent)
+    {
+        $this->userCurrent = $userCurrent;
+
+        return $this;
+    }
+
+    public function setDisabledUserCurrent($disabled)
+    {
+        $this->isDisabledUserCurrent = $disabled;
+
+        return $this;
     }
 
     public function fields()
@@ -374,6 +404,48 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                         'value'       => $this->values[ 'title' ]
                 ]);
         }, self::$attrGrp);
+    }
+
+    public function fieldsetUser()
+    {
+        $options = [];
+        if ($this->userCurrent) {
+            $options[] = [
+                'label' => $this->userCurrent[ 'username' ],
+                'value' => $this->userCurrent[ 'user_id' ]
+            ];
+        } elseif ($this->values[ 'user_id' ]) {
+            $user = $this->query
+                ->from('user')
+                ->where('user_id', $this->values[ 'user_id' ])
+                ->fetch();
+
+            $options[] = [
+                'label' => $user[ 'username' ],
+                'value' => $this->values[ 'user_id' ]
+            ];
+        }
+
+        return $this->group('user-fieldset', 'fieldset', function ($form) use ($options) {
+            $form->legend('user-legend', t('User'))
+                    ->group('user_id-group', 'div', function ($form) use ($options) {
+                        $form->label('user_id-label', t('User'), [
+                            'data-tooltip' => $this->isDisabledUserCurrent
+                            ? t('Vous n\'avez pas les droit pour modifier l\'utilisateur du contenu')
+                            : ''
+                        ])
+                        ->select('user_id', $options, [
+                            ':selected'        => $this->values[ 'user_id' ],
+                            'class'            => 'form-control select-ajax-multiple',
+                            'data-placeholder' => t('Anonymous'),
+                            'data-link'        => $this->router->getRoute('user.api.select'),
+                            'disabled'         => $this->isDisabledUserCurrent,
+                        ]);
+                    }, self::$attrGrp);
+        }, [
+                'class' => 'tab-pane fade',
+                'id'    => 'user-fieldset'
+        ]);
     }
 
     public function seo()

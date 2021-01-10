@@ -458,6 +458,9 @@ fieldset.package {
     font-weight: 300;
     line-height: 24px;
 }
+.user-content fieldset{
+    margin-bottom: 1em;
+}
 
 /* ---------- ROLE ----------- */
 .badge-role {

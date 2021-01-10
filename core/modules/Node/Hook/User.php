@@ -23,6 +23,11 @@ class User
             'node.manager'            => 'Go to the content overview page',
             'node.show.published'     => 'View any published content',
             'node.show.not_published' => 'View any unpublished content',
+            'node.show.own'           => 'View own published and unpublished content',
+            'node.user.edit'          => 'Edit user',
+            'node.cloned.own'         => 'Clone own content',
+            'node.edited.own'         => 'Edit own content',
+            'node.deleted.own'        => 'Delete own content'
         ];
 
         foreach ($nodeTypes as $nodeType) {
@@ -42,30 +47,28 @@ class User
         return [ 'node.administer', 'node.manager' ];
     }
 
-    public function hookNodeClone($idNode)
+    public function hookNodeSow($idNode, $req, $user)
     {
-        $node = $this->getNode($idNode);
+        $node   = $this->getNode($idNode);
+        $rights = '';
 
-        return $node
-            ? [ 'node.administer', 'node.cloned.' . $node[ 'type' ] ]
-            : '';
-    }
+        if ($node) {
+            $rights = [ 'node.administer' ];
 
-    public function hookNodeSow($idNode)
-    {
-        $node = $this->getNode($idNode);
+            if ($user && $user[ 'user_id' ] == $node[ 'user_id' ]) {
+                $rights[] = 'node.show.own';
+            }
 
-        return $node
-            ? [
-                'node.administer',
-                $node[ 'node_status_id' ] !== 1
-                    ? 'node.show.not_published'
-                    : 'node.show.published',
-                $node[ 'node_status_id' ] !== 1
-                    ? 'node.show.not_published.' . $node[ 'type' ]
-                    : 'node.show.published.' . $node[ 'type' ]
-            ]
-            : '';
+            if ($node[ 'node_status_id' ] !== 1) {
+                $rights[] = 'node.show.not_published';
+                $rights[] = 'node.show.not_published.' . $node[ 'type' ];
+            } else {
+                $rights[] = 'node.show.published';
+                $rights[] = 'node.show.published.' . $node[ 'type' ];
+            }
+        }
+
+        return $rights;
     }
 
     public function hookNodeAdd($req, $user)
@@ -85,29 +88,65 @@ class User
         return [ 'node.administer', 'node.created.' . $type ];
     }
 
-    public function hookNodeEdited($idNode)
+    public function hookNodeClone($idNode, $req, $user)
     {
-        $node = $this->getNode($idNode);
+        $node   = $this->getNode($idNode);
+        $rights = '';
 
-        return $node
-            ? [ 'node.administer', 'node.edited.' . $node[ 'type' ] ]
-            : '';
+        if ($node) {
+            $rights = [ 'node.administer', 'node.cloned.' . $node[ 'type' ] ];
+
+            if ($user && $user[ 'user_id' ] == $node[ 'user_id' ]) {
+                $rights[] = 'node.cloned.own';
+            }
+        }
+
+        return $rights;
     }
 
-    public function hookNodeDeleted($idNode)
+    public function hookNodeEdited($idNode, $req, $user)
     {
-        $node = $this->getNode($idNode);
+        $node   = $this->getNode($idNode);
+        $rights = '';
 
-        return $node
-            ? [ 'node.administer', 'node.deleted.' . $node[ 'type' ] ]
-            : '';
+        if ($node) {
+            $rights = [ 'node.administer', 'node.edited.' . $node[ 'type' ] ];
+
+            if ($user && $user[ 'user_id' ] == $node[ 'user_id' ]) {
+                $rights[] = 'node.edited.own';
+            }
+        }
+
+        return $rights;
     }
 
-    public function getNode($idNode)
+    public function hookNodeDeleted($idNode, $req, $user)
     {
-        return $this->query
+        $node   = $this->getNode($idNode);
+        $rights = '';
+
+        if ($node) {
+            $rights = [ 'node.administer', 'node.deleted.' . $node[ 'type' ] ];
+
+            if ($user && $user[ 'user_id' ] == $node[ 'user_id' ]) {
+                $rights[] = 'node.deleted.own';
+            }
+        }
+
+        return $rights;
+    }
+
+    private function getNode($idNode)
+    {
+        if (isset($this->nodes[ $idNode ])) {
+            return $this->nodes[ $idNode ];
+        }
+
+        $this->nodes[ $idNode ] = $this->query
             ->from('node')
             ->where('id', '==', $idNode)
             ->fetch();
+
+        return $this->nodes[ $idNode ];
     }
 }

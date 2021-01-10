@@ -9,13 +9,23 @@ class Menu
      */
     private $router;
 
-    public function __construct($router)
+    /**
+     * @var \SoosyzeCore\User\Services\User
+     */
+    private $user;
+
+    public function __construct($router, $user)
     {
         $this->router = $router;
+        $this->user   = $user;
     }
 
     public function hookUsersMenu(&$menu, $userId)
     {
+        if (!$this->user->isConnected()) {
+            return;
+        }
+
         $menu[] = [
             'key'        => 'filemanager.admin',
             'request'    => $this->router->getRequestByRoute('filemanager.admin'),

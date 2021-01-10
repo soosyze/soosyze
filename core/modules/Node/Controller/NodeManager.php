@@ -3,20 +3,17 @@
 namespace SoosyzeCore\Node\Controller;
 
 use Soosyze\Components\Paginate\Paginator;
-use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 
 class NodeManager extends \Soosyze\Controller
 {
-    protected static $limit = 20;
+    protected static $limit = 25;
 
     protected static $page = 1;
 
     protected $admin = false;
 
     protected $pathViews;
-
-    protected $title = '';
 
     public function __construct()
     {
@@ -36,23 +33,19 @@ class NodeManager extends \Soosyze\Controller
             ? $requestNodeAdd->getUri()
             : null;
 
-        /* Liens */
-        $linkIndex  = self::router()->getRequestByRoute('node.admin')->getUri();
-        $linkFilter = self::router()->getRequestByRoute('node.filter')->getUri();
-
         $this->admin = true;
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
-                    'title_main' => t('My contents')
+                    'title_main' => t('Contents')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
-                    'action_filter'         => $linkFilter,
+                    'action_filter'         => self::router()->getRoute('node.filter'),
                     'link_add'              => $linkAdd,
-                    'link_index'            => $linkIndex,
+                    'link_index'            => self::router()->getRoute('node.admin'),
                     'link_search_status'    => self::router()->getRoute('node.status.search'),
                     'link_search_node_type' => self::router()->getRoute('node.type.search'),
                 ])
@@ -78,7 +71,17 @@ class NodeManager extends \Soosyze\Controller
             ])
             ->setInputs($req->getQueryParams());
 
-        $query = $this->getNodes($req);
+        $query  = self::nodeuser()->getNodesQuery();
+        $userId = null;
+
+        if ($user = self::user()->isConnected()) {
+            $userId = $user[ 'user_id' ];
+        }
+
+        self::nodeuser()
+            ->whereNodes($query)
+            ->orWhereNodesUser($query, $userId)
+            ->orderNodes($query, $req);
 
         $params = [];
         if ($validator->getInput('title', '')) {
@@ -105,7 +108,7 @@ class NodeManager extends \Soosyze\Controller
         $countData = count($data);
         $nodes     = array_slice($data, self::$limit * ($page - 1), self::$limit);
 
-        $this->hydrateNodesLinks($nodes);
+        self::nodeuser()->hydrateNodesLinks($nodes);
 
         list($orderBy, $sort, $sortInverse, $isSortAsc) = $this->getSortParams($req);
         $params[ 'order_by' ] = $orderBy;
@@ -168,97 +171,6 @@ class NodeManager extends \Soosyze\Controller
                     'order_by'               => $orderBy,
                     'paginate'               => new Paginator($countData, self::$limit, $page, $linkPagination)
         ]);
-    }
-
-    protected function hydrateNodesLinks(&$nodes)
-    {
-        $nodeAdminister = $this->container->callHook('app.granted', [ 'node.administer' ]);
-
-        foreach ($nodes as &$node) {
-            $node[ 'link_view' ] = self::router()->makeRoute(
-                'node/' . $node[ 'id' ] === self::config()->get('settings.path_index')
-                ? ''
-                : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
-            );
-            if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.edited.' . $node[ 'type' ] ])) {
-                $node[ 'link_edit' ] = self::router()->getRoute('node.edit', [
-                    ':id_node' => $node[ 'id' ]
-                ]);
-            }
-            if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.cloned.' . $node[ 'type' ] ])) {
-                $node[ 'link_clone' ] = self::router()->getRoute('node.clone', [
-                    ':id_node' => $node[ 'id' ]
-                ]);
-            }
-            if ($nodeAdminister || $this->container->callHook('app.granted', [ 'node.deleted.' . $node[ 'type' ] ])) {
-                $node[ 'link_remove' ] = self::router()->getRoute('node.api.remove', [
-                    ':id_node' => $node[ 'id' ]
-                ]);
-            }
-            $node[ 'title' ] = Util::strHighlight($this->title, $node[ 'title' ]);
-        }
-        unset($node);
-    }
-
-    protected function getNodes(\Psr\Http\Message\ServerRequestInterface $req)
-    {
-        $query = clone self::query();
-        $nodes = $query->from('node')
-            ->leftJoin('node_type', 'type', 'node_type.node_type');
-
-        if ($this->container->callHook('app.granted', [ 'node.administer' ])) {
-            return $this->sortNode($req, $nodes);
-        }
-
-        $publish    = $this->container->callHook('app.granted', [ 'node.show.published' ]);
-        $notPublish = $this->container->callHook('app.granted', [ 'node.show.not_published' ]);
-
-        $nodeTypes = self::query()->from('node_type')->fetchAll();
-        foreach ($nodeTypes as $type) {
-            $typePublish    = $publish || $this->container->callHook('app.granted', [
-                    'node.show.published.' . $type[ 'node_type' ]
-            ]);
-            $typeNotPublish = $notPublish || $this->container->callHook('app.granted', [
-                    'node.show.not_published.' . $type[ 'node_type' ]
-            ]);
-
-            if ($typePublish || $typeNotPublish) {
-                $nodes->orWhere(function ($query) use ($type, $typePublish, $typeNotPublish) {
-                    $query->where('type', $type[ 'node_type' ])
-                        ->where(function ($query) use ($typePublish, $typeNotPublish) {
-                            if ($typePublish) {
-                                $query->where('node_status_id', '==', 1);
-                            }
-                            if ($typeNotPublish) {
-                                $query->orWhere('node_status_id', '!=', 1);
-                            }
-                        });
-                });
-            } else {
-                $nodes->where('type', '!=', $type[ 'node_type' ]);
-            }
-        }
-
-        return $this->sortNode($req, $nodes);
-    }
-
-    protected function sortNode($req, $nodes)
-    {
-        $get = $req->getQueryParams();
-
-        $nodes->orderBy('sticky', 'desc');
-
-        if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
-                'date_changed', 'node_status_id', 'title', 'type'
-            ])) {
-            $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
-                ? 'desc'
-                : 'asc';
-
-            return $nodes->orderBy($get[ 'order_by' ], $sort);
-        }
-
-        return $nodes->orderBy('date_changed', 'desc');
     }
 
     protected function getSortParams($req)

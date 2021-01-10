@@ -41,3 +41,5 @@ R::post('user.delete', 'user/:id/delete', 'User@delete', [ ':id' => '\d+' ]);
 R::get('user.admin', 'admin/user', 'UsersManager@admin');
 R::get('user.filter', 'user/filter', 'UsersManager@filter');
 R::get('user.filter.page', 'user/filter/:id', 'UsersManager@filterPage', [ ':id' => '[1-9]\d*' ]);
+
+R::get('user.api.select', 'api/user', 'UserApi@select');

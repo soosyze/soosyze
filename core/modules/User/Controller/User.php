@@ -41,6 +41,15 @@ class User extends \Soosyze\Controller
             unset($_SESSION[ 'messages' ]);
         }
 
+        $contentUser[] = self::user()->isConnected()
+            ? self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('user/content_user-roles.php', $this->pathViews)
+                ->addVar('roles', self::user()->getRolesUser($id))
+            : null;
+
+        $this->container->callHook('user.show', [ &$contentUser, $user ]);
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -48,7 +57,7 @@ class User extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-user-show.php', $this->pathViews, [
-                    'roles'        => self::user()->getRolesUser($id),
+                    'content_user' => $contentUser,
                     'user'         => $user,
                     'user_submenu' => self::user()->getUserSubmenu('user.show', $id)
                 ]);

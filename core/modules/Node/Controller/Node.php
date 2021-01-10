@@ -72,6 +72,8 @@ class Node extends \Soosyze\Controller
                 'id'      => 'form-node',
                 'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $type, $fields)
+            ->setUserCurrent(self::user()->isConnected())
+            ->setDisabledUserCurrent(self::user()->isGranted('node.user.edit'))
             ->makeFields();
 
         $this->container->callHook('node.create.form', [ &$form, $content, $type ]);
@@ -127,7 +129,8 @@ class Node extends \Soosyze\Controller
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
                 'sticky'           => 'bool',
                 'title'            => 'required|string|max:255|to_htmlsc',
-                'token_node'       => 'token:3600'
+                'token_node'       => 'token:3600',
+                'user_id'          => '!required|numeric|inarray:' . $this->getListUsersId()
             ])
             ->setLabels([
                 'date_created'     => t('Publication date'),
@@ -138,7 +141,8 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => t('Title'),
                 'node_status_id'   => t('Publication status'),
                 'sticky'           => t('Pin content'),
-                'title'            => t('Title of the content')
+                'title'            => t('Title of the content'),
+                'user_id'          => t('User')
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $type);
@@ -217,6 +221,9 @@ class Node extends \Soosyze\Controller
                 'node_status_id'   => $validator->getInput('node_status_id'),
                 'title'            => $validator->getInput('title'),
                 'type'             => $type,
+                'user_id'          => $validator->getInput('user_id') === ''
+                    ? null
+                    : (int) $validator->getInput('user_id')
             ];
 
             $this->container->callHook('node.store.before', [ $validator, &$node ]);
@@ -257,7 +264,9 @@ class Node extends \Soosyze\Controller
         if (!($node = self::node()->getCurrentNode($idNode))) {
             return $this->get404($req);
         }
+
         $fields = self::node()->makeFieldsById($node[ 'type' ], $node[ 'entity_id' ]);
+        $user   = self::nodeuser()->getInfosUser($node);
 
         $messages = [];
         if ($node[ 'node_status_id' ] != 1) {
@@ -275,7 +284,8 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'fields'     => $fields,
                     'node'       => $node,
-                    'title_main' => $node[ 'title' ]
+                    'title_main' => $node[ 'title' ],
+                    'user'       => $user
                 ])
                 ->override('page', [
                     'page-node-show_' . $node[ 'type' ] . '.php',
@@ -320,6 +330,7 @@ class Node extends \Soosyze\Controller
                 'id'      => 'form-node',
                 'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $content[ 'type' ], $fields)
+            ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
 
         $this->container->callHook('node.edit.form', [ &$form, $content ]);
@@ -381,7 +392,8 @@ class Node extends \Soosyze\Controller
                 'node_status_id'        => 'required|numeric|to_int|inarray:1,2,3,4',
                 'sticky'                => 'bool',
                 'title'                 => 'required|string|max:255|to_htmlsc',
-                'token_node_' . $idNode => 'token:3600'
+                'token_node_' . $idNode => 'token:3600',
+                'user_id'               => '!required|numeric|inarray:' . $this->getListUsersId()
             ])
             ->setLabels([
                 'date_created'     => t('Publication date'),
@@ -392,7 +404,8 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => t('Title'),
                 'node_status_id'   => t('Publication status'),
                 'sticky'           => t('Pin content'),
-                'title'            => t('Title of the content')
+                'title'            => t('Title of the content'),
+                'user_id'          => t('User')
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $node[ 'type' ]);
@@ -479,7 +492,10 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => $validator->getInput('meta_title'),
                 'node_status_id'   => (int) $validator->getInput('node_status_id'),
                 'sticky'           => (bool) $validator->getInput('sticky'),
-                'title'            => $validator->getInput('title')
+                'title'            => $validator->getInput('title'),
+                'user_id'          => $validator->getInput('user_id') === ''
+                    ? null
+                    : (int) $validator->getInput('user_id')
             ];
 
             $this->container->callHook('node.update.before', [
@@ -845,6 +861,10 @@ class Node extends \Soosyze\Controller
                 'title_link' => t('Publication')
             ], [
                 'class'      => '',
+                'link'       => '#user-fieldset',
+                'title_link' => t('User')
+            ], [
+                'class'      => '',
                 'link'       => '#seo-fieldset',
                 'title_link' => t('SEO')
             ], [
@@ -893,6 +913,13 @@ class Node extends \Soosyze\Controller
                 ->where($field[ 'field_name' ] . '_id', '==', $value[ 'id' ])
                 ->execute();
         }
+    }
+
+    private function getListUsersId()
+    {
+        $usersId = self::query()->from('user')->lists('user_id');
+
+        return implode(',', $usersId);
     }
 
     private function saveFile($node, $nameField, $validator)

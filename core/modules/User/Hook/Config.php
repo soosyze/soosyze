@@ -4,6 +4,10 @@ namespace SoosyzeCore\User\Hook;
 
 final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    const DELETE_ACCOUNT = 1;
+
+    const DELETE_ACCOUNT_AND_ASSIGN = 2;
+
     /**
      * @var \Soosyze\Components\Router\Router
      */
@@ -17,6 +21,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     public function defaultValues()
     {
         return [
+            'user_delete'            => '',
             'user_register'          => '',
             'user_relogin'           => '',
             'terms_of_service_show'  => '',
@@ -100,6 +105,29 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     $form->checkbox('user_register', [ 'checked' => $data[ 'user_register' ] ])
                     ->label('user_register-label', '<span class="ui"></span> ' . t('Open registration'), [
                         'for' => 'user_register'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+            })
+            ->group('user_delete-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('user_delete-legend', t('Supression du compte'))
+                ->group('user_delete_1-group', 'div', function ($form) use ($data) {
+                    $form->radio('user_delete', [
+                        'checked'  => $data[ 'user_delete' ] === self::DELETE_ACCOUNT,
+                        'id'       => 'user_delete_1',
+                        'required' => 1,
+                        'value'    => self::DELETE_ACCOUNT
+                    ])->label('user_delete-label', t('Supprimer le compte et son contenu'), [
+                        'for' => 'user_delete_1'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('user_delete_2-group', 'div', function ($form) use ($data) {
+                    $form->radio('user_delete', [
+                        'checked'  => $data[ 'user_delete' ] === self::DELETE_ACCOUNT_AND_ASSIGN,
+                        'id'       => 'user_delete_2',
+                        'required' => 1,
+                        'value'    => self::DELETE_ACCOUNT_AND_ASSIGN
+                    ])->label('user_delete-label', t('Supprimer le compte et attribuer son contenu à l\'utilisateur Anonyme.'), [
+                        'for' => 'user_delete_2'
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -261,6 +289,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     public function validator(&$validator)
     {
         $validator->setRules([
+            'user_delete'            => 'required|numeric|inarray:1,2',
             'user_register'          => 'bool',
             'user_relogin'           => 'bool',
             'terms_of_service_show'  => 'bool',
@@ -277,6 +306,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
             'password_special'       => 'min_numeric:1',
             'password_reset_timeout' => '!required_without:user_relogin|required|string|max:255|equal:@is_date_time_valid'
         ])->setLabels([
+            'user_delete'            => t('Supression du compte'),
             'user_register'          => t('Registration'),
             'user_relogin'           => t('Open password recovery'),
             'terms_of_service_show'  => t('Activate the Terms'),
@@ -320,6 +350,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     public function before(&$validator, array &$data, $id)
     {
         $data = [
+            'user_delete'            => (int) $validator->getInput('user_delete'),
             'user_register'          => (bool) $validator->getInput('user_register'),
             'user_relogin'           => (bool) $validator->getInput('user_relogin'),
             'terms_of_service_show'  => (bool) $validator->getInput('terms_of_service_show'),

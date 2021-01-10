@@ -35,7 +35,7 @@ return [
     ],
     'filemanager.hook.menu' => [
         'class' => 'SoosyzeCore\FileManager\Hook\Menu',
-        'arguments' => ['@router'],
+        'arguments' => ['@router', '@user'],
         'hooks' => [
             'user.submenu' => 'hookUsersMenu',
             'user.manager.submenu' => 'hookUserManagerSubmenu'
