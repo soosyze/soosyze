@@ -7,6 +7,10 @@ use SoosyzeCore\FileManager\Services\FileManager;
 
 class FormPermission extends \Soosyze\Components\Form\FormBuilder
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private static $attrGrpFlex = [ 'class' => 'form-group-flex' ];
+
     private $values = [
         'folder_show'         => '/',
         'folder_show_sub'     => true,
@@ -61,17 +65,17 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'required' => 1,
                             'value'    => $this->values[ 'folder_show' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ])
+                    }, self::$attrGrpFlex)
                     ->html('cancel', '<p>:content</p>', [
                         ':content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('folder_show_sub-group', 'div', function ($form) {
                     $form->checkbox('folder_show_sub', [ 'checked' => $this->values[ 'folder_show_sub' ] ])
                     ->label('folder_show_sub-label', '<i class="ui"></i><i class="fa fa-sitemap" aria-hidden="true"></i> ' . t('Apply permission to subdirectories'), [
                         'for' => 'folder_show_sub'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('profil_weight-group', 'div', function ($form) {
                     $form->label('profil_weight-label', t('Weight'), [
                         'for'      => 'profil_weight',
@@ -86,8 +90,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'required' => 1,
                             'value'    => $this->values[ 'profil_weight' ]
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrpFlex);
+                }, self::$attrGrp);
         })
             ->group('roles-fieldset', 'fieldset', function ($form) {
                 $form->legend('roles-legend', t('User Roles'));
@@ -107,7 +111,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             . t($role[ 'role_label' ]),
                             [ 'for' => "role-{$role[ 'role_id' ]}" ]
                         );
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
                 }
             })
             ->group('folder-fieldset', 'fieldset', function ($form) {
@@ -144,7 +148,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             ':content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
-                    }, [ 'class' => 'form-group-flex' ]);
+                    }, self::$attrGrpFlex);
                 }, [ 'class' => 'form-group col-sm-12' ]);
             })
             ->group('file-fieldset', 'fieldset', function ($form) {
@@ -199,7 +203,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             ':content'     => 'Mo',
                             'data-tooltip' => 'Mega octet'
                         ]);
-                    }, [ 'class' => 'form-group-flex' ])
+                    }, self::$attrGrpFlex)
                     ->html('cancel', '<p>:content</p>', [
                         ':content' => t('Maximum size per file upload allowed by your server: :size', [
                             ':size' => Util::strFileSizeFormatted(Util::getOctetUploadLimit())

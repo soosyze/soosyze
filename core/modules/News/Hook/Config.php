@@ -4,6 +4,8 @@ namespace SoosyzeCore\News\Hook;
 
 class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var \SoosyzeCore\FileSystem\Services\File
      */
@@ -41,7 +43,7 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                         'class' => 'form-control',
                         'value' => $data[ 'new_title' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('news_pagination-group', 'div', function ($form) use ($data) {
                     $form->label('news_pagination-group', t('Number of articles per page'), [
                         'for'      => 'news_pagination',
@@ -57,7 +59,7 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'    => $data[ 'news_pagination' ]
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
         })
             ->group('new_default_image-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('new_default_image-legend', t('Default image'))
@@ -68,7 +70,7 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                         'for'          => 'new_default_image'
                     ]);
                     $this->file->inputFile('new_default_image', $form, $data[ 'new_default_image' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('new_default_icon-group', 'div', function ($form) use ($data) {
                     $form->label('new_default_icon-group', t('Default icon'), [
                         'data-tooltip' => t('Icon Font Awesome if there is no default image'),
@@ -89,7 +91,7 @@ class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'data-tooltip'  => t('Rendering')
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             });
     }
 

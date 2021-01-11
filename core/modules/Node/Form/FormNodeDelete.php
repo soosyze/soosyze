@@ -74,7 +74,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                                 'class'       => 'api_route-list hidden',
                                 'data-target' => '#path'
                             ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             }
 
             $form->group('files-group', 'div', function ($form) {
@@ -87,7 +87,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                             '<span class="ui"></span> ' . t('Delete files with their contents'),
                             [ 'for' => 'files' ]
                         );
-            }, [ 'class' => 'form-group' ]);
+            }, self::$attrGrp);
         })
                 ->token('token_node_remove')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);

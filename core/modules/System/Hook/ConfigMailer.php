@@ -4,6 +4,8 @@ namespace SoosyzeCore\System\Hook;
 
 class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     public function defaultValues()
     {
         return [
@@ -39,7 +41,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'placeholder' => t('E-mail'),
                         'value'       => $data[ 'email' ]
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
         })
             ->group('driver-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('driver-legend', t('Sélectionner un driver'))
@@ -54,7 +56,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'required'    => 1,
                         ':selected'   => $data[ 'driver' ]
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             })
             ->group('smtp-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('smtp-legend', t('SMTP Configuration'))
@@ -66,7 +68,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'placeholder' => 'smtp1.example.com',
                         'value'       => $data[ 'smtp_host' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('smtp_port-group', 'div', function ($form) use ($data) {
                     $form->label('smtp_port-label', t('Host Port'))
                     ->text('smtp_port', [
@@ -75,7 +77,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'placeholder' => 465,
                         'value'       => $data[ 'smtp_port' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('smtp_encryption-group', 'div', function ($form) use ($data) {
                     $form->label('smtp_encryption-label', t('Encryption Protocol'))
                     ->select('smtp_encryption', [
@@ -86,7 +88,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'class'     => 'form-control',
                         ':selected' => $data[ 'smtp_encryption' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('smtp_username-group', 'div', function ($form) use ($data) {
                     $form->label('smtp_username-label', t('Serveur Username'))
                     ->text('smtp_username', [
@@ -95,7 +97,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'placeholder' => 'user@example.com',
                         'value'       => $data[ 'smtp_username' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('smtp_password-group', 'div', function ($form) use ($data) {
                     $form->label('smtp_password-label', t('Server Password'))
                     ->password('smtp_password', [
@@ -103,7 +105,7 @@ class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
                         'maxlength' => 255,
                         'value'     => $data[ 'smtp_password' ]
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             }, [ 'class' => 'select-pane' . ($data[ 'driver' ] === 'smtp' ? ' active' : ''), 'id' => 'smtp' ]);
     }
 

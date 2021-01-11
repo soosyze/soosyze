@@ -8,6 +8,8 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 
     const DELETE_ACCOUNT_AND_ASSIGN = 2;
 
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var \Soosyze\Components\Router\Router
      */
@@ -75,7 +77,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'       => $data[ 'connect_url' ]
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('connect_redirect-group', 'div', function ($form) use ($data) {
                     $form->label('connect_redirect-label', t('Redirect page after connection'), [
                         'for'      => 'connect_redirect',
@@ -97,7 +99,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ->html('connect_redirect-info', '<p>:content</p>', [
                         ':content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             })
             ->group('user_register-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('user_register-legend', t('Registration'))
@@ -106,7 +108,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ->label('user_register-label', '<span class="ui"></span> ' . t('Open registration'), [
                         'for' => 'user_register'
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             })
             ->group('user_delete-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('user_delete-legend', t('Supression du compte'))
@@ -119,7 +121,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ])->label('user_delete-label', t('Supprimer le compte et son contenu'), [
                         'for' => 'user_delete_1'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('user_delete_2-group', 'div', function ($form) use ($data) {
                     $form->radio('user_delete', [
                         'checked'  => $data[ 'user_delete' ] === self::DELETE_ACCOUNT_AND_ASSIGN,
@@ -129,7 +131,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ])->label('user_delete-label', t('Supprimer le compte et attribuer son contenu à l\'utilisateur Anonyme.'), [
                         'for' => 'user_delete_2'
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             })
             ->group('eula-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('eula-legend', t('Terms and GDPR'))
@@ -138,7 +140,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ->label('terms_of_service_show-label', '<span class="ui"></span> ' . t('Activate the Terms'), [
                         'for' => 'terms_of_service_show'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('terms_of_service_page-group', 'div', function ($form) use ($data) {
                     $form->label('terms_of_service_page-label', t('Terms page'), [
                         'data-tooltip' => t('End-User License Agreement (EULA)')
@@ -155,14 +157,14 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'       => $data[ 'terms_of_service_page' ]
                         ]);
                     }, [ 'class' => 'form-group-flex api_route' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 /* RGPD */
                 ->group('rgpd_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('rgpd_show', [ 'checked' => $data[ 'rgpd_show' ] ])
                     ->label('rgpd_show-label', '<span class="ui"></span> ' . t('Enable Data Privacy Policy'), [
                         'for' => 'rgpd_show'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('rgpd_page-group', 'div', function ($form) use ($data) {
                     $form->label('rgpd_page-label', t('GDPR Page'), [
                         'data-tooltip' => t('General Data Protection Regulation (GDPR)')
@@ -179,7 +181,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'       => $data[ 'rgpd_page' ]
                         ]);
                     }, [ 'class' => 'form-group-flex api_route' ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             })
             ->group('password-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('password-legend', t('Password policy'))
@@ -188,7 +190,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                     ->label('relogin-label', '<span class="ui"></span> ' . t('Open password recovery'), [
                         'for' => 'user_relogin'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_reset_timeout-group', 'div', function ($form) use ($data) {
                     $form->label('password_reset_timeout-label', t('Password reset time'))
                         ->text('password_reset_timeout', [
@@ -197,24 +199,24 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'placeholder' => '30 min, 1 hour, 1 day, 1 month, 1 year...',
                             'value'       => $data[ 'password_reset_timeout' ]
                         ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_reset_timeout-info-group', 'div', function ($form) {
                     $form->html('cron_info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:content</a>', [
                         ':content' => t('Relative PHP Date Formats')
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_show-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_show', [ 'checked' => $data[ 'password_show' ] ])
                     ->label('password_show-label', '<span class="ui"></span> ' . t('Add a button to view passwords'), [
                         'for' => 'password_show'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_policy-group', 'div', function ($form) use ($data) {
                     $form->checkbox('password_policy', [ 'checked' => $data[ 'password_policy' ] ])
                     ->label('password_policy-label', '<span class="ui"></span> ' . t('Add visualization of the password policy'), [
                         'for' => 'password_policy'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_length-group', 'div', function ($form) use ($data) {
                     $form->label('password_length-label', t('Minimum length'), [
                         'for'      => 'password_length',
@@ -231,7 +233,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 : 8
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_upper-group', 'div', function ($form) use ($data) {
                     $form->label('password_upper-label', t('Number of uppercase characters'), [
                         'for'      => 'password_upper',
@@ -248,7 +250,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 : 1
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_digit-group', 'div', function ($form) use ($data) {
                     $form->label('password_digit-label', t('Number of numeric characters'), [
                         'for'      => 'password_digit',
@@ -265,7 +267,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 : 1
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('password_special-group', 'div', function ($form) use ($data) {
                     $form->label('password_special-label', t('Number of special characters'), [
                         'for'      => 'password_special',
@@ -282,7 +284,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 : 1
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             });
     }
 

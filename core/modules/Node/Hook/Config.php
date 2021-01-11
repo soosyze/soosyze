@@ -4,6 +4,8 @@ namespace SoosyzeCore\Node\Hook;
 
 final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var array
      */
@@ -43,7 +45,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'class' => 'form-control',
                             'value' => $data[ 'node_default_url' ]
                         ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
             foreach ($this->nodeTypes as $nodeType) {
                 $form->group('node_url_' . $nodeType[ 'node_type' ] . '-group', 'div', function ($form) use ($data, $nodeType) {
                     $form->label('node_url_' . $nodeType[ 'node_type' ] . '-label', t($nodeType[ 'node_type_name' ]))
@@ -53,7 +55,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 ? $data[ 'node_url_' . $nodeType[ 'node_type' ] ]
                                 : ''
                             ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             }
             $form->html('node_default_url-info', '<p>:content</p>', [
                         ':content' => t('Variables allowed for all') .
@@ -68,12 +70,12 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                         ->label('node_cron-label', '<span class="ui"></span> ' . t('Activate automatic publication of CRON content'), [
                             'for' => 'node_cron'
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('cron_info-group', 'div', function ($form) {
                         $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:content</a>', [
                             ':content' => t('How to set up the CRON service ?')
                         ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
                 });
     }
 

@@ -4,6 +4,8 @@ namespace SoosyzeCore\BackupManager\Hook;
 
 final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     public function defaultValues()
     {
         return [
@@ -37,7 +39,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'value'    => $data[ 'max_backups' ]
                         ]);
                     }, [ 'class' => 'form-group-flex' ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('backup_frequency-group', 'div', function ($form) use ($data) {
                     $form->label('frequency_backup-label', t('Backup frequency'), [
                         'data-tooltip' => t('Leave the value at 0 so that the frequency is not taken into account'),
@@ -48,23 +50,23 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                         'placeholder' => '30 min, 1 hour, 1 day, 1 month, 1 year...',
                         'value'       => $data[ 'backup_frequency' ]
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('backup_frequency-info-group', 'div', function ($form) {
                     $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:content</a>', [
                         ':content' => t('Relative PHP Date Formats')
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('backup_cron-group', 'div', function ($form) use ($data) {
                     $form->checkbox('backup_cron', [ 'checked' => $data[ 'backup_cron' ] ])
                     ->label('backup_cron-label', '<span class="ui"></span> ' . t('Enable CRON backups'), [
                         'for' => 'backup_cron'
                     ]);
-                }, [ 'class' => 'form-group' ])
+                }, self::$attrGrp)
                 ->group('cron_info-group', 'div', function ($form) {
                     $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:content</a>', [
                         ':content' => t('How to set up the CRON service ?')
                     ]);
-                }, [ 'class' => 'form-group' ]);
+                }, self::$attrGrp);
             });
     }
 

@@ -4,6 +4,8 @@ namespace SoosyzeCore\System\Hook;
 
 final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var \SoosyzeCore\Filesystem\Services\File
      */
@@ -69,7 +71,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'  => 1,
                             ':selected' => $data[ 'lang' ]
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('timezone-group', 'div', function ($form) use ($data, $optionTimezone) {
                         $form->label('timezone-label', t('Timezone'))
                         ->select('timezone', $optionTimezone, [
@@ -77,7 +79,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'  => 1,
                             ':selected' => $data[ 'timezone' ]
                         ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
         })
                 ->group('information-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('information-legend', t('Information'))
@@ -88,7 +90,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                         ->label('maintenance-label', '<i class="ui" aria-hidden="true"></i> ' . t('Put the site in maintenance'), [
                             'for' => 'maintenance'
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('rewrite_engine-group', 'div', function ($form) use ($data) {
                         $isModeRewrite = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
 
@@ -105,7 +107,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'style'    => 'color: red;'
                             ]);
                         }
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
                 })
                 ->group('path-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('path-legend', t('Default page'))
@@ -127,7 +129,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'value'       => $data[ 'path_index' ]
                             ]);
                         }, [ 'class' => 'form-group-flex api_route' ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('path_access_denied-group', 'div', function ($form) use ($data) {
                         $form->label('path_access_denied-label', t('Page 403 by default (access denied)'), [
                             'data-tooltip' => t('The content of the link is displayed if a user accesses a forbidden page.'),
@@ -144,7 +146,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'value'       => $data[ 'path_access_denied' ]
                             ]);
                         }, [ 'class' => 'form-group-flex api_route' ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('path_no_found-group', 'div', function ($form) use ($data) {
                         $form->label('path_no_found-label', t('Page 404 by default (page not found)'), [
                             'data-tooltip' => t('The content of the link is displayed if a user accesses a non-existent page.'),
@@ -161,7 +163,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'value'       => $data[ 'path_no_found' ]
                             ]);
                         }, [ 'class' => 'form-group-flex api_route' ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('path_maintenance-group', 'div', function ($form) use ($data) {
                         $form->label('path_maintenance-label', t('Default maintenance page'), [
                             'data-tooltip' => t('Leave blank to use your theme\'s default page-maintenance.php template'),
@@ -178,7 +180,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                                 'value'       => $data[ 'path_maintenance' ]
                             ]);
                         }, [ 'class' => 'form-group-flex api_route' ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
                 })
                 ->group('metadata-fieldset', 'fieldset', function ($form) use ($data) {
                     $form->legend('metadata-legend', t('SEO'))
@@ -192,7 +194,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'  => 'required',
                             'value'     => $data[ 'meta_title' ]
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('meta_description-group', 'div', function ($form) use ($data) {
                         $form->label('meta_description-label', t('Description'), [
                             'data-tooltip' => t('Help your SEO and appears in the search engines.')
@@ -203,7 +205,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'required'  => 'required',
                             'rows'      => 5
                         ]);
-                    }, [ 'class' => 'form-group' ])
+                    }, self::$attrGrp)
                     ->group('meta_keyboard-group', 'div', function ($form) use ($data) {
                         $form->label('meta_keyboard-label', t('Keywords'))
                         ->text('meta_keyboard', [
@@ -211,7 +213,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
                             'placeholder' => t('Word1, Word2, Word3 ...'),
                             'value'       => $data[ 'meta_keyboard' ]
                         ]);
-                    }, [ 'class' => 'form-group' ]);
+                    }, self::$attrGrp);
                 });
     }
 
