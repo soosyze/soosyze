@@ -56,23 +56,7 @@ class Role extends \Soosyze\Controller
 
     public function store($req)
     {
-        $validator = (new Validator())
-            ->setRules([
-                'role_label'        => 'required|string|max:255|to_htmlsc',
-                'role_description'  => '!required|string|max:255|to_htmlsc',
-                'role_weight'       => '!required|between_numeric:1,50',
-                'role_color'        => '!required|colorhex',
-                'role_icon'         => '!required|max:255|fontawesome:solid,brands',
-                'token_role_submit' => 'required|token'
-            ])
-            ->setLabels([
-                'role_label'       => t('Name'),
-                'role_description' => t('Description'),
-                'role_weight'      => t('Weight'),
-                'role_color'       => t('Color'),
-                'role_icon'        => t('Icon')
-            ])
-            ->setInputs($req->getParsedBody());
+        $validator = $this->getValidator($req);
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
         if ($validator->isValid()) {
@@ -161,23 +145,7 @@ class Role extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $validator = (new Validator())
-            ->setRules([
-                'role_label'        => 'required|string|max:255|to_htmlsc',
-                'role_description'  => '!required|string|max:255|to_htmlsc',
-                'role_weight'       => 'required|between_numeric:1,50',
-                'role_color'        => '!required|colorhex',
-                'role_icon'         => '!required|max:255|fontawesome:solid,brands',
-                'token_role_submit' => 'required|token'
-            ])
-            ->setLabels([
-                'role_label'       => t('Name'),
-                'role_description' => t('Description'),
-                'role_weight'      => t('Weight'),
-                'role_color'       => t('Color'),
-                'role_icon'        => t('Icon')
-            ])
-            ->setInputs($req->getParsedBody());
+        $validator = $this->getValidator($req);
 
         $this->container->callHook('role.update.validator', [ &$validator ]);
         if ($validator->isValid()) {
@@ -289,6 +257,27 @@ class Role extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('user.role.remove', [
                 ':id' => $id
         ]));
+    }
+
+    public function getValidator($req)
+    {
+        return (new Validator())
+                ->setRules([
+                    'role_label'        => 'required|string|max:255|to_htmlsc',
+                    'role_description'  => '!required|string|max:255|to_htmlsc',
+                    'role_weight'       => '!required|between_numeric:1,50',
+                    'role_color'        => '!required|colorhex',
+                    'role_icon'         => '!required|max:255|fontawesome:solid,brands',
+                    'token_role_submit' => 'required|token'
+                ])
+                ->setLabels([
+                    'role_label'       => t('Name'),
+                    'role_description' => t('Description'),
+                    'role_weight'      => t('Weight'),
+                    'role_color'       => t('Color'),
+                    'role_icon'        => t('Icon')
+                ])
+                ->setInputs($req->getParsedBody());
     }
 
     private function find($id)
