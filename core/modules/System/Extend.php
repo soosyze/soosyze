@@ -115,9 +115,16 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function uninstall(ContainerInterface $ci)
     {
-        $ci->schema()->dropTable('module_controller');
-        $ci->schema()->dropTable('module_active');
-        $ci->schema()->dropTable('module_required');
+        $tables = [
+            'module_required',
+            'module_controller',
+            'module_active',
+            'system_alias_url',
+            'migration'
+        ];
+        foreach ($tables as $table) {
+            $ci->schema()->dropTableIfExists($table);
+        }
     }
 
     public function hookUninstall(ContainerInterface $ci)

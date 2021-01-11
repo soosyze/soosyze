@@ -211,8 +211,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function uninstall(ContainerInterface $ci)
     {
-        $ci->schema()->dropTable('profil_file');
-        $ci->schema()->dropTable('profil_file_role');
+        foreach ([ 'profil_file_role', 'profil_file' ] as $table) {
+            $ci->schema()->dropTableIfExists($table);
+        }
     }
 
     public function hookUninstall(ContainerInterface $ci)

@@ -197,11 +197,10 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         foreach ($types as $type) {
             $ci->schema()->dropTableIfExists('entity_' . $type);
         }
-        $ci->schema()->dropTableIfExists('node_type_field');
-        $ci->schema()->dropTableIfExists('field');
-        $ci->schema()->dropTableIfExists('node_type');
-        $ci->schema()->dropTableIfExists('node');
-        $ci->schema()->dropTableIfExists('node_status');
+
+        foreach ([ 'node_type_field', 'field', 'node_type', 'node', 'node_status' ] as $table) {
+            $ci->schema()->dropTableIfExists($table);
+        }
 
         $ci->query()->from('system_alias_url')
             ->delete()

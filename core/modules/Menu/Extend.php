@@ -93,8 +93,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function uninstall(ContainerInterface $ci)
     {
-        $ci->schema()->dropTable('menu_link');
-        $ci->schema()->dropTable('menu');
+        foreach ([ 'menu_link', 'menu' ] as $table) {
+            $ci->schema()->dropTableIfExists($table);
+        }
     }
 
     public function hookUninstall(ContainerInterface $ci)

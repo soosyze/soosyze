@@ -143,12 +143,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function uninstall(ContainerInterface $ci)
     {
-        // Table pivot
-        $ci->schema()->dropTable('user_role');
-        $ci->schema()->dropTable('role_permission');
-        // Table référentes
-        $ci->schema()->dropTable('user');
-        $ci->schema()->dropTable('role');
+        foreach ([ 'user_role', 'role_permission', 'user', 'role' ] as $table) {
+            $ci->schema()->dropTableIfExists($table);
+        }
     }
 
     public function hookUninstall(ContainerInterface $ci)
