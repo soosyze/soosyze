@@ -73,15 +73,6 @@ class User extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $roles = self::user()->getRolesAttribuable();
-        if (!$this->container->callHook('app.granted', [ 'role.all' ])) {
-            foreach ($roles as $key => $role) {
-                if (!$this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
-                    unset($roles[ $key ]);
-                }
-            }
-        }
-
         $form = (new FormUser([
             'method'  => 'post',
             'action'  => self::router()->getRoute('user.store'),
@@ -91,7 +82,7 @@ class User extends \Soosyze\Controller
             ->fieldsetProfil()
             ->fieldsetPassword()
             ->fieldsetActived()
-            ->fieldsetRoles($roles)
+            ->fieldsetRoles($this->getRoleByPermission())
             ->submitForm('Save', true);
 
         $this->container->callHook('user.create.form', [ &$form, $values ]);
@@ -254,18 +245,9 @@ class User extends \Soosyze\Controller
             $form->fieldsetActived();
         }
 
-        $roles = self::user()->getRolesAttribuable();
-        if (!$this->container->callHook('app.granted', [ 'role.all' ])) {
-            foreach ($roles as $key => $role) {
-                if (!$this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
-                    unset($roles[ $key ]);
-                }
-            }
-        }
-
         $rolesUser = self::user()->getIdRolesUser($id);
         $form->setValues([ 'roles' => $rolesUser ])
-            ->fieldsetRoles($roles)
+            ->fieldsetRoles($this->getRoleByPermission())
             ->submitForm();
 
         $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);
@@ -528,7 +510,11 @@ class User extends \Soosyze\Controller
     private function validRole(array $roles = [])
     {
         $validatorRoles = new Validator();
-        $listRoles = implode(',', $this->getRoleByPermission());
+
+        $listRoles = implode(
+            ',',
+            array_column($this->getRoleByPermission(), 'role_id')
+        );
 
         foreach ($roles as $key => $role) {
             $validatorRoles
@@ -544,29 +530,27 @@ class User extends \Soosyze\Controller
 
     private function getRoleByPermission()
     {
-        $roles   = self::user()->getRolesAttribuable();
-        $roleAll = $this->container->callHook('app.granted', [ 'role.all' ]);
+        $roles = self::user()->getRolesAttribuable();
 
-        $in = [];
-        foreach ($roles as $role) {
-            if ($roleAll || $this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
-                $in[] = $role[ 'role_id' ];
+        if (!$this->container->callHook('app.granted', [ 'role.all' ])) {
+            foreach ($roles as $key => $role) {
+                if (!$this->container->callHook('app.granted', [ 'role.' . $role[ 'role_id' ] ])) {
+                    unset($roles[ $key ]);
+                }
             }
         }
 
-        return $in;
+        return $roles;
     }
 
     private function updateRole($validator, $idUser)
     {
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
 
-        $in = $this->getRoleByPermission();
-
         self::query()
             ->from('user_role')
             ->where('user_id', '==', $idUser)
-            ->in('role_id', $in)
+            ->in('role_id', array_column($this->getRoleByPermission(), 'role_id'))
             ->delete()
             ->execute();
 
