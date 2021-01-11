@@ -879,7 +879,7 @@ class Node extends \Soosyze\Controller
                 ->addVar('menu', $menu);
     }
 
-    protected function getMetaRobots($node)
+    private function getMetaRobots($node)
     {
         $robots = '';
         if ($node[ 'meta_noindex' ]) {

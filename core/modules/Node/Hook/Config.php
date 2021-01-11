@@ -7,7 +7,7 @@ final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
     /**
      * @var array
      */
-    protected $nodeTypes = [];
+    private $nodeTypes = [];
 
     public function __construct($query)
     {

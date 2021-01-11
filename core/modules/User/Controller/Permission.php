@@ -96,7 +96,7 @@ class Permission extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    protected function storePermission(
+    private function storePermission(
         $idRole,
         array $permission,
         array $newPermission
@@ -114,7 +114,7 @@ class Permission extends \Soosyze\Controller
         self::query()->execute();
     }
 
-    protected function deletePermission(
+    private function deletePermission(
         $idRole,
         array $permission,
         array $newPermission

@@ -151,7 +151,7 @@ class Block
         ]);
     }
 
-    protected function getNodeTypeName($type)
+    private function getNodeTypeName($type)
     {
         $nodeType = $this->query
             ->from('node_type')

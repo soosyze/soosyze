@@ -248,7 +248,7 @@ class Menu
      *
      * @return array
      */
-    protected function getGrantedLink($query)
+    private function getGrantedLink($query)
     {
         $route   = $this->router->parseQueryFromRequest();
         $request = $this->core->getRequest()->withMethod('GET');

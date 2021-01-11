@@ -12,98 +12,98 @@ class File
      *
      * @var string
      */
-    protected $basePath = '';
+    private $basePath = '';
 
     /**
      * Fonction de suppression des données du fichier.
      *
      * @var callable|null
      */
-    protected $callDelete = null;
+    private $callDelete = null;
 
     /**
      * Fonction de récupération des données du fichier.
      *
      * @var callable|null
      */
-    protected $callGet = null;
+    private $callGet = null;
 
     /**
      * Fonction de déplacement des données du fichier.
      *
      * @var callable|null
      */
-    protected $callMove = null;
+    private $callMove = null;
 
     /**
      * Le répertoire d'envoie.
      *
      * @var string
      */
-    protected $dir = null;
+    private $dir = null;
 
     /**
      * L'extension du fichier a déplacer.
      *
      * @var string
      */
-    protected $ext;
+    private $ext;
 
     /**
      * Le fichier à déplacer.
      *
      * @var UploadedFileInterface
      */
-    protected $file;
+    private $file;
 
     /**
      * Le champ de fichier caché.
      *
      * @var string
      */
-    protected $fileHidden;
+    private $fileHidden;
 
     /**
      * Si le répertoire doit-être corrigé.
      *
      * @var bool
      */
-    protected $isResolveDir = false;
+    private $isResolveDir = false;
 
     /**
      * Droits attribués à la création du répertoire.
      *
      * @var int
      */
-    protected $mode = 0755;
+    private $mode = 0755;
 
     /**
      * Le nom du fichier à déplacer.
      *
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * Le nouveau nom du fichier à déplacer si corrigé.
      *
      * @var string
      */
-    protected $nameResolved;
+    private $nameResolved;
 
     /**
      * Le chemin d'envoie.
      *
      * @var string
      */
-    protected $path = null;
+    private $path = null;
 
     /**
      * Le répertoire racine.
      *
      * @var string
      */
-    protected $root;
+    private $root;
 
     /**
      * @param \Soosyze\App $core
@@ -330,7 +330,7 @@ class File
         return "{$this->basePath}{$this->path}/{$filename}.{$this->ext}";
     }
 
-    protected function getThumbnail($name, &$form, $filePath, $type)
+    private function getThumbnail($name, &$form, $filePath, $type)
     {
         $src = is_file($this->root . $filePath)
             ? $this->basePath . $filePath
@@ -351,7 +351,7 @@ class File
         }, [ 'class' => 'form-group' ]);
     }
 
-    protected function resolveDir()
+    private function resolveDir()
     {
         if ($this->isResolveDir && !is_dir($this->dir)) {
             mkdir($this->dir, $this->mode, true);

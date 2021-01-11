@@ -8,7 +8,7 @@ use Soosyze\Components\Template\Template;
 
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
-    protected $pathContent;
+    private $pathContent;
 
     public function __construct()
     {

@@ -11,14 +11,14 @@ class Step
     /**
      * @var string[]
      */
-    protected static $columnsMenu = [
+    private static $columnsMenu = [
         'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
     ];
 
     /**
      * @var string[]
      */
-    protected static $columnsNode = [
+    private static $columnsNode = [
         'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
         'title'
     ];
@@ -777,7 +777,7 @@ class Step
             ->execute();
     }
 
-    protected function lastInsertId($table, array $columns, array $values)
+    private function lastInsertId($table, array $columns, array $values)
     {
         $this->ci->query()
             ->insertInto($table, $columns)

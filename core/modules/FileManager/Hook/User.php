@@ -199,7 +199,7 @@ class User
         return min(Util::getOctetUploadLimit(), $maxUpload);
     }
 
-    protected function rightExtension($ext, array $right = [])
+    private function rightExtension($ext, array $right = [])
     {
         if ($right[ 'file_extensions_all' ]) {
             return true;

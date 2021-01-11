@@ -264,7 +264,7 @@ class Menu
             ->execute();
     }
 
-    protected function getOptions()
+    private function getOptions()
     {
         $menus = $this->query->from('menu')->fetchAll();
 
@@ -279,7 +279,7 @@ class Menu
         return $options;
     }
 
-    protected function getListNamesMenu()
+    private function getListNamesMenu()
     {
         $menus = $this->query->from('menu')->fetchAll();
         $names = $menus

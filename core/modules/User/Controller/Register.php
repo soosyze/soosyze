@@ -171,7 +171,7 @@ class Register extends \Soosyze\Controller
         ]));
     }
 
-    protected function sendMailRegister($from)
+    private function sendMailRegister($from)
     {
         $user     = self::user()->getUser($from);
         $urlReset = self::router()->getRoute('user.activate', [

@@ -8,13 +8,13 @@ use Soosyze\Components\Validator\Validator;
 
 class UsersManager extends \Soosyze\Controller
 {
-    protected static $limit = 20;
+    private static $limit = 20;
 
-    protected static $page = 1;
+    private static $page = 1;
 
-    protected $isAdmin = false;
+    private $isAdmin = false;
 
-    protected $username = '';
+    private $username = '';
 
     public function __construct()
     {
@@ -166,7 +166,7 @@ class UsersManager extends \Soosyze\Controller
         ]);
     }
 
-    protected function sortUser($users, $req)
+    private function sortUser($users, $req)
     {
         $get = $req->getQueryParams();
 
@@ -183,7 +183,7 @@ class UsersManager extends \Soosyze\Controller
         return $users->orderBy('time_access', 'desc');
     }
 
-    protected function hydrateUsersLinks(&$users)
+    private function hydrateUsersLinks(&$users)
     {
         foreach ($users as &$user) {
             $user[ 'link_show' ]   = self::router()->getRoute('user.show', [
@@ -201,7 +201,7 @@ class UsersManager extends \Soosyze\Controller
         unset($user);
     }
 
-    protected function getSortParams($req)
+    private function getSortParams($req)
     {
         $get = $req->getQueryParams();
 

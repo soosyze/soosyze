@@ -10,47 +10,47 @@ class Templating extends \Soosyze\Components\Http\Response
     /**
      * @var Block
      */
-    protected $template;
+    private $template;
 
     /**
      * @var \Soosyze\Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var \Soosyze\App
      */
-    protected $core;
+    private $core;
 
     /**
      * Nom du theme utilisé par défaut.
      *
      * @var string
      */
-    protected $defaultThemeName = '';
+    private $defaultThemeName = '';
 
     /**
      * Chemin du thème.
      *
      * @var string
      */
-    protected $defaultThemePath = '';
+    private $defaultThemePath = '';
 
     /**
      * Liste des répertoires contenant les thèmes.
      *
      * @var string[]
      */
-    protected $themesPath = [];
+    private $themesPath = [];
 
     /**
      * Les données du fichier composer.json
      *
      * @var array
      */
-    protected $composer = [];
+    private $composer = [];
 
-    protected $isDarkTheme = false;
+    private $isDarkTheme = false;
 
     public function __construct($core, $config)
     {

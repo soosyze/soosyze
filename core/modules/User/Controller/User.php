@@ -525,7 +525,7 @@ class User extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('user.admin'));
     }
 
-    protected function validRole(array $roles = [])
+    private function validRole(array $roles = [])
     {
         $validatorRoles = new Validator();
         $listRoles = implode(',', $this->getRoleByPermission());
@@ -542,7 +542,7 @@ class User extends \Soosyze\Controller
         return $validatorRoles;
     }
 
-    protected function getRoleByPermission()
+    private function getRoleByPermission()
     {
         $roles   = self::user()->getRolesAttribuable();
         $roleAll = $this->container->callHook('app.granted', [ 'role.all' ]);
@@ -557,7 +557,7 @@ class User extends \Soosyze\Controller
         return $in;
     }
 
-    protected function updateRole($validator, $idUser)
+    private function updateRole($validator, $idUser)
     {
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
 

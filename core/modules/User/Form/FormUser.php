@@ -4,7 +4,9 @@ namespace SoosyzeCore\User\Form;
 
 class FormUser extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $values = [
         'username'         => '',
         'email'            => '',
         'picture'          => '',
@@ -17,9 +19,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         'roles'            => []
     ];
 
-    protected $file;
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
+    private $file;
 
     public function __construct(array $attr, $file = null, $config = null)
     {

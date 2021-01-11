@@ -12,19 +12,19 @@ use SoosyzeCore\FileManager\Services\FileManager;
 
 class File extends \Soosyze\Controller
 {
-    protected static $extensionImage = [
+    private static $extensionImage = [
         'gif', 'ico', 'jpg', 'jpeg', 'png'
     ];
 
-    protected static $extensionCode = [
+    private static $extensionCode = [
         'css', 'csv', 'html', 'json', 'txt', 'xhtml', 'xml'
     ];
 
-    protected static $extensionVideo = [
+    private static $extensionVideo = [
         'mp4', 'mpeg'
     ];
 
-    protected static $extensionAudio = [
+    private static $extensionAudio = [
         'mp3'
     ];
 
@@ -413,7 +413,7 @@ class File extends \Soosyze\Controller
                 ->withHeader('expires', '0');
     }
 
-    protected function visualizeFile(array $info, $path)
+    private function visualizeFile(array $info, $path)
     {
         self::template()->getTheme('theme_admin');
 

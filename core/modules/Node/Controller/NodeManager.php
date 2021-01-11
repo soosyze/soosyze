@@ -7,11 +7,11 @@ use Soosyze\Components\Validator\Validator;
 
 class NodeManager extends \Soosyze\Controller
 {
-    protected static $limit = 25;
+    private static $limit = 25;
 
-    protected static $page = 1;
+    private static $page = 1;
 
-    protected $admin = false;
+    private $admin = false;
 
     public function __construct()
     {
@@ -171,7 +171,7 @@ class NodeManager extends \Soosyze\Controller
         ]);
     }
 
-    protected function getSortParams($req)
+    private function getSortParams($req)
     {
         $get = $req->getQueryParams();
 

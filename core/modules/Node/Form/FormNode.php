@@ -4,7 +4,23 @@ namespace SoosyzeCore\Node\Form;
 
 class FormNode extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $fieldRules = [
+        'email',
+        'month',
+        'password',
+        'search',
+        'tel',
+        'text',
+        'textarea',
+        'url',
+        'week'
+    ];
+
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private static $attrGrpInline = [ 'class' => 'form-group-inline' ];
+
+    private $values = [
         'title'            => '',
         'meta_description' => '',
         'meta_noindex'     => false,
@@ -18,31 +34,15 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         'user_id'          => null
     ];
 
-    protected static $fieldRules = [
-        'email',
-        'month',
-        'password',
-        'search',
-        'tel',
-        'text',
-        'textarea',
-        'url',
-        'week'
-    ];
+    private $file;
 
-    protected $file;
+    private $query;
 
-    protected static $attrGrp = [ 'class' => 'form-group' ];
+    private $fields;
 
-    protected static $attrGrpInline = [ 'class' => 'form-group-inline' ];
+    private $router;
 
-    protected $query;
-
-    protected $fields;
-
-    protected $router;
-
-    protected $config;
+    private $config;
 
     /**
      * Les données de l'utilisateur possèdant le contenu.
@@ -600,7 +600,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    protected function getDateCreated()
+    private function getDateCreated()
     {
         if (empty($this->values[ 'date_created' ])) {
             return date('Y-m-d H:i:s', time());

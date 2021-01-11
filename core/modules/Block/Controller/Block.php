@@ -313,12 +313,12 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.delete.after', [ $id ]);
     }
 
-    protected function find($id)
+    private function find($id)
     {
         return self::query()->from('block')->where('block_id', '==', $id)->fetch();
     }
 
-    protected function getOptions($block, $default = [])
+    private function getOptions($block, $default = [])
     {
         return empty($block[ 'options' ])
                 ? $default

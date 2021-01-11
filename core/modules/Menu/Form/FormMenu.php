@@ -4,12 +4,12 @@ namespace SoosyzeCore\Menu\Form;
 
 class FormMenu extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $values = [
         'title'       => '',
         'description' => ''
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function setValues(array $values)
     {

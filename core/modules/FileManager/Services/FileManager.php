@@ -6,7 +6,7 @@ use Soosyze\Components\Util\Util;
 
 class FileManager
 {
-    protected static $extAllowed = [
+    private static $extAllowed = [
         '7z',
         'ai', 'avi',
         'css', 'csv',

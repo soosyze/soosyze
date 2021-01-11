@@ -4,15 +4,15 @@ namespace SoosyzeCore\User\Form;
 
 class FormUserRole extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $values = [
         'role_label'       => '',
         'role_description' => '',
         'role_weight'      => 1,
         'role_color'       => '#e6e7f4',
         'role_icon'        => 'fa fa-user'
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function setValues(array $values)
     {

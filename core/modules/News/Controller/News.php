@@ -10,13 +10,13 @@ class News extends \Soosyze\Controller
 {
     public static $limit;
 
-    protected $dateCurrent;
+    private $dateCurrent;
 
-    protected $dateNext;
+    private $dateNext;
 
-    protected $titleMain;
+    private $titleMain;
 
-    protected $link;
+    private $link;
 
     public function __construct()
     {
@@ -174,7 +174,7 @@ class News extends \Soosyze\Controller
                 ->withHeader('Content-Disposition', 'attachment; filename=rss.xml');
     }
 
-    protected function renderNews($page, $req)
+    private function renderNews($page, $req)
     {
         $page = empty($page)
             ? 1
@@ -220,7 +220,7 @@ class News extends \Soosyze\Controller
         ]);
     }
 
-    protected function getNews($dateCurrent, $dateNext, $offset = 0)
+    private function getNews($dateCurrent, $dateNext, $offset = 0)
     {
         return self::query()
                 ->from('node')
@@ -233,7 +233,7 @@ class News extends \Soosyze\Controller
                 ->fetchAll();
     }
 
-    protected function getNewsAll($dateCurrent, $dateNext)
+    private function getNewsAll($dateCurrent, $dateNext)
     {
         return self::query()
                 ->from('node')

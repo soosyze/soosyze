@@ -12,6 +12,8 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
 
     const SHOW_BLOCK_ROLES = 1;
 
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     private $id = 0;
 
     private $rolesUser = [];
@@ -25,8 +27,6 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
         'visibility_roles' => '',
         'roles'            => ''
     ];
-
-    private static $attrGrp = [ 'class' => 'form-group' ];
 
     public function setValues(array $values, $id, $rolesUser)
     {

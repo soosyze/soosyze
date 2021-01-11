@@ -250,7 +250,7 @@ class Login extends \Soosyze\Controller
         return new Redirect(self::router()->getRoute('user.edit', [ ':id' => $id ]));
     }
 
-    protected function getRedirectLogin($user)
+    private function getRedirectLogin($user)
     {
         if (($redirect = self::config()->get('settings.connect_redirect', ''))) {
             $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);

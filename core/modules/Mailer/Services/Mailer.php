@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
 {
-    protected $mailer;
+    private $mailer;
 
-    protected $values = [
+    private $values = [
         'driver'          => 'mail',
         'smtp_encryption' => '',
         'smtp_host'       => '',

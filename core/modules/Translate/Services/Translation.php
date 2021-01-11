@@ -4,9 +4,9 @@ namespace SoosyzeCore\Translate\Services;
 
 class Translation extends \Soosyze\Config
 {
-    protected $lang;
+    private $lang;
 
-    protected $iso639_1 = [
+    private $iso639_1 = [
         'aa'  => 'Afar',
         'ab'  => 'Abkhazian',
         'ae'  => 'Avestan',

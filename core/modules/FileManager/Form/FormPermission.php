@@ -7,7 +7,7 @@ use SoosyzeCore\FileManager\Services\FileManager;
 
 class FormPermission extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private $values = [
         'folder_show'         => '/',
         'folder_show_sub'     => true,
         'profil_weight'       => 1,
@@ -27,7 +27,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
         'file_extensions'     => []
     ];
 
-    protected $roles = [];
+    private $roles = [];
 
     public function setValues(array $values)
     {

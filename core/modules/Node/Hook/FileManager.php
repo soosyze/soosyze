@@ -76,7 +76,7 @@ class FileManager
         $this->getFileManager($form, $request);
     }
 
-    protected function getFileManager(FormBuilder &$form, $request)
+    private function getFileManager(FormBuilder &$form, $request)
     {
         $response = '<div class="col-md-12">'
             . '<div class="alert alert-info">'

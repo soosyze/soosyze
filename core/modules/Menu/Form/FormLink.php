@@ -4,14 +4,16 @@ namespace SoosyzeCore\Menu\Form;
 
 class FormLink extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $isRewrite = false;
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $isRewrite = false;
 
     /**
      * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
-    protected $values = [
+    private $values = [
         'title_link'  => '',
         'link'        => '',
         'query'       => '',
@@ -19,8 +21,6 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'icon'        => '',
         'target_link' => false
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function __construct(array $attr, $router)
     {

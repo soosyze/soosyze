@@ -94,7 +94,7 @@ class Config extends \Soosyze\Controller
         );
     }
 
-    protected function getConfig($menu, $id, $req)
+    private function getConfig($menu, $id, $req)
     {
         if (!isset($menu[ $id ])) {
             return $this->get404($req);
@@ -154,7 +154,7 @@ class Config extends \Soosyze\Controller
         ]);
     }
 
-    protected function getMenuConfig()
+    private function getMenuConfig()
     {
         $menu = [];
         $this->container->callHook('config.edit.menu', [ &$menu ]);

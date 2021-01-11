@@ -4,20 +4,20 @@ namespace SoosyzeCore\Node\Form;
 
 class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var \Soosyze\Components\Router\Router
      */
-    protected $router;
+    private $router;
 
-    protected $values = [
+    private $values = [
         'current_path' => '',
         'files'        => 1,
         'path'         => ''
     ];
 
-    protected $useInPath;
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
+    private $useInPath;
 
     public function __construct($attr, $router)
     {

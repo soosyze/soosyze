@@ -100,7 +100,7 @@ class NodeUser
                 ->where('user_id', '==', $userId)
                 ->execute();
 
-            foreach( $nodes as $node ) {
+            foreach ($nodes as $node) {
                 self::node()->deleteRelation($node);
                 self::node()->deleteFile($node[ 'type' ], $node[ 'id' ]);
             }

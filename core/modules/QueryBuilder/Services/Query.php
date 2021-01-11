@@ -4,7 +4,7 @@ namespace SoosyzeCore\QueryBuilder\Services;
 
 class Query extends \Queryflatfile\Request
 {
-    protected $listRequest = [];
+    private $listRequest = [];
 
     public function fetchAll()
     {

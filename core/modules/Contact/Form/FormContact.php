@@ -4,14 +4,14 @@ namespace SoosyzeCore\Contact\Form;
 
 class FormContact extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $values = [
         'name'    => '',
         'email'   => '',
         'object'  => '',
         'message' => '',
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function setValues(array $values)
     {
@@ -33,7 +33,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    protected function name()
+    private function name()
     {
         return $this->group('name-group', 'div', function ($form) {
             $form->label('name-label', t('Name'))
@@ -45,7 +45,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    protected function email()
+    private function email()
     {
         return $this->group('email-group', 'div', function ($form) {
             $form->label('email-label', t('E-mail'))
@@ -57,7 +57,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    protected function object()
+    private function object()
     {
         return $this->group('object-group', 'div', function ($form) {
             $form->label('object-label', t('Object'))
@@ -69,7 +69,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    protected function message()
+    private function message()
     {
         return $this->group('message-group', 'div', function ($form) {
             $form->label('message-label', t('Message'))
@@ -81,7 +81,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    protected function copy()
+    private function copy()
     {
         return $this->group('copy-group', 'div', function ($form) {
             $form->checkbox('copy')

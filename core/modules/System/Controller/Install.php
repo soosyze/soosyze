@@ -112,7 +112,7 @@ class Install extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    protected function getSteps()
+    private function getSteps()
     {
         $step = [];
         $this->container->callHook('step', [ &$step ]);

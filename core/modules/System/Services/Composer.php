@@ -321,7 +321,7 @@ class Composer
         return $validator->getKeyErrors();
     }
 
-    protected function getComposer($dir, $type = 'soosyze-module')
+    private function getComposer($dir, $type = 'soosyze-module')
     {
         $out = [];
 

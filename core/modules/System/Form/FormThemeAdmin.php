@@ -4,11 +4,11 @@ namespace SoosyzeCore\System\Form;
 
 class FormThemeAdmin extends \Soosyze\Components\Form\FormBuilder
 {
-    protected $values = [
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    private $values = [
         'theme_admin_dark' => ''
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function setValues(array $values)
     {

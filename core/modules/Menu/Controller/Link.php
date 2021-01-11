@@ -236,7 +236,7 @@ class Link extends \Soosyze\Controller
         return new Redirect($route);
     }
 
-    protected function getValidator($req)
+    private function getValidator($req)
     {
         return (new Validator())
                 ->setRules([

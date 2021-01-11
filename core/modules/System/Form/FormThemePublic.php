@@ -4,17 +4,17 @@ namespace SoosyzeCore\System\Form;
 
 class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
 {
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
     /**
      * @var
      */
-    protected $file;
+    private $file;
 
-    protected $values = [
+    private $values = [
         'favicon' => '',
         'logo'    => ''
     ];
-
-    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     public function __construct(array $attr, $file)
     {

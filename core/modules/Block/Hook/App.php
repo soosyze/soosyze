@@ -90,7 +90,7 @@ class App
         }
     }
 
-    protected function getNameTheme()
+    private function getNameTheme()
     {
         $query = $this->router->parseQueryFromRequest();
         if ($query === 'admin/theme/public/section') {
@@ -103,7 +103,7 @@ class App
         return '';
     }
 
-    protected function getBlocks($isAdmin)
+    private function getBlocks($isAdmin)
     {
         $blocks = $this->query
             ->from('block')
@@ -145,7 +145,7 @@ class App
         return $out;
     }
 
-    protected function isVisibilityPages(array $block)
+    private function isVisibilityPages(array $block)
     {
         $path = $this->router->parseQueryFromRequest();
 
@@ -167,7 +167,7 @@ class App
         return !$visibility;
     }
 
-    protected function isVisibilityRoles(array $block)
+    private function isVisibilityRoles(array $block)
     {
         $rolesBlock  = explode(',', $block[ 'roles' ]);
         $visibility  = $block[ 'visibility_roles' ];

@@ -288,7 +288,7 @@ class Profil extends \Soosyze\Controller
         ]));
     }
 
-    protected function storeProfilRole($validator, $profilFileId)
+    private function storeProfilRole($validator, $profilFileId)
     {
         self::query()->insertInto('profil_file_role', [
             'profil_file_id', 'role_id'
@@ -299,7 +299,7 @@ class Profil extends \Soosyze\Controller
         self::query()->execute();
     }
 
-    protected function updateProfilRole($validator, $profilFileId)
+    private function updateProfilRole($validator, $profilFileId)
     {
         self::query()
             ->from('profil_file_role')
@@ -313,7 +313,7 @@ class Profil extends \Soosyze\Controller
         self::query()->execute();
     }
 
-    protected function getValidator($req)
+    private function getValidator($req)
     {
         $validator = (new Validator())
             ->setRules([
@@ -366,7 +366,7 @@ class Profil extends \Soosyze\Controller
         return $validator;
     }
 
-    protected function getData($validator)
+    private function getData($validator)
     {
         return [
             'folder_show'         => $validator->getInput('folder_show'),
