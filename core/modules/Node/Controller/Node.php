@@ -293,7 +293,7 @@ class Node extends \Soosyze\Controller
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields'       => $fields,
                     'node'         => $node,
-                    'node_submenu' => $this->getSubmenuNode($node, 'node.show')
+                    'node_submenu' => $this->getSubmenuNode('node.show', $idNode)
                 ])->override('page.content', [
                     'node/content-node-show_' . $idNode . '.php',
                     'node/content-node-show_' . $node[ 'type' ] . '.php'
@@ -352,7 +352,7 @@ class Node extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
-                    'node_submenu'          => $this->getSubmenuNode($node, 'node.edit'),
+                    'node_submenu'          => $this->getSubmenuNode('node.edit', $idNode),
                     'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
                 ])
                 ->override('page.content', [ 'node/content-node-form_edit.php' ]);
@@ -575,7 +575,7 @@ class Node extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'         => $form,
-                    'node_submenu' => $this->getSubmenuNode($node, 'node.delete')
+                    'node_submenu' => $this->getSubmenuNode('node.delete', $idNode)
                 ])
                 ->override('page.content', [ 'node/content-node-form_remove.php' ]);
     }
@@ -788,25 +788,25 @@ class Node extends \Soosyze\Controller
         return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
     }
 
-    public function getSubmenuNode(array $node, $keyRoute)
+    public function getSubmenuNode($keyRoute, $idNode)
     {
         $menu = [
             [
                 'key'        => 'node.edit',
                 'request'    => self::router()->getRequestByRoute('node.edit', [
-                    ':id_node' => $node[ 'id' ]
+                    ':id_node' => $idNode
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'node.delete',
                 'request'    => self::router()->getRequestByRoute('node.remove', [
-                    ':id_node' => $node[ 'id' ]
+                    ':id_node' => $idNode
                 ]),
                 'title_link' => t('Delete')
             ]
         ];
 
-        $this->container->callHook('node.submenu', [ &$menu, $node[ 'id' ] ]);
+        $this->container->callHook('node.submenu', [ &$menu, $idNode ]);
 
         foreach ($menu as $key => &$link) {
             if ($this->container->callHook('app.granted.route', [ $link[ 'request' ] ])) {
@@ -823,15 +823,15 @@ class Node extends \Soosyze\Controller
             $nodeShow = [
                 'key'        => 'node.show',
                 'request'    => self::router()->getRequestByRoute('node.show', [
-                    ':id_node' => $node[ 'id' ]
+                    ':id_node' => $idNode
                 ]),
                 'title_link' => t('View')
             ];
             if ($this->container->callHook('app.granted.route', [ $nodeShow[ 'request' ] ])) {
                 $nodeShow[ 'link' ] = self::router()->makeRoute(
-                    'node/' . $node[ 'id' ] === self::config()->get('settings.path_index')
+                    'node/' . $idNode === self::config()->get('settings.path_index')
                         ? ''
-                        : self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
+                        : self::alias()->getAlias('node/' . $idNode, 'node/' . $idNode)
                 );
 
                 $menu = array_merge([ $nodeShow ], $menu);
