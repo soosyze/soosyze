@@ -302,7 +302,7 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
-                    'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
+                    'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
                     'title_main' => t('Delete the menu :name', [
                         ':name' => t($menu[ 'title' ])
                     ])
