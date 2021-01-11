@@ -28,8 +28,6 @@ class File extends \Soosyze\Controller
         'mp3'
     ];
 
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

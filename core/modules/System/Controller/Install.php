@@ -9,8 +9,6 @@ use Soosyze\Components\Util\Util;
 
 class Install extends \Soosyze\Controller
 {
-    protected $pathViews;
-
     /**
      * Liste des modules à installer.
      *

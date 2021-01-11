@@ -9,8 +9,6 @@ use SoosyzeCore\FileManager\Hook\Config;
 
 class FileCopy extends \Soosyze\Controller
 {
-    private $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

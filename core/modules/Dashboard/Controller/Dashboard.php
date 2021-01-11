@@ -6,8 +6,6 @@ use Soosyze\Components\Http\Redirect;
 
 class Dashboard extends \Soosyze\Controller
 {
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes.php';

@@ -7,8 +7,6 @@ use SoosyzeCore\Node\Form\FormNodeDelete;
 
 class NodeApi extends \Soosyze\Controller
 {
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

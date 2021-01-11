@@ -13,8 +13,6 @@ class NodeManager extends \Soosyze\Controller
 
     protected $admin = false;
 
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

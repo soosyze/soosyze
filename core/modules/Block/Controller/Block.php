@@ -9,8 +9,6 @@ use SoosyzeCore\Block\Form\FormBlock;
 
 class Block extends \Soosyze\Controller
 {
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/services.php';

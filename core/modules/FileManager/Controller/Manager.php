@@ -8,8 +8,6 @@ use Soosyze\Components\Validator\Validator;
 
 class Manager extends \Soosyze\Controller
 {
-    private $pathViews;
-
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/services.php';

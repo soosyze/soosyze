@@ -16,8 +16,6 @@ class UsersManager extends \Soosyze\Controller
 
     protected $username = '';
 
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

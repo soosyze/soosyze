@@ -14,8 +14,6 @@ class Theme extends \Soosyze\Controller
 
     const TYPE_PUBLIC = 'public';
 
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';

@@ -18,8 +18,6 @@ class News extends \Soosyze\Controller
 
     protected $link;
 
-    protected $pathViews;
-
     public function __construct()
     {
         $this->pathServices = dirname(__DIR__) . '/Config/services.php';
