@@ -7,7 +7,17 @@
     <table class="table table-hover table-striped table-responsive node_manager-table">
         <thead>
             <tr class="form-head">
-                <th><?php echo t('Name'); ?></th>
+                <th>
+                <?php if ($order_by === 'title'): ?>
+                    <a href="<?php echo $link_title_sort; ?>" title="<?php echo t($is_sort_asc ? 'Ascending' : 'Descending'); ?>" class="sort">
+                        <?php echo t('Name'); ?> <i class="fa <?php echo $is_sort_asc ? 'fa-sort-amount-up-alt' : 'fa-sort-amount-down'; ?>" aria-hidden="true"></i>
+                    </a>
+                <?php else: ?>
+                    <a href="<?php echo $link_title_sort; ?>" class="sort">
+                        <?php echo t('Name'); ?>
+                    </a>
+                <?php endif; ?>
+                </th>
                 <th>
                 <?php if ($order_by === 'type'): ?>
                     <a href="<?php echo $link_type_sort; ?>" title="<?php echo t($is_sort_asc ? 'Ascending' : 'Descending'); ?>" class="sort">
