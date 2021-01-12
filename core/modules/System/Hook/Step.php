@@ -508,7 +508,7 @@ class Step
                 false, '/' . PHP_EOL . 'news' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
-                'sidebar', t('Archives by months'),
+                'sidebar', t('Archives'),
                 2,
                 'news.archive', 'news.archive',
                 json_encode([ 'expand' => false ]),
@@ -555,7 +555,7 @@ class Step
                 true, 'news/%/%/%/%'
             ])
             ->values([
-                'sidebar', t('Archives by months'),
+                'sidebar', t('Archives'),
                 1,
                 'news.archive', 'news.archive',
                 json_encode([ 'expand' => false ]),
