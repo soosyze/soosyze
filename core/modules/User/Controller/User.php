@@ -547,10 +547,12 @@ class User extends \Soosyze\Controller
     {
         $this->container->callHook('user.update.role.before', [ &$validator, $idUser ]);
 
+        $listRoles = array_column($this->getRoleByPermission(), 'role_id');
+
         self::query()
             ->from('user_role')
             ->where('user_id', '==', $idUser)
-            ->in('role_id', array_column($this->getRoleByPermission(), 'role_id'))
+            ->in('role_id', $listRoles)
             ->delete()
             ->execute();
 
