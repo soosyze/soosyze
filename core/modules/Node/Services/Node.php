@@ -22,6 +22,13 @@ class Node
     private $nodeCurrent = null;
 
     /**
+     * Données permettant de créer l'affichage d'un contenu.
+     *
+     * @var array
+     */
+    private $nodeTypeField = [];
+
+    /**
      * @var string
      */
     private $pathViews;
@@ -87,15 +94,20 @@ class Node
 
     public function getFields($type)
     {
-        return $this->query
-                ->select('field_name', 'field_type', 'field_label', 'field_show_label', 'field_option', 'field_weight')
-                ->from('node_type_field')
-                ->leftJoin('field', 'field_id', 'field.field_id')
-                ->where('node_type', $type)
-                ->where('field_show', true)
-                ->orderby('field_weight')
-                ->fetchAll();
-    
+        if (isset($this->nodeTypeField[ $type ])) {
+            return $this->nodeTypeField[ $type ];
+        }
+
+        $this->nodeTypeField[ $type ] = $this->query
+            ->select('field_name', 'field_type', 'field_label', 'field_show_label', 'field_option', 'field_weight')
+            ->from('node_type_field')
+            ->leftJoin('field', 'field_id', 'field.field_id')
+            ->where('node_type', $type)
+            ->where('field_show', true)
+            ->orderby('field_weight')
+            ->fetchAll();
+
+        return $this->nodeTypeField[ $type ];
     }
 
     public function getCurrentNode($idNode = null)
