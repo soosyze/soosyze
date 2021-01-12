@@ -74,13 +74,19 @@ class NodeUser
 
         $requestLinkAdd = $this->router->getRequestByRoute('node.add');
 
+        $contentNothing = 'The user has no content at the moment.';
+        if (($userConnected  = $this->user->isConnected()) && $userConnected[ 'user_id' ] == $user[ 'user_id' ]) {
+            $contentNothing = 'Your account has no content at the moment.';
+        }
+
         $contentUser[] = $this->template
             ->createBlock('components/user/content_user-nodes.php', $this->pathViews)
             ->addVars([
-                'link_add' => $this->user->isGrantedRoute($requestLinkAdd)
+                'content_nothing' => $contentNothing,
+                'link_add'        => $this->user->isGrantedRoute($requestLinkAdd)
                     ? $requestLinkAdd->getUri()
                     : null,
-                'nodes'    => $nodes
+                'nodes'           => $nodes
         ]);
     }
 

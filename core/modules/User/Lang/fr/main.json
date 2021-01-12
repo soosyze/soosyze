@@ -61,5 +61,7 @@
     "I have read and accept your privacy policy (Required)": "J'ai lu et j'accepte votre politique de confidentialité (Obligatoire)",
     "Read the privacy policy": "Lire la politique de confidentialité",
     ":count user": ":count utilisateur",
-    ":count users": ":count utilisateurs"
+    ":count users": ":count utilisateurs",
+    "The user has no content at the moment.": "L'utilisateur n'a pas de contenu pour le moment.",
+    "Your account has no content at the moment.": "Votre compte n'a pas de contenu pour le moment."
 }

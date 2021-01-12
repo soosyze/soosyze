@@ -18,6 +18,16 @@ class NodeUser
     private $config;
 
     /**
+     * @var bool
+     */
+    private $grantedPublish;
+
+    /**
+     * @var bool
+     */
+    private $grantedNotPublish;
+
+    /**
      * @var \SoosyzeCore\Node\Hook\User
      */
     private $hookUser;
@@ -68,17 +78,14 @@ class NodeUser
 
     public function whereNodes(&$nodeQuery)
     {
-        $publish    = $this->user->isGranted('node.show.published');
-        $notPublish = $this->user->isGranted('node.show.not_published');
-
-        if ($this->user->isGranted('node.administer') || ($publish && $notPublish)) {
+        if ($this->isGrantedAdmin()) {
             return $this;
         }
 
         $nodeTypes = $this->query->from('node_type')->fetchAll();
         foreach ($nodeTypes as $type) {
-            $typePublish    = $publish || $this->user->isGranted('node.show.published.' . $type[ 'node_type' ]);
-            $typeNotPublish = $notPublish || $this->user->isGranted('node.show.not_published.' . $type[ 'node_type' ]);
+            $typePublish    = $this->grantedPublish || $this->user->isGranted('node.show.published.' . $type[ 'node_type' ]);
+            $typeNotPublish = $this->grantedNotPublish || $this->user->isGranted('node.show.not_published.' . $type[ 'node_type' ]);
 
             if ($typePublish || $typeNotPublish) {
                 $nodeQuery->orWhere(function ($query) use ($type, $typePublish, $typeNotPublish) {
@@ -165,7 +172,7 @@ class NodeUser
 
     public function orWhereNodesUser(&$nodeQuery, $userId)
     {
-        if ($this->user->isGranted('node.show.own')) {
+        if (!$this->isGrantedAdmin() && $this->user->isGranted('node.show.own')) {
             $nodeQuery->orWhere('user_id', '===', $userId);
         }
 
@@ -191,5 +198,15 @@ class NodeUser
         }
 
         return $this;
+    }
+
+    private function isGrantedAdmin()
+    {
+        $this->grantedPublish    = $this->user->isGranted('node.show.published');
+        $this->grantedNotPublish = $this->user->isGranted('node.show.not_published');
+
+        return $this->user->isGranted('node.administer') || (
+            $this->grantedPublish && $this->grantedNotPublish
+        );
     }
 }

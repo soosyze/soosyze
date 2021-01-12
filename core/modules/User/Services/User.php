@@ -185,7 +185,9 @@ class User
                 ->createBlock('user/submenu-user.php', $this->pathViews)
                 ->addVars([
                     'key_route' => $keyRoute,
-                    'menu'      => $menu
+                    'menu'      => count($menu) === 1
+                        ? []
+                        : $menu
         ]);
     }
 

@@ -1,4 +1,5 @@
 
+<?php if ($menu): ?>
 <nav>
     <ul class="nav nav-tabs">
         <?php foreach ($menu as $link): ?>
@@ -10,3 +11,4 @@
 
     </ul>
 </nav>
+<?php endif; ?>

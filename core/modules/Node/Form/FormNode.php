@@ -417,7 +417,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         } elseif ($this->values[ 'user_id' ]) {
             $user = $this->query
                 ->from('user')
-                ->where('user_id', $this->values[ 'user_id' ])
+                ->where('user_id', '==', $this->values[ 'user_id' ])
                 ->fetch();
 
             $options[] = [

@@ -35,7 +35,7 @@
     <div colspan="5" class="alert alert-info">
         <div class="content-nothing">
             <i class="fa fa-inbox" aria-hidden="true"></i>
-            <p><?php echo t('Your account has no content at the moment.'); ?><p>
+            <p><?php echo t($content_nothing); ?><p>
         </div>
     </div>
     <?php endif; ?>
