@@ -24,11 +24,15 @@ class Permission extends \Soosyze\Controller
             ->from('role')
             ->leftJoin('role_permission', 'role_id', 'role_permission.role_id')
             ->fetchAll();
-        $roles             = self::query()->from('role')->orderBy('role_weight')->fetchAll();
+
+        $fetchRoles = self::query()->from('role')->orderBy('role_weight')->fetchAll();
+
+        $roles = array_combine(array_column($fetchRoles, 'role_id'), $fetchRoles);
 
         /* Simplifie les permissions par roles. */
+        $tmp = [];
         foreach ($permissionsByRole as $value) {
-            $tmp[ $value[ 'permission_id' ] ][] = $value[ 'role_id' ];
+            $tmp[ $value[ 'permission_id' ] ][ $value[ 'role_id' ] ] = '';
         }
         $permissionsByRole = $tmp;
 
@@ -42,7 +46,7 @@ class Permission extends \Soosyze\Controller
                     : $permission;
                 foreach ($roles as $role) {
                     $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] =
-                        isset($permissionsByRole[ $keyPermission ]) && in_array($role[ 'role_id' ], $permissionsByRole[ $keyPermission ])
+                        isset($permissionsByRole[ $keyPermission ][ $role[ 'role_id' ] ])
                             ? 'checked'
                             : '';
                 }

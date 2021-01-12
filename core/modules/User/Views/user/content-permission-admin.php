@@ -61,7 +61,7 @@
                             <?php foreach ($permission[ 'roles' ] as $role => $checked): ?>
                             <?php $name = $role . '[' . $key . ']' ?>
 
-                            <td data-title="<?php echo t($roles[ $role - 1 ][ 'role_label' ]); ?>">
+                            <td data-title="<?php echo t($roles[ $role ][ 'role_label' ]); ?>">
                                 <input type="checkbox" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $key ?>" <?php echo $checked ?> aria-labelledby="role-<?php echo $role; ?>">
                                 <label for="<?php echo $name ?>"><i class="ui" aria-hidden="true"></i></label>
                             </td>
