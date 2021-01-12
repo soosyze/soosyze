@@ -240,8 +240,20 @@ class Role extends \Soosyze\Controller
         if ($validator->isValid()) {
             $this->container->callHook('role.delete.before', [ $validator, $id ]);
 
-            self::query()->from('user_role')->where('role_id', '==', $id)->delete()->execute();
-            self::query()->from('role')->where('role_id', '==', $id)->delete()->execute();
+            self::query()->from('user_role')
+                ->where('role_id', '==', $id)
+                ->delete()
+                ->execute();
+            self::query()
+                ->from('role_permission')
+                ->where('role_id', '==', $id)
+                ->delete()
+                ->execute();
+            self::query()
+                ->from('role')
+                ->where('role_id', '==', $id)
+                ->delete()
+                ->execute();
 
             $this->container->callHook('role.delete.after', [ $validator, $id ]);
 
