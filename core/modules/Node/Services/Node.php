@@ -15,6 +15,19 @@ class Node
     private $core;
 
     /**
+     * La liste des champs de bases fournient par le module.
+     *
+     * @var string[]
+     */
+    private $fieldsCore = [
+        'body',
+        'image',
+        'summary',
+        'reading_time',
+        'weight'
+    ];
+
+    /**
      * Les données du contenu courant.
      *
      * @var array|null
@@ -39,15 +52,21 @@ class Node
     private $query;
 
     /**
+     * @var \SoosyzeCore\QueryBuilder\Services\Schema
+     */
+    private $schema;
+
+    /**
      * @var \SoosyzeCore\Template\Services\Templating
      */
     private $tpl;
 
-    public function __construct($config, $core, $query, $tpl)
+    public function __construct($config, $core, $query, $schema, $tpl)
     {
         $this->config = $config;
         $this->core   = $core;
         $this->query  = $query;
+        $this->schema = $schema;
         $this->tpl    = $tpl;
 
         $this->pathViews = dirname(__DIR__) . '/Views/';
@@ -179,6 +198,80 @@ class Node
                 ->fetchAll();
     }
 
+    public function deleteAliasByType($nodeType)
+    {
+        $nodes = $this->query
+            ->from('node')
+            ->where('type', $nodeType)
+            ->fetchAll();
+
+        if (!empty($nodes)) {
+            $this->query
+                ->from('system_alias_url')
+                ->delete();
+
+            foreach ($nodes as $node) {
+                $this->query->orWhere('source', 'node/' . $node[ 'id' ]);
+            }
+
+            $this->query->execute();
+        }
+    }
+
+    public function deleteByType($nodeType)
+    {
+        $nodeTypeFields = $this->getNodeTypeFieldsQuery($nodeType)->fetchAll();
+
+        foreach ($nodeTypeFields as $nodeTypeField) {
+            if ($nodeTypeField[ 'field_type' ] === 'one_to_many') {
+                $this->deleteByType($nodeTypeField[ 'field_name' ]);
+            }
+
+            /* Supprime la relation entre le champs et l'entité. */
+            $this->query
+                ->from('node_type_field')
+                ->delete()
+                ->where('node_type', $nodeType)
+                ->execute();
+
+            if (in_array($nodeTypeField[ 'field_name' ], $this->fieldsCore)) {
+                continue;
+            }
+
+            $isUseOtherTable = $this->query
+                ->from('node_type_field')
+                ->where('field_id', $nodeTypeField[ 'field_id' ])
+                ->where('node_type', '!==', $nodeType)
+                ->fetch();
+
+            /* Si le champ n'est pas utiliser dans une autre entityé, il est supprimé. */
+            if (empty($isUseOtherTable)) {
+                $this->query
+                    ->from('field')
+                    ->delete()
+                    ->where('field_id', $nodeTypeField[ 'field_id' ])
+                    ->execute();
+            }
+        }
+
+        /* Supprimes les contenus. */
+        $this->query
+            ->from('node')
+            ->delete()
+            ->where('type', $nodeType)
+            ->execute();
+
+        /* Supprime le type de contenu. */
+        $this->query
+            ->from('node_type')
+            ->delete()
+            ->where('node_type', $nodeType)
+            ->execute();
+
+        /* Supprime la table de l'entité principal. */
+        $this->schema->dropTableIfExists("entity_$nodeType");
+    }
+
     public function deleteRelation($node)
     {
         /* Suppression des relations */
@@ -301,6 +394,14 @@ class Node
                 'title' => 'Terms page'
             ]
         ];
+    }
+
+    private function getNodeTypeFieldsQuery($nodeType)
+    {
+        return $this->query
+                ->from('node_type_field')
+                ->leftJoin('field', 'field_id', 'field.field_id')
+                ->where('node_type', $nodeType);
     }
 
     private function makeFields($type, array $fields, array $data)

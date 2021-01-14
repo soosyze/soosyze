@@ -176,27 +176,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function uninstall(ContainerInterface $ci)
     {
-        $nodes = $ci->query()->from('node')->where('type', 'article')->fetchAll();
-        $ci->query()->from('system_alias_url')
-            ->delete();
-        foreach ($nodes as $node) {
-            $ci->query()->orWhere('source', 'node/' . $node[ 'id' ]);
-        }
-        $ci->query()->execute();
-
-        $ci->query()->from('node')
-            ->delete()
-            ->where('type', 'article')
-            ->execute();
-        $ci->query()->from('node_type_field')
-            ->delete()
-            ->where('node_type', 'article')
-            ->execute();
-        $ci->query()->from('node_type')
-            ->delete()
-            ->where('node_type', 'article')
-            ->execute();
-        $ci->schema()->dropTable('entity_article');
+        $ci->node()->deleteAliasByType('article');
+        $ci->node()->deleteByType('article');
     }
 
     public function hookUninstall(ContainerInterface $ci)

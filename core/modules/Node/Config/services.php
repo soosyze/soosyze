@@ -3,7 +3,7 @@
 return [
     'node' => [
         'class' => 'SoosyzeCore\Node\Services\Node',
-        'arguments' => ['@config', '@core', '@query', '@template']
+        'arguments' => ['@config', '@core', '@query', '@schema', '@template']
     ],
     'nodeuser' => [
         'class' => 'SoosyzeCore\Node\Services\NodeUser',
