@@ -22,4 +22,9 @@ class User
             ? false
             : 'menu.administer';
     }
+
+    public function hookMenuApiShow( $menu, $req, $user )
+    {
+        return !empty($user);
+    }
 }

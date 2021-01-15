@@ -99,22 +99,24 @@ return [
             'route.node.admin' => 'hookNodeManager',
             'route.filter' => 'hookNodeManager',
             'route.filter.page' => 'hookNodeManager',
+            'route.node.add' => 'hookNodeAdd',
             'route.node.show' => 'hookNodeSow',
             'route.node.create' => 'hookNodeCreated',
-            'route.node.clone' => 'hookNodeClone',
             'route.node.store' => 'hookNodeCreated',
             'route.node.edit' => 'hookNodeEdited',
+            'route.node.clone' => 'hookNodeClone',
             'route.node.update' => 'hookNodeEdited',
             'route.node.remove' => 'hookNodeDeleted',
             'route.node.delete' => 'hookNodeDeleted',
             'route.node.api.remove' => 'hookNodeDeleted',
             'route.node.api.delete' => 'hookNodeDeleted',
-            'route.node.add' => 'hookNodeAdd',
             'route.entity.create' => 'hookNodeCreated',
             'route.entity.store' => 'hookNodeCreated',
             'route.entity.edit' => 'hookNodeEdited',
             'route.entity.update' => 'hookNodeEdited',
-            'route.entity.delete' => 'hookNodeDeleted'
+            'route.entity.delete' => 'hookNodeDeleted',
+            'route.node.status.search' => 'hookNodeManager',
+            'route.node.type.search' => 'hookNodeManager'
         ]
     ],
     'node.hook.nodeuser' => [

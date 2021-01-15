@@ -13,12 +13,12 @@ return [
         'hooks' => [
             'route.news.index' => 'hookNewShow',
             'route.news.page' => 'hookNewShow',
-            'route.news.page.years' => 'hookNewShow',
-            'route.news.page.month' => 'hookNewShow',
-            'route.news.page.day' => 'hookNewShow',
             'route.news.years' => 'hookNewShow',
+            'route.news.page.years' => 'hookNewShow',
             'route.news.month' => 'hookNewShow',
+            'route.news.page.month' => 'hookNewShow',
             'route.news.day' => 'hookNewShow',
+            'route.news.page.day' => 'hookNewShow',
             'route.news.rss' => 'hookNewShow'
         ]
     ],

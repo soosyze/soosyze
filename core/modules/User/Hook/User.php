@@ -140,4 +140,9 @@ class User
 
         return 'user.people.manage';
     }
+
+    public function hookUserApiSelect($req, $user)
+    {
+        return !empty($user);
+    }
 }

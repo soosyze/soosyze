@@ -48,7 +48,8 @@ return [
             'route.system.theme.admin' => 'hookThemeManage',
             'route.system.theme.active' => 'hookThemeManage',
             'route.system.theme.edit' => 'hookThemeManage',
-            'route.system.theme.update' => 'hookThemeManage'
+            'route.system.theme.update' => 'hookThemeManage',
+            'route.api.route' => 'hookApiRoute'
         ]
     ],
     'system.hook.config' => [

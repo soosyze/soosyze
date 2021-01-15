@@ -341,7 +341,7 @@ class User
     {
         /* Si la permission n'existe pas. */
         if (!$this->hasPermission($key)) {
-            $grant = true;
+            $grant = false;
         }
         /* Si l'utilisateur et connecté. */
         elseif ($user = $this->isConnected()) {

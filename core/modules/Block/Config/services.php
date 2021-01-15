@@ -27,6 +27,7 @@ return [
             'user.permission.module' => 'hookPermission',
             'route.block.section.admin' => 'hookBlockAdmin',
             'route.block.section.update' => 'hookBlockAdmin',
+            'route.block.show' => 'hookBlockEdited',
             'route.block.create' => 'hookBlockCreated',
             'route.block.store' => 'hookBlockCreated',
             'route.block.edit' => 'hookBlockEdited',

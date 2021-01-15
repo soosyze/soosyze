@@ -24,10 +24,10 @@ return [
             'user.permission.module' => 'hookPermission',
             'route.backupmanager.admin' => 'hookBackupManage',
             'route.backupmanager.dobackup' => 'hookBackupManage',
-            'route.backupmanager.delete' => 'hookBackupManage',
+            'route.backupmanager.download' => 'hookBackupManage',
             'route.backupmanager.restore' => 'hookBackupManage',
-            'route.backupmanager.delete.all' => 'hookBackupManage',
-            'route.backupmanager.download' => 'hookBackupManage'
+            'route.backupmanager.delete' => 'hookBackupManage',
+            'route.backupmanager.delete.all' => 'hookBackupManage'
         ]
     ],
     'backupmanager.hook.cron' => [

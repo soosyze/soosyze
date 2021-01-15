@@ -22,4 +22,9 @@ class User
     {
         return 'system.theme.manage';
     }
+
+    public function hookApiRoute($req, $user)
+    {
+        return !empty($user);
+    }
 }
