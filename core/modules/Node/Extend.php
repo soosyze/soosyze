@@ -154,14 +154,14 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
             ])
             ->values([
-                'node.admin', 'fa fa-file', 'Contents', 'admin/node', 'menu-admin',
+                'node.admin', 'fa fa-file', 'Contents', 'admin/node', null, 'menu-admin',
                 2, -1
             ])
             ->values([
-                'node.show', null, 'Home', '/', 'menu-main', 1, -1
+                'node.show', null, 'Home', '/',  'node/3', 'menu-main', 1, -1
             ])
             ->execute();
 

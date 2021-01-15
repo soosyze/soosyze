@@ -6,6 +6,6 @@ class User
 {
     public function hookNewShow()
     {
-        return [ 'node.show.published', 'node.administer', 'node.show.article' ];
+        return [ 'node.administer', 'node.show.published', 'node.show.published.article' ];
     }
 }

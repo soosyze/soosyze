@@ -136,11 +136,11 @@ class Menu
         return [
             'key'         => isset($route[ 'key' ])
                 ? $route[ 'key' ]
-                : '',
+                : null,
             'link'        => $uri->getPath(),
-            'link_router' => isset($route[ 'key' ])
-                ? $route[ 'path' ]
-                : '',
+            'link_router' => isset($route[ 'key' ]) && $linkSource !== $uri->getPath()
+                ? $linkSource
+                : null,
             'query'       => $uri->getQuery(),
             'fragment'    => $uri->getFragment(),
         ];

@@ -410,7 +410,7 @@ class Step
             'node.show', 'fa fa-gem', 'Premium', 'page/premium', 'node/6', 'menu-main', 3, 7
         ]);
         $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Blog', 'news', 'menu-main', 'news', 2, -1
+            'news.index', '', 'Blog', 'news', null, 'menu-main', 2, -1
         ]);
         $idMenuAbout    = $this->lastInsertId('menu_link', self::$columnsMenu, [
             'node.show', '', 'About', 'page/about', 'menu-main', 'node/7', 3, -1
