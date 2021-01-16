@@ -50,25 +50,38 @@
 
                     </span>
                 </td>
-                <td data-title="<?php echo t('Actions'); ?>">
-                    <div class="btn-actions" role="group" aria-label="action">
+                <td data-title="<?php echo t('Actions'); ?>" class="text-right cell-actions">
+                    <div class="btn-group" role="group" aria-label="action">
                         <a class="btn btn-action"
                            onclick="return confirm('<?php echo t('Restore the backup ?') ?>');"
                            href="<?php echo $backup[ 'restore_link' ] ?>"
                         >
                             <i class="fa fa-trash-restore" aria-hidden="true"></i> <?php echo t('Restore') ?>
                         </a>
-                        <a class="btn btn-action"
-                           href="<?php echo $backup[ 'download_link' ] ?>"
-                        >
-                            <i class="fa fa-download" aria-hidden="true"></i> <?php echo t('Download') ?>
-                        </a>
-                        <a class="btn btn-action"
-                           onclick="return confirm('<?php echo t('Delete the backup ?') ?>');"
-                           href="<?php echo $backup[ 'delete_link' ] ?>"
-                        >
-                            <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete') ?>
-                        </a>
+
+                        <div class="dropdown">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $i; ?>">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
+
+                            <ul id="btn-<?php echo $i; ?>" class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="btn btn-action dropdown-item"
+                                        href="<?php echo $backup[ 'download_link' ] ?>"
+                                     >
+                                         <i class="fa fa-download" aria-hidden="true"></i> <?php echo t('Download') ?>
+                                     </a>
+                                 </li>
+                                <li>
+                                    <a class="btn btn-action dropdown-item"
+                                       onclick="return confirm('<?php echo t('Delete the backup ?') ?>');"
+                                       href="<?php echo $backup[ 'delete_link' ] ?>"
+                                    >
+                                        <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete') ?>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </td>
             <tr>
