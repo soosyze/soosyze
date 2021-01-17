@@ -83,7 +83,7 @@ class NodeUser
             ->createBlock('components/user/content_user-nodes.php', $this->pathViews)
             ->addVars([
                 'content_nothing' => $contentNothing,
-                'link_add'        => $this->user->isGrantedRoute($requestLinkAdd)
+                'link_add'        => $this->user->isGrantedRequest($requestLinkAdd)
                     ? $requestLinkAdd->getUri()
                     : null,
                 'nodes'           => $nodes

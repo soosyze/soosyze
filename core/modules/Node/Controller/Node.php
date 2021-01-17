@@ -29,7 +29,7 @@ class Node extends \Soosyze\Controller
             $reqGranted = self::router()->getRequestByRoute('node.create', [
                 ':node' => $value[ 'node_type' ]
             ]);
-            if (!$this->container->callHook('app.granted.route', [ $reqGranted ])) {
+            if (!$this->container->callHook('app.granted.request', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->getRoute('node.create', [
@@ -809,7 +809,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.submenu', [ &$menu, $idNode ]);
 
         foreach ($menu as $key => &$link) {
-            if ($this->container->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if ($this->container->callHook('app.granted.request', [ $link[ 'request' ] ])) {
                 $link[ 'link' ] = $link[ 'request' ]->getUri();
 
                 continue;
@@ -827,7 +827,7 @@ class Node extends \Soosyze\Controller
                 ]),
                 'title_link' => t('View')
             ];
-            if ($this->container->callHook('app.granted.route', [ $nodeShow[ 'request' ] ])) {
+            if ($this->container->callHook('app.granted.request', [ $nodeShow[ 'request' ] ])) {
                 $nodeShow[ 'link' ] = self::router()->makeRoute(
                     'node/' . $idNode === self::config()->get('settings.path_index')
                         ? ''

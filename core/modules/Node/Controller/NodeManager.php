@@ -27,7 +27,7 @@ class NodeManager extends \Soosyze\Controller
         }
 
         $requestNodeAdd = self::router()->getRequestByRoute('node.add');
-        $linkAdd        = $this->container->callHook('app.granted.route', [ $requestNodeAdd ])
+        $linkAdd        = $this->container->callHook('app.granted.request', [ $requestNodeAdd ])
             ? $requestNodeAdd->getUri()
             : null;
 

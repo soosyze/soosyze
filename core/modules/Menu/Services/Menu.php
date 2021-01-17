@@ -271,7 +271,7 @@ class Menu
             );
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
-            if (!$this->core->callHook('app.granted.route', [ $link ])) {
+            if (!$this->core->callHook('app.granted.request', [ $link ])) {
                 unset($query[ $key ]);
 
                 continue;

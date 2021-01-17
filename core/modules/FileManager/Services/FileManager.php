@@ -220,7 +220,7 @@ class FileManager
             if (isset($link[ 'link' ])) {
                 continue;
             }
-            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
                 unset($menu[ $key ]);
 
                 continue;
@@ -260,7 +260,7 @@ class FileManager
         $this->core->callHook('filemanager.folder.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
-            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
                 unset($menu[ $key ]);
 
                 continue;

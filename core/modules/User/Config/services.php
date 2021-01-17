@@ -6,7 +6,7 @@ return [
         'arguments' => ['@core', '@query', '@router'],
         'hooks' => [
             'app.granted' => 'isGranted',
-            'app.granted.route' => 'isGrantedRoute',
+            'app.granted.request' => 'isGrantedRequest',
             'app.response.before' => 'hookResponseBefore',
             'app.response.after' => 'hookResponseAfter'
         ]

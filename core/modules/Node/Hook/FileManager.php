@@ -84,7 +84,7 @@ class FileManager
             . '</div>'
             . '</div>';
 
-        if ($this->core->callHook('app.granted.route', [ $request ])) {
+        if ($this->core->callHook('app.granted.request', [ $request ])) {
             $route    = $this->router->parse($request);
             $response = $this->router->execute($route, $request);
         }

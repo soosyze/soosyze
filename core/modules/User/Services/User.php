@@ -2,6 +2,7 @@
 
 namespace SoosyzeCore\User\Services;
 
+use Psr\Http\Message\RequestInterface;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use SoosyzeCore\Template\Services\Templating;
@@ -171,7 +172,7 @@ class User
         $this->core->callHook('user.submenu', [ &$menu, $id ]);
 
         foreach ($menu as $key => &$link) {
-            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if (!$this->isGrantedRequest($link[ 'request' ])) {
                 unset($menu[ $key ]);
 
                 continue;
@@ -212,7 +213,7 @@ class User
         $this->core->callHook('user.manager.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
-            if (!$this->core->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if (!$this->isGrantedRequest($link[ 'request' ])) {
                 unset($menu[ $key ]);
 
                 continue;
@@ -355,7 +356,7 @@ class User
         return $grant;
     }
 
-    public function isGrantedRoute($request)
+    public function isGrantedRequest(RequestInterface $request)
     {
         $route = $this->router->parse($request);
 
@@ -402,14 +403,14 @@ class User
      *
      * @return Response
      */
-    public function hookResponseBefore(&$request, &$response)
+    public function hookResponseBefore(RequestInterface &$request, &$response)
     {
-        if (!$this->isGrantedRoute($request)) {
+        if (!$this->isGrantedRequest($request)) {
             $response = new Response(403, new Stream('Error HTTP 403 Forbidden'));
         }
     }
 
-    public function hookResponseAfter($request, &$response)
+    public function hookResponseAfter(RequestInterface $request, &$response)
     {
         if (!($response instanceof Templating)) {
             return;

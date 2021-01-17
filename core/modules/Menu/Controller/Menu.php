@@ -414,7 +414,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
-            if (!self::core()->callHook('app.granted.route', [ $link[ 'request' ] ])) {
+            if (!self::core()->callHook('app.granted.request', [ $link[ 'request' ] ])) {
                 unset($menu[ $key ]);
 
                 continue;

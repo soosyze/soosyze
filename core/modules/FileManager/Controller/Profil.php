@@ -411,7 +411,7 @@ class Profil extends \Soosyze\Controller
         $this->container->callHook('user.role.submenu', [ &$menu ]);
 
         foreach ($menu as $key => &$link) {
-            if (!self::user()->isGrantedRoute($link[ 'request' ])) {
+            if (!self::user()->isGrantedRequest($link[ 'request' ])) {
                 unset($menu[ $key ]);
 
                 continue;
