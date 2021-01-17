@@ -227,7 +227,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.edit.form.data', [ &$values, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
+            $values = array_replace($values, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
