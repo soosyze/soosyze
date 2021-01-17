@@ -372,9 +372,9 @@ class Menu extends \Soosyze\Controller
                 ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'link_delete' ] = self::router()
                 ->getRoute('menu.link.delete', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
-            $link[ 'submenu' ]     = $link['has_children' ]
+            $link[ 'submenu' ]     = $link[ 'has_children' ]
                 ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
-                : null;
+                : $this->createBlockMenuShowForm($nameMenu, null, $level + 1);
 
             if (!$link[ 'key' ]) {
                 continue;
@@ -384,10 +384,7 @@ class Menu extends \Soosyze\Controller
         }
         unset($link);
 
-        return self::template()
-                ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
-                ->addNameOverride("menu-show-$nameMenu.php")
-                ->addVars([ 'menu' => $query, 'level' => $level ]);
+        return $this->createBlockMenuShowForm($nameMenu, $query, $level);
     }
 
     public function getMenuSubmenu($keyRoute, $nameMenu)
@@ -451,6 +448,14 @@ class Menu extends \Soosyze\Controller
                     'key_route' => $nameMenu,
                     'menu'      => $menus
         ]);
+    }
+
+    private function createBlockMenuShowForm($nameMenu, $query, $level)
+    {
+        return self::template()
+                ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
+                ->addNameOverride("menu-show-$nameMenu.php")
+                ->addVars([ 'menu' => $query, 'level' => $level ]);
     }
 
     private function getValidator($req)
