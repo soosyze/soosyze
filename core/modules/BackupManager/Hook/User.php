@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\BackupManager\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Backups' ] = [
+        $permissions[ 'Backups' ] = [
             'backups.manage' => 'Manage the backups'
         ];
     }

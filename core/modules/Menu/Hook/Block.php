@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Menu\Hook;
 
-class Block
+class Block implements \SoosyzeCore\Block\BlockInterface
 {
     /**
      * @var Menu
@@ -20,7 +20,7 @@ class Block
         $this->router = $router;
     }
 
-    public function hookCreateFormData(array &$blocks)
+    public function hookBlockCreateFormData(array &$blocks)
     {
         $menus = $this->menu->getAllMenu();
 

@@ -24,7 +24,7 @@ return [
     'block.hook.user' => [
         'class' => 'SoosyzeCore\Block\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.block.section.admin' => 'hookBlockAdmin',
             'route.block.section.update' => 'hookBlockAdmin',
             'route.block.show' => 'hookBlockEdited',

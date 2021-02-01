@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Menu\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Menu' ] = [
+        $permissions[ 'Menu' ] = [
             'menu.administer' => 'Administer menus and menu items'
         ];
     }

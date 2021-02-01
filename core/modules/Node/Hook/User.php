@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
     /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
@@ -14,11 +14,11 @@ class User
         $this->query = $query;
     }
 
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
         $nodeTypes = $this->query->from('node_type')->fetchAll();
 
-        $permission[ 'Node' ] = [
+        $permissions[ 'Node' ] = [
             'node.administer'         => 'Override access control to content',
             'node.manager'            => 'Go to the content overview page',
             'node.show.published'     => 'View any published content',
@@ -31,7 +31,7 @@ class User
         ];
 
         foreach ($nodeTypes as $nodeType) {
-            $permission[ 'Node ' . $nodeType[ 'node_type_name' ] ] = [
+            $permissions[ 'Node ' . $nodeType[ 'node_type_name' ] ] = [
                 'node.show.published.' . $nodeType[ 'node_type' ]     => 'View published content',
                 'node.show.not_published.' . $nodeType[ 'node_type' ] => 'View unpublished content',
                 'node.created.' . $nodeType[ 'node_type' ]            => 'Create new content',

@@ -33,7 +33,7 @@ return [
         'class' => 'SoosyzeCore\News\Hook\Block',
         'arguments' => ['@alias', '@node', '@query', '@router'],
         'hooks' => [
-            'block.create.form.data' => 'hookCreateFormData',
+            'block.create.form.data' => 'hookBlockCreateFormData',
             'block.news.archive.select' => 'hookBlockNewsArchiveSelect',
             'block.news.archive' => 'hookBlockNewsArchive',
             'block.news.archive.edit.form' => 'hookBlockNewsArchiveEditForm',

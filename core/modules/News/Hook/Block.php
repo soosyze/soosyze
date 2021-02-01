@@ -4,7 +4,7 @@ namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Form\FormBuilder;
 
-class Block
+class Block implements \SoosyzeCore\Block\BlockInterface
 {
     /**
      * @var \SoosyzeCore\System\Services\Alias
@@ -41,7 +41,7 @@ class Block
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function hookCreateFormData(array &$blocks)
+    public function hookBlockCreateFormData(array &$blocks)
     {
         $blocks[ 'news.archive' ]        = [
             'hook'    => 'news.archive',

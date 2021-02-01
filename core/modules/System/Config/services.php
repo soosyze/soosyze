@@ -41,7 +41,7 @@ return [
     'system.hook.user' => [
         'class' => 'SoosyzeCore\System\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.system.module.edit' => 'hookModuleManage',
             'route.system.module.update' => 'hookModuleManage',
             'route.system.theme.index' => 'hookThemeManage',

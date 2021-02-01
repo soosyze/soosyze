@@ -45,7 +45,7 @@ return [
         'class' => 'SoosyzeCore\FileManager\Hook\User',
         'arguments' => ['@fileprofil', '@user'],
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.filemanager.profil.admin' => 'hookFileAdmin',
             'route.filemanager.profil.admin.check' => 'hookFileAdmin',
             'route.filemanager.profil.create' => 'hookFileAdmin',

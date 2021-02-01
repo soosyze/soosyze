@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Block\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Block' ] = [
+        $permissions[ 'Block' ] = [
             'block.administer' => 'See the block administration page',
             'block.created'    => 'Create a new block',
             'block.edited'     => 'Edit blocks',

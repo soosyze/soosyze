@@ -21,7 +21,7 @@ return [
     'backupmanager.hook.user' => [
         'class' => 'SoosyzeCore\BackupManager\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.backupmanager.admin' => 'hookBackupManage',
             'route.backupmanager.dobackup' => 'hookBackupManage',
             'route.backupmanager.download' => 'hookBackupManage',

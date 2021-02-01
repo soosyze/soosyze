@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\BackupManager\Hook;
 
-final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
+final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
     private static $attrGrp = [ 'class' => 'form-group' ];
 

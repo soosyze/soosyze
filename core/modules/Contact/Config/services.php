@@ -11,7 +11,7 @@ return [
     'contact.hook.user' => [
         'class' => 'SoosyzeCore\Contact\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.contact' => 'hookContact',
             'route.contact.check' => 'hookContact'
         ]

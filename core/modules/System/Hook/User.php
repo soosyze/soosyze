@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\System\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'System' ] = [
+        $permissions[ 'System' ] = [
             'system.module.manage'      => 'Administer the modules',
             'system.theme.manage'       => 'Administer the themes',
             'system.config.maintenance' => 'Access the site in maintenance mode'

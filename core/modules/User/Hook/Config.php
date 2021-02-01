@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\User\Hook;
 
-final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
+final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
     const DELETE_ACCOUNT = 1;
 

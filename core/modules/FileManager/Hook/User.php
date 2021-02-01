@@ -4,7 +4,7 @@ namespace SoosyzeCore\FileManager\Hook;
 
 use Soosyze\Components\Util\Util;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
     /**
      * @var FileProfil
@@ -20,6 +20,13 @@ class User
     {
         $this->profil = $profil;
         $this->user   = $user;
+    }
+
+    public function hookUserPermissionModule(array &$permissions)
+    {
+        $permissions[ 'FileManager' ] = [
+            'filemanager.profil.admin' => 'Administer file permissions'
+        ];
     }
 
     public function getRight($path, $userId = null)
@@ -47,13 +54,6 @@ class User
         }
 
         return [];
-    }
-
-    public function hookPermission(&$profil)
-    {
-        $profil[ 'FileManager' ] = [
-            'filemanager.profil.admin' => 'Administer file permissions'
-        ];
     }
 
     public function hookFileAdmin()

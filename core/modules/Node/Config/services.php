@@ -21,7 +21,7 @@ return [
         'class' => 'SoosyzeCore\Node\Hook\Block',
         'arguments' => ['@alias', '@node', '@query', '@router'],
         'hooks' => [
-            'block.create.form.data' => 'hookCreateFormData',
+            'block.create.form.data' => 'hookBlockCreateFormData',
             'block.node.next_previous' => 'hookBlockNextPrevious',
             'block.node.next_previous.edit.form' => 'hookNodeNextPreviousEditForm',
             'block.node.next_previous.update.validator' => 'hookNodeNextPreviousUpdateValidator',
@@ -95,7 +95,7 @@ return [
         'class' => 'SoosyzeCore\Node\Hook\User',
         'arguments' => ['@query'],
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.node.admin' => 'hookNodeManager',
             'route.filter' => 'hookNodeManager',
             'route.filter.page' => 'hookNodeManager',

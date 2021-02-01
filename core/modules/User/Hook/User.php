@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\User\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
     /**
      * @var \Soosyze\Config
@@ -20,18 +20,18 @@ class User
         $this->user   = $user;
     }
 
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'User' ] = [
+        $permissions[ 'User' ] = [
             'user.people.manage'     => 'Administer users',
             'user.permission.manage' => 'Administer permissions',
             'user.showed'            => 'View user profiles',
             'user.edited'            => 'Edit your user account',
             'user.deleted'           => 'Delete your user account',
         ];
-        $permission[ 'User role' ][ 'role.all' ] = 'Assign all roles';
+        $permissions[ 'User role' ][ 'role.all' ] = 'Assign all roles';
         foreach ($this->user->getRolesAttribuable() as $role) {
-            $permission[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = [
+            $permissions[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = [
                 'name' => 'Assign the role :name',
                 'attr' => [ ':name' => $role[ 'role_label' ] ]
             ];

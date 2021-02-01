@@ -14,7 +14,7 @@ return [
     'menu.hook.user' => [
         'class' => 'SoosyzeCore\Menu\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.menu.admin' => 'hookMenuAdminister',
             'route.menu.create' => 'hookMenuAdminister',
             'route.menu.store' => 'hookMenuAdminister',
@@ -45,7 +45,7 @@ return [
         'class' => 'SoosyzeCore\Menu\Hook\Block',
         'arguments' => ['@menu', '@router'],
         'hooks' => [
-            'block.create.form.data' => 'hookCreateFormData',
+            'block.create.form.data' => 'hookBlockCreateFormData',
             'block.menu' => 'hookBlockMenu',
             'block.menu.edit.form' => 'hookMenuEditForm',
             'block.menu.update.validator' => 'hookMenuUpdateValidator',

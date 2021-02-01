@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Dashboard\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Dashboard' ] = [
+        $permissions[ 'Dashboard' ] = [
             'dashboard.administer' => 'Use the dashboard'
         ];
     }

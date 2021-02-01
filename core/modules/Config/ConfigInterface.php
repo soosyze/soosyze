@@ -1,6 +1,6 @@
 <?php
 
-namespace SoosyzeCore\Config\Services;
+namespace SoosyzeCore\Config;
 
 interface ConfigInterface
 {

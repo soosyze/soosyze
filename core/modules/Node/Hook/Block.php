@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Hook;
 
-class Block
+class Block implements \SoosyzeCore\Block\BlockInterface
 {
     const DISPLAY_DEFAULT = 'meta-title';
 
@@ -47,7 +47,7 @@ class Block
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function hookCreateFormData(array &$blocks)
+    public function hookBlockCreateFormData(array &$blocks)
     {
         $blocks[ 'node.next_previous' ] = [
             'hook'    => 'node.next_previous',

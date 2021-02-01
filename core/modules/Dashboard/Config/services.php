@@ -15,7 +15,7 @@ return [
     'dashboard.hook.user' => [
         'class' => 'SoosyzeCore\Dashboard\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.dashboard.index' => 'hookDashboardAdminister',
             'route.dashboard.info' => 'hookDashboardAdminister',
             'route.dashboard.cron' => 'hookDashboardAdminister',

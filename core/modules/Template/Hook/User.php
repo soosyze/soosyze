@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Template\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Template' ][ 'template.admin' ] = 'Use the admin theme';
+        $permissions[ 'Template' ][ 'template.admin' ] = 'Use the admin theme';
     }
 
     public function hookInstallUser($ci)

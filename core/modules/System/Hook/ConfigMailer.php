@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\System\Hook;
 
-class ConfigMailer implements \SoosyzeCore\Config\Services\ConfigInterface
+class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
 {
     private static $attrGrp = [ 'class' => 'form-group' ];
 

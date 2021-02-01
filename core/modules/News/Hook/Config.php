@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\News\Hook;
 
-class Config implements \SoosyzeCore\Config\Services\ConfigInterface
+class Config implements \SoosyzeCore\Config\ConfigInterface
 {
     private static $attrGrp = [ 'class' => 'form-group' ];
 

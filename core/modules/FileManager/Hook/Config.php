@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\FileManager\Hook;
 
-final class Config implements \SoosyzeCore\Config\Services\ConfigInterface
+final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
     const REPLACE_WITH = 1;
 

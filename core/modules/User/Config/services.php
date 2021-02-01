@@ -32,7 +32,7 @@ return [
         'class' => 'SoosyzeCore\User\Hook\User',
         'arguments' => ['@config', '@user'],
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.user.login' => 'hookLogin',
             'route.user.login.check' => 'hookLoginCheck',
             'route.user.relogin' => 'hookRelogin',

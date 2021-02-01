@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Contact\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Contact' ] = [
+        $permissions[ 'Contact' ] = [
             'contact.main' => 'Use the general contact form'
         ];
     }

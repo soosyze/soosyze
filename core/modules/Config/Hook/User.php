@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Config\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
     /**
      * @var \Soosyze\App
@@ -14,14 +14,14 @@ class User
         $this->core = $core;
     }
 
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
         $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
 
-        $permission[ 'Configuration' ][ 'config.manage' ] = 'Administer all configurations';
+        $permissions[ 'Configuration' ][ 'config.manage' ] = 'Administer all configurations';
         foreach ($menu as $key => $link) {
-            $permission[ 'Configuration' ][ $key . '.config.manage' ] = [
+            $permissions[ 'Configuration' ][ $key . '.config.manage' ] = [
                 'name' => 'Administer :name configurations',
                 'attr'  => [ ':name' => $link[ 'title_link' ] ]
             ];
