@@ -100,6 +100,10 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 'system.theme.edit', 'fa fa-th-large', 'Themes', 'admin/theme',
                 'menu-admin', 6, -1
             ])
+            ->values([
+                'system.tool.admin', 'fa fa-tools', 'Tools', 'admin/tool',
+                'menu-admin', 7, -1
+            ])
             ->execute();
     }
 
@@ -109,6 +113,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'system.module.manage' ])
             ->values([ 3, 'system.theme.manage' ])
+            ->values([ 3, 'system.tool.manage' ])
+            ->values([ 3, 'system.tool.action' ])
             ->values([ 3, 'system.config.maintenance' ])
             ->execute();
     }

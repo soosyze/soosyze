@@ -13,4 +13,8 @@ R::get('system.theme.active', 'admin/theme/:type/active/:name', 'Theme@active', 
 R::get('system.theme.edit', 'admin/theme/:type/edit', 'Theme@edit', [ ':type' => 'admin|public' ]);
 R::post('system.theme.update', 'admin/theme/:type/edit', 'Theme@update', [ ':type' => 'admin|public' ]);
 
+R::get('system.tool.admin', 'admin/tool', 'Tool@admin');
+R::get('system.tool.cron', 'admin/tool/cron', 'Tool@cron');
+R::get('system.tool.trans', 'admin/tool/trans', 'Tool@updateTranslations');
+
 R::get('api.route', 'api/route', 'RouteApi@index');

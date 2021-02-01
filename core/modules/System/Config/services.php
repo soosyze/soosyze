@@ -49,6 +49,9 @@ return [
             'route.system.theme.active' => 'hookThemeManage',
             'route.system.theme.edit' => 'hookThemeManage',
             'route.system.theme.update' => 'hookThemeManage',
+            'route.system.tool.admin' => 'hookToolManage',
+            'route.system.tool.cron' => 'hookToolAction',
+            'route.system.tool.trans' => 'hookToolAction',
             'route.api.route' => 'hookApiRoute'
         ]
     ],

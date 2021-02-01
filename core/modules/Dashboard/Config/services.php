@@ -17,9 +17,7 @@ return [
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.dashboard.index' => 'hookDashboardAdminister',
-            'route.dashboard.info' => 'hookDashboardAdminister',
-            'route.dashboard.cron' => 'hookDashboardAdminister',
-            'route.dashboard.trans' => 'hookDashboardAdminister'
+            'route.dashboard.info' => 'hookDashboardAdminister'
         ]
     ]
 ];

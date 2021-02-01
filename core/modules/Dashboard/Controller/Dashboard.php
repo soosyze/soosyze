@@ -2,8 +2,6 @@
 
 namespace SoosyzeCore\Dashboard\Controller;
 
-use Soosyze\Components\Http\Redirect;
-
 class Dashboard extends \Soosyze\Controller
 {
     public function __construct()
@@ -30,8 +28,6 @@ class Dashboard extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
                     'link_info'   => self::router()->getRoute('dashboard.info'),
-                    'link_cron'   => self::router()->getRoute('dashboard.cron'),
-                    'link_trans'  => self::router()->getRoute('dashboard.trans'),
                     'size_backup' => self::dashboard()->getSizeBackups(),
                     'size_data'   => self::dashboard()->getSizeDatabase(),
                     'size_file'   => self::dashboard()->getSizeFiles()
@@ -54,42 +50,5 @@ class Dashboard extends \Soosyze\Controller
                         preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info)
                     )
         ]);
-    }
-
-    public function cron($req)
-    {
-        $this->container->callHook('app.cron', [ $req ]);
-
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('The cron task has been successfully executed') ];
-
-        return new Redirect(self::router()->getRoute('dashboard.index'));
-    }
-
-    public function updateTranslations($req)
-    {
-        $extensions   = array_column(self::module()->listModuleActive(), 'title');
-        $extensions[] = self::config()->get('settings.theme');
-        $extensions[] = self::config()->get('settings.theme_admin');
-
-        $composers = self::composer()->getModuleComposers() + self::composer()->getThemeComposers();
-
-        $composersActive = [];
-        foreach ($extensions as $title) {
-            $extendClass = self::composer()->getExtendClass($title, $composers);
-            $extend      = new $extendClass();
-
-            $extend->boot();
-
-            $composersActive[ $title ] = $composers[ $title ] + [
-                'dir'          => $extend->getDir(),
-                'translations' => $extend->getTranslations()
-            ];
-        }
-
-        self::module()->loadTranslations($composersActive);
-
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('The translation files have been updated') ];
-
-        return new Redirect(self::router()->getRoute('dashboard.index'));
     }
 }

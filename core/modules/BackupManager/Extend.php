@@ -58,9 +58,6 @@ Options +FollowSymLinks
 
     public function hookInstall(ContainerInterface $ci)
     {
-        if ($ci->module()->has('Menu')) {
-            $this->hookInstallMenu($ci);
-        }
         if ($ci->module()->has('User')) {
             $this->hookInstallUser($ci);
         }
@@ -71,19 +68,6 @@ Options +FollowSymLinks
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'backups.manage' ])
-            ->execute();
-    }
-
-    public function hookInstallMenu(ContainerInterface $ci)
-    {
-        $ci->query()
-            ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent',
-                'active'
-            ])
-            ->values([ 'backupmanager.admin', 'fas fa-file-archive', 'Backups',
-                'admin/backupmanager', 'menu-admin', 50, -1, true
-            ])
             ->execute();
     }
 

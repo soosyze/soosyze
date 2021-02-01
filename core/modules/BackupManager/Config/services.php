@@ -36,5 +36,12 @@ return [
         'hooks' => [
             'app.cron' => 'hookAppCron'
         ]
+    ],
+    'backupmanager.hook.tool' => [
+        'class' => 'SoosyzeCore\BackupManager\Hook\Tool',
+        'arguments' => ['@router'],
+        'hooks' => [
+            'tools.admin' => 'hookToolAdmin'
+        ]
     ]
 ];
