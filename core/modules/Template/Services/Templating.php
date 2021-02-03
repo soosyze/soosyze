@@ -50,6 +50,13 @@ class Templating extends \Soosyze\Components\Http\Response
      */
     private $composer = [];
 
+    /**
+     * Les méta données de la page.
+     *
+     * @var array
+     */
+    private $meta = [];
+
     private $isDarkTheme = false;
 
     public function __construct($core, $config)
@@ -65,6 +72,9 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function __toString()
     {
+        $this->view('this', [
+            'meta' => $this->makeBalise('meta', $this->meta)
+        ]);
         $content    = $this->getThemplate()->render();
         $this->body = new Stream($content);
 
@@ -267,6 +277,40 @@ class Templating extends \Soosyze\Components\Http\Response
         if (is_file($pathTheme . 'composer.json')) {
             $this->composer = Util::getJson($pathTheme . 'composer.json');
         }
+    }
+
+    public function addMetas(array $meta)
+    {
+        $this->meta = array_merge($this->meta, $meta);
+
+        return $this;
+    }
+
+    public function addMeta(array $meta)
+    {
+        $this->meta[] = $meta;
+
+        return $this;
+    }
+
+    private function makeBalise($type, array $data)
+    {
+        $out = '';
+        foreach ($data as $attrs) {
+            $out .= sprintf('<%s%s/>', $type, $this->renderAttrInput($attrs)) . PHP_EOL;
+        }
+
+        return $out;
+    }
+
+    private function renderAttrInput(array $attr)
+    {
+        $html = '';
+        foreach ($attr as $key => $value) {
+            $html .= sprintf(' %s="%s"', htmlspecialchars($key), htmlentities($value));
+        }
+
+        return $html;
     }
 
     private function getThemplate()

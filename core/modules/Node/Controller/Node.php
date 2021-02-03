@@ -276,9 +276,9 @@ class Node extends \Soosyze\Controller
         $tpl = self::template()
                 ->view('this', [
                     'title'       => $node[ 'meta_title' ],
-                    'description' => $node[ 'meta_description' ],
-                    'meta'        => $this->getMetaRobots($node)
+                    'description' => $node[ 'meta_description' ]
                 ])
+                ->addMetas($this->getMeta($node, $fields))
                 ->view('page', [
                     'fields'     => $fields,
                     'node'       => $node,
@@ -879,8 +879,39 @@ class Node extends \Soosyze\Controller
                 ->addVar('menu', $menu);
     }
 
-    private function getMetaRobots($node)
+    private function getMeta(array $node, array $fields)
     {
+        if (!empty($node[ 'meta_description' ])) {
+            $description = $node[ 'meta_description' ];
+        } elseif (!empty($fields[ 'summary' ][ 'field_value' ])) {
+            $description = $fields[ 'summary' ][ 'field_value' ];
+        } elseif (!empty($fields[ 'body' ][ 'field_value' ])) {
+            $description = $fields[ 'body' ][ 'field_value' ];
+        } else {
+            $description = self::config()->get('settings.meta_description');
+        }
+
+        $alias = self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
+
+        $meta = [
+            [
+                'property' => 'og:title',
+                'content'  => $node[ 'title' ]
+            ], [
+                'property' => 'og:type',
+                'content'  => 'website'
+            ], [
+                'property' => 'og:description',
+                'content'  => $this->cleanDescription($description)
+            ], [
+                'property' => 'og:site_name',
+                'content'  => self::config()->get('settings.meta_title')
+            ], [
+                'property' => 'og:url',
+                'content'  => self::router()->makeRoute($alias)
+            ],
+        ];
+
         $robots = '';
         if ($node[ 'meta_noindex' ]) {
             $robots .= 'noindex,';
@@ -892,9 +923,27 @@ class Node extends \Soosyze\Controller
             $robots .= 'noarchive,';
         }
 
-        return $robots
-            ? '<meta name="robots" content="' . substr($robots, 0, -1) . '">' . PHP_EOL
-            : '';
+        if ($robots) {
+            $meta[] = [ 'name' => 'robots', 'content' => substr($robots, 0, -1) ];
+        }
+
+        if (!empty($fields[ 'image' ][ 'field_value' ])) {
+            $meta[] = [ 'property' => 'og:image', 'content' => $fields[ 'image' ][ 'field_value' ] ];
+        } elseif ($logo = self::config()->get('settings.logo')) {
+            $meta[] = [ 'property' => 'og:image', 'content' => $logo ];
+        }
+
+        return $meta;
+    }
+
+    private function cleanDescription($str)
+    {
+        $str = strip_tags($str);
+        $str = htmlentities($str);
+        $str = trim($str);
+        $str = preg_replace('#[ \n\r\t\v\0]+#', ' ', $str);
+
+        return mb_strcut($str, 0, 200);
     }
 
     private function updateWeightEntity(array $field, array $data)

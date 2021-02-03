@@ -201,17 +201,18 @@ class App
 
         $metaTitle       = $this->config->get('settings.meta_title', 'Soosyze CMS');
         $metaDescription = $this->config->get('settings.meta_description', '');
-        $metaKeyboard    = $this->config->get('settings.meta_keyboard', '');
         $favicon         = $this->config->get('settings.favicon', '')
             ? $this->router->getBasePath() . $this->config->get('settings.favicon')
             : '';
-        $logo            = $this->config->get('settings.logo', '');
-        $maintenance     = $this->config->get('settings.maintenance', false);
 
-        $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets/js/script.js';
+        $logo        = $this->config->get('settings.logo', '');
+        $maintenance = $this->config->get('settings.maintenance', false);
+
+        $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets';
 
         $html      = $response->getBlock('this');
         $scripts   = $html->getVar('scripts');
+        $styles    = $html->getVar('styles');
         $siteDesc  = $html->getVar('description');
         $siteTitle = $html->getVar('title');
         $pageTitle = $response->getBlock('page')->getVar('title_main');
@@ -236,17 +237,28 @@ class App
             : $metaDescription;
 
         $response->view('this', [
-            'title'       => $title,
-            'description' => $description,
-            'keyboard'    => $metaKeyboard,
-            'generator'   => 'Soosyze CMS',
-            'favicon'     => $favicon,
-            'scripts'     => $scripts . '<script src="' . $vendor . '"></script>'
-        ])->view('page', [
-            'title' => $metaTitle,
-            'logo'  => is_file(ROOT . $logo)
-                ? $request->getBasePath() . $logo
-                : $logo
+                'title'       => $title,
+                'favicon'     => $favicon,
+                'scripts'     => $scripts . '<script src="' . $vendor . '/js/script.js"></script>',
+                'styles'      => $styles . '<link rel="stylesheet" href="' . $vendor . '/css/styles.css">'
+            ])
+            ->addMetas([
+                [
+                    'name'    => 'keyboard',
+                    'content' => $this->config->get('settings.meta_keyboard', '')
+                ], [
+                    'name'    => 'description',
+                    'content' => $description
+                ], [
+                    'name'    => 'generator',
+                    'content' => 'Soosyze CMS'
+                ]
+            ])
+            ->view('page', [
+                'title' => $metaTitle,
+                'logo'  => is_file(ROOT . $logo)
+                    ? $request->getBasePath() . $logo
+                    : $logo
         ]);
 
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
