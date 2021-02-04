@@ -19,7 +19,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
     private $useInPath;
 
-    public function __construct($attr, $router)
+    public function __construct(array $attr, $router)
     {
         parent::__construct($attr);
         $this->router = $router;

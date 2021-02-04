@@ -21,7 +21,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function labelRole(&$form)
+    public function labelGroup(&$form)
     {
         $form->group('role_label-group', 'div', function ($form) {
             $form->label('role_label-label', t('Name'))
@@ -36,7 +36,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function description(&$form)
+    public function descriptionGroup(&$form)
     {
         $form->group('role_description-group', 'div', function ($form) {
             $form->label('role_description-label', t('Description'))
@@ -50,7 +50,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function weight(&$form)
+    public function weightGroup(&$form)
     {
         $form->group('role_weight-group', 'div', function ($form) {
             $form->label('role_weight-label', t('Weight'), [
@@ -72,7 +72,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function colorRole(&$form)
+    public function colorGroup(&$form)
     {
         $form->group('role_color-group', 'div', function ($form) {
             $form->label('role_color-label', t('Color'), [ 'for' => 'role_color' ])
@@ -100,7 +100,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function icon(&$form)
+    public function iconGroup(&$form)
     {
         $form->group('role_icon-group', 'div', function ($form) {
             $form->label('role_icon-label', t('Icon'), [
@@ -130,11 +130,11 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
     {
         $this->group('role-fieldset', 'fieldset', function ($form) {
             $form->legend('role-legend', t('Role overview'));
-            $this->labelRole($form)
-                ->description($form)
-                ->weight($form)
-                ->colorRole($form)
-                ->icon($form);
+            $this->labelGroup($form)
+                ->descriptionGroup($form)
+                ->weightGroup($form)
+                ->colorGroup($form)
+                ->iconGroup($form);
         })->submitForm();
 
         return $this;
@@ -154,7 +154,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function generateDelete()
+    public function makeFieldsDelete()
     {
         $this->group('role-fieldset', 'fieldset', function ($form) {
             $form->legend('role-legend', t('Role deletion'))

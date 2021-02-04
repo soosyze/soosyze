@@ -40,7 +40,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function roles(array $roles)
+    public function setRoles(array $roles)
     {
         $this->roles = array_merge($this->roles, $roles);
 

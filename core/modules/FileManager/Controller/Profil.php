@@ -27,7 +27,7 @@ class Profil extends \Soosyze\Controller
         $action = self::router()->getRoute('filemanager.profil.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->setValues($values)
-            ->roles(self::query()->from('role')->fetchAll())
+            ->setRoles(self::query()->from('role')->fetchAll())
             ->makeFields();
 
         $this->container->callHook('filemanager.profil.create.form', [ &$form, $values ]);
@@ -119,7 +119,7 @@ class Profil extends \Soosyze\Controller
 
         $action = self::router()->getRoute('filemanager.profil.update', [ ':id' => $id ]);
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
-            ->roles(self::query()->from('role')->fetchAll())
+            ->setRoles(self::query()->from('role')->fetchAll())
             ->setValues($values)
             ->makeFields();
 

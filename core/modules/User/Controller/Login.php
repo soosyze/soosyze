@@ -40,8 +40,8 @@ class Login extends \Soosyze\Controller
 
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('login-legend', t('User login'));
-            $form->email($formbuilder)
-                ->passwordCurrent($formbuilder);
+            $form->emailGroup($formbuilder)
+                ->passwordCurrentGroup($formbuilder);
         })->submitForm(t('Sign in'));
 
         $this->container->callHook('login.form', [ &$form, $values ]);
@@ -130,7 +130,7 @@ class Login extends \Soosyze\Controller
             ->setValues($values);
 
         $form->group('login-fieldset', 'fieldset', function ($formBuilder) use ($form) {
-            $form->email($formBuilder);
+            $form->emailGroup($formBuilder);
         })->submitForm();
 
         $this->container->callHook('relogin.form', [ &$form, $values ]);

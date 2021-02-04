@@ -35,7 +35,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function username(&$form)
+    public function usernameGroup(&$form)
     {
         $form->group('username-group', 'div', function ($form) {
             $form->label('username-label', t('User name'))
@@ -50,11 +50,11 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function email(&$form)
+    public function emailGroup(&$form)
     {
         $form->group('email-group', 'div', function ($form) {
             $form->label('email-label', t('E-mail'))
-                ->email('email', [
+                ->emailGroup('email', [
                     'class'       => 'form-control',
                     'maxlength'   => 254,
                     'placeholder' => t('example@mail.com'),
@@ -66,7 +66,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function picture(&$form)
+    public function pictureGroup(&$form)
     {
         $form->group('picture-group', 'div', function ($form) {
             $form->label('picture-label', t('Picture'), [
@@ -79,7 +79,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function bio(&$form)
+    public function bioGroup(&$form)
     {
         $form->group('bio-group', 'div', function ($form) {
             $form->label('bio-label', t('Biography'), [
@@ -96,7 +96,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function name(&$form)
+    public function nameGroup(&$form)
     {
         $form->group('name-group', 'div', function ($form) {
             $form->label('name-label', t('Last name'))
@@ -110,7 +110,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function firstname(&$form)
+    public function firstnameGroup(&$form)
     {
         $form->group('firstname-group', 'div', function ($form) {
             $form->label('firstname-label', t('First name'))
@@ -124,7 +124,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function eula(&$form, $router)
+    public function eulaGroup(&$form, $router)
     {
         if (!$this->config) {
             return $this;
@@ -159,14 +159,14 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function passwordCurrent(&$form)
+    public function passwordCurrentGroup(&$form)
     {
         $this->password($form, 'password', t('Password'));
 
         return $this;
     }
 
-    public function passwordNew(&$form)
+    public function passwordNewGroup(&$form)
     {
         $this->password(
             $form,
@@ -180,7 +180,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function passwordConfirm(&$form)
+    public function passwordConfirmGroup(&$form)
     {
         $this->password($form, 'password_confirm', t('Confirmation of the new password'));
 
@@ -207,42 +207,42 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    public function fieldsetInformationsCreate()
+    public function informationsCreateFieldset()
     {
         return $this->group('informations-fieldset', 'fieldset', function ($form) {
             $form->legend('informations-legend', t('Information'));
-            $this->username($form)
-                    ->email($form);
+            $this->usernameGroup($form)
+                    ->emailGroup($form);
         });
     }
 
-    public function fieldsetInformations()
+    public function informationsFieldset()
     {
         return $this->group('informations-fieldset', 'fieldset', function ($form) {
             $form->legend('informations-legend', t('Information'));
-            $this->username($form)
-                    ->email($form)
-                    ->passwordCurrent($form);
+            $this->usernameGroup($form)
+                    ->emailGroup($form)
+                    ->passwordCurrentGroup($form);
         });
     }
 
-    public function fieldsetProfil()
+    public function profilFieldset()
     {
         return $this->group('profil-fieldset', 'fieldset', function ($form) {
             $form->legend('profil-legend', t('Profile'));
-            $this->picture($form)
-                    ->bio($form)
-                    ->name($form)
-                    ->firstname($form);
+            $this->pictureGroup($form)
+                    ->bioGroup($form)
+                    ->nameGroup($form)
+                    ->firstnameGroup($form);
         });
     }
 
-    public function fieldsetPassword()
+    public function passwordFieldset()
     {
         return $this->group('password-fieldset', 'fieldset', function ($form) {
             $form->legend('password-legend', t('Password'));
-            $this->passwordNew($form)
-                    ->passwordConfirm($form)
+            $this->passwordNewGroup($form)
+                    ->passwordConfirmGroup($form)
                     ->passwordPolicy($form);
         });
     }
@@ -276,7 +276,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function fieldsetActived()
+    public function activedFieldset()
     {
         return $this->group('actived-fieldset', 'fieldset', function ($form) {
             $form->legend('actived-legend', t('Status'))
@@ -288,7 +288,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         });
     }
 
-    public function fieldsetRoles(array $roles)
+    public function rolesFieldset(array $roles)
     {
         return $roles
             ? $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {

@@ -194,7 +194,7 @@ class Role extends \Soosyze\Controller
             'method' => 'post',
             'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ])
             ]))
-            ->generateDelete();
+            ->makeFieldsDelete();
 
         $this->container->callHook('role.remove.form', [ &$form, $data, $id ]);
 

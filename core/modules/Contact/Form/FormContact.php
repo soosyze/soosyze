@@ -22,18 +22,18 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
 
     public function makeFields()
     {
-        $this->name()
-            ->email()
-            ->object()
-            ->message()
-            ->copy()
+        $this->nameGroup()
+            ->emailGroup()
+            ->objectGroup()
+            ->messageGroup()
+            ->copyGroup()
             ->token('token_contact')
             ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
 
         return $this;
     }
 
-    private function name()
+    private function nameGroup()
     {
         return $this->group('name-group', 'div', function ($form) {
             $form->label('name-label', t('Name'))
@@ -45,11 +45,11 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    private function email()
+    private function emailGroup()
     {
         return $this->group('email-group', 'div', function ($form) {
             $form->label('email-label', t('E-mail'))
-                    ->email('email', [
+                    ->emailGroup('email', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->values[ 'email' ]
@@ -57,7 +57,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    private function object()
+    private function objectGroup()
     {
         return $this->group('object-group', 'div', function ($form) {
             $form->label('object-label', t('Object'))
@@ -69,7 +69,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    private function message()
+    private function messageGroup()
     {
         return $this->group('message-group', 'div', function ($form) {
             $form->label('message-label', t('Message'))
@@ -81,7 +81,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    private function copy()
+    private function copyGroup()
     {
         return $this->group('copy-group', 'div', function ($form) {
             $form->checkbox('copy')

@@ -31,12 +31,12 @@ class Register extends \Soosyze\Controller
 
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
             $formbuilder->legend('register-legend', t('User registration'));
-            $form->username($formbuilder)
-                ->email($formbuilder)
-                ->passwordNew($formbuilder)
-                ->passwordConfirm($formbuilder)
+            $form->usernameGroup($formbuilder)
+                ->emailGroup($formbuilder)
+                ->passwordNewGroup($formbuilder)
+                ->passwordConfirmGroup($formbuilder)
                 ->passwordPolicy($formbuilder)
-                ->eula($formbuilder, self::router());
+                ->eulaGroup($formbuilder, self::router());
         })->submitForm(t('Registration'));
 
         $messages = [];

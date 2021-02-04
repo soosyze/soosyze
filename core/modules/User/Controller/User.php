@@ -78,11 +78,11 @@ class User extends \Soosyze\Controller
             'action'  => self::router()->getRoute('user.store'),
             'enctype' => 'multipart/form-data' ], self::file(), self::config()))
             ->setValues($values)
-            ->fieldsetInformationsCreate()
-            ->fieldsetProfil()
-            ->fieldsetPassword()
-            ->fieldsetActived()
-            ->fieldsetRoles($this->getRoleByPermission())
+            ->informationsCreateFieldset()
+            ->profilFieldset()
+            ->passwordFieldset()
+            ->activedFieldset()
+            ->rolesFieldset($this->getRoleByPermission())
             ->submitForm('Save', true);
 
         $this->container->callHook('user.create.form', [ &$form, $values ]);
@@ -236,18 +236,18 @@ class User extends \Soosyze\Controller
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data' ], self::file(), self::config()))
             ->setValues($values)
-            ->fieldsetInformations()
-            ->fieldsetProfil()
-            ->fieldsetPassword();
+            ->informationsFieldset()
+            ->profilFieldset()
+            ->passwordFieldset();
 
         if (self::user()->isGranted('user.permission.manage')) {
             $rolesUser = self::user()->getIdRolesUser($id);
-            $form->fieldsetActived();
+            $form->activedFieldset();
         }
 
         $rolesUser = self::user()->getIdRolesUser($id);
         $form->setValues([ 'roles' => $rolesUser ])
-            ->fieldsetRoles($this->getRoleByPermission())
+            ->rolesFieldset($this->getRoleByPermission())
             ->submitForm();
 
         $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);

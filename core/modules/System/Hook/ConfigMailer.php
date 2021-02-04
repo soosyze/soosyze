@@ -35,7 +35,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                     $form->label('email-label', t('E-mail of the site'), [
                         'data-tooltip' => t('E-mail used for the general configuration, for your contacts, the recovery of your password ...')
                     ])
-                    ->email('email', [
+                    ->emailGroup('email', [
                         'class'       => 'form-control',
                         'required'    => 1,
                         'placeholder' => t('E-mail'),
