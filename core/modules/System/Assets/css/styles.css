@@ -1,0 +1,49 @@
+.tool-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.tool-card {
+    border: 1px solid rgba(86,61,124,.15);
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    min-height: 3em;
+    min-width: 30%;
+}
+.tool-card-thumb {
+    background-color: rgba(86,61,124,.15);
+    display: flex;
+    flex-direction: column;
+    font-size: 3em;
+    justify-content: center;
+    margin-bottom: 18px;
+    text-align: center;
+}
+.tool-card-thumb a {
+    color: #212529;
+    display: block;
+    height: 3em;
+    overflow: hidden;
+    padding: .5em;
+}
+.tool-card-content {
+    text-align: center;
+    word-break: break-word;
+}
+.tool-card-title,
+.tool-card-description {
+    margin-top:0;
+}
+.dark .tool-card {
+    border: 1px solid #17191f;
+}
+.dark .tool-card-thumb a {
+    color: #fff;
+}
