@@ -35,31 +35,34 @@ class App
         if (!($response instanceof Templating)) {
             return;
         }
+
         $script = $response->getBlock('this')->getVar('scripts');
         $script .= '<script>
             $().ready(function () {
-                var nestedSortables = [].slice.call($(\'.nested-sortable\'));
+                let nestedSortables = [].slice.call($(\'.nested-sortable\'));
 
-                for (var i = 0; i < nestedSortables.length; i++) {
+                for (let i = 0; i < nestedSortables.length; i++) {
                     new Sortable(nestedSortables[i], {
-                        group: "nested",
                         animation: 150,
-                        fallbackOnBody: true,
-                        swapThreshold: 0.1,
-                        ghostClass: "placeholder",
                         dragoverBubble: true,
+                        fallbackOnBody: true,
+                        ghostClass: "placeholder-sortable",
+                        group: "nested",
                         onEnd: function (evt) {
                             render("#main_sortable");
-                        }
+                        },
+                        swapThreshold: 0.3
                     });
                 }
 
                 function render(idMenu) {
-                    var weight = 1;
-                    var id = $(idMenu).parent("li").children(\'input[name^="id"]\').val();
+                    let weight = 1;
+                    let id = $(idMenu).parent("li").children(\'input[name^="id"]\').val();
+
                     if (id === undefined) {
                         id = -1;
                     }
+
                     $(idMenu).children("li").each(function () {
                         $(this).children(\'input[name^="weight"]\').val(weight);
                         $(this).children(\'input[name^="parent"]\').val(id);

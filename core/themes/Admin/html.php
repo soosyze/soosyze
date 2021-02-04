@@ -14,6 +14,7 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/soosyze.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/styles.css">
+        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/menu.css">
     </head>
 
     <body class="<?php echo $dark; ?>">

@@ -1,0 +1,42 @@
+.nestable-list {
+    margin: 0;
+    padding-left: 40px;
+    list-style: none;
+}
+.nestable-body {
+    padding: 16px 12px;
+    margin-top: -1px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.dark .nestable-body {
+    border-color: #393f4f;
+}
+.table-width-minimum {
+    width: 1px;
+}
+.table-width-100 {
+    width: 100px;
+}
+.table-width-300 {
+    width: 300px;
+}
+.table-min-width-100 {
+    min-width: 100px;
+}
+.table-min-width-300 {
+    min-width: 300px;
+}
+.table-max-width-100 {
+    max-width: 100px;
+}
+.table-row {
+    display: table;
+    width: 100%;
+    padding: 0;
+}
+.table-row > div {
+    display: table-cell;
+    padding: .5em .5em;
+    vertical-align: middle;
+}
