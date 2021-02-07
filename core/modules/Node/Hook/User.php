@@ -136,6 +136,23 @@ class User implements \SoosyzeCore\User\UserInterface
         return $rights;
     }
 
+    public function hookEntityCreated($idNode, $entity, $req, $user)
+    {
+        $node = $this->getNode($idNode);
+
+        return $this->hookNodeCreated($node[ 'type' ]);
+    }
+
+    public function hookEntityEdited($idNode, $entity, $idEntity, $req, $user)
+    {
+        return $this->hookNodeEdited($idNode, $req, $user);
+    }
+
+    public function hookEntityDeleted($idNode, $entity, $idEntity, $req, $user)
+    {
+        return $this->hookNodeDeleted($idNode, $req, $user);
+    }
+
     private function getNode($idNode)
     {
         if (isset($this->nodes[ $idNode ])) {
