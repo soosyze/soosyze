@@ -173,35 +173,35 @@ class FileManager
                 'request'    => $this->router->getRequestByRoute('filemanager.file.show', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
-                'title_link' => t('View')
+                'title_link' => 'View'
             ], [
                 'class'      => 'mod',
                 'key'        => 'filemanager.file.edit',
                 'request'    => $this->router->getRequestByRoute('filemanager.file.edit', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
-                'title_link' => t('Rename')
+                'title_link' => 'Rename'
             ], [
                 'class'      => 'mod',
                 'key'        => 'filemanager.file.remove',
                 'request'    => $this->router->getRequestByRoute('filemanager.file.remove', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
-                'title_link' => t('Delete')
+                'title_link' => 'Delete'
             ], [
                 'class'      => '',
                 'key'        => 'filemanager.file.download',
                 'request'    => $this->router->getRequestByRoute('filemanager.file.download', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
-                'title_link' => t('Download')
+                'title_link' => 'Download'
             ], [
                 'class'      => 'mod',
                 'key'        => 'filemanager.file.copy',
                 'request'    => $this->router->getRequestByRoute('filemanager.copy.admin', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
-                'title_link' => t('Deplace or copy')
+                'title_link' => 'Deplace or copy'
             ],
         ];
 
@@ -210,7 +210,7 @@ class FileManager
                 'class'      => 'copy-clipboard',
                 'key'        => '',
                 'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
-                'title_link' => t('Copy link')
+                'title_link' => 'Copy link'
             ];
         }
 
@@ -243,17 +243,19 @@ class FileManager
     {
         $menu = [
             [
+                'class'      => 'mod',
                 'key'        => 'filemanager.folder.edit',
                 'request'    => $this->router->getRequestByRoute('filemanager.folder.edit', [
                     ':path' => $path
                 ]),
-                'title_link' => t('Rename')
+                'title_link' => 'Rename'
             ], [
+                'class'      => 'mod',
                 'key'        => 'filemanager.folder.remove',
                 'request'    => $this->router->getRequestByRoute('filemanager.folder.remove', [
                     ':path' => $path
                 ]),
-                'title_link' => t('Delete')
+                'title_link' => 'Delete'
             ]
         ];
 
