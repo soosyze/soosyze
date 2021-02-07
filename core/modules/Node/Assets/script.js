@@ -47,7 +47,7 @@ $(function () {
     /**
      * Evenement des bouton d'actions.
      */
-    $(document).delegate('.actions-node .btn-action-remove', 'click', function (evt) {
+    $(document).delegate('.btn-action-remove', 'click', function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
 

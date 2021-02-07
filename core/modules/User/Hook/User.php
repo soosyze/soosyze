@@ -27,7 +27,7 @@ class User implements \SoosyzeCore\User\UserInterface
             'user.permission.manage' => 'Administer permissions',
             'user.showed'            => 'View user profiles',
             'user.edited'            => 'Edit your user account',
-            'user.deleted'           => 'Delete your user account',
+            'user.deleted'           => 'Delete your user account'
         ];
         $permissions[ 'User role' ][ 'role.all' ] = 'Assign all roles';
         foreach ($this->user->getRolesAttribuable() as $role) {

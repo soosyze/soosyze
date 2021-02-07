@@ -321,9 +321,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->addRule('offset', 'required|numeric|min_numeric:0')
             ->addRule('more', 'bool');
         $validator
-            ->addLabel('limit', t('Nombre de news à afficher'))
-            ->addLabel('offset', t('Décalage'))
-            ->addLabel('more', t('Ajouter un lien "plus" en bas de l\'affichage'));
+            ->addLabel('limit', t('Number of news to display'))
+            ->addLabel('offset', t('Offset'))
+            ->addLabel('more', t('Add a "more" link at the bottom of the screen if there is more content'));
     }
 
     public function hookNewsLastUpdateBefore($validator, &$values, $id)

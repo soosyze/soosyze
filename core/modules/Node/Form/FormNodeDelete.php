@@ -55,7 +55,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                                 'for'      => 'path',
                                 'required' => !empty($this->useInPath[ 'required' ])
                             ])
-                            ->group('path-flex-group', 'div', function ($form) {
+                            ->group('path-flex', 'div', function ($form) {
                                 $form->html('base_path', '<span:attr>:content</span>', [
                                     ':content' => $this->router->makeRoute(''),
                                     'id'       => ''

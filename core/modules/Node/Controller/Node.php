@@ -335,8 +335,10 @@ class Node extends \Soosyze\Controller
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $this->saveFile($node, $key, $validator);
                 } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                    $this->updateWeightEntity($value, $validator->getInput($key, [
-                    ]));
+                    $this->updateWeightEntity(
+                        $value,
+                        $validator->getInput($key, [])
+                    );
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fieldsUpdate[ $key ] = implode(',', $validator->getInput($key, [
                         ]));

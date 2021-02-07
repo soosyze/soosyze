@@ -437,16 +437,21 @@ class User extends \Soosyze\Controller
                 ]
             ]);
 
-        $this->container->callHook('user.delete.validator', [ &$validator, $user,
-            $id ]);
+        $this->container->callHook('user.delete.validator', [
+            &$validator, $user, $id
+        ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('user.delete.before', [ $validator, $user,
-                $id ]);
+            $this->container->callHook('user.delete.before', [
+                $validator, $user, $id
+            ]);
+
             self::query()->from('user_role')->where('user_id', '==', $id)->delete()->execute();
             self::query()->from('user')->where('user_id', '==', $id)->delete()->execute();
-            $this->container->callHook('user.delete.after', [ $validator, $user,
-                $id ]);
+
+            $this->container->callHook('user.delete.after', [
+                $validator, $user, $id
+            ]);
         } else {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         }

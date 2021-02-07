@@ -97,7 +97,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 'menu-admin', 5, -1
             ])
             ->values([
-                'system.theme.edit', 'fa fa-th-large', 'Themes', 'admin/theme',
+                'system.theme.index', 'fa fa-paint-brush', 'Themes', 'admin/theme',
                 'menu-admin', 6, -1
             ])
             ->values([

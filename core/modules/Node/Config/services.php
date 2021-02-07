@@ -121,7 +121,7 @@ return [
     ],
     'node.hook.nodeuser' => [
         'class' => 'SoosyzeCore\Node\Hook\NodeUser',
-        'arguments' => ['@config', "@node", '@nodeuser', '@query', '@router', '@template', '@user'],
+        'arguments' => ['@config', '@node', '@nodeuser', '@query', '@router', '@template', '@user'],
         'hooks' => [
             'user.show' => 'hookUserShow',
             'user.delete.after' => 'hookUserDeleteAfter'

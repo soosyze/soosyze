@@ -348,6 +348,7 @@ class Entity extends \Soosyze\Controller
                 ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
                 ->limit(2)
                 ->fetchAll();
+
             /* Et que l'entité est requise, la dernière entité ne peut-être supprimé. */
             if (isset($rules[ 'required' ]) && count($entitys) === 1) {
                 $validator
