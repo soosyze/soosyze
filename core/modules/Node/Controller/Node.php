@@ -117,67 +117,7 @@ class Node extends \Soosyze\Controller
         }
 
         /* Test les champs par defauts de la node. */
-        $validator = (new Validator())
-            ->setRules([
-                'meta_description' => '!required|string|max:512',
-                'meta_noarchive'   => 'bool',
-                'meta_nofollow'    => 'bool',
-                'meta_noindex'     => 'bool',
-                'meta_title'       => '!required|string|max:255',
-                'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
-                'sticky'           => 'bool',
-                'title'            => 'required|string|max:255|to_htmlsc',
-                'token_node'       => 'token:3600',
-                'user_id'          => '!required|numeric|inarray:' . $this->getListUsersId()
-            ])
-            ->setLabels([
-                'date_created'     => t('Publication date'),
-                'meta_description' => t('Description'),
-                'meta_noarchive'   => t('Block caching'),
-                'meta_nofollow'    => t('Block link tracking'),
-                'meta_noindex'     => t('Block indexing'),
-                'meta_title'       => t('Title'),
-                'node_status_id'   => t('Publication status'),
-                'sticky'           => t('Pin content'),
-                'title'            => t('Title of the content'),
-                'user_id'          => t('User')
-            ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
-            ->addInput('type', $type);
-
-        /* Test des champs personnalisés de la node. */
-        $files      = [];
-        $canPublish = true;
-        foreach ($fields as $value) {
-            /* Si une node possède une relation requise, elle ne peut-être publié. */
-            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                $rules = self::node()->getRules($value);
-                if (isset($rules[ 'required' ])) {
-                    $canPublish = false;
-                }
-            } else {
-                $validator->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
-                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
-            }
-            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                $files[] = $value[ 'field_name' ];
-            }
-        }
-
-        if (!$validator->getInput('date_created', false)) {
-            $validator->addInput('date_created', date('Y-m-d H:i:s'));
-        }
-        $validator->addRule(
-            'date_created',
-            $validator->getInput('node_status_id') == 1
-                ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
-                : '!required|date_format:Y-m-d H:i:s'
-        );
-
-        /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
-        if (!$canPublish) {
-            $validator->addRule('node_status_id', '!accepted');
-        }
+        $validator = $this->getValidator($req, $type, $fields);
 
         $this->container->callHook('node.store.validator', [ &$validator, $type ]);
 
@@ -250,9 +190,14 @@ class Node extends \Soosyze\Controller
                 : self::router()->getRoute('node.admin')
             );
         }
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithoutObject();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        if (in_array('date_created', $_SESSION[ 'errors_keys' ])) {
+            $_SESSION[ 'errors_keys' ][] = 'date';
+            $_SESSION[ 'errors_keys' ][] = 'date_time';
+        }
 
         return new Redirect(self::router()->getRoute('node.create', [ ':node' => $type ]));
     }
@@ -372,83 +317,14 @@ class Node extends \Soosyze\Controller
                 ])
             );
         }
-        if (!($node = self::node()->byId($idNode))) {
+        if (!($node = self::node()->getCurrentNode($idNode))) {
             return $this->get404($req);
         }
         if (!($fields = self::node()->getFieldsForm($node[ 'type' ]))) {
             return $this->get404($req);
         }
 
-        /* Test les champs par defauts de la node. */
-        $validator = (new Validator())
-            ->setRules([
-                'meta_description'      => '!required|string|max:512',
-                'meta_noarchive'        => 'bool',
-                'meta_nofollow'         => 'bool',
-                'meta_noindex'          => 'bool',
-                'meta_title'            => '!required|string|max:255',
-                'node_status_id'        => 'required|numeric|to_int|inarray:1,2,3,4',
-                'sticky'                => 'bool',
-                'title'                 => 'required|string|max:255|to_htmlsc',
-                'token_node_' . $idNode => 'token:3600',
-                'user_id'               => '!required|numeric|inarray:' . $this->getListUsersId()
-            ])
-            ->setLabels([
-                'date_created'     => t('Publication date'),
-                'meta_description' => t('Description'),
-                'meta_noarchive'   => t('Block caching'),
-                'meta_nofollow'    => t('Block link tracking'),
-                'meta_noindex'     => t('Block indexing'),
-                'meta_title'       => t('Title'),
-                'node_status_id'   => t('Publication status'),
-                'sticky'           => t('Pin content'),
-                'title'            => t('Title of the content'),
-                'user_id'          => t('User')
-            ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
-            ->addInput('type', $node[ 'type' ]);
-
-        /* Test des champs personnalisé de la node. */
-        $files      = [];
-        $canPublish = true;
-        foreach ($fields as $value) {
-            /* Si une node possède une relation requise, elle ne peut-être publié. */
-            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
-                if ($rules = self::node()->getRules($value)) {
-                    $options = json_decode($value[ 'field_option' ], true);
-                    $entitys = self::query()
-                        ->from($options[ 'relation_table' ])
-                        ->where($options[ 'foreign_key' ], '==', $node[ 'entity_id' ])
-                        ->limit(2)
-                        ->fetchAll();
-                    if (!empty($rules[ 'required' ]) && count($entitys) < 1) {
-                        $canPublish = false;
-                    }
-                }
-            } else {
-                $validator
-                    ->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
-                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
-            }
-            if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                $files[] = $value[ 'field_name' ];
-            }
-        }
-
-        if (!$validator->getInput('date_created', false)) {
-            $validator->addInput('date_created', date('Y-m-d H:i:s'));
-        }
-        $validator->addRule(
-            'date_created',
-            $validator->getInput('node_status_id') == 1
-                ? 'required|date_format:Y-m-d H:i:s|date_before_or_equal:' . date('Y-m-d H:i:s')
-                : '!required|date_format:Y-m-d H:i:s'
-        );
-
-        /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
-        if (!$canPublish) {
-            $validator->addRule('node_status_id', '!accepted');
-        }
+        $validator = $this->getValidator($req, $node[ 'type' ], $fields, $idNode);
 
         $this->container->callHook('node.update.validator', [ &$validator, $idNode ]);
 
@@ -507,9 +383,14 @@ class Node extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
         } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
+            $_SESSION[ 'inputs' ]               = $validator->getInputsWithoutObject();
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            if (in_array('date_created', $_SESSION[ 'errors_keys' ])) {
+                $_SESSION[ 'errors_keys' ][] = 'date';
+                $_SESSION[ 'errors_keys' ][] = 'date_time';
+            }
         }
 
         return new Redirect(
@@ -877,6 +758,103 @@ class Node extends \Soosyze\Controller
         return self::template()
                 ->createBlock('node/submenu-node_fieldset.php', $this->pathViews)
                 ->addVar('menu', $menu);
+    }
+
+    private function getValidator($req, $type, $fields, $idNode = null)
+    {
+        $node      = self::node()->getCurrentNode($idNode);
+        /* Test les champs par defauts de la node. */
+        $validator = (new Validator())
+            ->setRules([
+                'date_created'     => 'required|date_format:Y-m-d H:i',
+                'meta_description' => '!required|string|max:512',
+                'meta_noarchive'   => 'bool',
+                'meta_nofollow'    => 'bool',
+                'meta_noindex'     => 'bool',
+                'meta_title'       => '!required|string|max:255',
+                'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
+                'sticky'           => 'bool',
+                'title'            => 'required|string|max:255|to_htmlsc',
+                'user_id'          => '!required|numeric|inarray:' . $this->getListUsersId()
+            ])
+            ->setLabels([
+                'date_created'     => t('Publication date'),
+                'meta_description' => t('Description'),
+                'meta_noarchive'   => t('Block caching'),
+                'meta_nofollow'    => t('Block link tracking'),
+                'meta_noindex'     => t('Block indexing'),
+                'meta_title'       => t('Title'),
+                'node_status_id'   => t('Publication status'),
+                'sticky'           => t('Pin content'),
+                'title'            => t('Title of the content'),
+                'user_id'          => t('User')
+            ])
+            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+            ->addInput('type', $type);
+
+        $validator->addRule($node
+                ? ('token_node_' . $idNode)
+                : 'token_node', 'token:3600');
+
+        /* Test des champs personnalisé de la node. */
+        $canPublish = true;
+        foreach ($fields as $value) {
+            /* Si une node possède une relation requise, elle ne peut-être publié. */
+            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                $rules = self::node()->getRules($value);
+
+                if (empty($rules[ 'required' ])) {
+                    continue;
+                }
+
+                /* Si la node existe. */
+                if ($node) {
+                    $options = json_decode($value[ 'field_option' ], true);
+
+                    $entitys = self::query()
+                        ->from($options[ 'relation_table' ])
+                        ->where($options[ 'foreign_key' ], '==', $node[ 'entity_id' ])
+                        ->limit(2)
+                        ->fetchAll();
+
+                    $canPublish = count($entitys) >= 1;
+                } else {
+                    /* Si la node n'existe pas et que les champs multiples sont requis, la node ne peut pas être publié. */
+                    $canPublish = false;
+                }
+            } else {
+                $validator
+                    ->addRule($value[ 'field_name' ], $value[ 'field_rules' ])
+                    ->addLabel($value[ 'field_name' ], t($value[ 'field_label' ]));
+            }
+        }
+
+        if (!$validator->getInput('date', false)) {
+            $validator->addInput('date', date('Y-m-d'));
+        }
+        if (!$validator->getInput('date_time', false)) {
+            $validator->addInput('date_time', date('H:i'));
+        }
+
+        $validator
+            ->addInput(
+                'date_created',
+                $validator->getInput('date') . ' ' . $validator->getInput('date_time')
+            );
+
+        if ($validator->getInput('node_status_id') == 1) {
+            $validator->addRule(
+                'date_created',
+                'required|date_format:Y-m-d H:i|date_before_or_equal:' . date('Y-m-d H:i')
+            );
+        }
+
+        /* Ne peut pas publier la node si les règles des relations ne sont pas respectées. */
+        if (!$canPublish) {
+            $validator->addRule('node_status_id', '!accepted');
+        }
+
+        return $validator;
     }
 
     private function getMeta(array $node, array $fields)

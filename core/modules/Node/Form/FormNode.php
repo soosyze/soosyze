@@ -517,12 +517,16 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                         $form->label('date_created-label', t('Publication date'), [
                             'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')
                         ])
-                        ->text('date_created', [
-                            'class'       => 'form-control',
-                            'maxlength'   => 19,
-                            'placeholder' => t('YYYY-MM-DD Hours:Minutes:Seconds'),
-                            'value'       => $this->getDateCreated()
-                        ]);
+                        ->group('date_created-flex', 'div', function ($form) {
+                            $form->date('date', [
+                                'class' => 'form-control',
+                                'value' => $this->getDateCreated()
+                            ])
+                            ->time('date_time', [
+                                'class' => 'form-control',
+                                'value' => $this->getDateTimeCreated()
+                            ]);
+                        }, [ 'class' => 'form-group-flex' ]);
                     }, self::$attrGrp)
                     ->label('date_created-label', t('Publication status'))
                     ->group('node_status-group', 'div', function ($form) {
@@ -603,11 +607,26 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
     private function getDateCreated()
     {
         if (empty($this->values[ 'date_created' ])) {
-            return date('Y-m-d H:i:s', time());
+            $time = time();
+        } elseif (is_numeric($this->values[ 'date_created' ])) {
+            $time = (int) $this->values[ 'date_created' ];
+        } else {
+            $time = strtotime($this->values[ 'date_created' ]);
         }
 
-        return is_numeric($this->values[ 'date_created' ])
-            ? date('Y-m-d H:i:s', (int) $this->values[ 'date_created' ])
-            : $this->values[ 'date_created' ];
+        return date('Y-m-d', $time);
+    }
+
+    private function getDateTimeCreated()
+    {
+        if (empty($this->values[ 'date_created' ])) {
+            $time = time();
+        } elseif (is_numeric($this->values[ 'date_created' ])) {
+            $time = (int) $this->values[ 'date_created' ];
+        } else {
+            $time = strtotime($this->values[ 'date_created' ]);
+        }
+
+        return date('H:i', $time);
     }
 }
