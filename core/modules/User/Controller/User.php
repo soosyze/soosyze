@@ -121,8 +121,7 @@ class User extends \Soosyze\Controller
             return new Redirect(self::router()->getRoute('user.create'));
         }
 
-        $validator = (new Validator())
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+        $validator = $this->getValidator($req);
 
         $isEmail = ($user    = self::user()->getUser($validator->getInput('email')))
             ? $user[ 'email' ]
@@ -135,31 +134,8 @@ class User extends \Soosyze\Controller
         $validator
             ->addInput('is_email', $isEmail)
             ->addInput('is_username', $isUsername)
-            ->setRules([
-                'username'         => 'required|string|max:255|!equal:@is_username|to_htmlsc',
-                'email'            => 'required|email|max:254|!equal:@is_email|to_htmlsc',
-                'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
-                'bio'              => '!required|string|max:255|to_htmlsc',
-                'name'             => '!required|string|max:255|to_htmlsc',
-                'firstname'        => '!required|string|max:255|to_htmlsc',
-                'actived'          => 'bool',
-                'password_new'     => 'required|string|regex:' . self::user()->passwordPolicy(),
-                'password_confirm' => 'required_with:password_new|string|equal:@password_new',
-                'roles'            => '!required|array',
-                'token_user_form'  => 'token'
-            ])
-            ->setLabels([
-                'username'         => t('User name'),
-                'email'            => t('E-mail'),
-                'picture'          => t('Picture'),
-                'bio'              => t('Biography'),
-                'name'             => t('Name'),
-                'firstname'        => t('First name'),
-                'actived'          => t('Active'),
-                'password_new'     => t('New Password'),
-                'password_confirm' => t('Confirmation of the new password'),
-                'roles'            => t('User Roles')
-            ])
+            ->addRule('email', 'required|email|max:254|!equal:@is_email|to_htmlsc')
+            ->addRule('username', 'required|string|max:255|!equal:@is_username|to_htmlsc')
             ->setMessages([
                 'password_confirm' => [
                     'equal' => [ 'must' => t(':label is incorrect') ]
@@ -211,7 +187,7 @@ class User extends \Soosyze\Controller
             return new Redirect(self::router()->getRoute('user.admin'));
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout(['picture']);
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
@@ -293,36 +269,7 @@ class User extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $validator = (new Validator())
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
-            ->setRules([
-                /* max:254 RFC5321 - 4.5.3.1.3. */
-                'username'         => 'required|string|max:255|to_htmlsc',
-                'email'            => 'required|email|max:254',
-                'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
-                'bio'              => '!required|string|max:255|to_htmlsc',
-                'name'             => '!required|string|max:255|to_htmlsc',
-                'firstname'        => '!required|string|max:255|to_htmlsc',
-                'password'         => '!required|string',
-                'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
-                'password_confirm' => 'required_with:password_new|string|equal:@password_new',
-                'actived'          => 'bool',
-                'roles'            => '!required|array',
-                'token_user_form'  => 'required|token'
-            ])
-            ->setLabels([
-                'username'         => t('User name'),
-                'email'            => t('E-mail'),
-                'picture'          => t('Picture'),
-                'bio'              => t('Biography'),
-                'name'             => t('Name'),
-                'firstname'        => t('First name'),
-                'password'         => t('Password'),
-                'password_new'     => t('New Password'),
-                'password_confirm' => t('Confirmation of the new password'),
-                'actived'          => t('Active'),
-                'roles'            => t('User Roles')
-            ])
+        $validator = $this->getValidator($req)
             ->setMessages([
             'password_confirm' => [ 'equal' => [ 'must' => t(':label is incorrect') ] ],
             'password'         => [ 'required' => [ 'must' => t(':label is incorrect') ] ]
@@ -419,7 +366,7 @@ class User extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout('picture');
+        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout(['picture']);
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors() + $validatorRole->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
@@ -541,6 +488,40 @@ class User extends \Soosyze\Controller
         }
 
         return $roles;
+    }
+
+    private function getValidator($req)
+    {
+        return (new Validator())
+                ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+                ->setRules([
+                    /* max:254 RFC5321 - 4.5.3.1.3. */
+                    'actived'          => 'bool',
+                    'bio'              => '!required|string|max:255|to_htmlsc',
+                    'email'            => 'required|email|max:254',
+                    'firstname'        => '!required|string|max:255|to_htmlsc',
+                    'name'             => '!required|string|max:255|to_htmlsc',
+                    'password'         => '!required|string',
+                    'password_confirm' => 'required_with:password_new|string|equal:@password_new',
+                    'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
+                    'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
+                    'roles'            => '!required|array',
+                    'token_user_form'  => 'required|token',
+                    'username'         => 'required|string|max:255|to_htmlsc'
+                ])
+                ->setLabels([
+                    'actived'          => t('Active'),
+                    'bio'              => t('Biography'),
+                    'email'            => t('E-mail'),
+                    'firstname'        => t('First name'),
+                    'name'             => t('Name'),
+                    'password'         => t('Password'),
+                    'password_confirm' => t('Confirmation of the new password'),
+                    'password_new'     => t('New Password'),
+                    'picture'          => t('Picture'),
+                    'roles'            => t('User Roles'),
+                    'username'         => t('User name')
+        ]);
     }
 
     private function updateRole($validator, $idUser)
