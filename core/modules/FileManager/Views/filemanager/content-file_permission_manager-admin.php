@@ -22,7 +22,7 @@
                 <th><?php echo t('Actions'); ?></th>
             </tr>
         </thead>
-        <tbody class="nested-sortable-file_permission" id="main_sortable">
+        <tbody data-draggable="sortable" data-onEnd="sortFilePermission" data-handle=".draggable">
         <?php if ($profils): foreach ($profils as $key => $profil): ?>
 
             <tr>

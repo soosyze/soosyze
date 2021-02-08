@@ -1,25 +1,3 @@
-$(function () {
-    var nestedSortables = [].slice.call($('.nested-sortable-file_permission'));
-
-    for (var i = 0; i < nestedSortables.length; i++) {
-        new Sortable(nestedSortables[i], {
-            animation: 150,
-            handle: '.draggable',
-            onEnd: function (evt) {
-                sortRole("#main_sortable");
-            }
-        });
-    }
-
-    function sortRole(idMenu) {
-        var weight = 1;
-
-        $(idMenu).find('input[name^="profil_weight"]').each(function () {
-            $(this).val(weight);
-            weight++;
-        });
-    }
-});
 
 $(document).delegate('#form_filter_file', 'input', debounce(function () {
     const $this = $(this);
@@ -298,5 +276,14 @@ function updateManager(action, target) {
         success: function (data) {
             target.html(data);
         }
+    });
+}
+
+function sortFilePermission(evt, target) {
+    var weight = 1;
+
+    $(evt.from).find('input[name^="profil_weight"]').each(function () {
+        $(this).val(weight);
+        weight++;
     });
 }

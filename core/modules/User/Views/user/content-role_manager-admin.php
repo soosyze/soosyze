@@ -20,7 +20,7 @@
                 <th><?php echo t('Actions'); ?></th>
             </tr>
         </thead>
-        <tbody id="main_sortable" class="nested-sortable-role">
+        <tbody data-draggable="sortable" data-onEnd="sortRole">
             <?php foreach ($roles as $key => $role): ?>
 
             <tr>

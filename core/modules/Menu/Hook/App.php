@@ -38,39 +38,20 @@ class App
 
         $script = $response->getBlock('this')->getVar('scripts');
         $script .= '<script>
-            $().ready(function () {
-                let nestedSortables = [].slice.call($(\'.nested-sortable\'));
+            function sortMenu(evt) {
+                let weight = 1;
+                let id = $(evt.to).parent("li").children(\'input[name^="id"]\').val();
 
-                for (let i = 0; i < nestedSortables.length; i++) {
-                    new Sortable(nestedSortables[i], {
-                        animation: 150,
-                        dragoverBubble: true,
-                        fallbackOnBody: true,
-                        ghostClass: "placeholder-sortable",
-                        group: "nested",
-                        onEnd: function (evt) {
-                            render("#main_sortable");
-                        },
-                        swapThreshold: 0.3
-                    });
+                if (id === undefined) {
+                    id = -1;
                 }
 
-                function render(idMenu) {
-                    let weight = 1;
-                    let id = $(idMenu).parent("li").children(\'input[name^="id"]\').val();
-
-                    if (id === undefined) {
-                        id = -1;
-                    }
-
-                    $(idMenu).children("li").each(function () {
-                        $(this).children(\'input[name^="weight"]\').val(weight);
-                        $(this).children(\'input[name^="parent"]\').val(id);
-                        render($(this).children("ol"));
-                        weight++;
-                    });
-                }
-            });
+                $(evt.to).children("li").each(function () {
+                    $(this).children(\'input[name^="weight"]\').val(weight);
+                    $(this).children(\'input[name^="parent"]\').val(id);
+                    weight++;
+                });
+            }
             </script>';
 
         $response->view('this', [

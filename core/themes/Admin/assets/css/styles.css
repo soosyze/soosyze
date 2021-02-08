@@ -96,43 +96,16 @@ fieldset.package {
 .cell-actions {
     min-width: 185px;
 }
-/* ---------- Sortable ----------- */
-.nested-sortable {
-    list-style-type: none;
-    padding: 0;
-}
-.nested-sortable .link-item {
-    border: 2px dashed #393f4f;
-    margin-top: 1em;
-    padding: 1em;
-}
-.nested-sortable .link-item:hover {
-    border: 2px solid #393f4f;
-}
-.nested-sortable .link-item.placeholder {
-    background: #e1e4e8;
-    opacity: .5;
-}
-.nested-sortable .link-title {
-    margin-bottom: 5px;
-}
 /* ---------- Draggble ----------- */
 .draggable {
     border: 2px dashed #393f4f;
     cursor: move;
 }
-.draggable.placeholder {
-    background: #e1e4e8;
-    opacity: .5;
-}
 .draggable.draggable-verticale .fa-arrows-alt-v{
     margin-right: 1em;
 }
 
-.node-draggable_one_to_many {
-    margin-top: -2px;
-    padding-left: 1em;
-}
+
 /* --------------------------- */
 /* ---------- LAYOUT --------- */
 /* --------------------------- */
@@ -242,6 +215,12 @@ fieldset.package {
 /* --------------------------- */
 /* ----------- MENU ---------- */
 /* --------------------------- */
+/* Menu admin */
+.nestable-menu {
+    list-style-type: none;
+    padding: 0;
+}
+
 /* Menu drawer */
 .navbar-nav ul {
     padding: 0;
@@ -333,6 +312,8 @@ fieldset.package {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+    margin-top: -2px;
+    padding-left: 1em;
 }
 
 /* ---------- NODE STATUS ----------- */

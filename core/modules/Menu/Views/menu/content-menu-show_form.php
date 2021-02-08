@@ -1,6 +1,7 @@
 
 
-<ol <?php echo if_or($level === 1, ' id="main_sortable"'); ?> class="nested-sortable <?php echo if_or($level === 1, '', 'nestable-list'); ?>">
+<ol class="nestable-menu <?php echo if_or($level === 1, '', 'nestable-list'); ?>"
+    data-draggable="sortable" data-group="nested-menu" data-ghostClass="placeholder" data-onEnd="sortMenu">
     <?php if ($menu): foreach ($menu as $link): ?>
 
     <li style="cursor: move">

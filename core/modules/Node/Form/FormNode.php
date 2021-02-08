@@ -277,6 +277,17 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
         $subFields = $data->fetchAll();
         $dir = $this->router->getBasePath();
+
+        $attrSortable = ['class' => 'form-group'];
+        if ($options[ 'sort' ] === 'weight') {
+            $attrSortable = [
+                'class'           => 'form-group',
+                'data-ghostClass' => 'placeholder',
+                'data-draggable'  => 'sortable',
+                'data-onEnd'      => 'sortEntity'
+            ];
+        }
+
         $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options, $dir) {
             foreach ($subFields as $field) {
                 $idEntity = $field[ "{$key}_id" ];
@@ -324,9 +335,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ]);
                 }, [ 'class' => 'sort_weight draggable draggable-verticale node-draggable_one_to_many' ]);
             }
-        }, [ 'class' => $options[ 'sort' ] === 'weight'
-                ? 'nested-sortable form-group'
-                : 'form-group' ]);
+        }, $attrSortable);
 
         if (!isset($value[ 'attr' ][ 'max' ]) || $value[ 'attr' ][ 'max' ] > count($subFields)) {
             $form->group("add-$key-group", 'div', function ($form) use ($key) {

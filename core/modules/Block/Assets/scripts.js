@@ -1,34 +1,4 @@
 $(function () {
-    var nestedSortables = [].slice.call($('.block-sortable'));
-
-    for (var i = 0; i < nestedSortables.length; i++) {
-        new Sortable(nestedSortables[i], {
-            group: "block-nested",
-            handle: '.fa-arrows-alt',
-            ghostClass: "placeholder",
-            animation: 150,
-            filter: ".ignore-elements",
-            fallbackOnBody: true,
-            dragoverBubble: true,
-            onEnd: function (evt) {
-                updateSection(evt);
-            }
-        });
-    }
-
-    function updateSection(evt)
-    {
-        let weight = 0;
-        $(evt.to).find('.block').each(function () {
-            $.ajax({
-                url: $(this).find('.fa-arrows-alt').data('link_update'),
-                type: 'POST',
-                data: `weight=${weight}&section=${$(evt.to).data('id')}`
-            });
-            weight++;
-        });
-    }
-
     $(document).delegate('.block .fa-edit', 'click', function (evt) {
         evt.preventDefault();
         const $this = $(this).closest('.block');
@@ -92,10 +62,25 @@ $(function () {
     });
 });
 
+function sortSection(evt, target)
+{
+    let weight = 0;
+
+    $(evt.to).find('.block').each(function () {
+        $.ajax({
+            url: $(this).find('.fa-arrows-alt').data('link_update'),
+            type: 'POST',
+            data: `weight=${weight}&section=${$(evt.to).data('id')}`
+        });
+        weight++;
+    });
+}
+
 function search_blocks() {
     const search = document.getElementById('search').value;
     const reg = new RegExp(search, 'i');
     const elements = document.querySelectorAll('.search_item');
+
     Array.prototype.forEach.call(elements, function (el) {
         el.style.display = '';
         if (!reg.test(el.querySelector('.search_text').textContent)) {

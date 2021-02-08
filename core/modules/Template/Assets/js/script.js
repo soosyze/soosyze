@@ -42,3 +42,39 @@ $(document).delegate('select.ajax-control', 'change', function () {
         }
     });
 });
+/**
+ * Délare les éléments Traînable comme étant triable et leur options.
+ */
+$().ready(function () {
+    let nestedSortables = [].slice.call($('[data-draggable="sortable"]'));
+
+    for (let i = 0; i < nestedSortables.length; i++) {
+        let el = nestedSortables[i];
+        let options = {
+            animation: 150,
+            dragoverBubble: true,
+            fallbackOnBody: true,
+            ghostClass: "placeholder",
+            swapThreshold: 0.2
+        };
+
+        if (el.getAttribute("data-ghostClass") !== null) {
+            options.ghostClass = el.getAttribute("data-ghostClass");
+        }
+        if (el.getAttribute("data-group") !== null) {
+            options.group = el.getAttribute("data-group");
+        }
+        if (el.getAttribute("data-handle") !== null) {
+            options.handle = el.getAttribute("data-handle");
+        }
+        if (el.getAttribute("data-onEnd") !== null) {
+            options.onEnd = function (evt) {
+                let stringFunction = el.getAttribute("data-onEnd");
+
+                window[stringFunction](evt);
+            };
+        }
+
+        new Sortable(el, options);
+    }
+});

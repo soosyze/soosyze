@@ -2,8 +2,8 @@
 
 <div class="section">
     <?php if ($is_admin): ?>
-
-    <div class="block-sortable" data-id="<?php echo $section_id; ?>">
+    <div data-id="<?php echo $section_id; ?>"
+         data-draggable="sortable" data-onEnd="sortSection" data-group="section" data-handle=".fa-arrows-alt" data-ghostClass="placeholder">
     <?php endif; ?>
     <?php foreach ($content as $block): ?>
 
