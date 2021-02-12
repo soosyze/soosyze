@@ -13,21 +13,22 @@ class Section extends \Soosyze\Controller
 
     public function admin($theme, $req)
     {
-        $styles  = self::template()->getBlock('this')->getVar('styles');
-        $scripts = self::template()->getBlock('this')->getVar('scripts');
-
-        $styles  .= '<link rel="stylesheet" href="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/styles.css">';
-        $scripts .= '<script src="' . self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/scripts.js"></script>';
+        $vendor = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets';
 
         return self::template()
-                ->getTheme($theme === 'admin' ? 'theme_admin' : 'theme')
+                ->getTheme($theme === 'admin'
+                    ? 'theme_admin'
+                    : 'theme')
+                ->addStyle('block', [
+                    'href' => "$vendor/css/block.css",
+                    'rel'  => 'stylesheet'
+                ])
+                ->addScript('block', [
+                    'src' => "$vendor/js/block.js"
+                ])
                 ->view('page', [
                     'icon'       => '<i class="fa fa-columns" aria-hidden="true"></i>',
                     'title_main' => t('Editing blocks')
-                ])
-                ->view('this', [
-                    'styles'  => $styles,
-                    'scripts' => $scripts
                 ])
                 ->make('page.content', 'block/content-section-admin.php', $this->pathViews, [
                     'content'          => t('View and edit your site\'s display on the following topics.'),

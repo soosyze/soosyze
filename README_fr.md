@@ -86,14 +86,6 @@ Soosyze (hors modules contributeurs) nécessite 8MB de mémoire.
 | --------- | --------- | --------- | --------- | --------- | --------- | --------- |
 | Edge| 10 dernières versions| 10 dernières versions| 2 dernières versions| 2 dernières versions| 2 dernières versions| 2 dernières versions |
 
-## Connexion à internet
-
-Les thèmes de base utilisent les CND suivants :
-
-* JQuery 3.2.1,
-* Sortable 1.8.3,
-* Font Awesome 5.8.1
-
 # Installation
 
 ### :bike: Téléchargement simple

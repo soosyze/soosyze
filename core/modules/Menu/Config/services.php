@@ -34,7 +34,7 @@ return [
     ],
     'menu.hook.app' => [
         'class' => 'SoosyzeCore\Menu\Hook\App',
-        'arguments' => ['@menu'],
+        'arguments' => ['@core', '@menu'],
         'hooks' => [
             'app.response.after' => 'hookResponseAfter',
             'menu.admin.response.after' => 'hookMenuShowResponseAfter',

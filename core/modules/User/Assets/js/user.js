@@ -61,7 +61,7 @@ function getRandomColor() {
 
 function passwordPolicy(idPasswordInput)
 {
-    const value    = idPasswordInput.value;
+    const value = idPasswordInput.value;
     const elements = document.querySelectorAll('#password_policy li');
 
     elements.forEach(function (el, i) {
@@ -72,4 +72,48 @@ function passwordPolicy(idPasswordInput)
             el.style.color = 'inherit';
         }
     });
+}
+
+function searchPermission()
+{
+    const search = $('#search').val();
+    const reg = new RegExp(search, 'i');
+    let number = 0;
+
+    $('.modules').each(function () {
+        var package_hide = 'none';
+
+        $(this).find('.permission').each(function () {
+            $(this).css('display', '');
+
+            if (reg.test($(this).data('title'))) {
+                const str = strHighlight(search, $(this).data('title'));
+                $(this).find('.str-search').html(str);
+
+                number++;
+                package_hide = '';
+            } else {
+                $(this).css('display', 'none');
+            }
+            ;
+        });
+
+        $(this).css('display', package_hide);
+        /* Pour l'affichage de la navigation. */
+        $(`#nav-${this.id}`).css('display', package_hide);
+    });
+
+    if (number === 0) {
+        $('#form-permission').css('display', 'none');
+        $('#permission-nothing').css('display', '');
+    } else {
+        $('#form-permission').css('display', '');
+        $('#permission-nothing').css('display', 'none');
+    }
+
+    $('#result-search').text(
+            number <= 1
+            ? `${number} permission`
+            : `${number} permissions`
+            );
 }

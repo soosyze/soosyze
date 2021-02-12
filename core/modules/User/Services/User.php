@@ -416,9 +416,8 @@ class User
             return;
         }
 
-        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/User/Assets/js/script.js';
-        $script = $response->getBlock('this')->getVar('scripts');
-        $script .= '<script src="' . $vendor . '"></script>';
-        $response->view('this', [ 'scripts' => $script ]);
+        $vendor = $this->core->getPath('modules', 'modules/core', false);
+
+        $response->addScript('user', [ 'src' => "$vendor/User/Assets/js/user.js" ]);
     }
 }

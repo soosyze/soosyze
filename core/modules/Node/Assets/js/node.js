@@ -113,3 +113,12 @@ $(function () {
 
     $('#form-node #submit').on('click', checkValidateFormNode);
 });
+
+function sortEntity(evt, target) {
+    let weight = 1;
+
+    $(evt.from).children(".sort_weight").each(function () {
+        $(this).children('input[name*="weight"]').val(weight);
+        weight++;
+    });
+}

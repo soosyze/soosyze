@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\Node\Hook;
 
+use SoosyzeCore\Template\Services\Templating;
+
 class App
 {
     /**
@@ -16,36 +18,12 @@ class App
 
     public function hookResponseAfter($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
 
-        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Node/Assets/script.js';
-        $script = $response->getBlock('this')->getVar('scripts');
-        $script .= '<script src="' . $vendor . '"></script>';
-        $response->view('this', [ 'scripts' => $script ]);
-    }
+        $vendor = $this->core->getPath('modules', 'modules/core', false);
 
-    public function hookNodeEditResponseAfter($request, &$response)
-    {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
-            return;
-        }
-
-        $script = $response->getBlock('this')->getVar('scripts');
-        $script .= '<script>
-            function sortEntity(evt, target) {
-                let weight = 1;
-
-                $(evt.from).children(".sort_weight").each(function () {
-                    $(this).children(\'input[name*="weight"]\').val(weight);
-                    weight++;
-                });
-            }
-            </script>';
-
-        $response->view('this', [
-            'scripts' => $script
-        ]);
+        $response->addScript('node', [ 'src' => "$vendor/Node/Assets/js/node.js" ]);
     }
 }

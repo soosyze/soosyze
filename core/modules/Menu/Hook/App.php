@@ -7,12 +7,18 @@ use SoosyzeCore\Template\Services\Templating;
 class App
 {
     /**
+     * @var \Soosyze\App
+     */
+    private $core;
+
+    /**
      * @var Menu
      */
     private $menu;
 
-    public function __construct($menu)
+    public function __construct($core, $menu)
     {
+        $this->core = $core;
         $this->menu = $menu;
     }
 
@@ -36,26 +42,10 @@ class App
             return;
         }
 
-        $script = $response->getBlock('this')->getVar('scripts');
-        $script .= '<script>
-            function sortMenu(evt) {
-                let weight = 1;
-                let id = $(evt.to).parent("li").children(\'input[name^="id"]\').val();
+        $vendor = $this->core->getPath('modules', 'modules/core', false);
 
-                if (id === undefined) {
-                    id = -1;
-                }
-
-                $(evt.to).children("li").each(function () {
-                    $(this).children(\'input[name^="weight"]\').val(weight);
-                    $(this).children(\'input[name^="parent"]\').val(id);
-                    weight++;
-                });
-            }
-            </script>';
-
-        $response->view('this', [
-            'scripts' => $script
+        $response->addScript('menu', [
+            'src' => "$vendor/Menu/Assets/js/menu.js"
         ]);
     }
 }

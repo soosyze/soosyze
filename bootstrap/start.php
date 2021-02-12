@@ -30,7 +30,9 @@ $app->setSettings([
     /* Chemin des fichiers de configurations. */
     'config'              => 'app/config',
     /* Chemin des fichiers public. */
-    'files_public'        => 'app/files',
+    'files_public'        => 'public/files',
+    /* Chemin des ressources public. */
+    'assets_public'       => 'public/assets',
     /* Chemin des modules du core. */
     'modules'             => 'core/modules',
     /* Chemin des modules contributeur. */

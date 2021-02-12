@@ -1,0 +1,4 @@
+.trumbowyg-editor[contenteditable=true]:empty::before{
+    content: attr(placeholder);
+    color: #999;
+}

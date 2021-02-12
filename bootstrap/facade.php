@@ -16,3 +16,4 @@ function t($str, $vars = [])
 }
 
 require_once 'validator_custom.php';
+require_once 'template.php';

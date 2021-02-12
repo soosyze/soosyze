@@ -211,8 +211,6 @@ class App
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets';
 
         $html      = $response->getBlock('this');
-        $scripts   = $html->getVar('scripts');
-        $styles    = $html->getVar('styles');
         $siteDesc  = $html->getVar('description');
         $siteTitle = $html->getVar('title');
         $pageTitle = $response->getBlock('page')->getVar('title_main');
@@ -238,9 +236,14 @@ class App
 
         $response->view('this', [
                 'title'       => $title,
-                'favicon'     => $favicon,
-                'scripts'     => $scripts . '<script src="' . $vendor . '/js/script.js"></script>',
-                'styles'      => $styles . '<link rel="stylesheet" href="' . $vendor . '/css/styles.css">'
+                'favicon'     => $favicon
+            ])
+            ->addScript('system', [
+                'src' => "$vendor/js/system.js"
+            ])
+            ->addStyle('system', [
+                'href' => "$vendor/css/system.css",
+                'rel' => 'stylesheet'
             ])
             ->addMetas([
                 [

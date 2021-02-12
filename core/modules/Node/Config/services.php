@@ -49,8 +49,7 @@ return [
         'class' => 'SoosyzeCore\Node\Hook\App',
         'arguments' => ['@core'],
         'hooks' => [
-            'app.response.after' => 'hookResponseAfter',
-            'node.edit.response.after' => 'hookNodeEditResponseAfter'
+            'app.response.after' => 'hookResponseAfter'
         ]
     ],
     'node.hook.api.route' => [

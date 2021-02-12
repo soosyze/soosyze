@@ -2,6 +2,8 @@
 
 namespace SoosyzeCore\FileManager\Hook;
 
+use SoosyzeCore\Template\Services\Templating;
+
 class App
 {
     /**
@@ -16,17 +18,18 @@ class App
 
     public function hookResponseAfter($request, &$response)
     {
-        if (!($response instanceof \SoosyzeCore\Template\Services\Templating)) {
+        if (!($response instanceof Templating)) {
             return;
         }
 
-        $vendor = $this->core->getPath('modules', 'modules/core', false);
-        $script = $response->getBlock('this')->getVar('scripts');
-        $script .= '<script src="' . $vendor . '/FileManager/Assets/script.js"></script>';
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/FileManager/Assets';
 
-        $styles = $response->getBlock('this')->getVar('styles');
-        $styles .= '<link rel="stylesheet" href="' . $vendor . '/FileManager/Assets/style.css">' . PHP_EOL;
-
-        $response->view('this', [ 'scripts' => $script, 'styles' => $styles ]);
+        $response->addScript('filemanager', [
+                'src' => "$vendor/js/filemanager.js"
+            ])
+            ->addStyle('filemanager', [
+                'href' => "$vendor/css/filemanager.css",
+                'rel'  => 'stylesheet'
+        ]);
     }
 }

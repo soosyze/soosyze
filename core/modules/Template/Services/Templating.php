@@ -8,6 +8,16 @@ use Soosyze\Components\Util\Util;
 class Templating extends \Soosyze\Components\Http\Response
 {
     /**
+     * @var type
+     */
+    private static $scriptsGlobal = [];
+
+    /**
+     * @var type
+     */
+    private static $stylesGlobal = [];
+
+    /**
      * @var Block
      */
     private $template;
@@ -16,6 +26,11 @@ class Templating extends \Soosyze\Components\Http\Response
      * @var \Soosyze\Config
      */
     private $config;
+
+    /**
+     * @var array
+     */
+    private $configJs = [];
 
     /**
      * @var \Soosyze\App
@@ -44,6 +59,20 @@ class Templating extends \Soosyze\Components\Http\Response
     private $themesPath = [];
 
     /**
+     * Liste des scripts JS.
+     *
+     * @var array
+     */
+    private $scripts = [];
+
+    /**
+     * Liste des styles CSS.
+     *
+     * @var array
+     */
+    private $styles = [];
+
+    /**
      * Les données du fichier composer.json
      *
      * @var array
@@ -63,18 +92,26 @@ class Templating extends \Soosyze\Components\Http\Response
     {
         parent::__construct();
 
-        $this->core       = $core;
-        $this->config     = $config;
-        $this->themesPath = $core->getSetting('themes_path');
-        $this->basePath   = $core->getRequest()->getBasePath();
-        $this->pathViews  = dirname(__DIR__) . '/Views/';
+        $this->core        = $core;
+        $this->config      = $config;
+        $this->themesPath  = $core->getSetting('themes_path');
+        $this->filesPublic = $core->getPath('files_public');
+        $this->basePath    = $core->getRequest()->getBasePath();
+        $this->pathViews   = dirname(__DIR__) . '/Views/';
+
+        $this->loadAssets();
     }
 
     public function __toString()
     {
+        $scriptsInline = $this->getBlock('this')->getVar('scripts_inline');
         $this->view('this', [
-            'meta' => $this->makeBalise('meta', $this->meta)
+            'meta'          => $this->makeBalise('meta', $this->meta),
+            'script_inline' => $this->makeConfigJs() . $scriptsInline,
+            'styles'        => $this->makeBalise('link', (self::$stylesGlobal + $this->styles)),
+            'scripts'       => $this->makeBalise('script', (self::$scriptsGlobal + $this->scripts), false)
         ]);
+
         $content    = $this->getThemplate()->render();
         $this->body = new Stream($content);
 
@@ -105,8 +142,6 @@ class Templating extends \Soosyze\Components\Http\Response
             ->addBlock('main_menu')
             ->addBlock('second_menu');
 
-        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets/';
-
         $this->template = $this->createBlock('html.php', $this->pathViews)
             ->addBlock('page', $page)
             ->addVars([
@@ -116,10 +151,7 @@ class Templating extends \Soosyze\Components\Http\Response
                 'favicon'     => '',
                 'description' => '',
                 'keyboard'    => '',
-                'meta'        => '',
-                'styles'      => '<link rel="stylesheet" href="' . $vendor . 'css/soosyze.css">',
-                'scripts'     => '<script src="' . $vendor . 'js/script.js">'
-                . '</script><script src="' . $vendor . 'js/soosyze.js"></script>'
+                'scripts_inline' => ''
             ])
             ->addVars($this->core->getSettings());
     }
@@ -293,14 +325,63 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this;
     }
 
-    private function makeBalise($type, array $data)
+    public function addScript($name, $script)
+    {
+        $this->scripts[$name] = $script;
+
+        return $this;
+    }
+
+    public function addStyle($name, $style)
+    {
+        $this->styles[ $name ] = $style;
+
+        return $this;
+    }
+
+    public function addConfigJs($name, $value)
+    {
+        $this->configJs[ $name ] = $value;
+
+        return $this;
+    }
+
+    public static function setStylesGlobal($styles)
+    {
+        self::$stylesGlobal = $styles;
+    }
+
+    public static function setScriptsGlobal($scritps)
+    {
+        self::$scriptsGlobal = $scritps;
+    }
+
+    private function loadAssets()
+    {
+        $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets';
+
+        $this->scripts = [
+            'core'         => [
+                'src' => "$vendor/js/script.js"
+            ]
+        ];
+    }
+
+    private function makeBalise($type, array $data, $orphan = true)
     {
         $out = '';
         foreach ($data as $attrs) {
-            $out .= sprintf('<%s%s/>', $type, $this->renderAttrInput($attrs)) . PHP_EOL;
+            $out .= $orphan
+                ? sprintf('<%s%s/>', $type, $this->renderAttrInput($attrs)) . PHP_EOL
+                : sprintf('<%s%s></%s>', $type, $this->renderAttrInput($attrs), $type) . PHP_EOL;
         }
 
         return $out;
+    }
+
+    private function makeConfigJs()
+    {
+        return '<script>var config =' . json_encode($this->configJs) . ';</script>' . PHP_EOL;
     }
 
     private function renderAttrInput(array $attr)
