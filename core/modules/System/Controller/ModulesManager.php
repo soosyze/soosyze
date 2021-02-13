@@ -96,8 +96,8 @@ class ModulesManager extends \Soosyze\Controller
                 ->view('page.messages', $messages)
                 ->make('page.content', 'system/content-modules_manager-admin.php', $this->pathViews, [
                     'module_update'      => self::config()->get('settings.module_update'),
-                    'link_module_check'  => self::router()->getRoute('system.module.check'),
-                    'link_module_update' => self::router()->getRoute('system.module.updater'),
+                    'link_module_check'  => self::router()->getRoute('system.migration.check'),
+                    'link_module_update' => self::router()->getRoute('system.migration.update'),
                     'count'             => count($composer),
                     'form'              => $form,
                     'packages'          => $packages

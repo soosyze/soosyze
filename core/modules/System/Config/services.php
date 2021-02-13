@@ -44,6 +44,8 @@ return [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.system.module.edit' => 'hookModuleManage',
             'route.system.module.update' => 'hookModuleManage',
+            'route.system.migration.check' => 'hookModuleManage',
+            'route.system.migration.update' => 'hookModuleManage',
             'route.system.theme.index' => 'hookThemeManage',
             'route.system.theme.admin' => 'hookThemeManage',
             'route.system.theme.active' => 'hookThemeManage',
