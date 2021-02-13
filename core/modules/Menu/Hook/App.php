@@ -44,8 +44,6 @@ class App
 
         $vendor = $this->core->getPath('modules', 'modules/core', false);
 
-        $response->addScript('menu', [
-            'src' => "$vendor/Menu/Assets/js/menu.js"
-        ]);
+        $response->addScript('menu', "$vendor/Menu/Assets/js/menu.js");
     }
 }

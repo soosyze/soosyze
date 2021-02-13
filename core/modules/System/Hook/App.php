@@ -238,13 +238,8 @@ class App
                 'title'       => $title,
                 'favicon'     => $favicon
             ])
-            ->addScript('system', [
-                'src' => "$vendor/js/system.js"
-            ])
-            ->addStyle('system', [
-                'href' => "$vendor/css/system.css",
-                'rel' => 'stylesheet'
-            ])
+            ->addScript('system', "$vendor/js/system.js")
+            ->addStyle('system', "$vendor/css/system.css")
             ->addMetas([
                 [
                     'name'    => 'keyboard',

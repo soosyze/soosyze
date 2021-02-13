@@ -24,12 +24,7 @@ class App
 
         $vendor = $this->core->getPath('modules', 'modules/core', false) . '/FileManager/Assets';
 
-        $response->addScript('filemanager', [
-                'src' => "$vendor/js/filemanager.js"
-            ])
-            ->addStyle('filemanager', [
-                'href' => "$vendor/css/filemanager.css",
-                'rel'  => 'stylesheet'
-        ]);
+        $response->addScript('filemanager', "$vendor/js/filemanager.js")
+            ->addStyle('filemanager', "$vendor/css/filemanager.css");
     }
 }

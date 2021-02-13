@@ -37,45 +37,20 @@ class App
                 'lang'       => $lang,
                 'serverPath' => $this->router->getRoute('trumbowyg.upload')
             ])
-            ->addScripts([
-                'trumbowy.editor'        => [
-                    'src' => "$assets/js/trumbowyg.js"
-                ],
-                'trumbowyg'              => [
-                    'src' => "$vendor/trumbowyg.min.js"
-                ],
-                'trumbowyg.upload'       => [
-                    'src' => "$vendor/plugins/upload/trumbowyg.upload.min.js"
-                ],
-                'trumbowyg.noembed'      => [
-                    'src' => "$vendor/plugins/noembed/trumbowyg.noembed.min.js"
-                ],
-                'trumbowyg.preformatted' => [
-                    'src' => "$vendor/plugins/preformatted/trumbowyg.preformatted.min.js"
-                ],
-                'trumbowyg.emoji'        => [
-                    'src' => "$vendor/plugins/emoji/trumbowyg.emoji.min.js"
-                ]
-            ])
-            ->addStyles([
-                'trumbowy.editor' => [
-                    'src' => "$vendor/css/trumbowyg.css"
-                ],
-                'trumbowyg'       => [
-                    'href' => "$vendor/ui/trumbowyg.min.css",
-                    'rel'  => 'stylesheet'
-                ],
-                'trumbowyg.emoji' => [
-                    'href' => "$vendor/plugins/emoji/ui/trumbowyg.emoji.min.css",
-                    'rel'  => 'stylesheet'
-                ]
-        ]);
+            /* Scripts */
+            ->addScript('trumbowy.editor', "$assets/js/trumbowyg.js")
+            ->addScript('trumbowyg', "$vendor/trumbowyg.min.js")
+            ->addScript('trumbowyg.upload', "$vendor/plugins/upload/trumbowyg.upload.min.js")
+            ->addScript('trumbowyg.noembed', "$vendor/plugins/noembed/trumbowyg.noembed.min.js")
+            ->addScript('trumbowyg.preformatted', "$vendor/plugins/preformatted/trumbowyg.preformatted.min.js")
+            ->addScript('trumbowyg.emoji', "$vendor/plugins/emoji/trumbowyg.emoji.min.js")
+            /* Styles */
+            ->addStyle('trumbowy.editor', "$vendor/css/trumbowyg.css")
+            ->addStyle('trumbowyg', "$vendor/ui/trumbowyg.min.css")
+            ->addStyle('trumbowyg.emoji', "$vendor/plugins/emoji/ui/trumbowyg.emoji.min.css");
 
         if ($lang !== 'en') {
-            $response->addScript('trumbowyg.lang', [
-                'src'  => "$vendor/langs/$lang.min.js",
-                'type' => 'text/javascript'
-            ]);
+            $response->addScript('trumbowyg.lang', "$vendor/langs/$lang.min.js");
         }
     }
 }

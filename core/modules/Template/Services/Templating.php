@@ -325,16 +325,16 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this;
     }
 
-    public function addScript($name, $script)
+    public function addScript($name, $href, array $attr = [])
     {
-        $this->scripts[$name] = $script;
+        $this->scripts[$name] = [ 'src' => $href, 'type' => 'text/javascript' ] + $attr;
 
         return $this;
     }
 
-    public function addStyle($name, $style)
+    public function addStyle($name, $src, array $attr= [])
     {
-        $this->styles[ $name ] = $style;
+        $this->styles[ $name ] = [ 'href' => $src, 'rel' => 'stylesheet' ] + $attr;
 
         return $this;
     }

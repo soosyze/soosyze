@@ -24,6 +24,6 @@ class App
 
         $vendor = $this->core->getPath('modules', 'modules/core', false);
 
-        $response->addScript('node', [ 'src' => "$vendor/Node/Assets/js/node.js" ]);
+        $response->addScript('node', "$vendor/Node/Assets/js/node.js");
     }
 }
