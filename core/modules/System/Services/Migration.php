@@ -110,10 +110,18 @@ class Migration
 
         foreach ($callbacks as $callback) {
             try {
-                call_user_func_array(
-                    $callback[ 'callback' ][ 'up' ],
-                    [ $this->schema, $query ]
-                );
+                if (isset($callback[ 'callback' ][ 'up' ])) {
+                    call_user_func_array(
+                        $callback[ 'callback' ][ 'up' ],
+                        [ $this->schema, $query ]
+                    );
+                }
+                if (isset($callback[ 'callback' ][ 'up_config' ])) {
+                    call_user_func_array(
+                        $callback[ 'callback' ][ 'up_config' ],
+                        [ $this->config ]
+                    );
+                }
             } catch (\Exception $e) {
                 throw $e;
             }
