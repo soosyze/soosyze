@@ -107,7 +107,7 @@ class Theme extends \Soosyze\Controller
         if (!$validator->isValid()) {
             $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-            return new Redirect($route, 307);
+            return new Redirect($route, 302);
         }
 
         $outInstall = $this->installTheme($type, $name);
@@ -118,7 +118,7 @@ class Theme extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'errors' ] = $outInstall;
         }
 
-        return new Redirect($route, 307);
+        return new Redirect($route, 302);
     }
 
     public function edit($type)

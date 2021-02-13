@@ -376,7 +376,8 @@ class Entity extends \Soosyze\Controller
                 ':id_node'   => $idNode,
                 ':entity'    => $typeEntity,
                 ':id_entity' => $idEntity
-            ])
+            ]),
+            302
         );
     }
 

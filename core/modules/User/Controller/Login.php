@@ -21,7 +21,7 @@ class Login extends \Soosyze\Controller
         }
 
         if (self::user()->isConnected()) {
-            return new Redirect(self::router()->getRoute('user.account'));
+            return new Redirect(self::router()->getRoute('user.account'), 302);
         }
 
         $values = [];
@@ -106,7 +106,7 @@ class Login extends \Soosyze\Controller
         session_destroy();
         session_unset();
 
-        return new Redirect(self::router()->getBasePath());
+        return new Redirect(self::router()->getBasePath(), 302);
     }
 
     public function relogin($url, $req)
