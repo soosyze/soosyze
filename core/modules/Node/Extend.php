@@ -42,7 +42,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 $table->string('node_type')
                 ->string('node_type_name')
                 ->string('node_type_icon')
-                ->text('node_type_description');
+                ->text('node_type_description')
+                ->string('node_type_color', 7)->valueDefault('#ddd');
             })
             ->createTableIfNotExists('node_status', function (TableBuilder $table) {
                 $table->increments('node_status_id')

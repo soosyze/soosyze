@@ -7,7 +7,7 @@
 
          <div class="node_type-card">
             <header>
-                <h3 class="node_type-badge node_type-badge__<?php echo $node[ 'node_type' ]; ?>">
+                <h3 class="node_type-badge" style="background-color: <?php echo $node['node_type_color']; ?>">
                     <i class="<?php echo $node[ 'node_type_icon' ]; ?>" aria-hidden="true"></i> <?php echo t($node[ 'node_type_name' ]); ?>
 
                 </h3>

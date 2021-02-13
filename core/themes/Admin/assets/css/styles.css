@@ -356,37 +356,14 @@ fieldset.package {
     overflow: hidden;
 }
 .node_type-badge {
-    color: #fff;
+    color: #000;
     border-radius: 30px;
     display: inline-block;
     padding: 2px 10px;
     text-align: center;
     white-space: nowrap;
 }
-.node_type-badge__page {
-    background-color: #7fff88;
-    color: #005706;
-}
-.node_type-badge__page_private {
-    background-color: #005706;
-    color: #7fff88;
-}
-.node_type-badge__article {
-    background-color: #ddd;
-    color: #454545;
-}
-.node_type-badge__page_faq {
-    background-color: #7ff6ff;
-    color: #005157;
-}
-.node_type-badge__page_gallery {
-    background-color: #f6ffa8;
-    color: #4e5700;
-}
-.node_type-badge__documentation {
-    background-color: #a8beff;
-    color: #001a66;
-}
+
 
 /* --------------------------- */
 /* ---------- USER ----------- */
