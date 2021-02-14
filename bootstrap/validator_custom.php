@@ -2,6 +2,14 @@
 
 class RouteValue extends \Soosyze\Components\Validator\Rule
 {
+    protected function messages()
+    {
+        return [
+            'must' => 'The value of :label must be a route.',
+            'not'  => 'The value of :label should not be a route.'
+        ];
+    }
+
     protected function test($key, $value, $arg, $not = true)
     {
         /**
@@ -31,18 +39,18 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
             $this->addReturn($key, 'must');
         }
     }
-
-    protected function messages()
-    {
-        return [
-            'must' => 'The value of :label must be a route.',
-            'not'  => 'The value of :label should not be a route.'
-        ];
-    }
 }
 
 class RouteOrUrlValue extends \RouteValue
 {
+    protected function messages()
+    {
+        return [
+            'must' => 'The value of :label must be a link or route.',
+            'not'  => 'The value of :label should not be a link or route.'
+        ];
+    }
+
     protected function test($key, $value, $arg, $not = true)
     {
         $isRoute = !(new \RouteValue())
@@ -57,14 +65,6 @@ class RouteOrUrlValue extends \RouteValue
         if (!($isRoute || $isLink) && $not) {
             $this->addReturn($key, 'must');
         }
-    }
-
-    protected function messages()
-    {
-        return [
-            'must' => 'The value of :label must be a link or route.',
-            'not'  => 'The value of :label should not be a link or route.'
-        ];
     }
 }
 

@@ -1,9 +1,13 @@
 
 <?php echo $node_submenu; ?>
 
+<?php if ($fields['image']['field_value']): ?>
+
 <div class="article_img">
     <?php echo $fields[ 'image' ][ 'field_display' ]; ?>
 </div>
+<?php endif; ?>
+
 <div class="article_date_time">
     <?php if (!empty($user)): ?>
         <?php if (isset($user[ 'picture' ])): ?>

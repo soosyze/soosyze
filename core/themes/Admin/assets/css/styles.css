@@ -296,11 +296,14 @@ fieldset.package {
         padding: 0 !important;
     }
 }
-.module-is_required {
-    color: #d9534f;
-}
 .module-is_required_for_module {
     color: #5cd85c
+}
+.module-is_required_danger {
+    color: #d9534f;
+}
+.module-is_required_warning {
+    color: orange;
 }
 
 
@@ -317,13 +320,6 @@ fieldset.package {
 }
 
 /* ---------- NODE STATUS ----------- */
-.node_status-icon {
-    display: block;
-    height: 16px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 16px;
-}
 .node_status-icon__publish {
     color: #2ecc71;
 }
@@ -465,30 +461,18 @@ fieldset.package {
 
 
 /* --------------------------- */
-/* ------- DARK THEME  ------- */
+/* --------- SELECT2  -------- */
 /* --------------------------- */
-.dark .admin-wrapper .sidebar-wrapper__inner {
-    background: #282c37;
-}
-.dark .select2-container--default .select2-selection--multiple {
-    background-color: #131419;
-    border: 1px solid #000;
-}
-.dark .select2-dropdown {
-    background-color: #131419;
-    border: 1px solid #000;
-}
-.dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #282c37;
-    border: 1px solid #000;
-}
-.dark .select2-container--default .select2-results__option[aria-selected="true"] {
-    background-color: #282c37;
-}
-.dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #2185d0;
+.select2-container--default.select2-container--disabled .select2-selection,
+.select2-container--default.select2-container--disabled .select2-search__field {
+    cursor: not-allowed;
+    opacity: .65;
 }
 
+
+/* --------------------------- */
+/* --------- API LIST  ------- */
+/* --------------------------- */
 .api_route-list {
     position: absolute;
     z-index: 1;
@@ -504,4 +488,42 @@ fieldset.package {
 }
 .api_route-list li:hover {
     background-color: #eee;
+}
+
+
+/* --------------------------- */
+/* ------- DARK THEME  ------- */
+/* --------------------------- */
+.dark .admin-wrapper .sidebar-wrapper__inner {
+    background: #282c37;
+}
+.dark .select2-container--default .select2-selection--single,
+.dark .select2-container--default .select2-selection--multiple {
+    background-color: #131419;
+    border: 1px solid #000;
+}
+.dark .select2-dropdown {
+    background-color: #131419;
+    border: 1px solid #000;
+}
+.dark .select2-container--default .select2-selection__rendered {
+    color: #fff;
+}
+.dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #282c37;
+    border: 1px solid #000;
+}
+.dark .select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: #282c37;
+}
+.dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #2185d0;
+}
+
+.dark .api_route-list {
+    background-color: #131419;
+    border-color: #000;
+}
+.dark .api_route-list li:hover {
+    background-color: #2185d0;
 }

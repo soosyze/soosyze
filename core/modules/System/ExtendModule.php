@@ -16,6 +16,8 @@ abstract class ExtendModule
     public function loadTranslation($lang, $file)
     {
         $this->translations[ $lang ][] = $file;
+
+        return $this;
     }
 
     abstract public function getDir();

@@ -5,6 +5,11 @@ namespace SoosyzeCore\Node\Hook;
 class User implements \SoosyzeCore\User\UserInterface
 {
     /**
+     * @var array
+     */
+    private $nodes = [];
+
+    /**
      * @var \SoosyzeCore\QueryBuilder\Services\Query
      */
     private $query;

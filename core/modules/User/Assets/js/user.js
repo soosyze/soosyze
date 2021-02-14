@@ -1,4 +1,4 @@
-$().ready(function () {
+(function() {
     $('#form_filter_user').on('input', debounce(function () {
         const $this = $(this);
 
@@ -26,7 +26,7 @@ $().ready(function () {
             }
         });
     });
-});
+})();
 
 function sortRole(evt) {
     var weight = 1;

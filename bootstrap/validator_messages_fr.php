@@ -60,10 +60,10 @@ return [
         'not_before' => 'Le champ :label ne doit pas être une date inferieur au :datebefore.'
     ],
     'date_before_or_equal'    => [
-        'must'      => 'Le champ :label doit être une date.',
-        'not'       => 'Le champ :label ne doit pas être une date.',
-        'after'     => 'Le champ :label doit être une inferieur ou égale au :dateafter.',
-        'not_after' => 'Le champ :label ne doit pas être une date inferieur ou égale au :dateafter.'
+        'must'       => 'Le champ :label doit être une date.',
+        'not'        => 'Le champ :label ne doit pas être une date.',
+        'before'     => 'Le champ :label doit être une inferieur ou égale au :datebefore.',
+        'not_before' => 'Le champ :label ne doit pas être une date inferieur ou égale au :datebefore.'
     ],
     'date_format'             => [
         'must' => 'Le champ :label doit être une date au format :format.',

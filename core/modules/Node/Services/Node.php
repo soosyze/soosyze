@@ -189,10 +189,7 @@ class Node
 
     public function getFieldsEntity($entity)
     {
-        return $this->query
-                ->from('node_type_field')
-                ->leftJoin('field', 'field_id', 'field.field_id')
-                ->where('node_type', $entity)
+        return $this->getNodeTypeFieldsQuery($entity)
                 ->where('field_show_form', true)
                 ->orderBy('field_weight')
                 ->fetchAll();
@@ -277,10 +274,7 @@ class Node
         /* Suppression des relations */
         $entity = $this->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
 
-        $relationNode = $this->query
-            ->from('node_type_field')
-            ->leftJoin('field', 'field_id', 'field.field_id')
-            ->where('node_type', $node[ 'type' ])
+        $relationNode = $this->getNodeTypeFieldsQuery($node[ 'type' ])
             ->where('field_type', 'one_to_many')
             ->fetchAll();
         foreach ($relationNode as $relation) {

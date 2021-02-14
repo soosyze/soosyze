@@ -133,10 +133,8 @@ class User
 
     public function getIdRolesUser($idUser)
     {
-        $data = $this->query->from('user_role')
-            ->leftJoin('role', 'role_id', 'role.role_id')
-            ->where('user_id', '==', $idUser)
-            ->fetchAll();
+        $data = $this->getRolesUser($idUser);
+
         $out  = [];
         foreach ($data as $value) {
             $out[ $value[ 'role_id' ] ] = $value[ 'role_label' ];
@@ -418,6 +416,6 @@ class User
 
         $vendor = $this->core->getPath('modules', 'modules/core', false);
 
-        $response->addScript('user', [ 'src' => "$vendor/User/Assets/js/user.js" ]);
+        $response->addScript('user', "$vendor/User/Assets/js/user.js");
     }
 }

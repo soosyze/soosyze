@@ -35,21 +35,12 @@ $(function () {
     });
 
     /* Place la liste sous tous les champs nécessitant une route. */
-    const groupsApiRoute = document.querySelectorAll("div.api_route");
+    const groupsApiRoute = document.querySelectorAll("div.api_route, input.api_route");
 
     if (groupsApiRoute) {
         for (var i = 0; i < groupsApiRoute.length; i++) {
             const target = $(groupsApiRoute[i]).find('input').attr('id');
             $(groupsApiRoute[i]).after(`<ul class="api_route-list hidden" data-target="#${target}"></ul>`);
-        }
-    }
-
-    const inputsApiRoute = document.querySelectorAll("input.api_route");
-
-    if (inputsApiRoute) {
-        for (var i = 0; i < inputsApiRoute.length; i++) {
-            const target = $(inputsApiRoute[i]).attr('id');
-            $(inputsApiRoute[i]).after(`<ul class="api_route-list hidden" data-target="#${target}"></ul>`);
         }
     }
 

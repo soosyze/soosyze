@@ -42,7 +42,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ])
             ->values([
                 'config.admin', 'fa fa-cog', 'Configuration', 'admin/config',
-                'menu-admin', 6, -1
+                'menu-admin', 5, -1
             ])
             ->execute();
     }

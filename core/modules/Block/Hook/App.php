@@ -71,7 +71,7 @@ class App
 
         $blocks = $this->getBlocks($isAdmin);
 
-        $sections   = $this->tpl->getSections();
+        $sections = $this->tpl->getSections();
 
         foreach ($sections as $section) {
             $response->make('page.' . $section, 'section.php', $this->pathViews, [

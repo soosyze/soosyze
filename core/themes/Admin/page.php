@@ -73,9 +73,11 @@
 
     <div class="content-wrapper">
         <div class="content">
+            <?php if ($title_main): ?>
             <header id="header_main">
                 <h1><?php echo $icon; ?> <?php echo $title_main; ?></h1>
             </header>
+            <?php endif; ?>
             <?php if (!empty($section[ 'messages' ])): ?>
 
                 <?php echo $section[ 'messages' ]; ?>
