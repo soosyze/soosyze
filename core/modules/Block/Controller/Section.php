@@ -19,13 +19,8 @@ class Section extends \Soosyze\Controller
                 ->getTheme($theme === 'admin'
                     ? 'theme_admin'
                     : 'theme')
-                ->addStyle('block', [
-                    'href' => "$vendor/css/block.css",
-                    'rel'  => 'stylesheet'
-                ])
-                ->addScript('block', [
-                    'src' => "$vendor/js/block.js"
-                ])
+                ->addStyle('block', "$vendor/css/block.css")
+                ->addScript('block', "$vendor/js/block.js")
                 ->view('page', [
                     'icon'       => '<i class="fa fa-columns" aria-hidden="true"></i>',
                     'title_main' => t('Editing blocks')

@@ -45,7 +45,7 @@ class App
             ->addScript('trumbowyg.preformatted', "$vendor/plugins/preformatted/trumbowyg.preformatted.min.js")
             ->addScript('trumbowyg.emoji', "$vendor/plugins/emoji/trumbowyg.emoji.min.js")
             /* Styles */
-            ->addStyle('trumbowy.editor', "$vendor/css/trumbowyg.css")
+            ->addStyle('trumbowy.editor', "$assets/css/trumbowyg.css")
             ->addStyle('trumbowyg', "$vendor/ui/trumbowyg.min.css")
             ->addStyle('trumbowyg.emoji', "$vendor/plugins/emoji/ui/trumbowyg.emoji.min.css");
 
