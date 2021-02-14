@@ -96,8 +96,8 @@ return [
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.node.admin' => 'hookNodeManager',
-            'route.filter' => 'hookNodeManager',
-            'route.filter.page' => 'hookNodeManager',
+            'route.node.filter' => 'hookNodeManager',
+            'route.node.filter.page' => 'hookNodeManager',
             'route.node.add' => 'hookNodeAdd',
             'route.node.show' => 'hookNodeSow',
             'route.node.create' => 'hookNodeCreated',
