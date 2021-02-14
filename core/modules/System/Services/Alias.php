@@ -32,7 +32,7 @@ class Alias
     public function getSource($alias, $default = null)
     {
         if ($alias === '/') {
-            return empty($this->config[ 'settings.path_index' ])
+            $alias = empty($this->config[ 'settings.path_index' ])
                 ? $default
                 : $this->config[ 'settings.path_index' ];
         }
