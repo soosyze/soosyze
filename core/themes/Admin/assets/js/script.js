@@ -34,36 +34,6 @@ $(function () {
         $(this).parent().find('.render_icon i').attr('class', this.value);
     });
 
-    $('.select-ajax-multiple').select2({
-        width: "100%",
-        ajax: {
-            delay: 300,
-            url: function (params) {
-                return $(this).data('link');
-            },
-            data: function (params) {
-                var query = {
-                    search: params.term
-                };
-
-                return query;
-            }
-        },
-        templateResult: function (repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
-
-            if (repo.tpl) {
-                var $container = $(repo.tpl);
-            } else {
-                return repo.text;
-            }
-
-            return $container;
-        }
-    });
-
     /* Place la liste sous tous les champs nécessitant une route. */
     const groupsApiRoute = document.querySelectorAll("div.api_route");
 

@@ -445,7 +445,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                         ])
                         ->select('user_id', $options, [
                             ':selected'        => $this->values[ 'user_id' ],
-                            'class'            => 'form-control select-ajax-multiple',
+                            'class'            => 'form-control select-ajax',
                             'data-placeholder' => t('Anonymous'),
                             'data-link'        => $this->router->getRoute('user.api.select'),
                             'disabled'         => $this->isDisabledUserCurrent,

@@ -34,10 +34,11 @@
                     <label for="node_type"><?php echo t('Type of content'); ?></label>
                     <select
                         name="types[]"
-                        class="form-control select-ajax-multiple"
+                        class="form-control select-ajax"
                         id="node_type"
                         multiple="multiple"
-                        data-link="<?php echo $link_search_node_type; ?>">
+                        data-link="<?php echo $link_search_node_type; ?>"
+                        data-placeholder="">
                     </select>
                 </div>
             </div>
@@ -47,10 +48,11 @@
                     <label for="node_status_id"><?php echo t('Status'); ?></label>
                     <select
                         name="node_status_id[]"
-                        class="form-control select-ajax-multiple"
+                        class="form-control select-ajax"
                         id="node_status_id"
                         multiple="multiple"
-                        data-link="<?php echo $link_search_status; ?>">
+                        data-link="<?php echo $link_search_status; ?>"
+                        data-placeholder="">
                     </select>
                 </div>
             </div>

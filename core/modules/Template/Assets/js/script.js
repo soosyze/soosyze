@@ -42,10 +42,11 @@ $(document).delegate('select.ajax-control', 'change', function () {
         }
     });
 });
-/**
- * Délare les éléments Traînable comme étant triable et leur options.
- */
-$().ready(function () {
+
+(function() {
+    /**
+     * Délare les éléments Traînable comme étant triable et leur options.
+     */
     let nestedSortables = [].slice.call($('[data-draggable="sortable"]'));
 
     for (let i = 0; i < nestedSortables.length; i++) {
@@ -77,4 +78,38 @@ $().ready(function () {
 
         new Sortable(el, options);
     }
-});
+
+    /**
+     * Délare les listes de sélection dynamique
+     */
+    $('.select-ajax').select2({
+        width: "100%",
+        ajax: {
+            delay: 300,
+            url: function (params) {
+                return $(this).data('link');
+            },
+            data: function (params) {
+                var query = {
+                    search: params.term
+                };
+
+                return query;
+            }
+        },
+        allowClear: true,
+        templateResult: function (repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            if (repo.tpl) {
+                var $container = $(repo.tpl);
+            } else {
+                return repo.text;
+            }
+
+            return $container;
+        }
+    });
+})();
