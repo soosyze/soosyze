@@ -83,7 +83,12 @@ function search_blocks() {
 
     Array.prototype.forEach.call(elements, function (el) {
         el.style.display = '';
-        if (!reg.test(el.querySelector('.search_text').textContent)) {
+        const searchEl = el.querySelector('.search_text');
+
+        if (reg.test(searchEl.textContent)) {
+            const str = strHighlight(search, searchEl.textContent);
+            searchEl.innerHTML = str;
+        } else {
             el.style.display = 'none';
         }
     });

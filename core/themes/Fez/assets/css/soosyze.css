@@ -527,7 +527,7 @@ select[multiple].form-control {
 /* -------- RADIO BUTTON -------- */
 .radio-button label {
     background-color: #272737;
-    border: 0;
+    border: 1px solid #272737;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
@@ -545,7 +545,9 @@ select[multiple].form-control {
     display: none;
 }
 .radio-button [type="radio"]:checked ~ label {
-    background-color: #131419;
+    background-color: #fff;
+    border: 1px solid #272737;
+    color: #272737;
 }
 .radio-button [type="radio"] + label {
     padding: .7em 1em;

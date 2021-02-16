@@ -51,6 +51,11 @@ img {
 .content-nothing span {
     display: block;
 }
+.highlight{
+    background-color: #ffff00;
+    color: #000;
+}
+
 
 /* --------------------------- */
 /* ---------- LAYOUT --------- */

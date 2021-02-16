@@ -57,14 +57,14 @@ class Block extends \Soosyze\Controller
             ])
         ]);
 
+        $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
+
         foreach ($data as $key => $block) {
             if (empty($block[ 'hook' ])) {
                 $content = self::template()
                     ->getTheme('theme_admin')
                     ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                    ->addVars([
-                    'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
-                ]);
+                    ->addVar('src_image', $srcImage);
             } else {
                 $tpl = self::template()
                     ->getTheme('theme_admin')
@@ -78,16 +78,26 @@ class Block extends \Soosyze\Controller
                 ]);
             }
 
-            $form->group("key_block-$key-group", 'div', function ($form) use ($key, $content) {
-                $form->radio('key_block', [
+            $attrContent = empty($content)
+                ? [
+                    'class'    => 'block-content-disabled',
+                    ':content' => t('No content available for this block')
+                ] : [
+                    'class'    => 'block-content',
+                    ':content' => $content
+                ];
+
+            $form->html("key_block-$key-content", '<div:attr>:content</div>', $attrContent)
+                ->group("key_block-$key-group", 'div', function ($form) use ($key) {
+                    $form
+                    ->radio('key_block', [
                         'id'    => "key_block-$key",
                         'value' => $key
                     ])
-                    ->html('key_block-label', '<div:attr>:content</div>', [
-                        'class'    => 'block-content',
-                        ':content' => $content
-                ]);
-            });
+                    ->label("$key-label", t('Select'), [
+                        'for' => "key_block-$key"
+                    ]);
+                }, [ 'class' => 'radio-button' ]);
         }
 
         $form->group('submit-group', 'div', function ($form) use ($section) {

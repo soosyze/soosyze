@@ -17,7 +17,7 @@
     <?php if ($link_edit): ?>
 
     <a href="<?php echo $link_edit; ?>" class="btn btn-primary">
-        <i class="fa fa-edit"></i> <?php echo t('Edit'); ?>
+        <i class="fa fa-edit"></i> <?php echo t('Edit blocks'); ?>
 
     </a>
     <?php endif; ?>
