@@ -30,7 +30,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('entity_article', function (TableBuilder $table) {
+            ->createTableIfNotExists('entity_article', static function (TableBuilder $table) {
                 $table->increments('article_id')
                 ->string('image')
                 ->text('summary')
@@ -204,7 +204,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'news%')

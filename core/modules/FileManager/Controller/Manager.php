@@ -135,7 +135,7 @@ class Manager extends \Soosyze\Controller
                 }
             }
 
-            usort($files, function ($a, $b) {
+            usort($files, static function ($a, $b) {
                 if ($a['ext'] === $b['ext']) {
                     return 0;
                 }

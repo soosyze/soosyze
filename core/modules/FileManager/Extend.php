@@ -22,7 +22,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('profil_file', function (TableBuilder $table) {
+            ->createTableIfNotExists('profil_file', static function (TableBuilder $table) {
                 $table
                 ->increments('profil_file_id')
                 ->text('folder_show')
@@ -42,7 +42,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->boolean('file_extensions_all')->valueDefault(false)
                 ->text('file_extensions')->valueDefault('');
             })
-            ->createTableIfNotExists('profil_file_role', function (TableBuilder $table) {
+            ->createTableIfNotExists('profil_file_role', static function (TableBuilder $table) {
                 $table
                 ->integer('profil_file_id')
                 ->integer('role_id');
@@ -228,7 +228,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'filemanager%')

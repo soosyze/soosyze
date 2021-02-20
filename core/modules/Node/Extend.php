@@ -22,7 +22,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('node', function (TableBuilder $table) {
+            ->createTableIfNotExists('node', static function (TableBuilder $table) {
                 $table->increments('id')
                 ->integer('date_changed')
                 ->integer('date_created')
@@ -38,24 +38,24 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->string('type', 32)
                 ->integer('user_id')->nullable();
             })
-            ->createTableIfNotExists('node_type', function (TableBuilder $table) {
+            ->createTableIfNotExists('node_type', static function (TableBuilder $table) {
                 $table->string('node_type')
                 ->string('node_type_name')
                 ->string('node_type_icon')
                 ->text('node_type_description')
                 ->string('node_type_color', 7)->valueDefault('#ddd');
             })
-            ->createTableIfNotExists('node_status', function (TableBuilder $table) {
+            ->createTableIfNotExists('node_status', static function (TableBuilder $table) {
                 $table->increments('node_status_id')
                 ->text('node_status_name');
             })
-            ->createTableIfNotExists('field', function (TableBuilder $table) {
+            ->createTableIfNotExists('field', static function (TableBuilder $table) {
                 $table->increments('field_id')
                 ->string('field_name')
                 ->string('field_type');
             })
             /* Table pivot. */
-            ->createTableIfNotExists('node_type_field', function (TableBuilder $table) {
+            ->createTableIfNotExists('node_type_field', static function (TableBuilder $table) {
                 $table->string('node_type')
                 ->integer('field_id')
                 ->string('field_label')
@@ -74,11 +74,11 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 /* Poisition de la donnée dans l'affichage. */
                 ->integer('field_weight_form')->valueDefault(1);
             })
-            ->createTableIfNotExists('entity_page', function (TableBuilder $table) {
+            ->createTableIfNotExists('entity_page', static function (TableBuilder $table) {
                 $table->increments('page_id')
                 ->text('body');
             })
-            ->createTableIfNotExists('entity_page_private', function (TableBuilder $table) {
+            ->createTableIfNotExists('entity_page_private', static function (TableBuilder $table) {
                 $table->increments('page_private_id')
                 ->text('body');
             });
@@ -167,7 +167,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->schema()
-            ->createTableIfNotExists('node_menu_link', function (TableBuilder $table) {
+            ->createTableIfNotExists('node_menu_link', static function (TableBuilder $table) {
                 $table->integer('node_id')
                 ->integer('menu_link_id');
             });
@@ -236,7 +236,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         $ci->schema()->dropTableIfExists('node_menu_link');
 
         if ($ci->module()->has('Menu')) {
-            $ci->menu()->deleteLinks(function () use ($ci) {
+            $ci->menu()->deleteLinks(static function () use ($ci) {
                 return $ci->query()
                         ->from('menu_link')
                         ->where('key', 'like', 'node%')

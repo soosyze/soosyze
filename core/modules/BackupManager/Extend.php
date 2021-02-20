@@ -83,7 +83,7 @@ Options +FollowSymLinks
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'backupmanager%')

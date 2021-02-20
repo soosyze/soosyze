@@ -22,12 +22,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('menu', function (TableBuilder $table) {
+            ->createTableIfNotExists('menu', static function (TableBuilder $table) {
                 $table->string('name')
                 ->string('title')
                 ->text('description');
             })
-            ->createTableIfNotExists('menu_link', function (TableBuilder $table) {
+            ->createTableIfNotExists('menu_link', static function (TableBuilder $table) {
                 $table->increments('id')
                 ->string('key')->nullable()
                 ->string('icon')->nullable()

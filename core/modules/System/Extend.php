@@ -32,24 +32,24 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('module_active', function (TableBuilder $table) {
+            ->createTableIfNotExists('module_active', static function (TableBuilder $table) {
                 $table->string('title')
                 ->string('version');
             })
-            ->createTableIfNotExists('module_controller', function (TableBuilder $table) {
+            ->createTableIfNotExists('module_controller', static function (TableBuilder $table) {
                 $table->string('title')
                 ->string('controller');
             })
-            ->createTableIfNotExists('module_require', function (TableBuilder $table) {
+            ->createTableIfNotExists('module_require', static function (TableBuilder $table) {
                 $table->string('title_module')
                 ->string('title_required')
                 ->string('version');
             })
-            ->createTableIfNotExists('system_alias_url', function (TableBuilder $table) {
+            ->createTableIfNotExists('system_alias_url', static function (TableBuilder $table) {
                 $table->string('source')
                 ->string('alias');
             })
-            ->createTableIfNotExists('migration', function (TableBuilder $table) {
+            ->createTableIfNotExists('migration', static function (TableBuilder $table) {
                 $table->string('migration')
                 ->string('extension');
             });
@@ -145,7 +145,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'system%')

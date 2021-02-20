@@ -116,7 +116,7 @@ class Install extends \Soosyze\Controller
     {
         $step = [];
         $this->container->callHook('step', [ &$step ]);
-        uasort($step, function ($a, $b) {
+        uasort($step, static function ($a, $b) {
             if ($a[ 'weight' ] === $b[ 'weight' ]) {
                 return 0;
             }

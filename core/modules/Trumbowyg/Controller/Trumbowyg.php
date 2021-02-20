@@ -39,7 +39,7 @@ class Trumbowyg extends \Soosyze\Controller
                 ->setPath('/upload')
                 ->isResolvePath()
                 ->isResolveName()
-                ->callMove(function ($name, $fileName, $move) use (&$data) {
+                ->callMove(static function ($name, $fileName, $move) use (&$data) {
                     $data['link'] = '/' . $move;
                 })
                 ->saveOne();

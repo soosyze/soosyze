@@ -22,7 +22,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('user', function (TableBuilder $table) {
+            ->createTableIfNotExists('user', static function (TableBuilder $table) {
                 $table->increments('user_id')
                 ->string('email')
                 ->string('username')
@@ -44,7 +44,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->boolean('terms_of_service')->valueDefault(false)
                 ->text('timezone');
             })
-            ->createTableIfNotExists('role', function (TableBuilder $table) {
+            ->createTableIfNotExists('role', static function (TableBuilder $table) {
                 $table->increments('role_id')
                 ->string('role_description')->nullable()
                 ->string('role_label')
@@ -52,11 +52,11 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->string('role_icon')->nullable()
                 ->integer('role_weight')->valueDefault(1);
             })
-            ->createTableIfNotExists('user_role', function (TableBuilder $table) {
+            ->createTableIfNotExists('user_role', static function (TableBuilder $table) {
                 $table->integer('user_id')
                 ->integer('role_id');
             })
-            ->createTableIfNotExists('role_permission', function (TableBuilder $table) {
+            ->createTableIfNotExists('role_permission', static function (TableBuilder $table) {
                 $table->integer('role_id')
                 ->string('permission_id');
             });
@@ -157,7 +157,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'user%')

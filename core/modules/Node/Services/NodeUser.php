@@ -88,9 +88,9 @@ class NodeUser
             $typeNotPublish = $this->grantedNotPublish || $this->user->isGranted('node.show.not_published.' . $type[ 'node_type' ]);
 
             if ($typePublish || $typeNotPublish) {
-                $nodeQuery->orWhere(function ($query) use ($type, $typePublish, $typeNotPublish) {
+                $nodeQuery->orWhere(static function ($query) use ($type, $typePublish, $typeNotPublish) {
                     $query->where('type', $type[ 'node_type' ])
-                        ->where(function ($query) use ($typePublish, $typeNotPublish) {
+                        ->where(static function ($query) use ($typePublish, $typeNotPublish) {
                             if ($typePublish) {
                                 $query->where('node_status_id', '==', 1);
                             }

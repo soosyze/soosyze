@@ -22,7 +22,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci)
     {
         $ci->schema()
-            ->createTableIfNotExists('block', function (TableBuilder $table) {
+            ->createTableIfNotExists('block', static function (TableBuilder $table) {
                 $table->increments('block_id')
                 ->string('title')
                 ->string('section')
@@ -123,7 +123,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstallMenu(ContainerInterface $ci)
     {
-        $ci->menu()->deleteLinks(function () use ($ci) {
+        $ci->menu()->deleteLinks(static function () use ($ci) {
             return $ci->query()
                     ->from('menu_link')
                     ->where('key', 'like', 'block%')

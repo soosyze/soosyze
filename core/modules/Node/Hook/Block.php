@@ -166,7 +166,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     private function getNextNode(array $node)
     {
         $next = $this->query->from('node')
-            ->where(function ($query) use ($node) {
+            ->where(static function ($query) use ($node) {
                 return $query
                     ->where('date_created', '>=', $node[ 'date_created' ])
                     ->where('id', '>', $node[ 'id' ]);
@@ -189,7 +189,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     private function getPreviousNode(array $node)
     {
         $previous = $this->query->from('node')
-            ->where(function ($query) use ($node) {
+            ->where(static function ($query) use ($node) {
                 return $query
                     ->where('date_created', '<=', $node[ 'date_created' ])
                     ->where('id', '<', $node[ 'id' ]);
