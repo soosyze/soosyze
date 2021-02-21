@@ -1,7 +1,7 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<?php echo t('Close'); ?>">&times;</button>
-    <h2><?php echo $title; ?></h2>
+    <h2><?php echo htmlspecialchars($title); ?></h2>
 </div>
 <div class="modal-body">
     <div class="row">

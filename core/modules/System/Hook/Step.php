@@ -62,17 +62,17 @@ class Step
     {
         $step[ 'language' ] = [
             'weight' => 1,
-            'title'  => t('Choose language'),
+            'title'  => 'Choose language',
             'key'    => 'language'
         ];
         $step[ 'profil' ] = [
             'weight' => 2,
-            'title'  => t('Installation profile'),
+            'title'  => 'Installation profile',
             'key'    => 'profil'
         ];
         $step[ 'user' ]   = [
             'weight' => 3,
-            'title'  => t('User profile'),
+            'title'  => 'User profile',
             'key'    => 'user'
         ];
     }
@@ -83,27 +83,27 @@ class Step
         $profil = [
             'site'      => [
                 'key'         => 'site',
-                'title'       => t('Website'),
+                'title'       => 'Website',
                 'img'         => $assets . 'site.svg',
-                'description' => t('Create a standard site with all the basic features.')
+                'description' => 'Create a standard site with all the basic features.'
             ],
             'blog'      => [
                 'key'         => 'blog',
-                'title'       => t('Blog'),
+                'title'       => 'Blog',
                 'img'         => $assets . 'blog.svg',
-                'description' => t('Periodically publish your tickets, articles, news...')
+                'description' => 'Periodically publish your tickets, articles, news...'
             ],
             'portfolio' => [
                 'key'         => 'portfolio',
-                'title'       => t('Portfolio'),
+                'title'       => 'Portfolio',
                 'img'         => $assets . 'portfolio.svg',
-                'description' => t('Highlight your skills, experiences and training.')
+                'description' => 'Highlight your skills, experiences and training.'
             ],
             'one_page'  => [
                 'key'         => 'one_page',
-                'title'       => t('One page'),
+                'title'       => 'One page',
                 'img'         => $assets . 'one_page.svg',
-                'description' => t('Present your activity on a single webpage.')
+                'description' => 'Present your activity on a single webpage.'
             ]
         ];
         $this->core->callHook('app.step.profil', [ &$profil ]);
@@ -331,10 +331,10 @@ class Step
     {
         $validator = (new Validator())
             ->setRules([
-                'username'         => 'required|string|max:255|to_htmlsc',
+                'username'         => 'required|string|max:255',
                 'email'            => 'required|string|email',
-                'name'             => '!required|string|max:255|to_htmlsc',
-                'firstname'        => '!required|string|max:255|to_htmlsc',
+                'name'             => '!required|string|max:255',
+                'firstname'        => '!required|string|max:255',
                 'password'         => 'required|string',
                 'password_confirm' => 'required|string|equal:@password'
             ])

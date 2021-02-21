@@ -69,6 +69,9 @@ class Core extends App
                 'arguments' => [
                     '@config'
                 ]
+            ],
+            'xss' => [
+                'class' => 'SoosyzeCore\Filter\Services\Xss'
             ]
         ];
     }

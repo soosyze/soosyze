@@ -229,8 +229,8 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
             'path_access_denied' => '!required|route',
             'path_no_found'      => '!required|route',
             'path_maintenance'   => '!required|route',
-            'meta_title'         => 'required|string|max:64|to_htmlsc',
-            'meta_description'   => 'required|string|max:256|to_htmlsc',
+            'meta_title'         => 'required|string|max:64',
+            'meta_description'   => 'required|string|max:256',
             'meta_keyboard'      => '!required|string|to_htmlsc',
         ])->setLabels([
             'lang'               => t('Language'),

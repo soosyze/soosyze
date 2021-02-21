@@ -1,6 +1,6 @@
 
 <div class="block-content-disabled">
-    <p><?php echo $content; ?></p>
+    <p><?php echo t($content); ?></p>
     <a href="<?php echo $link_theme; ?>" class="btn btn-primary"><?php echo t('Website theme'); ?></a>
     <a href="<?php echo $link_theme_admin; ?>" class="btn btn-primary"><?php echo t('Website administration theme'); ?></a>
 </div>

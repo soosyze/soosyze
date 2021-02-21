@@ -48,7 +48,7 @@ class Contact extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => 'Contact'
+                    'title_main' => t('Contact')
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'contact/content-contact-form.php', $this->pathViews, [

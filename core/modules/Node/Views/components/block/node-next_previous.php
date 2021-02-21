@@ -14,7 +14,7 @@
             <?php endif; ?>
             <?php if (strpos($display, 'title') !== false): ?>
 
-                <span class="post-nav-title"><?php echo $previous[ 'title' ]; ?></span>
+                <span class="post-nav-title"><?php echo t($previous[ 'title' ]); ?></span>
             <?php endif; ?>
 
             </span>
@@ -32,7 +32,7 @@
             <?php endif; ?>
             <?php if (strpos($display, 'title') !== false): ?>
 
-                <span class="post-nav-title"><?php echo $next[ 'title' ]; ?></span>
+                <span class="post-nav-title"><?php echo t($next[ 'title' ]); ?></span>
             <?php endif; ?>
 
             </span>

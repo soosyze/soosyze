@@ -776,7 +776,7 @@ class Node extends \Soosyze\Controller
                 'meta_title'       => '!required|string|max:255',
                 'node_status_id'   => 'required|numeric|to_int|inarray:1,2,3,4',
                 'sticky'           => 'bool',
-                'title'            => 'required|string|max:255|to_htmlsc',
+                'title'            => 'required|string|max:255',
                 'user_id'          => '!required|numeric|inarray:' . $this->getListUsersId()
             ])
             ->setLabels([

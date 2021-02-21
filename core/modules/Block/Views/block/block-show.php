@@ -1,5 +1,5 @@
 
-<div class="block <?php echo $block[ 'class' ]; ?>" data-weight="<?php echo $block[ 'weight' ]; ?>">
+<div class="block <?php echo htmlspecialchars($block[ 'class' ]); ?>" data-weight="<?php echo htmlspecialchars($block[ 'weight' ]); ?>">
     <span class="block-actions">
         <i aria-hidden="true" class="fa fa-edit" data-link_edit="<?php echo $block[ 'link_edit' ]; ?>"></i>
         <i aria-hidden="true" class="fa fa-trash-alt" data-link_delete="<?php echo $block[ 'link_delete' ]; ?>"></i>
@@ -8,7 +8,7 @@
     <?php if ($block[ 'title' ]): ?>
 
         <header class="major">
-            <h2><?php echo $block[ 'title' ]; ?></h2>
+            <h2><?php echo xss($block[ 'title' ]); ?></h2>
         </header>
     <?php endif; ?>
 
@@ -17,6 +17,6 @@
             <?php echo t('No content available for this block'); ?>
         </div>
     <?php else: ?>
-        <?php echo $block[ 'content' ]; ?>
+        <?php echo xss($block[ 'content' ]); ?>
     <?php endif; ?>
 </div>

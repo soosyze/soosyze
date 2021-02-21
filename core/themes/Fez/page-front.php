@@ -26,7 +26,7 @@
                     <img src="<?php echo $logo; ?>" alt="Logo site" class="img-responsive logo">
                 <?php endif; ?>
 
-                    <h1><?php echo $title; ?></h1>
+                    <h1><?php echo htmlspecialchars($title); ?></h1>
                 <?php if (!empty($section[ 'header' ])): ?>
 
                     <?php echo $section[ 'header' ]; ?>

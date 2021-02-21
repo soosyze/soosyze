@@ -134,8 +134,8 @@ class User extends \Soosyze\Controller
         $validator
             ->addInput('is_email', $isEmail)
             ->addInput('is_username', $isUsername)
-            ->addRule('email', 'required|email|max:254|!equal:@is_email|to_htmlsc')
-            ->addRule('username', 'required|string|max:255|!equal:@is_username|to_htmlsc')
+            ->addRule('email', 'required|email|max:254|!equal:@is_email')
+            ->addRule('username', 'required|string|max:255|!equal:@is_username')
             ->setMessages([
                 'password_confirm' => [
                     'equal' => [ 'must' => t(':label is incorrect') ]
@@ -282,7 +282,7 @@ class User extends \Soosyze\Controller
                 : '';
             $validator
                 ->addInput('is_username', $isUsername)
-                ->addRule('username', 'required|string|max:255|!equal:@is_username|to_htmlsc')
+                ->addRule('username', 'required|string|max:255|!equal:@is_username')
                 ->setMessages([
                     'username' => [
                         'equal' => [ 'not' => t('The :value :label is unavailable.') ]
@@ -502,17 +502,17 @@ class User extends \Soosyze\Controller
                 ->setRules([
                     /* max:254 RFC5321 - 4.5.3.1.3. */
                     'actived'          => 'bool',
-                    'bio'              => '!required|string|max:255|to_htmlsc',
+                    'bio'              => '!required|string|max:255',
                     'email'            => 'required|email|max:254',
-                    'firstname'        => '!required|string|max:255|to_htmlsc',
-                    'name'             => '!required|string|max:255|to_htmlsc',
+                    'firstname'        => '!required|string|max:255',
+                    'name'             => '!required|string|max:255',
                     'password'         => '!required|string',
                     'password_confirm' => 'required_with:password_new|string|equal:@password_new',
                     'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
                     'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
                     'roles'            => '!required|array',
                     'token_user_form'  => 'required|token',
-                    'username'         => 'required|string|max:255|to_htmlsc'
+                    'username'         => 'required|string|max:255'
                 ])
                 ->setLabels([
                     'actived'          => t('Active'),

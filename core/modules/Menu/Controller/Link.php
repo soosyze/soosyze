@@ -214,7 +214,7 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'name' => 'required|string|max:255|to_htmlsc',
+                'name' => 'required|string|max:255',
                 'id'   => 'required|int'
             ])
             ->setInputs([ 'name' => $name, 'id' => $id ]);
@@ -240,7 +240,7 @@ class Link extends \Soosyze\Controller
     {
         return (new Validator())
                 ->setRules([
-                    'title_link'      => 'required|string|max:255|to_htmlsc',
+                    'title_link'      => 'required|string|max:255',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
                     'target_link'     => 'bool',

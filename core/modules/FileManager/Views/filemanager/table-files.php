@@ -67,7 +67,7 @@
                                 data-toogle="modal"
                                 data-target="#modal_filemanager"
                                 <?php endif; ?>>
-                                <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i> <?php echo $action[ 'title_link' ]; ?>
+                                <i class="<?php echo $action[ 'icon' ]; ?>" aria-hidden="true"></i> <?php echo t($action[ 'title_link' ]); ?>
                             </a>
                         </li>
                         <?php endforeach; ?>

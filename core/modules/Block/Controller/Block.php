@@ -236,7 +236,7 @@ class Block extends \Soosyze\Controller
                 'content'          => '!required|string|max:5000',
                 'class'            => '!required|string|max:255',
                 'visibility_pages' => 'bool',
-                'pages'            => '!required|string|to_htmlsc',
+                'pages'            => '!required|string',
                 'visibility_roles' => 'bool',
                 'roles'            => '!required|array',
                 "token_block_$id"  => 'token'

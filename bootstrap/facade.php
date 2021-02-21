@@ -15,5 +15,10 @@ function t($str, $vars = [])
     return \Core::getInstance()->get('translate')->t($str, $vars);
 }
 
+function xss($str)
+{
+    return \Core::getInstance()->get('xss')->filter($str);
+}
+
 require_once 'validator_custom.php';
 require_once 'template.php';

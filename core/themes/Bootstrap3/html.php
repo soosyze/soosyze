@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta content="IE=edge" http-equiv="X-UA-Compatible">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title><?php echo $title; ?></title>
+        <title><?php echo htmlspecialchars($title); ?></title>
         <?php if ($favicon): ?>
             <link rel="shortcut icon" type="image/png" href="<?php echo $favicon; ?>"/>
         <?php endif; ?>

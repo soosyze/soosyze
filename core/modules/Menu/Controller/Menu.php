@@ -321,7 +321,7 @@ class Menu extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'name' => 'required|string|max:255|to_htmlsc',
+                'name' => 'required|string|max:255',
             ])
             ->setInputs([ 'name' => $menu ]);
 
@@ -395,19 +395,19 @@ class Menu extends \Soosyze\Controller
                 'request'    => self::router()->getRequestByRoute('menu.show', [
                     ':menu' => $nameMenu
                 ]),
-                'title_link' => t('View')
+                'title_link' => 'View'
             ], [
                 'key'        => 'menu.edit',
                 'request'    => self::router()->getRequestByRoute('menu.edit', [
                     ':menu' => $nameMenu
                 ]),
-                'title_link' => t('Edit')
+                'title_link' => 'Edit'
             ], [
                 'key'        => 'menu.remove',
                 'request'    => self::router()->getRequestByRoute('menu.remove', [
                     ':menu' => $nameMenu
                 ]),
-                'title_link' => t('Delete')
+                'title_link' => 'Delete'
             ]
         ];
 

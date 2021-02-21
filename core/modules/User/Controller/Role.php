@@ -275,8 +275,8 @@ class Role extends \Soosyze\Controller
     {
         return (new Validator())
                 ->setRules([
-                    'role_label'        => 'required|string|max:255|to_htmlsc',
-                    'role_description'  => '!required|string|max:255|to_htmlsc',
+                    'role_label'        => 'required|string|max:255',
+                    'role_description'  => '!required|string|max:255',
                     'role_weight'       => '!required|between_numeric:1,50',
                     'role_color'        => '!required|colorhex',
                     'role_icon'         => '!required|max:255|fontawesome:solid,brands',

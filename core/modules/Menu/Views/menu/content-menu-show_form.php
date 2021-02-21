@@ -15,7 +15,7 @@
                    <?php echo if_or($link[ 'target_link' ], ' target="_blank" rel="noopener noreferrer"'); ?>
                    >
                     <?php echo if_or(!empty($link[ 'icon' ]), "<i class='{$link[ 'icon' ]}' aria-hidden='true'></i> "); ?>
-                        <?php echo $link[ 'title_link' ]; ?>
+                        <?php echo t($link[ 'title_link' ]); ?>
                 </a>
             </div>
 

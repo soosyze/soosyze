@@ -11,7 +11,7 @@
                         <?php endif; ?>
 
                         <a href="<?php echo $base_path; ?>" class="title">
-                            <?php echo $title; ?>
+                            <?php echo htmlspecialchars($title); ?>
                         </a>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
 
             <div class="col-md-12">
 
-                <h1><?php echo $title_main; ?></h1>
+                <h1><?php echo htmlspecialchars($title_main); ?></h1>
                 <?php if (!empty($section[ 'content' ])): ?>
                     <?php echo $section[ 'content' ]; ?>
 

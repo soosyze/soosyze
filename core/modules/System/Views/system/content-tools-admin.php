@@ -31,7 +31,7 @@
     <div class="tool-card">
         <header class="tool-card-thumb">
             <a href="<?php echo $tool[ 'link' ]; ?>">
-                <i class="<?php echo $tool[ 'icon' ][ 'name' ]; ?>" aria-hidden="true"></i>
+                <i class="<?php echo htmlspecialchars($tool[ 'icon' ][ 'name' ]); ?>" aria-hidden="true"></i>
             </a>
         </header>
         <main class="tool-card-content">

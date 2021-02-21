@@ -28,7 +28,7 @@
             <?php if ($block[ 'title' ]): ?>
 
             <header class="major">
-                <h2><?php echo $block[ 'title' ]; ?></h2>
+                <h2><?php echo xss($block[ 'title' ]); ?></h2>
             </header>
             <?php endif; ?>
 
@@ -37,7 +37,7 @@
                     <?php echo t('No content available for this block'); ?>
                 </div>
             <?php else: ?>
-                <?php echo $block[ 'content' ]; ?>
+                <?php echo xss($block[ 'content' ]); ?>
             <?php endif; ?>
 
         </div>

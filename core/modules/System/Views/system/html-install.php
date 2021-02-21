@@ -24,7 +24,7 @@
                             <?php ++$i; ?>
                             <?php if ($steps[$step_active]['weight'] > $step['weight']): ?>
                             <a href="<?php echo $router->getRoute('install.step', [ ':id' => $key ]); ?>">
-                                <span style="color: #16ab39">✔</span> <?php echo $step[ 'title' ]; ?>
+                                <span style="color: #16ab39">✔</span> <?php echo t($step[ 'title' ]); ?>
                             </a>
                             <?php else: ?>
                             <span class="step-inactive">

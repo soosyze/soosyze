@@ -73,19 +73,21 @@
 
     <div class="content-wrapper">
         <div class="content">
-            <?php if ($title_main): ?>
-            <header id="header_main">
-                <h1><?php echo $icon; ?> <?php echo $title_main; ?></h1>
-            </header>
-            <?php endif; ?>
-            <?php if (!empty($section[ 'messages' ])): ?>
-
-                <?php echo $section[ 'messages' ]; ?>
-            <?php endif; ?>
-
             <?php if (!empty($section[ 'content_header' ])): ?>
 
                 <?php echo $section[ 'content_header' ]; ?>
+            <?php endif; ?>
+
+            <?php if ($title_main): ?>
+
+            <header id="header_main">
+                <h1><?php echo xss($icon); ?> <?php echo $title_main; ?></h1>
+            </header>
+            <?php endif; ?>
+
+            <?php if (!empty($section[ 'messages' ])): ?>
+
+                <?php echo $section[ 'messages' ]; ?>
             <?php endif; ?>
 
             <?php echo $section[ 'content' ]; ?>

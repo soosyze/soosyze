@@ -7,16 +7,16 @@
     xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
 
     <channel>
-        <title><?php echo $title; ?></title>
+        <title><?php echo htmlspecialchars($title); ?></title>
         <link><?php echo $link; ?></link>
-        <description><?php echo $description; ?></description>
+        <description><?php echo htmlspecialchars($description); ?></description>
         <lastBuildDate><?php echo date('D, d M Y H:i:s O', $lastBuildDate); ?></lastBuildDate>
         <language><?php echo $language; ?></language>
         <generator>Soosyze CMS</generator>
         <?php foreach ($items as $item): ?>
 
         <item>
-            <title><?php echo htmlspecialchars($item[ 'title' ]); ?></title>
+            <title><?php echo t($item[ 'title' ]); ?></title>
             <link><?php echo $item[ 'link' ]; ?></link>
             <pubDate><?php echo date('D, d M Y H:i:s O', $item[ 'date_created' ]); ?></pubDate>
             <description><?php echo htmlspecialchars($item[ 'field' ][ 'summary' ][ 'field_value' ]); ?></description>
@@ -30,7 +30,7 @@
                         . ' '
                         . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                 </div>
-                <?php echo $item[ 'field' ][ 'body' ][ 'field_display' ]; ?>
+                <?php echo xss($item[ 'field' ][ 'body' ][ 'field_display' ]); ?>
 
             ]]></content:encoded>
         </item>

@@ -26,7 +26,7 @@ class Section extends \Soosyze\Controller
                     'title_main' => t('Editing blocks')
                 ])
                 ->make('page.content', 'block/content-section-admin.php', $this->pathViews, [
-                    'content'          => t('View and edit your site\'s display on the following topics.'),
+                    'content'          => 'View and edit your site\'s display on the following topics.',
                     'link_theme'       => self::router()->getRoute('block.section.admin', [
                         ':theme' => 'public'
                     ]),

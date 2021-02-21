@@ -112,7 +112,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
     public function validator(&$validator)
     {
         $rules  = [
-            'email'  => 'required|email|max:254|to_htmlsc',
+            'email'  => 'required|email|max:254',
             'driver' => 'required|inarray:mail,smtp'
         ];
         $labels = [

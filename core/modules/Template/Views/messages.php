@@ -5,7 +5,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
-        <p><?php echo $value; ?></p>
+        <p><?php echo xss($value); ?></p>
     </div>
     <?php endforeach; ?>
     <?php foreach ($warnings as $value): ?>
@@ -14,7 +14,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
-        <p><?php echo $value; ?></p>
+        <p><?php echo xss($value); ?></p>
     </div>
     <?php endforeach; ?>
     <?php foreach ($infos as $value): ?>
@@ -23,7 +23,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
-        <p><?php echo $value; ?></p>
+        <p><?php echo xss($value); ?></p>
     </div>
     <?php endforeach; ?>
     <?php foreach ($success as $value): ?>
@@ -32,7 +32,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
-        <p><?php echo $value; ?></p>
+        <p><?php echo xss($value); ?></p>
     </div>
     <?php endforeach; ?>
 <?php endif; ?>
