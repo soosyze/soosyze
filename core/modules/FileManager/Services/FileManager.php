@@ -139,22 +139,24 @@ class FileManager
         $actions = [];
         if ($this->hookUser->hookFolderUpdate("$path$name")) {
             $actions[] = [
-                'icon'       => 'fa fa-edit',
                 'class'      => 'mod',
-                'title_link' => t('Rename'),
+                'icon'       => 'fa fa-edit',
+                'key'        => 'filemanager.folder.edit',
                 'link'       => $this->router->getRoute('filemanager.folder.edit', [
                     ':path' => "$path$name"
-                ])
+                ]),
+                'title_link' => t('Rename')
             ];
         }
         if ($this->hookUser->hookFolderDelete("$path$name")) {
             $actions[] = [
-                'icon'       => 'fa fa-times',
                 'class'      => 'mod',
-                'title_link' => t('Delete'),
+                'icon'       => 'fa fa-times',
+                'key'        => 'filemanager.folder.remove',
                 'link'       => $this->router->getRoute('filemanager.folder.remove', [
                     ':path' => "$path$name"
-                ])
+                ]),
+                'title_link' => t('Delete')
             ];
         }
 
@@ -163,71 +165,9 @@ class FileManager
 
     public function getFileSubmenu($keyRoute, \SplFileInfo $file, $path)
     {
-        $name = '/' . $file->getBasename('.' . $file->getExtension());
-        $ext  = $file->getExtension();
-
-        $menu = [
-            [
-                'class'      => 'mod',
-                'key'        => 'filemanager.file.show',
-                'request'    => $this->router->getRequestByRoute('filemanager.file.show', [
-                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
-                ]),
-                'title_link' => 'View'
-            ], [
-                'class'      => 'mod',
-                'key'        => 'filemanager.file.edit',
-                'request'    => $this->router->getRequestByRoute('filemanager.file.edit', [
-                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
-                ]),
-                'title_link' => 'Rename'
-            ], [
-                'class'      => 'mod',
-                'key'        => 'filemanager.file.remove',
-                'request'    => $this->router->getRequestByRoute('filemanager.file.remove', [
-                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
-                ]),
-                'title_link' => 'Delete'
-            ], [
-                'class'      => '',
-                'key'        => 'filemanager.file.download',
-                'request'    => $this->router->getRequestByRoute('filemanager.file.download', [
-                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
-                ]),
-                'title_link' => 'Download'
-            ], [
-                'class'      => 'mod',
-                'key'        => 'filemanager.file.copy',
-                'request'    => $this->router->getRequestByRoute('filemanager.copy.admin', [
-                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
-                ]),
-                'title_link' => 'Deplace or copy'
-            ],
-        ];
-
-        if ($this->hookUser->hookFileCopyClipboard($path, $name, $ext)) {
-            $menu[] = [
-                'class'      => 'copy-clipboard',
-                'key'        => '',
-                'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
-                'title_link' => 'Copy link'
-            ];
-        }
+        $menu = $this->getActionsFile($file, $path);
 
         $this->core->callHook('filemanager.file.submenu', [ &$menu ]);
-
-        foreach ($menu as $key => &$link) {
-            if (isset($link[ 'link' ])) {
-                continue;
-            }
-            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
-                unset($menu[ $key ]);
-
-                continue;
-            }
-            $link[ 'link' ] = $link[ 'request' ]->getUri();
-        }
-        unset($link);
 
         return $this->core
                 ->get('template')
@@ -241,35 +181,9 @@ class FileManager
 
     public function getFolderSubmenu($keyRoute, $path)
     {
-        $menu = [
-            [
-                'class'      => 'mod',
-                'key'        => 'filemanager.folder.edit',
-                'request'    => $this->router->getRequestByRoute('filemanager.folder.edit', [
-                    ':path' => $path
-                ]),
-                'title_link' => 'Rename'
-            ], [
-                'class'      => 'mod',
-                'key'        => 'filemanager.folder.remove',
-                'request'    => $this->router->getRequestByRoute('filemanager.folder.remove', [
-                    ':path' => $path
-                ]),
-                'title_link' => 'Delete'
-            ]
-        ];
+        $menu = $this->getActionsFolder($path);
 
         $this->core->callHook('filemanager.folder.submenu', [ &$menu ]);
-
-        foreach ($menu as $key => &$link) {
-            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
-                unset($menu[ $key ]);
-
-                continue;
-            }
-            $link[ 'link' ] = $link[ 'request' ]->getUri();
-        }
-        unset($link);
 
         return $this->core
                 ->get('template')
@@ -289,76 +203,72 @@ class FileManager
 
         if ($this->hookUser->hookFileShow($path, $name, $ext)) {
             $actions[] = [
-                'type'       => 'button',
-                'icon'       => 'far fa-eye',
                 'class'      => 'mod',
-                'title_link' => t('View'),
+                'icon'       => 'far fa-eye',
+                'key'        => 'filemanager.file.show',
                 'link'       => $this->router->getRoute('filemanager.file.show', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => '.' . $ext
-                ])
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => 'View',
+                'type'       => 'button'
             ];
         }
         if ($this->hookUser->hookFileUpdate($path, $name, $ext)) {
             $actions[] = [
-                'type'       => 'button',
-                'icon'       => 'fa fa-edit',
                 'class'      => 'mod',
-                'title_link' => t('Rename'),
+                'icon'       => 'fa fa-edit',
+                'key'        => 'filemanager.file.edit',
                 'link'       => $this->router->getRoute('filemanager.file.edit', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => '.' . $ext
-                ])
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => 'Rename',
+                'type'       => 'button'
             ];
         }
         if ($this->hookUser->hookFileDelete($path, $name, $ext)) {
             $actions[] = [
-                'type'       => 'button',
-                'icon'       => 'fa fa-times',
                 'class'      => 'mod',
-                'title_link' => t('Delete'),
+                'icon'       => 'fa fa-times',
+                'key'        => 'filemanager.file.remove',
                 'link'       => $this->router->getRoute('filemanager.file.remove', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => '.' . $ext
-                ])
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => 'Delete',
+                'type'       => 'button'
             ];
         }
         if ($this->hookUser->hookFileDownlod($path, $name, $ext)) {
             $actions[] = [
-                'type'       => 'link',
-                'icon'       => 'fa fa-download',
                 'class'      => '',
-                'title_link' => t('Download'),
+                'icon'       => 'fa fa-download',
+                'key'        => 'filemanager.file.download',
                 'link'       => $this->router->getRoute('filemanager.file.download', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => '.' . $ext
-                ])
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => 'Download',
+                'type'       => 'link'
             ];
         }
         if ($this->hookUser->hookFileCopyClipboard($path, $name, $ext)) {
             $actions[] = [
-                'type'       => 'button',
-                'icon'       => 'fa fa-copy',
                 'class'      => 'copy-clipboard',
-                'title_link' => t('Copy link'),
-                'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename()
+                'icon'       => 'fa fa-copy',
+                'key'        => '',
+                'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
+                'title_link' => 'Copy link',
+                'type'       => 'button'
             ];
         }
-        if ($this->hookUser->hookFileCopy($path, $name, $ext)) {
+        if( $this->hookUser->hookFileCopy($path, $name, $ext) ) {
             $actions[] = [
-                'type'       => 'button',
-                'icon'       => 'fa fa-copy',
                 'class'      => 'mod',
-                'title_link' => t('Deplace or copy'),
+                'icon'       => 'fa fa-copy',
+                'key'        => 'filemanager.copy.admin',
                 'link'       => $this->router->getRoute('filemanager.copy.admin', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => '.' . $ext
-                ])
+                    ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
+                ]),
+                'title_link' => 'Deplace or copy',
+                'type'       => 'button'
             ];
         }
 
