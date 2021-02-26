@@ -1,10 +1,10 @@
 <?php
 
-namespace SoosyzeCore\System\Services;
+namespace SoosyzeCore\System\Hook;
 
 use Soosyze\Components\Http\Redirect;
 
-class Install
+class AppInstall
 {
     /**
      * @var \Soosyze\Components\Router\Router

@@ -2,7 +2,7 @@
 
 return [
     'install' => [
-        'class' => 'SoosyzeCore\System\Services\Install',
+        'class' => 'SoosyzeCore\System\Hook\AppInstall',
         'arguments' => ['@router'],
         'hooks' => [
             'app.404' => 'hook404'
