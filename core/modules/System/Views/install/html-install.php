@@ -28,7 +28,7 @@
                             </a>
                             <?php else: ?>
                             <span class="step-inactive">
-                                <span class="step-number"><?php echo $i; ?>.</span> <?php echo $step[ 'title' ]; ?>
+                                <span class="step-number"><?php echo $i; ?>.</span> <?php echo t($step[ 'title' ]); ?>
                             </span>
                             <?php endif; ?>
                         </li>

@@ -54,8 +54,8 @@ class Step
         $this->router    = $router;
         $this->translate = $translate;
 
-        $this->pathViews   = dirname(__DIR__) . '/Views/system/';
-        $this->pathContent = dirname(__DIR__) . '/Views/install/';
+        $this->pathViews   = dirname(__DIR__) . '/Views/install/';
+        $this->pathContent = dirname(__DIR__) . '/Views/install/content/';
     }
 
     public function hookStep(&$step)

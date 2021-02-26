@@ -39,7 +39,7 @@ class Install extends \Soosyze\Controller
     {
         $this->pathServices = dirname(__DIR__) . '/Config/services-install.php';
         $this->pathRoutes   = dirname(__DIR__) . '/Config/routes-install.php';
-        $this->pathViews    = dirname(__DIR__) . '/Views/system/';
+        $this->pathViews    = dirname(__DIR__) . '/Views/install/';
     }
 
     public function index(ServerRequestInterface $req)
