@@ -1,6 +1,4 @@
 
-<?php echo $menu_submenu; ?>
-
 <div class="nav-flex">
     <div class="nav-flex-right">
         <a href="<?php echo $link_create_link; ?>" class="btn btn-primary">

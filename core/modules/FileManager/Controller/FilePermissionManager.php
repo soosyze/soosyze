@@ -62,13 +62,13 @@ class FilePermissionManager extends \Soosyze\Controller
                     'title_main' => t('Administer file permissions')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', self::user()->getUserManagerSubmenu('filemanager.profil.admin'))
                 ->make('page.content', 'filemanager/content-file_permission_manager-admin.php', $this->pathViews, [
-                    'form'                 => $form,
-                    'link_add'             => self::router()->getRoute('filemanager.profil.create'),
-                    'profils'              => $values,
-                    'router'               => self::router(),
-                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('filemanager.profil.admin')
-        ]);
+                    'form'     => $form,
+                    'link_add' => self::router()->getRoute('filemanager.profil.create'),
+                    'profils'  => $values,
+                    'router'   => self::router()
+                ]);
     }
 
     public function adminCheck($req)

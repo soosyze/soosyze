@@ -69,11 +69,11 @@ class RoleManager extends \Soosyze\Controller
                     'title_main' => t('Administer roles')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', self::user()->getUserManagerSubmenu('user.role.admin'))
                 ->make('page.content', 'user/content-role_manager-admin.php', $this->pathViews, [
-                    'form'                 => $form,
-                    'link_add'             => self::router()->getRoute('user.role.create'),
-                    'roles'                => $values,
-                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.role.admin')
+                    'form'     => $form,
+                    'link_add' => self::router()->getRoute('user.role.create'),
+                    'roles'    => $values
                 ]);
     }
 

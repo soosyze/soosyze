@@ -71,6 +71,9 @@
             <?php endif; ?>
 
             <h1><?php echo xss($icon); ?> <?php echo $title_main; ?></h1>
+
+            <?php echo $section[ 'submenu' ]; ?>
+
             <?php echo $section[ 'content' ]; ?>
 
             <?php if (!empty($section[ 'content_footer' ])): ?>

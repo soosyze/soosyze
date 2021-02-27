@@ -1,6 +1,4 @@
 
-<?php echo $user_manager_submenu; ?>
-
 <div class="nav-flex">
     <div class="nav-flex-left">
         <button class="btn btn-default" data-dismiss="toogle" data-target="#filter_user">

@@ -179,15 +179,12 @@ class User
         }
         unset($link);
 
-        return $this->core
-                ->get('template')
-                ->createBlock('user/submenu-user.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => count($menu) === 1
-                        ? []
-                        : $menu
-        ]);
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => count($menu) === 1
+                ? []
+                : $menu
+        ];
     }
 
     public function getUserManagerSubmenu($keyRoute)
@@ -220,13 +217,7 @@ class User
         }
         unset($link);
 
-        return $this->core
-                ->get('template')
-                ->createBlock('user/submenu-user_manager.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => $menu
-        ]);
+        return [ 'key_route' => $keyRoute, 'menu' => $menu ];
     }
 
     public function hasPermission($idPermission)

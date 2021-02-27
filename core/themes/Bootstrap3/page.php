@@ -50,7 +50,11 @@
         <?php if (!empty($section[ 'content_header' ])): ?>
             <?php echo $section[ 'content_header' ]; ?>
         <?php endif; ?>
+
+        <?php echo $section[ 'submenu' ]; ?>
+
         <?php echo $section[ 'content' ]; ?>
+
         <?php if (!empty($section[ 'content_footer' ])): ?>
             <?php echo $section[ 'content_footer' ]; ?>
         <?php endif; ?>

@@ -133,10 +133,10 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Editing a role')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getRoleSubmenu('user.role.edit', $id))
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
-                    'form'         => $form,
-                    'role_submenu' => $this->getRoleSubmenu('user.role.edit', $id)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function update($id, $req)
@@ -215,10 +215,10 @@ class Role extends \Soosyze\Controller
                     'title_main' => t('Remove :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getRoleSubmenu('user.role.remove', $id))
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
-                    'form'         => $form,
-                    'role_submenu' => $this->getRoleSubmenu('user.role.remove', $id)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function delete($id, $req)
@@ -327,13 +327,11 @@ class Role extends \Soosyze\Controller
         }
         unset($link);
 
-        return self::template()
-                ->createBlock('user/submenu-user_manager.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => count($menu) === 1
-                        ? []
-                        : $menu
-        ]);
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => count($menu) === 1
+                ? []
+                : $menu
+        ];
     }
 }

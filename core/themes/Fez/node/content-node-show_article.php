@@ -1,6 +1,4 @@
 
-<?php echo $node_submenu; ?>
-
 <?php if ($fields['image']['field_value']): ?>
 
 <div class="article_img">

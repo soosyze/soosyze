@@ -67,12 +67,12 @@ class Permission extends \Soosyze\Controller
                     'title_main' => t('Administer permissions')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', self::user()->getUserManagerSubmenu('user.permission.admin'))
                 ->make('page.content', 'user/content-permission-admin.php', $this->pathViews, [
-                    'count'                => $count,
-                    'link_update'          => self::router()->getRoute('user.permission.update'),
-                    'modules'              => $output,
-                    'roles'                => $roles,
-                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.permission.admin')
+                    'count'       => $count,
+                    'link_update' => self::router()->getRoute('user.permission.update'),
+                    'modules'     => $output,
+                    'roles'       => $roles
                 ]);
     }
 

@@ -142,10 +142,10 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Edit the files permission')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.profil.edit', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
-                    'form'               => $form,
-                    'permission_submenu' => $this->getPermissionSubmenu('filemanager.profil.edit', $id)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function update($id, $req)
@@ -242,10 +242,10 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Delete files permission')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.profil.remove', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
-                    'form'               => $form,
-                    'permission_submenu' => $this->getPermissionSubmenu('filemanager.profil.remove', $id)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function delete($id, $req)
@@ -420,13 +420,11 @@ class Profil extends \Soosyze\Controller
         }
         unset($link);
 
-        return self::template()
-                ->createBlock('filemanager/submenu-permission.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => count($menu) === 1
-                    ? []
-                    : $menu
-        ]);
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => count($menu) === 1
+                ? []
+                : $menu
+        ];
     }
 }

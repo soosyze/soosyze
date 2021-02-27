@@ -77,16 +77,16 @@ class Theme extends \Soosyze\Controller
                     'title_main' => t('Themes')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-themes-admin.php', $this->pathViews, [
-                    'active_theme'          => $activeTheme,
-                    'link_edit'             => self::module()->has('Block')
+                    'active_theme' => $activeTheme,
+                    'link_edit'    => self::module()->has('Block')
                         ? self::router()->getRoute('block.section.admin', [ ':theme' => $type ])
                         : null,
-                    'link_setting'          => self::router()->getRoute('system.theme.edit', [
+                    'link_setting' => self::router()->getRoute('system.theme.edit', [
                         ':type' => $type
                     ]),
-                    'theme_manager_submenu' => $this->getListThemeSubmenu($type),
-                    'themes'                => $themes,
+                    'themes'       => $themes
         ]);
     }
 
@@ -160,13 +160,13 @@ class Theme extends \Soosyze\Controller
                     'title_main' => t('Theme settings')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-form.php', $this->pathViews, [
-                    'form'                  => $form,
-                    'link_edit'             => self::router()->getRoute('system.theme.admin', [
+                    'form'      => $form,
+                    'link_edit' => self::router()->getRoute('system.theme.admin', [
                         ':type' => $type
-                    ]),
-                    'theme_manager_submenu' => $this->getListThemeSubmenu($type),
-        ]);
+                    ])
+                ]);
     }
 
     public function update($type, ServerRequestInterface $req)
@@ -239,12 +239,7 @@ class Theme extends \Soosyze\Controller
             ]
         ];
 
-        return self::template()
-                ->createBlock('system/submenu-theme-list.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => $menus
-        ]);
+        return [ 'key_route' => $keyRoute, 'menu' => $menus ];
     }
 
     private function installTheme($type, $title)

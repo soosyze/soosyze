@@ -235,10 +235,10 @@ class Node extends \Soosyze\Controller
                     'page-node.php'
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getSubmenuNode('node.show', $idNode))
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
-                    'fields'       => $fields,
-                    'node'         => $node,
-                    'node_submenu' => $this->getSubmenuNode('node.show', $idNode)
+                    'fields' => $fields,
+                    'node'   => $node
                 ])->override('page.content', [
                     'node/content-node-show_' . $idNode . '.php',
                     'node/content-node-show_' . $node[ 'type' ] . '.php'
@@ -295,9 +295,9 @@ class Node extends \Soosyze\Controller
                     'title_main' => t('Edit :title content', [ ':title' => $content[ 'title' ] ])
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getSubmenuNode('node.edit', $idNode))
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
-                    'node_submenu'          => $this->getSubmenuNode('node.edit', $idNode),
                     'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
                 ])
                 ->override('page.content', [ 'node/content-node-form_edit.php' ]);
@@ -456,9 +456,9 @@ class Node extends \Soosyze\Controller
                     'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getSubmenuNode('node.delete', $idNode))
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
-                    'form'         => $form,
-                    'node_submenu' => $this->getSubmenuNode('node.delete', $idNode)
+                    'form' => $form,
                 ])
                 ->override('page.content', [ 'node/content-node-form_remove.php' ]);
     }
@@ -721,12 +721,7 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        return self::template()
-                ->createBlock('node/submenu-node.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => $menu
-        ]);
+        return [ 'key_route' => $keyRoute, 'menu' => $menu ];
     }
 
     public function getNodeFieldsetSubmenu()

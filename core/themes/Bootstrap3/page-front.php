@@ -43,6 +43,8 @@
             <?php echo '<div class="col-sm-12">'; ?>
         <?php endif; ?>
 
+        <?php echo $section[ 'submenu' ]; ?>
+
         <?php echo $section[ 'content' ]; ?>
         <?php echo '</div>'; ?>
 

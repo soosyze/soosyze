@@ -4,9 +4,6 @@
     }
 </style>
 
-<?php echo $theme_manager_submenu; ?>
-
-
 <fieldset class="filedset-theme">
     <h2>
         <?php echo $active_theme[ 'extra' ][ 'soosyze' ][ 'title' ]; ?>

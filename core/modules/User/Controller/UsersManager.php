@@ -38,11 +38,11 @@ class UsersManager extends \Soosyze\Controller
                     'title_main' => t('Administer users')
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', self::user()->getUserManagerSubmenu('user.admin'))
                 ->make('page.content', 'user/content-user_manager-admin.php', $this->pathViews, [
-                    'link_create_user'     => self::router()->getRoute('user.create'),
-                    'link_filter_user'     => self::router()->getRoute('user.filter'),
-                    'link_user_admin'      => self::router()->getRoute('user.admin'),
-                    'user_manager_submenu' => self::user()->getUserManagerSubmenu('user.admin')
+                    'link_create_user' => self::router()->getRoute('user.create'),
+                    'link_filter_user' => self::router()->getRoute('user.filter'),
+                    'link_user_admin'  => self::router()->getRoute('user.admin')
                 ])
                 ->addBlock('content.table', $this->filterPage(1, $req));
     }

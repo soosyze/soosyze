@@ -1,12 +1,5 @@
 
 <div class="row">
-    <div class="col-sm-12">
-        <?php echo $user_submenu; ?>
-
-    </div>
-</div>
-
-<div class="row">
     <div class="col-sm-3">
         <?php if ($user[ 'picture' ]): ?>
 

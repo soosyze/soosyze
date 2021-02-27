@@ -129,6 +129,8 @@ class Templating extends \Soosyze\Components\Http\Response
             'success'  => []
         ]);
 
+        $submenu = $this->createBlock('submenu.php', $this->pathViews);
+
         $page = $this->createBlock('page.php', $this->pathViews)
             ->addVars([
                 'title'      => '',
@@ -139,6 +141,7 @@ class Templating extends \Soosyze\Components\Http\Response
             ->addVars($this->core->getSettings())
             ->addBlock('content')
             ->addBlock('messages', $messages)
+            ->addBlock('submenu', $submenu)
             ->addBlock('main_menu')
             ->addBlock('second_menu');
 

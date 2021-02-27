@@ -1,6 +1,4 @@
 
-<?php echo $user_manager_submenu; ?>
-
 <div class="row">
     <div class="col-md-3 sticky">
         <div class="form-group">

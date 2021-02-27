@@ -46,6 +46,7 @@ class Menu extends \Soosyze\Controller
                     'title_main' => t($menu[ 'title' ])
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getMenuSubmenu('menu.show', $menu[ 'name' ]))
                 ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
                     'form'              => $form,
                     'link_create_link'  => self::router()->getRoute('menu.link.create', [
@@ -54,7 +55,6 @@ class Menu extends \Soosyze\Controller
                     'link_create_menu'  => self::router()->getRoute('menu.create'),
                     'menu'              => $this->renderMenu($name),
                     'menu_name'         => $menu[ 'title' ],
-                    'menu_submenu'      => $this->getMenuSubmenu('menu.show', $menu[ 'name' ]),
                     'list_menu_submenu' => $this->getListMenuSubmenu($name)
                 ]);
     }
@@ -225,10 +225,10 @@ class Menu extends \Soosyze\Controller
                     ])
                 ])
                 ->view('page.messages', $messages)
+                ->view('page.submenu', $this->getMenuSubmenu('menu.edit', $menu))
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
-                    'form'         => $form,
-                    'menu_submenu' => $this->getMenuSubmenu('menu.edit', $menu)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function update($menu, $req)
@@ -307,10 +307,10 @@ class Menu extends \Soosyze\Controller
                         ':name' => t($menu[ 'title' ])
                     ])
                 ])
+                ->view('page.submenu', $this->getMenuSubmenu('menu.remove', $name))
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
-                    'form'         => $form,
-                    'menu_submenu' => $this->getMenuSubmenu('menu.remove', $name)
-        ]);
+                    'form' => $form
+                ]);
     }
 
     public function delete($menu, $req)
@@ -422,12 +422,10 @@ class Menu extends \Soosyze\Controller
             $link[ 'link' ] = $link[ 'request' ]->getUri();
         }
 
-        return self::template()
-                ->createBlock('menu/submenu-menu.php', $this->pathViews)
-                ->addVars([
-                    'key_route' => $keyRoute,
-                    'menu'      => $menu
-        ]);
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => $menu
+        ];
     }
 
     public function getListMenuSubmenu($nameMenu)
