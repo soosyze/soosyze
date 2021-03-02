@@ -241,8 +241,8 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->from('node')
             ->where('node_status_id', 1)
             ->where('type', 'article')
-            ->orderBy('sticky', 'desc')
-            ->orderBy('date_created', 'desc')
+            ->orderBy('sticky', SORT_DESC)
+            ->orderBy('date_created', SORT_DESC)
             ->limit($options[ 'limit' ] + 1, $options[ 'offset' ])
             ->fetchAll();
 

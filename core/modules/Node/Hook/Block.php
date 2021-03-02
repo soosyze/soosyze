@@ -197,7 +197,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', $node[ 'type' ])
             ->where('id', '!=', $node[ 'id' ])
             ->where('node_status_id', 1)
-            ->orderBy('date_created', 'desc')
+            ->orderBy('date_created', SORT_DESC)
             ->fetch();
 
         if ($previous) {

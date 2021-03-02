@@ -271,8 +271,13 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $data = $this->query
             ->from($options[ 'relation_table' ])
             ->where($options[ 'foreign_key' ], $this->values[ 'entity_id' ]);
-        if (isset($options[ 'order_by' ])) {
-            $data->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
+        if(isset($options[ 'order_by' ])) {
+            $data->orderBy(
+                $options[ 'order_by' ],
+                $options[ 'sort' ] === 'asc' || $options[ 'sort' ] === SORT_ASC
+                    ? SORT_ASC
+                    : SORT_DESC
+            );
         }
 
         $subFields = $data->fetchAll();

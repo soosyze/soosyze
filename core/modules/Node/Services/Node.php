@@ -97,7 +97,12 @@ class Node
             ->where($options[ 'foreign_key' ], '==', $data[ $options[ 'foreign_key' ] ]);
 
         if (isset($options[ 'order_by' ])) {
-            $this->query->orderBy($options[ 'order_by' ], $options[ 'sort' ]);
+            $this->query->orderBy(
+                $options[ 'order_by' ],
+                $options[ 'sort' ] === 'asc' || $options[ 'sort' ] === SORT_ASC
+                    ? SORT_ASC
+                    : SORT_DESC
+            );
         }
 
         $data   = $this->query->fetchAll();

@@ -174,13 +174,13 @@ class UsersManager extends \Soosyze\Controller
                 'actived', 'time_access', 'time_installed', 'username'
             ])) {
             $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
-                ? 'desc'
-                : 'asc';
+                ? SORT_DESC
+                : SORT_ASC;
 
             return $users->orderBy($get[ 'order_by' ], $sort);
         }
 
-        return $users->orderBy('time_access', 'desc');
+        return $users->orderBy('time_access', SORT_DESC);
     }
 
     private function hydrateUsersLinks(&$users)

@@ -183,18 +183,18 @@ class NodeUser
     {
         $get = $req->getQueryParams();
 
-        $nodeQuery->orderBy('sticky', 'desc');
+        $nodeQuery->orderBy('sticky', SORT_DESC);
 
         if (!empty($get[ 'order_by' ]) && in_array($get[ 'order_by' ], [
                 'date_changed', 'node_status_id', 'title', 'type'
             ])) {
             $sort = !isset($get[ 'sort' ]) || $get[ 'sort' ] !== 'asc'
-                ? 'desc'
-                : 'asc';
+                ? SORT_DESC
+                : SORT_ASC;
 
             $nodeQuery->orderBy($get[ 'order_by' ], $sort);
         } else {
-            $nodeQuery->orderBy('date_changed', 'desc');
+            $nodeQuery->orderBy('date_changed', SORT_DESC);
         }
 
         return $this;

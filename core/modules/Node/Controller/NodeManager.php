@@ -105,6 +105,7 @@ class NodeManager extends \Soosyze\Controller
         $data      = $query->fetchAll();
         $countData = count($data);
         $nodes     = array_slice($data, self::$limit * ($page - 1), self::$limit);
+        unset($data);
 
         self::nodeuser()->hydrateNodesLinks($nodes);
 
