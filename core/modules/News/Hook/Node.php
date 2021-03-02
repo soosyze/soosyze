@@ -4,6 +4,8 @@ namespace SoosyzeCore\News\Hook;
 
 class Node
 {
+    const NODE_TYPE = 'article';
+
     /**
      * @var \Soosyze\Config
      */
@@ -16,12 +18,14 @@ class Node
 
     public function hookNodeShowTpl($tpl, $node, $idNode)
     {
-        $tpl->getBlock('page.content')->addPathOverride(dirname(__DIR__) . '/Views/');
+        if ($node[ 'type' ] === self::NODE_TYPE) {
+            $tpl->getBlock('page.content')->addPathOverride(dirname(__DIR__) . '/Views/');
+        }
     }
 
-    public function hookNodeStoreBefore($validator, &$fieldsInsert, $type)
+    public function hookNodeStoreBefore($validator, array &$fieldsInsert, $type)
     {
-        if ($type === 'article') {
+        if ($type === self::NODE_TYPE) {
             $words = str_word_count(strip_tags($fieldsInsert[ 'body' ]));
 
             $fieldsInsert[ 'reading_time' ] = ceil($words / 200);
@@ -30,41 +34,34 @@ class Node
 
     public function hookNodeUpdateBefore(
         $validator,
-        &$fieldsUpdate,
-        $node,
+        array &$fieldsUpdate,
+        array $node,
         $idNode
     ) {
-        if ($node[ 'type' ] === 'article') {
+        if ($node[ 'type' ] === self::NODE_TYPE) {
             $words = str_word_count(strip_tags($fieldsUpdate[ 'body' ]));
 
             $fieldsUpdate[ 'reading_time' ] = ceil($words / 200);
         }
     }
 
-    public function hookNodeShowBefore($type, &$fields, &$data)
+    public function hookNodeMakefields($type, array &$fields, array &$data)
     {
-        if ($type === 'article') {
-            if (empty($data[ 'image' ])) {
-                $fields[]      = [
-                    'field_name' => 'icon',
-                    'field_type' => 'text'
-                ];
-                $data[ 'image' ] = $this->config->get('settings.new_default_image', null);
-                $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', null);
-            }
+        if ($type === self::NODE_TYPE && empty($data[ 'image' ])) {
+            $fields[] = [
+                'field_name' => 'icon',
+                'field_type' => 'text'
+            ];
+
+            $data[ 'image' ] = $this->config->get('settings.new_default_image', null);
+            $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', null);
         }
     }
 
-    public function hookNodeFormData(
-        &$content,
-        $type
-    ) {
-        if ($type === 'article') {
-            if (!empty($content[ 'image' ])) {
-                return;
-            }
-
-            $content['image'] = $this->config->get('settings.new_default_image', '');
+    public function hookNodeFormData(array &$content, $type)
+    {
+        if ($type === self::NODE_TYPE && empty($content[ 'image' ])) {
+            $content[ 'image' ] = $this->config->get('settings.new_default_image', '');
         }
     }
 }

@@ -274,7 +274,7 @@ class Step
                 }, [ 'class' => 'form-group' ])
                 ->group('email-group', 'div', function ($form) use ($values) {
                     $form->label('email-label', t('E-mail'))
-                    ->emailGroup('email', [
+                    ->email('email', [
                         'class'       => 'form-control',
                         'maxlength'   => 254,
                         'placeholder' => t('example@mail.com'),

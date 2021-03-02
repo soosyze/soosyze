@@ -7,6 +7,10 @@ use Soosyze\Components\Util\Util;
 
 class Templating extends \Soosyze\Components\Http\Response
 {
+    const THEME_PUBLIC = 'theme';
+
+    const THEME_ADMIN = 'theme_admin';
+
     /**
      * @var type
      */
@@ -159,15 +163,15 @@ class Templating extends \Soosyze\Components\Http\Response
             ->addVars($this->core->getSettings());
     }
 
-    public function getTheme($theme = 'theme')
+    public function getTheme($theme = self::THEME_PUBLIC)
     {
         $granted = $this->core->callHook('app.granted', [ 'template.admin' ]);
 
-        if ($theme === 'theme_admin' && $granted) {
-            $this->defaultThemeName = 'theme_admin';
+        if ($theme === self::THEME_ADMIN && $granted) {
+            $this->defaultThemeName = self::THEME_ADMIN;
             $this->isDarkTheme      = $this->config[ 'settings.theme_admin_dark' ];
         } else {
-            $this->defaultThemeName = 'theme';
+            $this->defaultThemeName = self::THEME_PUBLIC;
         }
 
         foreach ($this->themesPath as $path) {
@@ -214,49 +218,49 @@ class Templating extends \Soosyze\Components\Http\Response
      *
      * @return $this
      */
-    public function make($parent, $tpl, $tplPath, array $vars = [])
+    public function make($selector, $tpl, $tplPath, array $vars = [])
     {
         $template = $this->createBlock($tpl, $tplPath);
 
-        return $this->addBlock($parent, $template, $vars);
+        return $this->addBlock($selector, $template, $vars);
     }
 
-    public function addFilterVar($parent, $key, callable $function)
+    public function addFilterVar($selector, $key, callable $function)
     {
-        $this->getBlock($parent)->addFilterVar($key, $function);
+        $this->getBlock($selector)->addFilterVar($key, $function);
 
         return $this;
     }
 
-    public function addFilterBlock($parent, $key, callable $function)
+    public function addFilterBlock($selector, $key, callable $function)
     {
-        $this->getBlock($parent)->addFilterBlock($key, $function);
+        $this->getBlock($selector)->addFilterBlock($key, $function);
 
         return $this;
     }
 
-    public function addFilterOutput($parent, $key, callable $function)
+    public function addFilterOutput($selector, $key, callable $function)
     {
-        $this->getBlock($parent)->addFilterOutput($key, $function);
+        $this->getBlock($selector)->addFilterOutput($key, $function);
 
         return $this;
     }
 
-    public function override($parent, array $templates)
+    public function override($selector, array $templates)
     {
-        $this->getBlock($parent)->setNamesOverride($templates);
+        $this->getBlock($selector)->setNamesOverride($templates);
 
         return $this;
     }
 
     /*
-     * @param string $parent
+     * @param string $selector
      *
      * @return \Soosyze\Components\Template\Template
      */
-    public function getBlock($parent)
+    public function getBlock($selector)
     {
-        return $this->getThemplate()->getBlockWithParent($parent);
+        return $this->getThemplate()->getBlockWithParent($selector);
     }
 
     /**
@@ -272,15 +276,16 @@ class Templating extends \Soosyze\Components\Http\Response
                 ->addPathOverride($this->getPathTheme());
     }
 
-    public function addBlock($parent, Block $template, array $vars = [])
+    public function addBlock($selector, Block $template, array $vars = [])
     {
         if ($template !== null) {
             $template->addVars($vars);
         }
 
-        if ($block = strstr($parent, '.', true)) {
-            $this->getBlock($block)
-                ->addBlock(substr(strstr($parent, '.'), 1), $template);
+        sscanf($selector, '%[a-z].%s', $parent, $child);
+
+        if ($child) {
+            $this->getBlock($parent)->addBlock($child, $template);
         } else {
             $this->getThemplate()->addBlock($parent, $template);
         }
@@ -384,7 +389,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
     private function makeConfigJs()
     {
-        return '<script>var config =' . json_encode($this->configJs) . ';</script>' . PHP_EOL;
+        return sprintf('<script>var config =%s</script>', json_encode($this->configJs)) . PHP_EOL;
     }
 
     private function renderAttrInput(array $attr)

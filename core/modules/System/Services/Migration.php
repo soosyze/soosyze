@@ -4,6 +4,8 @@ namespace SoosyzeCore\System\Services;
 
 class Migration
 {
+    const REGEX_MIGRATION_NAME = '/^2[\d]{3}_(0[1-9]|1[0-2])_(0[1-9]|[12][\d]|3[01])_\d{6}_[a-z0-9_]+/';
+
     /**
      * @var Composer
      */
@@ -57,7 +59,8 @@ class Migration
             foreach (new \DirectoryIterator($dir) as $fileInfo) {
                 if (
                     $fileInfo->isFile() &&
-                    !in_array($fileInfo->getBasename('.php'), $migrationsInstalled)) {
+                    !in_array($fileInfo->getBasename('.php'), $migrationsInstalled) &&
+                    preg_match(self::REGEX_MIGRATION_NAME, $fileInfo->getBasename('.php'))) {
                     return true;
                 }
             }
@@ -91,8 +94,9 @@ class Migration
             foreach (new \DirectoryIterator($dir) as $fileInfo) {
                 if (
                     !$fileInfo->isFile() ||
-                    !preg_match('/^2[\d]{3}_(0[1-9]|1[0-2])_(0[1-9]|[12][\d]|3[01])_\d{6}_[a-z0-9_]+/', $fileInfo->getBasename('.php')) ||
-                    in_array($fileInfo->getBasename('.php'), $migrationsInstalled)) {
+                    in_array($fileInfo->getBasename('.php'), $migrationsInstalled) ||
+                    !preg_match(self::REGEX_MIGRATION_NAME, $fileInfo->getBasename('.php'))
+                    ) {
                     continue;
                 }
 

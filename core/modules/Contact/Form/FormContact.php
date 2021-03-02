@@ -49,7 +49,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
     {
         return $this->group('email-group', 'div', function ($form) {
             $form->label('email-label', t('E-mail'))
-                    ->emailGroup('email', [
+                    ->email('email', [
                         'class'    => 'form-control',
                         'required' => 1,
                         'value'    => $this->values[ 'email' ]

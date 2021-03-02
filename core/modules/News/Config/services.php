@@ -49,7 +49,7 @@ return [
         'class' => 'SoosyzeCore\News\Hook\Node',
         'arguments' => ['@config'],
         'hooks' => [
-            'node.makefields' => 'hookNodeShowBefore',
+            'node.makefields' => 'hookNodeMakefields',
             'node.create.form.data' => 'hookNodeFormData',
             'node.edit.form.data' => 'hookNodeFormData',
             'node.entity.store.before' => 'hookNodeStoreBefore',

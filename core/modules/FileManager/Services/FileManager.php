@@ -259,7 +259,7 @@ class FileManager
                 'type'       => 'button'
             ];
         }
-        if( $this->hookUser->hookFileCopy($path, $name, $ext) ) {
+        if ($this->hookUser->hookFileCopy($path, $name, $ext)) {
             $actions[] = [
                 'class'      => 'mod',
                 'icon'       => 'fa fa-copy',
