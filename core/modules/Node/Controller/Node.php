@@ -238,7 +238,8 @@ class Node extends \Soosyze\Controller
                 ->view('page.submenu', $this->getSubmenuNode('node.show', $idNode))
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields' => $fields,
-                    'node'   => $node
+                    'node'   => $node,
+                    'user'   => $user
                 ])->override('page.content', [
                     'node/content-node-show_' . $idNode . '.php',
                     'node/content-node-show_' . $node[ 'type' ] . '.php'

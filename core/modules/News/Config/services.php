@@ -54,7 +54,7 @@ return [
             'node.edit.form.data' => 'hookNodeFormData',
             'node.entity.store.before' => 'hookNodeStoreBefore',
             'node.entity.update.before' => 'hookNodeUpdateBefore',
-            'node.entity.news.show' => 'hookNodeEntityPictureShow'
+            'node.show.tpl' => 'hookNodeShowTpl'
         ]
     ]
 ];

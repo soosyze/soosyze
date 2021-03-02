@@ -14,9 +14,9 @@ class Node
         $this->config = $config;
     }
 
-    public function hookNodeEntityPictureShow(&$entity)
+    public function hookNodeShowTpl($tpl, $node, $idNode)
     {
-        $entity->addPathOverride(dirname(__DIR__) . '/Views/');
+        $tpl->getBlock('page.content')->addPathOverride(dirname(__DIR__) . '/Views/');
     }
 
     public function hookNodeStoreBefore($validator, &$fieldsInsert, $type)
