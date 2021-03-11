@@ -162,7 +162,7 @@ class Install extends \Soosyze\Controller
 
         foreach ($this->modules as $title => $namespace) {
             /* Charge la version du coeur à ses modules. */
-            $composer[$title]['version'] = $this->container->get('module')->getVersionCore();
+            $composer[$title]['version'] = $this->container->get('composer')->getVersionCore();
 
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);

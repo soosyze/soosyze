@@ -27,10 +27,11 @@ class Dashboard extends \Soosyze\Controller
                 ])
                 ->view('page.messages', $messages)
                 ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
-                    'link_info'   => self::router()->getRoute('dashboard.info'),
-                    'size_backup' => self::dashboard()->getSizeBackups(),
-                    'size_data'   => self::dashboard()->getSizeDatabase(),
-                    'size_file'   => self::dashboard()->getSizeFiles()
+                    'link_info'    => self::router()->getRoute('dashboard.info'),
+                    'size_backup'  => self::dashboard()->getSizeBackups(),
+                    'size_data'    => self::dashboard()->getSizeDatabase(),
+                    'size_file'    => self::dashboard()->getSizeFiles(),
+                    'version_core' => self::composer()->getVersionCore()
         ]);
     }
 

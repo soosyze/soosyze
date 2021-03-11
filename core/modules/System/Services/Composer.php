@@ -19,6 +19,13 @@ class Composer
     private $core;
 
     /**
+     * Les données du fichier du coeur du CMS.
+     *
+     * @var array
+     */
+    private $coreComposer = [];
+
+    /**
      * @var Modules
      */
     private $module;
@@ -211,6 +218,22 @@ class Composer
         }
 
         return $errors;
+    }
+
+    public function getVersionCore()
+    {
+        $coreComposer = $this->getComposerCore();
+
+        return $coreComposer[ 'version' ];
+    }
+
+    public function getComposerCore()
+    {
+        if (!$this->coreComposer) {
+            $this->coreComposer = Util::getJson(ROOT . '/composer.json');
+        }
+
+        return $this->coreComposer;
     }
 
     public function getThemeComposers($reload = false)

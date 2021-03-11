@@ -42,7 +42,7 @@
                 <tbody>
                     <tr>
                         <th><?php echo t('Soosyze version'); ?></th>
-                        <td>1.0.0-beta2.4</td>
+                        <td><?php echo htmlspecialchars($version_core); ?></td>
                     </tr>
                     <tr>
                         <th><?php echo t('Environment'); ?></th>

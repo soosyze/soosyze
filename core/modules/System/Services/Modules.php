@@ -22,11 +22,6 @@ class Modules
         $this->transalte = $translate;
     }
 
-    public function getVersionCore()
-    {
-        return '1.0.0-beta2.4';
-    }
-
     /**
      * Si le module est installé.
      *
