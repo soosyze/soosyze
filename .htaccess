@@ -1,4 +1,4 @@
-# Apache Server Configs v3.2.1 | MIT License
+# Apache Server Configs v4.1.0 | MIT License
 # https://github.com/h5bp/server-configs-apache
 
 # (!) Using `.htaccess` files slows down Apache, therefore, if you have
@@ -8,11 +8,11 @@
 # https://httpd.apache.org/docs/current/howto/htaccess.html
 
 # ######################################################################
-# # CROSS-ORIGIN                                                       #
+# # CROSS-ORIGIN
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Cross-origin requests                                              |
+# | Cross-origin requests
 # ----------------------------------------------------------------------
 
 # Allow cross-origin requests.
@@ -21,12 +21,20 @@
 # https://enable-cors.org/
 # https://www.w3.org/TR/cors/
 
+# (!) Do not use this without understanding the consequences.
+#     This will permit access from any other website.
+#     Instead of using this file, consider using a specific rule such as
+#     allowing access based on (sub)domain:
+#
+#         Header set Access-Control-Allow-Origin "subdomain.example.com"
+
 # <IfModule mod_headers.c>
 #     Header set Access-Control-Allow-Origin "*"
 # </IfModule>
 
+
 # ----------------------------------------------------------------------
-# | Cross-origin images                                                |
+# | Cross-origin images
 # ----------------------------------------------------------------------
 
 # Send the CORS header for images when browsers request it.
@@ -36,7 +44,7 @@
 
 <IfModule mod_setenvif.c>
     <IfModule mod_headers.c>
-        <FilesMatch "\.(bmp|cur|gif|ico|jpe?g|png|svgz?|webp)$">
+        <FilesMatch "\.(avifs?|bmp|cur|gif|ico|jpe?g|a?png|svgz?|webp)$">
             SetEnvIf Origin ":" IS_CORS
             Header set Access-Control-Allow-Origin "*" env=IS_CORS
         </FilesMatch>
@@ -44,7 +52,7 @@
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Cross-origin web fonts                                             |
+# | Cross-origin web fonts
 # ----------------------------------------------------------------------
 
 # Allow cross-origin access to web fonts.
@@ -58,54 +66,54 @@
 </IfModule>
 
 # ######################################################################
-# # ERRORS                                                             #
+# # ERRORS
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Error prevention                                                   |
+# | Error prevention
 # ----------------------------------------------------------------------
 
 # Disable the pattern matching based on filenames.
 #
-# This setting prevents Apache from returning a 404 error as the result
-# of a rewrite when the directory with the same name does not exist.
+# This setting prevents Apache from returning a 404 error as the result of a
+# rewrite when the directory with the same name does not exist.
 #
 # https://httpd.apache.org/docs/current/content-negotiation.html#multiviews
 
 Options -MultiViews
 
 # ######################################################################
-# # INTERNET EXPLORER                                                  #
+# # INTERNET EXPLORER
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Document modes                                                     |
+# | Document modes
 # ----------------------------------------------------------------------
 
 # Force Internet Explorer 8/9/10 to render pages in the highest mode
-# available in the various cases when it may not.
+# available in various cases when it may not.
 #
 # https://hsivonen.fi/doctype/#ie8
 #
 # (!) Starting with Internet Explorer 11, document modes are deprecated.
-# If your business still relies on older web apps and services that were
-# designed for older versions of Internet Explorer, you might want to
-# consider enabling `Enterprise Mode` throughout your company.
+#     If your business still relies on older web apps and services that were
+#     designed for older versions of Internet Explorer, you might want to
+#     consider enabling `Enterprise Mode` throughout your company.
 #
 # https://msdn.microsoft.com/en-us/library/ie/bg182625.aspx#docmode
 # https://blogs.msdn.microsoft.com/ie/2014/04/02/stay-up-to-date-with-enterprise-mode-for-internet-explorer-11/
 # https://msdn.microsoft.com/en-us/library/ff955275.aspx
 
 <IfModule mod_headers.c>
-    Header set X-UA-Compatible "IE=edge" "expr=%{CONTENT_TYPE} =~ m#text/html#i"
+    Header always set X-UA-Compatible "IE=edge" "expr=%{CONTENT_TYPE} =~ m#text/html#i"
 </IfModule>
 
 # ######################################################################
-# # MEDIA TYPES AND CHARACTER ENCODINGS                                #
+# # MEDIA TYPES AND CHARACTER ENCODINGS
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Media types                                                        |
+# | Media types
 # ----------------------------------------------------------------------
 
 # Serve resources with the proper media types (f.k.a. MIME types).
@@ -133,6 +141,8 @@ Options -MultiViews
   # Media files
     AddType audio/mp4                                   f4a f4b m4a
     AddType audio/ogg                                   oga ogg opus
+    AddType image/avif                                  avif
+    AddType image/avif-sequence                         avifs
     AddType image/bmp                                   bmp
     AddType image/svg+xml                               svg svgz
     AddType image/webp                                  webp
@@ -140,8 +150,8 @@ Options -MultiViews
     AddType video/ogg                                   ogv
     AddType video/webm                                  webm
     AddType video/x-flv                                 flv
-    # Serving `.ico` image files with a different media type
-    # prevents Internet Explorer from displaying them as images:
+    # Serving `.ico` image files with a different media type prevents
+    # Internet Explorer from displaying them as images:
     # https://github.com/h5bp/html5-boilerplate/commit/37b5fec090d00f38de64b591bcddcb205aadf8ee
     AddType image/x-icon                                cur ico
   # WebAssembly
@@ -168,11 +178,11 @@ Options -MultiViews
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Character encodings                                                |
+# | Character encodings
 # ----------------------------------------------------------------------
 
-# Serve all resources labeled as `text/html` or `text/plain`
-# with the media type `charset` parameter set to `UTF-8`.
+# Serve all resources labeled as `text/html` or `text/plain` with the media type
+# `charset` parameter set to `UTF-8`.
 #
 # https://httpd.apache.org/docs/current/mod/core.html#adddefaultcharset
 
@@ -180,8 +190,8 @@ AddDefaultCharset utf-8
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# Serve the following file types with the media type `charset`
-# parameter set to `UTF-8`.
+# Serve the following file types with the media type `charset` parameter set to
+# `UTF-8`.
 #
 # https://httpd.apache.org/docs/current/mod/mod_mime.html#addcharset
 
@@ -207,15 +217,16 @@ AddDefaultCharset utf-8
 </IfModule>
 
 # ######################################################################
-# # REWRITES                                                           #
+# # REWRITES
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Rewrite engine                                                     |
+# | Rewrite engine
 # ----------------------------------------------------------------------
 
-# (1) Turn on the rewrite engine (this is necessary in order for
-#     the `RewriteRule` directives to work).
+
+# (1) Turn on the rewrite engine (this is necessary in order for the
+#     `RewriteRule` directives to work).
 #
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#RewriteEngine
 #
@@ -223,10 +234,10 @@ AddDefaultCharset utf-8
 #
 #     https://httpd.apache.org/docs/current/mod/core.html#options
 #
-# (3) If your web host doesn't allow the `FollowSymlinks` option,
-#     you need to comment it out or remove it, and then uncomment
-#     the `Options +SymLinksIfOwnerMatch` line (4), but be aware
-#     of the performance impact.
+# (3) If your web host doesn't allow the `FollowSymlinks` option, you need to
+#     comment it out or remove it, and then uncomment the
+#     `Options +SymLinksIfOwnerMatch` line (4), but be aware of the performance
+#     impact.
 #
 #     https://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
 #
@@ -235,9 +246,8 @@ AddDefaultCharset utf-8
 #     https://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-modrewrite-not-working-on-my-site
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 #
-# (5) Depending on how your server is set up, you may also need to
-#     use the `RewriteOptions` directive to enable some options for
-#     the rewrite engine.
+# (5) Depending on how your server is set up, you may also need to use the
+#     `RewriteOptions` directive to enable some options for the rewrite engine.
 #
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriteoptions
 #
@@ -263,24 +273,23 @@ AddDefaultCharset utf-8
 
     RewriteRule "^(.+/.*|autoload)\.php($|/)" - [F]
     RewriteRule "^(.+/.*)\.json($|/)" - [F]
-    
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [L]
+    RewriteRule ^ index.php [L]
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Forcing `https://`                                                 |
+# | Forcing `https://`
 # ----------------------------------------------------------------------
 
 # Redirect from the `http://` to the `https://` version of the URL.
 #
 # https://wiki.apache.org/httpd/RewriteHTTPToHTTPS
 
-# (1) If you're using cPanel AutoSSL or the Let's Encrypt webroot
-#     method it will fail to validate the certificate if validation
-#     requests are redirected to HTTPS. Turn on the condition(s)
-#     you need.
+# (1) If you're using cPanel AutoSSL or the Let's Encrypt webroot method it
+#     will fail to validate the certificate if validation requests are
+#     redirected to HTTPS. Turn on the condition(s) you need.
 #
 #     https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml
 #     https://tools.ietf.org/html/draft-ietf-acme-acme-12
@@ -296,43 +305,50 @@ AddDefaultCharset utf-8
 # </IfModule>
 
 # ----------------------------------------------------------------------
-# | Suppressing the `www.` at the beginning of URLs                    |
+# | Suppressing the `www.` at the beginning of URLs
 # ----------------------------------------------------------------------
 
 # Rewrite www.example.com → example.com
 
-# The same content should never be available under two different
-# URLs, especially not with and without `www.` at the beginning.
-# This can cause SEO problems (duplicate content), and therefore,
-# you should choose one of the alternatives and redirect the other
-# one.
+# The same content should never be available under two different URLs,
+# especially not with and without `www.` at the beginning.
+# This can cause SEO problems (duplicate content), and therefore, you should
+# choose one of the alternatives and redirect the other one.
 #
 # (!) NEVER USE BOTH WWW-RELATED RULES AT THE SAME TIME!
 
-# (1) The rule assumes by default that both HTTP and HTTPS
-#     environments are available for redirection.
-#     If your SSL certificate could not handle one of the domains
-#     used during redirection, you should turn the condition on.
+# (1) Set %{ENV:PROTO} variable, to allow rewrites to redirect with the
+#     appropriate schema automatically (http or https).
+#
+# (2) The rule assumes by default that both HTTP and HTTPS environments are
+#     available for redirection.
+#     If your SSL certificate could not handle one of the domains used during
+#     redirection, you should turn the condition on.
 #
 #     https://github.com/h5bp/server-configs-apache/issues/52
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
     # (1)
+    RewriteCond %{HTTPS} =on
+    RewriteRule ^ - [E=PROTO:https]
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ - [E=PROTO:http]
+    # (2)
     # RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
     RewriteRule ^ %{ENV:PROTO}://%1%{REQUEST_URI} [R=301,L]
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | File access                                                        |
+# | File access
 # ----------------------------------------------------------------------
 
 # Block access to directories without a default document.
 #
-# You should leave the following uncommented, as you shouldn't allow
-# anyone to surf through every directory on your server (which may
-# includes rather private places such as the CMS's directories).
+# You should leave the following uncommented, as you shouldn't allow anyone to
+# surf through every directory on your server (which may include rather
+# private places such as the CMS's directories).
 
 <IfModule mod_autoindex.c>
     Options -Indexes
@@ -340,17 +356,17 @@ AddDefaultCharset utf-8
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# Block access to all hidden files and directories with the exception of
-# the visible content from within the `/.well-known/` hidden directory.
+# Block access to all hidden files and directories except for the
+# visible content from within the `/.well-known/` hidden directory.
 #
-# These types of files usually contain user preferences or the preserved
-# state of an utility, and can include rather private places like, for
-# example, the `.git` or `.svn` directories.
+# These types of files usually contain user preferences or the preserved state
+# of a utility, and can include rather private places like, for example, the
+# `.git` or `.svn` directories.
 #
-# The `/.well-known/` directory represents the standard (RFC 5785) path
-# prefix for "well-known locations" (e.g.: `/.well-known/manifest.json`,
-# `/.well-known/keybase.txt`), and therefore, access to its visible
-# content should not be blocked.
+# The `/.well-known/` directory represents the standard (RFC 5785) path prefix
+# for "well-known locations" (e.g.: `/.well-known/manifest.json`,
+# `/.well-known/keybase.txt`), and therefore, access to its visible content
+# should not be blocked.
 #
 # https://www.mnot.net/blog/2010/04/07/well-known
 # https://tools.ietf.org/html/rfc5785
@@ -367,90 +383,89 @@ AddDefaultCharset utf-8
 
 # Block access to files that can expose sensitive information.
 #
-# By default, block access to backup and source files that may be
-# left by some text editors and can pose a security risk when anyone
-# has access to them.
+# By default, block access to backup and source files that may be left by some
+# text editors and can pose a security risk when anyone has access to them.
 #
 # https://feross.org/cmsploit/
 #
-# (!) Update the `<FilesMatch>` regular expression from below to
-# include any files that might end up on your production server and
-# can expose sensitive information about your website. These files may
-# include: configuration files, files that contain metadata about the
-# project (e.g.: project dependencies), build scripts, etc..
+# (!) Update the `<FilesMatch>` regular expression from below to include any
+#     files that might end up on your production server and can expose
+#     sensitive information about your website. These files may include:
+#     configuration files, files that contain metadata about the project (e.g.:
+#     project dependencies, build scripts, etc.).
 
 <FilesMatch "(^#.*#|^composer\.(json|lock)$|\.(bak|conf|dist|fla|in[ci]|json|log|orig|po|psd|sh|sql|sw[op]|tpl|twig|xml|yml)|~)$">
-# Apache >= 2.4    
+    # Apache >= 2.4
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
-# Apache < 2.4
+    # Apache < 2.4
     <IfModule !mod_authz_core.c>
         Order allow,deny
     </IfModule>
 </FilesMatch>
 
 # ----------------------------------------------------------------------
-# | Reducing MIME type security risks                                  |
+# | Content Type Options
 # ----------------------------------------------------------------------
 
 # Prevent some browsers from MIME-sniffing the response.
 #
-# This reduces exposure to drive-by download attacks and cross-origin
-# data leaks, and should be left uncommented, especially if the server
-# is serving user-uploaded content or content that could potentially be
-# treated as executable by the browser.
+# This reduces exposure to drive-by download attacks and cross-origin data
+# leaks, and should be left uncommented, especially if the server is serving
+# user-uploaded content or content that could potentially be treated as
+# executable by the browser.
 #
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
 # https://blogs.msdn.microsoft.com/ie/2008/07/02/ie8-security-part-v-comprehensive-protection/
 # https://mimesniff.spec.whatwg.org/
 
 <IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
+    Header always set X-Content-Type-Options "nosniff"
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Server-side technology information                                 |
+# | Server-side technology information
 # ----------------------------------------------------------------------
 
 # Remove the `X-Powered-By` response header that:
 #
-#  * is set by some frameworks and server-side languages
-#    (e.g.: ASP.NET, PHP), and its value contains information
-#    about them (e.g.: their name, version number)
+#  * is set by some frameworks and server-side languages (e.g.: ASP.NET, PHP),
+#    and its value contains information about them (e.g.: their name, version
+#    number)
 #
-#  * doesn't provide any value to users, contributes to header
-#    bloat, and in some cases, the information it provides can
-#    expose vulnerabilities
+#  * doesn't provide any value to users, contributes to header bloat, and in
+#    some cases, the information it provides can expose vulnerabilities
 #
 # (!) If you can, you should disable the `X-Powered-By` header from the
-# language / framework level (e.g.: for PHP, you can do that by setting
-# `expose_php = off` in `php.ini`)
+#     language/framework level (e.g.: for PHP, you can do that by setting
+#     `expose_php = off` in `php.ini`).
 #
 # https://php.net/manual/en/ini.core.php#ini.expose-php
 
 <IfModule mod_headers.c>
     Header unset X-Powered-By
+    Header always unset X-Powered-By
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Server software information                                        |
+# | Server software information
 # ----------------------------------------------------------------------
 
-# Prevent Apache from adding a trailing footer line containing
-# information about the server to the server-generated documents
-# (e.g.: error messages, directory listings, etc.)
+# Prevent Apache from adding a trailing footer line containing information
+# about the server to the server-generated documents (e.g.: error messages,
+# directory listings, etc.).
 #
 # https://httpd.apache.org/docs/current/mod/core.html#serversignature
 
 ServerSignature Off
 
 # ######################################################################
-# # WEB PERFORMANCE                                                    #
+# # WEB PERFORMANCE
 # ######################################################################
 
 # ----------------------------------------------------------------------
-# | Compression                                                        |
+# | Compression
 # ----------------------------------------------------------------------
 
 <IfModule mod_deflate.c>
@@ -493,6 +508,7 @@ ServerSignature Off
                                       "font/eot" \
                                       "font/opentype" \
                                       "font/otf" \
+                                      "font/ttf" \
                                       "image/bmp" \
                                       "image/svg+xml" \
                                       "image/vnd.microsoft.icon" \
@@ -514,16 +530,15 @@ ServerSignature Off
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Map the following filename extensions to the specified
-    # encoding type in order to make Apache serve the file types
-    # with the appropriate `Content-Encoding` response header
-    # (do note that this will NOT make Apache compress them!).
+    # Map the following filename extensions to the specified encoding type in
+    # order to make Apache serve the file types with the appropriate
+    # `Content-Encoding` response header (do note that this will NOT make
+    # Apache compress them!).
     #
     # If these files types would be served without an appropriate
-    # `Content-Enable` response header, client applications (e.g.:
-    # browsers) wouldn't know that they first need to uncompress
-    # the response, and thus, wouldn't be able to understand the
-    # content.
+    # `Content-Encoding` response header, client applications (e.g.: browsers)
+    # wouldn't know that they first need to uncompress the response, and thus,
+    # wouldn't be able to understand the content.
     #
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
     # https://httpd.apache.org/docs/current/mod/mod_mime.html#addencoding
@@ -534,7 +549,7 @@ ServerSignature Off
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | ETags                                                              |
+# | ETags
 # ----------------------------------------------------------------------
 
 # Remove `ETags` as resources are sent with far-future expires headers.
@@ -551,14 +566,13 @@ ServerSignature Off
 FileETag None
 
 # ----------------------------------------------------------------------
-# | Cache expiration                                                   |
+# | Cache expiration
 # ----------------------------------------------------------------------
 
-# Serve resources with far-future expiration date.
+# Serve resources with a far-future expiration date.
 #
-# (!) If you don't control versioning with filename-based
-# cache busting, you should consider lowering the cache times
-# to something like one week.
+# (!) If you don't control versioning with filename-based cache busting, you
+# should consider lowering the cache times to something like one week.
 #
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expires
@@ -597,6 +611,9 @@ FileETag None
     ExpiresByType text/markdown                         "access plus 0 seconds"
   # Media files
     ExpiresByType audio/ogg                             "access plus 1 month"
+    ExpiresByType image/apng                            "access plus 1 month"
+    ExpiresByType image/avif                            "access plus 1 month"
+    ExpiresByType image/avif-sequence                   "access plus 1 month"
     ExpiresByType image/bmp                             "access plus 1 month"
     ExpiresByType image/gif                             "access plus 1 month"
     ExpiresByType image/jpeg                            "access plus 1 month"
@@ -632,7 +649,7 @@ FileETag None
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | Other                                                              |
+# | Other
 # ----------------------------------------------------------------------
 
 # Increase cookie security
