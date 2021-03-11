@@ -79,12 +79,21 @@ class Login extends \Soosyze\Controller
             ->setRules([
                 'email'           => 'required|email|max:254',
                 'password'        => 'required|string',
-                'token_user_form' => 'required|token'
+                'token_user_form' => 'token'
             ])
             ->setInputs($req->getParsedBody());
 
         if ($validator->isValid()) {
             self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
+        } else {
+            $route = self::router()->getRoute('user.login', [
+                ':url' => $url
+            ]);
+
+            $_SESSION[ 'inputs' ]               = $validator->getInputs();
+            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+
+            return new Redirect($route);
         }
 
         if ($user = self::user()->isConnected()) {

@@ -271,12 +271,14 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $data = $this->query
             ->from($options[ 'relation_table' ])
             ->where($options[ 'foreign_key' ], $this->values[ 'entity_id' ]);
-        if(isset($options[ 'order_by' ])) {
+        if (isset($options[ 'order_by' ])) {
             $data->orderBy(
                 $options[ 'order_by' ],
-                $options[ 'sort' ] === 'asc' || $options[ 'sort' ] === SORT_ASC
+                $options[ 'sort' ] === 'weight'
                     ? SORT_ASC
-                    : SORT_DESC
+                    : ($options[ 'sort' ] === 'desc' || $options[ 'sort' ] === SORT_ASC
+                        ? SORT_ASC
+                        : SORT_DESC)
             );
         }
 
@@ -445,7 +447,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ->group('user_id-group', 'div', function ($form) use ($options) {
                         $form->label('user_id-label', t('User'), [
                             'data-tooltip' => $this->isDisabledUserCurrent
-                            ? t('Vous n\'avez pas les droit pour modifier l\'utilisateur du contenu')
+                            ? t('You do not have the right to modify the user of the content')
                             : ''
                         ])
                         ->select('user_id', $options, [

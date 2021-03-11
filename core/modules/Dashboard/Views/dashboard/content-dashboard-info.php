@@ -17,6 +17,7 @@
     #phpinfo .v i {color: #999;}
     #phpinfo img {float: right; border: 0;}
     #phpinfo hr {background-color: #ccc; border: 0; height: 1px;}
+    .dark #phpinfo table {color: #000}
 </style>
 <div id="phpinfo">
     <?php echo $info; ?>

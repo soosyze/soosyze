@@ -71,7 +71,7 @@ class Node extends \Soosyze\Controller
                 'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $type, $fields)
             ->setUserCurrent(self::user()->isConnected())
-            ->setDisabledUserCurrent(self::user()->isGranted('node.user.edit'))
+            ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
 
         $this->container->callHook('node.create.form', [ &$form, $content, $type ]);
@@ -712,10 +712,13 @@ class Node extends \Soosyze\Controller
                 'title_link' => t('View')
             ];
             if ($this->container->callHook('app.granted.request', [ $nodeShow[ 'request' ] ])) {
+                $alias     = self::alias()->getAlias('node/' . $idNode, 'node/' . $idNode);
+                $pathIndex = self::config()->get('settings.path_index');
+
                 $nodeShow[ 'link' ] = self::router()->makeRoute(
-                    'node/' . $idNode === self::config()->get('settings.path_index')
+                    in_array($pathIndex, [ $alias, 'node/' . $idNode ])
                         ? ''
-                        : self::alias()->getAlias('node/' . $idNode, 'node/' . $idNode)
+                        : $alias
                 );
 
                 $menu = array_merge([ $nodeShow ], $menu);

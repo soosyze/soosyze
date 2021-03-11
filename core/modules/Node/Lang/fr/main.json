@@ -47,5 +47,6 @@
     "You cannot enter the URL of the content that is going to be deleted.": "Vous ne pouvez pas saisir l'URL du contenu qui va être supprimé.",
     "Anonymous": "Anonyme",
     "By": "Par",
-    "My contents": "Mes contenus"
+    "My contents": "Mes contenus",
+    "You do not have the right to modify the user of the content": "Vous n'avez pas le droit de modifier l'utilisateur du contenu"
 }

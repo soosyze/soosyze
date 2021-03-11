@@ -99,9 +99,11 @@ class Node
         if (isset($options[ 'order_by' ])) {
             $this->query->orderBy(
                 $options[ 'order_by' ],
-                $options[ 'sort' ] === 'asc' || $options[ 'sort' ] === SORT_ASC
+                $options[ 'sort' ] === 'weight'
                     ? SORT_ASC
-                    : SORT_DESC
+                    : ($options[ 'sort' ] === 'desc' || $options[ 'sort' ] === SORT_ASC
+                        ? SORT_ASC
+                        : SORT_DESC)
             );
         }
 

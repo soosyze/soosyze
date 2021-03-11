@@ -28,8 +28,8 @@
             <img style="opacity: .5;" src="<?php echo $base_theme; ?>assets/files/arrow.svg" alt="Scroll to top" role="button" width="40"/>
         </div>
 
-        <?php echo $script_inline; ?>
         <?php echo $scripts; ?>
+        <?php echo $script_inline; ?>
 
         <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
     </body>

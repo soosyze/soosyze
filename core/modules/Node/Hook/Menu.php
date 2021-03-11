@@ -159,12 +159,13 @@ class Menu
         $link = $this->alias->getAlias("node/$id", "node/$id");
 
         $this->query->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
+                'key', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent', 'active'
             ])
             ->values([
                 'node.show',
                 $validator->getInput('title_link'),
                 $link,
+                "node/$id",
                 $validator->getInput('menu_title'),
                 1,
                 -1,
@@ -202,12 +203,13 @@ class Menu
                 ->execute();
         } elseif ($validator->hasInput('active') && !$nodeMenuLink) {
             $this->query->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
+                    'key', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent', 'active'
                 ])
                 ->values([
                     'node.show',
                     $validator->getInput('title_link'),
                     $link,
+                    "node/$id",
                     $validator->getInput('menu_title'),
                     1,
                     -1,

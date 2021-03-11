@@ -120,13 +120,13 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         $ci->query()
             ->insertInto('node', [
                 'title', 'type', 'date_created', 'date_changed', 'node_status_id',
-                'entity_id', 'sticky'
+                'entity_id', 'sticky', 'user_id'
             ])
             ->values([
-                'Bienvenue sur mon site', 'article', $time, $time, 1, 1, true
+                'Bienvenue sur mon site', 'article', $time, $time, 1, 1, true, 1
             ])
             ->values([
-                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2, false
+                'Lorem ipsum dolor sit amet', 'article', $time, $time, 1, 2, false, 1
             ])
             ->execute();
 

@@ -413,7 +413,7 @@ class Step
             'news.index', '', 'Blog', 'news', null, 'menu-main', 2, -1
         ]);
         $idMenuAbout    = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'About', 'page/about', 'menu-main', 'node/7', 3, -1
+            'node.show', '', 'About', 'page/about', 'node/7', 'menu-main', 3, -1
         ]);
 
         $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', 7)->execute();

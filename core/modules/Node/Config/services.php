@@ -78,6 +78,7 @@ return [
         'class' => 'SoosyzeCore\Node\Hook\Menu',
         'arguments' => ['@alias', '@query', '@schema'],
         'hooks' => [
+            'node.fieldset.submenu' => 'hookNodeFieldsetSubmenu',
             'node.create.form.data' => 'hookCreateFormData',
             'node.create.form' => 'hookCreateForm',
             'node.store.validator' => 'hookStoreValidator',

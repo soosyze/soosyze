@@ -96,19 +96,22 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 'node_type',
                 'node_type_name',
                 'node_type_description',
-                'node_type_icon'
+                'node_type_icon',
+                'node_type_color'
             ])
             ->values([
                 'page',
                 'Page',
                 'Use the pages for your static content.',
-                'fa fa-file'
+                'fa fa-file',
+                '#7fff88'
             ])
             ->values([
                 'page_private',
                 'Private page',
                 'Use private pages for content reserved for your members.',
-                'far fa-file'
+                'far fa-file',
+                '#005706'
             ])
             ->execute();
 

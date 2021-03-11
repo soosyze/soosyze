@@ -33,7 +33,7 @@ class Alias
     {
         if ($alias === '/') {
             $alias = empty($this->config[ 'settings.path_index' ])
-                ? $default
+                ? $alias
                 : $this->config[ 'settings.path_index' ];
         }
 

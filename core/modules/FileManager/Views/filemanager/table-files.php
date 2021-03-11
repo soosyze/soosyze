@@ -38,7 +38,7 @@
             <span class="wrapper">
                 <span class="name-text">
                     <span class="inner-text"><?php echo $file[ 'name' ]; ?></span>
-                    <?php echo if_or($file[ 'ext' ] !== 'dir', "<span class='ext'>{$file[ 'ext' ]}</span>"); ?>
+                    <?php echo if_or($file[ 'ext' ] !== 'dir', "<span class='ext'>.{$file[ 'ext' ]}</span>"); ?>
 
                 </span>
             </span>
