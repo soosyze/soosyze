@@ -74,5 +74,5 @@
 
 </table>
 <input type="hidden" name="dir" value="<?php echo $path; ?>">
-<input type="submit" name="deplace" value="<?php echo $text_deplace; ?>" class="btn btn-success">
-<input type="submit" name="copy" value="<?php echo $text_copy; ?>" class="btn btn-default">
+<button type="submit" name="deplace" value="deplace" class="btn btn-success"><?php echo $text_deplace; ?></button>
+<button type="submit" name="copy" value="copy" class="btn btn-default"><?php echo $text_copy; ?></button>

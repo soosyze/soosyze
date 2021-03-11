@@ -50,15 +50,28 @@ document.querySelectorAll('.ext').forEach(function (el) {
 /**
  * Ajoute les événements des action (voir, modifier, supprimer) de fichiers.
  */
-$(document).delegate('#modal_filemanager input[type="submit"]', 'click', function (evt) {
+$(document).delegate('#modal_filemanager input[type="submit"], #modal_filemanager button[type="submit"]', 'click', function (evt) {
     evt.preventDefault();
     const $form = $(this).closest('form');
     const target = $('.filemanager');
 
+    let data = $form.serialize();
+    const activeEl = document.activeElement;
+
+    if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
+        if (data) {
+            data += "&";
+        }
+        data += activeEl.name;
+        if (activeEl.value) {
+            data += "=" + activeEl.value;
+        }
+    }
+
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
-        data: $form.serialize(),
+        data: data,
         dataType: 'json',
         success: function () {
             var action = $('#table-file').data('link_show');
