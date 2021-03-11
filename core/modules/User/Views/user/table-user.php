@@ -86,7 +86,7 @@
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
                         </a>
                         <div class="dropdown">
-                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>" type="button">
                                 <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                             </button>
 

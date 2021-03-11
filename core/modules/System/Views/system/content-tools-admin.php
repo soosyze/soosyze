@@ -3,7 +3,7 @@
 <div class="nav-flex">
     <div class="nav-flex-right btn-group">
         <div class="dropdown">
-            <button class="btn btn-default" data-toogle="dropdown" data-target="#myDropdown">
+            <button class="btn btn-default" data-toogle="dropdown" data-target="#myDropdown" type="button">
                 <?php echo t('Actions'); ?> <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
             </button>
 

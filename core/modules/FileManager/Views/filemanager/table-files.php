@@ -53,7 +53,7 @@
         <td class="actions-file" role="group" aria-label="action" data-title="<?php echo t('Actions'); ?>">
             <div class="btn-group" role="group" aria-label="action">
                 <div class="dropdown">
-                    <button class="btn" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                    <button class="btn" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>" type="button">
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </button>
 

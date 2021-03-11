@@ -94,7 +94,7 @@
                         <?php endif; ?>
                         <?php if (isset($node[ 'link_clone' ]) || isset($node[ 'link_remove' ])): ?>
                         <div class="dropdown">
-                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $key; ?>" type="button">
                                 <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                             </button>
 

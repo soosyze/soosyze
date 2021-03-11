@@ -60,7 +60,7 @@
                         </a>
 
                         <div class="dropdown">
-                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $i; ?>">
+                            <button class="btn btn-action" data-toogle="dropdown" data-target="#btn-<?php echo $i; ?>" type="button">
                                 <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                             </button>
 
