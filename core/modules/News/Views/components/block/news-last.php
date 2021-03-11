@@ -16,7 +16,7 @@
 
                     <header>
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <?php echo htmlspecialchars($new[ 'field' ][ 'image' ][ 'field_display' ]); ?>
+                            <?php echo xss($new[ 'field' ][ 'image' ][ 'field_display' ]); ?>
                         </a>
                     </header>
                 <?php endif; ?>
@@ -32,7 +32,7 @@
                     <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo t($new[ 'title' ]); ?></a></h3>
 
                     <div class="card__text">
-                        <?php echo $new[ 'field' ][ 'summary' ][ 'field_display' ]; ?>
+                        <?php echo xss($new[ 'field' ][ 'summary' ][ 'field_display' ]); ?>
                     </div>
                 </div>
 
@@ -43,7 +43,9 @@
                             <?php echo strftime('%d %B, %Y', $new[ 'date_created' ]); ?>
                             -
                             <i class="fa fa-clock"></i> 
-                            ~<?php echo xss($new[ 'field' ][ 'reading_time' ][ 'field_value' ]) . ' ' . t('minute(s)'); ?>
+                            ~<?php echo $new[ 'field' ][ 'reading_time' ][ 'field_value' ]
+                                . ' '
+                                . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                         </span>
                     </div>
                 </div>

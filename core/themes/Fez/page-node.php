@@ -77,7 +77,7 @@
             <?php echo $section[ 'content_header' ]; ?>
         <?php endif; ?>
 
-            <h1><?php echo htmlspecialchars($title_main); ?></h1>
+        <h1><?php echo htmlspecialchars($title_main); ?></h1>
 
         <?php echo $section[ 'submenu' ]; ?>
 

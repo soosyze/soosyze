@@ -3,39 +3,31 @@
     <?php if ($news): ?>
         <?php foreach ($news as $new): ?>
 
-            <article class="card__blog">
+            <article class="thumbnail">
                 <?php if (empty($new[ 'field' ][ 'image' ][ 'field_value' ])): ?>
 
                     <header class="icon_default">
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <i class="icon <?php echo $new[ 'field' ][ 'icon' ][ 'field_value' ]; ?>"></i>
+                            <i class="icon <?php echo htmlspecialchars($new[ 'field' ][ 'icon' ][ 'field_value' ]); ?>"></i>
                         </a>
                     </header>
                 <?php else: ?>
 
                     <header>
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <img src="<?php echo $new[ 'field' ][ 'image' ][ 'field_value' ]; ?>">
+                            <img src="<?php echo htmlspecialchars($new[ 'field' ][ 'image' ][ 'field_value' ]); ?>">
                         </a>
                     </header>
                 <?php endif; ?>
 
-                <main class="card__content">
+                <main class="caption">
                     <?php if ($new[ 'sticky' ]): ?>
 
-                        <small class="card__blog_sticky">
+                        <p class="card__blog_sticky">
                             <i class="fa fa-thumbtack" aria-hidden="true"></i> <?php echo t('Pinned content'); ?>
-                        </small>
+                        </p>
                     <?php endif; ?>
 
-                    <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo $new[ 'title' ]; ?></a></h3>
-
-                    <div class="card__text">
-                        <?php echo $new[ 'field' ][ 'summary' ][ 'field_display' ]; ?>
-                    </div>
-                </main>
-
-                <div class="card__footer">
                     <div class="card__date_tags">
                         <span class="card__date">
                             <i class="fa fa-calendar-alt"></i> 
@@ -47,7 +39,13 @@
                                 . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                         </span>
                     </div>
-                </div>
+
+                    <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo t($new[ 'title' ]); ?></a></h3>
+
+                    <div class="card__text">
+                        <?php echo $new[ 'field' ][ 'summary' ][ 'field_display' ]; ?>
+                    </div>
+                </main>
             </article>
 
         <?php endforeach; ?>

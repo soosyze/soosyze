@@ -5,7 +5,8 @@
 
             <li>
                 <a href="<?php echo $link[ 'link' ]; ?>" class="btn btn-action">
-                    <?php echo !empty($link['icon']) ? "<i class='{$link['icon']}' aria-hidden='true'></i> {$link[ 'title_link' ]}" : $link[ 'title_link' ]; ?>
+                    <?php echo if_or($link['icon'], '<i class="' . htmlspecialchars($link['icon']) . '" aria-hidden="true"></i>'); ?>
+                    <?php echo $link[ 'title_link' ]; ?>
                 </a>
             </li>
         <?php endforeach; ?>

@@ -8,14 +8,14 @@
 
                     <header class="icon_default">
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <i class="icon <?php echo $new[ 'field' ][ 'icon' ][ 'field_value' ]; ?>"></i>
+                            <i class="icon <?php echo htmlspecialchars($new[ 'field' ][ 'icon' ][ 'field_value' ]); ?>"></i>
                         </a>
                     </header>
                 <?php else: ?>
 
                     <header>
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <img src="<?php echo $new[ 'field' ][ 'image' ][ 'field_value' ]; ?>">
+                            <img src="<?php echo htmlspecialchars($new[ 'field' ][ 'image' ][ 'field_value' ]); ?>">
                         </a>
                     </header>
                 <?php endif; ?>
@@ -28,7 +28,7 @@
                         </small>
                     <?php endif; ?>
 
-                    <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo $new[ 'title' ]; ?></a></h3>
+                    <h3 class="card__title"><a href="<?php echo $new[ 'link_view' ]; ?>"><?php echo t($new[ 'title' ]); ?></a></h3>
 
                     <div class="card__text">
                         <?php echo $new[ 'field' ][ 'summary' ][ 'field_display' ]; ?>

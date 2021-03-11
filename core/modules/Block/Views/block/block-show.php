@@ -17,6 +17,6 @@
             <?php echo t('No content available for this block'); ?>
         </div>
     <?php else: ?>
-        <?php echo xss($block[ 'content' ]); ?>
+        <?php echo $block['hook'] === null ? xss($block[ 'content' ]) : $block['content']; ?>
     <?php endif; ?>
 </div>
