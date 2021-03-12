@@ -16,9 +16,11 @@ class Section extends \Soosyze\Controller
         $vendor = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets';
 
         return self::template()
-                ->getTheme($theme === 'admin'
+                ->getTheme(
+                    $theme === 'admin'
                     ? 'theme_admin'
-                    : 'theme')
+                    : 'theme'
+                )
                 ->addStyle('block', "$vendor/css/block.css")
                 ->addScript('block', "$vendor/js/block.js")
                 ->view('page', [
@@ -26,12 +28,14 @@ class Section extends \Soosyze\Controller
                     'title_main' => t('Editing blocks')
                 ])
                 ->make('page.content', 'block/content-section-admin.php', $this->pathViews, [
-                    'content'          => 'View and edit your site\'s display on the following topics.',
-                    'link_theme'       => self::router()->getRoute('block.section.admin', [
-                        ':theme' => 'public'
-                    ]),
-                    'link_theme_admin' => self::router()->getRoute('block.section.admin', [
-                        ':theme' => 'admin'
+                    'content'          => $theme === 'admin'
+                        ? 'Edit public theme blocks'
+                        : 'Edit admin theme blocks',
+                    'link_theme_index' => self::router()->getRoute('system.theme.index'),
+                    'link_section'     => self::router()->getRoute('block.section.admin', [
+                        ':theme' => $theme === 'admin'
+                        ? 'public'
+                        : 'admin'
                     ])
         ]);
     }
