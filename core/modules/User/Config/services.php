@@ -72,5 +72,13 @@ return [
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
+    ],
+    'user.hook.block' => [
+        'class' => 'SoosyzeCore\User\Hook\Block',
+        'arguments' => ['@config', '@router', '@user'],
+        'hooks' => [
+            'block.create.form.data' => 'hookBlockCreateFormData',
+            'block.user.login' => 'hookUserLogin',
+        ]
     ]
 ];
