@@ -20,7 +20,7 @@ class Step
      */
     private static $columnsNode = [
         'entity_id', 'type', 'date_created', 'date_changed', 'node_status_id',
-        'title'
+        'title', 'user_id'
     ];
 
     /**
@@ -364,8 +364,9 @@ class Step
     {
         $this->ci = $ci;
         $ci->config()
-            ->set('settings.path_index', 'node/3')
+            ->set('settings.path_index', 'home')
             ->set('settings.path_no_found', 'node/8')
+            ->set('settings.path_maintenance', 'node/9')
             ->set('settings.meta_title', 'Soosyze site')
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
@@ -376,27 +377,30 @@ class Step
             ->values([ (new Template('block-text.php', $this->pathContent))->render() ])
             ->values([ (new Template('block-text.php', $this->pathContent))->render() ])
             ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
-            ->values([ t('Not Found') ])
+            ->values([ (new Template('page-not_found.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-maintenance.php', $this->pathContent))->render() ])
             ->execute();
 
         $time = (string) time();
         $ci->query()
             ->insertInto('node', self::$columnsNode)
-            ->values([ 1, 'page', $time, $time, 1, t('Site') ]) // id = 3
-            ->values([ 2, 'page', $time, $time, 1, t('Basic') ])
-            ->values([ 3, 'page', $time, $time, 1, t('Standard') ])
-            ->values([ 4, 'page', $time, $time, 1, t('Premium') ])
-            ->values([ 5, 'page', $time, $time, 1, t('About') ])
-            ->values([ 6, 'page', $time, $time, 1, t('Not Found') ])
+            ->values([ 1, 'page', $time, $time, 1, t('Home'), 1 ]) // id = 3
+            ->values([ 2, 'page', $time, $time, 1, t('Basic'), 1 ])
+            ->values([ 3, 'page', $time, $time, 1, t('Standard'), 1 ])
+            ->values([ 4, 'page', $time, $time, 1, t('Premium'), 1 ])
+            ->values([ 5, 'page', $time, $time, 1, t('About'), 1 ])
+            ->values([ 6, 'page', $time, $time, 1, t('Not Found'), 1 ])
+            ->values([ 7, 'page', $time, $time, 1, t('Maintenance'), 1 ])
             ->execute();
 
         $ci->query()
             ->insertInto('system_alias_url', [ 'source', 'alias' ])
-            ->values([ 'node/3', 'page/site' ])
+            ->values([ 'node/3', 'home' ])
             ->values([ 'node/4', 'page/basic' ])
             ->values([ 'node/5', 'page/standard' ])
             ->values([ 'node/6', 'page/premium' ])
             ->values([ 'node/7', 'page/about' ])
+            ->values([ 'node/8', 'maintenance' ])
             ->execute();
 
         $idMenuBasic    = $this->lastInsertId('menu_link', self::$columnsMenu, [
@@ -416,6 +420,7 @@ class Step
             'node.show', '', 'About', 'page/about', 'node/7', 'menu-main', 3, -1
         ]);
 
+        /* Add children Home */
         $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', 7)->execute();
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
@@ -523,6 +528,7 @@ class Step
         $ci->config()
             ->set('settings.path_index', 'news')
             ->set('settings.path_no_found', '')
+            ->set('settings.path_maintenance', 'node/4')
             ->set('settings.meta_title', 'Soosyze blog')
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
@@ -573,6 +579,8 @@ class Step
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
             ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-not_found.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-maintenance.php', $this->pathContent))->render() ])
             ->execute();
 
         $time = (string) time();
@@ -580,12 +588,26 @@ class Step
         $idNodeAbout = $this->lastInsertId(
             'node',
             self::$columnsNode,
-            [ 1, 'page', $time, $time, 1, t('About') ]
+            [ 1, 'page', $time, $time, 1, t('About'), 1 ]
+        );
+
+        $idNodeNotFound = $this->lastInsertId(
+            'node',
+            self::$columnsNode,
+            [ 2, 'page', $time, $time, 1, t('Not Found'), 1 ]
+        );
+
+        $idNodeMaintenance = $this->lastInsertId(
+            'node',
+            self::$columnsNode,
+            [ 3, 'page', $time, $time, 1, t('Maintenance'), 1 ]
         );
 
         $ci->query()
             ->insertInto('system_alias_url', [ 'source', 'alias' ])
             ->values([ 'node/' . $idNodeAbout, 'page/about' ])
+            ->values([ 'node/' . $idNodeNotFound, 'page/about' ])
+            ->values([ 'node/' . $idNodeMaintenance, 'maintenance' ])
             ->execute();
 
         $idMenuAbout = $this->lastInsertId(
@@ -602,11 +624,6 @@ class Step
     public function hookPortfolio($ci)
     {
         $this->ci = $ci;
-        $ci->config()
-            ->set('settings.path_index', 'node/1')
-            ->set('settings.path_no_found', '')
-            ->set('settings.meta_title', 'Soosyze portfolio')
-            ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
         $ci->query()
             ->insertInto('entity_page', [ 'body' ])
@@ -616,36 +633,49 @@ class Step
             ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
             ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
             ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-about.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-not_found.php', $this->pathContent))->render() ])
+            ->values([ (new Template('page-maintenance.php', $this->pathContent))->render() ])
             ->values([ t('Not Found') ])
             ->execute();
 
         $time = (string) time();
 
         $idNodeSite      = $this->lastInsertId('node', self::$columnsNode, [
-            1, 'page', $time, $time, 1, t('Site')
+            1, 'page', $time, $time, 1, t('Home'), 1
         ]);
         $idNodeEducation = $this->lastInsertId('node', self::$columnsNode, [
-            2, 'page', $time, $time, 1, t('Education')
+            2, 'page', $time, $time, 1, t('Education'), 1
         ]);
         $idNodeProjects  = $this->lastInsertId('node', self::$columnsNode, [
-            3, 'page', $time, $time, 1, t('Projects')
+            3, 'page', $time, $time, 1, t('Projects'), 1
         ]);
         $idNodeProject1  = $this->lastInsertId('node', self::$columnsNode, [
-            4, 'page', $time, $time, 1, t('Project 1')
+            4, 'page', $time, $time, 1, t('Project 1'), 1
         ]);
         $idNodeProject2  = $this->lastInsertId('node', self::$columnsNode, [
-            5, 'page', $time, $time, 1, t('Project 2')
+            5, 'page', $time, $time, 1, t('Project 2'), 1
         ]);
         $idNodeProject3  = $this->lastInsertId('node', self::$columnsNode, [
-            6, 'page', $time, $time, 1, t('Project 3')
+            6, 'page', $time, $time, 1, t('Project 3'), 1
         ]);
         $idNodeProject4  = $this->lastInsertId('node', self::$columnsNode, [
-            6, 'page', $time, $time, 1, t('Project 4')
+            7, 'page', $time, $time, 1, t('Project 4'), 1
         ]);
+
+        $idNodeNotFound    = $this->lastInsertId('node', self::$columnsNode, [
+            8, 'page', $time, $time, 1, t('Not Found'), 1
+        ]);
+        $idNodeMaintenance = $this->lastInsertId('node', self::$columnsNode, [
+            9, 'page', $time, $time, 1, t('Maintenance'), 1
+        ]);
+
+        /* Add children Project */
+        $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', $idNodeProjects)->execute();
 
         $ci->query()
             ->insertInto('system_alias_url', [ 'source', 'alias' ])
-            ->values([ 'node/' . $idNodeSite, 'page/site' ])
+            ->values([ 'node/' . $idNodeSite, 'home' ])
             ->values([ 'node/' . $idNodeEducation, 'education' ])
             ->values([ 'node/' . $idNodeProjects, 'project' ])
             ->values([ 'node/' . $idNodeProject1, 'project/1' ])
@@ -673,7 +703,7 @@ class Step
             'node.show', '', 'Project 4', 'project/4', 'node/' . $idNodeProject4, 'menu-main', 7, $idMenuProjects
         ]);
 
-        $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', 7)->execute();
+        $ci->query()->update('menu_link', [ 'has_children' => true ])->where('id', $idMenuProjects)->execute();
 
         $ci->query()->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
             ->values([ $idNodeEducation, $idMenuEducation ])
@@ -700,6 +730,13 @@ class Step
                 'sidebar', '', 1, '', 'social', 'social'
             ])
             ->execute();
+
+        $ci->config()
+            ->set('settings.path_index', 'node/1')
+            ->set('settings.path_no_found', 'node/' . $idNodeNotFound)
+            ->set('settings.path_maintenance', 'node/' . $idNodeMaintenance)
+            ->set('settings.meta_title', 'Soosyze portfolio')
+            ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
     }
 
     public function hookOnePage($ci)
@@ -719,7 +756,7 @@ class Step
         $time = (string) time();
 
         $idNodeSite = $this->lastInsertId('node', self::$columnsNode, [
-            1, 'page', $time, $time, 1, 'Ipsum sed adipiscing'
+            1, 'page', $time, $time, 1, 'Ipsum sed adipiscing', 1
         ]);
 
         $ci->query()
