@@ -35,7 +35,7 @@ class User implements \SoosyzeCore\User\UserInterface
         return 'system.tool.action';
     }
 
-    public function hookApiRoute($req, $user)
+    public function apiRoute($req, $user)
     {
         return !empty($user);
     }

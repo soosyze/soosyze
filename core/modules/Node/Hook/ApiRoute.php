@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\Node\Hook;
 
-class ApiRoute
+class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
 {
     /**
      * @var \SoosyzeCore\System\Services\Alias
@@ -26,19 +26,22 @@ class ApiRoute
         $this->router = $router;
     }
 
-    public function hookApiRoute(array &$routes, $search, $exclude)
+    public function apiRoute(array &$routes, $search, $exclude, $limit)
     {
-        $nodes = $this->query->from('node')->where('title', 'ilike', "%$search%")->limit(5)->fetchAll();
+        $nodes = $this->query
+            ->from('node')
+            ->where('title', '!=', $exclude)
+            ->where('title', 'ilike', "%$search%")
+            ->limit($limit)
+            ->fetchAll();
 
         foreach ($nodes as $node) {
-            $alias    = $this->alias->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
-            if ($alias === $exclude) {
-                continue;
-            }
+            $alias = $this->alias->getAlias("node/{$node[ 'id' ]}", "node/{$node[ 'id' ]}");
+
             $routes[] = [
-                'title' => $node[ 'title' ],
+                'link'  => $this->router->makeRoute($alias),
                 'route' => $alias,
-                'link'  => $this->router->makeRoute($alias)
+                'title' => $node[ 'title' ]
             ];
         }
     }

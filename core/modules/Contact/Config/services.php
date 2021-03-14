@@ -8,6 +8,13 @@ return [
             'install.menu' => 'hookInstallMenu'
         ]
     ],
+    'contact.hook.api.route' => [
+        'class' => 'SoosyzeCore\Contact\Hook\ApiRoute',
+        'arguments' => ['@alias', '@config', '@router'],
+        'hooks' => [
+            'api.route' => 'apiRoute'
+        ]
+    ],
     'contact.hook.user' => [
         'class' => 'SoosyzeCore\Contact\Hook\User',
         'hooks' => [

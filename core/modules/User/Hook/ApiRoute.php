@@ -2,7 +2,7 @@
 
 namespace SoosyzeCore\User\Hook;
 
-class ApiRoute
+class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
 {
     /**
      * @var \Soosyze\Config
@@ -20,43 +20,44 @@ class ApiRoute
         $this->router = $router;
     }
 
-    public function hookApiRoute(array &$routes, $search, $exclude)
+    public function apiRoute(array &$routes, $search, $exclude, $limit)
     {
         $values = [
             [
-                'title' => t('Account'),
+                'link'  => $this->router->getRoute('user.account'),
                 'route' => 'user/account',
-                'link'  => $this->router->getRoute('user.account')
+                'title' => t('My account')
             ], [
-                'title' => t('Sign in'),
-                'route' => 'user/login',
                 'link'  => $this->router->getRoute('user.login', [
                     ':url' => $this->config->get('connect_url', '')
-                ])
+                ]),
+                'route' => 'user/login',
+                'title' => t('Sign in')
             ], [
-                'title' => t('Request a new password'),
-                'route' => 'user/relogin',
                 'link'  => $this->router->getRoute('user.relogin', [
                     ':url' => $this->config->get('connect_url', '')
-                ])
+                ]),
+                'route' => 'user/relogin',
+                'title' => t('Request a new password')
             ], [
-                'title' => t('Sign out'),
-                'route' => 'user/logout',
                 'link'  => $this->router->getRoute('user.logout', [
                     ':url' => $this->config->get('connect_url', '')
-                ])
+                ]),
+                'route' => 'user/logout',
+                'title' => t('Sign out')
             ], [
-                'title' => t('Sign up'),
+                'link'  => $this->router->getRoute('user.register.create'),
                 'route' => 'user/register',
-                'link'  => $this->router->getRoute('user.register.create')
+                'title' => t('Sign up')
             ]
         ];
 
         foreach ($values as $value) {
-            if ($exclude && $exclude === $value[ 'title' ]) {
+            if ($exclude === $value[ 'title' ]) {
                 continue;
             }
-            if (strpos($value[ 'title' ], $search) !== false) {
+
+            if (stristr($value[ 'title' ], $search) !== false) {
                 $routes[] = $value;
             }
         }

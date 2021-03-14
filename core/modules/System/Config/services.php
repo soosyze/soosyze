@@ -54,7 +54,7 @@ return [
             'route.system.tool.admin' => 'hookToolManage',
             'route.system.tool.cron' => 'hookToolAction',
             'route.system.tool.trans' => 'hookToolAction',
-            'route.api.route' => 'hookApiRoute'
+            'route.api.route' => 'apiRoute'
         ]
     ],
     'system.hook.config' => [

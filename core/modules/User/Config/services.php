@@ -25,7 +25,7 @@ return [
         'class' => 'SoosyzeCore\User\Hook\ApiRoute',
         'arguments' => ['@config', '@router'],
         'hooks' => [
-            'api.route' => 'hookApiRoute'
+            'api.route' => 'apiRoute'
         ]
     ],
     'user.hook.user' => [

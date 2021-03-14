@@ -56,7 +56,7 @@ return [
         'class' => 'SoosyzeCore\Node\Hook\ApiRoute',
         'arguments' => ['@alias', '@query', '@router'],
         'hooks' => [
-            'api.route' => 'hookApiRoute'
+            'api.route' => 'apiRoute'
         ]
     ],
     'node.hook.url' => [

@@ -8,6 +8,13 @@ return [
             'install.user' => 'hookInstallUser'
         ]
     ],
+    'news.hook.api.route' => [
+        'class' => 'SoosyzeCore\News\Hook\ApiRoute',
+        'arguments' => ['@alias', '@config', '@router'],
+        'hooks' => [
+            'api.route' => 'apiRoute'
+        ]
+    ],
     'news.hook.user' => [
         'class' => 'SoosyzeCore\News\Hook\User',
         'hooks' => [

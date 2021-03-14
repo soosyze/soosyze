@@ -4,6 +4,8 @@ namespace SoosyzeCore\System\Controller;
 
 class RouteApi extends \Soosyze\Controller
 {
+    const LIMIT_ROUTE = 5;
+
     public function index($req)
     {
         if (!$req->isAjax()) {
@@ -20,8 +22,12 @@ class RouteApi extends \Soosyze\Controller
             ? ''
             : $get[ 'exclude' ];
 
+        $limit = empty($get[ 'limit' ])
+            ? self::LIMIT_ROUTE
+            : $get[ 'limit' ];
+
         $routes = [];
-        $this->container->callHook('api.route', [ &$routes, $search, $exclude ]);
+        $this->container->callHook('api.route', [ &$routes, $search, $exclude, $limit ]);
 
         if (empty($routes)) {
             $routes[] = [
@@ -31,6 +37,22 @@ class RouteApi extends \Soosyze\Controller
             ];
         }
 
-        return $this->json(200, $routes);
+        usort($routes, static function ($a, $b) use ($search) {
+            $aPos = stripos($a[ 'title' ], $search);
+            $bPos = stripos($b[ 'title' ], $search);
+
+            if ($aPos == $bPos) {
+                return 0;
+            }
+
+            return ($aPos < $bPos)
+                ? -1
+                : 1;
+        });
+
+        return $this->json(
+            200,
+            array_slice($routes, 0, self::LIMIT_ROUTE)
+        );
     }
 }
