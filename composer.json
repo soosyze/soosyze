@@ -23,7 +23,7 @@
     "require": {
         "php": ">=5.5",
         "composer/semver": "~3.2",
-        "soosyze/framework": "~2.1",
+        "soosyze/framework": "~3.0",
         "soosyze/queryflatfile": "~1.4",
         "paragonie/random_compat": "<9.99",
         "phpmailer/phpmailer": "~6.1",
