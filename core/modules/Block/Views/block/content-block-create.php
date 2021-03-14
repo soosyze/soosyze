@@ -8,7 +8,8 @@
 </div>
 <?php echo $form->form_open(); ?>
 
-<div class="block-list cards-block">
+<div class="block-list">
+    <div class="cards-block">
     <?php foreach ($blocks as $key => $block): ?>
 
     <div class="card__block search_item">
@@ -23,6 +24,7 @@
     </div>
     <?php endforeach; ?>
 
+    </div>
     <div class="col-md-12">
         <?php echo $form->form_group('submit-group'); ?>
 

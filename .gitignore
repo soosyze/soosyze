@@ -4,13 +4,17 @@
 /app/files/
 /app/modules/
 /app/themes/
+/public/files/
+/public/assets/
 
 # Dependency
 /node_modules/
 /vendor/
 
 # Tools
+/.history/
 /.scannerwork/
+/.vscode/
 /build/
 /nbproject/
 

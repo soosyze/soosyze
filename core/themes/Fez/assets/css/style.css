@@ -25,7 +25,7 @@ address {
 p,
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1em;
-    padding-top: 0;
+    margin-top: 0;
 }
 h2, h3, h4, h5, h6 {
     font-family: Roboto,Verdana,sans-serif;
@@ -357,4 +357,17 @@ ul.icons li a i {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+
+/* --------------------------- */
+/* ---------- NODE ----------- */
+/* --------------------------- */
+.node_type-badge {
+    color: #000;
+    border-radius: 30px;
+    display: inline-block;
+    padding: 2px 10px;
+    text-align: center;
+    white-space: nowrap;
 }

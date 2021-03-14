@@ -41,6 +41,9 @@
 .tool-card-description {
     margin-top:0;
 }
+.filedset-theme {
+    margin-bottom: 2em;
+}
 .dark .tool-card {
     border: 1px solid #17191f;
 }

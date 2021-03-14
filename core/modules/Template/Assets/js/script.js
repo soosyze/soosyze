@@ -59,10 +59,10 @@ $(document).delegate('select.ajax-control', 'change', function () {
     });
 });
 
-(function() {
-    /**
-     * Délare les éléments Traînable comme étant triable et leur options.
-     */
+(function () {
+    /* --------------------------- */
+    /* -------- SORTABLE --------- */
+    /* --------------------------- */
     let nestedSortables = [].slice.call($('[data-draggable="sortable"]'));
 
     for (let i = 0; i < nestedSortables.length; i++) {
@@ -95,6 +95,12 @@ $(document).delegate('select.ajax-control', 'change', function () {
         new Sortable(el, options);
     }
 
+    /* --------------------------- */
+    /* -------- ICON RENDER ------ */
+    /* --------------------------- */
+    $('.text_icon').keyup(function () {
+        $(this).parent().find('.render_icon i').attr('class', this.value);
+    });
 
     /* --------------------------- */
     /* -------- API ROUTE -------- */

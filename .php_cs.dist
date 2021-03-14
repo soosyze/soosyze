@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Configurations pour php-cs-fixer
  *
  * @version 2.16.*
@@ -79,7 +79,27 @@ return PhpCsFixer\Config::create()
             /* Supprime les parenthèses superflus. */
             'no_unneeded_control_parentheses'            => true,
             /* Ordonne les éléments des class. */
-            'ordered_class_elements'                     => true,
+            'ordered_class_elements'                     =>[
+                'order' => [
+                    'use_trait',
+                    'constant_public',
+                    'constant_protected',
+                    'constant_private',
+                    'property_public_static',
+                    'property_public',
+                    'property_protected_static',
+                    'property_protected',
+                    'property_private_static',
+                    'property_private',
+                    'construct',
+                    'destruct',
+                    'magic',
+                    'phpunit',
+                    'method_public',
+                    'method_protected',
+                    'method_private'
+                ]
+            ],
             /* Ordonne les imports (use). */
             'ordered_imports'                            => true,
             /* Les annotations PHPUnit doivent être un FQCN, y compris un espace de noms racine. */

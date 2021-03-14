@@ -65,12 +65,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                         'data-link'   => $this->router->getRoute('api.route'),
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
-                        'value'       => $this->values[ 'link' ] .
-                        (!empty($this->values[ 'query' ])
-                            ? $this->isRewrite . $this->values[ 'query' ]
-                            : '') . (!empty($this->values[ 'fragment' ])
-                            ? '#' . $this->values[ 'fragment' ]
-                            : '')
+                        'value'       => $this->getLinkValue()
                     ]);
                 }, self::$attrGrp)
                 ->group('icon-group', 'div', function ($form) {
@@ -114,5 +109,18 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
             ]);
 
         return $this;
+    }
+
+    private function getLinkValue()
+    {
+        $query = empty($this->values[ 'query' ])
+            ? ''
+            : $this->isRewrite . $this->values[ 'query' ];
+
+        $fragment = empty($this->values[ 'fragment' ])
+            ? ''
+            : '#' . $this->values[ 'fragment' ];
+
+        return $this->values[ 'link' ] . $query . $fragment;
     }
 }

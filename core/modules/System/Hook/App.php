@@ -100,7 +100,7 @@ class App
 
         /*
          * Si il n'y a aucune réponse ou que la réponse est déjà une page 404,
-         * une réponse sera construite à partir d'une template,
+         * une réponse sera construite à partir d'un template,
          * sinon renvoie la réponse 404 de base.
          */
         $response = empty($responseNoFound) || $responseNoFound->getStatusCode() === 404

@@ -16,6 +16,9 @@
     margin-bottom: 1em;
     position: relative;
 }
+.block:hover {
+    background-color: rgba(155,155,155,0.3);
+}
 .block:hover .block-actions {
     opacity: 1;
 }
@@ -69,17 +72,5 @@
     min-width: 30%;
 }
 .block-footer {
-   text-align: center;
+    text-align: center;
 }
-
-/*.card__block .radio-button label {
-    border: 1px solid #fff;
-}
-.card__block .radio-button label:hover {
-    background-color: rgba(33, 33,33,.5);
-}
-.card__block .radio-button [type="radio"]:checked ~ label {
-    background-color: #fff;
-    border: 1px solid #333;
-    color: #333;
-}*/

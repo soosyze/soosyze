@@ -345,7 +345,13 @@ fieldset.package {
     flex: 1;
     flex-direction: column;
     display: flex;
-    margin: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    min-width: 250px;
+}
+.node_type-card .btn-primary {
+    width: 100%;
 }
 .node_type-content {
     flex: 1;

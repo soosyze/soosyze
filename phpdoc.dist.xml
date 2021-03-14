@@ -6,7 +6,7 @@
         <extensions>
             <extension>php</extension>
         </extensions>
-    </parser>    
+    </parser>
     <transformer>
         <target>build/phpDocumentor</target>
     </transformer>

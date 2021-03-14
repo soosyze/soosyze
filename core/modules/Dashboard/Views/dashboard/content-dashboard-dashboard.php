@@ -90,6 +90,10 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <th><?php echo t(' Web server'); ?></th>
+                        <td><?php echo htmlspecialchars($_SERVER['SERVER_SOFTWARE']); ?></td>
+                    </tr>
+                    <tr>
                         <th>
                             <span>
                                 <?php echo t('PHP version'); ?>

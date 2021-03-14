@@ -136,8 +136,9 @@ class Migration
         }
 
         $this->query->execute();
-        $this->config->set('settings.module_update', false);
-        $this->config->set('settings.module_update_time', time());
+        $this->config
+            ->set('settings.module_update', false)
+            ->set('settings.module_update_time', time());
     }
 
     /**

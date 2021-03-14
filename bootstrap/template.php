@@ -6,10 +6,10 @@ $vendor = \Core::getInstance()->getPath('vendor_public', 'public/vendor', false)
 
 Templating::setScriptsGlobal([
     'jquery'   => [
-        'src' => " $vendor/jquery/jquery-3.5.1.min.js"
+        'src' => "$vendor/jquery/jquery-3.5.1.min.js"
     ],
     'sortable' => [
-        'src' => "$vendor/Sortable/Sortable.min.js"
+        'src' => "$vendor/sortable/Sortable.min.js"
     ],
     'select2'  => [
         'src' => "$vendor/select2/select2.min.js"
@@ -19,6 +19,10 @@ Templating::setScriptsGlobal([
     ]
 ]);
 Templating::setStylesGlobal([
+    'normalize-css' => [
+        'href' => "$vendor/normalize-css/normalize.css",
+        'rel'  => 'stylesheet'
+    ],
     'fontawesome' => [
         'href' => "$vendor/fontawesome/css/all.min.css",
         'rel'  => 'stylesheet'

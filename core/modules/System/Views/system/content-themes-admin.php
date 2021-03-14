@@ -1,8 +1,3 @@
-<style>
-    .filedset-theme {
-        margin-bottom: 2em;
-    }
-</style>
 
 <fieldset class="filedset-theme">
     <h2>
