@@ -12,7 +12,7 @@ function addEditor() {
                 ico: "insertImage"
             },
             customFormatting: {
-                dropdown: ["p", "blockquote", "h2", "h3", "h4"],
+                dropdown: ["p", "h2", "h3", "h4", "blockquote", "superscript", "subscript"],
                 ico: "p"
             }
         },
@@ -20,16 +20,15 @@ function addEditor() {
         btns: [
             ["viewHTML"],
             ["undo", "redo"], // Only supported in Blink browsers
-            ["customFormatting", "removeformat"],
-            ["preformatted"],
+            ["customFormatting", "preformatted", "removeformat"],
             ["emoji"],
             ["strong", "em", "del"],
-            ["superscript", "subscript"],
             ["link"],
             ["image"],
             ["justifyLeft", "justifyCenter", "justifyRight", "justifyFull"],
             ["unorderedList", "orderedList"],
             ["horizontalRule"],
+            ['table'],
             ["fullscreen"]
         ],
         imageWidthModalEdit: true,
@@ -39,6 +38,9 @@ function addEditor() {
                 serverPath: config.trumbowyg.serverPath,
                 fileFieldName: "image",
                 urlPropertyName: "link"
+            },
+            table: {
+                styler: "table table-striped table-hover"
             }
         },
         semantic: {

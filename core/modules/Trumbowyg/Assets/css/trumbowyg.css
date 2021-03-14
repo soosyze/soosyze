@@ -2,3 +2,6 @@
     content: attr(placeholder);
     color: #999;
 }
+.trumbowyg-dropdown {
+    max-height: none !important;
+}
