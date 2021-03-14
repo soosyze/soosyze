@@ -17,7 +17,7 @@ $(document).delegate('#form_filter_file', 'input', debounce(function () {
 $(document).delegate('.copy-clipboard', 'click', function (evt) {
     evt.preventDefault();
     const tmp = document.createElement("textarea");
-    tmp.value = this.href;
+    tmp.value = this.attributes.href.value;
     tmp.style.height = "0";
     tmp.style.overflow = "hidden";
     tmp.style.position = "fixed";

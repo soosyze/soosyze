@@ -29,6 +29,7 @@ return [
     ],
     'filemanager.hook.config' => [
         'class' => 'SoosyzeCore\FileManager\Hook\Config',
+        'arguments' => ['@core'],
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]

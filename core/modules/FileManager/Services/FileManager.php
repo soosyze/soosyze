@@ -3,6 +3,7 @@
 namespace SoosyzeCore\FileManager\Services;
 
 use Soosyze\Components\Util\Util;
+use SoosyzeCore\FileManager\Hook\Config;
 
 class FileManager
 {
@@ -26,6 +27,11 @@ class FileManager
         'xhtml', 'xls', 'xlsx', 'xml',
         'zip'
     ];
+
+    /**
+     * @var string
+     */
+    private $copyFileLink;
 
     /**
      * @var \Soosyze\App
@@ -52,6 +58,10 @@ class FileManager
         $this->core     = $core;
         $this->hookUser = $hookUser;
         $this->router   = $router;
+
+        $this->copyFileLink = $core->get('config')->get('settings.copy_link_file', 1) === Config::COPY_ABSOLUTE
+            ? $this->core->getPath('files_public', 'public/files')
+            : '/' . $this->core->getSettingEnv('files_public', 'public/files');
 
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
@@ -254,7 +264,7 @@ class FileManager
                 'class'      => 'copy-clipboard',
                 'icon'       => 'fa fa-copy',
                 'key'        => '',
-                'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
+                'link'       => $this->copyFileLink . $path . '/' . $file->getFilename(),
                 'title_link' => 'Copy link',
                 'type'       => 'button'
             ];

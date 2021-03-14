@@ -10,10 +10,25 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     const KEEP_REFUSE = 3;
 
+    const COPY_ABSOLUTE = 1;
+
+    const COPY_RELATIVE = 2;
+
+    /**
+     * @var \Soosyze\App
+     */
+    private $core;
+
+    public function __construct($core)
+    {
+        $this->core = $core;
+    }
+
     public function defaultValues()
     {
         return [
-            'replace_file' => self::REPLACE_WITH
+            'replace_file'   => self::REPLACE_WITH,
+            'copy_link_file' => self::COPY_ABSOLUTE
         ];
     }
 
@@ -26,8 +41,8 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     public function form(&$form, array $data, $req)
     {
-        $form->group('file-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('file-legend', t('Behavior of file transfers'))
+        $form->group('replace_file-fieldset', 'fieldset', function ($form) use ($data) {
+            $form->legend('file-legend', t('File transfer behavior'))
                 ->group('replace_file_1-group', 'div', function ($form) use ($data) {
                     $form->radio('replace_file', [
                         'checked'  => $data[ 'replace_file' ] === self::REPLACE_WITH,
@@ -58,20 +73,45 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         'for' => 'replace_file_3'
                     ]);
                 }, [ 'class' => 'form-group' ]);
-        });
+        })
+            ->group('copy_link_file-fieldset', 'fieldset', function ($form) use ($data) {
+                $form->legend('copy_link_file-legend', t('File link copy behavior'))
+                ->group('copy_link_file_1-group', 'div', function ($form) use ($data) {
+                    $form->radio('copy_link_file', [
+                        'checked'  => $data[ 'copy_link_file' ] === self::COPY_ABSOLUTE,
+                        'id'       => 'copy_link_file_1',
+                        'required' => 1,
+                        'value'    => self::COPY_ABSOLUTE
+                    ])->label('copy_link_file-label', $this->getLabelCopyLinkFileFull(), [
+                        'for' => 'copy_link_file_1'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('copy_link_file_2-group', 'div', function ($form) use ($data) {
+                    $form->radio('copy_link_file', [
+                        'checked'  => $data[ 'copy_link_file' ] === self::COPY_RELATIVE,
+                        'id'       => 'copy_link_file_2',
+                        'required' => 1,
+                        'value'    => self::COPY_RELATIVE
+                    ])->label('copy_link_file-label', $this->getLabelCopyLinkFileBase(), [
+                        'for' => 'copy_link_file_2'
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+            });
     }
 
     public function validator(&$validator)
     {
         $validator->setRules([
-            'replace_file' => 'required|between_numeric:1,3'
+            'replace_file'   => 'required|between_numeric:1,3',
+            'copy_link_file' => 'required|between_numeric:1,2'
         ]);
     }
 
     public function before(&$validator, array &$data, $id)
     {
         $data = [
-            'replace_file' => (int) $validator->getInput('replace_file')
+            'replace_file'   => (int) $validator->getInput('replace_file'),
+            'copy_link_file' => (int) $validator->getInput('copy_link_file')
         ];
     }
 
@@ -81,5 +121,17 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     public function files(array &$inputsFile)
     {
+    }
+
+    private function getLabelCopyLinkFileFull()
+    {
+        return t('Absolute path')
+            . " <code>{$this->core->getPath('files_public', 'public/files')}/exemple.jpg</code>";
+    }
+
+    private function getLabelCopyLinkFileBase()
+    {
+        return t('Relative path')
+            . " <code>/{$this->core->getSetting('files_public', 'public/files')}/exemple.jpg</code>";
     }
 }
