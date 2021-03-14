@@ -109,6 +109,10 @@ class Manager extends \Soosyze\Controller
         $size   = 0;
         $nbFile = 0;
 
+        $pattern = empty($params[ 'name' ])
+            ? ''
+            : preg_quote($params[ 'name' ], '/');
+
         if (is_dir($filesPublic)) {
             $dirIterator = new \DirectoryIterator($filesPublic);
             $iterator    = $this->get('filemanager.filter.iterator')->load($path, $dirIterator);
@@ -118,8 +122,8 @@ class Manager extends \Soosyze\Controller
                         ? self::filemanager()->parseDir($file, "$path/", $file->getBasename())
                         : self::filemanager()->parseFile($file, $path);
 
-                    if (isset($params[ 'name' ])) {
-                        if (!preg_match('/' . $params[ 'name' ] . '/i', $spl[ 'name' ])) {
+                    if (!empty($params[ 'name' ])) {
+                        if (!preg_match("/$pattern/i", $spl[ 'name' ])) {
                             continue;
                         }
                         $spl[ 'name' ] = Util::strHighlight($params[ 'name' ], $spl[ 'name' ]);

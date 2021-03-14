@@ -11,7 +11,6 @@
         <?php endif; ?>
 
         <?php echo $meta; ?>
-        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/normalize.css">
         <?php echo $styles; ?>
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/soosyze.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/menu.css">

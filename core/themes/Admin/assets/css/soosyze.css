@@ -234,7 +234,8 @@ label {
     color: #db2828;
     font-size: 1.3em;
 }
-input:disabled {
+input:disabled,
+select:disabled {
     cursor: not-allowed;
     opacity: .65;
 }

@@ -234,7 +234,8 @@ label {
     color: #db2828;
     font-size: 1.3em;
 }
-input:disabled {
+input:disabled,
+select:disabled {
     cursor: not-allowed;
     opacity: .65;
 }
@@ -527,7 +528,7 @@ select[multiple].form-control {
 /* -------- RADIO BUTTON -------- */
 .radio-button label {
     background-color: #272737;
-    border: 1px solid #272737;
+    border: 0;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
@@ -545,9 +546,7 @@ select[multiple].form-control {
     display: none;
 }
 .radio-button [type="radio"]:checked ~ label {
-    background-color: #fff;
-    border: 1px solid #272737;
-    color: #272737;
+    background-color: #131419;
 }
 .radio-button [type="radio"] + label {
     padding: .7em 1em;
@@ -612,7 +611,7 @@ caption {
     border-top: 1px solid #ddd;
     line-height: 1.4;
     vertical-align: middle;
-    padding: 1em;
+    padding: .5em .5em;
     text-align: left;
 }
 .table > thead > tr > th {
@@ -693,6 +692,9 @@ caption {
         padding-left: 50% !important;
         white-space: normal;
         text-align: right;
+    }
+    .table.table-responsive td .btn-group {
+        justify-content: end;
     }
     .table.table-responsive td:before {
         content: attr(data-title);
@@ -842,6 +844,7 @@ label[data-tooltip]:before {
     font-family: "Source Sans Pro",Helvetica,sans-serif;
     font-size: 1em;
     font-weight: 600;
+    line-height: 1.5;
     padding: .7em 1em;
     text-align: center;
     text-decoration: none;

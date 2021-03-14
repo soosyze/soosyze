@@ -216,7 +216,7 @@
     display: none;
 }
 .select-pane.active,
-.tab-content .active {
+.tab-content .tab-pane.active {
     display: block;
 }
 .fade:not(.active) {

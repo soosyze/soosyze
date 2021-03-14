@@ -32,9 +32,12 @@ class Alias
     public function getSource($alias, $default = null)
     {
         if ($alias === '/') {
-            $alias = empty($this->config[ 'settings.path_index' ])
+            $index = $this->config[ 'settings.path_index' ];
+            $alias = empty($index)
                 ? $alias
-                : $this->config[ 'settings.path_index' ];
+                : $index;
+
+            $default = $index;
         }
 
         $source = $this->query->from('system_alias_url')->where('alias', $alias)->fetch();
