@@ -36,8 +36,8 @@ class Menu
     public function hookUserManagerSubmenu(&$menu)
     {
         $menu[] = [
-            'key'        => 'filemanager.profil.admin',
-            'request'    => $this->router->getRequestByRoute('filemanager.profil.admin'),
+            'key'        => 'filemanager.permission.admin',
+            'request'    => $this->router->getRequestByRoute('filemanager.permission.admin'),
             'title_link' => t('Files permissions')
         ];
     }

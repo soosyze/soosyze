@@ -17,10 +17,10 @@ class FilePermissionManager extends \Soosyze\Controller
     {
         $values = self::query()->from('profil_file')->orderBy('profil_weight')->fetchAll();
 
-        $this->container->callHook('filemanager.profil.admin.form.data', [ &$values ]);
+        $this->container->callHook('filemanager.permission.admin.form.data', [ &$values ]);
 
         $form = ( new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.profil.admin.check'),
+            'action' => self::router()->getRoute('filemanager.permission.admin.check'),
             'method' => 'post'
         ]));
 
@@ -43,7 +43,7 @@ class FilePermissionManager extends \Soosyze\Controller
         $form->token('token_profil_form')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
-        $this->container->callHook('filemanager.profil.admin.form', [ &$form, $values ]);
+        $this->container->callHook('filemanager.permission.admin.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -62,10 +62,10 @@ class FilePermissionManager extends \Soosyze\Controller
                     'title_main' => t('Administer file permissions')
                 ])
                 ->view('page.messages', $messages)
-                ->view('page.submenu', self::user()->getUserManagerSubmenu('filemanager.profil.admin'))
+                ->view('page.submenu', self::user()->getUserManagerSubmenu('filemanager.permission.admin'))
                 ->make('page.content', 'filemanager/content-file_permission_manager-admin.php', $this->pathViews, [
                     'form'     => $form,
-                    'link_add' => self::router()->getRoute('filemanager.profil.create'),
+                    'link_add' => self::router()->getRoute('filemanager.permission.create'),
                     'profils'  => $values,
                     'router'   => self::router()
                 ]);
@@ -84,7 +84,7 @@ class FilePermissionManager extends \Soosyze\Controller
                 ->addRule("profil_weight-{$profil[ 'profil_file_id' ]}", 'required|numeric|between:1,50');
         }
 
-        $this->container->callHook('filemanager.profil.admin.check.validator', [
+        $this->container->callHook('filemanager.permission.admin.check.validator', [
             &$validator ]);
 
         if ($validator->isValid()) {
@@ -93,7 +93,7 @@ class FilePermissionManager extends \Soosyze\Controller
                     'profil_weight' => (int) $validator->getInput("profil_weight-{$profil[ 'profil_file_id' ]}")
                 ];
 
-                $this->container->callHook('filemanager.profil.admin.check.before', [
+                $this->container->callHook('filemanager.permission.admin.check.before', [
                     &$validator, &$data
                 ]);
 
@@ -102,7 +102,7 @@ class FilePermissionManager extends \Soosyze\Controller
                     ->where('profil_file_id', $profil[ 'profil_file_id' ])
                     ->execute();
 
-                $this->container->callHook('filemanager.profil.admin.check.after', [
+                $this->container->callHook('filemanager.permission.admin.check.after', [
                     &$validator
                 ]);
             }
@@ -114,6 +114,6 @@ class FilePermissionManager extends \Soosyze\Controller
             $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
+        return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
     }
 }

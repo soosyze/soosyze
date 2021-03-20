@@ -4,15 +4,15 @@ use Soosyze\Components\Router\Route as R;
 
 R::useNamespace('SoosyzeCore\FileManager\Controller');
 
-R::get('filemanager.profil.admin', 'admin/user/permission/filemanager', 'FilePermissionManager@admin');
-R::post('filemanager.profil.admin.check', 'admin/user/permission/filemanager', 'FilePermissionManager@adminCheck');
+R::get('filemanager.permission.admin', 'admin/user/permission/filemanager', 'FilePermissionManager@admin');
+R::post('filemanager.permission.admin.check', 'admin/user/permission/filemanager', 'FilePermissionManager@adminCheck');
 
-R::get('filemanager.profil.create', 'admin/user/permission/filemanager/create', 'Profil@create');
-R::post('filemanager.profil.store', 'admin/user/permission/filemanager/store', 'Profil@store');
-R::get('filemanager.profil.edit', 'admin/user/permission/filemanager/:id/edit', 'Profil@edit', [ ':id' => '\d+' ]);
-R::post('filemanager.profil.update', 'admin/user/permission/filemanager/:id/edit', 'Profil@update', [ ':id' => '\d+' ]);
-R::get('filemanager.profil.remove', 'admin/user/permission/filemanager/:id/delete', 'Profil@remove', [ ':id' => '\d+' ]);
-R::post('filemanager.profil.delete', 'admin/user/permission/filemanager/:id/delete', 'Profil@delete', [ ':id' => '\d+' ]);
+R::get('filemanager.permission.create', 'admin/user/permission/filemanager/create', 'FilePermission@create');
+R::post('filemanager.permission.store', 'admin/user/permission/filemanager/store', 'FilePermission@store');
+R::get('filemanager.permission.edit', 'admin/user/permission/filemanager/:id/edit', 'FilePermission@edit', [ ':id' => '\d+' ]);
+R::post('filemanager.permission.update', 'admin/user/permission/filemanager/:id/edit', 'FilePermission@update', [ ':id' => '\d+' ]);
+R::get('filemanager.permission.remove', 'admin/user/permission/filemanager/:id/delete', 'FilePermission@remove', [ ':id' => '\d+' ]);
+R::post('filemanager.permission.delete', 'admin/user/permission/filemanager/:id/delete', 'FilePermission@delete', [ ':id' => '\d+' ]);
 
 /* Affichage du filemanager complet. */
 R::get('filemanager.admin', 'admin/filemanager/show', 'Manager@admin');

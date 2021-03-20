@@ -25,7 +25,7 @@ class User implements \SoosyzeCore\User\UserInterface
     public function hookUserPermissionModule(array &$permissions)
     {
         $permissions[ 'FileManager' ] = [
-            'filemanager.profil.admin' => 'Administer file permissions'
+            'filemanager.permission.admin' => 'Administer file permissions'
         ];
     }
 
@@ -58,7 +58,7 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookFileAdmin()
     {
-        return 'filemanager.profil.admin';
+        return 'filemanager.permission.admin';
     }
 
     public function hookFileShow($path, $name, $ext, $req = null, $user = null)

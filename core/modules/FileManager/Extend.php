@@ -192,7 +192,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('role_permission', [ 'role_id', 'permission_id' ])
-            ->values([ 3, 'filemanager.profil.admin' ])
+            ->values([ 3, 'filemanager.permission.admin' ])
             ->execute();
     }
 

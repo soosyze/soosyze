@@ -8,7 +8,7 @@ use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Form\FormPermission;
 use SoosyzeCore\FileManager\Services\FileManager;
 
-class Profil extends \Soosyze\Controller
+class FilePermission extends \Soosyze\Controller
 {
     public function __construct()
     {
@@ -22,15 +22,15 @@ class Profil extends \Soosyze\Controller
             $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
-        $this->container->callHook('filemanager.profil.create.form.data', [ &$values ]);
+        $this->container->callHook('filemanager.permission.create.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('filemanager.profil.store');
+        $action = self::router()->getRoute('filemanager.permission.store');
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->setValues($values)
             ->setRoles(self::query()->from('role')->fetchAll())
             ->makeFields();
 
-        $this->container->callHook('filemanager.profil.create.form', [ &$form, $values ]);
+        $this->container->callHook('filemanager.permission.create.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -57,7 +57,7 @@ class Profil extends \Soosyze\Controller
     {
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('filemanager.profil.store.validator', [ &$validator ]);
+        $this->container->callHook('filemanager.permission.store.validator', [ &$validator ]);
 
         $validatorExtension = new Validator();
 
@@ -73,7 +73,7 @@ class Profil extends \Soosyze\Controller
         if ($isValid) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('filemanager.profil.store.before', [
+            $this->container->callHook('filemanager.permission.store.before', [
                 $validator, &$data
             ]);
 
@@ -85,10 +85,10 @@ class Profil extends \Soosyze\Controller
             $permissionFileId = self::schema()->getIncrement('profil_file');
             $this->storeProfilRole($validator, $permissionFileId);
 
-            $this->container->callHook('filemanager.profil.store.after', [ $validator ]);
+            $this->container->callHook('filemanager.permission.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-            $route                               = self::router()->getRoute('filemanager.profil.admin');
+            $route                               = self::router()->getRoute('filemanager.permission.admin');
 
             return new Redirect($route);
         }
@@ -97,7 +97,7 @@ class Profil extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        $route = self::router()->getRoute('filemanager.profil.create');
+        $route = self::router()->getRoute('filemanager.permission.create');
 
         return new Redirect($route);
     }
@@ -110,20 +110,20 @@ class Profil extends \Soosyze\Controller
         $values[ 'file_extensions' ] = explode(',', $values[ 'file_extensions' ]);
         $values[ 'roles' ] = self::fileprofil()->getIdRolesUser($id);
 
-        $this->container->callHook('filemanager.profil.edit.form.data', [ &$values ]);
+        $this->container->callHook('filemanager.permission.edit.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
             $values = $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $action = self::router()->getRoute('filemanager.profil.update', [ ':id' => $id ]);
+        $action = self::router()->getRoute('filemanager.permission.update', [ ':id' => $id ]);
         $form   = (new FormPermission([ 'method' => 'post', 'action' => $action ]))
             ->setRoles(self::query()->from('role')->fetchAll())
             ->setValues($values)
             ->makeFields();
 
-        $this->container->callHook('filemanager.profil.edit.form', [ &$form, $values ]);
+        $this->container->callHook('filemanager.permission.edit.form', [ &$form, $values ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
@@ -142,7 +142,7 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Edit the files permission')
                 ])
                 ->view('page.messages', $messages)
-                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.profil.edit', $id))
+                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.permission.edit', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
                 ]);
@@ -156,7 +156,7 @@ class Profil extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('filemanager.profil.update.validator', [
+        $this->container->callHook('filemanager.permission.update.validator', [
             &$validator, $id
         ]);
 
@@ -174,7 +174,7 @@ class Profil extends \Soosyze\Controller
         if ($isValid) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('filemanager.profil.update.before', [
+            $this->container->callHook('filemanager.permission.update.before', [
                 $validator, &$data, $id
             ]);
             self::query()
@@ -182,20 +182,20 @@ class Profil extends \Soosyze\Controller
                 ->where('profil_file_id', '==', $id)
                 ->execute();
             $this->updateProfilRole($validator, $id);
-            $this->container->callHook('filemanager.profil.update.after', [
+            $this->container->callHook('filemanager.permission.update.after', [
                 $validator, $id
             ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
+            return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
         }
 
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        return new Redirect(self::router()->getRoute('filemanager.profil.edit', [
+        return new Redirect(self::router()->getRoute('filemanager.permission.edit', [
                 ':id' => $id
         ]));
     }
@@ -207,7 +207,7 @@ class Profil extends \Soosyze\Controller
         }
 
         $form = (new FormBuilder([
-                'action' => self::router()->getRoute('filemanager.profil.delete', [
+                'action' => self::router()->getRoute('filemanager.permission.delete', [
                     ':id' => $id
                 ]),
                 'method' => 'post',
@@ -242,7 +242,7 @@ class Profil extends \Soosyze\Controller
                     'title_main' => t('Delete files permission')
                 ])
                 ->view('page.messages', $messages)
-                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.profil.remove', $id))
+                ->view('page.submenu', $this->getPermissionSubmenu('filemanager.permission.remove', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
                 ]);
@@ -256,12 +256,12 @@ class Profil extends \Soosyze\Controller
         $validator = (new Validator())
             ->addRule('token_file_permission', 'token')
             ->setInputs($req->getParsedBody());
-        $this->container->callHook('filemanager.profil.delete.validator', [
+        $this->container->callHook('filemanager.permission.delete.validator', [
             &$validator, $id
         ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('filemanager.profil.delete.before', [
+            $this->container->callHook('filemanager.permission.delete.before', [
                 $validator, $id
             ]);
             self::query()
@@ -274,16 +274,16 @@ class Profil extends \Soosyze\Controller
                 ->delete()
                 ->where('profil_file_id', '==', $id)
                 ->execute();
-            $this->container->callHook('filemanager.profil.delete.after', [
+            $this->container->callHook('filemanager.permission.delete.after', [
                 $validator, $id
             ]);
 
-            return new Redirect(self::router()->getRoute('filemanager.profil.admin'));
+            return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
         }
         $_SESSION[ 'inputs' ]               = $validator->getInputs();
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-        return new Redirect(self::router()->getRoute('filemanager.profil.remove', [
+        return new Redirect(self::router()->getRoute('filemanager.permission.remove', [
                 ':id' => $id
         ]));
     }
@@ -394,14 +394,14 @@ class Profil extends \Soosyze\Controller
     {
         $menu = [
             [
-                'key'        => 'filemanager.profil.edit',
-                'request'    => self::router()->getRequestByRoute('filemanager.profil.edit', [
+                'key'        => 'filemanager.permission.edit',
+                'request'    => self::router()->getRequestByRoute('filemanager.permission.edit', [
                     ':id' => $idPermission
                 ]),
                 'title_link' => t('Edit')
             ], [
-                'key'        => 'filemanager.profil.remove',
-                'request'    => self::router()->getRequestByRoute('filemanager.profil.remove', [
+                'key'        => 'filemanager.permission.remove',
+                'request'    => self::router()->getRequestByRoute('filemanager.permission.remove', [
                     ':id' => $idPermission
                 ]),
                 'title_link' => t('Delete')
