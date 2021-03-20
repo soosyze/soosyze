@@ -117,9 +117,9 @@ class Config extends \Soosyze\Controller
         }
 
         $form = new FormBuilder([
-            'method'  => 'post',
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data'
+            'enctype' => 'multipart/form-data',
+            'method'  => 'post'
         ]);
 
         $config->form($form, $data, $req);

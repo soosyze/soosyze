@@ -35,7 +35,8 @@ class App
         $response
             ->addConfigJs('trumbowyg', [
                 'lang'       => $lang,
-                'serverPath' => $this->router->getRoute('trumbowyg.upload')
+                'serverPath' => $this->router->getRoute('trumbowyg.upload'),
+                'vendor'     => $vendor
             ])
             /* Scripts */
             ->addScript('trumbowy.editor', "$assets/js/trumbowyg.js")
@@ -46,10 +47,10 @@ class App
             ->addScript('trumbowyg.emoji', "$vendor/plugins/emoji/trumbowyg.emoji.min.js")
             ->addScript('trumbowyg.table', "$vendor/plugins/table/trumbowyg.table.min.js")
             /* Styles */
-            ->addStyle('trumbowy.editor', "$assets/css/trumbowyg.css")
             ->addStyle('trumbowyg', "$vendor/ui/trumbowyg.min.css")
             ->addStyle('trumbowyg.emoji', "$vendor/plugins/emoji/ui/trumbowyg.emoji.min.css")
-            ->addStyle('trumbowyg.table', "$vendor/plugins/table/ui/trumbowyg.table.min.css");
+            ->addStyle('trumbowyg.table', "$vendor/plugins/table/ui/trumbowyg.table.min.css")
+            ->addStyle('trumbowy.editor', "$assets/css/trumbowyg.css");
 
         if ($lang !== 'en') {
             $response->addScript('trumbowyg.lang', "$vendor/langs/$lang.min.js");

@@ -74,9 +74,9 @@ class User extends \Soosyze\Controller
         }
 
         $form = (new FormUser([
-            'method'  => 'post',
             'action'  => self::router()->getRoute('user.store'),
-            'enctype' => 'multipart/form-data' ], self::file(), self::config()))
+            'enctype' => 'multipart/form-data',
+            'method'  => 'post' ], self::file(), self::config()))
             ->setValues($values)
             ->informationsCreateFieldset()
             ->profilFieldset()
@@ -207,9 +207,9 @@ class User extends \Soosyze\Controller
         }
 
         $form = (new FormUser([
-            'method'  => 'post',
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::config()))
+            'enctype' => 'multipart/form-data',
+            'method'  => 'post' ], self::file(), self::config()))
             ->setValues($values)
             ->informationsFieldset()
             ->profilFieldset()
@@ -381,8 +381,8 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.remove.form.data', [ &$user, $id ]);
 
         $form = (new FormBuilder([
-                'method' => 'post',
-                'action' => self::router()->getRoute('user.delete', [ ':id' => $id ])
+                'action' => self::router()->getRoute('user.delete', [ ':id' => $id ]),
+                'method' => 'post'
                 ]))
             ->group('user-fieldset', 'fieldset', function ($form) {
                 $form->legend('user-legend', t('Account deletion'))

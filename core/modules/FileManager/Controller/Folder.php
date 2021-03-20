@@ -30,10 +30,9 @@ class Folder extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormFolder([
-            'action' => self::router()->getRoute('filemanager.folder.store', [ ':path' => $path ]),
-            'method' => 'post',
-            ]))
+        $action = self::router()->getRoute('filemanager.folder.store', [ ':path' => $path ]);
+
+        $form = (new FormFolder([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
 
@@ -104,10 +103,9 @@ class Folder extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormFolder([
-            'action' => self::router()->getRoute('filemanager.folder.update', [ ':path' => $path ]),
-            'method' => 'post',
-            ]))
+        $action = self::router()->getRoute('filemanager.folder.update', [ ':path' => $path ]);
+
+        $form = (new FormFolder([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
 
@@ -177,14 +175,12 @@ class Folder extends \Soosyze\Controller
         if (!$spl->isDir()) {
             return $this->get404($req);
         }
-        $values = self::filemanager()->parseDir($spl, $path);
 
-        $form = (new FormBuilder([
-                'action' => self::router()->getRoute('filemanager.folder.delete', [
-                    ':path' => $path
-                ]),
-                'method' => 'post',
-            ]))
+        $action = self::router()->getRoute('filemanager.folder.delete', [
+            ':path' => $path
+        ]);
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
             ->group('folder-fieldset', 'fieldset', function ($form) {
                 $form->legend('folder-legend', t('Delete directory'))
                 ->group('info-group', 'div', function ($form) {
@@ -201,7 +197,7 @@ class Folder extends \Soosyze\Controller
                 ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
-                    'info'  => $values,
+                    'info'  => self::filemanager()->parseDir($spl, $path),
                     'menu'  => self::filemanager()->getFolderSubmenu('filemanager.folder.remove', $path),
                     'title' => t('Delete directory')
         ]);

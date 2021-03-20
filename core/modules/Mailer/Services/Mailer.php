@@ -18,11 +18,10 @@ class Mailer
         'smtp_username'   => ''
     ];
 
-    public function __construct(\ArrayAccess $config = null)
+    public function __construct(array $config = [])
     {
-        if (empty($config[ 'mailer' ])) {
-            $this->values += $config[ 'mailer' ];
-        }
+        $this->values = array_merge($this->values, $config);
+
         $this->mailer = new PHPMailer;
         $this->values[ 'driver' ] === 'mail'
                 ? $this->mailer->isMail()
@@ -33,14 +32,14 @@ class Mailer
     {
         $this->mailer->isSMTP();
 
-        $this->mailer->Host       = $this->config[ 'smtp_host' ];
+        $this->mailer->Host       = $this->values[ 'smtp_host' ];
         $this->mailer->SMTPAuth   = true;
-        $this->mailer->Username   = $this->config[ 'smtp_username' ];
-        $this->mailer->Password   = $this->config[ 'smtp_password' ];
-        $this->mailer->SMTPSecure = $this->config[ 'smtp_encryption' ] === 'tls'
+        $this->mailer->Username   = $this->values[ 'smtp_username' ];
+        $this->mailer->Password   = $this->values[ 'smtp_password' ];
+        $this->mailer->SMTPSecure = $this->values[ 'smtp_encryption' ] === 'tls'
             ? PHPMailer::ENCRYPTION_STARTTLS
             : PHPMailer::ENCRYPTION_SMTPS;
-        $this->mailer->Port       = $this->config[ 'smtp_port' ];
+        $this->mailer->Port       = $this->values[ 'smtp_port' ];
     }
 
     public function to($email, $name = '')

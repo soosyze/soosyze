@@ -110,8 +110,8 @@ class Menu
                         $form->group('menu_title-group', 'div', function ($form) use ($data) {
                             $form->label('menu_title-label', t('Menu title'))
                             ->select('menu_title', $this->getOptions(), [
-                                'class'     => 'form-control',
-                                ':selected' => $data[ 'menu_title' ]
+                                ':selected' => $data[ 'menu_title' ],
+                                'class'     => 'form-control'
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('title_link-group', 'div', function ($form) use ($data) {
@@ -159,7 +159,8 @@ class Menu
         $link = $this->alias->getAlias("node/$id", "node/$id");
 
         $this->query->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent', 'active'
+                'key', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent',
+                'active'
             ])
             ->values([
                 'node.show',
@@ -203,7 +204,8 @@ class Menu
                 ->execute();
         } elseif ($validator->hasInput('active') && !$nodeMenuLink) {
             $this->query->insertInto('menu_link', [
-                    'key', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent', 'active'
+                    'key', 'title_link', 'link', 'link_router', 'menu', 'weight',
+                    'parent', 'active'
                 ])
                 ->values([
                     'node.show',
@@ -273,8 +275,8 @@ class Menu
         $options = [];
         foreach ($menus as $menu) {
             $options[] = [
-                'value' => $menu[ 'name' ],
-                'label' => t($menu[ 'title' ])
+                'label' => t($menu[ 'title' ]),
+                'value' => $menu[ 'name' ]
             ];
         }
 

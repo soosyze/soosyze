@@ -34,17 +34,17 @@ class Url
         $this->schema = $schema;
     }
 
-    public function hookCreateFormData(&$data)
+    public function hookCreateFormData(array &$data)
     {
         $data[ 'meta_url' ] = '';
     }
 
-    public function hookEditFormData(&$data, $idNode)
+    public function hookEditFormData(array &$data, $idNode)
     {
         $data[ 'meta_url' ] = $this->alias->getAlias('node/' . $idNode, '');
     }
 
-    public function hookCreateForm($form, $data)
+    public function hookCreateForm($form, array $data)
     {
         $form->before('seo-fieldset', function ($form) use ($data) {
             $form->group('url-fieldset', 'fieldset', function ($form) use ($data) {

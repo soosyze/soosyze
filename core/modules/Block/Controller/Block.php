@@ -50,12 +50,11 @@ class Block extends \Soosyze\Controller
     {
         $data = self::block()->getBlocks();
 
-        $form = new FormBuilder([
-            'method' => 'post',
-            'action' => self::router()->getRoute('block.store', [
-                ':theme' => $theme, ':section' => $section
-            ])
+        $action = self::router()->getRoute('block.store', [
+            ':theme'   => $theme, ':section' => $section
         ]);
+
+        $form = new FormBuilder([ 'action' => $action, 'method' => 'post' ]);
 
         $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
 
@@ -111,9 +110,9 @@ class Block extends \Soosyze\Controller
                 ->getTheme('theme_admin')
                 ->createBlock('block/content-block-create.php', $this->pathViews)
                 ->addVars([
-                    'section' => $section,
                     'blocks'  => $data,
-                    'form'    => $form
+                    'form'    => $form,
+                    'section' => $section
         ]);
     }
 
@@ -189,12 +188,11 @@ class Block extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormBlock([
-                'method' => 'post',
-                'action' => self::router()->getRoute('block.update', [
-                    ':id' => $data[ 'block_id' ]
-                ])
-            ]))
+        $action = self::router()->getRoute('block.update', [
+            ':id' => $data[ 'block_id' ]
+        ]);
+
+        $form = (new FormBlock([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($data, $id, self::user()->getRoles())
             ->makeFields();
 

@@ -52,7 +52,7 @@ class File extends \Soosyze\Controller
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/modal-file-show.php', $this->pathViews)
-                ->addBlock('visualize', $visualize['block'])
+                ->addBlock('visualize', $visualize[ 'block' ])
                 ->addVars([
                     'file'  => $spl,
                     'info'  => $data,
@@ -90,7 +90,7 @@ class File extends \Soosyze\Controller
                     . '</div>'
                 )
                 ->file('file[]', [
-                    'id' => 'files',
+                    'id'       => 'files',
                     'multiple' => 1,
                     'style'    => 'display:none'
                 ]);
@@ -144,7 +144,7 @@ class File extends \Soosyze\Controller
             ->setRules($rules)
             ->addLabel('file', t('File'))
             ->setMessages([
-                'file' => [
+                'file'   => [
                     'max' => [
                         'must' => t('File size is limited to :max per upload')
                     ]
@@ -157,6 +157,7 @@ class File extends \Soosyze\Controller
             ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
 
+        $validator->addInput('folder', 0);
         if (is_dir($dir)) {
             $sizeFile   = $validator->getInput('file', 0)
                 ? $validator->getInput('file')->getSize()
@@ -164,8 +165,6 @@ class File extends \Soosyze\Controller
             $sizefolder = self::filemanager()->parseRecursive($dir)[ 'size' ];
 
             $validator->addInput('folder', $sizefolder + $sizeFile);
-        } else {
-            $validator->addInput('folder', 0);
         }
 
         if (!$validator->isValid()) {
@@ -233,14 +232,11 @@ class File extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.file.update', [
-                ':path' => $path,
-                ':name' => $name,
-                ':ext'  => $ext
-            ]),
-            'method' => 'post',
-            ]))
+        $action = self::router()->getRoute('filemanager.file.update', [
+            ':path' => $path, ':name' => $name, ':ext'  => $ext
+        ]);
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post']))
             ->group('file-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('file-legend', t('Rename the file'))
                 ->group('name-group', 'div', function ($form) use ($data) {
@@ -330,14 +326,11 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $form = (new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.file.delete', [
-                ':path' => $path,
-                ':name' => $name,
-                ':ext'  => $ext
-            ]),
-            'method' => 'post',
-            ]))
+        $action = self::router()->getRoute('filemanager.file.delete', [
+            ':path' => $path, ':name' => $name, ':ext'  => $ext
+        ]);
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
             ->group('file-fieldset', 'fieldset', function ($form) use ($name, $ext) {
                 $form->legend('file-legend', t('Delete file'))
                 ->group('info-group', 'div', function ($form) use ($name, $ext) {
@@ -446,7 +439,7 @@ class File extends \Soosyze\Controller
                         'path'      => $path,
                         'extension' => $info[ 'ext' ]
                     ]),
-                'type' => 'video'
+                'type'  => 'video'
             ];
         }
         if (in_array($info[ 'ext' ], self::$extensionAudio)) {

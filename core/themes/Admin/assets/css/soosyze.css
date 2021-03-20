@@ -461,9 +461,6 @@ select[multiple].form-control {
 }
 
 /* -------- RADIO -------- */
-.form-group-inline [type="radio"] + label {
-    margin-bottom: 1.5em;
-}
 .form-group-inline [type="radio"] + label:not(:last-child) {
     padding-right: 1em;
 }
@@ -478,6 +475,7 @@ select[multiple].form-control {
     display: inline-block;
     line-height: 20px;
     padding-left: 28px;
+    padding-right: 20px;
     position: relative;
 }
 [type="radio"]:checked + label:before,
@@ -528,7 +526,7 @@ select[multiple].form-control {
 /* -------- RADIO BUTTON -------- */
 .radio-button label {
     background-color: #272737;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
@@ -546,7 +544,9 @@ select[multiple].form-control {
     display: none;
 }
 .radio-button [type="radio"]:checked ~ label {
-    background-color: #131419;
+    background-color: #fff;
+    border: 1px solid #272737;
+    color: #272737;
 }
 .radio-button [type="radio"] + label {
     padding: .7em 1em;

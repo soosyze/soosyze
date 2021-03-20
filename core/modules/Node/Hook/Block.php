@@ -74,11 +74,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
         return $tpl->addVars([
                 'display'        => $options[ 'display' ],
-                'node_type_name' => $nodeTypeName,
-                'next_text'      => $options[ 'next_text' ],
-                'previous_text'  => $options[ 'previous_text' ],
                 'next'           => $this->getNextNode($node),
-                'previous'       => $this->getPreviousNode($node)
+                'next_text'      => $options[ 'next_text' ],
+                'node_type_name' => $nodeTypeName,
+                'previous'       => $this->getPreviousNode($node),
+                'previous_text'  => $options[ 'previous_text' ]
         ]);
     }
 
@@ -89,15 +89,15 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ->group('node-group', 'div', function ($form) use ($data) {
                     $form->label('type-label', t('Content type'))
                     ->select('type', $this->getOptionsType(), [
-                        'class'     => 'form-control',
-                        ':selected' => $data[ 'options' ][ 'type' ]
+                        ':selected' => $data[ 'options' ][ 'type' ],
+                        'class'     => 'form-control'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('display-group', 'div', function ($form) use ($data) {
                     $form->label('display-label', t('Display type'))
                     ->select('display', $this->getOptionsDisplay(), [
-                        'class'     => 'form-control',
-                        ':selected' => $data[ 'options' ][ 'display' ]
+                        ':selected' => $data[ 'options' ][ 'display' ],
+                        'class'     => 'form-control'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('previous_text-group', 'div', function ($form) use ($data) {

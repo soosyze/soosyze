@@ -361,8 +361,8 @@ class Node
             [
                 'key'      => 'settings.path_index',
                 'path'     => $this->config->get('settings.path_index'),
-                'title'    => 'Default homepage',
-                'required' => 1
+                'required' => 1,
+                'title'    => 'Default homepage'
             ],
             [
                 'key'   => 'settings.path_no_found',

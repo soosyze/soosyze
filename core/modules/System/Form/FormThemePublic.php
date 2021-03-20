@@ -31,11 +31,10 @@ class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
 
     public function makeFields()
     {
-        return $this->group('fieldset-theme', 'fieldset', function ($form) {
-            $form->legend('legend-theme', t('Settings'))
+        return $this->group('theme-fieldset', 'fieldset', function ($form) {
+            $form->legend('theme-legend', t('Settings'))
                     ->group('logo-group', 'div', function ($form) {
                         $form->label('logo-label', t('Logo'), [
-                            'class'        => 'control-label',
                             'data-tooltip' => '200ko maximum.',
                             'for'          => 'logo'
                         ]);
@@ -43,7 +42,6 @@ class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
                     }, self::$attrGrp)
                     ->group('group-favicon', 'div', function ($form) {
                         $form->label('favicon-label', t('Favicon'), [
-                            'class'        => 'control-label',
                             'data-tooltip' => t('Image to the left of the title of your browser window.'),
                             'for'          => 'favicon'
                         ]);

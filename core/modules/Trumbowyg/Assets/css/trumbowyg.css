@@ -3,5 +3,13 @@
     color: #999;
 }
 .trumbowyg-dropdown {
-    max-height: none !important;
+    max-height: 270px;
+}
+.trumbowyg-dropdown-table tr {
+    line-height: 0;
+}
+.trumbowyg-dropdown-table table td {
+    border: 1px solid #d7e0e2;
+    box-shadow: none;
+    margin: -1px -1px 0px 0px;
 }

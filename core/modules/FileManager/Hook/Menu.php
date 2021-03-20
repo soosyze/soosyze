@@ -20,7 +20,7 @@ class Menu
         $this->user   = $user;
     }
 
-    public function hookUsersMenu(&$menu, $userId)
+    public function hookUsersMenu(array &$menu, $userId)
     {
         if (!$this->user->isConnected()) {
             return;
@@ -33,7 +33,7 @@ class Menu
         ];
     }
 
-    public function hookUserManagerSubmenu(&$menu)
+    public function hookUserManagerSubmenu(array &$menu)
     {
         $menu[] = [
             'key'        => 'filemanager.permission.admin',

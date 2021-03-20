@@ -20,6 +20,7 @@ return [
 
         $req->insertInto('role_permission', [ 'role_id', 'permission_id' ])
             ->values([ 3, 'system.tool.manage' ])
+            ->values([ 3, 'system.tool.action' ])
             ->execute();
     }
 ];

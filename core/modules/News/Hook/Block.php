@@ -73,15 +73,15 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', 'article')
             ->fetchAll();
 
-        $query = $this->router->parseQueryFromRequest();
+        $query      = $this->router->parseQueryFromRequest();
         $paramMonth = $this->router->parseParam('news/:year/:month:id', $query, [
             ':year'  => '\d{4}',
             ':month' => '0[1-9]|1[0-2]',
             ':id'    => '(/page/[1-9]\d*)?'
         ]);
-        $paramYear = $this->router->parseParam('news/:year:id', $query, [
-            ':year'  => '\d{4}',
-            ':id'    => '(/page/[1-9]\d*)?'
+        $paramYear  = $this->router->parseParam('news/:year:id', $query, [
+            ':year' => '\d{4}',
+            ':id'   => '(/page/[1-9]\d*)?'
         ]);
 
         $optionsSelect[] = [
@@ -137,9 +137,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
         $form = (new FormBuilder([ 'method' => 'get', 'action' => '#' ]))
             ->select('archives', $optionsSelect, [
-            'class'     => 'form-control',
-            'onchange'  => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);',
             ':selected' => $selected,
+            'class'     => 'form-control',
+            'onchange'  => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);'
         ]);
 
         return $tpl->addVar('form', $form);
@@ -168,12 +168,12 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ++$output[ $year ][ 'number' ];
             } else {
                 $output[ $year ] = [
-                    'number' => 1,
-                    'year'   => $year,
                     'link'   => $this->router->getRoute('news.years', [
                         ':year' => $year,
                         ':id'   => ''
-                    ])
+                    ]),
+                    'number' => 1,
+                    'year'   => $year
                 ];
             }
 
@@ -185,14 +185,14 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ++$output[ $year ][ 'months' ][ $month ][ 'number' ];
             } else {
                 $output[ $year ][ 'months' ][ $month ] = [
-                    'number' => 1,
-                    'year'   => $year,
-                    'month'  => strftime('%b', $value[ 'date_created' ]),
                     'link'   => $this->router->getRoute('news.month', [
                         ':year'  => $year,
                         ':month' => $month,
                         ':id'    => ''
-                    ])
+                    ]),
+                    'month'  => strftime('%b', $value[ 'date_created' ]),
+                    'number' => 1,
+                    'year'   => $year
                 ];
             }
         }
@@ -205,14 +205,14 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $tpl->addVar('years', $output);
     }
 
-    public function hookBlockNewsArchiveEditForm(&$form, $data)
+    public function hookBlockNewsArchiveEditForm(&$form, array $data)
     {
         $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('new-legend', t('News setting'))
                 ->group('limit-group', 'div', function ($form) use ($data) {
                     $form->checkbox('expand', [
-                        'class'   => 'form-control',
-                        'checked' => $data[ 'options' ][ 'expand' ]
+                        'checked' => $data[ 'options' ][ 'expand' ],
+                        'class'   => 'form-control'
                     ])
                     ->label('limit-label', '<span class="ui"></span>' . t('Expand archives per month'), [
                         'for' => 'expand'
@@ -256,13 +256,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             }
             $value[ 'field' ] = $this->node->makeFieldsById('article', $value[ 'entity_id' ]);
 
-            if ($alias = $this->alias->getAlias('node/' . $value[ 'id' ])) {
-                $value[ 'link_view' ] = $this->router->makeRoute($alias);
-            } else {
-                $value[ 'link_view' ] = $this->router->getRoute('node.show', [
-                    ':id_node' => $value[ 'id' ]
-                ]);
-            }
+            $alias = $this->alias->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
+
+            $value[ 'link_view' ] = $this->router->makeRoute($alias);
         }
         unset($value);
 
@@ -275,24 +271,24 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         ]);
     }
 
-    public function hookBlockNewsLastEditForm(&$form, $data)
+    public function hookBlockNewsLastEditForm(&$form, array $data)
     {
         $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('new-legend', t('News setting'))
                 ->group('limit-group', 'div', function ($form) use ($data) {
                     $options = [
-                        [ 'value' => 1, 'label' => 1 ],
-                        [ 'value' => 2, 'label' => 2 ],
-                        [ 'value' => 3, 'label' => 3 ],
-                        [ 'value' => 4, 'label' => 4 ]
+                        [ 'label' => 1, 'value' => 1 ],
+                        [ 'label' => 2, 'value' => 2 ],
+                        [ 'label' => 3, 'value' => 3 ],
+                        [ 'label' => 4, 'value' => 4 ]
                     ];
 
                     $form->label('limit-label', t('Number of news to display'))
                     ->select('limit', $options, [
+                        ':selected' => $data[ 'options' ][ 'limit' ],
                         'class'     => 'form-control',
                         'max'       => 4,
-                        'min'       => 1,
-                        ':selected' => $data[ 'options' ][ 'limit' ]
+                        'min'       => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('offset-group', 'div', function ($form) use ($data) {
@@ -326,12 +322,12 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->addLabel('more', t('Add a "more" link at the bottom of the screen if there is more content'));
     }
 
-    public function hookNewsLastUpdateBefore($validator, &$values, $id)
+    public function hookNewsLastUpdateBefore($validator, array &$values, $id)
     {
         $values[ 'options' ] = json_encode([
             'limit'  => (int) $validator->getInput('limit'),
-            'offset' => (int) $validator->getInput('offset'),
-            'more'   => (bool) $validator->getInput('more')
+            'more'   => (bool) $validator->getInput('more'),
+            'offset' => (int) $validator->getInput('offset')
         ]);
     }
 }

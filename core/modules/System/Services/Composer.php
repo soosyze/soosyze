@@ -62,11 +62,11 @@ class Composer
 
         $validator = (new Validator())
             ->setRules([
+                'autoload'    => 'required|array',
+                'description' => 'required|string|max:512',
                 'name'        => 'required|string',
                 'type'        => 'required|string|inarray:soosyze-module,soosyze-theme',
-                'description' => 'required|string|max:512',
-                'version'     => 'required|version',
-                'autoload'    => 'required|array'
+                'version'     => 'required|version'
             ])
             ->setInputs($data);
 
@@ -132,8 +132,8 @@ class Composer
             if (!$this->semver->satisfies(PHP_VERSION, $data[ 'require' ][ 'php' ])) {
                 $errors[] = t('The PHP :version version of your server does not allow the installation of module :title.', [
                     ':current_php_version' => PHP_VERSION,
-                    ':title'               => $title,
-                    ':require_php_version' => $data[ 'require' ][ 'php' ]
+                    ':require_php_version' => $data[ 'require' ][ 'php' ],
+                    ':title'               => $title
                 ]);
             }
         } catch (\Exception $ex) {
@@ -304,13 +304,13 @@ class Composer
             ])
             ->setMessages([
                 'controller' => [
-                    'required'     => [
-                        'must' => t('The information on the controllers of the :name module does not exist.', [
+                    'class_exists' => [
+                        'must' => t('The :label of the :name module is not found by the autoloader.', [
                             ':name' => $title
                         ])
                     ],
-                    'class_exists' => [
-                        'must' => t('The :label of the :name module is not found by the autoloader.', [
+                    'required'     => [
+                        'must' => t('The information on the controllers of the :name module does not exist.', [
                             ':name' => $title
                         ])
                     ]

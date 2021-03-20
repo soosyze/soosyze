@@ -44,20 +44,20 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         }
     }
 
-    public function hookMenuEditForm(&$form, $data)
+    public function hookMenuEditForm(&$form, array $data)
     {
         $menus = $this->menu->getAllMenu();
 
         $options = [];
         foreach ($menus as $menu) {
             $options[] = [
-                'value' => $menu[ 'name' ],
-                'label' => $menu[ 'title' ],
                 'attr'  => [
                     'data-link' => $this->router->getRoute('menu.api.show', [
                         ':menu' => $menu[ 'name' ]
                     ])
-                ]
+                ],
+                'label' => $menu[ 'title' ],
+                'value' => $menu[ 'name' ]
             ];
         }
 
@@ -66,11 +66,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ->group('name-group', 'div', function ($form) use ($data, $options) {
                     $form->label('name-label', t('Menu to display'))
                     ->select('name', $options, [
+                        ':selected'   => $data[ 'options' ][ 'name' ],
                         'class'       => 'form-control ajax-control',
                         'data-target' => 'select[name="parent"]',
                         'max'         => 4,
-                        'min'         => 1,
-                        ':selected'   => $data[ 'options' ][ 'name' ]
+                        'min'         => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('parent-group', 'div', function ($form) use ($data) {
@@ -78,8 +78,8 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                         'data-tooltip' => t('Show child links of the selected one.')
                     ])
                     ->select('parent', $this->menu->renderMenuSelect($data[ 'options' ][ 'name' ]), [
-                        'class'    => 'form-control',
-                        'selected' => $data[ 'options' ][ 'parent' ]
+                        ':selected' => $data[ 'options' ][ 'parent' ],
+                        'class'     => 'form-control',
                     ]);
                 }, [ 'class' => 'form-group' ]);
         });
@@ -97,7 +97,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->addLabel('parent', t('Parent link'));
     }
 
-    public function hookMenuUpdateBefore($validator, &$values, $id)
+    public function hookMenuUpdateBefore($validator, array &$values, $id)
     {
         $values[ 'options' ] = json_encode([
             'name'   => $validator->getInput('name'),

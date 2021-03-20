@@ -24,8 +24,8 @@ class Role extends \Soosyze\Controller
         }
 
         $form = (new FormUserRole([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.role.store')
+            'action' => self::router()->getRoute('user.role.store'),
+            'method' => 'post'
             ]))
             ->setValues($values)
             ->makeFields();
@@ -108,8 +108,8 @@ class Role extends \Soosyze\Controller
         }
 
         $form = (new FormUserRole([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.role.update', [ ':id' => $id ])
+            'action' => self::router()->getRoute('user.role.update', [ ':id' => $id ]),
+            'method' => 'post'
             ]))
             ->setValues($values)
             ->makeFields();
@@ -191,8 +191,8 @@ class Role extends \Soosyze\Controller
         }
 
         $form = (new FormUserRole([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ])
+            'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ]),
+            'method' => 'post'
             ]))
             ->makeFieldsDelete();
 

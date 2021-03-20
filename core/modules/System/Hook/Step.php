@@ -120,9 +120,10 @@ class Step
         }
 
         $profils = $this->getProfils();
-        $form    = (new FormBuilder([
-            'method' => 'post',
-            'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]) ]));
+        $form    = new FormBuilder([
+            'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]),
+            'method' => 'post'
+        ]);
 
         foreach (array_keys($profils) as $key) {
             $form->group("profil_$key-group", 'div', function ($form) use ($key, $content) {
@@ -186,10 +187,11 @@ class Step
         }
 
         $form = (new FormBuilder([
-                'method' => 'post',
                 'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]),
-                'id'     => 'form_lang'
-                ]))
+                'id'     => 'form_lang',
+                'method' => 'post'
+                ])
+            )
             ->group('fieldset', 'fieldset', function ($form) use ($values, $optionLang, $optionTimezone) {
                 $form->legend('legend', t('Choose language'))
                 ->group('lang-group', 'div', function ($form) use ($values, $optionLang) {
@@ -258,8 +260,8 @@ class Step
         }
 
         $form = (new FormBuilder([
-            'method' => 'post',
-            'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ])
+            'action' => $this->router->getRoute('install.step.check', [ ':id' => $id ]),
+            'method' => 'post'
             ]))
             ->group('fieldset', 'fieldset', function ($form) use ($values) {
                 $form->legend('legend', t('User profile'))

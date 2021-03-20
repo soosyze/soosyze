@@ -65,10 +65,10 @@ class Node extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-                'method'  => 'post',
                 'action'  => self::router()->getRoute('node.store', [ ':node' => $type ]),
+                'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
-                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $type, $fields)
             ->setUserCurrent(self::user()->isConnected())
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
@@ -220,8 +220,8 @@ class Node extends \Soosyze\Controller
 
         $tpl = self::template()
                 ->view('this', [
-                    'title'       => $node[ 'meta_title' ],
-                    'description' => $node[ 'meta_description' ]
+                    'description' => $node[ 'meta_description' ],
+                    'title'       => $node[ 'meta_title' ]
                 ])
                 ->addMetas($this->getMeta($node, $fields))
                 ->view('page', [
@@ -269,10 +269,10 @@ class Node extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-                'method'  => 'post',
                 'action'  => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
+                'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
-                'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+                'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $content[ 'type' ], $fields)
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
@@ -431,10 +431,9 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $form = (new FormNodeDelete([
-                'method' => 'post',
-                'action' => self::router()->getRoute('node.delete', [ ':id_node' => $idNode ])
-                ], self::router()))
+        $action = self::router()->getRoute('node.delete', [ ':id_node' => $idNode ]);
+
+        $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($content, $useInPath)
             ->makeFields();
 
@@ -472,8 +471,8 @@ class Node extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'id'    => 'required',
-                'files' => 'bool'
+                'files' => 'bool',
+                'id'    => 'required'
             ])
             ->setInputs([ 'id' => $idNode ] + $req->getParsedBody());
 
@@ -664,7 +663,7 @@ class Node extends \Soosyze\Controller
             }
         }
 
-        return new Redirect(self::router()->getRoute('node.admin'));
+        return new Redirect(self::router()->getRoute('node.admin'), 302);
     }
 
     public static function getBasename($pathFile)

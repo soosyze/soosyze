@@ -46,8 +46,15 @@ class NodeUser
      */
     private $user;
 
-    public function __construct($config, $node, $nodeuser, $query, $router, $template, $user)
-    {
+    public function __construct(
+        $config,
+        $node,
+        $nodeuser,
+        $query,
+        $router,
+        $template,
+        $user
+    ) {
         $this->config   = $config;
         $this->node     = $node;
         $this->nodeuser = $nodeuser;
@@ -82,11 +89,11 @@ class NodeUser
         $contentUser[] = $this->template
             ->createBlock('components/user/content_user-nodes.php', $this->pathViews)
             ->addVars([
-                'content_nothing' => $contentNothing,
-                'link_add'        => $this->user->isGrantedRequest($requestLinkAdd)
-                    ? $requestLinkAdd->getUri()
-                    : null,
-                'nodes'           => $nodes
+            'content_nothing' => $contentNothing,
+            'link_add'        => $this->user->isGrantedRequest($requestLinkAdd)
+                ? $requestLinkAdd->getUri()
+                : null,
+            'nodes'           => $nodes
         ]);
     }
 

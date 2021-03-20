@@ -6,6 +6,8 @@ use Soosyze\Components\Util\Util;
 
 class User implements \SoosyzeCore\User\UserInterface
 {
+    const OCTET_IN_MEGAOCTET = 1048576;
+
     /**
      * @var FileProfil
      */
@@ -190,11 +192,11 @@ class User implements \SoosyzeCore\User\UserInterface
     {
         $profil = $this->getRight($path);
 
-        if (empty($profil['file_size'])) {
+        if (empty($profil[ 'file_size' ])) {
             return Util::getOctetUploadLimit();
         }
 
-        $maxUpload = $profil[ 'file_size' ] * 1048576;
+        $maxUpload = $profil[ 'file_size' ] * self::OCTET_IN_MEGAOCTET;
 
         return min(Util::getOctetUploadLimit(), $maxUpload);
     }

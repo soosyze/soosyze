@@ -52,8 +52,8 @@ class Block
         }
 
         $form = (new FormUser([
-                'method' => 'post',
-                'action' => $this->router->getRoute('user.login.check', [ ':url' => '' ])
+                'action' => $this->router->getRoute('user.login.check', [ ':url' => '' ]),
+                'method' => 'post'
                 ], null, $this->config));
 
         $form->group('login-fieldset', 'fieldset', function ($formbuilder) use ($form) {
@@ -63,15 +63,14 @@ class Block
         })
             ->submitForm(t('Sign in'));
 
-        return $tpl
-                ->addVars([
-                    'form'             => $form,
-                    'url_relogin'      => $this->router->getRoute('user.relogin', [
-                        ':url' => ''
-                    ]),
-                    'url_register'     => $this->router->getRoute('user.register.create'),
-                    'granted_relogin'  => $this->config->get('settings.user_relogin'),
-                    'granted_register' => $this->config->get('settings.user_register')
+        return $tpl->addVars([
+                'form'             => $form,
+                'granted_register' => $this->config->get('settings.user_register'),
+                'granted_relogin'  => $this->config->get('settings.user_relogin'),
+                'url_relogin'      => $this->router->getRoute('user.relogin', [
+                    ':url' => ''
+                ]),
+                'url_register'     => $this->router->getRoute('user.register.create')
         ]);
     }
 }

@@ -57,6 +57,7 @@ class BackupManager
         if (!$this->isRepository()) {
             return [];
         }
+
         $backups = [];
         foreach (new \DirectoryIterator($this->repository) as $file) {
             if ($file->isDot() || $file->getExtension() !== 'zip' || !preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $file->getFilename())) {
@@ -109,11 +110,10 @@ class BackupManager
     public function delete($date)
     {
         $file = $this->repository . DS . $date . self::SUFFIX;
-        if (file_exists($file)) {
-            return \unlink($file);
-        }
 
-        return false;
+        return file_exists($file)
+            ? \unlink($file)
+            : false;
     }
 
     public function deleteAll()
@@ -131,11 +131,10 @@ class BackupManager
     public function getBackup($date)
     {
         $file = $this->repository . DS . $date . self::SUFFIX;
-        if (file_exists($file)) {
-            return \file_get_contents($file);
-        }
 
-        return false;
+        return file_exists($file)
+            ? \file_get_contents($file)
+            : false;
     }
 
     private function getFreshZip()

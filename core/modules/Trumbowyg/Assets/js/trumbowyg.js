@@ -2,7 +2,7 @@ $(function () {
     addEditor();
 });
 function addEditor() {
-    $.trumbowyg.svgPath = '/core/modules/Trumbowyg/vendor/trumbowyg/dist/icons.svg';
+    $.trumbowyg.svgPath = config.trumbowyg.vendor  + '/icons.svg';
     $("textarea.editor").trumbowyg({
         lang: config.trumbowyg.lang,
         btnsDef: {

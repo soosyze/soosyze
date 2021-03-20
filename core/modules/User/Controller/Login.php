@@ -33,8 +33,8 @@ class Login extends \Soosyze\Controller
         }
 
         $form = (new FormUser([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ])
+            'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ]),
+            'method' => 'post'
             ], null, self::config()))
             ->setValues($values);
 
@@ -132,10 +132,9 @@ class Login extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormUser([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.relogin.check', [ ':url' => $url ])
-            ]))
+        $action = self::router()->getRoute('user.relogin.check', [ ':url' => $url ]);
+
+        $form = (new FormUser([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values);
 
         $form->group('login-fieldset', 'fieldset', function ($formBuilder) use ($form) {

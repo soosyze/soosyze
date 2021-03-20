@@ -101,9 +101,9 @@ class Migration
                 }
 
                 $callbacks[ $fileInfo->getBasename('.php') ] = [
-                    'migration' => $fileInfo->getBasename('.php'),
+                    'callback'  => include_once $fileInfo->getRealPath(),
                     'extension' => $title,
-                    'callback'  => include_once $fileInfo->getRealPath()
+                    'migration' => $fileInfo->getBasename('.php')
                 ];
             }
         }

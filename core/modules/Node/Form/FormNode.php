@@ -523,12 +523,26 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ->group('publication-fieldset', 'fieldset', function ($form) {
                     $form
                     ->legend('publication-legend', t('Publication'))
-                    ->group('sticky-group', 'div', function ($form) {
-                        $form->checkbox('sticky', [ 'checked' => $this->values[ 'sticky' ] ])
-                        ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
-                            'for' => 'sticky'
-                        ]);
-                    }, self::$attrGrp)
+                    ->label('date_created-label', t('Publication status'))
+                    ->group('node_status-group', 'div', function ($form) {
+                        $this->query->from('node_status');
+                        if (!$this->config->get('settings.node_cron')) {
+                            $this->query->where('node_status_id', '!=', 2);
+                        }
+                        $status = $this->query->fetchAll();
+                        foreach ($status as $value) {
+                            $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
+                                $form->radio('node_status_id', [
+                                    'id'      => "node_status_id-{$value[ 'node_status_id' ]}",
+                                    'checked' => $this->values[ 'node_status_id' ] == $value[ 'node_status_id' ],
+                                    'value'   => $value[ 'node_status_id' ]
+                                ])
+                                ->label('node_status_id-label', t($value[ 'node_status_name' ]), [
+                                    'for'    => "node_status_id-{$value[ 'node_status_id' ]}"
+                                ]);
+                            }, self::$attrGrpInline);
+                        }
+                    }, [ 'class' => 'form-group btn-group' ])
                     ->group('date_created-group', 'div', function ($form) {
                         $form->label('date_created-label', t('Publication date'), [
                             'data-tooltip' => t('Leave blank to use the form submission date. It must be less than or equal to today\'s date')
@@ -544,27 +558,11 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
                     }, self::$attrGrp)
-                    ->label('date_created-label', t('Publication status'))
-                    ->group('node_status-group', 'div', function ($form) {
-                        $this->query->from('node_status');
-                        if (!$this->config->get('settings.node_cron')) {
-                            $this->query->where('node_status_id', '!=', 2);
-                        }
-                        $status = $this->query->fetchAll();
-                        foreach ($status as $value) {
-                            $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {
-                                $form->radio('node_status_id', [
-                                    'id'      => "node_status_id-{$value[ 'node_status_id' ]}",
-                                    'checked' => $this->values[ 'node_status_id' ] == $value[ 'node_status_id' ],
-                                    'class'   => 'radio-button',
-                                    'value'   => $value[ 'node_status_id' ]
-                                ])
-                                ->label('node_status_id-label', t($value[ 'node_status_name' ]), [
-                                    'class ' => 'radio-button',
-                                    'for'    => "node_status_id-{$value[ 'node_status_id' ]}"
-                                ]);
-                            }, self::$attrGrpInline);
-                        }
+                    ->group('sticky-group', 'div', function ($form) {
+                        $form->checkbox('sticky', [ 'checked' => $this->values[ 'sticky' ] ])
+                        ->label('sticky-label', '<span class="ui"></span> <i class="fa fa-thumbtack" aria-hidden="true"></i> ' . t('Pin content'), [
+                            'for' => 'sticky'
+                        ]);
                     }, self::$attrGrp);
                 }, [
                     'class' => 'tab-pane fade',

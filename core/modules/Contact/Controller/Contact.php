@@ -26,10 +26,9 @@ class Contact extends \Soosyze\Controller
             unset($_SESSION[ 'inputs' ]);
         }
 
-        $form = (new FormContact([
-            'method' => 'post',
-            'action' => self::router()->getRoute('contact.check')
-            ]))
+        $action = self::router()->getRoute('contact.check');
+
+        $form = (new FormContact([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
 

@@ -28,7 +28,7 @@ class Link extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
-        $form = (new FormLink([ 'method' => 'post', 'action' => $action ], self::router()))
+        $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($values)
             ->makeFields();
 
@@ -70,17 +70,17 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $data = [
-                'key'         => $infoUrlOrRoute[ 'key' ],
-                'title_link'  => $validator->getInput('title_link'),
+                'active'      => true,
+                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'icon'        => $validator->getInput('icon'),
+                'key'         => $infoUrlOrRoute[ 'key' ],
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'link_router' => $infoUrlOrRoute[ 'link_router' ],
-                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => (bool) $validator->getInput('target_link'),
                 'menu'        => $nameMenu,
-                'weight'      => 1,
                 'parent'      => -1,
-                'active'      => true
+                'target_link' => (bool) $validator->getInput('target_link'),
+                'title_link'  => $validator->getInput('title_link'),
+                'weight'      => 1
             ];
 
             $this->container->callHook('menu.link.store.before', [ $validator, &$data ]);
@@ -122,11 +122,10 @@ class Link extends \Soosyze\Controller
         }
 
         $action = self::router()->getRoute('menu.link.update', [
-            ':menu' => $name,
-            ':id'   => $id
+            ':menu' => $name, ':id' => $id
         ]);
 
-        $form = (new FormLink([ 'method' => 'post', 'action' => $action ], self::router()))
+        $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($values)
             ->setRewrite(self::router()->isRewrite())
             ->makeFields();
@@ -169,14 +168,14 @@ class Link extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $data = [
-                'key'         => $infoUrlOrRoute[ 'key' ],
-                'title_link'  => $validator->getInput('title_link'),
+                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
                 'icon'        => $validator->getInput('icon'),
+                'key'         => $infoUrlOrRoute[ 'key' ],
                 'link'        => $infoUrlOrRoute[ 'link' ],
                 'link_router' => $infoUrlOrRoute[ 'link_router' ],
                 'query'       => $infoUrlOrRoute[ 'query' ],
-                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'target_link' => (bool) $validator->getInput('target_link')
+                'target_link' => (bool) $validator->getInput('target_link'),
+                'title_link'  => $validator->getInput('title_link')
             ];
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
@@ -214,8 +213,8 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'name' => 'required|string|max:255',
-                'id'   => 'required|int'
+                'id'   => 'required|int',
+                'name' => 'required|string|max:255'
             ])
             ->setInputs([ 'name' => $name, 'id' => $id ]);
 
@@ -240,17 +239,17 @@ class Link extends \Soosyze\Controller
     {
         return (new Validator())
                 ->setRules([
-                    'title_link'      => 'required|string|max:255',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
                     'target_link'     => 'bool',
+                    'title_link'      => 'required|string|max:255',
                     'token_link_form' => 'required|token'
                 ])
                 ->setLabels([
-                    'title_link'  => t('Link title'),
-                    'link'        => t('Link'),
                     'icon'        => t('Icon'),
+                    'link'        => t('Link'),
                     'target_link' => t('Target'),
+                    'title_link'  => t('Link title')
                 ])
                 ->setInputs($req->getParsedBody());
     }

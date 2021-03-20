@@ -9,21 +9,21 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
     public function defaultValues()
     {
         return [
-            'email'           => '',
             'driver'          => '',
-            'smtp_host'       => '',
-            'smtp_port'       => '',
+            'email'           => '',
             'smtp_encryption' => '',
-            'smtp_username'   => '',
-            'smtp_password'   => ''
+            'smtp_host'       => '',
+            'smtp_password'   => '',
+            'smtp_port'       => '',
+            'smtp_username'   => ''
         ];
     }
 
     public function menu(array &$menu)
     {
         $menu[ 'mailer' ] = [
-            'title_link' => 'Email',
-            'config'     => 'mailer'
+            'config'     => 'mailer',
+            'title_link' => 'Email'
         ];
     }
 
@@ -47,14 +47,11 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                 $form->legend('driver-legend', t('Sélectionner un driver'))
                 ->group('driver-group', 'div', function ($form) use ($data) {
                     $form->label('driver-label', t('Driver'))
-                    ->select('driver', [
-                        [ 'value' => 'mail', 'label' => 'mail' ],
-                        [ 'value' => 'smtp', 'label' => 'smtp' ]
-                        ], [
+                    ->select('driver', self::getOptionsDriver(), [
+                        ':selected'   => $data[ 'driver' ],
                         'class'       => 'form-control',
                         'data-toogle' => 'select',
-                        'required'    => 1,
-                        ':selected'   => $data[ 'driver' ]
+                        'required'    => 1
                     ]);
                 }, self::$attrGrp);
             })
@@ -80,13 +77,9 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                 }, self::$attrGrp)
                 ->group('smtp_encryption-group', 'div', function ($form) use ($data) {
                     $form->label('smtp_encryption-label', t('Encryption Protocol'))
-                    ->select('smtp_encryption', [
-                        [ 'value' => 'none', 'label' => 'none' ],
-                        [ 'value' => 'ssl', 'label' => 'SSL (Secure Sockets Layer)' ],
-                        [ 'value' => 'tls', 'label' => 'TLS (Transport Layer Security)' ]
-                        ], [
-                        'class'     => 'form-control',
-                        ':selected' => $data[ 'smtp_encryption' ]
+                    ->select('smtp_encryption', self::getOptionsEncryption(), [
+                        ':selected' => $data[ 'smtp_encryption' ],
+                        'class'     => 'form-control'
                     ]);
                 }, self::$attrGrp)
                 ->group('smtp_username-group', 'div', function ($form) use ($data) {
@@ -112,28 +105,28 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
     public function validator(&$validator)
     {
         $rules  = [
-            'email'  => 'required|email|max:254',
-            'driver' => 'required|inarray:mail,smtp'
+            'driver' => 'required|inarray:mail,smtp',
+            'email'  => 'required|email|max:254'
         ];
         $labels = [
-            'email'  => t('E-mail of the site'),
-            'driver' => t('Driver')
+            'driver' => t('Driver'),
+            'email'  => t('E-mail of the site')
         ];
 
         if ($validator->getInput('driver') === 'smtp') {
             $rules  += [
-                'smtp_host'       => 'required|url',
-                'smtp_port'       => 'required|numeric|between_numeric:0,65535',
                 'smtp_encryption' => 'required|inarray:tls,ssl',
-                'smtp_username'   => 'required|email',
-                'smtp_password'   => 'required|string'
+                'smtp_host'       => 'required|url',
+                'smtp_password'   => 'required|string',
+                'smtp_port'       => 'required|numeric|between_numeric:0,65535',
+                'smtp_username'   => 'required|email'
             ];
             $labels += [
+                'smtp_encryption' => t('Encryption Protocol'),
+                'smtp_password'   => t('Server Password'),
                 'smtp_host'       => t('Host Address'),
                 'smtp_port'       => t('Host Port'),
-                'smtp_encryption' => t('Encryption Protocol'),
-                'smtp_username'   => t('Serveur Username'),
-                'smtp_password'   => t('Server Password')
+                'smtp_username'   => t('Serveur Username')
             ];
         }
 
@@ -144,13 +137,13 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
     public function before(&$validator, array &$data, $id)
     {
         $data = [
-            'email'           => $validator->getInput('email'),
             'driver'          => $validator->getInput('driver'),
-            'smtp_host'       => $validator->getInput('smtp_host'),
-            'smtp_port'       => (int) $validator->getInput('smtp_port'),
+            'email'           => $validator->getInput('email'),
             'smtp_encryption' => $validator->getInput('smtp_encryption'),
-            'smtp_username'   => $validator->getInput('smtp_username'),
-            'smtp_password'   => $validator->getInput('smtp_password')
+            'smtp_host'       => $validator->getInput('smtp_host'),
+            'smtp_password'   => $validator->getInput('smtp_password'),
+            'smtp_port'       => (int) $validator->getInput('smtp_port'),
+            'smtp_username'   => $validator->getInput('smtp_username')
         ];
     }
 
@@ -160,5 +153,22 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
 
     public function after(&$validator, array $data, $id)
     {
+    }
+
+    private static function getOptionsEncryption()
+    {
+        return [
+            [ 'label' => 'none', 'value' => 'none' ],
+            [ 'label' => 'SSL (Secure Sockets Layer)', 'value' => 'ssl' ],
+            [ 'label' => 'TLS (Transport Layer Security)', 'value' => 'tls' ]
+        ];
+    }
+
+    private static function getOptionsDriver()
+    {
+        return [
+            [ 'label' => 'mail', 'value' => 'mail' ],
+            [ 'label' => 'smtp', 'value' => 'smtp' ]
+        ];
     }
 }

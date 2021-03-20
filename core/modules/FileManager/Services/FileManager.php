@@ -73,9 +73,10 @@ class FileManager
 
     public function getBreadcrumb($path, $keyRoute = 'filemanager.show')
     {
-        $path     = rtrim($path, '/');
-        $nextPath = '';
+        $path       = rtrim($path, '/');
+        $nextPath   = '';
         $breadcrumb = [];
+
         foreach (explode('/', $path) as $key => $value) {
             $nextPath .= "/$value";
             if (!$this->hookUser->hookFolderShow($nextPath)) {
@@ -93,17 +94,22 @@ class FileManager
             ];
         }
         if (isset($breadcrumb[ $key ])) {
-            $breadcrumb[$key][ 'active' ] = 'active';
+            $breadcrumb[ $key ][ 'active' ] = 'active';
         }
 
         return $breadcrumb;
     }
 
-    public function parseDir(\SplFileInfo $dir, $path, $name = '', $keyRoute = 'filemanager.show')
-    {
+    public function parseDir(
+        \SplFileInfo $dir,
+        $path,
+        $name = '',
+        $keyRoute = 'filemanager.show'
+    ) {
         $info = self::parseRecursive($dir->getPathname());
 
         return [
+            'actions'    => $this->getActionsFolder($path, $name),
             'ext'        => 'dir',
             'link_show'  => $this->router->getRoute($keyRoute, [
                 ':path' => Util::cleanPath("$path/" . $dir->getBasename())
@@ -115,8 +121,7 @@ class FileManager
             'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ]
                 ? $info[ 'time' ]
                 : $dir->getMTime()),
-            'type'       => 'dir',
-            'actions'    => $this->getActionsFolder($path, $name)
+            'type'       => 'dir'
         ];
     }
 
@@ -124,23 +129,24 @@ class FileManager
     {
         $path = Util::cleanPath($path);
 
+        $name = $file->getBasename('.' . $file->getExtension());
+        $ext  = $file->getExtension();
+
         return [
-            'ext'        => $file->getExtension(),
+            'actions'    => $this->getActionsFile($file, $path),
+            'ext'        => $ext,
             'link_show'  => $this->router->getRoute('filemanager.file.show', [
-                ':path' => $path,
-                ':name' => '/' . $file->getBasename('.' . $file->getExtension()),
-                ':ext'  => '.' . $file->getExtension()
+                ':path' => $path, ':name' => '/' . $name, ':ext'  => '.' . $ext
             ]),
-            'name'       => $file->getBasename('.' . $file->getExtension()),
+            'name'       => $name,
             'path'       => $path,
             'size'       => Util::strFileSizeFormatted($file->getSize()),
             'size_octet' => $file->getSize(),
             'time'       => strftime('%d/%m/%Y %H:%M', $file->getMTime()),
-            'type'       => in_array($file->getExtension(), [
-                'gif', 'ico', 'jpg', 'jpeg', 'png'
-                ]) ? 'image' : 'file',
-            'link' => $this->core->getPath('files_public') . $path . '/' . $file->getFilename(),
-            'actions'    => $this->getActionsFile($file, $path)
+            'type'       => in_array($ext, [ 'gif', 'ico', 'jpg', 'jpeg', 'png' ])
+                ? 'image'
+                : 'file',
+            'link'       => $this->core->getPath('files_public') . $path . '/' . $file->getFilename()
         ];
     }
 

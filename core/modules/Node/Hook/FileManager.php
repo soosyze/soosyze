@@ -44,9 +44,9 @@ class FileManager
                     . '</div>';
 
                 $form->html('files-manager', '<div:attr>:content</div>', [
-                        ':content' => $response,
-                        'class'    => 'row',
-                        'id'       => 'filemanager'
+                    ':content' => $response,
+                    'class'    => 'row',
+                    'id'       => 'filemanager'
                 ]);
             });
         });
@@ -92,8 +92,8 @@ class FileManager
         $form->append('fields-fieldset', function ($form) use ($response) {
             $form->group('files-group', 'div', function ($form) use ($response) {
                 $form->html('files-manager', '<div:attr>:content</div>', [
-                        ':content' => $response,
-                        'class'    => 'row filemanager'
+                    ':content' => $response,
+                    'class'    => 'row filemanager'
                 ]);
             });
         });

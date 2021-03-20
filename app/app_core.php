@@ -67,7 +67,7 @@ class Core extends App
             'mailer'        => [
                 'class'     => 'SoosyzeCore\Mailer\Services\Mailer',
                 'arguments' => [
-                    '@config'
+                    '#mailer'
                 ]
             ],
             'xss' => [

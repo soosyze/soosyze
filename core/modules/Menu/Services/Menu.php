@@ -104,11 +104,11 @@ class Menu
     {
         if (filter_var($link, FILTER_VALIDATE_URL)) {
             return [
+                'fragment'    => '',
                 'key'         => '',
                 'link'        => $link,
                 'link_router' => null,
-                'query'       => '',
-                'fragment'    => '',
+                'query'       => ''
             ];
         }
 
@@ -161,7 +161,7 @@ class Menu
         }
 
         $options = $level === 1
-            ? [ [ 'value' => -1, 'label' => '« ' . t('Root') . ' »' ] ]
+            ? [ [ 'label' => '« ' . t('Root') . ' »', 'value' => -1] ]
             : [];
 
         $space = str_repeat('│··· ', $level - 1);
@@ -173,8 +173,8 @@ class Menu
                 : '├─ ';
 
             $options[] = [
-                'value' => $menu[ 'id' ],
-                'label' => $space . $seperator . t($menu[ 'title_link' ])
+                'label' => $space . $seperator . t($menu[ 'title_link' ]),
+                'value' => $menu[ 'id' ]
             ];
 
             $options = array_merge(
@@ -215,8 +215,8 @@ class Menu
                 ->createBlock('menu.php', $this->pathViews)
                 ->addNameOverride($nameMenu . '.php')
                 ->addVars([
-                    'menu'  => $this->getGrantedLink($query),
-                    'level' => $level
+                    'level' => $level,
+                    'menu'  => $this->getGrantedLink($query)
         ]);
     }
 

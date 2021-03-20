@@ -272,7 +272,12 @@ img {
 .post-nav__previous .post-nav__arrow {
     margin-right: 1em;
 }
-
+.post-nav__previous .post-nav__label {
+    margin-right: 1em;
+}
+.post-nav__next .post-nav__label {
+    margin-left: 1em;
+}
 
 /* --------------------------- */
 /* ---------- ROLE ----------- */

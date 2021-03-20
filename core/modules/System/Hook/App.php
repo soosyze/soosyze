@@ -235,8 +235,8 @@ class App
             : $metaDescription;
 
         $response->view('this', [
-                'title'       => $title,
-                'favicon'     => $favicon
+                'favicon'     => $favicon,
+                'title'       => $title
             ])
             ->addScript('system', "$vendor/js/system.js")
             ->addStyle('system', "$vendor/css/system.css")
@@ -253,10 +253,10 @@ class App
                 ]
             ])
             ->view('page', [
-                'title' => $metaTitle,
                 'logo'  => is_file(ROOT . $logo)
                     ? $request->getBasePath() . $logo
-                    : $logo
+                    : $logo,
+                'title' => $metaTitle
         ]);
 
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);

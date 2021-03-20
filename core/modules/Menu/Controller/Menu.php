@@ -29,7 +29,8 @@ class Menu extends \Soosyze\Controller
         }
 
         $action = self::router()->getRoute('menu.check', [ ':menu' => $name ]);
-        $form   = (new FormBuilder([ 'method' => 'post', 'action' => $action ]))
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
             ->token('token_menu')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
@@ -53,10 +54,10 @@ class Menu extends \Soosyze\Controller
                         ':menu' => $name
                     ]),
                     'link_create_menu'  => self::router()->getRoute('menu.create'),
+                    'list_menu_submenu' => $this->getListMenuSubmenu($name),
                     'menu'              => $this->renderMenu($name),
-                    'menu_name'         => $menu[ 'title' ],
-                    'list_menu_submenu' => $this->getListMenuSubmenu($name)
-                ]);
+                    'menu_name'         => $menu[ 'title' ]
+        ]);
     }
 
     public function check($name, $req)
@@ -91,8 +92,8 @@ class Menu extends \Soosyze\Controller
                     ->where('id', $link[ 'id' ])
                     ->execute();
 
-                if ($linkUpdate['parent'] >= 1 && !in_array($linkUpdate['parent'], $updateParents)) {
-                    $updateParents[] = $linkUpdate['parent'];
+                if ($linkUpdate[ 'parent' ] >= 1 && !in_array($linkUpdate[ 'parent' ], $updateParents)) {
+                    $updateParents[] = $linkUpdate[ 'parent' ];
                 }
             }
             /* Mise à jour des parents. */
@@ -123,7 +124,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.store');
 
-        $form = (new FormMenu([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormMenu([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
 
@@ -200,7 +201,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.update', [ ':menu' => $menu ]);
 
-        $form = (new FormMenu([ 'method' => 'post', 'action' => $action ]))
+        $form = (new FormMenu(['action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
 
@@ -276,10 +277,9 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.remove.form.data', [ &$menu, $name ]);
 
-        $form = (new FormBuilder([
-                'method' => 'post',
-                'action' => self::router()->getRoute('menu.delete', [ ':menu' => $name ])
-                ]))
+        $action = self::router()->getRoute('menu.delete', [ ':menu' => $name ]);
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
             ->group('menu-fieldset', 'fieldset', function ($form) {
                 $form->legend('menu-legend', t('Menu deletion'))
                 ->group('info-group', 'div', function ($form) {
@@ -453,19 +453,19 @@ class Menu extends \Soosyze\Controller
         return self::template()
                 ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
                 ->addNameOverride("menu-show-$nameMenu.php")
-                ->addVars([ 'menu' => $query, 'level' => $level ]);
+                ->addVars([ 'level' => $level, 'menu' => $query ]);
     }
 
     private function getValidator($req)
     {
         return (new Validator())
                 ->setRules([
-                    'title'       => 'required|string|max:255|!equal:create',
-                    'description' => 'required|string|max:255'
+                    'description' => 'required|string|max:255',
+                    'title'       => 'required|string|max:255|!equal:create'
                 ])
                 ->setLabels([
-                    'title'       => t('Menu title'),
-                    'description' => t('Description')
+                    'description' => t('Description'),
+                    'title'       => t('Menu title')
                 ])
                 ->setInputs($req->getParsedBody());
     }

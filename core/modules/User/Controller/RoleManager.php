@@ -19,10 +19,10 @@ class RoleManager extends \Soosyze\Controller
 
         $this->container->callHook('user.role.admin.form.data', [ &$values ]);
 
-        $form = ( new FormBuilder([
+        $form = new FormBuilder([
             'action' => self::router()->getRoute('user.role.admin.check'),
             'method' => 'post'
-        ]));
+        ]);
 
         foreach ($values as &$role) {
             $role[ 'link_edit' ] = self::router()->getRoute('user.role.edit', [

@@ -29,15 +29,11 @@ class FileCopy extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $form = (new FormBuilder([
-                'action' => self::router()->getRoute('filemanager.copy.update', [
-                    ':path' => $path,
-                    ':name' => $name,
-                    ':ext'  => $ext
-                ]),
-                'method' => 'post'
-                ])
-            )
+        $action = self::router()->getRoute('filemanager.copy.update', [
+            ':path' => $path, ':name' => $name, ':ext'  => $ext
+        ]);
+
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
             ->token('token_file_copy');
 
         $content = self::template()

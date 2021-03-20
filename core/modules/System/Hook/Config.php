@@ -32,16 +32,16 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     {
         return [
             'lang'               => '',
-            'timezone'           => '',
             'maintenance'        => '',
-            'rewrite_engine'     => '',
-            'path_index'         => '',
-            'path_access_denied' => '',
-            'path_no_found'      => '',
-            'path_maintenance'   => '',
-            'meta_title'         => '',
             'meta_description'   => '',
-            'meta_keyboard'      => ''
+            'meta_keyboard'      => '',
+            'meta_title'         => '',
+            'path_access_denied' => '',
+            'path_index'         => '',
+            'path_maintenance'   => '',
+            'path_no_found'      => '',
+            'rewrite_engine'     => '',
+            'timezone'           => ''
         ];
     }
 
@@ -67,17 +67,17 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ->group('lang-group', 'div', function ($form) use ($data, $optionLang) {
                         $form->label('lang-label', t('Language'))
                         ->select('lang', $optionLang, [
+                            ':selected' => $data[ 'lang' ],
                             'class'     => 'form-control',
-                            'required'  => 1,
-                            ':selected' => $data[ 'lang' ]
+                            'required'  => 1
                         ]);
                     }, self::$attrGrp)
                     ->group('timezone-group', 'div', function ($form) use ($data, $optionTimezone) {
                         $form->label('timezone-label', t('Timezone'))
                         ->select('timezone', $optionTimezone, [
+                            ':selected' => $data[ 'timezone' ],
                             'class'     => 'form-control',
-                            'required'  => 1,
-                            ':selected' => $data[ 'timezone' ]
+                            'required'  => 1
                         ]);
                     }, self::$attrGrp);
         })
@@ -222,28 +222,28 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
             'lang'               => 'required|inarray:' . $langs,
-            'timezone'           => 'required|timezone',
             'maintenance'        => '!required|bool',
-            'rewrite_engine'     => 'bool',
-            'path_index'         => 'route',
-            'path_access_denied' => '!required|route',
-            'path_no_found'      => '!required|route',
-            'path_maintenance'   => '!required|route',
-            'meta_title'         => 'required|string|max:64',
             'meta_description'   => 'required|string|max:256',
             'meta_keyboard'      => '!required|string|to_htmlsc',
+            'meta_title'         => 'required|string|max:64',
+            'path_access_denied' => '!required|route',
+            'path_index'         => 'route',
+            'path_maintenance'   => '!required|route',
+            'path_no_found'      => '!required|route',
+            'rewrite_engine'     => 'bool',
+            'timezone'           => 'required|timezone'
         ])->setLabels([
             'lang'               => t('Language'),
-            'timezone'           => t('Timezone'),
             'maintenance'        => t('Put the site in maintenance'),
-            'rewrite_engine'     => t('Make the URLs clean'),
-            'path_index'         => t('Default page'),
-            'path_access_denied' => t('Page 403 by default (access denied)'),
-            'path_no_found'      => t('Page 404 by default (page not found)'),
-            'path_maintenance'   => t('Page de maintenance par défaut'),
-            'meta_title'         => t('Website title'),
             'meta_description'   => t('Description'),
-            'meta_keyboard'      => t('Keywords')
+            'meta_keyboard'      => t('Keywords'),
+            'meta_title'         => t('Website title'),
+            'path_access_denied' => t('Page 403 by default (access denied)'),
+            'path_index'         => t('Default page'),
+            'path_maintenance'   => t('Page de maintenance par défaut'),
+            'path_no_found'      => t('Page 404 by default (page not found)'),
+            'rewrite_engine'     => t('Make the URLs clean'),
+            'timezone'           => t('Timezone'),
         ]);
     }
 
@@ -251,16 +251,16 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     {
         $data = [
             'lang'               => $validator->getInput('lang'),
-            'timezone'           => $validator->getInput('timezone'),
             'maintenance'        => (bool) $validator->getInput('maintenance'),
-            'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
-            'path_index'         => $validator->getInput('path_index'),
-            'path_access_denied' => $validator->getInput('path_access_denied'),
-            'path_no_found'      => $validator->getInput('path_no_found'),
-            'path_maintenance'   => $validator->getInput('path_maintenance'),
-            'meta_title'         => $validator->getInput('meta_title'),
             'meta_description'   => $validator->getInput('meta_description'),
             'meta_keyboard'      => $validator->getInput('meta_keyboard'),
+            'meta_title'         => $validator->getInput('meta_title'),
+            'path_access_denied' => $validator->getInput('path_access_denied'),
+            'path_index'         => $validator->getInput('path_index'),
+            'path_maintenance'   => $validator->getInput('path_maintenance'),
+            'path_no_found'      => $validator->getInput('path_no_found'),
+            'rewrite_engine'     => (bool) $validator->getInput('rewrite_engine'),
+            'timezone'           => $validator->getInput('timezone'),
         ];
     }
 

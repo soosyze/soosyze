@@ -141,11 +141,11 @@ class Manager extends \Soosyze\Controller
             }
 
             usort($files, static function ($a, $b) {
-                if ($a['ext'] === $b['ext']) {
+                if ($a[ 'ext' ] === $b[ 'ext' ]) {
                     return 0;
                 }
 
-                return ($a['ext'] === 'dir')
+                return ($a[ 'ext' ] === 'dir')
                     ? -1
                     : 1;
             });
@@ -159,14 +159,14 @@ class Manager extends \Soosyze\Controller
                     'link_search' => self::router()->getRoute('filemanager.filter', [
                         ':path' => $path
                     ]),
-                    'link_show'           => self::router()->getRoute('filemanager.show', [
+                    'link_show'   => self::router()->getRoute('filemanager.show', [
                         ':path' => $path
                     ]),
-                    'nb_dir'              => $nbDir,
-                    'nb_file'             => $nbFile,
-                    'profil'              => $this->get('filemanager.hook.user')->getRight($path),
-                    'size_all'            => Util::strFileSizeFormatted($size)
-                ]);
+                    'nb_dir'      => $nbDir,
+                    'nb_file'     => $nbFile,
+                    'profil'      => $this->get('filemanager.hook.user')->getRight($path),
+                    'size_all'    => Util::strFileSizeFormatted($size)
+        ]);
     }
 
     private function getFileManager($path, $req)

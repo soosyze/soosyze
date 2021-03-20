@@ -24,8 +24,8 @@ class Register extends \Soosyze\Controller
         }
 
         $form = (new FormUser([
-            'method' => 'post',
-            'action' => self::router()->getRoute('user.register.store')
+            'action' => self::router()->getRoute('user.register.store'),
+            'method' => 'post'
             ], null, self::config()))
             ->setValues($values);
 

@@ -16,7 +16,7 @@ class Node
         $this->config = $config;
     }
 
-    public function hookNodeShowTpl($tpl, $node, $idNode)
+    public function hookNodeShowTpl($tpl, array $node, $idNode)
     {
         if ($node[ 'type' ] === self::NODE_TYPE) {
             $tpl->getBlock('page.content')->addPathOverride(dirname(__DIR__) . '/Views/');

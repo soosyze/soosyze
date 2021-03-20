@@ -39,12 +39,12 @@ class Entity extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
             'action'  => self::router()->getRoute('entity.store', [
                 ':id_node' => $idNode,
                 ':entity'  => $entity
             ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+            'enctype' => 'multipart/form-data',
+            'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $entity, $fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
@@ -197,13 +197,13 @@ class Entity extends \Soosyze\Controller
         }
 
         $form = (new FormNode([
-            'method'  => 'post',
             'action'  => self::router()->getRoute('entity.update', [
                 ':id_node'   => $idNode,
                 ':entity'    => $entity,
                 ':id_entity' => $idEntity
             ]),
-            'enctype' => 'multipart/form-data' ], self::file(), self::query(), self::router(), self::config()))
+            'enctype' => 'multipart/form-data',
+            'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($content, $entity, $fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
@@ -264,8 +264,9 @@ class Entity extends \Soosyze\Controller
         $validator = (new Validator())
             ->setRules([ 'token_entity' => 'token' ])
             ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+
         /* Test des champs personnalisé de la node. */
-        $files     = [];
+        $files = [];
         foreach ($fieldsEntity as $value) {
             if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                 $files[] = $value[ 'field_type' ];

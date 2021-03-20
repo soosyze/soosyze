@@ -40,10 +40,9 @@ class NodeApi extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $form = (new FormNodeDelete([
-                'method' => 'post',
-                'action' => self::router()->getRoute('node.api.delete', [ ':id_node' => $idNode ])
-                ], self::router()))
+        $action = self::router()->getRoute('node.api.delete', [ ':id_node' => $idNode ]);
+
+        $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($content, $useInPath)
             ->makeFields();
 

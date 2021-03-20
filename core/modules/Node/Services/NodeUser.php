@@ -114,11 +114,12 @@ class NodeUser
         $user = $this->user->isConnected();
 
         foreach ($nodes as &$node) {
-            $node[ 'link_view' ] = $this->router->makeRoute(
-                'node/' . $node[ 'id' ] === $this->config->get('settings.path_index')
+            $alias    = $this->alias->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
+            $linkView = $this->config->get('settings.path_index') === $alias
                 ? ''
-                : $this->alias->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ])
-            );
+                : $alias;
+
+            $node[ 'link_view' ] = $this->router->makeRoute($linkView);
 
             $nodeEdit = $this->hookUser->hookNodeEdited($node[ 'id' ], null, $user);
 

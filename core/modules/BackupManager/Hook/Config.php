@@ -27,8 +27,8 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         $form
             ->group('backups-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('backups-fieldset', t('Backups'))
-                ->group('max_backup-group', 'div', function ($form) use ($data) {
-                    $form->label('max_backup-label', t('Maximum number of backups'), [
+                ->group('max_backups-group', 'div', function ($form) use ($data) {
+                    $form->label('max_backups-label', t('Maximum number of backups'), [
                         'data-tooltip' => t('The maximum number of backups that will be stored at the same time. Then the older backups will be override. Set 0 for untilimited'),
                     ])
                     ->group('max_backups-flex', 'div', function ($form) use ($data) {
@@ -41,7 +41,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     }, [ 'class' => 'form-group-flex' ]);
                 }, self::$attrGrp)
                 ->group('backup_frequency-group', 'div', function ($form) use ($data) {
-                    $form->label('frequency_backup-label', t('Backup frequency'), [
+                    $form->label('backup_frequency-label', t('Backup frequency'), [
                         'data-tooltip' => t('Leave the value at 0 so that the frequency is not taken into account'),
                     ])
                     ->text('backup_frequency', [
@@ -52,8 +52,10 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ]);
                 }, self::$attrGrp)
                 ->group('backup_frequency-info-group', 'div', function ($form) {
-                    $form->html('backup_frequency-info', '<a target="_blank" href="https://www.php.net/manual/fr/datetime.formats.relative.php">:content</a>', [
-                        ':content' => t('Relative PHP Date Formats')
+                    $form->html('backup_frequency-info', '<a:attr>:content</a>', [
+                        ':content' => t('Relative PHP Date Formats'),
+                        'href'     => 'https://www.php.net/manual/fr/datetime.formats.relative.php',
+                        'target'   => '_blank'
                     ]);
                 }, self::$attrGrp)
                 ->group('backup_cron-group', 'div', function ($form) use ($data) {
@@ -63,8 +65,10 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ]);
                 }, self::$attrGrp)
                 ->group('cron_info-group', 'div', function ($form) {
-                    $form->html('cron_info', '<a target="_blank" href="https://fr.wikipedia.org/wiki/Cron">:content</a>', [
-                        ':content' => t('How to set up the CRON service ?')
+                    $form->html('cron_info', '<a:attr>:content</a>', [
+                        ':content' => t('How to set up the CRON service ?'),
+                        'href'     => 'https://fr.wikipedia.org/wiki/Cron',
+                        'target'   => '_blank'
                     ]);
                 }, self::$attrGrp);
             });
@@ -79,7 +83,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ])->setLabels([
             'max_backups'      => t('Maximum number of backups'),
             'backup_cron'      => t('Enable CRON backups'),
-            'backup_frequency' => t('Fréquence des sauvegardes')
+            'backup_frequency' => t('Backup frequency')
         ]);
     }
 

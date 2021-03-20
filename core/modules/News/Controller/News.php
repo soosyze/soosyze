@@ -54,13 +54,9 @@ class News extends \Soosyze\Controller
         foreach ($query as &$value) {
             $value[ 'field' ] = self::node()->makeFieldsById('article', $value[ 'entity_id' ]);
 
-            if ($alias = self::alias()->getAlias('node/' . $value[ 'id' ])) {
-                $value[ 'link_view' ] = self::router()->makeRoute($alias);
-            } else {
-                $value[ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':id_node' => $value[ 'id' ]
-                ]);
-            }
+            $alias = self::alias()->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
+
+            $value[ 'link_view' ] = self::router()->makeRoute($alias);
         }
         unset($value);
 
@@ -78,10 +74,10 @@ class News extends \Soosyze\Controller
                     'title_main' => t(self::config()->get('settings.new_title'))
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
-                    'news'     => $query,
                     'default'  => $default,
-                    'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link),
-                    'link_rss' => self::router()->getRoute('news.rss')
+                    'news'     => $query,
+                    'link_rss' => self::router()->getRoute('news.rss'),
+                    'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link)
         ]);
     }
 
@@ -140,13 +136,9 @@ class News extends \Soosyze\Controller
         foreach ($items as &$item) {
             $item[ 'field' ] = self::node()->makeFieldsById('article', $item[ 'entity_id' ]);
 
-            if ($alias = self::alias()->getAlias('node/' . $item[ 'id' ])) {
-                $item[ 'link' ] = self::router()->makeRoute($alias);
-            } else {
-                $item[ 'link' ] = self::router()->getRoute('node.show', [
-                    ':id_node' => $item[ 'id' ]
-                ]);
-            }
+            $alias = self::alias()->getAlias('node/' . $item[ 'id' ], 'node/' . $item[ 'id' ]);
+
+            $item[ 'link' ] = self::router()->makeRoute($alias);
         }
         unset($item);
 
@@ -195,13 +187,9 @@ class News extends \Soosyze\Controller
         foreach ($news as &$new) {
             $new[ 'field' ] = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
 
-            if ($alias = self::alias()->getAlias('node/' . $new[ 'id' ])) {
-                $new[ 'link_view' ] = self::router()->makeRoute($alias);
-            } else {
-                $new[ 'link_view' ] = self::router()->getRoute('node.show', [
-                    ':id_node' => $new[ 'id' ]
-                ]);
-            }
+            $alias = self::alias()->getAlias('node/' . $new[ 'id' ], 'node/' . $new[ 'id' ]);
+
+            $new[ 'link_view' ] = self::router()->makeRoute($alias);
         }
         unset($new);
 
