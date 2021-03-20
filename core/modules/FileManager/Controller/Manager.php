@@ -77,9 +77,10 @@ class Manager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
                     'title_main' => t('File manager')
                 ])
-                ->make('page.content', 'page-manager.php', $this->pathViews, [
-                    'filemanager' => $this->getFileManager($path, $req)
-                ])->override('page', [ 'page-filemanager-public.php', 'page-fuild.php' ]);
+                ->make('page.content', 'filemanager/content-file_manager-admin.php', $this->pathViews, [
+                    'filemanager' => $this->getFileManager($path, $req),
+                    'form'        => null
+                ])->override('page', [ 'content-file_manager-public.php' ]);
     }
 
     public function show($path, $req)

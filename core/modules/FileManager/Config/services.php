@@ -20,6 +20,13 @@ return [
             'install.menu' => 'hookInstallMenu'
         ]
     ],
+    'filemanager.hook.api.route' => [
+        'class' => 'SoosyzeCore\FileManager\Hook\ApiRoute',
+        'arguments' => ['@alias', '@config', '@router'],
+        'hooks' => [
+            'api.route' => 'apiRoute'
+        ]
+    ],
     'filemanager.hook.app' => [
         'class' => 'SoosyzeCore\FileManager\Hook\App',
         'arguments' => ['@core'],
