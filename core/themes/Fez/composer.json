@@ -1,7 +1,7 @@
 {
     "name": "soosyze-core/fez",
     "type": "soosyze-theme",
-    "description": "Thème léger avec un menu horizontal sur plusieurs niveaux.",
+    "description": "Light theme with a multi-level horizontal menu.",
     "version": "1.0.0",
     "autoload": {
         "psr-4": {

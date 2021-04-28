@@ -11,5 +11,6 @@ class Extend extends \SoosyzeCore\System\ExtendTheme
 
     public function boot()
     {
+        $this->loadTranslation('fr', __DIR__ . '/Lang/fr/main.json');
     }
 }

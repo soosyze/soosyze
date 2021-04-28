@@ -36,7 +36,7 @@
         </header>
         <main class="tool-card-content">
             <h3 class="tool-card-title"><?php echo t($tool[ 'title' ]); ?></h3>
-            <p class="tool-card-description"><?php echo $tool[ 'description' ]; ?></p>
+            <p class="tool-card-description"><?php echo t($tool[ 'description' ]); ?></p>
         </main>
     </div>
     <?php endforeach; ?>

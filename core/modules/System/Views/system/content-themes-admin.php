@@ -5,7 +5,7 @@
         <small><?php echo $active_theme[ 'version' ]; ?></small>
     </h2>
 
-    <p><?php echo $active_theme[ 'description' ]; ?></p>
+    <p><?php echo t($active_theme[ 'description' ]); ?></p>
     <?php if ($link_edit): ?>
 
     <a href="<?php echo $link_edit; ?>" class="btn btn-primary">
@@ -38,7 +38,7 @@
             <tr>
                 <th><?php echo $theme[ 'extra' ][ 'soosyze' ][ 'title' ]; ?></th>
                 <td data-title="<?php echo t('Description'); ?>">
-                    <?php echo htmlspecialchars($theme[ 'description' ]); ?>
+                    <?php echo t($theme[ 'description' ]); ?>
 
                 </td>
                 <td data-title="<?php echo t('Version'); ?>">
