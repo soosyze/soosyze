@@ -1,22 +1,21 @@
 <?php
 
-use Soosyze\Config;
 use Queryflatfile\Request;
 use Queryflatfile\Schema;
+use Soosyze\Config;
 
 return [
-    'up' => function ( Schema $sch, Request $req )
-    {
+    'up' => function (Schema $sch, Request $req) {
         $search  = 'app/files';
         $replace = 'public/files';
 
-        if( $sch->hasTable('entity_article') ) {
+        if ($sch->hasTable('entity_article')) {
             $articles = $req->from('entity_article')->fetchAll();
-            foreach( $articles as $article ) {
+            foreach ($articles as $article) {
                 $req
                     ->update('entity_article', [
                         'body'    => str_replace($search, $replace, $article[ 'body' ]),
-                        "summary" => str_replace($search, $replace, $article[ 'summary' ]),
+                        'summary' => str_replace($search, $replace, $article[ 'summary' ]),
                         'image'   => str_replace($search, $replace, $article[ 'image' ])
                     ])
                     ->where('article_id', $article[ 'article_id' ])
@@ -25,7 +24,7 @@ return [
         }
 
         $pages = $req->from('entity_page')->fetchAll();
-        foreach( $pages as $page ) {
+        foreach ($pages as $page) {
             $req
                 ->update('entity_page', [
                     'body'    => str_replace($search, $replace, $page[ 'body' ])
@@ -35,8 +34,8 @@ return [
         }
 
         $users = $req->from('user')->fetchAll();
-        foreach( $users as $user ) {
-            if( empty($user[ 'picture' ]) ) {
+        foreach ($users as $user) {
+            if (empty($user[ 'picture' ])) {
                 continue;
             }
             $req
@@ -47,9 +46,9 @@ return [
                 ->execute();
         }
 
-        if( $sch->hasTable('block') ) {
+        if ($sch->hasTable('block')) {
             $blocks = $req->from('block')->fetchAll();
-            foreach( $blocks as $block ) {
+            foreach ($blocks as $block) {
                 $req
                     ->update('block', [
                         'content' => str_replace($search, $replace, $block[ 'content' ])
@@ -59,8 +58,7 @@ return [
             }
         }
     },
-    'up_config' => function ( Config $config )
-    {
+    'up_config' => function (Config $config) {
         $search  = 'app/files';
         $replace = 'public/files';
 
