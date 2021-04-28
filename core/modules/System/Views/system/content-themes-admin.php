@@ -1,8 +1,8 @@
 
 <fieldset class="filedset-theme">
     <h2>
-        <?php echo $active_theme[ 'extra' ][ 'soosyze' ][ 'title' ]; ?>
-        <small><?php echo $active_theme[ 'version' ]; ?></small>
+        <?php echo htmlspecialchars($active_theme[ 'extra' ][ 'soosyze' ][ 'title' ]); ?>
+        <small><?php echo htmlspecialchars($active_theme[ 'version' ]); ?></small>
     </h2>
 
     <p><?php echo t($active_theme[ 'description' ]); ?></p>
@@ -36,7 +36,7 @@
         <?php if ($themes): foreach ($themes as $theme): ?>
 
             <tr>
-                <th><?php echo $theme[ 'extra' ][ 'soosyze' ][ 'title' ]; ?></th>
+                <th><?php echo htmlspecialchars($theme[ 'extra' ][ 'soosyze' ][ 'title' ]); ?></th>
                 <td data-title="<?php echo t('Description'); ?>">
                     <?php echo t($theme[ 'description' ]); ?>
 
