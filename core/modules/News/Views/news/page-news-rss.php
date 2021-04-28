@@ -1,4 +1,4 @@
-<?php echo $xml; ?><rss version="2.0" 
+<?php echo $xml; ?><rss version="2.0"
     xmlns:content="http://purl.org/rss/1.0/modules/content/"
     xmlns:wfw="http://wellformedweb.org/CommentAPI/"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -26,9 +26,9 @@
                 <div class="article_date_time">
                     <?php echo strftime('%d %B %Y', $item[ 'date_created' ]); ?>
                     -
-                    ~<?php echo $new[ 'field' ][ 'reading_time' ][ 'field_value' ]
+                    ~<?php echo $item[ 'field' ][ 'reading_time' ][ 'field_value' ]
                         . ' '
-                        . t(if_or($new[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
+                        . t(if_or($item[ 'field' ][ 'reading_time' ][ 'field_value' ] === 1, 'minute', 'minutes')); ?>
                 </div>
                 <?php echo xss($item[ 'field' ][ 'body' ][ 'field_display' ]); ?>
 

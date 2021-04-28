@@ -142,8 +142,8 @@ class News extends \Soosyze\Controller
         }
         unset($item);
 
-        $lastBuildDate = isset($items[0]['date_created'])
-            ? $items[0]['date_created']
+        $lastBuildDate = isset($items[ 0 ][ 'date_created' ])
+            ? $items[ 0 ][ 'date_created' ]
             : '';
 
         $stream = new Stream(
@@ -157,13 +157,16 @@ class News extends \Soosyze\Controller
                     'link'          => self::router()->getBasePath(),
                     'title'         => self::config()->get('settings.meta_title', ''),
                     'xml'           => '<?xml version="1.0" encoding="UTF-8" ?>'
-        ])
+                ])
         );
 
         return (new Response(200, $stream))
-                ->withHeader('Content-Type', 'application/rss+xml; charset=utf-8')
-                ->withHeader('Content-Length', $stream->getSize())
-                ->withHeader('Content-Disposition', 'attachment; filename=rss.xml');
+                ->withHeader('content-type', 'application/octet-stream')
+                ->withHeader('content-length', $stream->getSize())
+                ->withHeader('content-disposition', 'attachment; filename=rss.xml')
+                ->withHeader('pragma', 'no-cache')
+                ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+                ->withHeader('expires', '0');
     }
 
     private function renderNews($page, $req)
