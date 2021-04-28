@@ -140,7 +140,7 @@ class Block extends \Soosyze\Controller
                         ->getTheme('theme_admin')
                         ->createBlock($block[ 'tpl' ], $block[ 'path' ])
                         ->addVars([
-                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/static.svg'
+                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg'
                 ]);
             }
 
