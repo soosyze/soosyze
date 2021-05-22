@@ -8,9 +8,11 @@
 * :gb: [README in English](README.md)
 * :fr: [README en Français](README_fr.md)
 
-# About
+## About
 
-Soosyze CMS is a micro content management system without a database. It's easy to create and manage your website easily with little or no technical knowledge. It is based on an MVC micro-framework in object-oriented PHP and on a noSQL library to ensure its stability and evolution.
+Soosyze CMS is a content management system without a database.
+It's easy to create and manage your website easily with little or no technical knowledge.
+It is based on an MVC micro-framework in object-oriented PHP and on a noSQL library to ensure its stability and evolution.
 
 To encourage us to continue the development of Soosyze CMS do not hesitate to put a star :star: Github. Thank you :heart:
 
@@ -27,7 +29,7 @@ Find us on the networks :
 * :busts_in_silhouette: [Mastodon](https://mamot.fr/@soosyze)
 * :telephone_receiver: [Discord](https://discordapp.com/invite/parFfTt)
 
-# Summary
+## Summary
 
 * [Screenshots](#screenshots)
 * [Installation requirements](#installation-requirements)
@@ -35,13 +37,13 @@ Find us on the networks :
 * [Configuration](#configuration)
 * [License](#license)
 
-# Screenshots
+## Screenshots
 
 [![Screenshot of Soosyze CMS](https://soosyze.com/assets/files/screen/devices-accueil.png)](https://soosyze.com/#screenshot)
 
-# Installation requirements
+## Installation requirements
 
-## Web Server
+### Web Server
 
 | Web server              | Soosyze 1.x   |
 |-------------------------|---------------|
@@ -52,7 +54,7 @@ Find us on the networks :
 *For Nginx, see the [installation recommendation](#ngnix)
 **For IIS, see the [installation recommendation](#iis)
 
-## PHP version
+### PHP version
 
 | PHP version                 | Soosyze 1.x   |
 |-----------------------------|---------------|
@@ -62,7 +64,7 @@ Find us on the networks :
 
 With PHP 7.x, your performance in terms of memory and performance will increase by 30% to 45%. Your site will be faster and better referenced.
 
-## Required PHP extensions
+### Required PHP extensions
 
 * `date` for the dates format,
 * `fileinfo` for file validation,
@@ -76,17 +78,17 @@ With PHP 7.x, your performance in terms of memory and performance will increase 
 
 These extensions are usually active by default. But if he missed an error message, he would come to inform you.
 
-## Required memory
+### Required memory
 
 Soosyze (excluding contributor modules) requires 8MB of memory.
 
-## Browsers support
+### Browsers support
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/samsung-internet/samsung-internet_48x48.png" alt="Samsung" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Samsung | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera |
 | --------- | --------- | --------- | --------- | --------- | --------- | --------- |
 | Edge| last 10 versions| last 10 versions| last 2 versions| last 2 versions| last 2 versions| last 2 versions |
 
-# Installation
+## Installation
 
 ### :bike: Simple download
 
@@ -100,6 +102,7 @@ To install **the production version of Soosyze CMS** via Composer it is necessar
 * And the `php` command in your environment variables.
 
 Go to the directory of your server, open a command prompt and run the command:
+(*Remplacer le terme `[my-directory]` par le répertoire qui hébergera votre site.*)
 
 ```sh
 php composer.phar create-project soosyze/soosyze [my-directory] --stability=beta --no-dev
@@ -118,11 +121,12 @@ To install the production version of Soosyze CMS via Git and Composer it is nece
 * And the `php` command in your environment variables.
 
 Go to the directory of your server, open a command prompt and run the command:
+(*Remplacer le terme `<my-directory>` par le répertoire qui hébergera votre site.*)
 
 Clone the repo with Git on your server,
 ```sh
-git clone https://github.com/soosyze/soosyze.git [my-directory]
-cd [my-directory]
+git clone https://github.com/soosyze/soosyze.git <my-directory>
+cd <my-directory>
 ```
 
 Install dependencies with Composer,
@@ -155,6 +159,7 @@ That's it, the CMS is installed.
 ### Ngnix
 
 If you use Nginx, add the following items to your server's configuration block to ensure the security of CMS Soosyze:
+
 ```
 include path\soosyze\.nginx.conf;
 ```
@@ -166,6 +171,6 @@ If you use IIS, **you must block access to the following directories**:
 * `app/config`,
 * `app/data`.
 
-# License
+## License
 
 Soosyze CMS is under MIT license. See the [license file](https://github.com/soosyze/soosyze/blob/master/LICENSE) for more information.
