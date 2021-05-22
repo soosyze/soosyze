@@ -191,7 +191,11 @@ class File
 
     public function isResolveName()
     {
-        if (!$this->name) {
+        if (
+            !$this->name &&
+            (!($this->file instanceof UploadedFileInterface) ||
+            $this->file->getError() !== UPLOAD_ERR_NO_FILE)
+        ) {
             throw new \Exception('To resolve the file name, the file must be present.');
         }
 
