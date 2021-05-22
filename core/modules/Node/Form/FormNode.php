@@ -259,9 +259,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
             'data-tooltip' => t($value[ 'field_description' ])
         ]);
         if (!isset($this->values[ 'entity_id' ])) {
-            $form->html('add-' . $key, '<div:attr><p>:content</p></div>', [
+            $form->html('content_nothing', '<div:attr><p>:content</p></div>', [
                 ':content' => t('Save your content before you can add items'),
-                'class'    => 'block-content-disabled',
+                'class'    => 'alert alert-info',
                 'style'    => 'cursor:not-allowed'
             ]);
 
@@ -300,7 +300,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 $idEntity = $field[ "{$key}_id" ];
                 $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field, $dir) {
                     if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
-                        $form->html("$key-$idEntity-drag", '<i class="fa fa-arrows-alt-v" aria-hidden="true"></i>')
+                        $form->html("$key-$idEntity-drag", '<div class="table-width-minimum"><i class="fa fa-arrows-alt-v" aria-hidden="true"></i></div>')
                             ->hidden("{$key}[$idEntity][weight]", [
                                 'value' => $field[ 'weight' ]
                             ])->hidden("{$key}[$idEntity][id]", [
@@ -314,7 +314,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                         $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
                     }
 
-                    $form->html("$key-$idEntity-show", '<a:attr>:content</a>', [
+                    $form->html("$key-$idEntity-show", '<div class="table-min-width-100"><a:attr>:content</a></div>', [
                             ':content' => $content,
                             'href'     => $this->router->getRoute('entity.edit', [
                                 ':id_node'   => $this->values[ 'id' ],
@@ -322,36 +322,39 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                                 ':id_entity' => $field[ "{$key}_id" ]
                             ]),
                         ])
-                        ->html("$key-$idEntity-edit", '<a:attr>:content</a>', [
-                            ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
-                            'class'    => 'btn',
-                            'href'     => $this->router->getRoute('entity.edit', [
-                                ':id_node'   => $this->values[ 'id' ],
-                                ':entity'    => $key,
-                                ':id_entity' => $field[ "{$key}_id" ]
-                            ]),
-                        ])
-                        ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
-                            ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
-                            'class'    => 'btn',
-                            'href'     => $this->router->getRoute('entity.delete', [
-                                ':id_node'   => $this->values[ 'id' ],
-                                ':entity'    => $key,
-                                ':id_entity' => $field[ "{$key}_id" ]
-                            ]),
-                    ]);
-                }, [ 'class' => 'sort_weight draggable draggable-verticale node-draggable_one_to_many' ]);
+                        ->group("$key-$idEntity-actions", 'div', function ($form) use ($field, $idEntity, $key) {
+                            $form->html("$key-$idEntity-edit", '<a:attr>:content</a>', [
+                                ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
+                                'class'    => 'btn',
+                                'href'     => $this->router->getRoute('entity.edit', [
+                                    ':id_node'   => $this->values[ 'id' ],
+                                    ':entity'    => $key,
+                                    ':id_entity' => $field[ "{$key}_id" ]
+                                ]),
+                            ])
+                            ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
+                                ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
+                                'class'    => 'btn',
+                                'href'     => $this->router->getRoute('entity.delete', [
+                                    ':id_node'   => $this->values[ 'id' ],
+                                    ':entity'    => $key,
+                                    ':id_entity' => $field[ "{$key}_id" ]
+                                ]),
+                            ]);
+                        }, [ 'class' => 'table-width-300' ]);
+                }, [ 'class' => 'sort_weight nestable-body table-row' ]);
             }
         }, $attrSortable);
 
         if (!isset($value[ 'attr' ][ 'max' ]) || $value[ 'attr' ][ 'max' ] > count($subFields)) {
             $form->group("add-$key-group", 'div', function ($form) use ($key) {
                 $form->html('add-' . $key, '<a:attr>:content</a>', [
+                    ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content'),
+                    'class'    => 'btn btn-primary',
                     'href'     => $this->router->getRoute('entity.create', [
                         ':id_node' => $this->values[ 'id' ],
                         ':entity'  => $key,
-                    ]),
-                    ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content')
+                    ])
                 ]);
             });
         }

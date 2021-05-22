@@ -43,10 +43,11 @@ class FileManager
                     . '</div>'
                     . '</div>';
 
-                $form->html('files-manager', '<div:attr>:content</div>', [
-                    ':content' => $response,
-                    'class'    => 'row',
-                    'id'       => 'filemanager'
+                $form->legend('files-manager-label', t('Media'))
+                    ->html('files-manager', '<div:attr>:content</div>', [
+                        ':content' => $response,
+                        'class'    => 'row',
+                        'id'       => 'filemanager'
                 ]);
             });
         });
@@ -91,7 +92,8 @@ class FileManager
 
         $form->append('fields-fieldset', function ($form) use ($response) {
             $form->group('files-group', 'div', function ($form) use ($response) {
-                $form->html('files-manager', '<div:attr>:content</div>', [
+                $form->legend('files-manager-label', t('Media'))
+                    ->html('files-manager', '<div:attr>:content</div>', [
                     ':content' => $response,
                     'class'    => 'row filemanager'
                 ]);
