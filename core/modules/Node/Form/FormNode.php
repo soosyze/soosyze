@@ -1,6 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SoosyzeCore\Node\Form;
+
+use Soosyze\Components\Form\FormGroupBuilder;
+use Soosyze\Components\Router\Router;
+use Soosyze\Config;
+use SoosyzeCore\FileSystem\Services\File;
+use SoosyzeCore\QueryBuilder\Services\Query;
 
 class FormNode extends \Soosyze\Components\Form\FormBuilder
 {
@@ -36,12 +44,24 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
     private $file;
 
+    /**
+     * @var Query
+     */
     private $query;
 
+    /**
+     * @var array
+     */
     private $fields;
 
+    /**
+     * @var Router
+     */
     private $router;
 
+    /**
+     * @var Config
+     */
     private $config;
 
     /**
@@ -60,10 +80,10 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(
         array $attr,
-        $file,
-        $query,
-        $router,
-        $config
+        File $file,
+        Query $query,
+        Router $router,
+        Config $config
     ) {
         parent::__construct($attr);
         $this->file   = $file;
@@ -80,7 +100,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function makeFields()
+    public function makeFields(): self
     {
         return $this
                 ->nodeFieldset()
@@ -89,21 +109,21 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ->publicationFieldset();
     }
 
-    public function setUserCurrent(array $userCurrent)
+    public function setUserCurrent(?array $userCurrent): self
     {
         $this->userCurrent = $userCurrent;
 
         return $this;
     }
 
-    public function setDisabledUserCurrent($disabled)
+    public function setDisabledUserCurrent(bool $disabled): self
     {
         $this->isDisabledUserCurrent = $disabled;
 
         return $this;
     }
 
-    public function nodeFieldset()
+    public function nodeFieldset(): self
     {
         return $this->group('fields-fieldset', 'fieldset', function ($form) {
             $form->group('title-group', 'div', function ($form) {
@@ -116,11 +136,10 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ]);
             }, self::$attrGrp);
             foreach ($this->fields as $value) {
-                $key                   = $value[ 'field_name' ];
+                $key = $value[ 'field_name' ];
+
                 /* Si le contenu du champ n'existe pas alors il est déclaré vide. */
-                $this->values[ $key ] = isset($this->values[ $key ])
-                        ? $this->values[ $key ]
-                        : '';
+                $this->values[ $key ] = $this->values[ $key ] ?? '';
                 $this->makeField($form, $value);
             }
         }, [
@@ -129,7 +148,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         ]);
     }
 
-    public function entityFieldset()
+    public function entityFieldset(): self
     {
         return $this->group('fields-fieldset', 'fieldset', function ($form) {
             foreach ($this->fields as $value) {
@@ -146,7 +165,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         ]);
     }
 
-    public function makeField(&$form, $value)
+    public function makeField(FormGroupBuilder &$form, array $value): FormGroupBuilder
     {
         $key = $value[ 'field_name' ];
         $this->rules($value);
@@ -196,11 +215,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    public function makeNumber(&$form, $key, array $value, array $options)
+    public function makeNumber(FormGroupBuilder &$form, string $key, array $value, array $options): void
     {
-        $default = empty($this->values[ $key ])
-            ? $value[ 'field_default_value' ]
-            : $this->values[ $key ];
+        $default = $this->values[ $key ] ?? $value[ 'field_default_value' ];
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ]),
@@ -216,12 +233,10 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
             }, [ 'class' => 'form-group-flex' ]);
     }
 
-    public function makeInput(&$form, $key, array $value, array $options)
+    public function makeInput(FormGroupBuilder &$form, string $key, array $value, array $options): void
     {
         $type    = $value[ 'field_type' ];
-        $default = empty($this->values[ $key ])
-            ? $value[ 'field_default_value' ]
-            : $this->values[ $key ];
+        $default = $this->values[ $key ] ?? $value[ 'field_default_value' ];
 
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
@@ -232,7 +247,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ] + $value[ 'attr' ]);
     }
 
-    public function makeCheckbox(&$form, $key, array $value, array $options)
+    public function makeCheckbox(FormGroupBuilder &$form, string $key, array $value, array $options): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'data-tooltip' => t($value[ 'field_description' ])
@@ -251,7 +266,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    public function makeOneToMany($form, $key, array $value, array $options)
+    public function makeOneToMany(FormGroupBuilder $form, string $key, array $value, array $options): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'required'     => !empty($value[ 'attr' ][ 'required' ]),
@@ -359,12 +374,12 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    public function isShowFile(array $options, array $field)
+    public function isShowFile(array $options, array $field): bool
     {
         return isset($options[ 'field_type_show' ]) && $options[ 'field_type_show' ] === 'image' && is_file($field[ $options[ 'field_type_show' ] ]);
     }
 
-    public function makeRadio(&$form, $key, array $value, array $options)
+    public function makeRadio(FormGroupBuilder &$form, $key, array $value, array $options): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'data-tooltip' => t($value[ 'field_description' ])
@@ -383,7 +398,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    public function makeSelect(&$form, $key, array $value, array $options)
+    public function makeSelect(FormGroupBuilder &$form, string $key, array $value, array $options): void
     {
         $selectOptions = [];
         foreach ($options as $keyOption => $option) {
@@ -399,7 +414,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
             ->select($key, $selectOptions, [ 'class' => 'form-control' ] + $value[ 'attr' ]);
     }
 
-    public function makeTextarea(&$form, $key, array $value, array $options)
+    public function makeTextarea(FormGroupBuilder &$form, string $key, array $value, array $options): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
@@ -410,7 +425,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ] + $value[ 'attr' ]);
     }
 
-    public function titleGroup()
+    public function titleGroup(): self
     {
         return $this->group('title-group', 'div', function ($form) {
             $form->label('title-label', t('Title of the content'))
@@ -424,7 +439,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }, self::$attrGrp);
     }
 
-    public function userFieldset()
+    public function userFieldset(): self
     {
         $options = [];
         if ($this->userCurrent) {
@@ -466,7 +481,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         ]);
     }
 
-    public function seoFieldset()
+    public function seoFieldset(): self
     {
         return $this->group('seo-fieldset', 'fieldset', function ($form) {
             $form->legend('seo-legend', t('SEO'))
@@ -519,7 +534,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         ]);
     }
 
-    public function publicationFieldset()
+    public function publicationFieldset(): self
     {
         return $this
                 ->group('publication-fieldset', 'fieldset', function ($form) {
@@ -586,7 +601,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 }, self::$attrGrp);
     }
 
-    public function actionsEntitySubmit()
+    public function actionsEntitySubmit(): self
     {
         return $this->token('token_entity')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
@@ -598,7 +613,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ]);
     }
 
-    public function rules(array &$value)
+    public function rules(array &$value): void
     {
         $value[ 'attr' ] = [];
         if (preg_match('/^(.*\|)?required(\|.*)?/', $value[ 'field_rules' ])) {
@@ -620,7 +635,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    private function getDateCreated()
+    private function getDateCreated(): string
     {
         if (empty($this->values[ 'date_created' ])) {
             $time = time();
@@ -633,7 +648,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         return date('Y-m-d', $time);
     }
 
-    private function getDateTimeCreated()
+    private function getDateTimeCreated(): string
     {
         if (empty($this->values[ 'date_created' ])) {
             $time = time();
