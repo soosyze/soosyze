@@ -83,6 +83,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->config()
+            ->set('settings.user_delete', 2)
             ->set('settings.user_register', false)
             ->set('settings.user_relogin', true)
             ->set('settings.terms_of_service_show', false)

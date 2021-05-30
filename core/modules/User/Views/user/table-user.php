@@ -62,7 +62,7 @@
 
             <tr>
                 <td data-title="<?php echo t('Username'); ?>">
-                    <a href="<?php echo $user[ 'link_show' ] ?>"><?php echo $user[ 'username' ] ?></a>
+                    <a href="<?php echo $user[ 'link_show' ] ?>"><?php echo xss($user[ 'username' ]) ?></a>
                     <?php foreach ($user[ 'roles' ] as $role): ?>
 
                         <span data-tooltip="<?php echo t($role[ 'role_label' ]); ?>" class="badge-role" style="background-color: <?php echo $role[ 'role_color' ]; ?>">

@@ -4,7 +4,7 @@ namespace SoosyzeCore\User\Hook;
 
 use SoosyzeCore\User\Form\FormUser;
 
-class Block
+class Block implements \SoosyzeCore\Block\BlockInterface
 {
     /**
      * @var \Soosyze\Config
