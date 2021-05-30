@@ -19,7 +19,7 @@ return [
     'trumbowyg.hook.user' => [
         'class' => 'SoosyzeCore\Trumbowyg\Hook\User',
         'hooks' => [
-            'user.permission.module' => 'hookPermission',
+            'user.permission.module' => 'hookUserPermissionModule',
             'route.trumbowyg.upload' => 'hookUpload'
         ]
     ]

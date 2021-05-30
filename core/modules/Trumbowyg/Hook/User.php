@@ -2,11 +2,11 @@
 
 namespace SoosyzeCore\Trumbowyg\Hook;
 
-class User
+class User implements \SoosyzeCore\User\UserInterface
 {
-    public function hookPermission(&$permission)
+    public function hookUserPermissionModule(array &$permissions)
     {
-        $permission[ 'Trumbowyg' ] = [
+        $permissions[ 'Trumbowyg' ] = [
             'trumbowyg.upload' => 'Use image upload'
         ];
     }
