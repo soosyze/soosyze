@@ -76,7 +76,7 @@ return [
             'route.filemanager.file.download' => 'hookFileDownlod',
             'route.filemanager.copy.admin' => 'hookFileAdmin',
             'route.filemanager.copy.update' => 'hookFileCopy',
-            'route.filemanager.copy.show' => 'hookFileShow',
+            'route.filemanager.copy.show' => 'hookFolderShow',
             'route.filemanager.folder.create' => 'hookFolderStore',
             'route.filemanager.folder.store' => 'hookFolderStore',
             'route.filemanager.folder.edit' => 'hookFolderUpdate',

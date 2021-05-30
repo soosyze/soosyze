@@ -206,10 +206,7 @@ class User implements \SoosyzeCore\User\UserInterface
         if ($right[ 'file_extensions_all' ]) {
             return true;
         }
-        if (($tmp = substr(strstr($ext, '.'), 1)) !== false) {
-            $ext = $tmp;
-        }
 
-        return in_array($ext, explode(',', $right[ 'file_extensions' ]));
+        return in_array(trim($ext, '.'), explode(',', $right[ 'file_extensions' ]));
     }
 }
