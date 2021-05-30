@@ -111,7 +111,7 @@ class NodeUser
             $nodes = $this->query
                 ->from('node')
                 ->where('user_id', '==', $userId)
-                ->execute();
+                ->fetchAll();
 
             foreach ($nodes as $node) {
                 self::node()->deleteRelation($node);

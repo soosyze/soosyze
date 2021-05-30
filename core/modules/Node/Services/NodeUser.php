@@ -8,6 +8,11 @@ use Soosyze\Components\Util\Util;
 class NodeUser
 {
     /**
+     * @var string
+     */
+    public $title = '';
+
+    /**
      * @var \SoosyzeCore\System\Services\Alias
      */
     private $alias;
@@ -41,11 +46,6 @@ class NodeUser
      * @var \Soosyze\Components\Router\Router
      */
     private $router;
-
-    /**
-     * @var string
-     */
-    private $title = '';
 
     /**
      * @var \SoosyzeCore\User\Services\User

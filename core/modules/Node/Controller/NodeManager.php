@@ -84,7 +84,7 @@ class NodeManager extends \Soosyze\Controller
         $params = [];
         if ($validator->getInput('title', '')) {
             $params[ 'title' ] = $validator->getInput('title');
-            $this->title = $validator->getInput('title');
+            self::nodeuser()->title = $validator->getInput('title');
             $query->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
         }
         if ($validator->getInput('types', [])) {
