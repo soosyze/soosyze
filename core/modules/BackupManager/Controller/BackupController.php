@@ -55,7 +55,8 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backups delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin')
+            self::router()->getRoute('backupmanager.admin'),
+            302
         );
     }
 
@@ -89,7 +90,8 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin')
+            self::router()->getRoute('backupmanager.admin'),
+            302
         );
     }
 
@@ -100,7 +102,8 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin')
+            self::router()->getRoute('backupmanager.admin'),
+            302
         );
     }
 }

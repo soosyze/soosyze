@@ -4,7 +4,6 @@ return [
     'backupmanager.extend' => [
         'class' => 'SoosyzeCore\BackupManager\Extend',
         'hooks' => [
-            'install.menu' => 'hookInstallMenu',
             'install.user' => 'hookInstallUser'
         ]
     ],
