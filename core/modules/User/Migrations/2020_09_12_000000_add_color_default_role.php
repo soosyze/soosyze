@@ -29,7 +29,7 @@ return [
             $req->update('role', [
                     'role_color' => $role[ 'color' ]
                 ])
-                ->where('role_id', '==', $role[ 'id' ])
+                ->where('role_id', '=', $role[ 'id' ])
                 ->execute();
         }
     }

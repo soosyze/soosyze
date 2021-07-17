@@ -358,7 +358,7 @@ class Node extends \Soosyze\Controller
             ]);
             self::query()
                 ->update('entity_' . $node[ 'type' ], $fieldsUpdate)
-                ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                 ->execute();
             $this->container->callHook('node.entity.update.after', [
                 $validator, $node, $idNode
@@ -385,7 +385,7 @@ class Node extends \Soosyze\Controller
             ]);
             self::query()
                 ->update('node', $value)
-                ->where('id', '==', $idNode)
+                ->where('id', '=', $idNode)
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $idNode ]);
 
@@ -519,7 +519,7 @@ class Node extends \Soosyze\Controller
             self::query()
                 ->from('node')
                 ->delete()
-                ->where('id', '==', $idNode)
+                ->where('id', '=', $idNode)
                 ->execute();
 
             if ((bool) $validator->getInput('files')) {
@@ -609,7 +609,7 @@ class Node extends \Soosyze\Controller
                     ->callMove(function ($key, $name, $move) use ($type, $entityId, $fieldName) {
                         self::query()
                         ->update('entity_' . $type, [ $fieldName => $move ])
-                        ->where($type . '_id', '==', $entityId)
+                        ->where($type . '_id', '=', $entityId)
                         ->execute();
                     })
                     ->saveOne();
@@ -818,7 +818,7 @@ class Node extends \Soosyze\Controller
 
                     $entitys = self::query()
                         ->from($options[ 'relation_table' ])
-                        ->where($options[ 'foreign_key' ], '==', $node[ 'entity_id' ])
+                        ->where($options[ 'foreign_key' ], '=', $node[ 'entity_id' ])
                         ->limit(2)
                         ->fetchAll();
 
@@ -940,7 +940,7 @@ class Node extends \Soosyze\Controller
                 ->update('entity_' . $field[ 'field_name' ], [
                     'weight' => $value[ 'weight' ]
                 ])
-                ->where($field[ 'field_name' ] . '_id', '==', $value[ 'id' ])
+                ->where($field[ 'field_name' ] . '_id', '=', $value[ 'id' ])
                 ->execute();
         }
     }
@@ -962,19 +962,19 @@ class Node extends \Soosyze\Controller
             ->callGet(function ($key, $name) use ($node) {
                 return self::query()
                     ->from('entity_' . $node[ 'type' ])
-                    ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                    ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                     ->fetch()[ $key ];
             })
             ->callMove(function ($key, $name, $move) use ($node) {
                 self::query()
                 ->update('entity_' . $node[ 'type' ], [ $key => $move ])
-                ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                 ->execute();
             })
             ->callDelete(function ($key, $name) use ($node) {
                 self::query()
                 ->update('entity_' . $node[ 'type' ], [ $key => '' ])
-                ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                 ->execute();
             })
             ->save();

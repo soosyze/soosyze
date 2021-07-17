@@ -126,7 +126,7 @@ class NodeApi extends \Soosyze\Controller
             self::query()
                 ->from('node')
                 ->delete()
-                ->where('id', '==', $idNode)
+                ->where('id', '=', $idNode)
                 ->execute();
 
             if ((bool) $validator->getInput('files')) {

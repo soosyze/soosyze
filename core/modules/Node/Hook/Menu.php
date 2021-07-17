@@ -82,7 +82,7 @@ class Menu
         $link = $this->query
             ->from('node_menu_link')
             ->leftJoin('menu_link', 'menu_link_id', '=', 'menu_link.id')
-            ->where('node_id', '==', $idNode)
+            ->where('node_id', '=', $idNode)
             ->fetch();
 
         if ($link) {
@@ -193,7 +193,7 @@ class Menu
         }
 
         $nodeMenuLink = $this->query->from('node_menu_link')
-            ->where('node_id', '==', $id)
+            ->where('node_id', '=', $id)
             ->fetch();
 
         $link = $this->alias->getAlias("node/$id", "node/$id");
@@ -227,16 +227,16 @@ class Menu
             $linkId = $this->schema->getIncrement('menu_link');
 
             $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
-                ->values([ (int) $id, (int) $linkId ])
+                ->values([ $id, $linkId ])
                 ->execute();
         } elseif (!$validator->hasInput('active') && $nodeMenuLink) {
             $this->query->from('node_menu_link')
-                ->where('node_id', '==', $id)
+                ->where('node_id', '=', $id)
                 ->delete()
                 ->execute();
 
             $this->query->from('menu_link')
-                ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
+                ->where('id', '=', $nodeMenuLink[ 'menu_link_id' ])
                 ->delete()
                 ->execute();
         }
@@ -249,17 +249,17 @@ class Menu
         }
 
         $nodeMenuLink = $this->query->from('node_menu_link')
-            ->where('node_id', '==', $item)
+            ->where('node_id', '=', $item)
             ->fetch();
 
         if ($nodeMenuLink) {
             $this->query->from('node_menu_link')
-                ->where('node_id', '==', $item)
+                ->where('node_id', '=', $item)
                 ->delete()
                 ->execute();
 
             $this->query->from('menu_link')
-                ->where('id', '==', $nodeMenuLink[ 'menu_link_id' ])
+                ->where('id', '=', $nodeMenuLink[ 'menu_link_id' ])
                 ->delete()
                 ->execute();
         }
@@ -268,7 +268,7 @@ class Menu
     public function hookLinkDeleteValid(Validator $validator, int $id): void
     {
         $this->query->from('node_menu_link')
-            ->where('menu_link_id', '==', $id)
+            ->where('menu_link_id', '=', $id)
             ->delete()
             ->execute();
     }

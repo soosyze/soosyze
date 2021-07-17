@@ -304,7 +304,7 @@ class Entity extends \Soosyze\Controller
             ]);
             self::query()
                 ->update('entity_' . $entity, $fields)
-                ->where($entity . '_id', '==', $idEntity)
+                ->where($entity . '_id', '=', $idEntity)
                 ->execute();
             $this->container->callHook('entity.update.after', [
                 $validator, $node, $entity, $idEntity
@@ -354,7 +354,7 @@ class Entity extends \Soosyze\Controller
         if ($node[ 'node_status_id' ] === 1 && ($rules = self::node()->getRules($fieldNode))) {
             $entitys = self::query()
                 ->from('entity_' . $typeEntity)
-                ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                 ->limit(2)
                 ->fetchAll();
 
@@ -370,7 +370,7 @@ class Entity extends \Soosyze\Controller
             self::query()
                 ->from('entity_' . $typeEntity)
                 ->delete()
-                ->where($typeEntity . '_id', '==', $idEntity)
+                ->where($typeEntity . '_id', '=', $idEntity)
                 ->execute();
 
             $this->deleteFile($fieldsEntity, $entity);
@@ -421,19 +421,19 @@ class Entity extends \Soosyze\Controller
             ->callGet(function ($key, $name) use ($typeEntity, $idEntity) {
                 return self::query()
                     ->from('entity_' . $typeEntity)
-                    ->where($typeEntity . '_id', '==', $idEntity)
+                    ->where($typeEntity . '_id', '=', $idEntity)
                     ->fetch();
             })
             ->callMove(function ($key, $name, $move) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
                 ->update('entity_' . $typeEntity, [ $nameField => $move ])
-                ->where($typeEntity . '_id', '==', $idEntity)
+                ->where($typeEntity . '_id', '=', $idEntity)
                 ->execute();
             })
             ->callDelete(function ($key, $name) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
                 ->update('entity_' . $typeEntity, [ $nameField => '' ])
-                ->where($typeEntity . '_id', '==', $idEntity)
+                ->where($typeEntity . '_id', '=', $idEntity)
                 ->execute();
             })
             ->save();

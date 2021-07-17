@@ -49,7 +49,7 @@ return [
             ])
             ->execute();
 
-        $nodes = $req->from('node')->where('type', 'article')->fetchAll();
+        $nodes = $req->from('node')->where('type', '=', 'article')->fetchAll();
         foreach ($nodes as $i => $node) {
             $field = unserialize($node[ 'field' ]);
             $req->insertInto('entity_article', [

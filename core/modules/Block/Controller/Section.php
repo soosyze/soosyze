@@ -99,7 +99,7 @@ class Section extends \Soosyze\Controller
 
     public function update(int $id, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::query()->from('block')->where('block_id', '==', $id)->fetch()) {
+        if (!self::query()->from('block')->where('block_id', '=', $id)->fetch()) {
             return $this->get404($req);
         }
 
@@ -116,7 +116,7 @@ class Section extends \Soosyze\Controller
                     'weight'  => (int) $validator->getInput('weight'),
                     'section' => $validator->getInput('section')
                 ])
-                ->where('block_id', '==', $id)
+                ->where('block_id', '=', $id)
                 ->execute();
         }
 
