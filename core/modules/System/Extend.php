@@ -48,7 +48,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->string('version');
             })
             ->createTableIfNotExists('system_alias_url', static function (TableBuilder $table): void {
-                $table->string('source')
+                $table->increments('id')
+                ->string('source')
                 ->string('alias');
             })
             ->createTableIfNotExists('migration', static function (TableBuilder $table): void {
