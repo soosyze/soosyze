@@ -23,7 +23,7 @@ class Role
     {
         $this->query
             ->from('profil_file_role')
-            ->where('role_id', '==', $id)
+            ->where('role_id', '=', $id)
             ->delete()
             ->execute();
     }

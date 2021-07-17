@@ -196,7 +196,7 @@ class User implements \SoosyzeCore\User\UserInterface
 
         $this->nodes[ $idNode ] = $this->query
             ->from('node')
-            ->where('id', '==', $idNode)
+            ->where('id', '=', $idNode)
             ->fetch();
 
         return $this->nodes[ $idNode ];

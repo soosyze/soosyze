@@ -94,7 +94,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         $data = $this->query
             ->from('node')
-            ->where('node_status_id', '==', 1)
+            ->where('node_status_id', '=', 1)
             ->where('type', '=', 'article')
             ->fetchAll();
 
@@ -174,7 +174,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         $data = $this->query
             ->from('node')
-            ->where('node_status_id', '==', 1)
+            ->where('node_status_id', '=', 1)
             ->where('type', '=', 'article')
             ->fetchAll();
 

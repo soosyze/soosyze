@@ -164,7 +164,7 @@ class Role extends \Soosyze\Controller
             $this->container->callHook('role.udpate.before', [
                 &$validator, &$value, $id
             ]);
-            self::query()->update('role', $value)->where('role_id', '==', $id)->execute();
+            self::query()->update('role', $value)->where('role_id', '=', $id)->execute();
             $this->container->callHook('role.udpate.after', [
                 $validator, $value, $id
             ]);
@@ -245,17 +245,17 @@ class Role extends \Soosyze\Controller
             $this->container->callHook('role.delete.before', [ $validator, $id ]);
 
             self::query()->from('user_role')
-                ->where('role_id', '==', $id)
+                ->where('role_id', '=', $id)
                 ->delete()
                 ->execute();
             self::query()
                 ->from('role_permission')
-                ->where('role_id', '==', $id)
+                ->where('role_id', '=', $id)
                 ->delete()
                 ->execute();
             self::query()
                 ->from('role')
-                ->where('role_id', '==', $id)
+                ->where('role_id', '=', $id)
                 ->delete()
                 ->execute();
 
@@ -298,7 +298,7 @@ class Role extends \Soosyze\Controller
 
     private function find(int $id): array
     {
-        return self::query()->from('role')->where('role_id', '==', $id)->fetch();
+        return self::query()->from('role')->where('role_id', '=', $id)->fetch();
     }
 
     private function getRoleSubmenu(string $keyRoute, int $idRole): array

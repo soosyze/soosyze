@@ -132,7 +132,7 @@ class Permission extends \Soosyze\Controller
         }
 
         self::query()->from('role_permission')->delete()
-            ->where('role_id', '==', $idRole)
+            ->where('role_id', '=', $idRole)
             ->where(static function ($query) use ($diffDelete) {
                 foreach ($diffDelete as $delete) {
                     $query->orWhere('permission_id', '==', $delete);

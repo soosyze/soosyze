@@ -188,9 +188,9 @@ class FilePermission extends \Soosyze\Controller
             ]);
             self::query()
                 ->update('profil_file', $data)
-                ->where('profil_file_id', '==', $id)
+                ->where('profil_file_id', '=', $id)
                 ->execute();
-            $this->updateProfilRole($validator, (int) $id);
+            $this->updateProfilRole($validator, $id);
             $this->container->callHook('filemanager.permission.update.after', [
                 $validator, $id
             ]);
@@ -277,12 +277,12 @@ class FilePermission extends \Soosyze\Controller
             self::query()
                 ->from('profil_file_role')
                 ->delete()
-                ->where('profil_file_id', '==', $id)
+                ->where('profil_file_id', '=', $id)
                 ->execute();
             self::query()
                 ->from('profil_file')
                 ->delete()
-                ->where('profil_file_id', '==', $id)
+                ->where('profil_file_id', '=', $id)
                 ->execute();
             $this->container->callHook('filemanager.permission.delete.after', [
                 $validator, $id
@@ -315,7 +315,7 @@ class FilePermission extends \Soosyze\Controller
     {
         self::query()
             ->from('profil_file_role')
-            ->where('profil_file_id', '==', $profilFileId)
+            ->where('profil_file_id', '=', $profilFileId)
             ->delete()->execute();
         self::query()
             ->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ]);

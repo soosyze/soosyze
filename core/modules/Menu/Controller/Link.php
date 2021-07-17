@@ -184,7 +184,7 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
             self::query()
                 ->update('menu_link', $data)
-                ->where('id', '==', $id)
+                ->where('id', '=', $id)
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ $validator ]);
 

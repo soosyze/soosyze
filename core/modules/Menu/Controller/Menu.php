@@ -256,7 +256,7 @@ class Menu extends \Soosyze\Controller
             $this->container->callHook('menu.update.before', [ $validator, &$data ]);
             self::query()
                 ->update('menu', $data)
-                ->where('name', '==', $menu)
+                ->where('name', '=', $menu)
                 ->execute();
             $this->container->callHook('menu.update.after', [ $validator ]);
 
@@ -344,12 +344,12 @@ class Menu extends \Soosyze\Controller
             self::query()
                 ->from('menu_link')
                 ->delete()
-                ->where('menu', '==', $menu)
+                ->where('menu', '=', $menu)
                 ->execute();
             self::query()
                 ->from('menu')
                 ->delete()
-                ->where('name', '==', $menu)
+                ->where('name', '=', $menu)
                 ->execute();
             $this->container->callHook('menu.delete.after', [ $validator, $menu ]);
 
@@ -368,7 +368,7 @@ class Menu extends \Soosyze\Controller
         $query = self::query()
             ->from('menu_link')
             ->where('menu', '=', $nameMenu)
-            ->where('parent', '==', $parent)
+            ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
 

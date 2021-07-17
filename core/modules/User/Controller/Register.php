@@ -162,7 +162,7 @@ class Register extends \Soosyze\Controller
         $this->container->callHook('register.activate.before', [ $id ]);
         self::query()
             ->update('user', [ 'token_actived' => null, 'actived' => true ])
-            ->where('user_id', '==', $id)
+            ->where('user_id', '=', $id)
             ->execute();
         $this->container->callHook('register.activate.after', [ $id ]);
 
