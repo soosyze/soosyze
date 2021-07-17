@@ -2,16 +2,32 @@
 
 use Soosyze\Components\Router\Route as R;
 
+define('BLOCK_WITH_THEME', [
+    ':theme' => 'public|admin'
+]);
+define('BLOCK_WITH', [
+    ':theme' => 'public|admin',
+    ':section' => '\w+'
+]);
+define('BLOCK_WITH_ID', [
+    ':theme' => 'public|admin',
+     ':id' => '\d+'
+]);
+
 R::useNamespace('SoosyzeCore\Block\Controller');
 
 R::get('block.section.admin', 'admin/theme/:theme/section', 'Section@admin', [ ':theme' => 'public|admin' ]);
+R::get('block.section.show', 'admin/section/:theme/:section', 'Section@show', BLOCK_WITH);
 R::post('block.section.update', 'admin/section/:id/edit', 'Section@update', [ ':id' => '\d+' ]);
 
 R::useNamespace('SoosyzeCore\Block\Controller')->name('block.')->prefix('block')->group(function () {
-    R::get('show', '/:id', 'Block@show', [ ':id' => '\d+' ]);
-    R::get('create', '/:theme/:section', 'Block@create', [ ':theme' => 'public|admin', ':section' => '[\-a-z_]+' ]);
-    R::post('store', '/:theme/:section', 'Block@store', [ ':theme' => 'public|admin', ':section' => '[\-a-z_]+' ]);
-    R::get('edit', '/:id/edit', 'Block@edit', [ ':id' => '\d+' ]);
-    R::post('update', '/:id', 'Block@update', [ ':id' => '\d+' ]);
-    R::delete('delete', '/:id/delete', 'Block@delete', [ ':id' => '\d+' ]);
+    R::get('create.list', '/:theme/create/:section', 'Block@createList', BLOCK_WITH);
+    R::get('create.show', '/create/:id', 'Block@createShow', [ ':id' => '[\w\.\-]+' ]);
+    R::post('create.form', '/:theme/create/form', 'Block@createForm', BLOCK_WITH_THEME);
+    R::post('store', '/:theme', 'Block@store', BLOCK_WITH_THEME);
+
+    R::get('edit', '/:theme/:id/edit', 'Block@edit', BLOCK_WITH_ID);
+    R::post('update', '/:theme/:id', 'Block@update', BLOCK_WITH_ID);
+    R::get('remove', '/:theme/:id/delete', 'Block@remove', BLOCK_WITH_ID);
+    R::post('delete', '/:theme/:id/delete', 'Block@delete', BLOCK_WITH_ID);
 });

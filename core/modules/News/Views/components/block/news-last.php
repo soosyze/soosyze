@@ -65,7 +65,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a href="<?php echo $link_more; ?>" class="btn btn-primary"><?php echo t('All news'); ?></a>
+            <a href="<?php echo $link_more; ?>" class="btn btn-primary"><?php echo t($text_more); ?></a>
         </div>
     </div>
 <?php endif; ?>

@@ -1,0 +1,14 @@
+{
+    "Advanced": "Avancée",
+    "Class CSS": "Class CSS",
+    "Visibility by pages": "Visibilité par pages",
+    "Hide the block on the pages listed": "Cacher le bloc aux pages listées",
+    "Show block on listed pages": "Afficher le bloc aux pages listées",
+    "List of pages": "Liste des pages",
+    "Enter a path by line. The \"%\" character is a wildcard character that specifies all characters.": "Saisir un chemin par ligne. Le caractère «%» est un caractère de remplacement spécifiant tous les caractères.",
+    "Visibility by roles": "Visibilité par rôles",
+    "Hide the block to selected roles": "Cacher le bloc aux rôles sélectionnés",
+    "Show block with selected roles": "Afficher le bloc aux rôles sélectionnés",
+    "Delete block": "Suppression du bloc",
+    "Warning ! The deletion of the block is final.": "Attention ! La suppression du bloc est définitive."
+}

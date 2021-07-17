@@ -14,11 +14,18 @@ return [
             'api.route' => 'apiRoute'
         ]
     ],
+    'contact.hook.block' => [
+        'class' => 'SoosyzeCore\Contact\Hook\Block',
+        'hooks' => [
+            'block.create.form.data' => 'hookBlockCreateFormData',
+            'block.contact' => 'hookContact'
+        ]
+    ],
     'contact.hook.user' => [
         'class' => 'SoosyzeCore\Contact\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
-            'route.contact' => 'hookContact',
+            'route.contact.form' => 'hookContact',
             'route.contact.check' => 'hookContact'
         ]
     ]

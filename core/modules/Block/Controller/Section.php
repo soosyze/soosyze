@@ -8,12 +8,64 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Template\Services\Block;
 
 class Section extends \Soosyze\Controller
 {
     public function __construct()
     {
         $this->pathViews = dirname(__DIR__) . '/Views/';
+    }
+
+    public function show(
+        string $theme,
+        string $section
+    ): Block {
+        $listBlock = self::block()->getBlocks();
+        $blocks    = self::query()
+            ->from('block')
+            ->where('section', '=', $section)
+            ->orderBy('weight')
+            ->fetchAll();
+
+        self::template()
+            ->getTheme(
+                $theme === 'admin'
+                    ? 'theme_admin'
+                    : 'theme'
+            );
+
+        foreach ($blocks as &$block) {
+            if (!empty($block[ 'hook' ])) {
+                $tplBlock           = self::template()->createBlock(
+                    $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
+                    $listBlock[ $block[ 'key_block' ] ][ 'path' ]
+                );
+                $block[ 'content' ] .= (string) self::core()->callHook('block.' . $block[ 'hook' ], [
+                        $tplBlock, json_decode($block[ 'options' ] ?? '{}', true)
+                ]);
+            }
+            $params = [
+                ':theme'   => $theme,
+                ':id'      => $block[ 'block_id' ]
+            ];
+
+            $block[ 'link_edit' ]   = self::router()->getRoute('block.edit', $params);
+            $block[ 'link_delete' ] = self::router()->getRoute('block.delete', $params);
+            $block[ 'link_update' ] = self::router()->getRoute('block.section.update', $params);
+        }
+
+        return self::template()
+                ->createBlock('section.php', $this->pathViews)
+                ->addVars([
+                    'section_id'  => $section,
+                    'content'     => $blocks,
+                    'is_admin'    => true,
+                    'link_create' => self::router()->getRoute('block.create.list', [
+                        ':theme'   => $theme,
+                        ':section' => $section
+                    ])
+        ]);
     }
 
     public function admin(string $theme, ServerRequestInterface $req): ResponseInterface
@@ -53,7 +105,7 @@ class Section extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'weight'  => 'required|string|max:50',
+                'weight'  => 'required|numeric|between_numeric:0,50',
                 'section' => 'required|string|max:50'
             ])
             ->setInputs($req->getParsedBody());

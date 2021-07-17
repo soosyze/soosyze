@@ -15,6 +15,14 @@ use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
+    public const MORE_LINK_NOT_ADD = 0;
+
+    public const MORE_LINK_ADD = 1;
+
+    public const MORE_LINK_ADD_IF = 2;
+
+    private const PATH_VIEWS = __DIR__ . '/../Views/';
+
     /**
      * @var Alias
      */
@@ -26,11 +34,6 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     private $node;
 
     /**
-     * @var string
-     */
-    private $pathViews;
-
-    /**
      * @var Query
      */
     private $query;
@@ -40,41 +43,54 @@ class Block implements \SoosyzeCore\Block\BlockInterface
      */
     private $router;
 
-    public function __construct(Alias $alias, Node $node, Query $query, Router $router)
-    {
+    public function __construct(
+        Alias $alias,
+        Node $node,
+        Query $query,
+        Router $router
+    ) {
         $this->alias  = $alias;
         $this->node   = $node;
         $this->query  = $query;
         $this->router = $router;
-
-        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function hookBlockCreateFormData(array &$blocks): void
     {
         $blocks[ 'news.archive' ]        = [
-            'hook'    => 'news.archive',
-            'options' => [ 'expand' => false ],
-            'path'    => $this->pathViews,
-            'title'   => 'Archives',
-            'tpl'     => 'components/block/news-archive.php'
+            'description' => t('List of articles by year and month.'),
+            'icon'        => 'fas fa-archive',
+            'hook'        => 'news.archive',
+            'options'     => [ 'expand' => false ],
+            'path'        => self::PATH_VIEWS,
+            'title'       => t('Archives list'),
+            'tpl'         => 'components/block/news-archive.php'
         ];
         $blocks[ 'news.archive.select' ] = [
-            'hook'  => 'news.archive.select',
-            'path'  => $this->pathViews,
-            'title' => 'Archives',
-            'tpl'   => 'components/block/news-archive_select.php'
+            'description' => t('Selection list of articles by year and month.'),
+            'icon'        => 'fas fa-archive',
+            'hook'        => 'news.archive.select',
+            'path'        => self::PATH_VIEWS,
+            'title'       => t('Archives select'),
+            'tpl'         => 'components/block/news-archive_select.php'
         ];
         $blocks[ 'news.last' ]           = [
-            'hook'    => 'news.last',
-            'options' => [ 'limit' => 3, 'offset' => 0, 'more' => true ],
-            'path'    => $this->pathViews,
-            'title'   => 'Last News',
-            'tpl'     => 'components/block/news-last.php'
+            'description' => t('Displays the latest news.'),
+            'icon'        => 'fas fa-newspaper',
+            'hook'        => 'news.last',
+            'options'     => [
+                'limit'     => 3,
+                'offset'    => 0,
+                'more'      => self::MORE_LINK_NOT_ADD,
+                'text_more' => t('Show blog')
+            ],
+            'path'        => self::PATH_VIEWS,
+            'title'       => t('Last news'),
+            'tpl'         => 'components/block/news-last.php'
         ];
     }
 
-    public function hookBlockNewsArchiveSelect(ServiceBlock $tpl, array $options): ServiceBlock
+    public function hookNewsArchiveSelect(ServiceBlock $tpl): ServiceBlock
     {
         $data = $this->query
             ->from('node')
@@ -154,7 +170,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $tpl->addVar('form', $form);
     }
 
-    public function hookBlockNewsArchive(ServiceBlock $tpl, array $options): ServiceBlock
+    public function hookNewsArchive(ServiceBlock $tpl, array $options): ServiceBlock
     {
         $data = $this->query
             ->from('node')
@@ -214,13 +230,13 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $tpl->addVar('years', $output);
     }
 
-    public function hookBlockNewsArchiveEditForm(FormGroupBuilder &$form, array $data): void
+    public function hookNewsArchiveForm(FormGroupBuilder &$form, array $values): void
     {
-        $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('new-legend', t('News setting'))
-                ->group('limit-group', 'div', function ($form) use ($data) {
+        $form->group('new-fieldset', 'fieldset', function ($form) use ($values) {
+            $form->legend('new-legend', t('Settings'))
+                ->group('limit-group', 'div', function ($form) use ($values) {
                     $form->checkbox('expand', [
-                        'checked' => $data[ 'options' ][ 'expand' ],
+                        'checked' => $values[ 'options' ][ 'expand' ],
                         'class'   => 'form-control'
                     ])
                     ->label('limit-label', '<span class="ui"></span>' . t('Expand archives per month'), [
@@ -230,21 +246,21 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         });
     }
 
-    public function hookNewsBlockArchiveUpdateValidator(Validator &$validator): void
+    public function hookNewsArchiveValidator(Validator &$validator): void
     {
         $validator
             ->addRule('expand', 'bool')
             ->addLabel('expand', t('Expand archives per month'));
     }
 
-    public function hookNewsArchiveUpdateBefore(Validator $validator, array &$values, int $id): void
+    public function hookNewsArchiveBefore(Validator $validator, array &$data): void
     {
-        $values[ 'options' ] = json_encode([
+        $data[ 'options' ] = json_encode([
             'expand' => (bool) $validator->getInput('expand')
         ]);
     }
 
-    public function hookBlockNewsLast(ServiceBlock $tpl, array $options): ServiceBlock
+    public function hookNewsLast(ServiceBlock $tpl, array $options): ServiceBlock
     {
         $news = $this->query
             ->from('node')
@@ -272,19 +288,20 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         unset($value);
 
         return $tpl->addVars([
-                'is_link_more' => $isMore,
+                'is_link_more' => $options[ 'more' ] === 1 || ($options[ 'more' ] === 2 && $isMore),
                 'limit'        => $options[ 'limit' ],
                 'link_more'    => $this->router->getRoute('news.index'),
                 'news'         => $news,
-                'offset'       => $options[ 'offset' ]
+                'offset'       => $options[ 'offset' ],
+                'text_more'    => $options[ 'text_more' ],
         ]);
     }
 
-    public function hookBlockNewsLastEditForm(FormGroupBuilder &$form, array $data): void
+    public function hookNewsLastForm(FormGroupBuilder &$form, array $values): void
     {
-        $form->group('new-fieldset', 'fieldset', function ($form) use ($data) {
-            $form->legend('new-legend', t('News setting'))
-                ->group('limit-group', 'div', function ($form) use ($data) {
+        $form->group('new-fieldset', 'fieldset', function ($form) use ($values) {
+            $form->legend('new-legend', t('Settings'))
+                ->group('limit-group', 'div', function ($form) use ($values) {
                     $options = [
                         [ 'label' => 1, 'value' => 1 ],
                         [ 'label' => 2, 'value' => 2 ],
@@ -292,51 +309,101 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                         [ 'label' => 4, 'value' => 4 ]
                     ];
 
-                    $form->label('limit-label', t('Number of news to display'))
+                    $form->label('limit-label', t('Number of items to show'))
                     ->select('limit', $options, [
-                        ':selected' => $data[ 'options' ][ 'limit' ],
+                        ':selected' => $values[ 'options' ][ 'limit' ],
                         'class'     => 'form-control',
                         'max'       => 4,
                         'min'       => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('offset-group', 'div', function ($form) use ($data) {
-                    $form->label('offset-label', t('Offset'))
+                ->group('offset-group', 'div', function ($form) use ($values) {
+                    $form->label('offset-label', t('Offset (number of items to skip)'))
                     ->number('offset', [
                         'class' => 'form-control',
                         'min'   => 0,
-                        'value' => $data[ 'options' ][ 'offset' ]
+                        'value' => $values[ 'options' ][ 'offset' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
-                ->group('more-group', 'div', function ($form) use ($data) {
-                    $form->checkbox('more', [
-                        'checked' => $data[ 'options' ][ 'more' ]
+                ->legend('more-legend', t('More link'))
+                ->group('more_0-group', 'div', function ($form) use ($values) {
+                    $form->radio('more', [
+                        'checked' => $values[ 'options' ][ 'more' ] === self::MORE_LINK_NOT_ADD,
+                        'id'      => 'more_0',
+                        'value'   => 0
                     ])
-                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Add a "more" link at the bottom of the screen if there is more content'), [
-                        'for' => 'more'
+                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Do not add a "more" link'), [
+                        'for' => 'more_0'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('more_1-group', 'div', function ($form) use ($values) {
+                    $form->radio('more', [
+                        'checked' => $values[ 'options' ][ 'more' ] === self::MORE_LINK_ADD,
+                        'id'      => 'more_1',
+                        'value'   => 1
+                    ])
+                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Add a "more" link'), [
+                        'for' => 'more_1'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('more_2-group', 'div', function ($form) use ($values) {
+                    $form->radio('more', [
+                        'checked' => $values[ 'options' ][ 'more' ] === self::MORE_LINK_ADD_IF,
+                        'id'      => 'more_2',
+                        'value'   => 2
+                    ])
+                    ->label('more-label', '<i class="ui" aria-hidden="true"></i> ' . t('Add a "more" link if there is more content'), [
+                        'for' => 'more_2'
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('text_more-group', 'div', function ($form) use ($values) {
+                    $form->label('text_more-label', t('More link text'))
+                    ->text('text_more', [
+                        'class'     => 'form-control',
+                        'maxlength' => 128,
+                        'value'     => $values[ 'options' ][ 'text_more' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
         });
     }
 
-    public function hookBlockNewsLastUpdateValidator(Validator &$validator, int $id): void
+    public function hookNewsLastValidator(Validator &$validator): void
     {
+        $optionsMore = [
+            self::MORE_LINK_NOT_ADD => t('Do not add a "more" link'),
+            self::MORE_LINK_ADD     => t('Add a "more" link'),
+            self::MORE_LINK_ADD_IF  => t('Add a "more" link if there is more content')
+        ];
+
         $validator
             ->addRule('limit', 'required|inarray:1,2,3,4')
             ->addRule('offset', 'required|numeric|min_numeric:0')
-            ->addRule('more', 'bool');
+            ->addRule('more', 'required|inarray:' . implode(', ', array_keys($optionsMore)))
+            ->addRule('text_more', 'required_with:more|string|max:255');
         $validator
-            ->addLabel('limit', t('Number of news to display'))
-            ->addLabel('offset', t('Offset'))
-            ->addLabel('more', t('Add a "more" link at the bottom of the screen if there is more content'));
+            ->addLabel('limit', t('Number of items to show'))
+            ->addLabel('offset', t('Offset (number of items to skip)'))
+            ->addLabel('more', t('More link'))
+            ->addLabel('text_more', t('More link text'));
+        $validator
+            ->setAttributs([
+                'more' => [
+                    'inarray' => [
+                        ':list' => static function (string $label) use ($optionsMore) {
+                            return implode(', ', $optionsMore);
+                        }
+                    ]
+                ]
+        ]);
     }
 
-    public function hookNewsLastUpdateBefore(Validator $validator, array &$values, int $id): void
+    public function hookNewsLastBefore(Validator $validator, array &$data): void
     {
-        $values[ 'options' ] = json_encode([
-            'limit'  => (int) $validator->getInput('limit'),
-            'more'   => (bool) $validator->getInput('more'),
-            'offset' => (int) $validator->getInput('offset')
+        $data[ 'options' ] = json_encode([
+            'limit'     => (int) $validator->getInput('limit'),
+            'more'      => (int) $validator->getInput('more'),
+            'offset'    => (int) $validator->getInput('offset'),
+            'text_more' => $validator->getInput('text_more')
         ]);
     }
 }

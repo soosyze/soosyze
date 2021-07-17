@@ -15,7 +15,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot(): void
     {
-        foreach ([ 'main', 'permission' ] as $file) {
+        foreach ([ 'block', 'main', 'permission' ] as $file) {
             $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
         }
     }
@@ -44,7 +44,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->insertInto('menu_link', [
                 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
-            ->values([ 'contact', '', 'Contact', 'contact', 'menu-main', 50, -1 ])
+            ->values([ 'contact.form', '', 'Contact', 'contact', 'menu-main', 50, -1 ])
             ->execute();
     }
 
@@ -64,12 +64,24 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookUninstall(ContainerInterface $ci): void
     {
+        if ($ci->module()->has('Block')) {
+            $this->hookUninstallBlock($ci);
+        }
         if ($ci->module()->has('Menu')) {
             $this->hookUninstallMenu($ci);
         }
         if ($ci->module()->has('User')) {
             $this->hookUninstallUser($ci);
         }
+    }
+
+    public function hookUninstallBlock(ContainerInterface $ci): void
+    {
+        $ci->query()
+            ->from('block')
+            ->delete()
+            ->where('hook', 'like', 'contact.%')
+            ->execute();
     }
 
     public function hookUninstallMenu(ContainerInterface $ci): void
