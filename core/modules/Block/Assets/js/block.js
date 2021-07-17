@@ -1,62 +1,53 @@
 $(function () {
-    $(document).delegate('.block .fa-edit', 'click', function (evt) {
-        evt.preventDefault();
-        const $this = $(this).closest('.block');
-        $.ajax({
-            url: $(this).data('link_edit'),
-            type: 'GET',
-            dataType: 'html',
-            success: function (data) {
-                $this.replaceWith(data);
-                addEditor();
-            }
-        });
-    }).delegate('.block .fa-trash-alt', 'click', function (evt) {
-        evt.preventDefault();
-        const $block = $(this).closest('.block');
-        if (confirm("Voulez vous supprimer définitivement le contenu ?")) {
-            $.ajax({
-                url: $(this).data('link_delete'),
-                type: 'DELETE',
-                dataType: 'html',
-                success: function (data) {
-                    $block.replaceWith('');
-                }
-            });
-        }
-    }).delegate('.block-edit input[name=submit_save]', 'click', function (evt) {
+    $(document).delegate('#modal_block input[type="submit"].submit-block-form', 'click', function (evt) {
         evt.preventDefault();
         const $this = $(this);
-        const $form = $this.parent('form');
+        const $form = $this.closest('form');
+
+        let data = $form.serialize();
+        const activeEl = document.activeElement;
+
+        if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
+            if (data) {
+                data += "&";
+            }
+            data += activeEl.name;
+            if (activeEl.value) {
+                data += "=" + activeEl.value;
+            }
+        }
+
         $.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
-            data: $form.serialize(),
-            dataType: 'html',
+            data: data,
+            dataType: 'json',
             success: function (data) {
-                $this.closest('.block-edit').replaceWith(data);
-            }
-        });
-    }).delegate('.block-edit input[name=submit_cancel]', 'click', function (evt) {
-        evt.preventDefault();
-        const $block = $(this).closest('.block-edit');
-        $.ajax({
-            url: $block.data('link_show'),
-            type: 'GET',
-            dataType: 'html',
-            success: function (data) {
-                $block.replaceWith(data);
+                closeModal.call(evt.target, evt);
+                showBlock(data.inputs.section, data.link_show);
+            },
+            error: function (data) {
+                renderMessage('#modal_block .modal-messages', data.responseJSON);
+                fieldsetError(data.responseJSON.errors_keys);
             }
         });
     });
-    $('.block-create').click(function (evt) {
+
+    /**
+     * Menu de navigation pour les blocs.
+     */
+    $(document).delegate('.block-actions a.mod', 'click', function (evt) {
         evt.preventDefault();
+        evt.stopPropagation();
+        const link = evt.currentTarget.href;
+
         $.ajax({
-            url: $(this).data('link_create'),
+            url: link,
             type: 'GET',
             dataType: 'html',
             success: function (data) {
-                $('#modal_block .modal-body').replaceWith(data);
+                $('#modal_block .modal-content').html(data);
+                addEditor();
             }
         });
     });
@@ -76,7 +67,7 @@ function sortSection(evt, target)
     });
 }
 
-function search_blocks() {
+function searchBlocks() {
     const search = document.getElementById('search').value;
     const reg = new RegExp(search, 'i');
     const elements = document.querySelectorAll('.search_item');
@@ -91,5 +82,79 @@ function search_blocks() {
         } else {
             el.style.display = 'none';
         }
+    });
+}
+
+/**
+ * Affiche un bloc lorsque l'on clique sur la radiobox
+ */
+$(document).delegate('#modal_block .block-card label', 'click', function (evt) {
+    const $this = $(this);
+    const link = $this.data('link');
+
+    $.ajax({
+        url: link,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            $('#modal_block .block-preview').html(data);
+        }
+    });
+});
+
+/**
+ * Affiche le formulaire de création de bloc après sa selection
+ */
+$(document).delegate('#modal_block input[type="submit"].block-create-list', 'click', function (evt) {
+    evt.preventDefault();
+    const $this = $(this);
+    const $form = $this.closest('form');
+
+    let data = $form.serialize();
+
+    $.ajax({
+        url: $form.attr('action'),
+        type: $form.attr('method'),
+        data: data,
+        dataType: 'html',
+        success: function (data) {
+            $('#modal_block .modal-content').html(data);
+            addEditor();
+        },
+        error: function (data) {
+            renderMessage('#modal_block .modal-messages', data.responseJSON);
+        }
+    });
+});
+
+function showBlock(id, link) {
+    $.ajax({
+        url: link,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            $('#section-' + id).replaceWith(data);
+        }
+    });
+}
+
+function fieldsetError(dataError) {
+    $('#modal_block .tab-pane').each(function () {
+        let idPane = $(this).attr("id");
+
+        $(this).find('input, textarea, select').each(function () {
+            if (dataError.indexOf(this.id) != -1 || this.checkValidity() === false || $(this).hasClass('is-invalid')) {
+                const error = `
+                    <span class="fieldset-error" title="Error">
+                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
+                    <span>`;
+
+                $(`ul a[href="#${idPane}"]`).css("color", "red");
+                $(`ul a .fieldset-error`).remove();
+                $(`ul a[href="#${idPane}"]`).append(error);
+
+                return false;
+            }
+        });
     });
 }

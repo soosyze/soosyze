@@ -60,16 +60,19 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     public function hookBlockCreateFormData(array &$blocks): void
     {
         $blocks[ 'node.next_previous' ] = [
-            'hook'    => 'node.next_previous',
-            'options' => [
+            'description' => t('Next/previous buttons for content types.'),
+            'hook'        => 'node.next_previous',
+            'icon'        => 'fas fa-exchange-alt',
+            'no_content'  => t('Buttons are displayed when the user browses the content type'),
+            'options'     => [
                 'display'       => self::DISPLAY_DEFAULT,
                 'next_text'     => self::NEXT_TEXT_DEFAULT,
                 'previous_text' => self::PREVIOUS_TEXT_DEFAULT,
                 'type'          => self::TYPE_DEFAULT
             ],
-            'path'    => $this->pathViews,
-            'title'   => 'Next/previous button for content types',
-            'tpl'     => 'components/block/node-next_previous.php'
+            'path'        => $this->pathViews,
+            'title'       => t('Next/previous navigation'),
+            'tpl'         => 'components/block/node-next_previous.php'
         ];
     }
 
@@ -184,6 +187,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->fetch();
 
         if ($next) {
+            /** @var string $linkNext */
             $linkNext = $this->alias->getAlias('node/' . $next[ 'id' ], 'node/' . $next[ 'id' ]);
 
             $next[ 'link' ] = $this->router->makeRoute($linkNext);
@@ -207,6 +211,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->fetch();
 
         if ($previous) {
+            /** @var string $linkPrevious */
             $linkPrevious = $this->alias->getAlias('node/' . $previous[ 'id' ], 'node/' . $previous[ 'id' ]);
 
             $previous[ 'link' ] = $this->router->makeRoute($linkPrevious);

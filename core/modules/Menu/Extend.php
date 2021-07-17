@@ -16,7 +16,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot(): void
     {
-        foreach ([ 'main', 'permission' ] as $file) {
+        foreach ([ 'block', 'main', 'permission' ] as $file) {
             $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
         }
     }
@@ -115,7 +115,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         $ci->query()
             ->from('block')
             ->delete()
-            ->where('hook', 'like', 'menu.%')
+            ->where('hook', 'like', 'menu')
             ->execute();
     }
 

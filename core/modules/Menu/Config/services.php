@@ -43,10 +43,13 @@ return [
         'class' => 'SoosyzeCore\Menu\Hook\Block',
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
-            'block.menu' => 'hookBlockMenu',
-            'block.menu.edit.form' => 'hookMenuEditForm',
-            'block.menu.update.validator' => 'hookMenuUpdateValidator',
-            'block.menu.update.before' => 'hookMenuUpdateBefore'
+            'block.menu' => 'hookMenu',
+            'block.menu.create.form' => 'hookMenuForm',
+            'block.menu.store.validator' => 'hookMenuValidator',
+            'block.menu.store.before' => 'hookMenuBefore',
+            'block.menu.edit.form' => 'hookMenuForm',
+            'block.menu.update.validator' => 'hookMenuValidator',
+            'block.menu.update.before' => 'hookMenuBefore'
         ]
     ]
 ];

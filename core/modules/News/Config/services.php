@@ -38,15 +38,21 @@ return [
         'class' => 'SoosyzeCore\News\Hook\Block',
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
-            'block.news.archive.select' => 'hookBlockNewsArchiveSelect',
-            'block.news.archive' => 'hookBlockNewsArchive',
-            'block.news.archive.edit.form' => 'hookBlockNewsArchiveEditForm',
-            'block.news.archive.update.validator' => 'hookNewsBlockArchiveUpdateValidator',
-            'block.news.archive.update.before' => 'hookNewsArchiveUpdateBefore',
-            'block.news.last' => 'hookBlockNewsLast',
-            'block.news.last.edit.form' => 'hookBlockNewsLastEditForm',
-            'block.news.last.update.validator' => 'hookBlockNewsLastUpdateValidator',
-            'block.news.last.update.before' => 'hookNewsLastUpdateBefore'
+            'block.news.archive.select' => 'hookNewsArchiveSelect',
+            'block.news.archive' => 'hookNewsArchive',
+            'block.news.archive.create.form' => 'hookNewsArchiveForm',
+            'block.news.archive.store.validator' => 'hookNewsArchiveValidator',
+            'block.news.archive.store.before' => 'hookNewsArchiveBefore',
+            'block.news.archive.edit.form' => 'hookNewsArchiveForm',
+            'block.news.archive.update.validator' => 'hookNewsArchiveValidator',
+            'block.news.archive.update.before' => 'hookNewsArchiveBefore',
+            'block.news.last' => 'hookNewsLast',
+            'block.news.last.create.form' => 'hookNewsLastForm',
+            'block.news.last.store.validator' => 'hookNewsLastValidator',
+            'block.news.last.store.before' => 'hookNewsLastBefore',
+            'block.news.last.edit.form' => 'hookNewsLastForm',
+            'block.news.last.update.validator' => 'hookNewsLastValidator',
+            'block.news.last.update.before' => 'hookNewsLastBefore'
         ]
     ],
     'news.hook.node' => [

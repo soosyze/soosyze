@@ -1,4 +1,4 @@
-
+<?php if (isset($menu)): ?>
 <ul>
     <?php foreach ($menu as $link): ?>
 
@@ -13,3 +13,4 @@
     <?php endforeach; ?>
 
 </ul>
+<?php endif; ?>

@@ -1,9 +1,19 @@
 {
-    "News setting": "Paramètre des news",
-    "Number of news to display": "Nombre de news à afficher",
-    "Offset": "Décalage",
-    "Add a \"more\" link at the bottom of the screen if there is more content": "Ajouter un lien \"plus\" en bas de l'écran s'il y a plus de contenu",
-    "All news": "Toutes les nouvelles",
+    "Archives list": "Liste des articles",
+    "List of articles by year and month.": "Liste des articles par années et mois.",
+    "Archives select": "Sélection d'articles",
+    "Selection list of articles by year and month.": "Liste de sélection des articles par année et par mois.",
+    "Last news": "Derniers articles",
+    "Displays the latest news.": "Affiche les derniers articles",
+    "Show blog": "Voir le blog",
+    "All news": "Tous les articles",
+    "All :year": "Tout :year",
     "Expand archives per month": "Développer les archives par mois",
-    "All :year": "Tout :year"
+    "More link": "Lien plus",
+    "Number of items to show": "Nombre d'éléments à afficher",
+    "Offset (number of items to skip)": "Décalage (nombre d'éléments à ignorer)",
+    "Do not add a \"more\" link": "Ne pas ajouter de lien \"plus\"",
+    "Add a \"more\" link": "Ajouter un lien \"plus\"",
+    "Add a \"more\" link if there is more content": "Ajouter un lien \"plus\" s'il y a plus de contenu",
+    "More link text": "Text du lien \"plus\""
 }

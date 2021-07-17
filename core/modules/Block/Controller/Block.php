@@ -6,10 +6,10 @@ namespace SoosyzeCore\Block\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Block\Form\FormBlock;
+use SoosyzeCore\Block\Form\FormDeleteBlock;
+use SoosyzeCore\Block\Form\FormListBlock;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
 class Block extends \Soosyze\Controller
@@ -21,329 +21,529 @@ class Block extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
+    public function createList(string $theme, string $section): ServiceBlock
+    {
+        $blocks = self::block()->getBlocks();
+
+        foreach ($blocks as $key => &$block) {
+            $block[ 'link_show_create' ] = self::router()->getRoute('block.create.show', [
+                ':id' => $key
+            ]);
+        }
+
+        $action = self::router()->getRoute('block.create.form', [
+            ':theme'   => $theme
+        ]);
+
+        $form = (new FormListBlock([ 'action' => $action, 'method' => 'post' ]))
+            ->setValues([
+                'blocks'  => $blocks,
+                'section' => $section
+            ])
+            ->makeFields();
+
+        $this->container->callHook('block.create.form', [ &$form, $blocks ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('block/modal-form-create_list.php', $this->pathViews)
+                ->addVars([
+                    'class' => 'form-create_list',
+                    'form'  => $form,
+                    'title' => t('Add a block')
+        ]);
+    }
+
     /**
      * @return ServiceBlock|ResponseInterface
      */
-    public function show(int $id, ServerRequestInterface $req)
+    public function createShow(string $name)
     {
-        if (!($block = $this->find($id))) {
-            return $this->get404($req);
+        $block = self::block()->getBlock($name);
+
+        if (!$block) {
+            return $this->get404();
         }
 
-        $block[ 'link_edit' ]   = self::router()->getRoute('block.edit', [ ':id' => $id ]);
-        $block[ 'link_delete' ] = self::router()->getRoute('block.delete', [ ':id' => $id ]);
-        $block[ 'link_update' ] = self::router()->getRoute('block.update', [ ':id' => $id ]);
+        if (empty($block[ 'hook' ])) {
+            $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
 
-        if (!empty($block[ 'hook' ])) {
-            $data = self::block()->getBlocks();
-            $key  = $block[ 'key_block' ];
-
+            $block[ 'content' ] = self::template()
+                ->getTheme('theme_admin')
+                ->createBlock($block[ 'tpl' ], $block[ 'path' ])
+                ->addVar('src_image', $srcImage);
+        } else {
             $tpl = self::template()
                 ->getTheme('theme_admin')
-                ->createBlock($data[ $key ][ 'tpl' ], $data[ $key ][ 'path' ]);
+                ->createBlock($block[ 'tpl' ], $block[ 'path' ]);
 
-            $block[ 'content' ] .= (string) $this->container->callHook(
+            $block[ 'content' ] = (string) $this->container->callHook(
                 'block.' . $block[ 'hook' ],
-                [ $tpl, $this->getOptions($block) ]
+                [ $tpl, $block[ 'options' ] ?? null ]
             );
         }
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->createBlock('block/block-show.php', $this->pathViews)
-                ->addVars([ 'block' => $block ]);
-    }
-
-    public function create(string $theme, string $section): ServiceBlock
-    {
-        $data = self::block()->getBlocks();
-
-        $action = self::router()->getRoute('block.store', [
-            ':theme'   => $theme, ':section' => $section
-        ]);
-
-        $form = new FormBuilder([ 'action' => $action, 'method' => 'post' ]);
-
-        $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
-
-        foreach ($data as $key => $block) {
-            if (empty($block[ 'hook' ])) {
-                $content = self::template()
-                    ->getTheme('theme_admin')
-                    ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                    ->addVar('src_image', $srcImage);
-            } else {
-                $tpl = self::template()
-                    ->getTheme('theme_admin')
-                    ->createBlock($block[ 'tpl' ], $block[ 'path' ]);
-
-                $content = $this->container->callHook('block.' . $block[ 'hook' ], [
-                    $tpl,
-                    $block[ 'options' ] ?? []
-                ]);
-            }
-
-            $attrContent = empty($content)
-                ? [
-                    'class'    => 'block-content-disabled',
-                    ':content' => t('No content available for this block')
-                ] : [
-                    'class'    => 'block-content',
-                    ':content' => $content
-                ];
-
-            $form->html("key_block-$key-content", '<div:attr>:content</div>', $attrContent)
-                ->group("key_block-$key-group", 'div', function ($form) use ($key) {
-                    $form
-                    ->radio('key_block', [
-                        'id'    => "key_block-$key",
-                        'value' => $key
-                    ])
-                    ->label("$key-label", t('Select'), [
-                        'for' => "key_block-$key"
-                    ]);
-                }, [ 'class' => 'radio-button' ]);
-        }
-
-        $form->group('submit-group', 'div', function ($form) use ($section) {
-            $form->token("token_$section")
-                ->submit('submit', t('Add'), [ 'class' => 'btn btn-success' ]);
-        });
-
-        $this->container->callHook('block.create.form', [ &$form, $data ]);
-
-        return self::template()
-                ->getTheme('theme_admin')
-                ->createBlock('block/content-block-create.php', $this->pathViews)
-                ->addVars([
-                    'blocks'  => $data,
-                    'form'    => $form,
-                    'section' => $section
-        ]);
-    }
-
-    public function store(string $theme, string $section, ServerRequestInterface $req): ResponseInterface
-    {
-        $blocks = self::block()->getBlocks();
-
-        $validator = (new Validator())
-            ->setRules([
-                'key_block'      => 'required|string|max:255',
-                "token_$section" => 'token'
-            ])
-            ->setInputs($req->getParsedBody());
-
-        $this->container->callHook('block.store.validator', [ &$validator ]);
-
-        if ($validator->isValid()) {
-            $block   = $blocks[ $validator->getInput('key_block') ];
-            $content = '';
-
-            if (empty($block[ 'hook' ])) {
-                $block[ 'hook' ] = null;
-
-                $content = (string) self::template()
-                        ->getTheme('theme_admin')
-                        ->createBlock($block[ 'tpl' ], $block[ 'path' ])
-                        ->addVars([
-                            'src_image' => self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg'
-                ]);
-            }
-
-            $values = [
-                'section'          => $section,
-                'title'            => t($block[ 'title' ]),
-                'content'          => $content,
-                'weight'           => 1,
-                'visibility_roles' => true,
-                'roles'            => '1,2',
-                'hook'             => $block[ 'hook' ],
-                'key_block'        => $validator->getInput('key_block'),
-                'options'          => empty($block[ 'options' ])
-                    ? null
-                    : json_encode($block[ 'options' ])
-            ];
-
-            $this->container->callHook('block.store.before', [ $validator, &$values ]);
-
-            self::query()
-                ->insertInto('block', array_keys($values))
-                ->values($values)
-                ->execute();
-
-            $this->container->callHook('block.store.after', [ $validator, $values ]);
-        }
-
-        return new Redirect(
-            self::router()->getRoute('block.section.admin', [ ':theme' => $theme ])
-        );
+                ->createBlock('block/block-create_show.php', $this->pathViews)
+                ->addVar('block', $block);
     }
 
     /**
      * @return ServiceBlock|ResponseInterface
      */
-    public function edit(int $id, ServerRequestInterface $req)
-    {
-        if (!($data = $this->find($id))) {
-            return $this->get404($req);
-        }
-        $data[ 'roles' ]   = explode(',', $data[ 'roles' ]);
-        $data[ 'options' ] = $this->getOptions($data);
+    public function createForm(
+        string $theme,
+        ServerRequestInterface $req
+    ) {
+        /** @var array $body */
+        $body   = $req->getParsedBody();
+        $key    = $body[ 'key_block' ] ?? null;
+        $values = self::block()->getBlock($key);
 
-        $this->container->callHook('block.edit.form.data', [ &$data, $id ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
+        if ($values === null) {
+            $this->get404();
         }
 
-        $action = self::router()->getRoute('block.update', [
-            ':id' => $data[ 'block_id' ]
+        $values[ 'key_block' ] = $key;
+        $values[ 'section' ]   = $body[ 'section' ] ?? null;
+
+        if (empty($values[ 'hook' ])) {
+            $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
+
+            $values[ 'content' ] = self::template()
+                ->getTheme('theme_admin')
+                ->createBlock($values[ 'tpl' ], $values[ 'path' ])
+                ->addVar('src_image', $srcImage);
+        }
+
+        $this->container->callHook('block.create.form.data', [ &$values, $theme ]);
+
+        $action = self::router()->getRoute('block.store', [
+            ':theme'   => $theme
         ]);
 
         $form = (new FormBlock([ 'action' => $action, 'method' => 'post' ]))
-            ->setValues($data, $id, self::user()->getRoles())
+            ->setValues($values)
+            ->setRoles(self::user()->getRoles())
             ->makeFields();
 
-        if (!empty($data[ 'hook' ])) {
-            $form->after('block-fieldset', function ($form) use ($data, $id) {
-                self::core()->callHook("block.{$data[ 'hook' ]}.edit.form", [
-                    &$form, $data, $id
+        if (!empty($values[ 'hook' ])) {
+            $form->append('block-fieldset', function ($form) use ($values) {
+                self::core()->callHook("block.{$values[ 'hook' ]}.create.form", [
+                    &$form, $values
                 ]);
             });
         }
 
-        $this->container->callHook('block.edit.form', [ &$form, $data, $id ]);
-
-        if (isset($_SESSION[ 'errors' ])) {
-            unset($_SESSION[ 'errors_keys' ][ 'roles' ]);
-            $form->addErrors($_SESSION[ 'errors' ])
-                ->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors' ], $_SESSION[ 'errors_keys' ]);
-        }
+        $this->container->callHook('block.create.form', [ &$form, $values, $theme ]);
 
         return self::template()
                 ->getTheme('theme_admin')
-                ->createBlock('block/content-block-form.php', $this->pathViews)
+                ->createBlock('block/modal-form.php', $this->pathViews)
                 ->addVars([
-                    'form'      => $form,
-                    'link_show' => self::router()->getRoute('block.show', [ ':id' => $data[ 'block_id' ] ])
+                    'class'            => 'form-create',
+                    'fieldset_submenu' => self::block()->getBlockFieldsetSubmenu(),
+                    'form'             => $form,
+                    'section'          => $values[ 'section' ],
+                    'title'            => t('Add block :title', [ ':title' => $values[ 'title' ] ])
         ]);
+    }
+
+    public function store(
+        string $theme,
+        ServerRequestInterface $req
+    ): ResponseInterface {
+        $validator = $this->getValidator($req, $theme);
+
+        $this->container->callHook('block.store.validator', [ &$validator, $theme ]);
+
+        $block = self::block()->getBlock($validator->getInput('key_block'));
+
+        $isValid = $validator->isValid();
+
+        if ($isValid) {
+            $hook = $block[ 'hook' ] ?? null;
+
+            if ($hook) {
+                $this->container->callHook("block.{$hook}.store.validator", [
+                    &$validator
+                ]);
+            }
+
+            /* Ajoute à la validation générale la validation des rôles. */
+            $isValid = $validator->isValid();
+        }
+
+        if (!$validator->hasError('roles')) {
+            $validatorRole = $this->getValidatorRoles(
+                $validator->getInput('roles', [])
+            );
+
+            /* Ajoute à la validation générale la validation des rôles. */
+            $isValid &= $validatorRole->isValid();
+        }
+
+        if ($isValid) {
+            $data = $this->getData($validator);
+            $data += [
+                'hook'    => $block[ 'hook' ] ?? null,
+                'options' => json_encode($block[ 'options' ] ?? [])
+            ];
+
+            if (!empty($block[ 'hook' ])) {
+                $this->container->callHook("block.{$block[ 'hook' ]}.store.before", [
+                    &$validator, &$data
+                ]);
+            }
+            $this->container->callHook('block.store.before', [ $validator, &$data, $theme ]);
+
+            self::query()
+                ->insertInto('block', array_keys($data))
+                ->values($data)
+                ->execute();
+
+            if (!empty($block[ 'hook' ])) {
+                $this->container->callHook("block.{$block[ 'hook' ]}.store.after", [
+                    &$validator
+                ]);
+            }
+            $this->container->callHook('block.store.after', [ $validator, $data, $theme  ]);
+
+            $id = self::schema()->getIncrement('block');
+
+            return $this->json(200, [
+                    'inputs'    => array_merge($block, $data),
+                    'link_show' => self::router()->getRoute('block.section.show', [
+                        ':theme'   => $theme, ':section' => $data[ 'section' ]
+                    ]),
+                    'messages'  => [
+                        'success' => [ t('The block is create') ]
+                    ],
+                    'params'    => [
+                        'theme'   => $theme,
+                        'id'      => $id
+                    ]
+            ]);
+        }
+
+        $out[ 'inputs' ]               = $validator->getInputs();
+        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return $this->json(400, $out);
     }
 
     /**
      * @return ServiceBlock|ResponseInterface
      */
-    public function update(int $id, ServerRequestInterface $req)
-    {
-        if (!($block = $this->find($id))) {
+    public function edit(
+        string $theme,
+        int $id,
+        ServerRequestInterface $req
+    ) {
+        if (!($values = $this->find($id))) {
             return $this->get404($req);
         }
 
-        $validator = (new Validator())
-            ->setRules([
-                'title'            => '!required|string|max:255',
-                'content'          => '!required|string|max:5000',
-                'class'            => '!required|string|max:255',
-                'visibility_pages' => 'bool',
-                'pages'            => '!required|string',
-                'visibility_roles' => 'bool',
-                'roles'            => '!required|array',
-                "token_block_$id"  => 'token'
-            ])
-            ->setLabels([
-                'title'   => t('Title'),
-                'content' => t('Content'),
-                'pages'   => t('List of pages'),
-                'roles'   => t('User Roles')
-            ])
-            ->setInputs(
-                $req->getParsedBody()
+        $values[ 'roles' ]   = explode(',', $values[ 'roles' ]);
+
+        if (!empty($values[ 'hook' ])) {
+            $values[ 'options' ] = array_merge(
+                self::block()->getBlock($values[ 'key_block' ])[ 'options' ] ?? [],
+                json_decode($values[ 'options' ] ?? '{}', true) ?? []
             );
+        }
+
+        $this->container->callHook('block.edit.form.data', [ &$values, $theme, $id ]);
+
+        $action = self::router()->getRoute('block.update', [
+            ':theme'   => $theme,
+            ':id'      => $values[ 'block_id' ]
+        ]);
+
+        $form = (new FormBlock([ 'action' => $action, 'method' => 'post' ]))
+            ->setValues($values)
+            ->setRoles(self::user()->getRoles())
+            ->makeFields();
+
+        if (!empty($values[ 'hook' ])) {
+            $form->append('block-fieldset', function ($form) use ($values, $id) {
+                self::core()->callHook("block.{$values[ 'hook' ]}.edit.form", [
+                    &$form, $values, $id
+                ]);
+            });
+        }
+
+        $this->container->callHook('block.edit.form', [ &$form, $values, $theme, $id ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('block/modal-form.php', $this->pathViews)
+                ->addVars([
+                    'class'            => 'form-edit',
+                    'fieldset_submenu' => self::block()->getBlockFieldsetSubmenu(),
+                    'form'             => $form,
+                    'menu'             => self::block()->getBlockSubmenu('block.edit', $theme, $id),
+                    'title'            => t('Edit block :title', [
+                        ':title' => self::xss()->getKses()->filter($values[ 'title' ])
+                    ])
+        ]);
+    }
+
+    public function update(string $theme, int $id, ServerRequestInterface $req): ResponseInterface
+    {
+        if (!($block = $this->find($id))) {
+            return $this->json(404, []);
+        }
+
+        $validator = $this->getValidator($req, $theme, $id);
 
         if ($block[ 'hook' ]) {
-            $this->container->callHook("block.{$block[ 'hook' ]}.update.validator", [ &$validator, $id ]);
+            $this->container->callHook("block.{$block[ 'hook' ]}.update.validator", [
+                &$validator, $id
+            ]);
         }
-        $this->container->callHook('block.update.validator', [ &$validator, $id ]);
 
-        $validatorRoles = new Validator();
+        $this->container->callHook('block.update.validator', [ &$validator, $theme, $id ]);
 
-        if ($isValid = $validator->isValid()) {
-            $listRoles = implode(',', self::query()->from('role')->lists('role_id'));
-            foreach ($validator->getInput('roles', []) as $key => $role) {
-                $validatorRoles
-                    ->addRule($key, 'int|inarray:' . $listRoles)
-                    ->addLabel($key, t($role))
-                    ->addInput($key, $key);
-            }
+        $isValid = $validator->isValid();
+
+        if (!$validator->hasError('roles')) {
+            $validatorRole = $this->getValidatorRoles(
+                $validator->getInput('roles', [])
+            );
+
+            /* Ajoute à la validation générale la validation des rôles. */
+            $isValid &= $validatorRole->isValid();
         }
-        $isValid &= $validatorRoles->isValid();
 
         if ($isValid) {
-            $idRoles = array_keys($validator->getInput('roles', []));
-            $values  = [
-                'title'            => $validator->getInput('title'),
-                'content'          => $validator->getInput('content'),
-                'class'            => $validator->getInput('class'),
-                'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
-                'pages'            => $validator->getInput('pages'),
-                'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
-                'roles'            => implode(',', $idRoles)
-            ];
+            $data = $this->getData($validator);
 
             if ($block[ 'hook' ]) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.before", [
-                    &$validator, &$values, $id
+                    &$validator, &$data, $id
                 ]);
             }
             $this->container->callHook('block.update.before', [
-                $validator, &$values, $id
+                $validator, &$data, $theme, $id
             ]);
 
             self::query()
-                ->update('block', $values)
-                ->where('block_id', '==', $id)
+                ->update('block', $data)
+                ->where('block_id', '=', $id)
                 ->execute();
 
             if ($block[ 'hook' ]) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.after", [
-                    &$validator, $id
+                    $validator, $data, $id
                 ]);
             }
-            $this->container->callHook('block.update.after', [ $validator, $id ]);
+            $this->container->callHook('block.update.after', [ $validator, $data, $theme, $id ]);
 
-            return $this->show($id, $req);
+            return $this->json(200, [
+                    'inputs'    => array_merge($block, $data),
+                    'link_show' => self::router()->getRoute('block.section.show', [
+                        ':theme'   => $theme, ':section' => $data[ 'section' ]
+                    ]),
+                    'messages'  => [
+                        'success' => [ t('The block is update') ]
+                    ],
+                    'params'    => [
+                        'theme'   => $theme,
+                        'id'      => $id
+                    ]
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]      = $validator->getInputs();
-        $_SESSION[ 'errors' ]      = $validator->getKeyErrors() + $validatorRoles->getKeyErrors();
-        $_SESSION[ 'errors_keys' ] = $validator->getKeyInputErrors();
+        $out[ 'inputs' ]               = $validator->getInputs();
+        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        return $this->edit($id, $req);
+        return $this->json(400, $out);
     }
 
-    public function delete(int $id, ServerRequestInterface $req): ResponseInterface
+    /**
+     * @return ServiceBlock|ResponseInterface
+     */
+    public function remove(string $theme, int $id, ServerRequestInterface $req)
     {
-        if (!$this->find($id)) {
+        if (!($values = $this->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('block.delete.before', [ $id ]);
-        self::query()->from('block')->where('block_id', '==', $id)->delete()->execute();
-        $this->container->callHook('block.delete.after', [ $id ]);
+        $values[ 'roles' ]   = explode(',', $values[ 'roles' ]);
+        $values[ 'options' ] = json_decode($values[ 'options' ] ?? '{}', true);
 
-        return $this->json();
+        $this->container->callHook('block.remove.form.data', [ &$values, $theme, $id ]);
+
+        $action = self::router()->getRoute('block.delete', [
+            ':theme'   => $theme,
+            ':id'      => $values[ 'block_id' ]
+        ]);
+
+        $form = (new FormDeleteBlock([ 'action' => $action, 'method' => 'post' ]))->makeFields();
+
+        $this->container->callHook('block.remove.form', [ &$form, $values, $theme, $id ]);
+
+        return self::template()
+                ->getTheme('theme_admin')
+                ->createBlock('block/modal-form.php', $this->pathViews)
+                ->addVars([
+                    'form'      => $form,
+                    'link_show' => '',
+                    'menu'      => self::block()->getBlockSubmenu('block.remove', $theme, $id),
+                    'title'     => t('Delete block :title', [ ':title' => $values[ 'title' ] ])
+        ]);
+    }
+
+    public function delete(
+        string $theme,
+        int $id,
+        ServerRequestInterface $req
+    ): ResponseInterface {
+        if (!$block = $this->find($id)) {
+            return $this->json(404);
+        }
+
+        $validator = new Validator();
+
+        if ($validator->isValid()) {
+            $this->container->callHook('block.delete.before', [ $id ]);
+            self::query()
+                ->from('block')
+                ->where('block_id', '=', $id)
+                ->delete()
+                ->execute();
+            $this->container->callHook('block.delete.after', [ $id ]);
+
+            return $this->json(200, [
+                    'inputs'    => $block,
+                    'link_show' => self::router()->getRoute('block.section.show', [
+                        ':theme'   => $theme,
+                        ':section' => $block[ 'section' ]
+                    ]),
+                    'messages'  => [
+                        'success' => [ t('The block is create') ]
+                    ],
+                    'params'    => [
+                        'theme' => $theme,
+                        'id'    => $id
+                    ]
+            ]);
+        }
+
+        $out[ 'inputs' ]               = $validator->getInputs();
+        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+        return $this->json(400, $out);
     }
 
     private function find(int $id): array
     {
-        return self::query()->from('block')->where('block_id', '==', $id)->fetch();
+        return self::query()->from('block')->where('block_id', '=', $id)->fetch();
     }
 
-    private function getOptions(array $block, array $default = []): array
+    private function getValidator(
+        ServerRequestInterface $req,
+        string $theme,
+        ?int $id = null
+    ): Validator {
+        $blocks  = self::block()->getBlocks();
+        $section = self::template()->getTheme($theme)->getSections();
+
+        $rules = [
+            'class'            => '!required|string|max:255',
+            'content'          => '!required|string|max:5000',
+            'is_title'         => 'bool',
+            'key_block'        => '!required|string|inarray:' . implode(',', array_keys($blocks)),
+            'pages'            => '!required|string',
+            'roles'            => '!required|array',
+            'section'          => 'required|inarray:' . implode(',', $section),
+            'title'            => 'required|string|max:255',
+            'visibility_pages' => 'bool',
+            'visibility_roles' => 'bool',
+            'weight'           => 'required|numeric|between_numeric:0,50'
+        ];
+
+        if ($id === null) {
+            $rules[ 'token_block_create' ] = 'token';
+        } else {
+            $rules[ "token_block_edit_$id" ] = 'token';
+        }
+
+        return (new Validator())
+                ->setRules($rules)
+                ->setLabels([
+                    'class'     => t('Class'),
+                    'content'   => t('Content'),
+                    'is_title'  => t('Afficher le titre'),
+                    'key_block' => t('Clé du bloc'),
+                    'pages'     => t('List of pages'),
+                    'roles'     => t('User Roles'),
+                    'section'   => t('Section'),
+                    'title'     => t('Title'),
+                    'weight'    => t('Weight')
+                ])
+                ->setInputs(
+                    $req->getParsedBody()
+                )
+                ->setAttributs([
+                    'key_block' => [
+                        'inarray' => [
+                            ':list' => static function (string $label) use ($blocks) {
+                                return implode(', ', array_column($blocks, 'title'));
+                            }
+                        ]
+                    ],
+                    'section' => [
+                        'inarray' => [
+                            ':list' => static function (string $label) use ($section) {
+                                return implode(', ', $section);
+                            }
+                        ]
+                    ]
+                ])
+        ;
+    }
+
+    private function getValidatorRoles(array $roles = []): Validator
     {
-        return empty($block[ 'options' ])
-                ? $default
-                : json_decode($block[ 'options' ], true);
+        $validatorRoles = new Validator();
+
+        $listRoles = implode(
+            ',',
+            array_column(self::user()->getRoles(), 'role_id')
+        );
+
+        foreach ($roles as $key => $role) {
+            $validatorRoles
+                ->addRule($key, 'int|inarray:' . $listRoles)
+                ->addLabel($key, t($role))
+                ->addInput($key, $key);
+        }
+
+        $this->container->callHook('block.update.role.validator', [ &$validatorRoles ]);
+
+        return $validatorRoles;
+    }
+
+    private function getData(Validator $validator): array
+    {
+        return [
+            'class'            => $validator->getInput('class'),
+            'content'          => $validator->getInput('content'),
+            'is_title'         => (bool) $validator->getInput('is_title'),
+            'key_block'        => $validator->getInput('key_block'),
+            'pages'            => $validator->getInput('pages'),
+            'roles'            => implode(',', array_keys($validator->getInput('roles', []))),
+            'section'          => $validator->getInput('section'),
+            'title'            => $validator->getInput('title'),
+            'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
+            'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
+            'weight'           => (int) $validator->getInput('weight'),
+        ];
     }
 }

@@ -16,7 +16,7 @@ use SoosyzeCore\User\Services\User;
 class App
 {
     /**
-     * @var SoosyzeApp
+     * @var Core
      */
     private $core;
 
@@ -85,19 +85,17 @@ class App
         $theme   = $this->getNameTheme();
         $isAdmin = $this->core->callHook('app.granted', [ 'block.administer' ]) && !empty($theme);
 
-        $blocks = $this->getBlocks($isAdmin);
+        $blocks = $this->getBlocks($theme, $isAdmin);
 
         $sections = $this->tpl->getSections();
 
         foreach ($sections as $section) {
             $response->make('page.' . $section, 'section.php', $this->pathViews, [
                 'section_id'  => $section,
-                'content'     => !empty($blocks[ $section ])
-                    ? $blocks[ $section ]
-                    : [],
+                'content'     => $blocks[ $section ] ?? [],
                 'is_admin'    => $isAdmin,
                 'link_create' => $isAdmin
-                    ? $this->router->getRoute('block.create', [
+                    ? $this->router->getRoute('block.create.list', [
                         ':theme'   => $theme,
                         ':section' => $section
                     ])
@@ -119,7 +117,7 @@ class App
         return '';
     }
 
-    private function getBlocks(bool $isAdmin): array
+    private function getBlocks(string $theme, bool $isAdmin): array
     {
         $blocks = $this->query
             ->from('block')
@@ -128,7 +126,7 @@ class App
 
         $listBlock = $this->block->getBlocks();
 
-        $out = [];
+        $out      = [];
         foreach ($blocks as $block) {
             if (!$isAdmin && (!$this->isVisibilityPages($block) || !$this->isVisibilityRoles($block))) {
                 continue;
@@ -138,22 +136,26 @@ class App
                     $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
                     $listBlock[ $block[ 'key_block' ] ][ 'path' ]
                 );
-                $block[ 'content' ] .= (string) $this->core->callHook('block.' . $block[ 'hook' ], [
-                        $tplBlock, empty($block[ 'options' ])
-                        ? []
-                        : json_decode($block[ 'options' ], true)
-                ]);
+                /* Construit les options avec les option présentent dans le bloc et les données en base. */
+                $options            = array_merge(
+                    $listBlock[ $block[ 'key_block' ] ][ 'options' ] ?? [],
+                    json_decode($block[ 'options' ] ?? '{}', true) ?? []
+                );
+                $block[ 'content' ] .= (string) $this->core->callHook(
+                    "block.{$block[ 'hook' ]}",
+                    [ $tplBlock, $options ]
+                );
             }
             if ($isAdmin) {
-                $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', [
-                    ':id' => $block[ 'block_id' ]
-                ]);
-                $block[ 'link_delete' ] = $this->router->getRoute('block.delete', [
-                    ':id' => $block[ 'block_id' ]
-                ]);
-                $block[ 'link_update' ] = $this->router->getRoute('block.section.update', [
-                    ':id' => $block[ 'block_id' ]
-                ]);
+                $params = [
+                    ':theme' => $theme,
+                    ':id'    => $block[ 'block_id' ]
+                ];
+
+                $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', $params);
+                $block[ 'link_delete' ] = $this->router->getRoute('block.delete', $params);
+                $block[ 'link_update' ] = $this->router->getRoute('block.section.update', $params);
+                $block[ 'title_admin' ] = $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
             }
             $out[ $block[ 'section' ] ][] = $block;
         }

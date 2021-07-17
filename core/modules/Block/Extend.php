@@ -16,7 +16,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot(): void
     {
-        foreach ([ 'main', 'permission' ] as $file) {
+        foreach ([ 'block', 'form', 'main', 'permission' ] as $file) {
             $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
         }
     }
@@ -27,6 +27,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->createTableIfNotExists('block', static function (TableBuilder $table): void {
                 $table->increments('block_id')
                 ->string('title')
+                ->boolean('is_title')->valueDefault(true)
                 ->string('section')
                 ->text('content')->nullable()
                 ->string('class')->valueDefault('')
@@ -37,7 +38,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->boolean('visibility_roles')->valueDefault(true)
                 ->string('roles')->valueDefault('1,2')
                 ->string('key_block')->nullable()
-                ->string('options')->nullable();
+                ->text('options')->nullable();
             });
 
         $ci->config()->set('settings.icon_socials', [
@@ -63,12 +64,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('block', [
-                'section', 'title',
+                'section', 'title', 'is_title',
                 'weight', 'visibility_pages', 'pages',
                 'content'
             ])
             ->values([
-                'content_footer', '',
+                'content_footer', t('Found an bug'), false,
                 50, true, 'admin/%',
                 '<div class="block-report_github">'
                 . '<p>'
@@ -83,7 +84,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 . '</div>'
             ])
             ->values([
-                'footer', '',
+                'footer', t('Power by'), false,
                 50, false, '',
                 '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
             ])
