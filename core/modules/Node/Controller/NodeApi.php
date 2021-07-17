@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNodeDelete;
+use SoosyzeCore\Template\Services\Block;
 
 class NodeApi extends \Soosyze\Controller
 {
@@ -16,7 +17,7 @@ class NodeApi extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function remove(int $idNode, ServerRequestInterface $req): ResponseInterface
+    public function remove(int $idNode, ServerRequestInterface $req): Block
     {
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);

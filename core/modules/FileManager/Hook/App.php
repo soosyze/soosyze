@@ -12,7 +12,7 @@ use SoosyzeCore\Template\Services\Templating;
 class App
 {
     /**
-     * @var SoosyzeApp
+     * @var Core
      */
     private $core;
 
