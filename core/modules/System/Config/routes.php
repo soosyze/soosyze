@@ -6,7 +6,7 @@ R::useNamespace('SoosyzeCore\System\Controller');
 
 R::get('api.route', 'api/route', 'RouteApi@index');
 
-R::useNamespace('SoosyzeCore\System\Controller')->name('system.module.')->prefix('admin/module')->group(function () {
+R::useNamespace('SoosyzeCore\System\Controller')->name('system.module.')->prefix('admin/modules')->group(function () {
     R::get('edit', '/', 'ModulesManager@edit');
     R::post('update', '/', 'ModulesManager@update');
 });

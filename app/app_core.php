@@ -38,9 +38,6 @@ class Core extends App
             ],
             'template' => [
                 'class'     => 'SoosyzeCore\Template\Services\Templating',
-                'arguments' => [
-                    'app' => '@core'
-                ]
             ],
             'template.hook.user' => [
                 'class' => 'SoosyzeCore\Template\Hook\User',
@@ -51,9 +48,6 @@ class Core extends App
             ],
             'file'     => [
                 'class'     => 'SoosyzeCore\FileSystem\Services\File',
-                'arguments' => [
-                    '@core'
-                ]
             ],
             'translate'     => [
                 'class'     => 'SoosyzeCore\Translate\Services\Translation',
