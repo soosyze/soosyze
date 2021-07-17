@@ -350,9 +350,9 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.update.before', [
                 &$validator, &$value, $id
             ]);
-            self::query()->update('user', $value)->where('user_id', '==', $id)->execute();
+            self::query()->update('user', $value)->where('user_id', '=', $id)->execute();
 
-            $this->updateRole($validator, (int) $id);
+            $this->updateRole($validator, $id);
 
             $this->savePicture($id, $validator);
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
@@ -449,8 +449,8 @@ class User extends \Soosyze\Controller
                 $validator, $user, $id
             ]);
 
-            self::query()->from('user_role')->where('user_id', '==', $id)->delete()->execute();
-            self::query()->from('user')->where('user_id', '==', $id)->delete()->execute();
+            self::query()->from('user_role')->where('user_id', '=', $id)->delete()->execute();
+            self::query()->from('user')->where('user_id', '=', $id)->delete()->execute();
 
             $this->container->callHook('user.delete.after', [
                 $validator, $user, $id
@@ -540,7 +540,7 @@ class User extends \Soosyze\Controller
 
         self::query()
             ->from('user_role')
-            ->where('user_id', '==', $idUser)
+            ->where('user_id', '=', $idUser)
             ->in('role_id', $listRoles)
             ->delete()
             ->execute();
@@ -569,10 +569,10 @@ class User extends \Soosyze\Controller
                 return self::user()->find($id)[ $key ];
             })
             ->callMove(function ($key, $name, $move) use ($id) {
-                self::query()->update('user', [ $key => $move ])->where('user_id', '==', $id)->execute();
+                self::query()->update('user', [ $key => $move ])->where('user_id', '=', $id)->execute();
             })
             ->callDelete(function ($key, $name) use ($id) {
-                self::query()->update('user', [ $key => '' ])->where('user_id', '==', $id)->execute();
+                self::query()->update('user', [ $key => '' ])->where('user_id', '=', $id)->execute();
             })
             ->save();
     }

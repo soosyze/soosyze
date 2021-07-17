@@ -102,7 +102,7 @@ class Node
     {
         $this->query
             ->from('entity_' . $entity)
-            ->where($options[ 'foreign_key' ], '==', $data[ $options[ 'foreign_key' ] ]);
+            ->where($options[ 'foreign_key' ], '=', $data[ $options[ 'foreign_key' ] ]);
 
         if (isset($options[ 'order_by' ])) {
             $this->query->orderBy(
@@ -157,7 +157,7 @@ class Node
     {
         return $this->query
                 ->from('node')
-                ->where('id', '==', $idNode)
+                ->where('id', '=', $idNode)
                 ->fetch();
     }
 
@@ -165,7 +165,7 @@ class Node
     {
         return $this->query
                 ->from('entity_' . $entity)
-                ->where($entity . '_id', '==', $idEntity)
+                ->where($entity . '_id', '=', $idEntity)
                 ->fetch();
     }
 
@@ -305,7 +305,7 @@ class Node
         $this->query
             ->from('entity_' . $node[ 'type' ])
             ->delete()
-            ->where($node[ 'type' ] . '_id', '==', $node[ 'entity_id' ])
+            ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
             ->execute();
     }
 

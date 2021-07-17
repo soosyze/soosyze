@@ -76,7 +76,7 @@ class User
     {
         return $this->query
                 ->from('user')
-                ->where('user_id', '==', $id)
+                ->where('user_id', '=', $id)
                 ->fetch();
     }
 
@@ -84,7 +84,7 @@ class User
     {
         return $this->query
                 ->from('user')
-                ->where('user_id', '==', $id)
+                ->where('user_id', '=', $id)
                 ->where('actived', '=', $actived)
                 ->fetch();
     }
@@ -133,7 +133,7 @@ class User
         return $this->query
                 ->from('user_role')
                 ->leftJoin('role', 'role_id', '=', 'role.role_id')
-                ->where('user_id', '==', $idUser)
+                ->where('user_id', '=', $idUser)
                 ->fetchAll();
     }
 

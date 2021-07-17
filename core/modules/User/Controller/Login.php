@@ -254,7 +254,7 @@ class Login extends \Soosyze\Controller
                 'token_forget' => '',
                 'time_reset'   => null
             ])
-            ->where('user_id', '==', $id)
+            ->where('user_id', '=', $id)
             ->execute();
 
         self::auth()->login($user[ 'email' ], $pwd);

@@ -73,7 +73,7 @@ class Menu
     {
         return $this->query
                 ->from('menu_link')
-                ->where('id', '==', $id)
+                ->where('id', '=', $id)
                 ->fetch();
     }
 
@@ -114,7 +114,7 @@ class Menu
 
         return $this->query
                 ->from('menu_link')
-                ->where('menu', '==', $menu[ 'name' ]);
+                ->where('menu', '=', $menu[ 'name' ]);
     }
 
     public function getInfo(string $link, RequestInterface $request): array
@@ -152,7 +152,7 @@ class Menu
             ->from('menu_link')
             ->where('active', '==', 1)
             ->where('menu', '=', $nameMenu)
-            ->where('parent', '==', $parent)
+            ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
 
@@ -194,7 +194,7 @@ class Menu
             ->from('menu_link')
             ->where('active', '==', 1)
             ->where('menu', '=', $nameMenu)
-            ->where('parent', '==', $parent)
+            ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
 

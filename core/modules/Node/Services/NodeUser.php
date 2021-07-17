@@ -100,15 +100,15 @@ class NodeUser
                     $query->where('type', '=', $type[ 'node_type' ])
                         ->where(static function ($query) use ($typePublish, $typeNotPublish) {
                             if ($typePublish) {
-                                $query->where('node_status_id', '==', 1);
+                                $query->where('node_status_id', '=', 1);
                             }
                             if ($typeNotPublish) {
-                                $query->orWhere('node_status_id', '!=', 1);
+                                $query->orWhere('node_status_id', '!==', 1);
                             }
                         });
                 });
             } else {
-                $nodeQuery->where('type', '!=', $type[ 'node_type' ]);
+                $nodeQuery->where('type', '!==', $type[ 'node_type' ]);
             }
         }
 
@@ -182,7 +182,7 @@ class NodeUser
     public function orWhereNodesUser(Query &$nodeQuery, int $userId): self
     {
         if (!$this->isGrantedAdmin() && $this->user->isGranted('node.show.own')) {
-            $nodeQuery->orWhere('user_id', '===', $userId);
+            $nodeQuery->orWhere('user_id', '=', $userId);
         }
 
         return $this;

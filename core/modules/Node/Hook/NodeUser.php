@@ -115,12 +115,12 @@ class NodeUser
             $this->query
                 ->delete()
                 ->from('node')
-                ->where('user_id', '==', $userId)
+                ->where('user_id', '=', $userId)
                 ->execute();
         } else {
             $nodes = $this->query
                 ->from('node')
-                ->where('user_id', '==', $userId)
+                ->where('user_id', '=', $userId)
                 ->fetchAll();
 
             foreach ($nodes as $node) {
@@ -132,7 +132,7 @@ class NodeUser
                 ->update('node', [
                     'user_id' => null
                 ])
-                ->where('user_id', '==', $userId)
+                ->where('user_id', '=', $userId)
                 ->execute();
         }
     }
