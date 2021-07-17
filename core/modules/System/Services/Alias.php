@@ -25,14 +25,14 @@ class Alias
         $this->query  = $query;
     }
 
-    public function getAlias(string $source, ?string $default = null): string
+    public function getAlias(string $source, ?string $default = null): ?string
     {
         $alias = $this->query->from('system_alias_url')->where('source', '=', $source)->fetch();
 
         return $alias['alias'] ?? $default;
     }
 
-    public function getSource(string $alias, ?string $default = null): string
+    public function getSource(string $alias, ?string $default = null): ?string
     {
         if ($alias === '/') {
             $index = $this->config[ 'settings.path_index' ];

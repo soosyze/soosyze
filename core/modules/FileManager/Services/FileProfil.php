@@ -75,7 +75,7 @@ class FileProfil
             : [];
     }
 
-    public function getProfilsFileByUser(int $userId): array
+    public function getProfilsFileByUser(?int $userId): array
     {
         if (empty($this->profil[ $userId ])) {
             $this->profil[ $userId ] = $this->getProfil($userId);
