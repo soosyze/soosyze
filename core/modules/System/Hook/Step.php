@@ -468,61 +468,60 @@ class Step
         /* Block content */
         $this->query
             ->insertInto('block', [
-                'section', 'title',
+                'section', 'title', 'is_title',
                 'weight',
                 'visibility_pages', 'pages',
                 'content'
             ])
             ->values([
-                'header', '',
+                'header', t('Learn more'), false,
                 1,
                 true, '/',
                 (new Template('block-learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">' . t('Introduction') . '</span>',
+                'content_header', '<span id="text">' . t('Introduction') . '</span>', true,
                 1,
                 true, '/',
                 (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->values([
-                'sidebar', '',
+                'sidebar', t('About'), false,
                 1,
                 true, '/',
                 (new Template('block-about.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_first', t('To join us'),
+                'footer_first', t('To join us'), true,
                 1,
                 true, 'contact',
                 (new Template('block-contact.php', $this->pathContent))->render()
-            ])
-            ->values([
-                'footer_second', t('Access map'),
-                1,
-                true, 'contact',
-                (new Template('block-map.php', $this->pathContent))->render()
             ])
             ->execute();
 
         /* Block hook. */
         $this->query
             ->insertInto('block', [
-                'section', 'title',
+                'section', 'title', 'is_title',
                 'weight',
                 'hook', 'key_block',
                 'options',
                 'visibility_pages', 'pages'
             ])
             ->values([
-                'content_footer', t('Last News'),
+                'content_footer', t('Last news'), true,
                 1,
                 'news.last', 'news.last',
-                json_encode([ 'limit' => 3, 'offset' => 0, 'more' => true ]),
+                json_encode([
+                    'limit'     => 3,
+                    'offset'    => 0,
+                    'more'      => \SoosyzeCore\News\Hook\Block::MORE_LINK_NOT_ADD,
+                    'text_more' => t('Show blog')
+                ]),
                 true, '/'
             ])
             ->values([
-                'content_footer', '',
+                'content_footer', t('Next/previous navigation'), false,
                 2,
                 'node.next_previous', 'node.next_previous',
                 json_encode([
@@ -534,25 +533,29 @@ class Step
                 true, 'news/%/%/%/%'
             ])
             ->values([
-                'sidebar', '',
+                'footer', t('Social networks'), false,
                 1,
                 'social', 'social',
-                '',
-                true, '/' . PHP_EOL . 'news'
+                null,
+                false, '/' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
-                'footer', '',
-                1,
-                'social', 'social',
-                '',
-                false, '/' . PHP_EOL . 'news' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
-            ])
-            ->values([
-                'sidebar', t('Archives'),
+                'sidebar', t('Archives list'), true,
                 2,
                 'news.archive', 'news.archive',
-                json_encode([ 'expand' => false ]),
+                json_encode([
+                    'expand' => false
+                ]),
                 true, '/' . PHP_EOL . 'news%'
+            ])
+            ->values([
+                'footer_second', t('Access map'), true,
+                1,
+                'map', 'map',
+                json_encode([
+                    'code_integration' => '<iframe width="100%" height="315" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=2.1193313598632817%2C48.74985082796366%2C2.5725173950195317%2C48.95069008682183&amp;layer=mapnik" style="border: 1px solid black" title="Carte openstreetmap"></iframe>'
+                ]),
+                true, 'contact'
             ])
             ->execute();
     }
@@ -566,24 +569,31 @@ class Step
             ->set('settings.meta_title', 'Soosyze blog')
             ->set('settings.logo', 'https://picsum.photos/id/30/200/200');
 
+        /* Block content. */
         $this->query
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
+            ->insertInto('block', [
+                'section', 'title', 'is_title',
+                'weight',
+                'content'
+            ])
             ->values([
-                'footer_second', 'Lorem ipsum dolor', 1,
+                'footer_second', 'Lorem ipsum dolor', true,
+                1,
                 (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->execute();
 
+        /* Block hook. */
         $this->query
             ->insertInto('block', [
-                'section', 'title',
+                'section', 'title', 'is_title',
                 'weight',
                 'hook', 'key_block',
                 'options',
                 'visibility_pages', 'pages'
             ])
             ->values([
-                'content_footer', '',
+                'content_footer', t('Next/previous navigation'), false,
                 2,
                 'node.next_previous', 'node.next_previous',
                 json_encode([
@@ -595,17 +605,17 @@ class Step
                 true, 'news/%/%/%/%'
             ])
             ->values([
-                'sidebar', t('Archives'),
+                'sidebar', t('Archives'), true,
                 1,
                 'news.archive', 'news.archive',
                 json_encode([ 'expand' => false ]),
                 false, 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->values([
-                'footer_first', t('Follow us'),
+                'footer_first', t('Follow us'), true,
                 1,
                 'social', 'social',
-                '[]',
+                null,
                 false, 'admin/%' . PHP_EOL . 'user/%'
             ])
             ->execute();
@@ -746,20 +756,33 @@ class Step
             ->values([ $idNodeProject4, $idMenuProject4 ])
             ->execute();
 
+        /* Block content. */
         $this->query
-            ->insertInto('block', [ 'section', 'title', 'weight', 'content' ])
+            ->insertInto('block', [
+                'section', 'title', 'is_title',
+                'weight',
+                'content'
+            ])
             ->values([
-                'sidebar', '', 1,
+                'sidebar', t('About'), false,
+                1,
                 (new Template('block-about.php', $this->pathContent))->render()
             ])
             ->execute();
 
+        /* Block hook. */
         $this->query
             ->insertInto('block', [
-                'section', 'title', 'weight', 'content', 'hook', 'key_block'
+                'section', 'title', 'is_title',
+                'weight',
+                'content',
+                'hook', 'key_block'
             ])
             ->values([
-                'sidebar', '', 1, '', 'social', 'social'
+                'sidebar', t('Social networks'), false,
+                1,
+                null,
+                'social', 'social'
             ])
             ->execute();
 
@@ -805,42 +828,53 @@ class Step
             ->values([ 'node.show', 'menu-main', '/', 'node/' . $idNodeSite, 6, -1, 'Social media', 'social' ])
             ->execute();
 
+        /* Block content. */
         $this->query
             ->insertInto('block', [
-                'section', 'title', 'weight', 'visibility_pages', 'pages', 'content'
+                'section', 'title', 'is_title',
+                'weight',
+                'visibility_pages', 'pages',
+                'content'
             ])
             ->values([
-                'header', '', 1, true, '/',
+                'header', '', false,
+                1,
+                true, '/',
                 (new Template('block-learn_more.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_header', '<span id="text">' . t('Introduction') . '</span>',
-                1, true,
-                '/',
+                'content_header', '<span id="text">' . t('Introduction') . '</span>', true,
+                1,
+                true, '/',
                 (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->values([
-                'content_footer', '<span id="img">' . t('About') . '</span>', 1,
+                'content_footer', '<span id="img">' . t('About') . '</span>', true,
+                1,
                 true, '/',
                 (new Template('block-img.php', $this->pathContent))->render()
             ])
             ->values([
-                'footer_first', 'Lorem ipsum', 1, false, 'admin/%' . PHP_EOL . 'user/%',
+                'footer_first', 'Lorem ipsum', true,
+                1,
+                false, 'admin/%' . PHP_EOL . 'user/%',
                 (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->execute();
 
+        /* Block hook. */
         $this->query
             ->insertInto('block', [
-                'section', 'title', 'weight', 'content', 'hook', 'key_block'
+                'section', 'title', 'is_title',
+                'weight',
+                'content',
+                'hook', 'key_block'
             ])
             ->values([
-                'footer_second',
-                '<span id="social">' . t('Follow us') . '</span>',
+                'footer_second', '<span id="social">' . t('Follow us') . '</span>', true,
                 1,
-                '',
-                'social',
-                'social'
+                null,
+                'social', 'social'
             ])
             ->execute();
     }

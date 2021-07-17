@@ -13,6 +13,11 @@ use SoosyzeCore\Template\Services\Block as ServiceBlock;
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
     /**
+     * @var string
+     */
+    private const PATH_VIEWS = __DIR__ . '/../Views/';
+
+    /**
      * @var Menu
      */
     private $menu;
@@ -30,32 +35,95 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     public function hookBlockCreateFormData(array &$blocks): void
     {
-        $menus = $this->menu->getAllMenu();
-
-        foreach ($menus as $menu) {
-            $blocks[ "menu.{$menu[ 'name' ]}" ] = [
-                'hook'      => 'menu',
-                'key_block' => "menu.{$menu[ 'name' ]}",
-                'options'   => [ 'name' => $menu[ 'name' ], 'parent' => -1, 'level' => 0 ],
-                'path'      => $this->menu->getPathViews(),
-                'title'     => $menu[ 'title' ],
-                'tpl'       => "components/block/menu-{$menu[ 'name' ]}.php"
-            ];
-        }
+        $blocks[ 'menu' ] = [
+            'description' => 'Displays a menu.',
+            'hook'      => 'menu',
+            'icon'      => 'fas fa-bars',
+            'options'     => [
+                'depth'  => 10,
+                'name'   => 'menu-main',
+                'parent' => -1,
+            ],
+            'path'      => self::PATH_VIEWS,
+            'title'     => 'Menu',
+            'tpl'       => 'components/block/menu-menu.php'
+        ];
     }
 
-    public function hookBlockMenu(ServiceBlock $tpl, array $options): ServiceBlock
+    public function hookMenu(ServiceBlock $tpl, array $options): ServiceBlock
     {
-        if ($menu = $this->menu->renderMenu($options[ 'name' ], $options[ 'parent' ])) {
-            return $menu
-                    ->setName('components/block/menu.php')
-                    ->setNamesOverride([ "components/block/menu-{$options[ 'name' ]}.php" ]);
+        $menu = $this->menu->renderMenu($options[ 'name' ], $options[ 'parent' ], $options[ 'depth' ]);
+        if ($menu) {
+            return $menu->setNamesOverride([ "components/block/menu-{$options[ 'name' ]}.php" ]);
         }
 
         return $tpl;
     }
 
-    public function hookMenuEditForm(FormGroupBuilder &$form, array $data): void
+    public function hookMenuForm(FormGroupBuilder &$form, array $values): void
+    {
+        $form->group('menu-fieldset', 'fieldset', function ($form) use ($values) {
+            $form->legend('menu-legend', t('Settings'))
+                ->group('name-group', 'div', function ($form) use ($values) {
+                    $form->label('name-label', t('Menu to display'))
+                    ->select('name', $this->getOptionsName(), [
+                        ':selected'   => $values[ 'options' ][ 'name' ],
+                        'class'       => 'form-control ajax-control',
+                        'data-target' => 'select[name="parent"]',
+                        'max'         => 4,
+                        'min'         => 1
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('parent-group', 'div', function ($form) use ($values) {
+                    $form->label('parent-label', t('Parent link'), [
+                        'data-tooltip' => t('Show child links of the selected one.')
+                    ])
+                    ->select('parent', $this->menu->renderMenuSelect($values[ 'options' ][ 'name' ]), [
+                        ':selected' => $values[ 'options' ][ 'parent' ],
+                        'class'     => 'form-control',
+                    ]);
+                }, [ 'class' => 'form-group' ])
+                ->group('depth-group', 'div', function ($form) use ($values) {
+                    $form->label('depth-label', t('Menu depth'), [
+                        'data-tooltip' => t('Nombre de sous menu à afficher')
+                    ])
+                    ->number('depth', [
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'max'      => 10,
+                        'min'      => 0,
+                        'required' => 1,
+                        'value'    => $values[ 'options' ][ 'depth' ]
+                    ]);
+                }, [ 'class' => 'form-group' ]);
+        });
+    }
+
+    public function hookMenuValidator(Validator &$validator): void
+    {
+        $menus = $this->menu->getAllMenu();
+        $names = array_column($menus, 'name');
+
+        $validator
+            ->addRule('depth', 'required|numeric|between_numeric:0,10')
+            ->addRule('name', 'required|inarray:' . implode(',', $names))
+            ->addRule('parent', 'required|numeric');
+        $validator
+            ->addLabel('depth', t('Menu depth'))
+            ->addLabel('name', t('Menu to display'))
+            ->addLabel('parent', t('Parent link'));
+    }
+
+    public function hookMenuBefore(Validator $validator, array &$data): void
+    {
+        $data[ 'options' ] = json_encode([
+            'depth'  => (int) $validator->getInput('depth'),
+            'name'   => $validator->getInput('name'),
+            'parent' => (int) $validator->getInput('parent'),
+        ]);
+    }
+
+    private function getOptionsName(): array
     {
         $menus = $this->menu->getAllMenu();
 
@@ -67,52 +135,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                         ':menu' => $menu[ 'name' ]
                     ])
                 ],
-                'label' => $menu[ 'title' ],
+                'label' => t($menu[ 'title' ]),
                 'value' => $menu[ 'name' ]
             ];
         }
 
-        $form->group('menu-fieldset', 'fieldset', function ($form) use ($data, $options) {
-            $form->legend('menu-legend', t('Settings'))
-                ->group('name-group', 'div', function ($form) use ($data, $options) {
-                    $form->label('name-label', t('Menu to display'))
-                    ->select('name', $options, [
-                        ':selected'   => $data[ 'options' ][ 'name' ],
-                        'class'       => 'form-control ajax-control',
-                        'data-target' => 'select[name="parent"]',
-                        'max'         => 4,
-                        'min'         => 1
-                    ]);
-                }, [ 'class' => 'form-group' ])
-                ->group('parent-group', 'div', function ($form) use ($data) {
-                    $form->label('parent-label', t('Parent link'), [
-                        'data-tooltip' => t('Show child links of the selected one.')
-                    ])
-                    ->select('parent', $this->menu->renderMenuSelect($data[ 'options' ][ 'name' ]), [
-                        ':selected' => $data[ 'options' ][ 'parent' ],
-                        'class'     => 'form-control',
-                    ]);
-                }, [ 'class' => 'form-group' ]);
-        });
-    }
-
-    public function hookMenuUpdateValidator(Validator &$validator, int $id): void
-    {
-        $menus = $this->menu->getAllMenu();
-        $names = array_column($menus, 'name');
-
-        $validator
-            ->addRule('name', 'required|inarray:' . implode(',', $names))
-            ->addRule('parent', 'required|numeric')
-            ->addLabel('name', t('Menu to display'))
-            ->addLabel('parent', t('Parent link'));
-    }
-
-    public function hookMenuUpdateBefore(Validator $validator, array &$values, int $id): void
-    {
-        $values[ 'options' ] = json_encode([
-            'name'   => $validator->getInput('name'),
-            'parent' => (int) $validator->getInput('parent')
-        ]);
+        return $options;
     }
 }

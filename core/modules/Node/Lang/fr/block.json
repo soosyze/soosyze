@@ -1,5 +1,7 @@
 {
-    "Next/previous button for content types": "Bouton suivant/précédent pour les types de contenu",
+    "Next/previous navigation": "Navigation suivante/précédente",
+    "Next/previous buttons for content types.": "Boutons suivant/précédent pour les types de contenu.",
+    "Buttons are displayed when the user browses the content type": "Les boutons s'affichent lorsque l'utilisateur parcourt le type de contenu",
     "Next :node_type_name": ":node_type_name suivant",
     "Previous :node_type_name": ":node_type_name précédent",
     "Display type": "Type d'affichage",

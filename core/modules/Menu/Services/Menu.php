@@ -188,7 +188,7 @@ class Menu
         return $options;
     }
 
-    public function renderMenu(string $nameMenu, int $parent = -1, int $level = 1): ?Block
+    public function renderMenu(string $nameMenu, int $parent = -1, int $depth = 10, int $level = 1): ?Block
     {
         $query = $this->query
             ->from('menu_link')
@@ -204,8 +204,8 @@ class Menu
 
         foreach ($query as &$link) {
             $link[ 'title_link' ] = t($link[ 'title_link' ]);
-            $link[ 'submenu' ]    = $link['has_children']
-                ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
+            $link[ 'submenu' ]    = $link[ 'has_children' ] && $depth >= $level
+                ? $this->renderMenu($nameMenu, $link[ 'id' ], $depth, $level + 1)
                 : null;
         }
         unset($link);

@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace SoosyzeCore\Block\Services;
 
 use Core;
-use Soosyze\Config;
+use Soosyze\Components\Router\Router;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use SoosyzeCore\Template\Services\Templating;
 
 class Block
 {
     /**
-     * @var Config
+     * @var array
      */
-    private $config;
+    private $blocks = [];
 
     /**
      * @var Core
@@ -21,93 +22,108 @@ class Block
     private $core;
 
     /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @var Templating
+     */
+    private $template;
+
+    /**
      * @var string
      */
     private $pathViews;
 
-    public function __construct(Config $config, Core $core)
+    public function __construct(Core $core, Router $router, Templating $template)
     {
-        $this->config    = $config;
-        $this->core      = $core;
+        $this->core     = $core;
+        $this->router   = $router;
+        $this->template = $template;
+
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function getBlocks(): array
     {
-        $blocks = [
-            'button'  => [
-                'path'  => $this->pathViews,
-                'title' => 'Text with button',
-                'tpl'   => 'components/block/block-button.php'
-            ],
-            'card_ui' => [
-                'path'  => $this->pathViews,
-                'title' => 'Simple UI card',
-                'tpl'   => 'components/block/block-card_ui.php'
-            ],
-            'code'    => [
-                'path'  => $this->pathViews,
-                'title' => 'Code',
-                'tpl'   => 'components/block/block-code.php'
-            ],
-            'contact' => [
-                'path'  => $this->pathViews,
-                'title' => 'Contact',
-                'tpl'   => 'components/block/block-contact.php'
-            ],
-            'gallery' => [
-                'path'  => $this->pathViews,
-                'title' => 'Picture Gallery',
-                'tpl'   => 'components/block/block-gallery.php'
-            ],
-            'img'     => [
-                'path'  => $this->pathViews,
-                'title' => 'Image and text',
-                'tpl'   => 'components/block/block-img.php'
-            ],
-            'map'     => [
-                'path'  => $this->pathViews,
-                'title' => 'Map',
-                'tpl'   => 'components/block/block-map.php'
-            ],
-            'video'   => [
-                'path'  => $this->pathViews,
-                'title' => 'Video',
-                'tpl'   => 'components/block/block-peertube.php'
-            ],
-            'social'  => [
-                'path'  => $this->pathViews,
-                'title' => 'Social networks',
-                'tpl'   => 'components/block/block-social.php',
-                'hook'  => 'social'
-            ],
-            'table'   => [
-                'path'  => $this->pathViews,
-                'title' => 'Table',
-                'tpl'   => 'components/block/block-table.php'
-            ],
-            'text'    => [
-                'path'  => $this->pathViews,
-                'title' => 'Simple text',
-                'tpl'   => 'components/block/block-text.php'
-            ],
-            'three'   => [
-                'path'  => $this->pathViews,
-                'title' => '3 columns',
-                'tpl'   => 'components/block/block-three.php'
+        if (empty($this->blocks)) {
+            $this->core->callHook('block.create.form.data', [ &$this->blocks ]);
+
+            uasort($this->blocks, static function ($a, $b) {
+                return strcmp($a['title'], $b['title']);
+            });
+        }
+
+        return $this->blocks;
+    }
+
+    public function getBlock(string $key, ?array $default = null): ?array
+    {
+        return $this->getBlocks()[ $key ] ?? $default;
+    }
+
+    public function getBlockSubmenu(string $keyRoute, string $theme, int $id): ServiceBlock
+    {
+        $menu = [
+            [
+                'class'      => 'mod',
+                'icon'       => 'fa fa-edit',
+                'key'        => 'block.edit',
+                'link'       => $this->router->getRoute('block.edit', [
+                    ':theme'   => $theme,
+                    ':id'      => $id
+                ]),
+                'title_link' => t('Edit')
+            ], [
+                'class'      => 'mod',
+                'icon'       => 'fa fa-times',
+                'key'        => 'block.remove',
+                'link'       => $this->router->getRoute('block.remove', [
+                    ':theme'   => $theme,
+                    ':id'      => $id
+                ]),
+                'title_link' => t('Delete')
             ]
         ];
 
-        $this->core->callHook('block.create.form.data', [ &$blocks ]);
+        $this->core->callHook('block.submenu', [ &$menu ]);
 
-        return $blocks;
+        return $this->template
+                ->getTheme('theme_admin')
+                ->createBlock('block/modal-submenu.php', $this->pathViews)
+                ->addVars([
+                    'key_route' => $keyRoute,
+                    'menu'      => $menu
+        ]);
     }
 
-    public function hookBlockSocial(ServiceBlock $tpl, array $options): ServiceBlock
+    public function getBlockFieldsetSubmenu(): ServiceBlock
     {
-        return $tpl->addVar(
-            'icon_socials',
-            $this->config->get('settings.icon_socials')
-        );
+        $menu = [
+            [
+                'class'      => 'active',
+                'link'       => '#block-fieldset',
+                'title_link' => t('Content')
+            ], [
+                'class'      => '',
+                'link'       => '#page-fieldset',
+                'title_link' => t('Visibility by pages')
+            ], [
+                'class'      => '',
+                'link'       => '#roles-fieldset',
+                'title_link' => t('Visibility by roles')
+            ], [
+                'class'      => '',
+                'link'       => '#advanced-fieldset',
+                'title_link' => t('Advanced')
+            ]
+        ];
+
+        $this->core->callHook('block.fieldset.submenu', [ &$menu ]);
+
+        return $this->template
+                ->createBlock('block/submenu-block_fieldset.php', $this->pathViews)
+                ->addVar('menu', $menu);
     }
 }

@@ -16,7 +16,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function boot(): void
     {
-        foreach ([ 'config', 'main', 'permission' ] as $file) {
+        foreach ([ 'block', 'config', 'main', 'permission' ] as $file) {
             $this->loadTranslation('fr', __DIR__ . "/Lang/fr/$file.json");
         }
     }
@@ -156,6 +156,15 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         if ($ci->module()->has('Menu')) {
             $this->hookUninstallMenu($ci);
         }
+    }
+
+    public function hookUninstallBlock(ContainerInterface $ci): void
+    {
+        $ci->query()
+            ->from('block')
+            ->delete()
+            ->where('hook', 'like', 'user.%')
+            ->execute();
     }
 
     public function hookUninstallMenu(ContainerInterface $ci): void

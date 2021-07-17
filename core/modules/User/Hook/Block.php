@@ -13,14 +13,14 @@ use SoosyzeCore\User\Services\User;
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
     /**
+     * @var string
+     */
+    private const PATH_VIEWS = __DIR__ . '/../Views/';
+
+    /**
      * @var Config
      */
     private $config;
-
-    /**
-     * @var string
-     */
-    private $pathViews;
 
     /**
      * @var Router
@@ -37,21 +37,22 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         $this->config = $config;
         $this->router = $router;
         $this->user   = $user;
-
-        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
     public function hookBlockCreateFormData(array &$blocks): void
     {
         $blocks[ 'user.login' ] = [
-            'hook'  => 'user.login',
-            'path'  => $this->pathViews,
-            'title' => 'Sign in',
-            'tpl'   => 'components/block/user-login.php'
+            'description' => t('Displays a login form when the user is not logged in.'),
+            'hook'        => 'user.login',
+            'icon'        => 'fas fa-sign-in-alt',
+            'no_content'  => t('The login form is displayed only for users who are not logged in.'),
+            'path'        => self::PATH_VIEWS,
+            'title'       => t('Sign in form'),
+            'tpl'         => 'components/block/user-login.php'
         ];
     }
 
-    public function hookUserLogin(ServiceBlock $tpl, array $options): ?ServiceBlock
+    public function hookUserLogin(ServiceBlock $tpl, ?array $options): ?ServiceBlock
     {
         if ($this->user->isConnected()) {
             return null;

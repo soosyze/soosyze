@@ -1,4 +1,3 @@
-
 <?php if (!empty($icon_socials)): ?>
 
 <ul class="icons">
