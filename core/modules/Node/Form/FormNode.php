@@ -72,10 +72,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->config = $config;
     }
 
-    public function setValues(array $values, $type, array $fields)
+    public function setValues(array $values, array $fields)
     {
         $this->values = array_merge($this->values, $values);
-        $this->type    = $type;
         $this->fields  = $fields;
 
         return $this;

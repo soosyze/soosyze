@@ -60,7 +60,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.create.form.data', [ &$content, $type ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
+            $content += $_SESSION[ 'inputs' ];
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -69,7 +69,7 @@ class Node extends \Soosyze\Controller
                 'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
                 'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $type, $fields)
+            ->setValues($content, $fields)
             ->setUserCurrent(self::user()->isConnected())
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
@@ -273,7 +273,7 @@ class Node extends \Soosyze\Controller
                 'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
                 'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $content[ 'type' ], $fields)
+            ->setValues($content, $fields)
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
 

@@ -103,7 +103,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
+            $values = array_merge($values, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 

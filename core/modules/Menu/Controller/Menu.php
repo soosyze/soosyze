@@ -195,7 +195,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
         if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
+            $values = array_merge($values, $_SESSION[ 'inputs' ]);
             unset($_SESSION[ 'inputs' ]);
         }
 
@@ -266,7 +266,7 @@ class Menu extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        return new Redirect(self::router()->getRoute('menu.edit'));
+        return new Redirect(self::router()->getRoute('menu.edit', [ ':menu' => $menu ]));
     }
 
     public function remove($name, $req)

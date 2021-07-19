@@ -45,7 +45,7 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $entity, $fieldsEntity)
+            ->setValues($content, $fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
 
@@ -204,7 +204,7 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $entity, $fieldsEntity)
+            ->setValues($content, $fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
 

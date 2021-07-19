@@ -453,7 +453,6 @@ class Node
 
                 $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $option);
                 $out[ $key ][ 'field_display' ] = $this->tpl
-                    ->getTheme()
                     ->createBlock('node/content-entity-show.php', $this->pathViews)
                     ->addVars([
                         'entities' => $out[ $key ][ 'field_value' ]
