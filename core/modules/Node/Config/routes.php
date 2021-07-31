@@ -29,7 +29,7 @@ R::useNamespace('SoosyzeCore\Node\Controller')->name('node.')->prefix('admin/nod
     R::get('create', '/:node/create', 'Node@create', [ ':node' => '[_a-z]+' ]);
     R::post('store', '/:node/create', 'Node@store', [ ':node' => '[_a-z]+' ]);
     R::get('edit', '/:id_node/edit', 'Node@edit', [ ':id_node' => '\d+' ]);
-    R::get('clone', '/:id_node/clone', 'Node@cloneNode', [ ':id_node' => '\d+' ]);
+    R::get('clone', '/:id_node/clone', 'NodeClone@duplicate', [ ':id_node' => '\d+' ]);
     R::post('update', '/:id_node/edit', 'Node@update', [ ':id_node' => '\d+' ]);
     R::get('remove', '/:id_node/remove', 'Node@remove', [ ':id_node' => '\d+' ]);
     R::post('delete', '/:id_node/delete', 'Node@delete', [ ':id_node' => '\d+' ]);
