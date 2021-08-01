@@ -139,7 +139,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         $ci->config()
             ->set('settings.node_default_url', ':node_type/:node_title')
             ->set('settings.node_url_page_private', 'page/:node_title')
-            ->set('settings.node_cron', false);
+            ->set('settings.node_cron', false)
+            ->set('settings.node_markdown', false);
     }
 
     public function seeders(ContainerInterface $ci): void

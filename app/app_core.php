@@ -64,6 +64,9 @@ class Core extends App
             ],
             'xss' => [
                 'class' => 'SoosyzeCore\Filter\Services\Xss'
+            ],
+            'parsedown' => [
+                'class' => 'SoosyzeCore\Filter\Services\Parsedown'
             ]
         ];
     }
