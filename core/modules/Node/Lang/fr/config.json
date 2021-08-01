@@ -1,5 +1,8 @@
 {
-    "URL alias":"Alias d'Url",
+    "Enable Markdown format": "Activer le format Markdown",
+    "The Markdown format does not prevent the use of HTML tags, but the default text editor is not suitable for this format.": "Le format Markdown n'empêche pas l'utilisation de balises HTML, mais l'éditeur de texte par défaut n'est pas adapté à ce format.",
+    "Learn more about the Markdown format": "En savoir plus sur le format Markdown ",
+    "URL alias": "Alias d'Url",
     "Default url": "Url par défaut",
     "The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).": "Le champ: label doit contenir des variables autorisées, des caractères alphanumériques, des barres obliques (/), des tirets (-) ou des traits de soulignement (_).",
     "Applies to all types of content if the templates below are empty": "S'applique à tous les types de contenu si les modèles ci-dessous sont vides",
