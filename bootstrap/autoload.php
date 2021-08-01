@@ -7,7 +7,7 @@ $vendor = ROOT . 'vendor/';
  * Utilisation conseilliez pour les environnements de dev ou pour déboguer.
  */
 require_once $vendor . 'soosyze/framework/src/Autoload.php';
-require_once $vendor . 'paragonie/random_compat/lib/random.php';
+require_once $vendor . 'erusev/parsedown/Parsedown.php';
 
 $autoload = new Soosyze\Autoload([
     'Soosyze'           => $vendor . 'soosyze/framework/src',
