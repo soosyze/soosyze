@@ -59,6 +59,10 @@
 
                     <i class="fa fa-times" aria-hidden="true"> <?php echo t('Delete'); ?></i><br>
                 <?php endif; ?>
+                <?php if ($profil[ 'folder_download' ]): ?>
+
+                    <i class="fa fa-download" aria-hidden="true"> <?php echo t('Downlod'); ?></i><br>
+                <?php endif; ?>
 
                 </td>
                 <td data-title="<?php echo t('Files permissions'); ?>">

@@ -88,7 +88,6 @@ class FileCopy extends \Soosyze\Controller
                         $spl = self::filemanager()->parseDir(
                             $file,
                             "$path/",
-                            $file->getBasename(),
                             'filemanager.copy.show'
                         );
 
