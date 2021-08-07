@@ -33,6 +33,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->boolean('folder_store')->valueDefault(true)
                 ->boolean('folder_update')->valueDefault(false)
                 ->boolean('folder_delete')->valueDefault(true)
+                ->boolean('folder_download')->valueDefault(false)
                 ->integer('folder_size')->valueDefault(10)
                 ->boolean('file_store')->valueDefault(true)
                 ->boolean('file_update')->valueDefault(false)
@@ -68,6 +69,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 'folder_store',
                 'folder_update',
                 'folder_delete',
+                'folder_download',
                 'folder_size',
                 'file_store',
                 'file_update',
@@ -83,6 +85,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 '/user/:user_id',
                 true,
                 1,
+                true,
                 true,
                 true,
                 true,
@@ -104,6 +107,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 false,
                 false,
                 false,
+                false,
                 10,
                 false,
                 false,
@@ -119,6 +123,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 '/node/',
                 true,
                 3,
+                true,
                 true,
                 true,
                 true,
@@ -140,6 +145,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 false,
                 false,
                 false,
+                false,
                 10,
                 false,
                 false,
@@ -155,6 +161,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 '/',
                 true,
                 5,
+                true,
                 true,
                 true,
                 true,

@@ -7,10 +7,14 @@ namespace SoosyzeCore\FileManager\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Http\Response;
+use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Form\FormFolder;
+use SoosyzeCore\FileManager\Services\FileManager;
 use SoosyzeCore\Template\Services\Block;
+use ZipArchive;
 
 class Folder extends \Soosyze\Controller
 {
@@ -254,5 +258,89 @@ class Folder extends \Soosyze\Controller
         $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
         return $this->json(400, $out);
+    }
+
+    public function download(string $path, ServerRequestInterface $req): ResponseInterface
+    {
+        $dir = self::core()->getDir('files_public', 'app/files') . $path;
+        if (!is_dir($dir)) {
+            return $this->get404($req);
+        }
+
+        $nameZipArchive     = basename($path) . '-' . Util::strRandom(12) . '.zip';
+        $pathnameZipArchive = self::core()->getSetting('tmp_dir') . DS . $nameZipArchive;
+
+        $zipArchive = new ZipArchive();
+        $zipArchive->open($pathnameZipArchive, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        $zipArchive = $this->zipRecursivly($dir, $path, $zipArchive);
+        $close      = $zipArchive->close();
+
+        if (!is_file($pathnameZipArchive)) {
+            return $this->get404($req);
+        }
+
+        $stream = new Stream(fopen($pathnameZipArchive, 'r+'));
+
+        return (new Response(200, $stream))
+                ->withHeader('content-type', 'application/octet-stream')
+                ->withHeader('content-length', (string) $stream->getSize())
+                ->withHeader('content-disposition', 'attachment; filename=' . $nameZipArchive)
+                ->withHeader('pragma', 'no-cache')
+                ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+                ->withHeader('expires', '0');
+    }
+
+    private function zipRecursivly(string $dir, string $path, ZipArchive $zipArchive): ZipArchive
+    {
+        $iterator = new \DirectoryIterator($dir);
+
+        foreach ($iterator as $file) {
+            if ($file->isDot() || $file->isLink()) {
+                continue;
+            }
+
+            $pathRight = str_replace(
+                [ self::core()->getDir('files_public', 'app/files'), '\\' ],
+                [ '', '/' ],
+                $file->getPathname()
+            );
+
+            if ($file->isFile() && $this->isRight($file, $pathRight)) {
+                $pathName = str_replace(
+                    self::core()->getDir('files_public', 'app/files') . $path,
+                    '',
+                    $file->getPathname()
+                );
+                $zipArchive->addFile($file->getPathname(), ltrim(Util::cleanPath($pathName), '/'));
+            } elseif ($file->isDir() && $this->isRight($file, $pathRight)) {
+                $zipArchive = $this->zipRecursivly($file->getPathname(), $path, $zipArchive);
+            }
+        }
+
+        return $zipArchive;
+    }
+
+    private function isRight(\DirectoryIterator $file, string $path): bool
+    {
+        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
+        $hookUser = $this->get('filemanager.hook.user');
+        $name     = '/' . $file->getBasename('.' . $file->getExtension());
+        $ext      = $file->getExtension();
+
+        $accept = true;
+        if ($file->isFile()) {
+            if (!in_array($ext, FileManager::getExtAllowed())) {
+                $accept = false;
+            } elseif ($file->getBasename() === '.' . $file->getExtension()) {
+                $accept = false;
+            } elseif (!$hookUser->hookFileShow($path, $name, $ext)) {
+                $accept = false;
+            }
+        } elseif ($file->isDir() && !$hookUser->hookFolderShow($path . '/' . $file->getBasename())) {
+            $accept = false;
+        }
+
+        return $accept;
     }
 }
