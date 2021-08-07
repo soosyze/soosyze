@@ -163,7 +163,7 @@ class User implements \SoosyzeCore\User\UserInterface
         return $this->rightExtension($ext, $right);
     }
 
-    public function hookFolderAdmin(? ServerRequestInterface $req = null, ?array $user = null): bool
+    public function hookFolderAdmin(?ServerRequestInterface $req = null, ?array $user = null): bool
     {
         $profils = $this->fileProfil->getProfilsFileByUser($user[ 'user_id' ]);
 
@@ -196,6 +196,13 @@ class User implements \SoosyzeCore\User\UserInterface
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
+    }
+
+    public function hookFolderDownload(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
+    {
+        $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
+
+        return !empty($right[ 'folder_download' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
     public function getMaxUpload(string $path): int

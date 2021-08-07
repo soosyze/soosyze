@@ -40,6 +40,7 @@ R::useNamespace('SoosyzeCore\FileManager\Controller')->name('filemanager.folder.
     R::post('update', '/edit', 'Folder@update', [ ':path' => '(/[-\w]+){1,255}' ]);
     R::get('remove', '/delete', 'Folder@remove', [ ':path' => '(/[-\w]+){1,255}' ]);
     R::post('delete', '/delete', 'Folder@delete', [ ':path' => '(/[-\w]+){1,255}' ]);
+    R::get('download', '/download', 'Folder@download', [ ':path' => '(/[-\w]+){1,255}' ]);
 });
 R::useNamespace('SoosyzeCore\FileManager\Controller')->name('filemanager.permission.')->prefix('admin/user/permission/filemanager')->group(function () {
     R::get('admin', '/', 'FilePermissionManager@admin');
