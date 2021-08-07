@@ -131,7 +131,7 @@ class Manager extends \Soosyze\Controller
             foreach ($iterator as $file) {
                 try {
                     $spl = $file->isDir()
-                        ? self::filemanager()->parseDir($file, "$path/", $file->getBasename())
+                        ? self::filemanager()->parseDir($file, "$path/")
                         : self::filemanager()->parseFile($file, $path);
 
                     if (!empty($params[ 'name' ])) {

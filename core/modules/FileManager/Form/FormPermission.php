@@ -30,6 +30,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
         'folder_store'        => true,
         'folder_update'       => false,
         'folder_delete'       => false,
+        'folder_download'     => false,
         'folder_size'         => 10,
         'file_store'          => true,
         'file_update'         => true,
@@ -146,6 +147,12 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     $form->checkbox('folder_delete', [ 'checked' => $this->values[ 'folder_delete' ] ])
                     ->label('folder_delete-label', '<i class="ui"></i><i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'), [
                         'for' => 'folder_delete'
+                    ]);
+                }, [ 'class' => 'form-group col-sm-4' ])
+                ->group('folder_download-group', 'div', function ($form) {
+                    $form->checkbox('folder_download', [ 'checked' => $this->values[ 'file_download' ] ])
+                    ->label('folder_download-label', '<i class="ui"></i><i class="fa fa-download" aria-hidden="true"></i> ' . t('Download'), [
+                        'for' => 'folder_download'
                     ]);
                 }, [ 'class' => 'form-group col-sm-4' ])
                 ->group('folder_size-group', 'div', function ($form) {

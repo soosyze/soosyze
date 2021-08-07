@@ -74,7 +74,8 @@ return [
             'route.filemanager.folder.edit' => 'hookFolderUpdate',
             'route.filemanager.folder.update' => 'hookFolderUpdate',
             'route.filemanager.folder.remove' => 'hookFolderDelete',
-            'route.filemanager.folder.delete' => 'hookFolderDelete'
+            'route.filemanager.folder.delete' => 'hookFolderDelete',
+            'route.filemanager.folder.download' => 'hookFolderDownload'
         ]
     ],
     'filemanager.hook.role' => [

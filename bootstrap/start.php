@@ -40,7 +40,9 @@ $app->setSettings([
     /* Chemins des thèmes par ordre de priorité d'appel. */
     'themes_path'         => [ 'app/themes', 'core/themes' ],
     /* Chemin des backups, absolu */
-    'backup_dir'          => '../soosyze_backups'
+    'backup_dir'          => '../soosyze_backups',
+    /* Chemin du répertoire utilisé pour les fichiers temporaires. */
+    'tmp_dir'             => sys_get_temp_dir()
 ]);
 
 $app->setEnvironmentDefault('default');

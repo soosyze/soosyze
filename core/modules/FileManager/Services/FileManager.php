@@ -118,18 +118,18 @@ class FileManager
     public function parseDir(
         \SplFileInfo $dir,
         string $path,
-        string $name = '',
         string $keyRoute = 'filemanager.show'
     ): array {
         $info = self::parseRecursive($dir->getPathname());
+        $name = $dir->getBasename();
 
         return [
-            'actions'    => $this->getActionsFolder($path, $name),
+            'actions'    => $this->getActionsFolder($path . $name, $info),
             'ext'        => 'dir',
             'link_show'  => $this->router->getRoute($keyRoute, [
-                ':path' => Util::cleanPath("$path/" . $dir->getBasename())
+                ':path' => Util::cleanPath("$path/" . $name)
             ]),
-            'name'       => $dir->getBasename(),
+            'name'       => $name,
             'path'       => $dir->getPath(),
             'size'       => Util::strFileSizeFormatted($info[ 'size' ], 2, t('Empty folder')),
             'size_octet' => $info[ 'size' ],
@@ -165,29 +165,41 @@ class FileManager
         ];
     }
 
-    public function getActionsFolder(string $path, string $name = ''): array
+    public function getActionsFolder(string $path, array $info = []): array
     {
         $actions = [];
-        if ($this->hookUser->hookFolderUpdate("$path$name")) {
+        if ($this->hookUser->hookFolderUpdate($path)) {
             $actions[] = [
                 'class'      => 'mod',
                 'icon'       => 'fa fa-edit',
                 'key'        => 'filemanager.folder.edit',
                 'link'       => $this->router->getRoute('filemanager.folder.edit', [
-                    ':path' => "$path$name"
+                    ':path' => $path
                 ]),
                 'title_link' => t('Rename')
             ];
         }
-        if ($this->hookUser->hookFolderDelete("$path$name")) {
+        if ($this->hookUser->hookFolderDelete($path)) {
             $actions[] = [
                 'class'      => 'mod',
                 'icon'       => 'fa fa-times',
                 'key'        => 'filemanager.folder.remove',
                 'link'       => $this->router->getRoute('filemanager.folder.remove', [
-                    ':path' => "$path$name"
+                    ':path' => $path
                 ]),
                 'title_link' => t('Delete')
+            ];
+        }
+        if (!empty($info['size']) && $this->hookUser->hookFolderDownload($path)) {
+            $actions[] = [
+                'class'      => '',
+                'icon'       => 'fa fa-download',
+                'key'        => 'filemanager.folder.download',
+                'link'       => $this->router->getRoute('filemanager.folder.download', [
+                    ':path' => $path
+                ]),
+                'title_link' => 'Download',
+                'type'       => 'link'
             ];
         }
 
@@ -211,7 +223,8 @@ class FileManager
 
     public function getFolderSubmenu(string $keyRoute, string $path): Block
     {
-        $menu = $this->getActionsFolder($path);
+        $info = self::parseRecursive($this->core->getDir('files_public', 'app/files') . $path);
+        $menu = $this->getActionsFolder($path, $info);
 
         $this->core->callHook('filemanager.folder.submenu', [ &$menu ]);
 
