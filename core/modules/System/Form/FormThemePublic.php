@@ -11,6 +11,14 @@ class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
+    protected $values = [
+        'favicon' => '',
+        'logo'    => ''
+    ];
+
+    /**
+     * @var array
+     */
     private static $attrGrp = [ 'class' => 'form-group' ];
 
     /**
@@ -18,25 +26,10 @@ class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
      */
     private $file;
 
-    /**
-     * @var array
-     */
-    private $values = [
-        'favicon' => '',
-        'logo'    => ''
-    ];
-
     public function __construct(array $attr, File $file)
     {
         parent::__construct($attr);
         $this->file = $file;
-    }
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_replace($this->values, $values);
-
-        return $this;
     }
 
     public function makeFields(): self

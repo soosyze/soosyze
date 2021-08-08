@@ -11,12 +11,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'role_label'       => '',
         'role_description' => '',
         'role_weight'      => 1,
@@ -24,12 +19,10 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
         'role_icon'        => 'fa fa-user'
     ];
 
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
-    }
+    /**
+     * @var array
+     */
+    private static $attrGrp = [ 'class' => 'form-group' ];
 
     public function labelGroup(FormGroupBuilder &$form): self
     {

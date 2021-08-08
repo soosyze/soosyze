@@ -15,6 +15,23 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
+    protected $values = [
+        'title'            => '',
+        'meta_description' => '',
+        'meta_noindex'     => false,
+        'meta_nofollow'    => false,
+        'meta_noarchive'   => false,
+        'meta_title'       => '',
+        'sticky'           => false,
+        'node_status_id'   => 3,
+        'date_created'     => '',
+        'id'               => null,
+        'user_id'          => null
+    ];
+
+    /**
+     * @var array
+     */
     private static $fieldRules = [
         'email',
         'month',
@@ -36,23 +53,6 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     private static $attrGrpInline = [ 'class' => 'form-group-inline' ];
-
-    /**
-     * @var array
-     */
-    private $values = [
-        'title'            => '',
-        'meta_description' => '',
-        'meta_noindex'     => false,
-        'meta_nofollow'    => false,
-        'meta_noarchive'   => false,
-        'meta_title'       => '',
-        'sticky'           => false,
-        'node_status_id'   => 3,
-        'date_created'     => '',
-        'id'               => null,
-        'user_id'          => null
-    ];
 
     /**
      * @var File
@@ -112,9 +112,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->config = $config;
     }
 
-    public function setValues(array $values, array $fields)
+    public function setFields(array $fields)
     {
-        $this->values = array_merge($this->values, $values);
         $this->fields  = $fields;
 
         return $this;
