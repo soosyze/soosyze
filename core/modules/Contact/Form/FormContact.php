@@ -9,24 +9,17 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'name'    => '',
         'email'   => '',
         'object'  => '',
         'message' => '',
     ];
 
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
-    }
+    /**
+     * @var array
+     */
+    private static $attrGrp = [ 'class' => 'form-group' ];
 
     public function makeFields(): self
     {

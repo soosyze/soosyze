@@ -14,12 +14,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'username'         => '',
         'email'            => '',
         'picture'          => '',
@@ -31,6 +26,11 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         'terms_of_service' => '',
         'roles'            => []
     ];
+
+    /**
+     * @var array
+     */
+    private static $attrGrp = [ 'class' => 'form-group' ];
 
     /**
      * @var File|null
@@ -47,13 +47,6 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         parent::__construct($attr);
         $this->file   = $file;
         $this->config = $config;
-    }
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
     }
 
     public function usernameGroup(FormGroupBuilder &$form): self

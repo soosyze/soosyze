@@ -12,17 +12,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var array
-     */
-    private static $attrGrpFlex = [ 'class' => 'form-group-flex' ];
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'folder_show'         => '/',
         'folder_show_sub'     => true,
         'profil_weight'       => 1,
@@ -46,14 +36,17 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    /**
+     * @var array
+     */
+    private static $attrGrpFlex = [ 'class' => 'form-group-flex' ];
+
+    /**
+     * @var array
+     */
     private $roles = [];
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
-    }
 
     public function setRoles(array $roles): self
     {
