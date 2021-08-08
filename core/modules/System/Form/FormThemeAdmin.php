@@ -9,21 +9,14 @@ class FormThemeAdmin extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
+    protected $values = [
+        'theme_admin_dark' => ''
+    ];
 
     /**
      * @var array
      */
-    private $values = [
-        'theme_admin_dark' => ''
-    ];
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_replace($this->values, $values);
-
-        return $this;
-    }
+    private static $attrGrp = [ 'class' => 'form-group' ];
 
     public function makeFields(): self
     {

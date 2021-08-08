@@ -11,17 +11,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'title_link'  => '',
         'link'        => '',
         'query'       => '',
@@ -30,17 +20,20 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'target_link' => false
     ];
 
+    /**
+     * @var array
+     */
+    private static $attrGrp = [ 'class' => 'form-group' ];
+
+    /**
+     * @var Router
+     */
+    private $router;
+
     public function __construct(array $attr, Router $router)
     {
         parent::__construct($attr);
         $this->router = $router;
-    }
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
     }
 
     public function makeFields(): self
