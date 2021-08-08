@@ -72,7 +72,8 @@ class Node extends \Soosyze\Controller
                 'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
                 'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $fields)
+            ->setValues($content)
+            ->setFields($fields)
             ->setUserCurrent(self::user()->isConnected())
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
@@ -276,7 +277,8 @@ class Node extends \Soosyze\Controller
                 'enctype' => 'multipart/form-data',
                 'id'      => 'form-node',
                 'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content, $fields)
+            ->setValues($content)
+            ->setFields($fields)
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
 
@@ -437,7 +439,8 @@ class Node extends \Soosyze\Controller
         $action = self::router()->getRoute('node.delete', [ ':id_node' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'post' ], self::router()))
-            ->setValues($content, $useInPath)
+            ->setValues($content)
+            ->setUseInPath($useInPath)
             ->makeFields();
 
         $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);

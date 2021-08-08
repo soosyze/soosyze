@@ -7,20 +7,13 @@ namespace SoosyzeCore\Block\Form;
 class FormListBlock extends \Soosyze\Components\Form\FormBuilder
 {
     /** @var array */
-    private $values = [
+    protected $values = [
         'blocks'  => [],
         'section' => ''
     ];
 
     /** @var string */
     private $section;
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
-    }
 
     public function setSection(string $section): self
     {

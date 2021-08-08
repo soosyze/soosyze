@@ -9,14 +9,7 @@ class FormFolder extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private $values = [ 'name' => '' ];
-
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
-
-        return $this;
-    }
+    protected $values = [ 'name' => '' ];
 
     public function makeFields(): self
     {

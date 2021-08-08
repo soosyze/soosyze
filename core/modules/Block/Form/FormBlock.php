@@ -17,17 +17,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var array
-     */
-    private $rolesUser = [];
-
-    /**
-     * @var array
-     */
-    private $values = [
+    protected $values = [
         'block_id'         => null,
         'class'            => '',
         'content'          => '',
@@ -42,12 +32,15 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
         'weight'           => 1
     ];
 
-    public function setValues(array $values): self
-    {
-        $this->values = array_merge($this->values, $values);
+    /**
+     * @var array
+     */
+    private static $attrGrp = [ 'class' => 'form-group' ];
 
-        return $this;
-    }
+    /**
+     * @var array
+     */
+    private $rolesUser = [];
 
     public function setRoles(array $rolesUser): self
     {

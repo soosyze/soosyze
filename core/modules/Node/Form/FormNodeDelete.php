@@ -11,21 +11,21 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
+    protected $values = [
+        'current_path' => '',
+        'files'        => 1,
+        'path'         => ''
+    ];
+
+    /**
+     * @var array
+     */
     private static $attrGrp = [ 'class' => 'form-group' ];
 
     /**
      * @var Router
      */
     private $router;
-
-    /**
-     * @var array
-     */
-    private $values = [
-        'current_path' => '',
-        'files'        => 1,
-        'path'         => ''
-    ];
 
     /**
      * @var array|null
@@ -38,9 +38,8 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
         $this->router = $router;
     }
 
-    public function setValues(array $values, ?array $useInPath): self
+    public function setUseInPath(?array $useInPath): self
     {
-        $this->values    = array_merge($this->values, $values);
         $this->useInPath = $useInPath;
 
         return $this;
