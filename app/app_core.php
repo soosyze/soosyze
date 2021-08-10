@@ -62,11 +62,17 @@ class Core extends App
                     '#mailer'
                 ]
             ],
+            'filter' => [
+                'class' => 'SoosyzeCore\Filter\Services\Filter'
+            ],
             'xss' => [
                 'class' => 'SoosyzeCore\Filter\Services\Xss'
             ],
             'parsedown' => [
                 'class' => 'SoosyzeCore\Filter\Services\Parsedown'
+            ],
+            'lazyloading' => [
+                'class' => 'SoosyzeCore\Filter\Services\LazyLoding'
             ]
         ];
     }

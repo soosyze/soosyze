@@ -32,4 +32,4 @@
         : t('minutes')); ?>
     </p>
 </div>
-<?php echo xss($fields[ 'body' ][ 'field_display' ]); ?>
+<?php echo $fields[ 'body' ][ 'field_display' ]; ?>
