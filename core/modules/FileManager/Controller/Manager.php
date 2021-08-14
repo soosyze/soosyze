@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\FileManager\Hook\User;
+use SoosyzeCore\FileManager\Services\FilterManagerIterator;
 use SoosyzeCore\Template\Services\Block;
 
 class Manager extends \Soosyze\Controller
@@ -30,8 +32,8 @@ class Manager extends \Soosyze\Controller
         }
 
         $filemanager = null;
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
         $path = '';
         /*
          * Le profil par défaut est derterminé par le premier profil trouvé.
@@ -125,8 +127,8 @@ class Manager extends \Soosyze\Controller
         if (is_dir($filesPublic)) {
             $dirIterator = new \DirectoryIterator($filesPublic);
 
-            /** @var \SoosyzeCore\FileManager\Services\FilterManagerIterator $iterator */
-            $iterator = $this->get('filemanager.filter.iterator');
+            /** @var FilterManagerIterator $iterator */
+            $iterator = $this->get(FilterManagerIterator::class);
             $iterator = $iterator->load($path, $dirIterator);
             foreach ($iterator as $file) {
                 try {
@@ -162,8 +164,8 @@ class Manager extends \Soosyze\Controller
             });
         }
 
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -187,8 +189,8 @@ class Manager extends \Soosyze\Controller
     {
         $path = Util::cleanPath('/' . $path);
 
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
 
         $breadcrumb = self::template()
             ->getTheme('theme_admin')

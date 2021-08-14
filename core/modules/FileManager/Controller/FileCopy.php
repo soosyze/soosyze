@@ -10,6 +10,8 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Hook\Config;
+use SoosyzeCore\FileManager\Hook\User;
+use SoosyzeCore\FileManager\Services\FilterManagerIterator;
 use SoosyzeCore\Template\Services\Block;
 
 class FileCopy extends \Soosyze\Controller
@@ -78,8 +80,8 @@ class FileCopy extends \Soosyze\Controller
         if (is_dir($filesPublic)) {
             $dirIterator = new \DirectoryIterator($filesPublic);
 
-            /** @var \SoosyzeCore\FileManager\Services\FilterManagerIterator $iterator */
-            $iterator = $this->get('filemanager.filter.iterator');
+            /** @var FilterManagerIterator $iterator */
+            $iterator = $this->get(FilterManagerIterator::class);
             $iterator = $iterator->load($path, $dirIterator);
 
             foreach ($iterator as $file) {
@@ -110,8 +112,8 @@ class FileCopy extends \Soosyze\Controller
             });
         }
 
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser =  $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser =  $this->get(User::class);
 
         return self::template()
                 ->getTheme('theme_admin')

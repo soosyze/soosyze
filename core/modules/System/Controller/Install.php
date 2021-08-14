@@ -11,6 +11,7 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
+use SoosyzeCore\System\Services\Composer;
 
 class Install extends \Soosyze\Controller
 {
@@ -172,7 +173,7 @@ class Install extends \Soosyze\Controller
 
         foreach ($this->modules as $title => $namespace) {
             /* Charge la version du coeur à ses modules. */
-            $composer[$title]['version'] = $this->container->get('composer')->getVersionCore();
+            $composer[$title]['version'] = $this->container->get(Composer::class)->getVersionCore();
 
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
