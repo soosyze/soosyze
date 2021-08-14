@@ -12,6 +12,7 @@ use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Hook\Config;
+use SoosyzeCore\FileManager\Hook\User;
 use SoosyzeCore\FileManager\Services\FileManager;
 use SoosyzeCore\Template\Services\Block;
 
@@ -85,8 +86,8 @@ class File extends \Soosyze\Controller
     public function create(string $path): Block
     {
         $path = Util::cleanPath($path);
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
         $max      = $hookUser->getMaxUpload($path);
 
         $form = (new FormBuilder([
@@ -145,8 +146,8 @@ class File extends \Soosyze\Controller
         }
 
         $dir    = self::core()->getDir('files_public', 'app/files') . $path;
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
         $profil   = $hookUser->getRight($path);
 
         $rules  = [
