@@ -8,6 +8,9 @@ Templating::setScriptsGlobal([
     'jquery'   => [
         'src' => "$vendor/jquery/jquery-3.5.1.min.js"
     ],
+    'lazyloading' => [
+        'src' => "$vendor/lazyload/lazyload-17.3.1.min.js"
+    ],
     'sortable' => [
         'src' => "$vendor/sortable/Sortable.min.js"
     ],

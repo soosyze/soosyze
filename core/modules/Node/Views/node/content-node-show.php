@@ -6,6 +6,8 @@
 
     <?php if ($field[ 'field_type' ] === 'one_to_many'): ?>
         <?php echo $field[ 'field_display' ]; ?>
+    <?php elseif ($field[ 'field_type' ] === 'textarea'): ?>
+        <?php echo $field[ 'field_display' ]; ?>
     <?php else: ?>
         <?php echo xss($field[ 'field_display' ]); ?>
     <?php endif; ?>

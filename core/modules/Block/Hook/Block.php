@@ -8,6 +8,7 @@ use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
+use SoosyzeCore\Filter\Services\LazyLoding;
 use SoosyzeCore\Filter\Services\Xss;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
@@ -17,6 +18,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         'iframe' => [
             'allowfullscreen' => 1,
             'class'           => 1,
+            'data-src'        => 1,
             'frameborder'     => 1,
             'height'          => 1,
             'loading'         => 1,
@@ -44,6 +46,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     private $config;
 
     /**
+     * @var LazyLoding
+     */
+    private $lazyloading;
+
+    /**
      * @var Router
      */
     private $router;
@@ -53,11 +60,16 @@ class Block implements \SoosyzeCore\Block\BlockInterface
      */
     private $xss;
 
-    public function __construct(Config $config, Router $router, Xss $xss)
-    {
-        $this->config = $config;
-        $this->router = $router;
-        $this->xss    = $xss;
+    public function __construct(
+        Config $config,
+        LazyLoding $lazyloading,
+        Router $router,
+        Xss $xss
+    ) {
+        $this->config      = $config;
+        $this->lazyloading = $lazyloading;
+        $this->router      = $router;
+        $this->xss         = $xss->getKses();
     }
 
     public function hookBlockCreateFormData(array &$blocks): void
@@ -143,7 +155,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         return $tpl->addVar(
             'code_integration',
-            $this->xssIframe($options[ 'code_integration' ])
+            $this->filterIframe($options[ 'code_integration' ])
         );
     }
 
@@ -198,7 +210,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         return $tpl->addVar(
             'code_integration',
-            $this->xssIframe($options[ 'code_integration' ])
+            $this->filterIframe($options[ 'code_integration' ])
         );
     }
 
@@ -233,10 +245,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         ]);
     }
 
-    private function xssIframe(string $str): string
+    private function filterIframe(string $str): string
     {
-        $kses = $this->xss->getKses()->setAllowedTags(self::TAG_IFRAME);
+        $this->xss->setAllowedTags(self::TAG_IFRAME);
+        $str = $this->xss->filter($str);
 
-        return $kses->filter($str);
+        return $this->lazyloading->filter($str);
     }
 }
