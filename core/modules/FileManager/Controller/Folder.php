@@ -12,6 +12,7 @@ use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Form\FormFolder;
+use SoosyzeCore\FileManager\Hook\User;
 use SoosyzeCore\FileManager\Services\FileManager;
 use SoosyzeCore\Template\Services\Block;
 use ZipArchive;
@@ -323,8 +324,8 @@ class Folder extends \Soosyze\Controller
 
     private function isRight(\DirectoryIterator $file, string $path): bool
     {
-        /** @var \SoosyzeCore\FileManager\Hook\User $hookUser */
-        $hookUser = $this->get('filemanager.hook.user');
+        /** @var User $hookUser */
+        $hookUser = $this->get(User::class);
         $name     = '/' . $file->getBasename('.' . $file->getExtension());
         $ext      = $file->getExtension();
 
