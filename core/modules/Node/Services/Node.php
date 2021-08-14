@@ -6,7 +6,7 @@ namespace SoosyzeCore\Node\Services;
 
 use Core;
 use Soosyze\Config;
-use SoosyzeCore\Filter\Services\Parsedown;
+use SoosyzeCore\Filter\Services\Filter;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Template\Services\Templating;
@@ -51,9 +51,9 @@ class Node
     private $nodeTypeField = [];
 
     /**
-     * @var Parsedown
+     * @var Filter
      */
-    private $parsedown;
+    private $filter;
 
     /**
      * @var string
@@ -78,17 +78,17 @@ class Node
     public function __construct(
         Config $config,
         Core $core,
-        Parsedown $parsedown,
+        Filter $filter,
         Query $query,
         Schema $schema,
         Templating $tpl
     ) {
-        $this->config    = $config;
-        $this->core      = $core;
-        $this->parsedown = $parsedown;
-        $this->query     = $query;
-        $this->schema    = $schema;
-        $this->tpl       = $tpl;
+        $this->config = $config;
+        $this->core   = $core;
+        $this->filter = $filter;
+        $this->query  = $query;
+        $this->schema = $schema;
+        $this->tpl    = $tpl;
 
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
@@ -442,9 +442,7 @@ class Node
                 $out[ $key ][ 'field_display' ] = '<div>' . $data[ $key ] . '</div>';
             }
             if ($value[ 'field_type' ] === 'textarea') {
-                if ($this->config->get('settings.node_markdown', false)) {
-                    $out[ $key ][ 'field_display' ] = $this->parsedown->parse($data[ $key ]);
-                }
+                $out[ $key ][ 'field_display' ] = $this->filter->parse($data[ $key ]);
             } elseif ($value[ 'field_type' ] === 'image') {
                 $link = is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]

@@ -99,4 +99,6 @@ $(function () {
                 .parent()
                 .addClass("active");
     });
+
+    new LazyLoad({});
 });
