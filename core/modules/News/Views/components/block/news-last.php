@@ -16,7 +16,7 @@
 
                     <header>
                         <a href="<?php echo $new[ 'link_view' ]; ?>">
-                            <?php echo xss($new[ 'field' ][ 'image' ][ 'field_display' ]); ?>
+                            <img class="lazy" data-src="<?php echo htmlspecialchars($new[ 'field' ][ 'image' ][ 'field_value' ]); ?>">
                         </a>
                     </header>
                 <?php endif; ?>
