@@ -380,9 +380,9 @@ class User extends \Soosyze\Controller
 
         foreach ($roles as $key => $role) {
             $validatorRoles
-                ->addRule($key, 'int|inarray:' . $listRoles)
-                ->addLabel($key, t($role))
-                ->addInput($key, $key);
+                ->addRule("$key-role", 'int|inarray:' . $listRoles)
+                ->addLabel("$key-role", t($role))
+                ->addInput("$key-role", $key);
         }
 
         $this->container->callHook('user.update.role.validator', [ &$validatorRoles ]);

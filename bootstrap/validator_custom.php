@@ -1,8 +1,13 @@
 <?php
 
+use Soosyze\Components\Http\Uri;
+use Soosyze\Components\Router\Router;
+use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\System\Services\Alias;
+
 class RouteValue extends \Soosyze\Components\Validator\Rule
 {
-    protected function messages()
+    protected function messages(): array
     {
         return [
             'must' => 'The value of :label must be a route.',
@@ -10,37 +15,38 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
         ];
     }
 
-    protected function test($key, $value, $arg, $not = true)
+    protected function test(string $keyRule, $value, $args, bool $not): void
     {
-        /**
-         * @var \Core
-         */
-        $app = \Core::getInstance();
+        $app    = \Core::getInstance();
+        /** @var Router $router */
+        $router = $app->get(Router::class);
+        /** @var Alias $alias */
+        $alias  = $app->get(Alias::class);
 
-        $uri        = \Soosyze\Components\Http\Uri::create($value);
-        $linkSource = $app->get('router')->parseQueryFromRequest(
+        $uri        = Uri::create($value);
+        $linkSource = $router->parseQueryFromRequest(
             $app->getRequest()->withUri($uri)
         );
 
-        $linkSource = $app->get('alias')->getSource($linkSource, $linkSource);
+        $linkSource = $alias->getSource($linkSource, $linkSource);
 
-        $uriSource = \Soosyze\Components\Http\Uri::create($linkSource);
+        $uriSource = Uri::create($linkSource);
 
-        $isRoute = $app->get('router')->parse(
+        $isRoute = $router->parse(
             $app->getRequest()
                 ->withUri($uriSource->withQuery('q=' . $uriSource->getPath()))
                 ->withMethod('get')
         );
 
         if (!$isRoute && $not) {
-            $this->addReturn($key, 'must');
+            $this->addReturn($keyRule, 'must');
         }
     }
 }
 
 class RouteOrUrlValue extends \RouteValue
 {
-    protected function messages()
+    protected function messages(): array
     {
         return [
             'must' => 'The value of :label must be a link or route.',
@@ -48,22 +54,22 @@ class RouteOrUrlValue extends \RouteValue
         ];
     }
 
-    protected function test($key, $value, $arg, $not = true)
+    protected function test(string $keyRule, $value, $args, bool $not): void
     {
         $isRoute = !(new \RouteValue())
-            ->hydrate('route', $key, $arg, $not)
+            ->hydrate('route', $key, $args, $not)
             ->execute($value)
             ->hasErrors();
         $isLink = !(new \Soosyze\Components\Validator\Rules\Url())
-            ->hydrate('url', $key, $arg, $not)
+            ->hydrate('url', $key, $args, $not)
             ->execute($value)
             ->hasErrors();
 
         if (!($isRoute || $isLink) && $not) {
-            $this->addReturn($key, 'must');
+            $this->addReturn($keyRule, 'must');
         }
     }
 }
 
-Soosyze\Components\Validator\Validator::addTestGlobal('route', new \RouteValue());
-Soosyze\Components\Validator\Validator::addTestGlobal('route_or_url', new \RouteOrUrlValue());
+Validator::addTestGlobal('route', RouteValue::class);
+Validator::addTestGlobal('route_or_url', RouteValue::class);

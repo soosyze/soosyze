@@ -244,8 +244,8 @@ class Folder extends \Soosyze\Controller
             /* Supprime tous les dossiers et fichiers */
             foreach ($iterator as $file) {
                 $file->isDir()
-                        ? rmdir($file)
-                        : unlink($file);
+                        ? rmdir((string) $file)
+                        : unlink((string) $file);
             }
             /* Supprime le dossier cible. */
             rmdir($dir);

@@ -33,6 +33,7 @@ class FilterManagerIterator extends \FilterIterator
 
     public function accept(): bool
     {
+        /** @var \DirectoryIterator $file */
         $file   = $this->current();
         $accept = true;
         if ($file->isDot() || $file->isLink()) {

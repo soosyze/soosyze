@@ -252,7 +252,7 @@ class Translation extends \Soosyze\Config
         return $output;
     }
 
-    protected function prepareKey($strKey)
+    protected function prepareKey(string $strKey): array
     {
         return [ $this->lang, $strKey ];
     }
