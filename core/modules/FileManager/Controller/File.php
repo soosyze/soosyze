@@ -256,11 +256,6 @@ class File extends \Soosyze\Controller
         }
         $data = self::filemanager()->parseFile($spl, $path);
 
-        if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
-
         $action = self::router()->getRoute('filemanager.file.update', [
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);

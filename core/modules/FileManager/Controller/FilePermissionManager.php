@@ -7,7 +7,6 @@ namespace SoosyzeCore\FileManager\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
 class FilePermissionManager extends \Soosyze\Controller
@@ -25,6 +24,7 @@ class FilePermissionManager extends \Soosyze\Controller
 
         $form = new FormBuilder([
             'action' => self::router()->getRoute('filemanager.permission.admin.check'),
+            'class'  => 'form-api',
             'method' => 'post'
         ]);
 
@@ -55,10 +55,6 @@ class FilePermissionManager extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -115,12 +111,15 @@ class FilePermissionManager extends \Soosyze\Controller
             }
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+            ]);
         }
 
-        return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 }

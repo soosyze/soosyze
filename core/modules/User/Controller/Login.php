@@ -31,11 +31,6 @@ class Login extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('login.form.data', [ &$values ]);
 
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
         $form = (new FormUser([
             'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ]),
             'method' => 'post'
@@ -90,28 +85,22 @@ class Login extends \Soosyze\Controller
         if ($validator->isValid()) {
             self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
         } else {
-            $route = self::router()->getRoute('user.login', [
-                ':url' => $url
+            return $this->json(400, [
+                    'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                    'errors_keys' => $validator->getKeyInputErrors()
             ]);
-
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return new Redirect($route);
         }
 
         if ($user = self::user()->isConnected()) {
             $route = $this->getRedirectLogin($user);
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = [ t('E-mail or password not recognized.') ];
 
-            $route = self::router()->getRoute('user.login', [
-                ':url' => $url
-            ]);
+            return $this->json(200, [ 'redirect' => $route ]);
         }
 
-        return new Redirect($route);
+        return $this->json(400, [
+                'messages'    => [ t('E-mail or password not recognized.') ],
+                'errors_keys' => []
+        ]);
     }
 
     public function logout(): ResponseInterface
@@ -130,11 +119,6 @@ class Login extends \Soosyze\Controller
 
         $values = [];
         $this->container->callHook('relogin.form.data', [ &$values ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('user.relogin.check', [ ':url' => $url ]);
 
@@ -212,24 +196,25 @@ class Login extends \Soosyze\Controller
                         t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
                     ];
 
-                    return new Redirect(self::router()->getRoute('user.login', [
-                            ':url' => $url
-                    ]));
+                    return $this->json(200, [
+                            'redirect' => self::router()->getRoute('user.login', [
+                                ':url' => $url
+                            ])
+                    ]);
                 }
 
-                $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
+                $messagesErrors = [ t('An error prevented your email from being sent.') ];
             } else {
-                $_SESSION[ 'messages' ][ 'errors' ] = [ t('Sorry, this email is not recognized.') ];
+                $messagesErrors = [ t('Sorry, this email is not recognized.') ];
             }
         } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+            $messagesErrors = $validator->getKeyErrors();
         }
 
-        $_SESSION[ 'inputs' ] = $validator->getInputs();
-
-        return new Redirect(self::router()->getRoute('user.relogin', [
-                ':url' => $url
-        ]));
+        return $this->json(400, [
+                'messages'    => $messagesErrors,
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function resetUser(int $id, string $token, ServerRequestInterface $req): ResponseInterface

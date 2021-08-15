@@ -7,7 +7,6 @@ namespace SoosyzeCore\Config\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
 class Config extends \Soosyze\Controller
@@ -50,6 +49,16 @@ class Config extends \Soosyze\Controller
         if (!($menu = $this->getMenuConfig()) || !isset($menu[ $id ])) {
             return $this->get404($req);
         }
+        if ($req->isMaxSize()) {
+            return $this->json(400, [
+                    'messages'    => [
+                        'errors' => [
+                            t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                        ]
+                    ],
+                    'errors_keys' => []
+            ]);
+        }
 
         $validator = (new Validator())
             ->addRule('token_' . $id . '_config', 'token')
@@ -79,23 +88,15 @@ class Config extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(
-                self::router()->getRoute('config.edit', [ ':id' => $id ])
-            );
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('config.edit', [ ':id' => $id ])
+            ]);
         }
 
-        if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.');
-            $_SESSION[ 'errors_keys' ]            = [];
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($inputsFile);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        }
-
-        return new Redirect(
-            self::router()->getRoute('config.edit', [ ':id' => $id ])
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function getConfig(array $menu, string $id, ServerRequestInterface $req): ResponseInterface
@@ -113,13 +114,10 @@ class Config extends \Soosyze\Controller
         );
 
         $this->container->callHook("config.edit.$id.form.data", [ &$data, $id ]);
-        if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = new FormBuilder([
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
+            'class'   => 'form-api',
             'enctype' => 'multipart/form-data',
             'method'  => 'post'
         ]);
@@ -134,10 +132,6 @@ class Config extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()

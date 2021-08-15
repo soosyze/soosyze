@@ -6,7 +6,6 @@ namespace SoosyzeCore\Menu\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Menu\Form\FormLink;
 
@@ -25,11 +24,6 @@ class Link extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
@@ -42,10 +36,6 @@ class Link extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -84,20 +74,17 @@ class Link extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('menu.show', [
-                ':menu' => $nameMenu
-            ]));
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('menu.show', [
+                        ':menu' => $nameMenu
+                    ])
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'inputs' ][ 'link' ]     = $infoUrlOrRoute[ 'link' ];
-        $_SESSION[ 'inputs' ][ 'fragment' ] = $infoUrlOrRoute[ 'fragment' ];
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('menu.link.create', [
-            ':menu' => $nameMenu
-        ]));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function edit(string $name, int $id, ServerRequestInterface $req): ResponseInterface
@@ -107,11 +94,6 @@ class Link extends \Soosyze\Controller
         }
 
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = array_merge($values, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('menu.link.update', [
             ':menu' => $name, ':id' => $id
@@ -127,10 +109,6 @@ class Link extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -169,22 +147,17 @@ class Link extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('menu.show', [
-                ':menu' => $nameMenu
-            ]));
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('menu.show', [
+                        ':menu' => $nameMenu
+                    ])
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'inputs' ][ 'link' ]     = $infoUrlOrRoute[ 'link' ];
-        $_SESSION[ 'inputs' ][ 'query' ]    = $infoUrlOrRoute[ 'query' ];
-        $_SESSION[ 'inputs' ][ 'fragment' ] = $infoUrlOrRoute[ 'fragment' ];
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('menu.link.edit', [
-            ':menu' => $nameMenu,
-            ':id'   => $id
-        ]));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function delete(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
@@ -212,9 +185,9 @@ class Link extends \Soosyze\Controller
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
         }
 
-        $route = self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ]);
-
-        return new Redirect($route);
+        return $this->json(200, [
+                'redirect' => self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ])
+        ]);
     }
 
     private function getValidator(ServerRequestInterface $req): Validator

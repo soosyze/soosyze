@@ -1,34 +1,26 @@
 $(function () {
     $(document).delegate('#modal_block input[type="submit"].submit-block-form', 'click', function (evt) {
         evt.preventDefault();
-        const $this = $(this);
-        const $form = $this.closest('form');
+        const $this         = $(this);
+        const $form         = $this.closest('form');
+        const $classTabPane = $form.attr('data-tab-pane');
 
-        let data = $form.serialize();
-        const activeEl = document.activeElement;
-
-        if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
-            if (data) {
-                data += "&";
-            }
-            data += activeEl.name;
-            if (activeEl.value) {
-                data += "=" + activeEl.value;
-            }
-        }
+        let data = new FormData($form[0]);
 
         $.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
             data: data,
             dataType: 'json',
+            processData: false,
+            contentType: false,
             success: function (data) {
                 closeModal.call(evt.target, evt);
                 showBlock(data.inputs.section, data.link_show);
             },
             error: function (data) {
                 renderMessage('#modal_block .modal-messages', data.responseJSON);
-                fieldsetError(data.responseJSON.errors_keys);
+                fieldsetErrorFormApi($form, $classTabPane);
             }
         });
     });
@@ -135,26 +127,5 @@ function showBlock(id, link) {
         success: function (data) {
             $('#section-' + id).replaceWith(data);
         }
-    });
-}
-
-function fieldsetError(dataError) {
-    $('#modal_block .tab-pane').each(function () {
-        let idPane = $(this).attr("id");
-
-        $(this).find('input, textarea, select').each(function () {
-            if (dataError.indexOf(this.id) != -1 || this.checkValidity() === false || $(this).hasClass('is-invalid')) {
-                const error = `
-                    <span class="fieldset-error" title="Error">
-                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
-                    <span>`;
-
-                $(`ul a[href="#${idPane}"]`).css("color", "red");
-                $(`ul a .fieldset-error`).remove();
-                $(`ul a[href="#${idPane}"]`).append(error);
-
-                return false;
-            }
-        });
     });
 }
