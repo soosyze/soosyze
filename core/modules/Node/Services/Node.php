@@ -335,8 +335,8 @@ class Node
         /* Supprime tous les dossiers et fichiers */
         foreach ($iterator as $file) {
             $file->isDir()
-                    ? \rmdir($file)
-                    : \unlink($file);
+                    ? \rmdir($file->getPathname())
+                    : \unlink($file->getPathname());
         }
         /* Supprime le dossier cible. */
         \rmdir($dir);

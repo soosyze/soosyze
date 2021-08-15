@@ -31,7 +31,7 @@ class Core extends App
                 ]
             ],
             'query'    => [
-                'class'     => 'SoosyzeCore\QueryBuilder\\Services\Query',
+                'class'     => 'SoosyzeCore\QueryBuilder\Services\Query',
                 'arguments' => [
                     'schema' => '@schema'
                 ]

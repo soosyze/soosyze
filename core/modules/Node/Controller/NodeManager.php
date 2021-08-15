@@ -168,7 +168,7 @@ class NodeManager extends \Soosyze\Controller
                     'link_type_sort'         => $linkSort->withQuery(http_build_query($paramsTypeSort)),
                     'nodes'                  => $nodes,
                     'order_by'               => $orderBy,
-                    'paginate'               => new Paginator($countData, self::$limit, $page, $linkPagination)
+                    'paginate'               => new Paginator($countData, self::$limit, $page, (string) $linkPagination)
         ]);
     }
 
