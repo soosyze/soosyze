@@ -85,7 +85,7 @@ class Menu extends \Soosyze\Controller
         if ($validator->isValid()) {
             $updateParents = [];
             foreach ($links as $link) {
-                $linkUpdate = [
+                $data = [
                     'active'       => $validator->getInput("active-{$link[ 'id' ]}") === 'on',
                     'has_children' => false,
                     'parent'       => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
@@ -93,12 +93,12 @@ class Menu extends \Soosyze\Controller
                 ];
 
                 self::query()
-                    ->update('menu_link', $linkUpdate)
+                    ->update('menu_link', $data)
                     ->where('id', '=', $link[ 'id' ])
                     ->execute();
 
-                if ($linkUpdate[ 'parent' ] >= 1 && !in_array($linkUpdate[ 'parent' ], $updateParents)) {
-                    $updateParents[] = $linkUpdate[ 'parent' ];
+                if ($data[ 'parent' ] >= 1 && !in_array($data[ 'parent' ], $updateParents)) {
+                    $updateParents[] = $data[ 'parent' ];
                 }
             }
             /* Mise à jour des parents. */
@@ -164,11 +164,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $data = [
-                'title'       => $validator->getInput('title'),
-                'name'        => Util::strSlug($validator->getInput('title'), '-'),
-                'description' => $validator->getInput('description')
-            ];
+            $data = $this->getData($validator);
 
             $this->container->callHook('menu.store.before', [ $validator, &$data ]);
             self::query()
@@ -248,10 +244,7 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.update.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $data = [
-                'title'       => $validator->getInput('title'),
-                'description' => $validator->getInput('description')
-            ];
+            $data = $this->getData($validator, $menu);
 
             $this->container->callHook('menu.update.before', [ $validator, &$data ]);
             self::query()
@@ -473,5 +466,19 @@ class Menu extends \Soosyze\Controller
                     'title'       => t('Menu title')
                 ])
                 ->setInputs($req->getParsedBody());
+    }
+
+    private function getData(Validator $validator, ?string $menu = null): array
+    {
+        $data = [
+            'description' => $validator->getInput('description'),
+            'title'       => $validator->getInput('title')
+        ];
+
+        if ($menu === null) {
+            $data[ 'name' ] = Util::strSlug($validator->getInput('title'), '-');
+        }
+
+        return $data;
     }
 }

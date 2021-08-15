@@ -126,47 +126,12 @@ class User extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $isEmail = ($user    = self::user()->getUser($validator->getInput('email')))
-            ? $user[ 'email' ]
-            : '';
-
-        $isUsername = ($user       = self::user()->getUserByUsername($validator->getInput('username')))
-            ? $user[ 'username' ]
-            : '';
-
-        $validator
-            ->addInput('is_email', $isEmail)
-            ->addInput('is_username', $isUsername)
-            ->addRule('email', 'required|email|max:254|!equal:@is_email')
-            ->addRule('username', 'required|string|max:255|!equal:@is_username')
-            ->setMessages([
-                'password_confirm' => [
-                    'equal' => [ 'must' => t(':label is incorrect') ]
-                ],
-                'email'            => [
-                    'equal' => [ 'not' => t('The :value :label is unavailable.') ]
-                ],
-                'username'         => [
-                    'equal' => [ 'not' => t('The :value :label is unavailable.') ]
-                ]
-        ]);
-
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
         $validatorRoles = $this->validRole($validator->getInput('roles', []));
 
         if ($validator->isValid() && $validatorRoles->isValid()) {
-            $data = [
-                'username'       => $validator->getInput('username'),
-                'email'          => $validator->getInput('email'),
-                'bio'            => $validator->getInput('bio'),
-                'name'           => $validator->getInput('name'),
-                'firstname'      => $validator->getInput('firstname'),
-                'password'       => self::auth()->hash($validator->getInput('password_new')),
-                'actived'        => (bool) $validator->getInput('actived'),
-                'time_installed' => (string) time(),
-                'timezone'       => 'Europe/Paris'
-            ];
+            $data = $this->getData($validator);
 
             $this->container->callHook('user.store.before', [ &$validator, &$data ]);
             self::query()->insertInto('user', array_keys($data))
@@ -272,49 +237,7 @@ class User extends \Soosyze\Controller
             return new Redirect($route);
         }
 
-        $validator = $this->getValidator($req)
-            ->setMessages([
-            'password_confirm' => [ 'equal' => [ 'must' => t(':label is incorrect') ] ],
-            'password'         => [ 'required' => [ 'must' => t(':label is incorrect') ] ]
-        ]);
-
-        /* En cas de modification du username. */
-        if ($isUpdateUsername = ($validator->getInput('username') !== $user[ 'username' ])) {
-            $isUsername = ($userName   = self::user()->getUserByUsername($validator->getInput('username')))
-                ? $userName[ 'username' ]
-                : '';
-            $validator
-                ->addInput('is_username', $isUsername)
-                ->addRule('username', 'required|string|max:255|!equal:@is_username')
-                ->setMessages([
-                    'username' => [
-                        'equal' => [ 'not' => t('The :value :label is unavailable.') ]
-                    ]
-            ]);
-        }
-
-        /* En cas de modification du email. */
-        if ($isUpdateEmail = ($validator->getInput('email') !== $user[ 'email' ])) {
-            $isEmail   = ($userEmail = self::user()->getUser($validator->getInput('email')))
-                ? $userEmail[ 'email' ]
-                : '';
-            $validator
-                ->addInput('is_email', $isEmail)
-                ->addRule('email', 'required|email|max:254|!equal:is_email')
-                ->setMessages([
-                    'email' => [
-                        'equal' => [ 'not' => t('The :value :label is unavailable.') ]
-                    ]
-            ]);
-        }
-
-        if ($isUpdateEmail || $isUpdateUsername) {
-            $validator->addRule('password', 'required|string');
-
-            if (!self::auth()->hashVerify($validator->getInput('password'), $user)) {
-                $validator->addInput('password', '');
-            }
-        }
+        $validator = $this->getValidator($req, $user);
 
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
@@ -329,28 +252,12 @@ class User extends \Soosyze\Controller
 
         if ($isValid) {
             /* Prépare les donnée à mettre à jour. */
-            $value = [
-                'username'  => $validator->getInput('username'),
-                'email'     => $validator->getInput('email'),
-                'bio'       => $validator->getInput('bio'),
-                'name'      => $validator->getInput('name'),
-                'firstname' => $validator->getInput('firstname')
-            ];
-
-            /* Si l'utilisateur à les droits d'administrer les autres utilisateurs. */
-            if (self::user()->isGranted('user.people.manage')) {
-                $value[ 'actived' ] = (bool) $validator->getInput('actived');
-            }
-
-            /* En cas de modification du mot de passe. */
-            if (($isUpdateMdp = $validator->getInput('password_new')) !== '') {
-                $value[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
-            }
+            $data = $this->getData($validator, $id);
 
             $this->container->callHook('user.update.before', [
-                &$validator, &$value, $id
+                &$validator, &$data, $id
             ]);
-            self::query()->update('user', $value)->where('user_id', '=', $id)->execute();
+            self::query()->update('user', $data)->where('user_id', '=', $id)->execute();
 
             $this->updateRole($validator, $id);
 
@@ -358,7 +265,7 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
             if (($userCurrent = self::user()->isConnected()) && $userCurrent[ 'user_id' ] == $id) {
-                $pwd = $isUpdateMdp
+                $pwd = !empty($data[ 'password' ])
                     ? $validator->getInput('password_new')
                     : $validator->getInput('password');
 
@@ -498,24 +405,25 @@ class User extends \Soosyze\Controller
         return $roles;
     }
 
-    private function getValidator(ServerRequestInterface $req): Validator
+    private function getValidator(ServerRequestInterface $req, ?array $user = null): Validator
     {
-        return (new Validator())
+        $passwordPolicy = self::user()->passwordPolicy();
+
+        $validator = (new Validator())
                 ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
                 ->setRules([
-                    /* max:254 RFC5321 - 4.5.3.1.3. */
                     'actived'          => 'bool',
                     'bio'              => '!required|string|max:255',
-                    'email'            => 'required|email|max:254',
+                    /* max:254 RFC5321 - 4.5.3.1.3. */
+                    'email'            => 'required|email|max:254|!equal:@is_email',
                     'firstname'        => '!required|string|max:255',
                     'name'             => '!required|string|max:255',
-                    'password'         => '!required|string',
                     'password_confirm' => 'required_with:password_new|string|equal:@password_new',
-                    'password_new'     => '!required|string|regex:' . self::user()->passwordPolicy(),
+                    'password_new'     => '!required|string|regex:' . $passwordPolicy,
                     'picture'          => '!required|image:jpeg,jpg,png|max:200Kb',
                     'roles'            => '!required|array',
                     'token_user_form'  => 'required|token',
-                    'username'         => 'required|string|max:255'
+                    'username'         => 'required|string|max:255|!equal:@is_username'
                 ])
                 ->setLabels([
                     'actived'          => t('Active'),
@@ -529,7 +437,76 @@ class User extends \Soosyze\Controller
                     'picture'          => t('Picture'),
                     'roles'            => t('User Roles'),
                     'username'         => t('User name')
-        ]);
+                ])
+                ->setMessages([
+                    'email'            => [ 'equal' => [ 'not' => t('The :value email is unavailable.') ] ],
+                    'password'         => [ 'required' => [ 'must' => t(':label is incorrect') ] ],
+                    'password_confirm' => [ 'equal' => [ 'must' => t(':label is incorrect') ] ],
+                    'username'         => [ 'equal' => [ 'not' => t('The :value username is unavailable.') ] ],
+                ]);
+
+        if ($user === null) {
+            $validator->addRule('password_new', 'required|string|regex:' . $passwordPolicy);
+            /* La vérification doit être faite à la création de l'utilisateur. */
+            $isUpdateUsername = true;
+            $isUpdateEmail    = true;
+        } else {
+            /* La vérification doit être faite si l'utilisateur met à jour ses informations. */
+            $isUpdateUsername = $validator->getInput('username') !== $user[ 'username' ];
+            $isUpdateEmail    = $validator->getInput('email') !== $user[ 'email' ];
+
+            if ($isUpdateEmail || $isUpdateUsername) {
+                $validator->addRule('password', 'required|string');
+
+                if (!self::auth()->hashVerify($validator->getInput('password'), $user)) {
+                    $validator->addInput('password', '');
+                }
+            }
+        }
+
+        $isUsername = $isUpdateUsername && ($userName = self::user()->getUserByUsername($validator->getInput('username')))
+            ? $userName[ 'username' ]
+            : '';
+
+        $isEmail   = $isUpdateEmail && ($userEmail = self::user()->getUser($validator->getInput('email')))
+            ? $userEmail[ 'email' ]
+            : '';
+
+        $validator
+            ->addInput('is_email', $isEmail)
+            ->addInput('is_username', $isUsername);
+
+        return $validator;
+    }
+
+    private function getData(Validator $validator, ?int $id = null): array
+    {
+        /* Prépare les donnée à mettre à jour. */
+        $data = [
+            'bio'       => $validator->getInput('bio'),
+            'email'     => $validator->getInput('email'),
+            'firstname' => $validator->getInput('firstname'),
+            'name'      => $validator->getInput('name'),
+            'username'  => $validator->getInput('username'),
+        ];
+
+        if ($id === null) {
+            $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
+        } else {
+            $data[ 'time_installed' ] = (string) time();
+            $data[ 'timezone' ]       = 'Europe/Paris';
+            /* En cas de modification du mot de passe. */
+            if ($validator->getInput('password_new') !== '') {
+                $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
+            }
+        }
+
+        /* Si l'utilisateur à les droits d'administrer les autres utilisateurs. */
+        if (self::user()->isGranted('user.people.manage')) {
+            $data[ 'actived' ] = (bool) $validator->getInput('actived');
+        }
+
+        return $data;
     }
 
     private function updateRole(Validator $validator, int $idUser): void
