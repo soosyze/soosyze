@@ -85,6 +85,7 @@
             </header>
             <?php endif; ?>
 
+            <div class="messages"></div>
             <?php if (!empty($section[ 'messages' ])): ?>
 
                 <?php echo $section[ 'messages' ]; ?>

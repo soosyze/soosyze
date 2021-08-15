@@ -45,7 +45,7 @@
         </nav>
     </div>
     <div class="col-md-9">
-        <?php echo $form->form_open([ 'id' => 'form-package' ]); ?>
+        <?php echo $form->form_open(); ?>
         <?php foreach ($packages as $package => $modules): ?>
 
         <fieldset id="<?php echo $package; ?>" class="responsive package">

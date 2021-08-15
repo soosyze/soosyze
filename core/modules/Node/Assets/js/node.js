@@ -82,36 +82,6 @@ $(function () {
             }
         });
     });
-
-    const checkValidateFormNode = function () {
-        $('#form-node .tab-pane').each(function () {
-            let idPane = $(this).attr("id");
-
-            $(this).find('input, textarea, select').each(function () {
-
-                if (this.checkValidity() === false || $(this).hasClass('is-invalid')) {
-                    const error = `
-                    <span class="fieldset-error" title="Error">
-                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
-                    <span>`;
-
-                    $(`ul a[href="#${idPane}"]`).css("color", "red");
-                    $(`ul a .fieldset-error`).remove();
-                    $(`ul a[href="#${idPane}"]`).append(error);
-
-                    return false;
-                }
-            });
-            $(this).find('.trumbowyg-textarea').each(function () {
-
-                if (this.checkValidity() === false || $(this).hasClass('is-invalid')) {
-                    $(this).closest(`.trumbowyg-box`).css("border-color", "red");
-                }
-            });
-        });
-    };
-
-    $('#form-node #submit').on('click', checkValidateFormNode);
 });
 
 function sortEntity(evt, target) {

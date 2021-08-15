@@ -7,7 +7,6 @@ namespace SoosyzeCore\System\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
 class ModulesManager extends \Soosyze\Controller
@@ -29,6 +28,8 @@ class ModulesManager extends \Soosyze\Controller
 
         $form = new FormBuilder([
             'action' => self::router()->getRoute('system.module.update'),
+            'class'  => 'form-api',
+            'id'     => 'form-package',
             'method' => 'post'
         ]);
 
@@ -120,9 +121,10 @@ class ModulesManager extends \Soosyze\Controller
             ->setInputs($req->getParsedBody());
 
         if (!$validator->isValid()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return new Redirect($route);
+            return $this->json(400, [
+                    'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                    'errors_keys' => []
+            ]);
         }
 
         $data = $validator->getInput('modules', []);
@@ -134,11 +136,14 @@ class ModulesManager extends \Soosyze\Controller
 
         if (empty($outInstall) && empty($outUninstall)) {
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $outInstall + $outUninstall;
+
+            return $this->json(200, [ 'redirect' => $route ]);
         }
 
-        return new Redirect($route);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $outInstall + $outUninstall ],
+                'errors_keys' => []
+        ]);
     }
 
     private function installModule(array $moduleActive, array $data): array

@@ -6,7 +6,6 @@ namespace SoosyzeCore\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
@@ -33,14 +32,8 @@ class Entity extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $content = [];
-
-        $this->container->callHook('entity.create.form.data', [ &$content, $node, $entity ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
+        $values = [];
+        $this->container->callHook('entity.create.form.data', [ &$values, $node, $entity ]);
 
         $form = (new FormNode([
             'action'  => self::router()->getRoute('entity.store', [
@@ -49,21 +42,17 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content)
+            ->setValues($values)
             ->setFields($fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
 
-        $this->container->callHook('entity.create.form', [ &$form, $content, $node, $entity ]);
+        $this->container->callHook('entity.create.form', [ &$form, $values, $node, $entity ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -82,17 +71,14 @@ class Entity extends \Soosyze\Controller
     public function store(int $idNode, string $entity, ServerRequestInterface $req): ResponseInterface
     {
         if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-            $_SESSION[ 'errors_keys' ]          = [];
-
-            return new Redirect(
-                self::router()->getRoute('entity.create', [
-                    ':id_node' => $idNode,
-                    ':entity'  => $entity
-                ])
-            );
+            return $this->json(400, [
+                    'messages'    => [
+                        'errors' => [
+                            t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                        ]
+                    ],
+                    'errors_keys' => []
+            ]);
         }
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
@@ -161,22 +147,15 @@ class Entity extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
 
-            return new Redirect(
-                self::router()->getRoute('node.edit', [
-                    ':id_node' => $idNode
-                ])
-            );
+            return $this->json(201, [
+                'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
+            ]);
         }
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        return new Redirect(
-            self::router()->getRoute('entity.create', [
-                ':id_node' => $idNode,
-                ':entity'  => $entity
-            ])
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function edit(int $idNode, string $entity, int $idEntity, ServerRequestInterface $req): ResponseInterface
@@ -190,18 +169,13 @@ class Entity extends \Soosyze\Controller
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
             return $this->get404($req);
         }
-        if (!($content = self::node()->getEntity($entity, $idEntity))) {
+        if (!($values = self::node()->getEntity($entity, $idEntity))) {
             return $this->get404($req);
         }
 
         $this->container->callHook('entity.edit.form.data', [
-            &$content, $node, $entity, $idEntity
+            &$values, $node, $entity, $idEntity
         ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = (new FormNode([
             'action'  => self::router()->getRoute('entity.update', [
@@ -211,20 +185,17 @@ class Entity extends \Soosyze\Controller
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
-            ->setValues($content)
+            ->setValues($values)
             ->setFields($fieldsEntity)
             ->entityFieldset()
             ->actionsEntitySubmit();
 
-        $this->container->callHook('entity.edit.form', [ &$form, $content, $node, $entity, $idEntity ]);
+        $this->container->callHook('entity.edit.form', [ &$form, $values, $node, $entity, $idEntity ]);
 
         $messages = [];
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -242,18 +213,14 @@ class Entity extends \Soosyze\Controller
     public function update(int $idNode, string $entity, int $idEntity, ServerRequestInterface $req): ResponseInterface
     {
         if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-            $_SESSION[ 'errors_keys' ]          = [];
-
-            return new Redirect(
-                self::router()->getRoute('entity.update', [
-                    ':id_node'   => $idNode,
-                    ':entity'    => $entity,
-                    ':id_entity' => $idEntity
-                ])
-            );
+            return $this->json(400, [
+                    'messages'    => [
+                        'errors' => [
+                            t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                        ]
+                    ],
+                    'errors_keys' => []
+            ]);
         }
 
         if (!($node = self::node()->byId($idNode))) {
@@ -314,23 +281,15 @@ class Entity extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(
-                self::router()->getRoute('node.edit', [
-                    ':id_node' => $idNode
-                ])
-            );
+            return $this->json(200, [
+                'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
+            ]);
         }
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($files);
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 
-        return new Redirect(
-            self::router()->getRoute('entity.update', [
-                ':id_node'   => $idNode,
-                ':entity'    => $entity,
-                ':id_entity' => $idEntity
-            ])
-        );
+        return $this->json(400, [
+            'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+            'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function delete(int $idNode, string $typeEntity, int $idEntity, ServerRequestInterface $req): ResponseInterface
@@ -376,20 +335,20 @@ class Entity extends \Soosyze\Controller
                 ->execute();
 
             $this->deleteFile($fieldsEntity, $entity);
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('node.edit', [
+                        ':id_node'   => $idNode,
+                        ':entity'    => $typeEntity,
+                        ':id_entity' => $idEntity
+                    ])
+            ]);
         }
 
-        return new Redirect(
-            self::router()->getRoute('node.edit', [
-                ':id_node'   => $idNode,
-                ':entity'    => $typeEntity,
-                ':id_entity' => $idEntity
-            ]),
-            302
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function deleteFile(array $fieldsEntity, array $entity): void

@@ -7,7 +7,6 @@ namespace SoosyzeCore\User\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
@@ -72,11 +71,6 @@ class User extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('user.create.form.data', [ &$values ]);
 
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
         $form = (new FormUser([
             'action'  => self::router()->getRoute('user.store'),
             'enctype' => 'multipart/form-data',
@@ -96,10 +90,6 @@ class User extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
-        }
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -116,12 +106,14 @@ class User extends \Soosyze\Controller
     public function store(ServerRequestInterface $req): ResponseInterface
     {
         if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-            $_SESSION[ 'errors_keys' ]          = [];
-
-            return new Redirect(self::router()->getRoute('user.create'));
+            return $this->json(400, [
+                    'messages'    => [
+                        'errors' => [
+                            t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                        ]
+                    ],
+                    'errors_keys' => []
+            ]);
         }
 
         $validator = $this->getValidator($req);
@@ -152,14 +144,15 @@ class User extends \Soosyze\Controller
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
 
-            return new Redirect(self::router()->getRoute('user.admin'));
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('user.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout(['picture']);
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('user.create'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function edit(int $id, ServerRequestInterface $req): ResponseInterface
@@ -169,11 +162,6 @@ class User extends \Soosyze\Controller
         }
 
         $this->container->callHook('user.edit.form.data', [ &$values, $id ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = array_merge($content, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = (new FormUser([
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
@@ -201,10 +189,6 @@ class User extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
-        }
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -225,16 +209,15 @@ class User extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $route = self::router()->getRoute('user.edit', [ ':id' => $id ]);
-
         if ($req->isMaxSize()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = [
-                t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
-            ];
-
-            $_SESSION[ 'errors_keys' ] = [];
-
-            return new Redirect($route);
+            return $this->json(400, [
+                    'messages'    => [
+                        'errors' => [
+                            t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
+                        ]
+                    ],
+                    'errors_keys' => []
+            ]);
         }
 
         $validator = $this->getValidator($req, $user);
@@ -273,14 +256,15 @@ class User extends \Soosyze\Controller
             }
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect($route);
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('user.edit', [ ':id' => $id ])
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputsWithout(['picture']);
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors() + $validatorRole->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect($route);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() + $validatorRole->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function remove(int $id, ServerRequestInterface $req): ResponseInterface
@@ -293,6 +277,7 @@ class User extends \Soosyze\Controller
 
         $form = (new FormBuilder([
                 'action' => self::router()->getRoute('user.delete', [ ':id' => $id ]),
+                'class' => 'form-api',
                 'method' => 'post'
                 ]))
             ->group('user-fieldset', 'fieldset', function ($form) {
@@ -362,11 +347,16 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.delete.after', [
                 $validator, $user, $id
             ]);
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
+
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('user.admin')
+            ]);
         }
 
-        return new Redirect(self::router()->getRoute('user.admin'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function validRole(array $roles = []): Validator

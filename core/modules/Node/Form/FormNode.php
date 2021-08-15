@@ -100,7 +100,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         Router $router,
         Config $config
     ) {
-        parent::__construct($attr);
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
         $this->file   = $file;
         $this->query  = $query;
         $this->router = $router;

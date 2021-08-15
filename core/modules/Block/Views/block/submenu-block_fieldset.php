@@ -1,7 +1,7 @@
 
 <?php if ($menu): ?>
 
-<nav>
+<nav class="pane-block">
     <ul class="nav nav-pills">
         <?php foreach ($menu as $link): ?>
 
