@@ -6,7 +6,6 @@ namespace SoosyzeCore\Contact\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Contact\Form\FormContact;
 
@@ -22,13 +21,7 @@ class Contact extends \Soosyze\Controller
     public function form(): ResponseInterface
     {
         $values = [];
-
         $this->container->callHook('contact.form.data', [ &$values ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('contact.check');
 
@@ -42,10 +35,6 @@ class Contact extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -99,16 +88,19 @@ class Contact extends \Soosyze\Controller
 
             if ($mail->send()) {
                 $_SESSION[ 'messages' ][ 'success' ] = [ t('Your message has been sent.') ];
+
+                return $this->json(200, [ 'redirect' => self::router()->getRoute('contact.form') ]);
             } else {
-                $_SESSION[ 'inputs' ]               = $validator->getInputs();
-                $_SESSION[ 'messages' ][ 'errors' ] = [ t('An error prevented your email from being sent.') ];
+                return $this->json(400, [
+                        'messages'    => [ t('An error prevented your email from being sent.') ],
+                        'errors_keys' => []
+                ]);
             }
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputs();
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
         }
 
-        return new Redirect(self::router()->getRoute('contact.form'));
+        return $this->json(400, [
+                'messages'    => $validator->getKeyErrors(),
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 }

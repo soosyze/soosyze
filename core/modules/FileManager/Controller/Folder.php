@@ -38,10 +38,6 @@ class Folder extends \Soosyze\Controller
         );
 
         $values = [];
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('filemanager.folder.store', [ ':path' => $path ]);
 
@@ -114,10 +110,6 @@ class Folder extends \Soosyze\Controller
         }
 
         $values = self::filemanager()->parseDir($spl, $path);
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('filemanager.folder.update', [ ':path' => $path ]);
 

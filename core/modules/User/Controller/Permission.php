@@ -6,7 +6,6 @@ namespace SoosyzeCore\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 
 class Permission extends \Soosyze\Controller
 {
@@ -99,9 +98,10 @@ class Permission extends \Soosyze\Controller
             $this->deletePermission($id, $perm[ $id ], $post[ $id ]);
         }
         $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        $route                               = self::router()->getRoute('user.permission.admin');
 
-        return new Redirect($route);
+        return $this->json(200, [
+                'redirect' => self::router()->getRoute('user.permission.admin')
+        ]);
     }
 
     private function storePermission(

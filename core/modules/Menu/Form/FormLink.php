@@ -32,7 +32,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(array $attr, Router $router)
     {
-        parent::__construct($attr);
+        parent::__construct($attr + ['class' => 'form-api']);
         $this->router = $router;
     }
 

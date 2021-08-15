@@ -23,14 +23,7 @@ class NodeApi extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $content = [];
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $content = array_merge($content, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
-
-        $content[ 'current_path' ] = self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
+        $values[ 'current_path' ] = self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
 
         $pathsSettings = self::node()->getPathSettings();
 
@@ -48,7 +41,7 @@ class NodeApi extends \Soosyze\Controller
         $action = self::router()->getRoute('node.api.delete', [ ':id_node' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'post' ], self::router()))
-            ->setValues($content, $useInPath)
+            ->setValues($values, $useInPath)
             ->makeFields();
 
         $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
@@ -57,10 +50,6 @@ class NodeApi extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -74,9 +63,6 @@ class NodeApi extends \Soosyze\Controller
 
     public function delete(int $idNode, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
         }
@@ -146,7 +132,6 @@ class NodeApi extends \Soosyze\Controller
             return $this->json(200, $out);
         }
 
-        $out[ 'inputs' ]               = $validator->getInputs();
         $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
         $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
 

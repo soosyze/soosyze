@@ -6,7 +6,6 @@ namespace SoosyzeCore\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\System\Form\FormThemeAdmin;
 use SoosyzeCore\System\Form\FormThemePublic;
@@ -95,9 +94,6 @@ class Theme extends \Soosyze\Controller
     {
         $themes = $this->getThemes($type);
 
-        $route     = self::router()->getRoute('system.theme.admin', [
-            ':type' => $type
-        ]);
         $validator = (new Validator())
             ->setRules([
                 'token' => 'token',
@@ -106,20 +102,26 @@ class Theme extends \Soosyze\Controller
             ->setInputs($req->getQueryParams() + [ 'name' => $name ]);
 
         if (!$validator->isValid()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return new Redirect($route, 302);
+            return $this->json(400, [
+                    'messages' => [ 'errors' => $validator->getKeyErrors() ]
+            ]);
         }
 
         $outInstall = $this->installTheme($type, $name);
 
         if (empty($outInstall)) {
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $outInstall;
+
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('system.theme.admin', [
+                        ':type' => $type
+                    ])
+            ]);
         }
 
-        return new Redirect($route, 302);
+        return $this->json(400, [
+                'messages' => [ 'errors' => $validator->getKeyErrors() ]
+        ]);
     }
 
     public function edit(string $type): ResponseInterface
@@ -130,6 +132,7 @@ class Theme extends \Soosyze\Controller
             'action'  => self::router()->getRoute('system.theme.update', [
                 ':type' => $type
             ]),
+            'class'   => 'form-api',
             'enctype' => 'multipart/form-data',
             'method'  => 'post'
         ];
@@ -209,17 +212,16 @@ class Theme extends \Soosyze\Controller
             }
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'inputs' ]               = $validator->getInputsWithout($inputsFile);
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            return $this->json(200, [
+                'redirect' => self::router()->getRoute('system.theme.admin', [ ':type' => $type ])
+            ]);
         }
 
-        return new Redirect(
-            self::router()->getRoute('system.theme.admin', [
-                ':type' => $type
-            ])
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function getListThemeSubmenu(string $keyRoute): array

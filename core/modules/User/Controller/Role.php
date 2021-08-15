@@ -6,7 +6,6 @@ namespace SoosyzeCore\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUserRole;
 
@@ -22,11 +21,6 @@ class Role extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('role.create.form.data', [ &$values ]);
 
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values += $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
-
         $form = (new FormUserRole([
             'action' => self::router()->getRoute('user.role.store'),
             'method' => 'post'
@@ -40,10 +34,6 @@ class Role extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -63,6 +53,7 @@ class Role extends \Soosyze\Controller
         $validator = $this->getValidator($req);
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             $data = $this->getData($validator);
 
@@ -72,14 +63,15 @@ class Role extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('user.role.admin'));
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('user.role.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('user.role.create'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function edit(int $id, ServerRequestInterface $req): ResponseInterface
@@ -89,11 +81,6 @@ class Role extends \Soosyze\Controller
         }
 
         $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = array_merge($values, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = (new FormUserRole([
             'action' => self::router()->getRoute('user.role.update', [ ':id' => $id ]),
@@ -108,10 +95,6 @@ class Role extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -136,6 +119,7 @@ class Role extends \Soosyze\Controller
         $validator = $this->getValidator($req);
 
         $this->container->callHook('role.update.validator', [ &$validator ]);
+
         if ($validator->isValid()) {
             $data = $this->getData($validator);
 
@@ -149,14 +133,15 @@ class Role extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('user.role.admin'));
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('user.role.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('user.role.edit', [ ':id' => $id ]));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function remove(int $id, ServerRequestInterface $req): ResponseInterface
@@ -166,11 +151,6 @@ class Role extends \Soosyze\Controller
         }
 
         $this->container->callHook('role.remove.form.data', [ &$data, $id ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $data = array_merge($data, $_SESSION[ 'inputs' ]);
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = (new FormUserRole([
             'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ]),
@@ -184,10 +164,6 @@ class Role extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -241,16 +217,15 @@ class Role extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('user.role.admin'));
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('user.role.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('user.role.remove', [
-                ':id' => $id
-        ]));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function getValidator(ServerRequestInterface $req): Validator

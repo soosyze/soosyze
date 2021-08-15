@@ -24,6 +24,11 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
      */
     private static $attrGrp = [ 'class' => 'form-group' ];
 
+    public function __construct(array $attr)
+    {
+        parent::__construct($attr + ['class' => 'form-api']);
+    }
+
     public function labelGroup(FormGroupBuilder &$form): self
     {
         $form->group('role_label-group', 'div', function ($form) {
