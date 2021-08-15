@@ -7,7 +7,6 @@ namespace SoosyzeCore\User\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 
 class RoleManager extends \Soosyze\Controller
@@ -25,6 +24,7 @@ class RoleManager extends \Soosyze\Controller
 
         $form = new FormBuilder([
             'action' => self::router()->getRoute('user.role.admin.check'),
+            'class'  => 'form-api',
             'method' => 'post'
         ]);
 
@@ -60,10 +60,6 @@ class RoleManager extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -116,11 +112,15 @@ class RoleManager extends \Soosyze\Controller
             }
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-            $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('user.role.admin')
+            ]);
         }
 
-        return new Redirect(self::router()->getRoute('user.role.admin'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 }

@@ -7,7 +7,6 @@ namespace SoosyzeCore\FileManager\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Form\FormPermission;
 use SoosyzeCore\FileManager\Services\FileManager;
@@ -22,10 +21,6 @@ class FilePermission extends \Soosyze\Controller
     public function create(ServerRequestInterface $req): ResponseInterface
     {
         $values = [];
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
         $this->container->callHook('filemanager.permission.create.form.data', [ &$values ]);
 
         $action = self::router()->getRoute('filemanager.permission.store');
@@ -43,9 +38,6 @@ class FilePermission extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -96,14 +88,15 @@ class FilePermission extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(self::router()->getRoute('filemanager.permission.create'));
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function edit(int $id, ServerRequestInterface $req): ResponseInterface
@@ -117,11 +110,6 @@ class FilePermission extends \Soosyze\Controller
         $values[ 'roles' ] = self::fileprofil()->getIdRolesUser($id);
 
         $this->container->callHook('filemanager.permission.edit.form.data', [ &$values ]);
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $action = self::router()->getRoute('filemanager.permission.update', [ ':id' => $id ]);
 
@@ -138,10 +126,6 @@ class FilePermission extends \Soosyze\Controller
         if (isset($_SESSION[ 'messages' ])) {
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
-        }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
         }
 
         return self::template()
@@ -197,18 +181,15 @@ class FilePermission extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
 
-            return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+            ]);
         }
 
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return new Redirect(
-            self::router()->getRoute('filemanager.permission.edit', [
-                ':id' => $id
-            ])
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function remove(int $id, ServerRequestInterface $req): ResponseInterface
@@ -221,7 +202,7 @@ class FilePermission extends \Soosyze\Controller
             ':id' => $id
         ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'post' ]))
             ->group('profil-fieldset', 'fieldset', function ($form) {
                 $form->legend('profil-legend', t('Delete files permission'))
                 ->group('info-group', 'div', function ($form) {
@@ -288,16 +269,15 @@ class FilePermission extends \Soosyze\Controller
                 $validator, $id
             ]);
 
-            return new Redirect(self::router()->getRoute('filemanager.permission.admin'));
+            return $this->json(200, [
+                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+            ]);
         }
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
 
-        return new Redirect(
-            self::router()->getRoute('filemanager.permission.remove', [
-                ':id' => $id
-            ])
-        );
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function storeProfilRole(Validator $validator, int $profilFileId): void

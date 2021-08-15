@@ -123,7 +123,7 @@ class Block extends \Soosyze\Controller
             ':theme'   => $theme
         ]);
 
-        $form = (new FormBlock([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'post' ]))
             ->setValues($values)
             ->setRoles(self::user()->getRoles())
             ->makeFields();
@@ -227,11 +227,10 @@ class Block extends \Soosyze\Controller
             ]);
         }
 
-        $out[ 'inputs' ]               = $validator->getInputs();
-        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return $this->json(400, $out);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     /**
@@ -262,7 +261,7 @@ class Block extends \Soosyze\Controller
             ':id'      => $values[ 'block_id' ]
         ]);
 
-        $form = (new FormBlock([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'post' ]))
             ->setValues($values)
             ->setRoles(self::user()->getRoles())
             ->makeFields();
@@ -357,11 +356,10 @@ class Block extends \Soosyze\Controller
             ]);
         }
 
-        $out[ 'inputs' ]               = $validator->getInputs();
-        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return $this->json(400, $out);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     /**
@@ -434,11 +432,10 @@ class Block extends \Soosyze\Controller
             ]);
         }
 
-        $out[ 'inputs' ]               = $validator->getInputs();
-        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-
-        return $this->json(400, $out);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     private function find(int $id): array

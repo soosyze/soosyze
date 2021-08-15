@@ -48,6 +48,11 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
      */
     private $roles = [];
 
+    public function __construct(array $attr)
+    {
+        parent::__construct($attr + ['class' => 'form-api']);
+    }
+
     public function setRoles(array $roles): self
     {
         $this->roles = array_merge($this->roles, $roles);

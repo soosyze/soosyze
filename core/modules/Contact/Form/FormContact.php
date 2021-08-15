@@ -21,6 +21,11 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
      */
     private static $attrGrp = [ 'class' => 'form-group' ];
 
+    public function __construct(array $attr)
+    {
+        parent::__construct($attr + ['class' => 'form-api']);
+    }
+
     public function makeFields(): self
     {
         $this->nameGroup()

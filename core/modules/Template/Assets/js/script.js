@@ -24,16 +24,16 @@ var debounce = function (func, wait, immediate) {
 
 var renderMessage = function (selector, data) {
     $(selector).html('');
-    if (data.messages != null && data.messages.success != null) {
+    if (data != undefined && data.messages != undefined && data.messages.success != undefined) {
         $.each(data.messages.success, function (key, val) {
             $(selector).append(`<div class="alert alert-success" role="alert"><p>${val}</p></div>`);
         });
-    } else if (data.messages !== undefined && data.messages.errors !== undefined) {
+    } else if (data != undefined && data.messages != undefined && data.messages.errors != undefined) {
         $.each(data.messages.errors, function (key, val) {
             $(selector).append(`<div class="alert alert-danger" role="alert"><p>${val}</p></div>`);
         });
         $.each(data.errors_keys, function (key, val) {
-            $(`.modal #${val}`).css('border-color', '#f00');
+            $(`#${val}`).addClass('is-invalid');
         });
     }
 }

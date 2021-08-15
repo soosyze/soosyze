@@ -6,7 +6,6 @@ namespace SoosyzeCore\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
@@ -21,11 +20,6 @@ class Register extends \Soosyze\Controller
     public function create(): ResponseInterface
     {
         $values = [];
-
-        if (isset($_SESSION[ 'inputs' ])) {
-            $values = $_SESSION[ 'inputs' ];
-            unset($_SESSION[ 'inputs' ]);
-        }
 
         $form = (new FormUser([
             'action' => self::router()->getRoute('user.register.store'),
@@ -48,10 +42,6 @@ class Register extends \Soosyze\Controller
             $messages = $_SESSION[ 'messages' ];
             unset($_SESSION[ 'messages' ]);
         }
-        if (isset($_SESSION[ 'errors_keys' ])) {
-            $form->addAttrs($_SESSION[ 'errors_keys' ], [ 'class' => 'is-invalid' ]);
-            unset($_SESSION[ 'errors_keys' ]);
-        }
 
         if (($connectUrl = self::config()->get('settings.connect_url', ''))) {
             $connectUrl = '/' . $connectUrl;
@@ -73,7 +63,6 @@ class Register extends \Soosyze\Controller
 
     public function store(ServerRequestInterface $req): ResponseInterface
     {
-        $route     = self::router()->getRoute('user.register.create');
         $validator = (new Validator())->setInputs($req->getParsedBody());
 
         $isEmail = ($user = self::user()->getUser($validator->getInput('email')))
@@ -141,16 +130,23 @@ class Register extends \Soosyze\Controller
                 ->values([ $user[ 'user_id' ], 2 ])
                 ->execute();
 
-            $this->sendMailRegister($data[ 'email' ]);
             $this->container->callHook('register.store.after', [ $validator ]);
 
-            return new Redirect($route);
-        }
-        $_SESSION[ 'inputs' ]               = $validator->getInputs();
-        $_SESSION[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-        $_SESSION[ 'errors_keys' ]          = $validator->getKeyInputErrors();
+            if ($this->sendMailRegister($data[ 'email' ])) {
+                $_SESSION[ 'messages' ][ 'success' ][] = t(
+                    'An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.'
+                );
 
-        return new Redirect($route);
+                return $this->json(201, [
+                        'redirect' => self::router()->getRoute('user.register.create')
+                ]);
+            }
+        }
+
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() + [ t('An error prevented your email from being sent.') ] ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function activate(int $id, string $token, ServerRequestInterface $req): ResponseInterface
@@ -170,12 +166,14 @@ class Register extends \Soosyze\Controller
             t('Your user account has just been activated, you can now login.')
         ];
 
-        return new Redirect(self::router()->getRoute('user.login', [
-            ':url' => ''
-        ]));
+        return $this->json(200, [
+                'redirect' => self::router()->getRoute('user.login', [
+                    ':url' => ''
+                ])
+        ]);
     }
 
-    private function sendMailRegister(string $from): void
+    private function sendMailRegister(string $from): bool
     {
         $user     = self::user()->getUser($from);
         $urlReset = self::router()->getRoute('user.activate', [
@@ -195,10 +193,6 @@ class Register extends \Soosyze\Controller
             ->message($message)
             ->isHtml(true);
 
-        if ($mail->send()) {
-            $_SESSION[ 'messages' ][ 'success' ][] = t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.');
-        } else {
-            $_SESSION[ 'messages' ][ 'errors' ][] = t('An error prevented your email from being sent.');
-        }
+        return $mail->send();
     }
 }

@@ -29,7 +29,7 @@
     </div>
 
     <div class="col-md-9">
-        <form method="post" action="<?php echo $link_update ?>" id="form-permission">
+        <form method="post" action="<?php echo $link_update ?>" id="form-permission" class="form-api">
 
             <?php foreach ($modules as $key => $module): ?>
             <fieldset id="<?php echo \Soosyze\Components\Util\Util::strSlug($key); ?>" class="modules responsive">
