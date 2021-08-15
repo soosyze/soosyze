@@ -62,7 +62,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ':content' => t('Learn more about the Markdown format')
                     ]);
                 }, self::$attrGrp);
-            })
+        })
             ->group('node_default_url-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('node_default_url-legend', t('Url'))
                 ->group('node_default_url-group', 'div', function ($form) use ($data) {
