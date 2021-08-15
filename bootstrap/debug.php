@@ -182,7 +182,7 @@ function parseArg($args)
          * __PHP_Incomplete_Class lorsque vous utilisez des objets en session
          * si vous déclarez vos classes avant session_start().
          */
-        elseif ($arg instanceof \stdClass || $arg instanceof \__PHP_Incomplete_Class) {
+        elseif (is_object($arg) || $arg instanceof \__PHP_Incomplete_Class) {
             $html .= '<span class="arg-object">' . get_class($arg) . '</span>, ';
         } elseif (is_numeric($arg)) {
             $html .= '<span class="arg-numeric">' . $arg . '</span>, ';
@@ -223,7 +223,5 @@ function parseCode($code)
         E_USER_DEPRECATED   => 'E_USER_DEPRECATED',
     ];
 
-    return isset($type[ $code ])
-        ? $type[ $code ]
-        : '';
+    return $type[ $code ] ?? '';
 }

@@ -392,7 +392,7 @@ class Entity extends \Soosyze\Controller
         );
     }
 
-    private function deleteFile(array $fieldsEntity, string $entity): void
+    private function deleteFile(array $fieldsEntity, array $entity): void
     {
         foreach ($fieldsEntity as $field) {
             if (!in_array($field[ 'field_type' ], [ 'image', 'file' ])) {

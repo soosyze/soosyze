@@ -431,7 +431,7 @@ class File extends \Soosyze\Controller
 
         return (new Response(200, $stream))
                 ->withHeader('content-type', 'application/octet-stream')
-                ->withHeader('content-length', $stream->getSize())
+                ->withHeader('content-length', (string) $stream->getSize())
                 ->withHeader('content-disposition', 'attachment; filename=' . substr("$name$ext", 1))
                 ->withHeader('pragma', 'no-cache')
                 ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')

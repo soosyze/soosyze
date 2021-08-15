@@ -165,7 +165,7 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookFolderAdmin(?ServerRequestInterface $req = null, ?array $user = null): bool
     {
-        $profils = $this->fileProfil->getProfilsFileByUser($user[ 'user_id' ]);
+        $profils = $this->fileProfil->getProfilsFileByUser($user[ 'user_id' ] ?? null);
 
         return !empty($profils);
     }
