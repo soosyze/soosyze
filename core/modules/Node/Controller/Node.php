@@ -150,47 +150,29 @@ class Node extends \Soosyze\Controller
             $this->container->callHook('node.entity.store.after', [ $validator, $type ]);
 
             /* Rassemble les champs personnalisés dans la node. */
-            $node = [
-                'date_changed'     => (string) time(),
-                'date_created'     => (string) strtotime($validator->getInput('date_created')),
-                'entity_id'        => self::schema()->getIncrement('entity_' . $type),
-                'meta_description' => $validator->getInput('meta_description'),
-                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
-                'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
-                'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
-                'meta_title'       => $validator->getInput('meta_title'),
-                'sticky'           => (bool) $validator->getInput('sticky'),
-                'node_status_id'   => (int) $validator->getInput('node_status_id'),
-                'title'            => $validator->getInput('title'),
-                'type'             => $type,
-                'user_id'          => $validator->getInput('user_id') === ''
-                    ? null
-                    : (int) $validator->getInput('user_id')
-            ];
+            $data = $this->getData($validator, $type);
 
-            $this->container->callHook('node.store.before', [ $validator, &$node ]);
+            $this->container->callHook('node.store.before', [ $validator, &$data ]);
             self::query()
-                ->insertInto('node', array_keys($node))
-                ->values($node)
+                ->insertInto('node', array_keys($data))
+                ->values($data)
                 ->execute();
             $this->container->callHook('node.store.after', [ $validator ]);
 
             /* Télécharge et enregistre les fichiers. */
-            $node[ 'id' ] = self::schema()->getIncrement('node');
+            $data[ 'id' ] = self::schema()->getIncrement('node');
 
             foreach ($fields as $value) {
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $this->saveFile($node, $value[ 'field_name' ], $validator);
+                    $this->saveFile($data, $value[ 'field_name' ], $validator);
                 }
             }
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
 
-            $idNode = self::schema()->getIncrement('node');
-
             return new Redirect(
                 $fieldsRelation
-                ? self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
+                ? self::router()->getRoute('node.edit', [ ':id_node' => $data[ 'id' ] ])
                 : self::router()->getRoute('node.admin')
             );
         }
@@ -364,27 +346,13 @@ class Node extends \Soosyze\Controller
                 $validator, $node, $idNode
             ]);
 
-            $value = [
-                'date_changed'     => (string) time(),
-                'date_created'     => strtotime($validator->getInput('date_created')),
-                'meta_description' => $validator->getInput('meta_description'),
-                'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
-                'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
-                'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
-                'meta_title'       => $validator->getInput('meta_title'),
-                'node_status_id'   => (int) $validator->getInput('node_status_id'),
-                'sticky'           => (bool) $validator->getInput('sticky'),
-                'title'            => $validator->getInput('title'),
-                'user_id'          => $validator->getInput('user_id') === ''
-                    ? null
-                    : (int) $validator->getInput('user_id')
-            ];
+            $data = $this->getData($validator);
 
             $this->container->callHook('node.update.before', [
-                $validator, &$value, $idNode
+                $validator, &$data, $idNode
             ]);
             self::query()
-                ->update('node', $value)
+                ->update('node', $data)
                 ->where('id', '=', $idNode)
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $idNode ]);
@@ -731,6 +699,32 @@ class Node extends \Soosyze\Controller
         }
 
         return $validator;
+    }
+
+    private function getData(Validator $validator, ?string $type = null): array
+    {
+        $data = [
+            'date_changed'     => (string) time(),
+            'date_created'     => (string) strtotime($validator->getInput('date_created')),
+            'meta_description' => $validator->getInput('meta_description'),
+            'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
+            'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
+            'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
+            'meta_title'       => $validator->getInput('meta_title'),
+            'node_status_id'   => (int) $validator->getInput('node_status_id'),
+            'sticky'           => (bool) $validator->getInput('sticky'),
+            'title'            => $validator->getInput('title'),
+            'user_id'          => $validator->getInput('user_id') === ''
+                ? null
+                : (int) $validator->getInput('user_id')
+        ];
+
+        if ($type !== null) {
+            $data[ 'entity_id' ] = self::schema()->getIncrement('entity_' . $type);
+            $data[ 'type' ]      = $type;
+        }
+
+        return $data;
     }
 
     private function getMeta(array $node, array $fields): array

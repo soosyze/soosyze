@@ -64,26 +64,10 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.store.validator', [ &$validator ]);
         if ($validator->isValid()) {
-            $roleWeight = $validator->getInput('role_weight');
-            $roleColor  = $validator->getInput('role_color');
-            $roleIcon   = $validator->getInput('role_icon');
+            $data = $this->getData($validator);
 
-            $value = [
-                'role_label'       => $validator->getInput('role_label'),
-                'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => empty($roleWeight)
-                    ? 1
-                    : (int) $roleWeight,
-                'role_color'       => empty($roleColor)
-                    ? '#e6e7f4'
-                    : strtolower($roleColor),
-                'role_icon'        => empty($roleIcon)
-                    ? 'fa fa-user'
-                    : strtolower($roleIcon)
-            ];
-
-            $this->container->callHook('role.store.before', [ &$validator, &$value ]);
-            self::query()->insertInto('role', array_keys($value))->values($value)->execute();
+            $this->container->callHook('role.store.before', [ &$validator, &$data ]);
+            self::query()->insertInto('role', array_keys($data))->values($data)->execute();
             $this->container->callHook('role.store.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
@@ -153,20 +137,14 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.update.validator', [ &$validator ]);
         if ($validator->isValid()) {
-            $value = [
-                'role_label'       => $validator->getInput('role_label'),
-                'role_description' => $validator->getInput('role_description'),
-                'role_weight'      => (int) $validator->getInput('role_weight'),
-                'role_color'       => $validator->getInput('role_color'),
-                'role_icon'        => $validator->getInput('role_icon')
-            ];
+            $data = $this->getData($validator);
 
             $this->container->callHook('role.udpate.before', [
-                &$validator, &$value, $id
+                &$validator, &$data, $id
             ]);
-            self::query()->update('role', $value)->where('role_id', '=', $id)->execute();
+            self::query()->update('role', $data)->where('role_id', '=', $id)->execute();
             $this->container->callHook('role.udpate.after', [
-                $validator, $value, $id
+                $validator, $data, $id
             ]);
 
             $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
@@ -275,25 +253,46 @@ class Role extends \Soosyze\Controller
         ]));
     }
 
-    public function getValidator(ServerRequestInterface $req): Validator
+    private function getValidator(ServerRequestInterface $req): Validator
     {
         return (new Validator())
                 ->setRules([
-                    'role_label'        => 'required|string|max:255',
                     'role_description'  => '!required|string|max:255',
-                    'role_weight'       => '!required|between_numeric:1,50',
+                    'role_label'        => 'required|string|max:255',
                     'role_color'        => '!required|colorhex',
                     'role_icon'         => '!required|max:255|fontawesome:solid,brands',
+                    'role_weight'       => '!required|between_numeric:1,50',
                     'token_role_submit' => 'required|token'
                 ])
                 ->setLabels([
-                    'role_label'       => t('Name'),
                     'role_description' => t('Description'),
-                    'role_weight'      => t('Weight'),
+                    'role_label'       => t('Name'),
                     'role_color'       => t('Color'),
-                    'role_icon'        => t('Icon')
+                    'role_icon'        => t('Icon'),
+                    'role_weight'      => t('Weight')
                 ])
                 ->setInputs($req->getParsedBody());
+    }
+
+    private function getData(Validator $validator): array
+    {
+        $roleWeight = $validator->getInput('role_weight');
+        $roleColor  = $validator->getInput('role_color');
+        $roleIcon   = $validator->getInput('role_icon');
+
+        return [
+            'role_description' => $validator->getInput('role_description'),
+            'role_label'       => $validator->getInput('role_label'),
+            'role_color'       => empty($roleColor)
+                ? '#e6e7f4'
+                : strtolower($roleColor),
+            'role_icon'        => empty($roleIcon)
+                ? 'fa fa-user'
+                : strtolower($roleIcon),
+            'role_weight'      => empty($roleWeight)
+                ? 1
+                : (int) $roleWeight,
+        ];
     }
 
     private function find(int $id): array

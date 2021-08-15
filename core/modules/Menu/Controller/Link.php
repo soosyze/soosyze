@@ -73,19 +73,7 @@ class Link extends \Soosyze\Controller
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
 
         if ($validator->isValid()) {
-            $data = [
-                'active'      => true,
-                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'icon'        => $validator->getInput('icon'),
-                'key'         => $infoUrlOrRoute[ 'key' ],
-                'link'        => $infoUrlOrRoute[ 'link' ],
-                'link_router' => $infoUrlOrRoute[ 'link_router' ],
-                'menu'        => $nameMenu,
-                'parent'      => -1,
-                'target_link' => (bool) $validator->getInput('target_link'),
-                'title_link'  => $validator->getInput('title_link'),
-                'weight'      => 1
-            ];
+            $data = $this->getData($validator, $nameMenu, $infoUrlOrRoute);
 
             $this->container->callHook('menu.link.store.before', [ $validator, &$data ]);
             self::query()
@@ -170,16 +158,7 @@ class Link extends \Soosyze\Controller
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
 
         if ($validator->isValid()) {
-            $data = [
-                'fragment'    => $infoUrlOrRoute[ 'fragment' ],
-                'icon'        => $validator->getInput('icon'),
-                'key'         => $infoUrlOrRoute[ 'key' ],
-                'link'        => $infoUrlOrRoute[ 'link' ],
-                'link_router' => $infoUrlOrRoute[ 'link_router' ],
-                'query'       => $infoUrlOrRoute[ 'query' ],
-                'target_link' => (bool) $validator->getInput('target_link'),
-                'title_link'  => $validator->getInput('title_link')
-            ];
+            $data = $this->getData($validator, $nameMenu, $infoUrlOrRoute, $id);
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
             self::query()
@@ -255,5 +234,34 @@ class Link extends \Soosyze\Controller
                     'title_link'  => t('Link title')
                 ])
                 ->setInputs($req->getParsedBody());
+    }
+
+    private function getData(
+        Validator $validator,
+        string $nameMenu,
+        array $infoUrlOrRoute,
+        ?int $id = null
+    ): array {
+        $data = [
+            'fragment'    => $infoUrlOrRoute[ 'fragment' ],
+            'icon'        => $validator->getInput('icon'),
+            'key'         => $infoUrlOrRoute[ 'key' ],
+            'link'        => $infoUrlOrRoute[ 'link' ],
+            'link_router' => $infoUrlOrRoute[ 'link_router' ],
+            'query'       => $infoUrlOrRoute[ 'query' ],
+            'target_link' => (bool) $validator->getInput('target_link'),
+            'title_link'  => $validator->getInput('title_link')
+        ];
+
+        if ($id === null) {
+            $data += [
+                'active' => true,
+                'menu'   => $nameMenu,
+                'parent' => -1,
+                'weight' => 1
+            ];
+        }
+
+        return $data;
     }
 }
