@@ -166,7 +166,7 @@ class User extends \Soosyze\Controller
         $form = (new FormUser([
             'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data',
-            'method'  => 'post' ], self::file(), self::config()))
+            'method'  => 'put' ], self::file(), self::config()))
             ->setValues($values)
             ->informationsFieldset()
             ->profilFieldset()
@@ -278,7 +278,7 @@ class User extends \Soosyze\Controller
         $form = (new FormBuilder([
                 'action' => self::router()->getRoute('user.delete', [ ':id' => $id ]),
                 'class' => 'form-api',
-                'method' => 'post'
+                'method' => 'delete'
                 ]))
             ->group('user-fieldset', 'fieldset', function ($form) {
                 $form->legend('user-legend', t('Account deletion'))

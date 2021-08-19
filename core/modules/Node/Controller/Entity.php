@@ -184,7 +184,7 @@ class Entity extends \Soosyze\Controller
                 ':id_entity' => $idEntity
             ]),
             'enctype' => 'multipart/form-data',
-            'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
+            'method'  => 'put' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($values)
             ->setFields($fieldsEntity)
             ->entityFieldset()

@@ -99,7 +99,7 @@ class Link extends \Soosyze\Controller
             ':menu' => $name, ':id' => $id
         ]);
 
-        $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
+        $form = (new FormLink([ 'action' => $action, 'method' => 'put' ], self::router()))
             ->setValues($values)
             ->makeFields();
 
