@@ -249,7 +249,7 @@ class Node extends \Soosyze\Controller
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
-                'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
+                'method'        => 'put' ], self::file(), self::query(), self::router(), self::config()))
             ->setValues($values)
             ->setFields($fields)
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
@@ -387,7 +387,7 @@ class Node extends \Soosyze\Controller
 
         $action = self::router()->getRoute('node.delete', [ ':id_node' => $idNode ]);
 
-        $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'post' ], self::router()))
+        $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'delete' ], self::router()))
             ->setValues($values)
             ->setUseInPath($useInPath)
             ->makeFields();
