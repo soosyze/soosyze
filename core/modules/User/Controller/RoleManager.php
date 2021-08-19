@@ -25,7 +25,7 @@ class RoleManager extends \Soosyze\Controller
         $form = new FormBuilder([
             'action' => self::router()->getRoute('user.role.admin.check'),
             'class'  => 'form-api',
-            'method' => 'post'
+            'method' => 'patch'
         ]);
 
         foreach ($values as &$role) {

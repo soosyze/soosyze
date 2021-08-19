@@ -111,6 +111,8 @@ $(document).delegate('.form-api input[type="submit"]', 'click', function (evt) {
 
     let data = new FormData($form[0]);
 
+    method = $($form).find('input[name="__method"]').attr('value');
+
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
@@ -118,6 +120,7 @@ $(document).delegate('.form-api input[type="submit"]', 'click', function (evt) {
         dataType: 'json',
         processData: false,
         contentType: false,
+        headers: {"X-HTTP-Method-Override": method},
         success: function (data) {
             window.location.replace(data.redirect);
         },
