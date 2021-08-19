@@ -119,7 +119,7 @@ class Config extends \Soosyze\Controller
             'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
             'class'   => 'form-api',
             'enctype' => 'multipart/form-data',
-            'method'  => 'post'
+            'method'  => 'put'
         ]);
 
         $config->form($form, $data, $req);

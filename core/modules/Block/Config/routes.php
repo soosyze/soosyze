@@ -27,7 +27,7 @@ R::useNamespace('SoosyzeCore\Block\Controller')->name('block.')->prefix('block')
     R::post('store', '/:theme', 'Block@store', BLOCK_WITH_THEME);
 
     R::get('edit', '/:theme/:id/edit', 'Block@edit', BLOCK_WITH_ID);
-    R::post('update', '/:theme/:id', 'Block@update', BLOCK_WITH_ID);
+    R::put('update', '/:theme/:id', 'Block@update', BLOCK_WITH_ID);
     R::get('remove', '/:theme/:id/delete', 'Block@remove', BLOCK_WITH_ID);
-    R::post('delete', '/:theme/:id/delete', 'Block@delete', BLOCK_WITH_ID);
+    R::delete('delete', '/:theme/:id/delete', 'Block@delete', BLOCK_WITH_ID);
 });

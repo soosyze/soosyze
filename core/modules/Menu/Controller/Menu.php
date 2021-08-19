@@ -34,7 +34,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.check', [ ':menu' => $name ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'post' ]))
+        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'patch' ]))
             ->token('token_menu')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
 
@@ -189,7 +189,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.update', [ ':menu' => $menu ]);
 
-        $form = (new FormMenu(['action' => $action, 'method' => 'post' ]))
+        $form = (new FormMenu(['action' => $action, 'method' => 'put' ]))
             ->setValues($values)
             ->makeFields();
 
@@ -259,7 +259,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->getRoute('menu.delete', [ ':menu' => $name ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
             ->group('menu-fieldset', 'fieldset', function ($form) {
                 $form->legend('menu-legend', t('Menu deletion'))
                 ->group('info-group', 'div', function ($form) {

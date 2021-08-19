@@ -261,7 +261,7 @@ class Block extends \Soosyze\Controller
             ':id'      => $values[ 'block_id' ]
         ]);
 
-        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'post' ]))
+        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'put' ]))
             ->setValues($values)
             ->setRoles(self::user()->getRoles())
             ->makeFields();
@@ -381,7 +381,7 @@ class Block extends \Soosyze\Controller
             ':id'      => $values[ 'block_id' ]
         ]);
 
-        $form = (new FormDeleteBlock([ 'action' => $action, 'method' => 'post' ]))->makeFields();
+        $form = (new FormDeleteBlock([ 'action' => $action, 'method' => 'delete' ]))->makeFields();
 
         $this->container->callHook('block.remove.form', [ &$form, $values, $theme, $id ]);
 
