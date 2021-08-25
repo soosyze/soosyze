@@ -26,9 +26,9 @@
                 <div class="table-width-300">Actions</div>
             </div>
             <?php echo $form->form_open(); ?>
+            <?php echo $form->form_input('__method'); ?>
             <?php echo $menu; ?>
-            <?php echo $form->form_token('token_menu'); ?>
-            <?php echo $form->form_input('submit'); ?>
+            <?php echo $form->form_group('submit-group'); ?>
             <?php echo $form->form_close(); ?>
 
         <?php else: ?>
@@ -42,5 +42,11 @@
         <?php endif; ?>
 
         </fieldset>
+    </div>
+</div>
+
+<div id="modal_menu" class="modal" aria-label="<?php echo t('File actions window'); ?>">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
     </div>
 </div>

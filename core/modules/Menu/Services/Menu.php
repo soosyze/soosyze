@@ -228,6 +228,82 @@ class Menu
                 ->withFragment($fragment);
     }
 
+    public function getMenuSubmenu(string $keyRoute, string $nameMenu): array
+    {
+        $menu = [
+            [
+                'key'        => 'menu.show',
+                'request'    => $this->router->getRequestByRoute('menu.show', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => 'View'
+            ], [
+                'key'        => 'menu.edit',
+                'request'    => $this->router->getRequestByRoute('menu.edit', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => 'Edit'
+            ], [
+                'key'        => 'menu.remove',
+                'request'    => $this->router->getRequestByRoute('menu.remove', [
+                    ':menu' => $nameMenu
+                ]),
+                'title_link' => 'Delete'
+            ]
+        ];
+
+        $this->core->callHook('menu.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => $menu
+        ];
+    }
+
+    public function getMenuLinkSubmenu(string $keyRoute, string $nameMenu, int $id): array
+    {
+        $menu = [
+            [
+                'key'        => 'menu.link.edit',
+                'request'    => $this->router->getRequestByRoute('menu.link.edit', [
+                    ':menu' => $nameMenu, ':id' => $id
+                ]),
+                'title_link' => 'Edit'
+            ], [
+                'key'        => 'menu.link.remove',
+                'request'    => $this->router->getRequestByRoute('menu.link.remove', [
+                    ':menu' => $nameMenu, ':id' => $id
+                ]),
+                'title_link' => 'Delete'
+            ]
+        ];
+
+        $this->core->callHook('menu.link.submenu', [ &$menu ]);
+
+        foreach ($menu as $key => &$link) {
+            if (!$this->core->callHook('app.granted.request', [ $link[ 'request' ] ])) {
+                unset($menu[ $key ]);
+
+                continue;
+            }
+            $link[ 'link' ] = $link[ 'request' ]->getUri();
+        }
+
+        return [
+            'key_route' => $keyRoute,
+            'menu'      => $menu
+        ];
+    }
+
     /**
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
