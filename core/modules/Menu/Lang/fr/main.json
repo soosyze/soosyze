@@ -26,6 +26,9 @@
     "Menu to display": "Menu à afficher",
     "Return to site": "Retour au site",
     "Open in a new window": "Ouvrir dans une nouvelle fenêtre",
-    "Parent link":"Lien parent",
-    "Show child links of the selected one.": "Afficher les liens enfants de celui sélectionné."
+    "Parent link": "Lien parent",
+    "Show child links of the selected one.": "Afficher les liens enfants de celui sélectionné.",
+    "Warning ! The deletion of the link is final.": "Attention ! La suppression du lien est définitive.",
+    "Delete a link": "Supprimer un lien",
+    "Link deletion": "Suppression de lien"
 }
