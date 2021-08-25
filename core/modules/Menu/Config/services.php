@@ -28,6 +28,8 @@ return [
             'route.menu.link.store' => 'hookMenuAdminister',
             'route.menu.link.edit' => 'hookMenuAdminister',
             'route.menu.link.update' => 'hookMenuAdminister',
+            'route.menu.link.remove' => 'hookMenuAdminister',
+            'route.menu.link.remove.modal' => 'hookMenuAdminister',
             'route.menu.link.delete' => 'hookMenuAdminister'
         ]
     ],

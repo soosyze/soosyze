@@ -34,9 +34,10 @@
                     <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
                 </a>
 
-                <a class="btn btn-action"
-                   href="<?php echo $link[ 'link_delete' ]; ?>"
-                   onclick="return confirm('<?php echo t('Do you want to permanently delete the content ?'); ?>')">
+                <a href="<?php echo $link[ 'link_remove' ]; ?>"
+                   class="btn btn-action btn-action-remove"
+                   data-toogle="modal"
+                   data-target="#modal_menu">
                     <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
                 </a>
             </div>
