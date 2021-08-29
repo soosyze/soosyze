@@ -70,7 +70,7 @@ class NodeManager extends \Soosyze\Controller
 
     public function filterPage(int $page, ServerRequestInterface $req)
     {
-        if (!$req->isAjax() && !$this->admin) {
+        if (!$this->admin) {
             return $this->get404($req);
         }
 

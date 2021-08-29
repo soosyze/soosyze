@@ -28,22 +28,6 @@ $(function () {
             }
         });
     });
-    $(document).delegate('#modal_node input[name="submit"]', 'click', function (evt) {
-        evt.preventDefault();
-        const $formModal = $(this).parent('form');
-        $.ajax({
-            url: $formModal.attr('action'),
-            type: $formModal.attr('method'),
-            data: $formModal.serialize(),
-            dataType: 'json',
-            success: function () {
-                closeModal.call(evt.target, evt);
-            },
-            error: function (data) {
-                renderMessage('.modal-messages', data.responseJSON);
-            }
-        });
-    });
     /**
      * Evenement des bouton d'actions.
      */
@@ -59,26 +43,6 @@ $(function () {
             success: function (data) {
                 $('.modal-content').html(data);
                 renderMessage('.modal-messages', data);
-            }
-        });
-    });
-
-    $('#form-node .tab-pane').each(function () {
-        let idPane = $(this).attr("id");
-
-        $(this).find('input, textarea, select').each(function () {
-
-            if ($(this).hasClass('is-invalid')) {
-                const error = `
-                    <span class="fieldset-error" title="Error">
-                        <i class='fa fa-exclamation-triangle' aria-hidden="true"></i>
-                    <span>`;
-
-                $(`ul a[href="#${idPane}"]`).css("color", "red");
-                $(`ul a .fieldset-error`).remove();
-                $(`ul a[href="#${idPane}"]`).append(error);
-
-                return false;
             }
         });
     });
