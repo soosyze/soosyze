@@ -81,13 +81,19 @@ class Entity extends \Soosyze\Controller
             ]);
         }
         if (!($node = self::node()->byId($idNode))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         $options = json_decode($fieldNode[ 'field_option' ]);
         if (self::node()->isMaxEntity($entity, $options->foreign_key, $idNode, $options->count)) {
@@ -145,7 +151,7 @@ class Entity extends \Soosyze\Controller
                 }
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Your content has been saved.');
 
             return $this->json(201, [
                 'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
@@ -224,16 +230,24 @@ class Entity extends \Soosyze\Controller
         }
 
         if (!($node = self::node()->byId($idNode))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!self::node()->getEntity($entity, $idEntity)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -279,7 +293,7 @@ class Entity extends \Soosyze\Controller
                 $validator, $node, $entity, $idEntity
             ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                 'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
