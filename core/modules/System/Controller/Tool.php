@@ -54,7 +54,7 @@ class Tool extends \Soosyze\Controller
     {
         $this->container->callHook('app.cron', [ $req ]);
 
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('The cron task has been successfully executed') ];
+        $_SESSION[ 'messages' ][ 'success' ][] = t('The cron task has been successfully executed');
 
         return new Redirect(self::router()->getRoute('system.tool.admin'), 302);
     }
@@ -81,7 +81,7 @@ class Tool extends \Soosyze\Controller
 
         self::module()->loadTranslations($composersActive);
 
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('The translation files have been updated') ];
+        $_SESSION[ 'messages' ][ 'success' ][] = t('The translation files have been updated');
 
         return new Redirect(self::router()->getRoute('system.tool.admin'), 302);
     }
