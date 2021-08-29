@@ -52,29 +52,30 @@ document.querySelectorAll('.ext').forEach(function (el) {
  */
 $(document).delegate('#modal_filemanager input[type="submit"], #modal_filemanager button[type="submit"]', 'click', function (evt) {
     evt.preventDefault();
-    const $form = $(this).closest('form');
+    const $this = $(this);
+    const $form = $this.closest('form');
     const target = $('.filemanager');
 
-    let data = $form.serialize();
+    let data = new FormData($form[0]);
+
     const activeEl = document.activeElement;
 
     if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
-        if (data) {
-            data += "&";
-        }
-        data += activeEl.name;
-        if (activeEl.value) {
-            data += "=" + activeEl.value;
-        }
+        data.append(activeEl.name, activeEl.value);
     }
+
+    method = $($form).find('input[name="__method"]').attr('value');
 
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
         data: data,
         dataType: 'json',
+        processData: false,
+        contentType: false,
+        headers: {"X-HTTP-Method-Override": method},
         success: function () {
-            var action = $('#table-file').data('link_show');
+            const action = $('#table-file').data('link_show');
             updateManager(action, target);
             closeModal.call(evt.target, evt);
         },

@@ -56,10 +56,6 @@ class File extends \Soosyze\Controller
      */
     public function show(string $path, string $name, string $ext, ServerRequestInterface $req)
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -131,9 +127,6 @@ class File extends \Soosyze\Controller
 
     public function store(string $path, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
         if ($req->isMaxSize()) {
             return $this->json(400, [
                 'messages' => [
@@ -145,7 +138,8 @@ class File extends \Soosyze\Controller
             ]);
         }
 
-        $dir    = self::core()->getDir('files_public', 'app/files') . $path;
+        $dir = self::core()->getDir('files_public', 'app/files') . $path;
+
         /** @var User $hookUser */
         $hookUser = $this->get(User::class);
         $profil   = $hookUser->getRight($path);
@@ -225,7 +219,7 @@ class File extends \Soosyze\Controller
 
         $serviceFile->saveOne();
 
-        return $this->json(200, [
+        return $this->json(201, [
             'ext'       => $ext,
             'link_file' => $serviceFile->getMovePathAbsolute(),
             'messages'  => [
@@ -244,10 +238,6 @@ class File extends \Soosyze\Controller
      */
     public function edit(string $path, string $name, string $ext, ServerRequestInterface $req)
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -260,7 +250,7 @@ class File extends \Soosyze\Controller
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post']))
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'put']))
             ->group('file-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('file-legend', t('Rename the file'))
                 ->group('name-group', 'div', function ($form) use ($data) {
@@ -291,10 +281,6 @@ class File extends \Soosyze\Controller
 
     public function update(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $dir         = self::core()->getDir('files_public', 'app/files') . $path;
         $fileCurrent = "$dir$name$ext";
 
@@ -310,13 +296,12 @@ class File extends \Soosyze\Controller
             ->addInput('dir', $dir)
             ->addInput('file_current', $fileCurrent);
 
-        $out = [];
         /* Si les valeur attendues sont les bonnes. */
         if (!$validator->isValid()) {
-            $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return $this->json(400, $out);
+            return $this->json(400, [
+                    'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                    'errors_keys' => $validator->getKeyInputErrors()
+            ]);
         }
 
         $nameUpdate = Util::strSlug($validator->getInput('name'));
@@ -326,15 +311,15 @@ class File extends \Soosyze\Controller
         if ($fileCurrent === $fileUpdate || !is_file($fileUpdate)) {
             rename($fileCurrent, $fileUpdate);
 
-            $out[ 'messages' ][ 'success' ] = [ t('The file has been renamed') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('The file has been renamed');
 
-            return $this->json(200, $out);
+            return $this->json(200);
         }
 
-        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $out[ 'messages' ][ 'errors' ] = [ t('You can not use this name to rename the file') ];
-
-        return $this->json(400, $out);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => [ t('You can not use this name to rename the file') ] ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     /**
@@ -342,10 +327,6 @@ class File extends \Soosyze\Controller
      */
     public function remove(string $path, string $name, string $ext, ServerRequestInterface $req)
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -357,7 +338,7 @@ class File extends \Soosyze\Controller
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'delete' ]))
             ->group('file-fieldset', 'fieldset', function ($form) use ($name, $ext) {
                 $form->legend('file-legend', t('Delete file'))
                 ->group('info-group', 'div', function ($form) use ($name, $ext) {
@@ -384,10 +365,6 @@ class File extends \Soosyze\Controller
 
     public function delete(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $dir  = self::core()->getDir('files_public', 'app/files') . $path;
         $file = "$dir$name$ext";
 
@@ -401,18 +378,17 @@ class File extends \Soosyze\Controller
             ->addInput('dir', $dir)
             ->addInput('file', $file);
 
-        $out = [];
         if ($validator->isValid()) {
             unlink($file);
-            $out[ 'messages' ][ 'success' ] = [ t('The file has been deleted') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('The file has been deleted');
 
-            return $this->json(200, $out);
+            return $this->json(200);
         }
 
-        $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-        $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-        return $this->json(400, $out);
+        return $this->json(400, [
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                'errors_keys' => $validator->getKeyInputErrors()
+        ]);
     }
 
     public function download(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface

@@ -86,7 +86,7 @@ class FilePermission extends \Soosyze\Controller
 
             $this->container->callHook('filemanager.permission.store.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
                     'redirect' => self::router()->getRoute('filemanager.permission.admin')
@@ -144,7 +144,9 @@ class FilePermission extends \Soosyze\Controller
     public function update(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!self::fileprofil()->find($id)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req);
@@ -179,7 +181,7 @@ class FilePermission extends \Soosyze\Controller
                 $validator, $id
             ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('filemanager.permission.admin')
@@ -242,7 +244,9 @@ class FilePermission extends \Soosyze\Controller
     public function delete(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!self::fileprofil()->find($id)) {
-            $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         $validator = (new Validator())
             ->addRule('token_file_permission', 'token')
