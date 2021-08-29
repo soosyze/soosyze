@@ -78,7 +78,7 @@ class UsersManager extends \Soosyze\Controller
      */
     public function filterPage(int $page, ServerRequestInterface $req)
     {
-        if (!$req->isAjax() && !$this->isAdmin) {
+        if (!$this->isAdmin) {
             return $this->get404($req);
         }
 

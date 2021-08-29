@@ -22,9 +22,9 @@ R::useNamespace('SoosyzeCore\User\Controller')->name('user.')->prefix('user')->g
     R::get('show', '/:id', 'User@show', [ ':id' => '\d+' ]);
     R::post('store', '/', 'User@store');
     R::get('edit', '/:id/edit', 'User@edit', [ ':id' => '\d+' ]);
-    R::put('update', '/:id/edit', 'User@update', [ ':id' => '\d+' ]);
+    R::put('update', '/:id', 'User@update', [ ':id' => '\d+' ]);
     R::get('remove', '/:id/delete', 'User@remove', [ ':id' => '\d+' ]);
-    R::delete('delete', '/:id/delete', 'User@delete', [ ':id' => '\d+' ]);
+    R::delete('delete', '/:id', 'User@delete', [ ':id' => '\d+' ]);
 });
 R::useNamespace('SoosyzeCore\User\Controller')->name('user.')->prefix('admin/user')->group(function () {
     R::get('admin', '/', 'UsersManager@admin');
@@ -36,11 +36,11 @@ R::useNamespace('SoosyzeCore\User\Controller')->name('user.')->prefix('admin/use
 });
 R::useNamespace('SoosyzeCore\User\Controller')->name('user.role.')->prefix('admin/user/role')->group(function () {
     R::get('admin', '/', 'RoleManager@admin');
-    R::patch('admin.check', '', 'RoleManager@adminCheck');
+    R::patch('admin.check', '/', 'RoleManager@adminCheck');
     R::get('create', '/create', 'Role@create');
-    R::post('store', '/create', 'Role@store');
+    R::post('store', '/', 'Role@store');
     R::get('edit', '/:id/edit', 'Role@edit', [ ':id' => '\d+' ]);
-    R::put('update', '/:id/edit', 'Role@update', [ ':id' => '\d+' ]);
+    R::put('update', '/:id', 'Role@update', [ ':id' => '\d+' ]);
     R::get('remove', '/:id/delete', 'Role@remove', [ ':id' => '\d+' ]);
-    R::delete('delete', '/:id/delete', 'Role@delete', [ ':id' => '\d+' ]);
+    R::delete('delete', '/:id', 'Role@delete', [ ':id' => '\d+' ]);
 });
