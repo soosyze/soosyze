@@ -8,6 +8,8 @@ use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Menu\Services\Menu;
+use SoosyzeCore\QueryBuilder\Services\Query;
+use SoosyzeCore\System\Services\Modules;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
 class Block implements \SoosyzeCore\Block\BlockInterface
@@ -23,14 +25,30 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     private $menu;
 
     /**
+     * @var Modules
+     */
+    private $modules;
+
+    /**
+     * @var Query
+     */
+    private $query;
+
+    /**
      * @var Router
      */
     private $router;
 
-    public function __construct(Menu $menu, Router $router)
-    {
-        $this->menu   = $menu;
-        $this->router = $router;
+    public function __construct(
+        Menu $menu,
+        Modules $modules,
+        Query $query,
+        Router $router
+    ) {
+        $this->menu    = $menu;
+        $this->modules = $modules;
+        $this->query   = $query;
+        $this->router  = $router;
     }
 
     public function hookBlockCreateFormData(array &$blocks): void
@@ -121,6 +139,48 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             'name'   => $validator->getInput('name'),
             'parent' => (int) $validator->getInput('parent'),
         ]);
+    }
+
+    public function hookMenuRemoveForm(
+        FormGroupBuilder &$form,
+        array $values,
+        string $nameMenu
+    ): void {
+        if (!$this->modules->has('Block')) {
+            return;
+        }
+
+        $isBlock = $this->query
+            ->from('block')
+            ->where('key_block', '=', 'menu')
+            ->where('options', 'like', '%' . $nameMenu . '%')
+            ->fetch();
+
+        if (!$isBlock) {
+            return;
+        }
+
+        $form->after('info-group', function ($form) {
+            $form->group('info-block-group', 'div', function ($form) {
+                $form->html('info-block', '<p:attr>:content</p>', [
+                    ':content' => t('This menu is displayed by a block. By removing this menu, you will remove the block.')
+                ]);
+            }, [ 'class' => 'alert alert-warning' ]);
+        }, [ 'class' => 'form-group' ]);
+    }
+
+    public function hookMenuDeleteBefore(Validator $validator, string $nameMenu): void
+    {
+        if (!($this->modules->has('Block') && $validator->getInput('delete_block'))) {
+            return;
+        }
+
+        $this->query
+            ->from('block')
+            ->delete()
+            ->where('key_block', '=', 'menu')
+            ->where('options', 'like', '%' . $nameMenu . '%')
+            ->execute();
     }
 
     private function getOptionsName(): array
