@@ -110,7 +110,7 @@ class Theme extends \Soosyze\Controller
         $outInstall = $this->installTheme($type, $name);
 
         if (empty($outInstall)) {
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('system.theme.admin', [
@@ -211,7 +211,7 @@ class Theme extends \Soosyze\Controller
                 $this->saveFile($file, $validator);
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                 'redirect' => self::router()->getRoute('system.theme.admin', [ ':type' => $type ])

@@ -103,13 +103,17 @@ $(function () {
     new LazyLoad({});
 });
 
-$(document).delegate('.form-api input[type="submit"]', 'click', function (evt) {
+$(document).delegate('.form-api input[type="submit"], .form-api button[type="submit"]', 'click', function (evt) {
     evt.preventDefault();
-    const $this         = $(this);
-    const $form         = $this.closest('form');
-    const $classTabPane = $form.attr('data-tab-pane');
-
+    const $this = $(this);
+    const $form = $this.closest('form');
     let data = new FormData($form[0]);
+
+    /* Ajoute les données du boutton de soumission aux données envoyé au back.*/
+    const activeEl = document.activeElement;
+    if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
+        data.append(activeEl.name, activeEl.value);
+    }
 
     method = $($form).find('input[name="__method"]').attr('value');
 
@@ -125,7 +129,9 @@ $(document).delegate('.form-api input[type="submit"]', 'click', function (evt) {
             window.location.replace(data.redirect);
         },
         error: function (data) {
+            const $classTabPane = $form.attr('data-tab-pane');
             renderMessage('.messages', data.responseJSON);
+            fieldIsInvalid($form, data.responseJSON)
             fieldsetErrorFormApi($form, $classTabPane);
         }
     });
@@ -155,5 +161,15 @@ function fieldsetErrorFormApi(form, classTabPane) {
                 $(this).closest(`.trumbowyg-box`).css("border-color", "red");
             }
         });
+    });
+}
+
+function fieldIsInvalid($form, data) {
+    /* Clean les champs invalid */
+    $($form).find('.is-invalid').each(function() {
+        $(this).removeClass('is-invalid')
+    });
+    $.each(data.errors_keys, function (key, val) {
+        $(`#${val}`).addClass('is-invalid');
     });
 }
