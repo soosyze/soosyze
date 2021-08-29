@@ -153,7 +153,7 @@ class App
                 ];
 
                 $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', $params);
-                $block[ 'link_delete' ] = $this->router->getRoute('block.delete', $params);
+                $block[ 'link_remove' ] = $this->router->getRoute('block.remove', $params);
                 $block[ 'link_update' ] = $this->router->getRoute('block.section.update', $params);
                 $block[ 'title_admin' ] = $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
             }
