@@ -86,7 +86,7 @@ class Config extends \Soosyze\Controller
             }
             $config->after($validator, $data, $id);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('config.edit', [ ':id' => $id ])
