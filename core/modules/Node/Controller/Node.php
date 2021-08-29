@@ -110,7 +110,9 @@ class Node extends \Soosyze\Controller
             ]);
         }
         if (!($fields = self::node()->getFieldsForm($type))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         /* Test les champs par defauts de la node. */
@@ -161,7 +163,7 @@ class Node extends \Soosyze\Controller
                 }
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Your content has been saved.') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Your content has been saved.');
 
             return $this->json(201, [
                 'redirect' => $fieldsRelation
@@ -291,10 +293,14 @@ class Node extends \Soosyze\Controller
             ]);
         }
         if (!($node = self::node()->getCurrentNode($idNode))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
         if (!($fields = self::node()->getFieldsForm($node[ 'type' ]))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req, $node[ 'type' ], $fields, $idNode);
@@ -342,7 +348,7 @@ class Node extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('node.update.after', [ $validator, $idNode ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('node.edit', [
@@ -417,7 +423,9 @@ class Node extends \Soosyze\Controller
     public function delete(int $idNode, ServerRequestInterface $req): ResponseInterface
     {
         if (!($node = self::node()->byId($idNode))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -473,14 +481,11 @@ class Node extends \Soosyze\Controller
             }
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [
-                t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ])
-            ];
-
             if ($validator->getInput('path')) {
-                var_dump($validator->getInput('path_key'), $validator->getInput('path'));
                 self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
             }
+
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ]);
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('node.admin')
