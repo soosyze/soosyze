@@ -54,7 +54,9 @@ class Link extends \Soosyze\Controller
     public function store(string $nameMenu, ServerRequestInterface $req): ResponseInterface
     {
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req);
@@ -73,7 +75,7 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.store.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
                     'redirect' => self::router()->getRoute('menu.show', [
@@ -88,7 +90,7 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    public function edit(string $name, int $id, ServerRequestInterface $req): ResponseInterface
+    public function edit(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!($values = self::menu()->find($id))) {
             return $this->get404($req);
@@ -97,7 +99,7 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         $action = self::router()->getRoute('menu.link.update', [
-            ':menu' => $name, ':id' => $id
+            ':menu' => $nameMenu, ':id' => $id
         ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'put' ], self::router()))
@@ -128,7 +130,9 @@ class Link extends \Soosyze\Controller
     public function update(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!self::menu()->find($id)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req);
@@ -147,7 +151,7 @@ class Link extends \Soosyze\Controller
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('menu.show', [
@@ -218,7 +222,9 @@ class Link extends \Soosyze\Controller
     public function delete(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!($linkMenu = self::menu()->find($id))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -239,7 +245,7 @@ class Link extends \Soosyze\Controller
 
             $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ])
