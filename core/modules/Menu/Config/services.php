@@ -51,7 +51,9 @@ return [
             'block.menu.store.before' => 'hookMenuBefore',
             'block.menu.edit.form' => 'hookMenuForm',
             'block.menu.update.validator' => 'hookMenuValidator',
-            'block.menu.update.before' => 'hookMenuBefore'
+            'block.menu.update.before' => 'hookMenuBefore',
+            'menu.remove.form' => 'hookMenuRemoveForm',
+            'menu.delete.before' => 'hookMenuDeleteBefore'
         ]
     ]
 ];

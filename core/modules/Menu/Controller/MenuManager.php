@@ -104,7 +104,7 @@ class MenuManager extends \Soosyze\Controller
                     ->execute();
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [ 'redirect' => $route ]);
         }
@@ -148,7 +148,7 @@ class MenuManager extends \Soosyze\Controller
             $link[ 'link_edit' ]   = self::router()
                 ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'link_remove' ] = self::router()
-                ->getRoute('menu.link.remove.modal', [ ':menu' => $link[ 'menu' ], ':id' => (int) $link[ 'id' ] ]);
+                ->getRoute('menu.link.remove.modal', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'submenu' ]     = $link[ 'has_children' ]
                 ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
                 : $this->createBlockMenuShowForm($nameMenu, null, $level + 1);

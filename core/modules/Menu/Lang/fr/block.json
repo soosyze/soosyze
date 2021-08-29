@@ -1,4 +1,5 @@
 {
     "Menu": "Menu",
-    "Displays a menu.": "Affiche un menu."
+    "Displays a menu.": "Affiche un menu.",
+    "This menu is displayed by a block. By removing this menu, you will remove the block.": "Ce menu est affiché par un bloc. En supprimant ce menu, vous supprimerez le bloc."
 }
