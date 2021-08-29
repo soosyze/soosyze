@@ -61,7 +61,7 @@ class Role extends \Soosyze\Controller
             self::query()->insertInto('role', array_keys($data))->values($data)->execute();
             $this->container->callHook('role.store.after', [ $validator ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
                     'redirect' => self::router()->getRoute('user.role.admin')
@@ -113,7 +113,9 @@ class Role extends \Soosyze\Controller
     public function update(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!$this->find($id)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req);
@@ -131,7 +133,7 @@ class Role extends \Soosyze\Controller
                 $validator, $data, $id
             ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('user.role.admin')
@@ -182,7 +184,9 @@ class Role extends \Soosyze\Controller
     public function delete(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!$this->find($id)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -215,7 +219,7 @@ class Role extends \Soosyze\Controller
 
             $this->container->callHook('role.delete.after', [ $validator, $id ]);
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('user.role.admin')

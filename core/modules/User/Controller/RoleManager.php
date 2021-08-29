@@ -51,8 +51,11 @@ class RoleManager extends \Soosyze\Controller
         }
         unset($role);
 
-        $form->token('token_role_form')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        $form
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_role_form')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            });
 
         $this->container->callHook('user.role.admin.form', [ &$form, $values ]);
 
@@ -111,7 +114,7 @@ class RoleManager extends \Soosyze\Controller
                 $this->container->callHook('user.role.admin.check.after', [ &$validator ]);
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('user.role.admin')
