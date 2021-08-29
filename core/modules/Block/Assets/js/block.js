@@ -1,30 +1,4 @@
 $(function () {
-    $(document).delegate('#modal_block input[type="submit"].submit-block-form', 'click', function (evt) {
-        evt.preventDefault();
-        const $this         = $(this);
-        const $form         = $this.closest('form');
-        const $classTabPane = $form.attr('data-tab-pane');
-
-        let data = new FormData($form[0]);
-
-        $.ajax({
-            url: $form.attr('action'),
-            type: $form.attr('method'),
-            data: data,
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                closeModal.call(evt.target, evt);
-                showBlock(data.inputs.section, data.link_show);
-            },
-            error: function (data) {
-                renderMessage('#modal_block .modal-messages', data.responseJSON);
-                fieldsetErrorFormApi($form, $classTabPane);
-            }
-        });
-    });
-
     /**
      * Menu de navigation pour les blocs.
      */
