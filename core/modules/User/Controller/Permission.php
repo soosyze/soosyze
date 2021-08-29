@@ -81,23 +81,23 @@ class Permission extends \Soosyze\Controller
 
     public function udpate(ServerRequestInterface $req): ResponseInterface
     {
-        $post = $req->getParsedBody();
+        $data = $req->getParsedBody();
 
         $rolesId           = self::query()->from('role')->lists('role_id');
         $permissionsByRole = self::query()->from('role_permission')->fetchAll();
 
         foreach ($rolesId as $id) {
             $perm[ $id ] = [];
-            if (empty($post[ $id ])) {
-                $post[ $id ] = [];
+            if (empty($data[ $id ])) {
+                $data[ $id ] = [];
             }
             foreach ($permissionsByRole as $permission) {
                 $perm[ $permission[ 'role_id' ] ][ $permission[ 'permission_id' ] ] = $permission[ 'permission_id' ];
             }
-            $this->storePermission($id, $perm[ $id ], $post[ $id ]);
-            $this->deletePermission($id, $perm[ $id ], $post[ $id ]);
+            $this->storePermission($id, $perm[ $id ], $data[ $id ]);
+            $this->deletePermission($id, $perm[ $id ], $data[ $id ]);
         }
-        $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+        $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
         return $this->json(200, [
                 'redirect' => self::router()->getRoute('user.permission.admin')
