@@ -206,7 +206,9 @@ class User extends \Soosyze\Controller
     public function update(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!($user = self::user()->find($id))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         if ($req->isMaxSize()) {
@@ -254,9 +256,9 @@ class User extends \Soosyze\Controller
 
                 self::auth()->login($validator->getInput('email'), $pwd);
             }
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
-            return $this->json(201, [
+            return $this->json(200, [
                     'redirect' => self::router()->getRoute('user.edit', [ ':id' => $id ])
             ]);
         }
@@ -269,11 +271,11 @@ class User extends \Soosyze\Controller
 
     public function remove(int $id, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($user = self::user()->find($id))) {
+        if (!($values = self::user()->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('user.remove.form.data', [ &$user, $id ]);
+        $this->container->callHook('user.remove.form.data', [ &$values, $id ]);
 
         $form = (new FormBuilder([
                 'action' => self::router()->getRoute('user.delete', [ ':id' => $id ]),
@@ -297,13 +299,13 @@ class User extends \Soosyze\Controller
                 'type'     => 'button'
             ]);
 
-        $this->container->callHook('user.remove.form', [ &$form, $user, $id ]);
+        $this->container->callHook('user.remove.form', [ &$form, $values, $id ]);
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
-                    'title_main' => t('Delete :name account', [ ':name' => $user[ 'username' ] ])
+                    'title_main' => t('Delete :name account', [ ':name' => $values[ 'username' ] ])
                 ])
                 ->view('page.submenu', self::user()->getUserSubmenu('user.remove', $id))
                 ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
@@ -314,7 +316,9 @@ class User extends \Soosyze\Controller
     public function delete(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!($user = self::user()->find($id))) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())

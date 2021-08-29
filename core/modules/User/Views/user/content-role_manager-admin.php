@@ -8,6 +8,7 @@
 </div>
 
 <?php echo $form->form_open(); ?>
+<?php echo $form->form_input('__method'); ?>
 <fieldset class="responsive">
     <table class="table table-hover table-striped table-responsive role_manager-table">
         <thead>
@@ -65,6 +66,5 @@
         </tbody>
     </table>
 </fieldset>
-<?php echo $form->form_input('token_role_form'); ?>
-<?php echo $form->form_input('submit'); ?>
+<?php echo $form->form_group('submit-group'); ?>
 <?php echo $form->form_close(); ?>

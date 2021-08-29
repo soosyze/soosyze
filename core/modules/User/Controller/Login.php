@@ -71,7 +71,9 @@ class Login extends \Soosyze\Controller
     public function loginCheck(string $url, ServerRequestInterface $req): ResponseInterface
     {
         if (self::user()->isConnectUrl($url)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -98,8 +100,7 @@ class Login extends \Soosyze\Controller
         }
 
         return $this->json(400, [
-                'messages'    => [ t('E-mail or password not recognized.') ],
-                'errors_keys' => []
+                'messages' => [ 'errors' => t('E-mail or password not recognized.') ]
         ]);
     }
 
@@ -152,7 +153,9 @@ class Login extends \Soosyze\Controller
     public function reloginCheck(string $url, ServerRequestInterface $req): ResponseInterface
     {
         if (self::user()->isConnectUrl($url)) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -192,9 +195,9 @@ class Login extends \Soosyze\Controller
                     ->isHtml(true);
 
                 if ($mail->send()) {
-                    $_SESSION[ 'messages' ][ 'success' ] = [
+                    $_SESSION[ 'messages' ][ 'success' ][] =
                         t('An email with instructions to access your account has just been sent to you. Warning ! This can be in your junk mail.')
-                    ];
+                    ;
 
                     return $this->json(200, [
                             'redirect' => self::router()->getRoute('user.login', [
@@ -203,16 +206,16 @@ class Login extends \Soosyze\Controller
                     ]);
                 }
 
-                $messagesErrors = [ t('An error prevented your email from being sent.') ];
+                $messagesErrors[] = t('An error prevented your email from being sent.');
             } else {
-                $messagesErrors = [ t('Sorry, this email is not recognized.') ];
+                $messagesErrors[] = t('Sorry, this email is not recognized.');
             }
         } else {
             $messagesErrors = $validator->getKeyErrors();
         }
 
         return $this->json(400, [
-                'messages'    => $messagesErrors,
+                'messages'    => [ 'errors' => $messagesErrors ],
                 'errors_keys' => $validator->getKeyInputErrors()
         ]);
     }
@@ -226,7 +229,7 @@ class Login extends \Soosyze\Controller
             return $this->get404($req);
         }
         if ($user['time_reset'] < time()) {
-            $_SESSION[ 'messages' ][ 'errors' ] = t('Password reset timeout');
+            $_SESSION[ 'messages' ][ 'errors' ][] = t('Password reset timeout');
 
             return $this->get404($req);
         }

@@ -6,6 +6,7 @@ namespace SoosyzeCore\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
@@ -73,11 +74,19 @@ class Register extends \Soosyze\Controller
             ? $user[ 'username' ]
             : '';
 
+        $isRgpd = self::config()->get('settings.rgpd_show', false) === false
+            ? ''
+            : true;
+
+        $isTermsOfService = self::config()->get('settings.terms_of_service_show', false) === false
+            ? ''
+            : true;
+
         $validator
             ->addInput('is_email', $isEmail)
             ->addInput('is_username', $isUsername)
-            ->addInput('is_rgpd', self::config()->get('settings.rgpd_show', ''))
-            ->addInput('is_terms_of_service', self::config()->get('settings.terms_of_service_show', ''))
+            ->addInput('is_rgpd', $isRgpd)
+            ->addInput('is_terms_of_service', $isTermsOfService)
             ->setRules([
                 'username'         => 'required|string|max:255|!equal:@is_username',
                 'email'            => 'required|string|email|!equal:@is_email',
@@ -140,11 +149,15 @@ class Register extends \Soosyze\Controller
                 return $this->json(201, [
                         'redirect' => self::router()->getRoute('user.register.create')
                 ]);
+            } else {
+                return $this->json(400, [
+                        'messages' => [ t('An error prevented your email from being sent.') ]
+                ]);
             }
         }
 
         return $this->json(400, [
-                'messages'    => [ 'errors' => $validator->getKeyErrors() + [ t('An error prevented your email from being sent.') ] ],
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
                 'errors_keys' => $validator->getKeyInputErrors()
         ]);
     }
@@ -162,15 +175,9 @@ class Register extends \Soosyze\Controller
             ->execute();
         $this->container->callHook('register.activate.after', [ $id ]);
 
-        $_SESSION[ 'messages' ][ 'success' ] = [
-            t('Your user account has just been activated, you can now login.')
-        ];
+        $_SESSION[ 'messages' ][ 'success' ][] = t('Your user account has just been activated, you can now login.');
 
-        return $this->json(200, [
-                'redirect' => self::router()->getRoute('user.login', [
-                    ':url' => ''
-                ])
-        ]);
+        return new Redirect(self::router()->getRoute('user.login', [ ':url' => '' ]), 302);
     }
 
     private function sendMailRegister(string $from): bool

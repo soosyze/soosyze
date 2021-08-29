@@ -11,10 +11,6 @@ class UserApi extends \Soosyze\Controller
 {
     public function select(ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $data = self::query()
             ->from('user')
             ->fetchAll();
