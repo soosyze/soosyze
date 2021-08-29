@@ -102,7 +102,7 @@ class Block extends \Soosyze\Controller
         $values = self::block()->getBlock($key);
 
         if ($values === null) {
-            $this->get404();
+            return $this->get404();
         }
 
         $values[ 'key_block' ] = $key;
@@ -123,7 +123,13 @@ class Block extends \Soosyze\Controller
             ':theme'   => $theme
         ]);
 
-        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'post' ]))
+        $form = (new FormBlock([
+                'action'        => $action,
+                'class'         => 'form-api',
+                'data-tab-pane' => '.pane-block',
+                'method'        => 'post'
+                ])
+            )
             ->setValues($values)
             ->setRoles(self::user()->getRoles())
             ->makeFields();
@@ -210,20 +216,10 @@ class Block extends \Soosyze\Controller
             }
             $this->container->callHook('block.store.after', [ $validator, $data, $theme  ]);
 
-            $id = self::schema()->getIncrement('block');
-
-            return $this->json(200, [
-                    'inputs'    => array_merge($block, $data),
-                    'link_show' => self::router()->getRoute('block.section.show', [
-                        ':theme'   => $theme, ':section' => $data[ 'section' ]
-                    ]),
-                    'messages'  => [
-                        'success' => [ t('The block is create') ]
-                    ],
-                    'params'    => [
-                        'theme'   => $theme,
-                        'id'      => $id
-                    ]
+            return $this->json(201, [
+                    'redirect' => self::router()->getRoute('block.section.admin', [
+                        ':theme'   => $theme
+                    ])
             ]);
         }
 
@@ -261,7 +257,13 @@ class Block extends \Soosyze\Controller
             ':id'      => $values[ 'block_id' ]
         ]);
 
-        $form = (new FormBlock([ 'action' => $action, 'data-tab-pane' => '.pane-block', 'method' => 'put' ]))
+        $form = (new FormBlock([
+                'action'        => $action,
+                'class'         => 'form-api',
+                'data-tab-pane' => '.pane-block',
+                'method'        => 'put'
+                ])
+            )
             ->setValues($values)
             ->setRoles(self::user()->getRoles())
             ->makeFields();
@@ -293,7 +295,9 @@ class Block extends \Soosyze\Controller
     public function update(string $theme, int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!($block = $this->find($id))) {
-            return $this->json(404, []);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = $this->getValidator($req, $theme, $id);
@@ -342,17 +346,9 @@ class Block extends \Soosyze\Controller
             $this->container->callHook('block.update.after', [ $validator, $data, $theme, $id ]);
 
             return $this->json(200, [
-                    'inputs'    => array_merge($block, $data),
-                    'link_show' => self::router()->getRoute('block.section.show', [
-                        ':theme'   => $theme, ':section' => $data[ 'section' ]
-                    ]),
-                    'messages'  => [
-                        'success' => [ t('The block is update') ]
-                    ],
-                    'params'    => [
-                        'theme'   => $theme,
-                        'id'      => $id
-                    ]
+                    'redirect'    => self::router()->getRoute('block.section.admin', [
+                        ':theme'   => $theme
+                    ])
             ]);
         }
 
@@ -381,7 +377,13 @@ class Block extends \Soosyze\Controller
             ':id'      => $values[ 'block_id' ]
         ]);
 
-        $form = (new FormDeleteBlock([ 'action' => $action, 'method' => 'delete' ]))->makeFields();
+        $form = (new FormDeleteBlock([
+                'action' => $action,
+                'class'  => 'form-api',
+                'method' => 'delete'
+                ])
+            )
+            ->makeFields();
 
         $this->container->callHook('block.remove.form', [ &$form, $values, $theme, $id ]);
 
@@ -402,7 +404,9 @@ class Block extends \Soosyze\Controller
         ServerRequestInterface $req
     ): ResponseInterface {
         if (!$block = $this->find($id)) {
-            return $this->json(404);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = new Validator();
@@ -417,18 +421,9 @@ class Block extends \Soosyze\Controller
             $this->container->callHook('block.delete.after', [ $id ]);
 
             return $this->json(200, [
-                    'inputs'    => $block,
-                    'link_show' => self::router()->getRoute('block.section.show', [
-                        ':theme'   => $theme,
-                        ':section' => $block[ 'section' ]
-                    ]),
-                    'messages'  => [
-                        'success' => [ t('The block is create') ]
-                    ],
-                    'params'    => [
-                        'theme' => $theme,
-                        'id'    => $id
-                    ]
+                    'redirect' => self::router()->getRoute('block.section.admin', [
+                        ':theme' => $theme
+                    ])
             ]);
         }
 

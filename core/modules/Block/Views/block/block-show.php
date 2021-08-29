@@ -9,7 +9,7 @@
         <a data-target="#modal_block"
            data-toogle="modal"
            class="mod"
-           href="<?php echo $block[ 'link_delete' ]; ?>"
+           href="<?php echo $block[ 'link_remove' ]; ?>"
            title="<?php echo t('Delete'); ?>"><i class="fa fa-trash-alt" aria-hidden="true"></i></a>
         <i aria-hidden="true"
            class="fa fa-arrows-alt"

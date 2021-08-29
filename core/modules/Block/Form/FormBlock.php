@@ -78,7 +78,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
                     $form->label('content-label', t('Content'), [
                             'for' => 'content'
                         ])
-                        ->textarea('content', $this->values[ 'content' ], [
+                        ->textarea('content', (string) $this->values[ 'content' ], [
                             'class'       => 'form-control editor',
                             'placeholder' => '<p>Hello World!</p>',
                             'rows'        => 8

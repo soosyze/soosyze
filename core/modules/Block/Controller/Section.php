@@ -17,57 +17,6 @@ class Section extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function show(
-        string $theme,
-        string $section
-    ): Block {
-        $listBlock = self::block()->getBlocks();
-        $blocks    = self::query()
-            ->from('block')
-            ->where('section', '=', $section)
-            ->orderBy('weight')
-            ->fetchAll();
-
-        self::template()
-            ->getTheme(
-                $theme === 'admin'
-                    ? 'theme_admin'
-                    : 'theme'
-            );
-
-        foreach ($blocks as &$block) {
-            if (!empty($block[ 'hook' ])) {
-                $tplBlock           = self::template()->createBlock(
-                    $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
-                    $listBlock[ $block[ 'key_block' ] ][ 'path' ]
-                );
-                $block[ 'content' ] .= (string) self::core()->callHook('block.' . $block[ 'hook' ], [
-                        $tplBlock, json_decode($block[ 'options' ] ?? '{}', true)
-                ]);
-            }
-            $params = [
-                ':theme'   => $theme,
-                ':id'      => $block[ 'block_id' ]
-            ];
-
-            $block[ 'link_edit' ]   = self::router()->getRoute('block.edit', $params);
-            $block[ 'link_delete' ] = self::router()->getRoute('block.delete', $params);
-            $block[ 'link_update' ] = self::router()->getRoute('block.section.update', $params);
-        }
-
-        return self::template()
-                ->createBlock('section.php', $this->pathViews)
-                ->addVars([
-                    'section_id'  => $section,
-                    'content'     => $blocks,
-                    'is_admin'    => true,
-                    'link_create' => self::router()->getRoute('block.create.list', [
-                        ':theme'   => $theme,
-                        ':section' => $section
-                    ])
-        ]);
-    }
-
     public function admin(string $theme, ServerRequestInterface $req): ResponseInterface
     {
         $vendor = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets';
@@ -100,7 +49,9 @@ class Section extends \Soosyze\Controller
     public function update(int $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!self::query()->from('block')->where('block_id', '=', $id)->fetch()) {
-            return $this->get404($req);
+            return $this->json(404, [
+                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+            ]);
         }
 
         $validator = (new Validator())
@@ -120,6 +71,6 @@ class Section extends \Soosyze\Controller
                 ->execute();
         }
 
-        return new Response(200);
+        return $this->json(200);
     }
 }

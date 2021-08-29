@@ -44,7 +44,6 @@ return [
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.block.section.admin' => 'hookBlockAdmin',
-            'route.block.section.show' => 'hookBlockAdmin',
             'route.block.section.update' => 'hookBlockAdmin',
             'route.block.show' => 'hookBlockEdited',
             'route.block.create.form' => 'hookBlockCreated',
