@@ -14,7 +14,7 @@ class ModulesMigration extends \Soosyze\Controller
         if (self::migration()->isMigration()) {
             self::config()->set('settings.module_update', true);
         } else {
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Your site is up to date') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Your site is up to date');
         }
 
         return new Redirect(self::router()->getRoute('system.module.edit'), 302);
@@ -24,9 +24,9 @@ class ModulesMigration extends \Soosyze\Controller
     {
         try {
             self::migration()->migrate();
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('The update is a success') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('The update is a success');
         } catch (\Exception $e) {
-            $_SESSION[ 'messages' ][ 'error' ] = [ t('An error occurred during the update') ];
+            $_SESSION[ 'messages' ][ 'error' ][] = t('An error occurred during the update');
         }
 
         return new Redirect(self::router()->getRoute('system.module.edit'), 302);

@@ -135,7 +135,7 @@ class ModulesManager extends \Soosyze\Controller
         $outInstall   = $this->installModule($moduleActive, $data);
 
         if (empty($outInstall) && empty($outUninstall)) {
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [ 'redirect' => $route ]);
         }
@@ -278,19 +278,23 @@ class ModulesManager extends \Soosyze\Controller
 
         $isRequired = [];
         foreach ($module[ 'require' ] as $require => $version) {
+            $require = htmlspecialchars($require);
             /* Si le module requis n'existe pas. */
             if (empty($composer[ $require ])) {
-                $isRequired[] = '<span class="module-is_required_danger">' . htmlspecialchars($require) . '</span>';
+                $isRequired[] = sprintf('<span class="module-is_required_danger">%s</span>', $require);
             }
             /* Si le module requis existe, mais n'est pas installé */
             elseif (!in_array($require, $data)) {
-                $isRequired[] = "<a href='#{$require}' class=\"module-is_required_info\">" . htmlspecialchars($require) . '</a>';
+                $isRequired[] = sprintf('<a href="#%s" class="module-is_required_info">%s</a>', $require, $require);
             }
             /* Si le module requis est installé, mais n'est pas de la bonne version. */
             elseif (!self::semver()->satisfies($composer[ $require ][ 'version' ], $version)) {
-                $isRequired[] = "<a href='#{$require}' class=\"module-is_required_warning\">" . htmlspecialchars(
-                    "{$require} ($version)"
-                ) . '</a>';
+                $isRequired[] = sprintf(
+                    '<a href="#%s" class="module-is_required_warning">%s (%s)</a>',
+                    $require,
+                    $require,
+                    $version
+                );
             }
         }
 

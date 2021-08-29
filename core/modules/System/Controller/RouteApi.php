@@ -13,10 +13,6 @@ class RouteApi extends \Soosyze\Controller
 
     public function index(ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $get = $req->getQueryParams();
 
         $search  = $get[ 'title' ] ?? '';
