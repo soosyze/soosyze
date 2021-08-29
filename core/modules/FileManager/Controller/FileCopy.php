@@ -26,10 +26,6 @@ class FileCopy extends \Soosyze\Controller
      */
     public function admin(string $path, string $name, string $ext, ServerRequestInterface $req)
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $path = Util::cleanPath('/' . $path);
         $spl  = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
@@ -137,10 +133,6 @@ class FileCopy extends \Soosyze\Controller
 
     public function update(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$req->isAjax()) {
-            return $this->get404($req);
-        }
-
         $path = Util::cleanPath('/' . $path);
 
         $fileCurrent = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
@@ -165,13 +157,12 @@ class FileCopy extends \Soosyze\Controller
         $dirTarget = self::core()->getDir('files_public', 'app/files') . $validator->getInput('dir');
         $validator->addInput('dir', $dirTarget);
 
-        $out = [];
         /* Si les valeur attendues sont les bonnes. */
         if (!$validator->isValid()) {
-            $out[ 'errors_keys' ]          = $validator->getKeyInputErrors();
-            $out[ 'messages' ][ 'errors' ] = $validator->getKeyErrors();
-
-            return $this->json(400, $out);
+            return $this->json(400, [
+                    'messages'    => [ 'errors' => $validator->getKeyErrors() ],
+                    'errors_keys' => $validator->getKeyInputErrors()
+            ]);
         }
 
         $fileTarget = "$dirTarget$name$ext";
@@ -179,10 +170,7 @@ class FileCopy extends \Soosyze\Controller
             $fileTarget = $this->isResolveName($dirTarget, $name, $ext);
         } elseif (self::config()->get('settings.replace_file') === Config::KEEP_REFUSE && is_file($fileTarget)) {
             return $this->json(400, [
-                    'messages' => [
-                        'type'   => t('Error'),
-                        'errors' => [ t('An existing file has the same name, you can not replace it') ]
-                    ]
+                    'messages' => [ 'errors' => [ t('An existing file has the same name, you can not replace it') ] ]
             ]);
         }
 
@@ -191,9 +179,9 @@ class FileCopy extends \Soosyze\Controller
             unlink($fileCurrent);
         }
 
-        $out[ 'messages' ][ 'success' ] = [ t('The directory is renamed') ];
+        $_SESSION[ 'messages' ][ 'success' ][] = t('The directory is renamed');
 
-        return $this->json(200, $out);
+        return $this->json(200);
     }
 
     private function getFileManager(string $path, ServerRequestInterface $req): Block
