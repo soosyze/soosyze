@@ -25,7 +25,7 @@ class FilePermissionManager extends \Soosyze\Controller
         $form = new FormBuilder([
             'action' => self::router()->getRoute('filemanager.permission.admin.check'),
             'class'  => 'form-api',
-            'method' => 'post'
+            'method' => 'patch'
         ]);
 
         foreach ($values as &$profil) {
@@ -110,7 +110,7 @@ class FilePermissionManager extends \Soosyze\Controller
                 ]);
             }
 
-            $_SESSION[ 'messages' ][ 'success' ] = [ t('Saved configuration') ];
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('filemanager.permission.admin')
