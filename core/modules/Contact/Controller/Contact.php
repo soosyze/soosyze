@@ -87,19 +87,18 @@ class Contact extends \Soosyze\Controller
             $this->container->callHook('contact.after', [ &$validator ]);
 
             if ($mail->send()) {
-                $_SESSION[ 'messages' ][ 'success' ] = [ t('Your message has been sent.') ];
+                $_SESSION[ 'messages' ][ 'success' ][] = t('Your message has been sent.');
 
                 return $this->json(200, [ 'redirect' => self::router()->getRoute('contact.form') ]);
             } else {
                 return $this->json(400, [
-                        'messages'    => [ t('An error prevented your email from being sent.') ],
-                        'errors_keys' => []
+                        'messages'    => [ 'errors' => t('An error prevented your email from being sent.') ]
                 ]);
             }
         }
 
         return $this->json(400, [
-                'messages'    => $validator->getKeyErrors(),
+                'messages'    => [ 'errors' => $validator->getKeyErrors() ],
                 'errors_keys' => $validator->getKeyInputErrors()
         ]);
     }
