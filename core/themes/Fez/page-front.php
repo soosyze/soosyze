@@ -62,13 +62,6 @@
 <div id="wrapper_main">
     <div class="container">
         <div class="row">
-        <?php if (!empty($section[ 'messages' ])): ?>
-
-            <div class="col-md-12">
-                <?php echo $section[ 'messages' ]; ?>
-
-            </div>
-        <?php endif; ?>
         <?php echo!empty($section[ 'sidebar' ])
                 ? '<div class="col-md-9">'
                 : '<div class="col-sm-12">'; ?>

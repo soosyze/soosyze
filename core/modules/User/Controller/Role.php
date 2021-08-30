@@ -30,19 +30,12 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.create.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Creating a role')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -91,19 +84,12 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.edit.form', [ &$form, $values, $id ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Editing a role')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getRoleSubmenu('user.role.edit', $id))
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form
@@ -162,19 +148,12 @@ class Role extends \Soosyze\Controller
 
         $this->container->callHook('role.remove.form', [ &$form, $data, $id ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Remove :name role', [ ':name' => $data[ 'role_label' ] ])
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getRoleSubmenu('user.role.remove', $id))
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
                     'form' => $form

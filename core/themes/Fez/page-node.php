@@ -60,14 +60,6 @@
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($section[ 'messages' ])): ?>
-
-            <div class="col-md-12">
-                <?php echo $section[ 'messages' ]; ?>
-
-            </div>
-        <?php endif; ?>
-
         <?php echo empty($section[ 'sidebar' ])
             ? '<div class="col-sm-8 col-sm-offset-2">'
             : '<div class="col-md-9">';

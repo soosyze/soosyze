@@ -22,13 +22,6 @@
 </div>
 <div class="container">
     <div class="row">
-        <?php if (!empty($section[ 'messages' ])): ?>
-
-        <div class="col-md-12">
-            <?php echo $section[ 'messages' ]; ?>
-
-        </div>
-        <?php endif; ?>
         <?php if ($section[ 'sidebar' ]): ?>
 
         <div class="col-md-4">

@@ -45,18 +45,11 @@ class Login extends \Soosyze\Controller
 
         $this->container->callHook('login.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Sign in')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-login-login.php', $this->pathViews, [
                     'form'             => $form,
                     'url_relogin'      => self::router()->getRoute('user.relogin', [
@@ -132,18 +125,11 @@ class Login extends \Soosyze\Controller
 
         $this->container->callHook('relogin.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Request a new password')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-login-relogin.php', $this->pathViews, [
                     'form'      => $form,
                     'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])

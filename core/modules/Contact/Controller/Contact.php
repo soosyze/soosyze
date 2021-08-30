@@ -31,18 +31,11 @@ class Contact extends \Soosyze\Controller
 
         $this->container->callHook('contact.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
                     'title_main' => t('Contact')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'contact/content-contact-form.php', $this->pathViews, [
                     'form' => $form
                 ])
