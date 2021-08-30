@@ -33,12 +33,6 @@ class NodeManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         $requestNodeAdd = self::router()->getRequestByRoute('node.add');
         $linkAdd        = $this->container->callHook('app.granted.request', [ $requestNodeAdd ])
             ? $requestNodeAdd->getUri()
@@ -52,7 +46,6 @@ class NodeManager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Contents')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
                     'action_filter'         => self::router()->getRoute('node.filter'),
                     'link_add'              => $linkAdd,
@@ -70,10 +63,6 @@ class NodeManager extends \Soosyze\Controller
 
     public function filterPage(int $page, ServerRequestInterface $req)
     {
-        if (!$this->admin) {
-            return $this->get404($req);
-        }
-
         $validator = (new Validator())
             ->setRules([
                 'title'          => '!required|string|max:255',

@@ -128,19 +128,12 @@ class Config extends \Soosyze\Controller
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-cog" aria-hidden="true"></i>',
                     'title_main' => t('Configuration')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'config/content-config-form.php', $this->pathViews, [
                     'form' => $form
                 ])

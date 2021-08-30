@@ -59,19 +59,12 @@ class RoleManager extends \Soosyze\Controller
 
         $this->container->callHook('user.role.admin.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
                     'title_main' => t('Administer roles')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.role.admin'))
                 ->make('page.content', 'user/content-role_manager-admin.php', $this->pathViews, [
                     'form'     => $form,

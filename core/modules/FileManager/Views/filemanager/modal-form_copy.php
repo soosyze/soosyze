@@ -6,7 +6,6 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            <div class="modal-messages"></div>
             <?php echo not_empty_or($menu); ?>
 
             <?php echo $form->form_open(); ?>

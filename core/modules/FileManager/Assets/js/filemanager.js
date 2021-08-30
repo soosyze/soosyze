@@ -78,9 +78,10 @@ $(document).delegate('#modal_filemanager input[type="submit"], #modal_filemanage
             const action = $('#table-file').data('link_show');
             updateManager(action, target);
             closeModal.call(evt.target, evt);
+            renderMessage(data.responseJSON);
         },
         error: function (data) {
-            renderMessage('.modal-messages', data.responseJSON);
+            renderMessage(data.responseJSON);
         }
     });
 });
@@ -97,7 +98,6 @@ $(document).delegate('.actions-file .mod', 'click', function (evt) {
         dataType: 'html',
         success: function (data) {
             $('.modal-content').html(data);
-            renderMessage('.modal-messages', data);
         }
     });
 });
@@ -121,7 +121,6 @@ $(document).delegate('.file-link_show', 'click', function (evt) {
         dataType: 'html',
         success: function (data) {
             $('.modal-content').html(data);
-            renderMessage('.modal-messages', data);
         }
     });
 });
@@ -137,7 +136,6 @@ $(document).delegate('#folder_create', 'click', function (evt) {
         dataType: 'html',
         success: function (data) {
             $('.modal-content').html(data);
-            renderMessage('.modal-messages', data);
         }
     });
 });

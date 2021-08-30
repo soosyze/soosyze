@@ -20,12 +20,6 @@ class Tool extends \Soosyze\Controller
         $tools = [];
         $this->container->callHook('tools.admin', [ &$tools ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         foreach ($tools as $key => &$tool) {
             if (!self::user()->isGrantedRequest($tool[ 'link' ])) {
                 unset($tools[ $key ]);
@@ -46,8 +40,7 @@ class Tool extends \Soosyze\Controller
                     'link_cron'         => self::router()->getRoute('system.tool.cron'),
                     'link_trans'        => self::router()->getRoute('system.tool.trans'),
                     'tools'             => $tools
-                ])
-                ->view('page.messages', $messages);
+                ]);
     }
 
     public function cron(ServerRequestInterface $req): ResponseInterface

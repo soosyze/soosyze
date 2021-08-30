@@ -34,19 +34,12 @@ class MenuManager extends \Soosyze\Controller
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
             });
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
                     'title_main' => t($menu[ 'title' ])
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::menu()->getMenuSubmenu('menu.show', $menu[ 'name' ]))
                 ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
                     'form'              => $form,

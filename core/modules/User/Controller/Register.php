@@ -38,12 +38,6 @@ class Register extends \Soosyze\Controller
                 ->eulaGroup($formbuilder, self::router());
         })->submitForm(t('Registration'));
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         if (($connectUrl = self::config()->get('settings.connect_url', ''))) {
             $connectUrl = '/' . $connectUrl;
         }
@@ -53,7 +47,6 @@ class Register extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Registration')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-register-create.php', $this->pathViews, [
                     'form'        => $form,
                     'url_relogin' => self::router()->getRoute('user.login', [

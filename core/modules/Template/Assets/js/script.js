@@ -22,19 +22,61 @@ var debounce = function (func, wait, immediate) {
     };
 };
 
-var renderMessage = function (selector, data) {
-    $(selector).html('');
-    if (data != undefined && data.messages != undefined && data.messages.success != undefined) {
-        $.each(data.messages.success, function (key, val) {
-            $(selector).append(`<div class="alert alert-success" role="alert"><p>${val}</p></div>`);
-        });
-    } else if (data != undefined && data.messages != undefined && data.messages.errors != undefined) {
-        $.each(data.messages.errors, function (key, val) {
-            $(selector).append(`<div class="alert alert-danger" role="alert"><p>${val}</p></div>`);
-        });
-        $.each(data.errors_keys, function (key, val) {
-            $(`#${val}`).addClass('is-invalid');
-        });
+var notyf = new Notyf({
+    dismissible: true,
+    duration: 2000,
+    position: {
+        x: 'right',
+        y: 'top'
+    },
+    types: [
+        {
+            type: 'info',
+            background: '#2185d0',
+            duration: false,
+            icon: {
+                color: '',
+                className: 'fas fa-info',
+                tagName: 'i'
+            }
+        },
+        {
+            type: 'warning',
+            background: 'orange',
+            icon: {
+                className: 'fa fa-warning',
+                tagName: 'i',
+                text: 'warning'
+            }
+        },
+        {
+            type: 'error',
+            duration: 10000
+        }
+    ]
+});
+
+var renderMessage = function (data) {
+    notyf.dismissAll();
+    if (data != undefined && data.messages != undefined) {
+        if (data.messages.success != undefined) {
+            $.each(data.messages.success, function (key, val) {
+                notyf.success(val);
+            });
+        }
+        if (data.messages.errors != undefined) {
+            $.each(data.messages.errors, function (key, val) {
+                notyf.error(val);
+            });
+        }
+        if (data.messages.infos != undefined) {
+            $.each(data.messages.infos, function (key, val) {
+                notyf.open({
+                    type: 'info',
+                    message: val
+                });
+            });
+        }
     }
 }
 

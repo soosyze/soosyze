@@ -88,7 +88,7 @@ $(document).delegate('#modal_block input[type="submit"].block-create-list', 'cli
             addEditor();
         },
         error: function (data) {
-            renderMessage('#modal_block .modal-messages', data.responseJSON);
+            renderMessage(data.responseJSON);
         }
     });
 });

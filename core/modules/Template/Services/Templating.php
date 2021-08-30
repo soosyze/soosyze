@@ -136,7 +136,7 @@ class Templating extends \Soosyze\Components\Http\Response
             'meta'          => $this->makeBalise('meta', $this->meta),
             'script_inline' => $this->makeConfigJs() . $scriptsInline,
             'styles'        => $this->makeBalise('link', (self::$stylesGlobal + $this->styles)),
-            'scripts'       => $this->makeBalise('script', (self::$scriptsGlobal + $this->scripts), false)
+            'scripts'       => $this->makeBalise('script', (self::$scriptsGlobal + $this->scripts), false) . $this->makeMessages()
         ]);
 
         $content    = $this->getThemplate()->render();
@@ -148,13 +148,6 @@ class Templating extends \Soosyze\Components\Http\Response
     public function init(): void
     {
         $this->loadComposer();
-        $messages = $this->createBlock('messages.php', $this->pathViews)
-            ->addVars([
-            'errors'   => [],
-            'warnings' => [],
-            'infos'    => [],
-            'success'  => []
-        ]);
 
         $submenu = $this->createBlock('submenu.php', $this->pathViews);
 
@@ -167,7 +160,6 @@ class Templating extends \Soosyze\Components\Http\Response
             ])
             ->addVars($this->core->getSettings())
             ->addBlock('content')
-            ->addBlock('messages', $messages)
             ->addBlock('submenu', $submenu)
             ->addBlock('main_menu')
             ->addBlock('second_menu');
@@ -386,6 +378,20 @@ class Templating extends \Soosyze\Components\Http\Response
             $out .= $orphan
                 ? sprintf('<%s%s/>', $type, $this->renderAttrInput($attrs)) . PHP_EOL
                 : sprintf('<%s%s></%s>', $type, $this->renderAttrInput($attrs), $type) . PHP_EOL;
+        }
+
+        return $out;
+    }
+
+    private function makeMessages(): string
+    {
+        $out = '';
+        if (isset($_SESSION[ 'messages' ])) {
+            $out = sprintf(
+                '<script>(function () {renderMessage(%s);})();</script>',
+                json_encode([ 'messages' => $_SESSION[ 'messages' ] ])
+            ) . PHP_EOL;
+            unset($_SESSION[ 'messages' ]);
         }
 
         return $out;

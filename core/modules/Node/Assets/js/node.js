@@ -42,7 +42,7 @@ $(function () {
             dataType: 'html',
             success: function (data) {
                 $('.modal-content').html(data);
-                renderMessage('.modal-messages', data);
+                renderMessage(data);
             }
         });
     });

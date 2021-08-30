@@ -41,12 +41,6 @@ class UsersManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         $this->isAdmin = true;
 
         return self::template()
@@ -55,7 +49,6 @@ class UsersManager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Administer users')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.admin'))
                 ->make('page.content', 'user/content-user_manager-admin.php', $this->pathViews, [
                     'link_create_user' => self::router()->getRoute('user.create'),

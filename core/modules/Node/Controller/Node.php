@@ -75,12 +75,6 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.create.form', [ &$form, $values, $type ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -89,7 +83,6 @@ class Node extends \Soosyze\Controller
                         ':name' => $fields[ 0 ][ 'node_type_name' ]
                     ])
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
                     'node_fieldset_submenu' => $this->getNodeFieldsetSubmenu()
@@ -194,11 +187,8 @@ class Node extends \Soosyze\Controller
         $fields = self::node()->makeFieldsById($node[ 'type' ], $node[ 'entity_id' ]);
         $user   = self::nodeuser()->getInfosUser($node);
 
-        $messages = [];
         if ($node[ 'node_status_id' ] != 1) {
-            $messages = [
-                'infos' => [ t('This content is not published') ]
-            ];
+            $_SESSION[ 'messages' ][ 'infos' ][] = t('This content is not published');
         }
 
         $tpl = self::template()
@@ -217,7 +207,6 @@ class Node extends \Soosyze\Controller
                     'page-node-show_' . $node[ 'type' ] . '.php',
                     'page-node.php'
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getSubmenuNode('node.show', $idNode))
                 ->make('page.content', 'node/content-node-show.php', $this->pathViews, [
                     'fields' => $fields,
@@ -259,19 +248,12 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.edit.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Edit :title content', [ ':title' => $values[ 'title' ] ])
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getSubmenuNode('node.edit', $idNode))
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form'                  => $form,
@@ -400,19 +382,12 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-file" aria-hidden="true"></i>',
                     'title_main' => t('Delete :name content', [ ':name' => $node[ 'title' ] ])
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getSubmenuNode('node.delete', $idNode))
                 ->make('page.content', 'node/content-node-form.php', $this->pathViews, [
                     'form' => $form,

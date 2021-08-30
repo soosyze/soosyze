@@ -64,19 +64,12 @@ class Theme extends \Soosyze\Controller
             }
         }
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-paint-brush" aria-hidden="true"></i>',
                     'title_main' => t('Themes')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-themes-admin.php', $this->pathViews, [
                     'active_theme' => $activeTheme,
@@ -151,19 +144,12 @@ class Theme extends \Soosyze\Controller
                 'type'     => 'button'
         ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-paint-brush" aria-hidden="true"></i>',
                     'title_main' => t('Theme settings')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-form.php', $this->pathViews, [
                     'form'      => $form,
