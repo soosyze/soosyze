@@ -49,12 +49,6 @@ class Entity extends \Soosyze\Controller
 
         $this->container->callHook('entity.create.form', [ &$form, $values, $node, $entity ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -62,7 +56,6 @@ class Entity extends \Soosyze\Controller
                     'title_main' => t('Add content of type :name', [
                         ':name' => $entity ])
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -198,12 +191,6 @@ class Entity extends \Soosyze\Controller
 
         $this->container->callHook('entity.edit.form', [ &$form, $values, $node, $entity, $idEntity ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -212,7 +199,6 @@ class Entity extends \Soosyze\Controller
                         ':title' => $entity
                     ])
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'node/content-entity-form.php', $this->pathViews, [ 'form' => $form ]);
     }
 

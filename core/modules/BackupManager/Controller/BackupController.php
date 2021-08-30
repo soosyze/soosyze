@@ -21,12 +21,6 @@ class BackupController extends \Soosyze\Controller
 
     public function admin(): ResponseInterface
     {
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         $backups = [];
         if ($isRepository = self::backupmanager()->isRepository()) {
             $backups = self::backupmanager()->listBackups();
@@ -41,7 +35,6 @@ class BackupController extends \Soosyze\Controller
                     'icon'       => '<i class="fas fa-file-archive"></i>',
                     'title_main' => t('Backups manager')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'backupmanager/content-backup-admin.php', $this->pathViews, [
                     'backups'          => $backups,
                     'delete_all_route' => $doBackupRoute,

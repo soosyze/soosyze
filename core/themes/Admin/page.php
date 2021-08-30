@@ -85,12 +85,6 @@
             </header>
             <?php endif; ?>
 
-            <div class="messages"></div>
-            <?php if (!empty($section[ 'messages' ])): ?>
-
-                <?php echo $section[ 'messages' ]; ?>
-            <?php endif; ?>
-
             <?php echo $section[ 'submenu' ]; ?>
 
             <?php echo $section[ 'content' ]; ?>

@@ -46,12 +46,6 @@ class NodeApi extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form', [ &$form, $node, $idNode ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('node/modal-form.php', $this->pathViews)

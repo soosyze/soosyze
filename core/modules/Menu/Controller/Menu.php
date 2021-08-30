@@ -33,19 +33,12 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.create.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
                     'title_main' => t('Add a menu')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -96,12 +89,6 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.store.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -110,7 +97,6 @@ class Menu extends \Soosyze\Controller
                         ':name' => t($values[ 'title' ])
                     ])
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::menu()->getMenuSubmenu('menu.edit', $nameMenu))
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
                     'form' => $form

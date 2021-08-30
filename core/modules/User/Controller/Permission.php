@@ -57,19 +57,12 @@ class Permission extends \Soosyze\Controller
             }
         }
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Administer permissions')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.permission.admin'))
                 ->make('page.content', 'user/content-permission-admin.php', $this->pathViews, [
                     'count'       => $count,

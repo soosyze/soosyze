@@ -53,11 +53,6 @@
                     <?php echo $section[ 'header' ]; ?>
                 </div>
             <?php endif; ?>
-            <?php if (!empty($section[ 'messages' ])): ?>
-                <div class="col-md-12">
-                    <?php echo $section[ 'messages' ]; ?>
-                </div>
-            <?php endif; ?>
 
             <?php
             echo!empty($section[ 'sidebar' ])

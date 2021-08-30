@@ -33,19 +33,12 @@ class Link extends \Soosyze\Controller
 
         $this->container->callHook('menu.link.create.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' => t('Add a link')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -108,12 +101,6 @@ class Link extends \Soosyze\Controller
 
         $this->container->callHook('menu.link.edit.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -121,7 +108,6 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Edit a link')
                 ])
                 ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.edit', $values[ 'menu' ], $id))
-                ->view('page.messages', $messages)
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -180,12 +166,6 @@ class Link extends \Soosyze\Controller
             'type'     => 'button'
         ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -193,7 +173,6 @@ class Link extends \Soosyze\Controller
                     'title_main' => t('Delete a link')
                 ])
                 ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.remove', $values[ 'menu' ], $id))
-                ->view('page.messages', $messages)
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
