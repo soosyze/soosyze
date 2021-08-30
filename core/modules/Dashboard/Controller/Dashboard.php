@@ -18,19 +18,12 @@ class Dashboard extends \Soosyze\Controller
 
     public function index(): ResponseInterface
     {
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fas fa-tachometer-alt" aria-hidden="true"></i>',
                     'title_main' => t('Dashboard')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
                     'link_info'    => self::router()->getRoute('dashboard.info'),
                     'size_backup'  => self::dashboard()->getSizeBackups(),

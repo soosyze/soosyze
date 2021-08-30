@@ -5,8 +5,6 @@
 </div>
 
 <div class="modal-body <?php echo not_empty_or($class); ?>">
-    <div class="modal-messages"></div>
-
     <?php echo not_empty_or($menu); ?>
 
     <div class="block-edit">

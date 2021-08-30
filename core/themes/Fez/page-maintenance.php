@@ -22,14 +22,6 @@
 <div id="wrapper_main">
     <div class="container">
         <div class="row">
-            <?php if (!empty($section[ 'messages' ])): ?>
-
-                <div class="col-md-12">
-                    <?php echo $section[ 'messages' ]; ?>
-
-                </div>
-            <?php endif; ?>
-
             <div class="col-md-12">
 
                 <h1><?php echo htmlspecialchars($title_main); ?></h1>

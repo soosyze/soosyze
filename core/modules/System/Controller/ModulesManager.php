@@ -86,11 +86,6 @@ class ModulesManager extends \Soosyze\Controller
         $form->token('token_module_edit')
             ->submit('submit', t('Save'));
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
         ksort($packages);
 
         return self::template()
@@ -99,7 +94,6 @@ class ModulesManager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-th-large" aria-hidden="true"></i>',
                     'title_main' => t('Modules')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'system/content-modules_manager-admin.php', $this->pathViews, [
                     'module_update'      => self::config()->get('settings.module_update'),
                     'link_module_check'  => self::router()->getRoute('system.migration.check'),

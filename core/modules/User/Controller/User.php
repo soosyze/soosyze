@@ -38,12 +38,6 @@ class User extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         $contentUser[] = self::user()->isConnected()
             ? self::template()
                 ->getTheme('theme_admin')
@@ -58,7 +52,6 @@ class User extends \Soosyze\Controller
                 ->view('page', [
                     'title_main' => $user[ 'username' ]
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserSubmenu('user.show', $id))
                 ->make('page.content', 'user/content-user-show.php', $this->pathViews, [
                     'content_user' => $contentUser,
@@ -85,19 +78,12 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.create.form', [ &$form, $values ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('User creation')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form' => $form
                 ]);
@@ -184,19 +170,12 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Editing a user')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserSubmenu('user.edit', $id))
                 ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form' => $form

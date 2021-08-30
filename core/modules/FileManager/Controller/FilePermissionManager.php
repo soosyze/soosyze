@@ -51,19 +51,12 @@ class FilePermissionManager extends \Soosyze\Controller
             &$form, $values
         ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-folder" aria-hidden="true"></i>',
                     'title_main' => t('Administer file permissions')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('filemanager.permission.admin'))
                 ->make('page.content', 'filemanager/content-file_permission_manager-admin.php', $this->pathViews, [
                     'form'     => $form,

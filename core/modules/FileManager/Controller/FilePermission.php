@@ -34,19 +34,12 @@ class FilePermission extends \Soosyze\Controller
             &$form, $values
         ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Add a files permission')
                 ])
-                ->view('page.messages', $messages)
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -122,19 +115,12 @@ class FilePermission extends \Soosyze\Controller
             &$form, $values
         ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Edit the files permission')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getPermissionSubmenu('filemanager.permission.edit', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form
@@ -222,19 +208,12 @@ class FilePermission extends \Soosyze\Controller
                 'type'     => 'button'
             ]);
 
-        $messages = [];
-        if (isset($_SESSION[ 'messages' ])) {
-            $messages = $_SESSION[ 'messages' ];
-            unset($_SESSION[ 'messages' ]);
-        }
-
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user" aria-hidden="true"></i>',
                     'title_main' => t('Delete files permission')
                 ])
-                ->view('page.messages', $messages)
                 ->view('page.submenu', $this->getPermissionSubmenu('filemanager.permission.remove', $id))
                 ->make('page.content', 'filemanager/content-file_permission-form.php', $this->pathViews, [
                     'form' => $form

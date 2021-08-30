@@ -130,7 +130,7 @@ $(document).delegate('.form-api input[type="submit"], .form-api button[type="sub
         },
         error: function (data) {
             const $classTabPane = $form.attr('data-tab-pane');
-            renderMessage('.messages', data.responseJSON);
+            renderMessage(data.responseJSON);
             fieldIsInvalid($form, data.responseJSON)
             fieldsetErrorFormApi($form, $classTabPane);
         }
@@ -165,11 +165,14 @@ function fieldsetErrorFormApi(form, classTabPane) {
 }
 
 function fieldIsInvalid($form, data) {
-    /* Clean les champs invalid */
-    $($form).find('.is-invalid').each(function() {
+    $($form).find('.is-invalid').each(function () {
         $(this).removeClass('is-invalid')
     });
-    $.each(data.errors_keys, function (key, val) {
-        $(`#${val}`).addClass('is-invalid');
-    });
+    if (data.errors_keys != undefined) {
+        console.log(data.errors_keys);
+        /* Clean les champs invalid */
+        $.each(data.errors_keys, function (key, val) {
+            $(`#${val}`).addClass('is-invalid');
+        });
+    }
 }

@@ -263,7 +263,7 @@ class App
 
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
         if ($maintenance && $granted) {
-            $response->view('page.messages', [ 'infos' => [ t('Site under maintenance') ] ]);
+            $_SESSION['messages']['infos'][] = t('Site under maintenance');
         }
         if ($this->router->parseQueryFromRequest() === '/' &&
             (!$maintenance ||
