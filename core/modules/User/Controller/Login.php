@@ -77,24 +77,30 @@ class Login extends \Soosyze\Controller
             ])
             ->setInputs($req->getParsedBody());
 
-        if ($validator->isValid()) {
-            self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
-        } else {
+        if (!$validator->isValid()) {
             return $this->json(400, [
                     'messages'    => [ 'errors' => $validator->getKeyErrors() ],
                     'errors_keys' => $validator->getKeyInputErrors()
             ]);
         }
 
-        if ($user = self::user()->isConnected()) {
-            $route = $this->getRedirectLogin($user);
-
-            return $this->json(200, [ 'redirect' => $route ]);
+        $user = self::auth()->attempt($validator->getInput('email'), $validator->getInput('password'));
+        if ($user === null) {
+            return $this->json(400, [
+                    'messages' => [ 'errors' => [ t('E-mail or password not recognized.') ] ]
+            ]);
         }
 
-        return $this->json(400, [
-                'messages' => [ 'errors' => t('E-mail or password not recognized.') ]
-        ]);
+        if (self::config()->get('settings.maintenance') && !self::user()->getGranted($user, 'system.config.maintenance')) {
+            return $this->json(400, [
+                    'messages' => [ 'errors' => [ t('You are not allowed to log in while the site is under maintenance.') ] ]
+            ]);
+        }
+
+        self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
+        $route = $this->getRedirectLogin($user);
+
+        return $this->json(200, [ 'redirect' => $route ]);
     }
 
     public function logout(): ResponseInterface

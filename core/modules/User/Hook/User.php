@@ -128,20 +128,8 @@ class User implements \SoosyzeCore\User\UserInterface
         if ($this->user->isConnectUrl($url)) {
             return false;
         }
-        /* Si le site est en maintenance. */
-        if (!$this->config->get('settings.maintenance')) {
-            return empty($user);
-        }
-        /* Et que l'utilisateur qui se connect existe. */
-        $post = $req->getParsedBody();
-        if (!isset($post[ 'email' ]) || !filter_var($post[ 'email' ], FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-        if (!($userActived = $this->user->getUserActived($post[ 'email' ]))) {
-            return false;
-        }
-        /* Si l'utilisateur à le droit de se connecter en mode maintenance. */
-        return $this->user->getGranted($userActived, 'system.config.maintenance');
+
+        return empty($user);
     }
 
     public function hookLogout(?ServerRequestInterface $req, ?array $user): bool
