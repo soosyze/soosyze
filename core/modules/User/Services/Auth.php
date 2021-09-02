@@ -35,7 +35,7 @@ class Auth
             ]);
         }
 
-        if (!($user = $this->attempt($email, $password))) {
+        if ($this->attempt($email, $password) === null) {
             return false;
         }
 
@@ -81,7 +81,7 @@ class Auth
 
     public function hash(string $password): string
     {
-        if ($hash = password_hash($password, PASSWORD_DEFAULT) === false) {
+        if (($hash = password_hash($password, PASSWORD_DEFAULT)) === false) {
             throw new \Exception();
         }
 

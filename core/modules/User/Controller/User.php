@@ -464,10 +464,10 @@ class User extends \Soosyze\Controller
         ];
 
         if ($id === null) {
-            $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
-        } else {
+            $data[ 'password' ]       = self::auth()->hash($validator->getInput('password_new'));
             $data[ 'time_installed' ] = (string) time();
             $data[ 'timezone' ]       = 'Europe/Paris';
+        } else {
             /* En cas de modification du mot de passe. */
             if ($validator->getInput('password_new') !== '') {
                 $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
