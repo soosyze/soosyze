@@ -186,7 +186,7 @@ class User extends \Soosyze\Controller
     {
         if (!($user = self::user()->find($id))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -296,7 +296,7 @@ class User extends \Soosyze\Controller
     {
         if (!($user = self::user()->find($id))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

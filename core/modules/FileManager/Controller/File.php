@@ -311,9 +311,9 @@ class File extends \Soosyze\Controller
         if ($fileCurrent === $fileUpdate || !is_file($fileUpdate)) {
             rename($fileCurrent, $fileUpdate);
 
-            $_SESSION[ 'messages' ][ 'success' ][] = t('The file has been renamed');
-
-            return $this->json(200);
+            return $this->json(200, [
+                    'messages' => [ 'success' => [ t('The file has been renamed') ] ]
+            ]);
         }
 
         return $this->json(400, [
@@ -380,9 +380,10 @@ class File extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             unlink($file);
-            $_SESSION[ 'messages' ][ 'success' ][] = t('The file has been deleted');
 
-            return $this->json(200);
+            return $this->json(200, [
+                    'messages' => [ 'success' => [ t('The file has been deleted') ] ]
+            ]);
         }
 
         return $this->json(400, [

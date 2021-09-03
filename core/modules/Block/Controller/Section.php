@@ -50,7 +50,7 @@ class Section extends \Soosyze\Controller
     {
         if (!self::query()->from('block')->where('block_id', '=', $id)->fetch()) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

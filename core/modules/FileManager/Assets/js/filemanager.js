@@ -74,11 +74,11 @@ $(document).delegate('#modal_filemanager input[type="submit"], #modal_filemanage
         processData: false,
         contentType: false,
         headers: {"X-HTTP-Method-Override": method},
-        success: function () {
+        success: function (data) {
             const action = $('#table-file').data('link_show');
             updateManager(action, target);
             closeModal.call(evt.target, evt);
-            renderMessage(data.responseJSON);
+            renderMessage(data);
         },
         error: function (data) {
             renderMessage(data.responseJSON);
