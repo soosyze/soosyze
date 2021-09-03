@@ -104,7 +104,7 @@ class Node extends \Soosyze\Controller
         }
         if (!($fields = self::node()->getFieldsForm($type))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -276,12 +276,12 @@ class Node extends \Soosyze\Controller
         }
         if (!($node = self::node()->getCurrentNode($idNode))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!($fields = self::node()->getFieldsForm($node[ 'type' ]))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -399,7 +399,7 @@ class Node extends \Soosyze\Controller
     {
         if (!($node = self::node()->byId($idNode))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
