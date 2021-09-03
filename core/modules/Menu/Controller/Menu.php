@@ -107,7 +107,7 @@ class Menu extends \Soosyze\Controller
     {
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -186,7 +186,7 @@ class Menu extends \Soosyze\Controller
     {
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

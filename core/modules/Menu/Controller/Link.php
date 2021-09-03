@@ -48,7 +48,7 @@ class Link extends \Soosyze\Controller
     {
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -117,7 +117,7 @@ class Link extends \Soosyze\Controller
     {
         if (!self::menu()->find($id)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -202,7 +202,7 @@ class Link extends \Soosyze\Controller
     {
         if (!($linkMenu = self::menu()->find($id))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

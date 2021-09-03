@@ -175,13 +175,15 @@ class FileCopy extends \Soosyze\Controller
         }
 
         copy($fileCurrent, $fileTarget);
+        $messageSuccess = t('The directory is copied');
         if ($validator->getInput('deplace')) {
             unlink($fileCurrent);
+            $messageSuccess = t('The directory is moved');
         }
 
-        $_SESSION[ 'messages' ][ 'success' ][] = t('The directory is renamed');
-
-        return $this->json(200);
+        return $this->json(200, [
+                'messages' => [ 'success' => [ $messageSuccess ] ]
+        ]);
     }
 
     private function getFileManager(string $path, ServerRequestInterface $req): Block

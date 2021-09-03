@@ -100,7 +100,7 @@ class Role extends \Soosyze\Controller
     {
         if (!$this->find($id)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -164,7 +164,7 @@ class Role extends \Soosyze\Controller
     {
         if (!$this->find($id)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

@@ -296,7 +296,7 @@ class Block extends \Soosyze\Controller
     {
         if (!($block = $this->find($id))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -405,7 +405,7 @@ class Block extends \Soosyze\Controller
     ): ResponseInterface {
         if (!$block = $this->find($id)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
