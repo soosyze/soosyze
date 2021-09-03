@@ -74,9 +74,9 @@ class Folder extends \Soosyze\Controller
         if (!is_dir($newDir)) {
             mkdir($newDir, 0755, true);
 
-            $_SESSION[ 'messages' ][ 'success' ][] = t('The directory is created');
-
-            return $this->json(201);
+            return $this->json(201, [
+                'messages' => [ 'success' => [ t('The directory is created') ] ]
+            ]);
         }
 
         return $this->json(400, [
@@ -144,9 +144,9 @@ class Folder extends \Soosyze\Controller
         if ($dir === $dirUpdate || !is_dir($dirUpdate)) {
             rename($dir, $dirUpdate);
 
-            $_SESSION[ 'messages' ][ 'success' ][] = t('The directory is renamed');
-
-            return $this->json(200);
+            return $this->json(200, [
+                'messages' => [ 'success' => [ t('The directory is renamed') ] ]
+            ]);
         }
 
         return $this->json(400, [
@@ -218,9 +218,9 @@ class Folder extends \Soosyze\Controller
             /* Supprime le dossier cible. */
             rmdir($dir);
 
-            $_SESSION[ 'messages' ][ 'success' ][] = t('The directory has been deleted');
-
-            return $this->json(200);
+            return $this->json(200, [
+                'messages' => [ 'success' => [ t('The directory has been deleted') ] ]
+            ]);
         }
 
         return $this->json(400, [

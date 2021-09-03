@@ -75,17 +75,17 @@ class Entity extends \Soosyze\Controller
         }
         if (!($node = self::node()->byId($idNode))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         $options = json_decode($fieldNode[ 'field_option' ]);
@@ -217,22 +217,22 @@ class Entity extends \Soosyze\Controller
 
         if (!($node = self::node()->byId($idNode))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
         if (!self::node()->getEntity($entity, $idEntity)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 

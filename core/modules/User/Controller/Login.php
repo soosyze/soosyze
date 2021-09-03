@@ -65,7 +65,7 @@ class Login extends \Soosyze\Controller
     {
         if (self::user()->isConnectUrl($url)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
@@ -146,7 +146,7 @@ class Login extends \Soosyze\Controller
     {
         if (self::user()->isConnectUrl($url)) {
             return $this->json(404, [
-                    'messages' => [ 'errors' => t('The requested resource does not exist.') ]
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
