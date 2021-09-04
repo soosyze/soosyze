@@ -124,8 +124,10 @@ class Config extends \Soosyze\Controller
 
         $config->form($form, $data, $req);
 
-        $form->token('token_' . $id . '_config')
+        $form->group('submit-group', 'div', function ($form) use ($id) {
+            $form->token('token_' . $id . '_config')
             ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        });
         $this->container->callHook("config.edit.$id.form", [ &$form, $data, $req ]);
 
         return self::template()
