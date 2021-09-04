@@ -180,8 +180,10 @@ class Folder extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_folder_delete')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_folder_delete')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            });
 
         return self::template()
                 ->getTheme('theme_admin')

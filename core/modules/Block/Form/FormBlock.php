@@ -195,7 +195,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
                 ->hidden('key_block', [ 'value' => $this->values[ 'key_block' ] ])
                 ->hidden('section', [ 'value' => $this->values[ 'section' ] ])
                 ->hidden('weight', [ 'value' => $this->values[ 'weight' ] ])
-                ->submit('submit_save', t('Save'), [ 'class' => 'btn btn-success submit-block-form' ]);
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
             });
 
         return $this;

@@ -265,8 +265,10 @@ class File extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->token('token_file_update')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_file_update')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            });
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -349,8 +351,10 @@ class File extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_file_delete')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_file_delete')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            });
 
         return self::template()
                 ->getTheme('theme_admin')

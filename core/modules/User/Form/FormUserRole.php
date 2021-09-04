@@ -150,14 +150,16 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
 
     public function submitForm(): self
     {
-        $this->token('token_role_submit')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
+        $this->group('submit-group', 'div', function ($form) {
+            $form->token('token_role_submit')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-danger',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
             ]);
+        });
 
         return $this;
     }
@@ -172,14 +174,16 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
         })
-            ->token('token_role_delete')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-default',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_role_delete')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-default',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
+            });
 
         return $this;
     }

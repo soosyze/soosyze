@@ -134,15 +134,7 @@ class Theme extends \Soosyze\Controller
             : (new FormThemePublic($attr, self::file()));
 
         $form->setValues($values)
-            ->makeFields()
-            ->token('setting_theme')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-        ]);
+            ->makeFields();
 
         return self::template()
                 ->getTheme('theme_admin')

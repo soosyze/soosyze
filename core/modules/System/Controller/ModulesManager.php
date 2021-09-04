@@ -83,8 +83,10 @@ class ModulesManager extends \Soosyze\Controller
                     : htmlspecialchars($values[ 'support' ][ 'docs' ])
             ];
         }
-        $form->token('token_module_edit')
-            ->submit('submit', t('Save'));
+        $form->group('submit-group', 'div', function ($form) {
+            $form->token('token_module_edit')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        });
 
         ksort($packages);
 
