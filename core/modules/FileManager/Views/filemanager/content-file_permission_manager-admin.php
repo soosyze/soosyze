@@ -141,6 +141,5 @@
         </tbody>
     </table>
 </fieldset>
-<?php echo $form->form_input('token_profil_form'); ?>
-<?php echo $form->form_input('submit'); ?>
+<?php echo $form->form_group('submit-group'); ?>
 <?php echo $form->form_close(); ?>

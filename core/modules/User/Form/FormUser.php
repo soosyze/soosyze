@@ -331,16 +331,18 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
      */
     public function submitForm(string $label = 'Save', bool $cancel = false): self
     {
-        $this->token('token_user_form')
-            ->submit('submit', t($label), [ 'class' => 'btn btn-success' ]);
-        if ($cancel) {
-            $this->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ]);
-        }
+        $this->group('submit-group', 'div', function ($form) use ($label, $cancel) {
+            $form->token('token_user_form')
+                ->submit('submit', t($label), [ 'class' => 'btn btn-success' ]);
+            if ($cancel) {
+                $this->html('cancel', '<button:attr>:content</button>', [
+                        ':content' => t('Cancel'),
+                        'class'    => 'btn btn-danger',
+                        'onclick'  => 'javascript:history.back();',
+                        'type'     => 'button'
+                    ]);
+            }
+        });
 
         return $this;
     }

@@ -28,8 +28,10 @@ class FormFolder extends \Soosyze\Components\Form\FormBuilder
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
-            ->token('token_folder')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_folder')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            });
 
         return $this;
     }
