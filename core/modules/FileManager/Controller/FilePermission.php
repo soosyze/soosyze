@@ -199,14 +199,16 @@ class FilePermission extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_file_permission')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-default',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_file_permission')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-default',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
+            });
 
         return self::template()
                 ->getTheme('theme_admin')

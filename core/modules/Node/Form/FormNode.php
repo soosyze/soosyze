@@ -604,7 +604,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ? 'token_node'
                     : 'token_node_' . $this->values[ 'id' ]
                 )
-                ->group('actions-group', 'fieldset', function ($form) {
+                ->group('submit-group', 'div', function ($form) {
                     $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                     ->html('cancel', '<button:attr>:content</button>', [
                         ':content' => t('Cancel'),
@@ -617,14 +617,17 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
     public function actionsEntitySubmit(): self
     {
-        return $this->token('token_entity')
-                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-                ->html('cancel', '<button:attr>:content</button>', [
-                    ':content' => t('Cancel'),
-                    'class'    => 'btn btn-danger',
-                    'onclick'  => 'javascript:history.back();',
-                    'type'     => 'button'
-                ]);
+        return $this
+                ->group('submit-group', 'div', function ($form) {
+                    $form->token('token_entity')
+                    ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+                    ->html('cancel', '<button:attr>:content</button>', [
+                        ':content' => t('Cancel'),
+                        'class'    => 'btn btn-danger',
+                        'onclick'  => 'javascript:history.back();',
+                        'type'     => 'button'
+                    ]);
+                }, self::$attrGrp);
     }
 
     public function rules(array &$value): void

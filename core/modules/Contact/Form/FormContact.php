@@ -33,8 +33,10 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
             ->objectGroup()
             ->messageGroup()
             ->copyGroup()
-            ->token('token_contact')
-            ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_contact')
+                ->submit('submit', t('Send the message'), [ 'class' => 'btn btn-success' ]);
+            });
 
         return $this;
     }

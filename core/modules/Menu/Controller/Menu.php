@@ -157,14 +157,16 @@ class Menu extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_menu_remove')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-default',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_menu_remove')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-default',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
+            });
 
         $this->container->callHook('menu.remove.form', [ &$form, $values, $nameMenu ]);
 

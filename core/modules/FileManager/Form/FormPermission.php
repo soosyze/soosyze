@@ -253,14 +253,16 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     }, [ 'class' => 'form-group col-sm-3' ]);
                 }
             })
-            ->token('token_file_permission')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-danger',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-        ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_file_permission')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-danger',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
+            });
 
         return $this;
     }

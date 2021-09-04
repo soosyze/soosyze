@@ -18,7 +18,7 @@ class FormDeleteBlock extends \Soosyze\Components\Form\FormBuilder
         })
             ->group('submit-group', 'div', function ($form) {
                 $form->token('token_block_delete')
-                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger submit-block-form' ]);
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
             });
 
         return $this;

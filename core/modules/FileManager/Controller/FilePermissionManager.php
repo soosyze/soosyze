@@ -44,8 +44,11 @@ class FilePermissionManager extends \Soosyze\Controller
             });
         }
         unset($profil);
-        $form->token('token_profil_form')
-            ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+        $form
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_profil_form')
+                ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
+            });
 
         $this->container->callHook('filemanager.permission.admin.form', [
             &$form, $values

@@ -269,14 +269,16 @@ class User extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_user_remove')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-            ->html('cancel', '<button:attr>:content</button>', [
-                ':content' => t('Cancel'),
-                'class'    => 'btn btn-default',
-                'onclick'  => 'javascript:history.back();',
-                'type'     => 'button'
-            ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_user_remove')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
+                ->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-default',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
+            });
 
         $this->container->callHook('user.remove.form', [ &$form, $values, $id ]);
 

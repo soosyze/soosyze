@@ -98,7 +98,7 @@ class Menu
             return;
         }
 
-        $form->before('actions-group', function ($form) use ($data) {
+        $form->before('submit-group', function ($form) use ($data) {
             $form->group('menu-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('menu-legend', t('Menu'))
                     ->group('active-group', 'div', function ($form) use ($data) {

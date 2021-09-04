@@ -100,8 +100,9 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                             [ 'for' => 'files' ]
                         );
             }, self::$attrGrp);
-        })
-                ->token('token_node_remove')
-                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+        })->group('submit-group', 'div', function ($form) {
+            $form->token('token_node_remove')
+                    ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+        });
     }
 }

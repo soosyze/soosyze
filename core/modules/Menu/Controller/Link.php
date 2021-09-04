@@ -254,8 +254,10 @@ class Link extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->token('token_menu_remove')
-            ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            ->group('submit-group', 'div', function ($form) {
+                $form->token('token_menu_remove')
+                ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+            });
 
         $this->container->callHook('menu.link.remove.form', [ &$form, $values ]);
 
