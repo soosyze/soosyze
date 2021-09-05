@@ -13,24 +13,24 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'folder_show'         => '/',
-        'folder_show_sub'     => true,
-        'profil_weight'       => 1,
-        'roles'               => [],
-        'folder_store'        => true,
-        'folder_update'       => false,
-        'folder_delete'       => false,
-        'folder_download'     => false,
-        'folder_size'         => 10,
-        'file_store'          => true,
-        'file_update'         => true,
-        'file_delete'         => false,
-        'file_download'       => true,
         'file_clipboard'      => true,
         'file_copy'           => true,
-        'file_size'           => 1,
+        'file_delete'         => false,
+        'file_download'       => true,
         'file_extensions_all' => false,
-        'file_extensions'     => []
+        'file_extensions'     => [],
+        'file_size'           => 1,
+        'file_store'          => true,
+        'file_update'         => true,
+        'folder_delete'       => false,
+        'folder_download'     => false,
+        'folder_show_sub'     => true,
+        'folder_show'         => '/',
+        'folder_size'         => 10,
+        'folder_store'        => true,
+        'folder_update'       => false,
+        'profil_weight'       => 1,
+        'roles'               => []
     ];
 
     /**

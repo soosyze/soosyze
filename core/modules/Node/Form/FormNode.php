@@ -16,16 +16,16 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'title'            => '',
-        'meta_description' => '',
-        'meta_noindex'     => false,
-        'meta_nofollow'    => false,
-        'meta_noarchive'   => false,
-        'meta_title'       => '',
-        'sticky'           => false,
-        'node_status_id'   => 3,
         'date_created'     => '',
         'id'               => null,
+        'meta_description' => '',
+        'meta_noarchive'   => false,
+        'meta_nofollow'    => false,
+        'meta_noindex'     => false,
+        'meta_title'       => '',
+        'node_status_id'   => 3,
+        'sticky'           => false,
+        'title'            => '',
         'user_id'          => null
     ];
 

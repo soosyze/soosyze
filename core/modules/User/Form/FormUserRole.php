@@ -12,11 +12,11 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'role_label'       => '',
-        'role_description' => '',
-        'role_weight'      => 1,
         'role_color'       => '#e6e7f4',
-        'role_icon'        => 'fa fa-user'
+        'role_description' => '',
+        'role_icon'        => 'fa fa-user',
+        'role_label'       => '',
+        'role_weight'      => 1
     ];
 
     /**
