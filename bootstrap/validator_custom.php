@@ -30,12 +30,13 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
 
         $linkSource = $alias->getSource($linkSource, $linkSource);
 
-        $uriSource = Uri::create($linkSource);
+        $uriSource = Uri::create($router->getBasePath() . $linkSource);
 
         $isRoute = $router->parse(
             $app->getRequest()
-                ->withUri($uriSource->withQuery('q=' . $uriSource->getPath()))
+                ->withUri($uriSource)
                 ->withMethod('get')
+                ->withoutHeader('x-http-method-override')
         );
 
         if (!$isRoute && $not) {
