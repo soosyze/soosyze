@@ -87,25 +87,21 @@
             <tr>
         <?php endforeach; elseif (!$is_repository): ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="4" class="alert alert-warning">
-                    <div class="content-nothing">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                        <p><?php
-                            echo t('The :name directory must be created to store the backups', [
-                               ':name' => $name_repository
-                            ]) ?></p>
-                        </div>
-                    </td>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <p><?php
+                        echo t('The :name directory must be created to store the backups', [
+                            ':name' => $name_repository
+                    ]) ?></p>
+                </td>
             </tr>
         <?php else: ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="4" class="alert alert-info">
-                    <div class="content-nothing">
-                        <i class="fa fa-inbox" aria-hidden="true"></i>
-                        <p><?php echo t('There is no backup yet') ?></p>
-                    </div>
+                    <i class="fa fa-inbox" aria-hidden="true"></i>
+                    <p><?php echo t('There is no backup yet') ?></p>
                 </td>
             </tr>
         <?php endif; ?>
