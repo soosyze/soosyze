@@ -12,12 +12,12 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'title_link'  => '',
-        'link'        => '',
-        'query'       => '',
         'fragment'    => '',
         'icon'        => '',
-        'target_link' => false
+        'link'        => '',
+        'query'       => '',
+        'target_link' => false,
+        'title_link'  => ''
     ];
 
     /**
@@ -92,7 +92,11 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 }, self::$attrGrp);
         })
             ->group('submit-group', 'div', function ($form) {
-                $form->token('token_link_form')
+                $form
+                ->hidden('active', [ 'value' => $this->values[ 'active' ] ])
+                ->hidden('menu', [ 'value' => $this->values[ 'menu' ] ])
+                ->hidden('weight', [ 'value' => $this->values[ 'weight' ] ])
+                ->token('token_link_form')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->html('cancel', '<button:attr>:content</button>', [
                     ':content' => t('Cancel'),

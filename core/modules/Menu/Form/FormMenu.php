@@ -10,8 +10,8 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'title'       => '',
-        'description' => ''
+        'description' => '',
+        'title'       => ''
     ];
 
     /**

@@ -15,16 +15,16 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'username'         => '',
-        'email'            => '',
-        'picture'          => '',
-        'bio'              => '',
-        'name'             => '',
-        'firstname'        => '',
         'actived'          => '',
+        'bio'              => '',
+        'email'            => '',
+        'firstname'        => '',
+        'name'             => '',
+        'picture'          => '',
         'rgpd'             => '',
+        'roles'            => [],
         'terms_of_service' => '',
-        'roles'            => []
+        'username'         => ''
     ];
 
     /**
