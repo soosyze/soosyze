@@ -34,12 +34,10 @@
         </td>
     </tr><?php endforeach; else: ?>
 
-    <tr>
+    <tr class="content-nothing">
         <td colspan="5" class="alert alert-info">
-            <div class="content-nothing">
-                <i class="fa fa-inbox" aria-hidden="true"></i>
-                <p><?php echo t('This directory does not currently contain any subdirectories.'); ?></p>
-            </div>
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p><?php echo t('This directory does not currently contain any subdirectories.'); ?></p>
         </td>
     </tr>
     <?php endif; ?>

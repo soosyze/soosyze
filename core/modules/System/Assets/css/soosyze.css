@@ -610,7 +610,7 @@ caption {
     border-top: 1px solid #ddd;
     line-height: 1.4;
     vertical-align: middle;
-    padding: 1em;
+    padding: .5em .5em;
     text-align: left;
 }
 .table > thead > tr > th {
@@ -663,7 +663,11 @@ caption {
 .table.table-responsive thead tr th {
     padding: 1em;
 }
-
+.table.table-responsive tr.content-nothing td {
+    margin: 0;
+    padding-left: 0.5em;
+    text-align: center;
+}
 @media (max-width: 768px) {
     .table > tbody > tr > td,
     .table > tbody > tr > th,
@@ -688,26 +692,34 @@ caption {
         border-bottom: 0;
         position: relative;
         border: 0px solid transparent;
-        padding-left: 50% !important;
+        padding-left: 50%;
         white-space: normal;
         text-align: right;
+    }
+    .table.table-responsive td .btn-group {
+        justify-content: end;
     }
     .table.table-responsive td:before {
         content: attr(data-title);
         font-weight: 600;
-        height: 100%;
         left: 0;
-        overflow: hidden !important;
+        overflow: hidden;
         padding-left: 1em;
         position: absolute;
         text-align: left;
-        text-overflow: ellipsis !important;
+        text-overflow: ellipsis;
         white-space: nowrap;
         width: 45%;
     }
     .table.table-responsive tbody tr th a,
     .table.table-responsive tbody tr th {
         color: #fff;
+    }
+    .table.table-responsive tr.content-nothing td:before {
+        content: initial;
+    }
+    .table.table-responsive td.content-nothing {
+        display: none;
     }
 }
 

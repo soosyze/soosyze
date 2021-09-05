@@ -54,12 +54,10 @@
             </tr>
         <?php endforeach; else: ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="4" class="alert alert-info">
-                    <div class="content-nothing">
-                        <i class="fa fa-inbox" aria-hidden="true"></i>
-                        <p><?php echo t('Your site has no content at the moment.'); ?><p>
-                    </div>
+                    <i class="fa fa-inbox" aria-hidden="true"></i>
+                    <p><?php echo t('Your site has no content at the moment.'); ?><p>
                 </td>
             </tr>
         <?php endif; ?>

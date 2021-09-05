@@ -149,16 +149,14 @@
             </tr>
             <?php endforeach; else: ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="5" class="alert alert-info">
-                   <div class="content-nothing">
                         <i class="fa fa-inbox" aria-hidden="true"></i>
                         <p><?php
                             echo t($is_admin
                                 ? 'Your site has no content at the moment.'
                                 : 'No results were found for your search.');
                         ?><p>
-                    </div>
                 </td>
             </tr>
         <?php endif; ?>

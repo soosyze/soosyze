@@ -103,7 +103,7 @@
                         </td>
                         <?php else: ?>
 
-                        <td></td>
+                        <td class="content-nothing"></td>
                         <?php endif; ?>
 
                     </tr>
