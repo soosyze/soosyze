@@ -55,8 +55,7 @@ class Config extends \Soosyze\Controller
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
-                    ],
-                    'errors_keys' => []
+                    ]
             ]);
         }
 

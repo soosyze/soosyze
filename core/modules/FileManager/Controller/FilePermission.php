@@ -106,7 +106,7 @@ class FilePermission extends \Soosyze\Controller
 
         $action = self::router()->getRoute('filemanager.permission.update', [ ':id' => $id ]);
 
-        $form = (new FormPermission([ 'action' => $action, 'method' => 'post' ]))
+        $form = (new FormPermission([ 'action' => $action, 'method' => 'put' ]))
             ->setRoles(self::query()->from('role')->fetchAll())
             ->setValues($values)
             ->makeFields();
@@ -190,7 +190,7 @@ class FilePermission extends \Soosyze\Controller
             ':id' => $id
         ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'post' ]))
+        $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
             ->group('profil-fieldset', 'fieldset', function ($form) {
                 $form->legend('profil-legend', t('Delete files permission'))
                 ->group('info-group', 'div', function ($form) {
@@ -253,6 +253,8 @@ class FilePermission extends \Soosyze\Controller
             $this->container->callHook('filemanager.permission.delete.after', [
                 $validator, $id
             ]);
+
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('filemanager.permission.admin')
