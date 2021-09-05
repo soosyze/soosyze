@@ -22,7 +22,7 @@ class Link extends \Soosyze\Controller
         if (!self::menu()->getMenu($nameMenu)->fetch()) {
             return $this->get404($req);
         }
-        $values = [];
+        $values = [ 'menu' => $nameMenu ];
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
         $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
@@ -59,7 +59,7 @@ class Link extends \Soosyze\Controller
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
 
         if ($validator->isValid()) {
-            $data = $this->getData($validator, $nameMenu, $infoUrlOrRoute);
+            $data = $this->getData($validator, $infoUrlOrRoute);
 
             $this->container->callHook('menu.link.store.before', [ $validator, &$data ]);
             self::query()
@@ -128,7 +128,7 @@ class Link extends \Soosyze\Controller
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
 
         if ($validator->isValid()) {
-            $data = $this->getData($validator, $nameMenu, $infoUrlOrRoute, $id);
+            $data = $this->getData($validator, $infoUrlOrRoute, $id);
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
             self::query()
@@ -268,47 +268,62 @@ class Link extends \Soosyze\Controller
     {
         return (new Validator())
                 ->setRules([
+                    'active'          => 'bool',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
+                    'menu'            => 'required|inarray:' . $this->getListNamesMenu(),
                     'target_link'     => 'bool',
                     'title_link'      => 'required|string|max:255',
-                    'token_link_form' => 'required|token'
+                    'token_link_form' => 'required|token',
+                    'weight'          => '!required|numeric|between_numeric:0,50'
                 ])
                 ->setLabels([
+                    'active'      => t('Active'),
                     'icon'        => t('Icon'),
                     'link'        => t('Link'),
+                    'menu'        => t('Menu'),
                     'target_link' => t('Target'),
-                    'title_link'  => t('Link title')
+                    'title_link'  => t('Link title'),
+                    'weight'      => t('Weight')
                 ])
                 ->setInputs($req->getParsedBody());
     }
 
     private function getData(
         Validator $validator,
-        string $nameMenu,
         array $infoUrlOrRoute,
         ?int $id = null
     ): array {
         $data = [
+            'active'      => (bool) $validator->getInput('active'),
             'fragment'    => $infoUrlOrRoute[ 'fragment' ],
             'icon'        => $validator->getInput('icon'),
             'key'         => $infoUrlOrRoute[ 'key' ],
             'link'        => $infoUrlOrRoute[ 'link' ],
             'link_router' => $infoUrlOrRoute[ 'link_router' ],
+            'menu'        => $validator->getInput('menu'),
             'query'       => $infoUrlOrRoute[ 'query' ],
             'target_link' => (bool) $validator->getInput('target_link'),
-            'title_link'  => $validator->getInput('title_link')
+            'title_link'  => $validator->getInput('title_link'),
+            'weight'      => (int) $validator->getInput('weight')
         ];
 
         if ($id === null) {
             $data += [
-                'active' => true,
-                'menu'   => $nameMenu,
                 'parent' => -1,
-                'weight' => 1
             ];
         }
 
         return $data;
+    }
+
+    private function getListNamesMenu(): string
+    {
+        $menus = self::query()->from('menu')->fetchAll();
+        $names = $menus
+            ? array_column($menus, 'name')
+            : [];
+
+        return implode(',', $names);
     }
 }
