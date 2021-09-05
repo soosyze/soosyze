@@ -12,12 +12,15 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
+        'active'      => true,
         'fragment'    => '',
         'icon'        => '',
         'link'        => '',
+        'menu'        => '',
         'query'       => '',
         'target_link' => false,
-        'title_link'  => ''
+        'title_link'  => '',
+        'weight'      => 1
     ];
 
     /**
