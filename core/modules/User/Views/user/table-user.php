@@ -103,12 +103,10 @@
             </tr>
             <?php endforeach; else: ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="6" class="alert alert-info">
-                    <div class="content-nothing">
-                        <i class="fa fa-inbox"></i>
-                        <p><?php echo t('No results were found for your search.'); ?><p>
-                    </div>
+                    <i class="fa fa-inbox"></i>
+                    <p><?php echo t('No results were found for your search.'); ?><p>
                 </td>
             </tr>
         <?php endif; ?>

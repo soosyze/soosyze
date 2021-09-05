@@ -128,12 +128,10 @@
             </tr>
             <?php endforeach; else: ?>
 
-            <tr>
+            <tr class="content-nothing">
                 <td colspan="6" class="alert alert-info">
-                    <div class="content-nothing">
-                        <i class="fa fa-inbox" aria-hidden="true"></i>
-                        <p><?php echo t('Your site does not have a file profile at this time.'); ?></p>
-                    </div>
+                    <i class="fa fa-inbox" aria-hidden="true"></i>
+                    <p><?php echo t('Your site does not have a file profile at this time.'); ?></p>
                 </td>
             </tr>
         <?php endif; ?>

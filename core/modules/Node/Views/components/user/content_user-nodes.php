@@ -32,7 +32,7 @@
     </p>
     <?php endforeach; else: ?>
 
-    <div colspan="5" class="alert alert-info">
+    <div class="alert alert-info">
         <div class="content-nothing">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p><?php echo t($content_nothing); ?><p>
