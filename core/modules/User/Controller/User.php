@@ -97,8 +97,7 @@ class User extends \Soosyze\Controller
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
-                    ],
-                    'errors_keys' => []
+                    ]
             ]);
         }
 
@@ -129,6 +128,8 @@ class User extends \Soosyze\Controller
 
             $this->savePicture($user[ 'user_id' ], $validator);
             $this->container->callHook('user.store.after', [ &$validator ]);
+
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
                     'redirect' => self::router()->getRoute('user.admin')
@@ -196,8 +197,7 @@ class User extends \Soosyze\Controller
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
-                    ],
-                    'errors_keys' => []
+                    ]
             ]);
         }
 
@@ -332,6 +332,8 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.delete.after', [
                 $validator, $user, $id
             ]);
+
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
                     'redirect' => self::router()->getRoute('user.admin')

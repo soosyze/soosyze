@@ -118,8 +118,7 @@ class ModulesManager extends \Soosyze\Controller
 
         if (!$validator->isValid()) {
             return $this->json(400, [
-                    'messages'    => [ 'errors' => $validator->getKeyErrors() ],
-                    'errors_keys' => []
+                    'messages'    => [ 'errors' => $validator->getKeyErrors() ]
             ]);
         }
 
@@ -137,8 +136,7 @@ class ModulesManager extends \Soosyze\Controller
         }
 
         return $this->json(400, [
-                'messages'    => [ 'errors' => $outInstall + $outUninstall ],
-                'errors_keys' => []
+                'messages'    => [ 'errors' => $outInstall + $outUninstall ]
         ]);
     }
 
