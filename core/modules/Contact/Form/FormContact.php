@@ -10,10 +10,10 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
      * @var array
      */
     protected $values = [
-        'name'    => '',
         'email'   => '',
-        'object'  => '',
         'message' => '',
+        'name'    => '',
+        'object'  => ''
     ];
 
     /**
