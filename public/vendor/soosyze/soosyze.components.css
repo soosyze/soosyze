@@ -1,0 +1,227 @@
+/*!
+ * Soosyze CSS 1.0.0
+ *
+ * Released under the MIT license
+ * https://github.com/soosyze/css/blob/master/LICENSE.md
+ */
+.hidden {
+    display: none;
+}
+
+
+/* --------------------------- */
+/* --------- DRIPDOWN -------- */
+/* --------------------------- */
+.dropdown {
+    position: relative;
+}
+.dropdown-menu {
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    display: none;
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+}
+.dropdown-menu.dropdown-menu-right {
+    left: auto;
+    right: 0;
+}
+.dropdown-menu .dropdown-item {
+    color: black;
+    border-radius: 0;
+    display: block;
+    padding: .7em 1em;
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    width: 100%;
+}
+.dropdown-menu .dropdown-item:hover {
+    background-color: #ddd
+}
+.dark .dropdown-menu .dropdown-item {
+    background-color: #131419;
+    color: #fff;
+}
+.dark .dropdown-menu .dropdown-item:hover {
+    background-color: #191c22;
+}
+
+.show {
+    display: block;
+}
+
+
+/* --------------------------- */
+/* ---------- DRAWER --------- */
+/* --------------------------- */
+.drawer {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 0;
+    z-index: 15;
+}
+.drawer.drawer-open {
+    background-color: rgba(0,0,0,.4);
+    transition: background-color .3s ease-out;
+    width: 100%;
+}
+.drawer .close {
+    color: #333;
+}
+.drawer-left .drawer-dialog {
+    left: -16em;
+}
+.drawer-left.drawer-open .drawer-dialog {
+    left: 0;
+}
+.drawer-right .drawer-dialog {
+    right: -16em;
+}
+.drawer-right.drawer-open .drawer-dialog {
+    right: 0;
+}
+.drawer-top .drawer-dialog {
+    top: -16em;
+}
+.drawer-top.drawer-open .drawer-dialog {
+    top: 0;
+}
+.drawer-bottom .drawer-dialog {
+    bottom: -16em;
+}
+.drawer-bottom.drawer-open .drawer-dialog {
+    bottom: 0;
+}
+.drawer-dialog {
+    background-color: #fff;
+    color: #333;
+    position: fixed;
+    overflow-x: hidden;
+    transition: .5s;
+    z-index: 15;
+}
+.drawer-left .drawer-dialog,
+.drawer-right .drawer-dialog {
+    height: 100%;
+    top: 0;
+    width: 16em;
+}
+.drawer-top .drawer-dialog,
+.drawer-bottom .drawer-dialog {
+    height: 16em;
+    left: 0;
+    right: 0;
+    width: auto;
+}
+.drawer-header {
+    padding: 1em;
+}
+.drawer-body {
+    padding: 0 1em;
+}
+
+/* Dark */
+.dark .drawer.drawer-open,
+.dark .modal.modal-open {
+    background-color: rgba(255,255,255,.1);
+}
+.dark .drawer-dialog {
+    background-color: #282c37;
+    color: #fff;
+}
+.dark .drawer .close {
+    color: #fff;
+}
+
+
+/* --------------------------- */
+/* --------- MODALE----------- */
+/* --------------------------- */
+.modal {
+    bottom: 0;
+    display: none;
+    left: 0;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 15;
+}
+.modal.modal-open {
+    background-color: rgba(0,0,0,.4);
+    display: block;
+    transition: background-color .3s ease-out;
+}
+.modal-dialog {
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: .4s;
+    animation-name: animatetop;
+    animation-duration: .4s;
+    background-color: #fefefe;
+    box-shadow: 0 0 8px 1px rgba(0,0,0,.2);
+    margin: 30px auto;
+    width: 80%;
+}
+.modal .close {
+    color: #fff;
+}
+@-webkit-keyframes animatetop {
+    from { top: -300px; opacity: 0 }
+    to { top: 0; opacity: 1 }
+}
+@keyframes animatetop {
+    from { top: -300px; opacity: 0 }
+    to { top: 0; opacity: 1 }
+}
+.modal-header,
+.modal-body,
+.modal-footer {
+    padding: 1em;
+}
+.modal-header {
+    background-color: #20222d;
+    color: #fff;
+}
+.modal-header h2,
+.modal-header h3,
+.modal-header h4 {
+    padding: 0;
+    margin: 0;
+}
+
+/* Dark */
+.dark .modal-body {
+    background-color: #1f232b;
+}
+.dark .modal-header {
+    background-color: #131419
+}
+
+
+/* --------------------------- */
+/* -------- TABS LINK -------- */
+/* --------------------------- */
+.select-pane,
+.tab-content .tab-pane {
+    display: none;
+}
+.select-pane.active,
+.tab-content .tab-pane.active {
+    display: block;
+}
+.fade:not(.active) {
+    opacity: 0;
+}
+.fade {
+    transition: opacity .15s linear;
+}

@@ -32,7 +32,7 @@ $app->setSettings([
     /* Chemin des fichiers public. */
     'files_public'        => 'public/files',
     /* Chemin des ressources public. */
-    'assets_public'       => 'public/assets',
+    'assets_public'       => 'public/vendor',
     /* Chemin des modules du core. */
     'modules'             => 'core/modules',
     /* Chemin des modules contributeur. */

@@ -91,7 +91,7 @@ class Install extends \Soosyze\Controller
                     'steps'         => $steps,
                     'step_active'   => $id,
                     'style_install' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/install.css',
-                    'style_soosyze' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/soosyze.css'
+                    'style_soosyze' => self::core()->getPath('assets_public', 'public/vendor', false) . '/soosyze/soosyze.css'
                 ])
                 ->render();
 

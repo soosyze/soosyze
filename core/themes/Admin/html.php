@@ -9,7 +9,7 @@
         <?php echo $meta; ?>
         <?php echo $styles; ?>
 
-        <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/soosyze.css">
+        <link rel="stylesheet" href="<?php echo $base_path . $assets_public; ?>/soosyze/soosyze.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/styles.css">
         <link rel="stylesheet" href="<?php echo $base_theme; ?>assets/css/menu.css">
     </head>
