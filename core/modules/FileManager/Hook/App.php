@@ -30,6 +30,9 @@ class App
         $vendor = $this->core->getPath('modules', 'modules/core', false) . '/FileManager/Assets';
 
         $response->addScript('filemanager', "$vendor/js/filemanager.js")
-            ->addStyle('filemanager', "$vendor/css/filemanager.css");
+            ->addStyle('filemanager', "$vendor/css/filemanager.css")
+            ->addConfigJs('filemanager', [
+                'copy'       => t('Copied link')
+            ]);
     }
 }
