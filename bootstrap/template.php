@@ -18,7 +18,7 @@ Templating::setScriptsGlobal([
         'src' => "$vendor/select2/select2.min.js"
     ],
     'soosyze'  => [
-        'src' => "$vendor/soosyze/soosyze.js",
+        'src' => "$vendor/soosyze/soosyze.components.js",
     ],
     'notify' => [
         'src' => "$vendor/notyf/notyf.min.js"
@@ -38,7 +38,7 @@ Templating::setStylesGlobal([
         'rel'  => 'stylesheet'
     ],
     'soosyze'     => [
-        'href' => "$vendor/soosyze/soosyze.css",
+        'href' => "$vendor/soosyze/soosyze.components.css",
         'rel'  => 'stylesheet'
     ],
     'notify' => [
