@@ -26,6 +26,11 @@ $(document).delegate('.copy-clipboard', 'click', function (evt) {
     tmp.select();
     document.execCommand("copy");
     document.body.removeChild(tmp);
+    notyf.open({
+        type: 'info',
+        duration: 2000,
+        message: config.filemanager.copy
+    });
 });
 /**
  * Evenements de la page des profils de fichier.
