@@ -24,4 +24,9 @@ RouteCollection::name('block.')->group(function (RouteGroup $r): void {
         $r->get('remove', '/{theme}/{id}/delete', '@remove')->whereDigits('id');
         $r->delete('delete', '/{theme}/{id}', '@delete')->whereDigits('id');
     });
+    $r->setNamespace('\Style')->name('style.')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
+        $r->get('edit', '/{theme}/{id}/style', '@edit')->whereDigits('id');
+        $r->put('update', '/{theme}/{id}/style', '@update')->whereDigits('id');
+    });
+    $r->get('tool.style', '/admin/tool/style', '\Style@styleGenerate');
 });

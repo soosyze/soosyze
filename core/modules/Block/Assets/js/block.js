@@ -14,6 +14,7 @@ $(function () {
             success: function (data) {
                 $('#modal_block .modal-content').html(data);
                 addEditor();
+                $('input.color-picker').colorPicker();
             }
         });
     });

@@ -22,6 +22,9 @@ Templating::setScriptsGlobal([
     ],
     'notify' => [
         'src' => "$vendor/notyf/notyf.min.js"
+    ],
+    'colorpicker' => [
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/tinyColorPicker/1.1.1/jqColorPicker.min.js'
     ]
 ]);
 Templating::setStylesGlobal([

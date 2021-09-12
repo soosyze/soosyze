@@ -4,7 +4,7 @@
     <h2><?php echo $title; ?></h2>
 </div>
 
-<div class="modal-body <?php echo not_empty_or($class); ?>">
+<div class="modal-body">
     <?php echo not_empty_or($menu); ?>
 
     <div class="block-edit">

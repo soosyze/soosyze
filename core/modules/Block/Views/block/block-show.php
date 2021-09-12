@@ -9,6 +9,11 @@
         <a data-target="#modal_block"
            data-toogle="modal"
            class="mod"
+           href="<?php echo $block[ 'link_edit_style' ]; ?>"
+           title="<?php echo t('Style'); ?>"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
+        <a data-target="#modal_block"
+           data-toogle="modal"
+           class="mod"
            href="<?php echo $block[ 'link_remove' ]; ?>"
            title="<?php echo t('Delete'); ?>"><i class="fa fa-trash-alt" aria-hidden="true"></i></a>
         <i aria-hidden="true"

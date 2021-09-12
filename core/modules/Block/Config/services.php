@@ -8,6 +8,9 @@ return [
     'block' => [
         'class' => Services\Block::class
     ],
+    'style' => [
+        'class' => 'Soosyze\Core\Modules\Block\Services\Style'
+    ],
     'block.hook.app' => [
         'class' => Hook\App::class,
         'hooks' => [
@@ -56,14 +59,23 @@ return [
             'route.block.store' => 'hookBlockCreated',
             'route.block.edit' => 'hookBlockEdited',
             'route.block.update' => 'hookBlockEdited',
+            'route.block.style.edit' => 'hookBlockEdited',
+            'route.block.style.update' => 'hookBlockEdited',
             'route.block.remove' => 'hookBlockDeleted',
-            'route.block.delete' => 'hookBlockDeleted'
+            'route.block.delete' => 'hookBlockDeleted',
+            'route.block.tool.style' => 'hookBlockEdited'
         ]
     ],
     'block.extend' => [
         'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser'
+        ]
+    ],
+    'block.hook.tool' => [
+        'class' => 'Soosyze\Core\Modules\Block\Hook\Tool',
+        'hooks' => [
+            'tools.action' => 'hookToolAction'
         ]
     ]
 ];

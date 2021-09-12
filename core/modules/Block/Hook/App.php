@@ -9,6 +9,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Core\Modules\Block\Services\Block;
+use Soosyze\Core\Modules\Block\Services\Style;
 use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 use Soosyze\Core\Modules\Template\Services\Block as ServicesBlock;
 use Soosyze\Core\Modules\Template\Services\Templating;
@@ -33,6 +34,11 @@ class App
      * @var Query
      */
     private $query;
+
+    /**
+     * @var Style
+     */
+    private $style;
 
     /**
      * @var string
@@ -66,6 +72,7 @@ class App
         Core $core,
         Query $query,
         Router $router,
+        Style $style,
         Templating $template,
         User $user
     ) {
@@ -73,6 +80,7 @@ class App
         $this->core   = $core;
         $this->query  = $query;
         $this->router = $router;
+        $this->style  = $style;
         $this->tpl    = $template;
         $this->block  = $block;
 
@@ -114,6 +122,15 @@ class App
                     : null
             ]);
         }
+
+        $themeName = $theme === 'admin'
+            ? $this->tpl->getThemeAdminName()
+            : $this->tpl->getThemePublicName();
+
+        $response->addStyle(
+            'template.theme',
+            $this->style->getUrlStyle($themeName)
+        );
     }
 
     private function isAdmin(): bool
@@ -172,10 +189,11 @@ class App
                     'id'    => $block[ 'block_id' ]
                 ];
 
-                $block[ 'link_edit' ]   = $this->router->generateUrl('block.edit', $params);
-                $block[ 'link_remove' ] = $this->router->generateUrl('block.remove', $params);
-                $block[ 'link_update' ] = $this->router->generateUrl('block.section.update', $params);
-                $block[ 'title_admin' ] = empty($block[ 'key_block' ])
+                $block[ 'link_edit' ]       = $this->router->generateUrl('block.edit', $params);
+                $block[ 'link_edit_style' ] = $this->router->generateUrl('block.style.edit', $params);
+                $block[ 'link_remove' ]     = $this->router->generateUrl('block.remove', $params);
+                $block[ 'link_update' ]     = $this->router->generateUrl('block.section.update', $params);
+                $block[ 'title_admin' ]     = empty($block[ 'key_block' ])
                     ? ''
                     : $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
             }
