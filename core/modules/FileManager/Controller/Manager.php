@@ -46,7 +46,7 @@ class Manager extends \Soosyze\Controller
          */
         foreach ($profils as $profil) {
             $path = $profil[ 'folder_show' ];
-            $path = str_replace(':user_id', (string) $user[ 'user_id' ] ?? '0', $path);
+            $path = str_replace(':user_id', (string) ($user[ 'user_id' ] ?? '0'), $path);
             /* Si le profil est mal écrit. */
             $path = Util::strSlug($path, '-', '\/');
 

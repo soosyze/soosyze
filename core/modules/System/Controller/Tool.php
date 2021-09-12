@@ -46,9 +46,8 @@ class Tool extends \Soosyze\Controller
                     'title_main' => t('Tools')
                 ])
                 ->make('page.content', 'system/content-tools-admin.php', $this->pathViews, [
+                    'actions'           => $this->getActions(),
                     'is_granted_action' => self::user()->isGranted('system.tool.action'),
-                    'link_cron'         => self::router()->generateUrl('system.tool.cron'),
-                    'link_trans'        => self::router()->generateUrl('system.tool.trans'),
                     'tools'             => $tools
                 ]);
     }
@@ -88,5 +87,33 @@ class Tool extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'success' ][] = t('The translation files have been updated');
 
         return new Redirect(self::router()->generateUrl('system.tool.admin'), 302);
+    }
+
+    private function getActions(): array
+    {
+        $actions = [
+            [
+                'icon'       => 'fa fa-language',
+                'request'    => self::router()->generateRequest('system.tool.trans'),
+                'title_link' => 'Update translation'
+            ],
+            [
+                'icon'       => 'fa fa-concierge-bell',
+                'request'    => self::router()->generateRequest('system.tool.cron'),
+                'title_link' => 'Execute the cron task'
+            ]
+        ];
+        $this->container->callHook('tools.action', [ &$actions ]);
+
+        foreach ($actions as $key => &$action) {
+            if (!self::user()->isGrantedRequest($action[ 'request' ])) {
+                unset($actions[ $key ]);
+
+                continue;
+            }
+            $action[ 'link' ] = $action[ 'request' ]->getUri();
+        }
+
+        return $actions;
     }
 }

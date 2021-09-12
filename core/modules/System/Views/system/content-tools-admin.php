@@ -8,16 +8,14 @@
             </button>
 
             <ul id="myDropdown" class="dropdown-menu dropdown-menu-right">
+                <?php if ($actions): foreach ($actions as $action): ?>
+
                 <li>
-                    <a href="<?php echo $link_trans; ?>" class="btn dropdown-item">
-                        <i class="fa fa-language" aria-hidden="true"></i> <?php echo t('Update translation'); ?>
+                    <a href="<?php echo $action[ 'link' ]; ?>" class="btn dropdown-item">
+                        <i class="<?php echo t($action[ 'icon' ]); ?>" aria-hidden="true"></i> <?php echo t($action[ 'title_link' ]); ?>
                     </a>
                 </li>
-                <li>
-                    <a href="<?php echo $link_cron; ?>" class="btn dropdown-item">
-                        <i class="fa fa-concierge-bell" aria-hidden="true"></i> <?php echo t('Execute the cron task'); ?>
-                    </a>
-                </li>
+                <?php endforeach; endif; ?>
             </ul>
         </div>
     </div>

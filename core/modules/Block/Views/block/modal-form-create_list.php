@@ -4,7 +4,7 @@
     <h2><?php echo $title; ?></h2>
 </div>
 
-<div class="modal-body <?php echo not_empty_or($class); ?>">
+<div class="modal-body form-create_list">
     <div class="row">
         <div class="col-md-4">
             <input aria-label="<?php echo t('Search blocks'); ?>"

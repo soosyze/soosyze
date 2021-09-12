@@ -27,7 +27,6 @@
 
         <?php echo $script_inline; ?>
         <?php echo $scripts; ?>
-
         <script src="<?php echo $base_theme; ?>assets/js/script.js"></script>
     </body>
 </html>
