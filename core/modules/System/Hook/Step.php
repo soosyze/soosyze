@@ -537,7 +537,7 @@ class Step
                 1,
                 'social', 'social',
                 null,
-                false, '/' . PHP_EOL . 'admin/%' . PHP_EOL . 'user/%'
+                false, '/' . PHP_EOL . 'user/%'
             ])
             ->values([
                 'sidebar', t('Archives list'), true,
@@ -609,14 +609,14 @@ class Step
                 1,
                 'news.archive', 'news.archive',
                 json_encode([ 'expand' => false ]),
-                false, 'admin/%' . PHP_EOL . 'user/%'
+                false, 'user/%'
             ])
             ->values([
                 'footer_first', t('Follow us'), true,
                 1,
                 'social', 'social',
                 null,
-                false, 'admin/%' . PHP_EOL . 'user/%'
+                false, 'user/%'
             ])
             ->execute();
 
@@ -857,7 +857,7 @@ class Step
             ->values([
                 'footer_first', 'Lorem ipsum', true,
                 1,
-                false, 'admin/%' . PHP_EOL . 'user/%',
+                false, 'user/%',
                 (new Template('block-text.php', $this->pathContent))->render()
             ])
             ->execute();

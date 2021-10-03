@@ -12,11 +12,11 @@
         "soosyze": {
             "title": "Admin",
             "sections": [
-                "header",
-                "sidebar",
                 "content_header",
                 "content_footer",
-                "footer"
+                "footer",
+                "main_menu",
+                "second_menu"
             ],
             "options": {
                 "dark": true,

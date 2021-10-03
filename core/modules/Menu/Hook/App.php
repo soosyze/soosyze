@@ -17,29 +17,9 @@ class App
      */
     private $core;
 
-    /**
-     * @var Menu
-     */
-    private $menu;
-
-    public function __construct(Core $core, Menu $menu)
+    public function __construct(Core $core)
     {
         $this->core = $core;
-        $this->menu = $menu;
-    }
-
-    public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
-    {
-        if (!($response instanceof Templating)) {
-            return;
-        }
-        $nameMenu = $response->isTheme('theme')
-            ? 'menu-main'
-            : 'menu-admin';
-
-        $response
-            ->addBlock('page.main_menu', $this->menu->renderMenu($nameMenu))
-            ->addBlock('page.second_menu', $this->menu->renderMenu('menu-user'));
     }
 
     public function hookMenuShowResponseAfter(RequestInterface $request, ResponseInterface &$response): void

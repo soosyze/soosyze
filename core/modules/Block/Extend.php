@@ -34,11 +34,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 ->text('hook')->nullable()
                 ->integer('weight')
                 ->boolean('visibility_pages')->valueDefault(false)
-                ->string('pages')->valueDefault('admin/%' . PHP_EOL . 'user/%')
+                ->string('pages')->valueDefault('user/%')
                 ->boolean('visibility_roles')->valueDefault(true)
                 ->string('roles')->valueDefault('1,2')
                 ->string('key_block')->nullable()
-                ->text('options')->nullable();
+                ->text('options')->nullable()
+                ->text('theme')->valueDefault('public');
             });
 
         $ci->config()->set('settings.icon_socials', [
@@ -65,12 +66,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
         $ci->query()
             ->insertInto('block', [
                 'section', 'title', 'is_title',
-                'weight', 'visibility_pages', 'pages',
+                'weight', 'pages', 'theme',
                 'content'
             ])
             ->values([
                 'content_footer', t('Found an bug'), false,
-                50, true, 'admin/%',
+                50, '', 'admin',
                 '<div class="block-report_github">'
                 . '<p>'
                 . '<a href="https://github.com/soosyze/soosyze/issues" '
@@ -85,7 +86,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ])
             ->values([
                 'footer', t('Power by'), false,
-                50, false, '',
+                50, '', 'public',
                 '<p>Power by <a href="https://soosyze.com">SoosyzeCMS</a></p>',
             ])
             ->execute();

@@ -83,7 +83,7 @@ class App
         }
 
         $theme   = $this->getNameTheme();
-        $isAdmin = $this->core->callHook('app.granted', [ 'block.administer' ]) && !empty($theme);
+        $isAdmin = $this->isAdmin();
 
         $blocks = $this->getBlocks($theme, $isAdmin);
 
@@ -94,53 +94,58 @@ class App
                 'section_id'  => $section,
                 'content'     => $blocks[ $section ] ?? [],
                 'is_admin'    => $isAdmin,
-                'link_create' => $isAdmin
+                'link_create' => ($isAdmin && ($section !== 'main_menu' || ($section === 'main_menu' && empty($blocks['main_menu']))))
                     ? $this->router->getRoute('block.create.list', [
                         ':theme'   => $theme,
                         ':section' => $section
                     ])
-                    : ''
+                    : null
             ]);
         }
     }
 
+    private function isAdmin(): bool
+    {
+        return in_array($this->router->parseQueryFromRequest(), [
+                'admin/theme/public/section',
+                'admin/theme/admin/section'
+            ]) && $this->core->callHook('app.granted', [ 'block.administer' ]);
+    }
+
     private function getNameTheme(): string
     {
-        $query = $this->router->parseQueryFromRequest();
-        if ($query === 'admin/theme/public/section') {
-            return 'public';
-        }
-        if ($query === 'admin/theme/admin/section') {
-            return 'admin';
-        }
-
-        return '';
+        return $this->tpl->isTheme(Templating::THEME_PUBLIC)
+            ? 'public'
+            : 'admin';
     }
 
     private function getBlocks(string $theme, bool $isAdmin): array
     {
         $blocks = $this->query
             ->from('block')
+            ->where('theme', '=', $theme)
             ->orderBy('weight')
             ->fetchAll();
 
         $listBlock = $this->block->getBlocks();
 
-        $out      = [];
+        $out = [];
         foreach ($blocks as $block) {
             if (!$isAdmin && (!$this->isVisibilityPages($block) || !$this->isVisibilityRoles($block))) {
                 continue;
             }
             if (!empty($block[ 'hook' ])) {
-                $tplBlock           = $this->tpl->createBlock(
+                $tplBlock = $this->tpl->createBlock(
                     $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
                     $listBlock[ $block[ 'key_block' ] ][ 'path' ]
                 );
+
                 /* Construit les options avec les option présentent dans le bloc et les données en base. */
-                $options            = array_merge(
+                $options = array_merge(
                     $listBlock[ $block[ 'key_block' ] ][ 'options' ] ?? [],
                     json_decode($block[ 'options' ] ?? '{}', true) ?? []
                 );
+
                 $block[ 'content' ] .= (string) $this->core->callHook(
                     "block.{$block[ 'hook' ]}",
                     [ $tplBlock, $options ]
