@@ -34,7 +34,6 @@
                         </ul>
 
                         <?php echo $section[ 'main_menu' ]; ?>
-                        <?php echo $section[ 'second_menu' ]; ?>
                     </div>
                 </div>
             </div>
@@ -60,12 +59,7 @@
                     </ul>
                     <?php echo $section[ 'main_menu' ]; ?>
 
-                    <?php if (!empty($section[ 'sidebar' ])): ?>
-                        <?php echo $section[ 'sidebar' ]; ?>
-
-                    <?php endif; ?>
                     <?php echo $section[ 'second_menu' ]; ?>
-
                 </div>
             </div>
         </div>

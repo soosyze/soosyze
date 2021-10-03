@@ -124,8 +124,9 @@
                     <?php echo $section[ 'footer' ]; ?>
                 <?php endif; ?>
 
+                <div class="menu_user">
                 <?php echo $section[ 'second_menu' ]; ?>
-
+                </div>
             </div>
         </div>
     </div>

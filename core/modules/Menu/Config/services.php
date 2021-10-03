@@ -7,6 +7,7 @@ return [
     'menu.extend' => [
         'class' => 'SoosyzeCore\Menu\Extend',
         'hooks' => [
+            'install.block' => 'hookInstallBlock',
             'install.user' => 'hookInstallUser'
         ]
     ],
@@ -36,7 +37,6 @@ return [
     'menu.hook.app' => [
         'class' => 'SoosyzeCore\Menu\Hook\App',
         'hooks' => [
-            'app.response.after' => 'hookResponseAfter',
             'menu.admin.response.after' => 'hookMenuShowResponseAfter',
             'menu.show.response.after' => 'hookMenuShowResponseAfter'
         ]

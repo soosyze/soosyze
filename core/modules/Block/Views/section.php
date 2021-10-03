@@ -51,10 +51,12 @@
 
         </div>
     <?php endforeach; ?>
-
-    <?php if ($is_admin) : ?>
+    <?php if ($is_admin): ?>
 
     </div>
+    <?php endif; ?>
+    <?php if ($link_create): ?>
+
     <div class="block-actions">
         <a data-target="#modal_block"
            data-toogle="modal"

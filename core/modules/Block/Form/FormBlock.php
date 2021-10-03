@@ -23,9 +23,10 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
         'content'          => '',
         'is_title'         => true,
         'key_block'        => '',
-        'pages'            => 'admin/%' . PHP_EOL . 'user/%',
+        'pages'            => 'user/%',
         'roles'            => [ 1, 2 ],
         'section'          => '',
+        'theme'            => 'public',
         'title'            => '',
         'visibility_pages' => false,
         'visibility_roles' => true,
@@ -193,6 +194,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
             ->group('submit-group', 'div', function ($form) {
                 $form->token($this->getTokenName())
                 ->hidden('key_block', [ 'value' => $this->values[ 'key_block' ] ])
+                ->hidden('theme', [ 'value' => $this->values[ 'theme' ] ])
                 ->hidden('section', [ 'value' => $this->values[ 'section' ] ])
                 ->hidden('weight', [ 'value' => $this->values[ 'weight' ] ])
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
