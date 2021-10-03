@@ -18,7 +18,9 @@
                 "content_footer",
                 "footer",
                 "footer_first",
-                "footer_second"
+                "footer_second",
+                "main_menu",
+                "second_menu"
             ]
         }
     }

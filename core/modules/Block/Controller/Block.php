@@ -107,6 +107,7 @@ class Block extends \Soosyze\Controller
 
         $values[ 'key_block' ] = $key;
         $values[ 'section' ]   = $body[ 'section' ] ?? null;
+        $values[ 'theme' ]     = $theme;
 
         if (empty($values[ 'hook' ])) {
             $srcImage = self::core()->getPath('modules', 'modules/core', false) . '/Block/Assets/misc/static.svg';
@@ -454,6 +455,7 @@ class Block extends \Soosyze\Controller
             'pages'            => '!required|string',
             'roles'            => '!required|array',
             'section'          => 'required|inarray:' . implode(',', $section),
+            'theme'            => 'required|inarray:public,admin',
             'title'            => 'required|string|max:255',
             'visibility_pages' => 'bool',
             'visibility_roles' => 'bool',
@@ -476,6 +478,7 @@ class Block extends \Soosyze\Controller
                     'pages'     => t('List of pages'),
                     'roles'     => t('User Roles'),
                     'section'   => t('Section'),
+                    'theme'     => t('Theme'),
                     'title'     => t('Title'),
                     'weight'    => t('Weight')
                 ])
@@ -532,6 +535,7 @@ class Block extends \Soosyze\Controller
             'pages'            => $validator->getInput('pages'),
             'roles'            => implode(',', array_keys($validator->getInput('roles', []))),
             'section'          => $validator->getInput('section'),
+            'theme'            => $validator->getInput('theme'),
             'title'            => $validator->getInput('title'),
             'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
             'visibility_roles' => (bool) $validator->getInput('visibility_roles'),

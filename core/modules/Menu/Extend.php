@@ -80,9 +80,48 @@ class Extend extends \SoosyzeCore\System\ExtendModule
 
     public function hookInstall(ContainerInterface $ci): void
     {
+        if ($ci->module()->has('Block')) {
+            $this->hookInstallBlock($ci);
+        }
         if ($ci->module()->has('User')) {
             $this->hookInstallUser($ci);
         }
+    }
+
+    public function hookInstallBlock(ContainerInterface $ci): void
+    {
+        $ci->query()
+            ->insertInto('block', [
+                'title', 'is_title', 'section', 'hook',
+                'weight', 'pages', 'key_block',
+                'options',
+                'theme'
+            ])
+            ->values([
+                'Administration menu', false, 'main_menu', 'menu',
+                0, '', 'menu',
+                json_encode([ 'depth' => 10, 'name' => 'menu-admin', 'parent' => -1 ]),
+                'admin'
+            ])
+            ->values([
+                'User Menu', false, 'second_menu', 'menu',
+                1, '', 'menu',
+                json_encode([ 'depth' => 10, 'name' => 'menu-user', 'parent' => -1 ]),
+                'admin'
+            ])
+            ->values([
+                'Main Menu', false, 'main_menu', 'menu',
+                0, '', 'menu',
+                json_encode([ 'depth' => 10, 'name' => 'menu-main', 'parent' => -1 ]),
+                'public'
+            ])
+            ->values([
+                'User Menu', false, 'second_menu', 'menu',
+                1, '', 'menu',
+                json_encode([ 'depth' => 10, 'name' => 'menu-user', 'parent' => -1 ]),
+                'public'
+            ])
+            ->execute();
     }
 
     public function hookInstallUser(ContainerInterface $ci): void
