@@ -18,7 +18,9 @@
                 "content_footer",
                 "footer",
                 "footer_column_first",
-                "footer_column_second"
+                "footer_column_second",
+                "main_menu",
+                "second_menu"
             ]
         }
     }

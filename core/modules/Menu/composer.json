@@ -13,6 +13,9 @@
             "title": "Menu",
             "package": "Core",
             "controller": "SoosyzeCore\\Menu\\Controller\\Menu",
+            "require": {
+                "Block": "1.0.*"
+            },
             "icon": {
                 "name": "fas fa-bars",
                 "background-color": "#2454a8",
