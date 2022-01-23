@@ -74,7 +74,7 @@ class BackupManager
                 'size'          => $file->getSize(),
                 'download_link' => $this->router->getRoute('backupmanager.download', [
                     ':file' => strtr($file->getFilename(), [ self::SUFFIX => '' ])
-            ]),
+                ]),
                 'restore_link'  => $this->router->getRoute('backupmanager.restore', [
                     ':file' => strtr($file->getFilename(), [ self::SUFFIX => '' ])
                 ]),
@@ -90,7 +90,7 @@ class BackupManager
 
     public function doBackup(): bool
     {
-        if (!($backup = $this->getFreshZip())) {
+        if (($backup = $this->getFreshZip()) === null) {
             return false;
         }
 
@@ -154,10 +154,11 @@ class BackupManager
 
         $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
 
-        if ($maxBackups && count($dir) - 2 >= $maxBackups) {
-            if (preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[ 2 ])) {
-                \unlink($this->repository . DS . $dir[ 2 ]);
-            }
+        if ($maxBackups &&
+            count($dir) - 2 >= $maxBackups &&
+            preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[ 2 ])
+        ) {
+            \unlink($this->repository . DS . $dir[ 2 ]);
         }
 
         $backup = new \ZipArchive();

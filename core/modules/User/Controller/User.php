@@ -229,9 +229,9 @@ class User extends \Soosyze\Controller
             $this->container->callHook('user.update.after', [ &$validator, $id ]);
 
             if (($userCurrent = self::user()->isConnected()) && $userCurrent[ 'user_id' ] == $id) {
-                $pwd = !empty($data[ 'password' ])
-                    ? $validator->getInput('password_new')
-                    : $validator->getInput('password');
+                $pwd = empty($data[ 'password' ])
+                    ? $validator->getInput('password')
+                    : $validator->getInput('password_new');
 
                 self::auth()->login($validator->getInput('email'), $pwd);
             }
@@ -471,11 +471,8 @@ class User extends \Soosyze\Controller
             $data[ 'password' ]       = self::auth()->hash($validator->getInput('password_new'));
             $data[ 'time_installed' ] = (string) time();
             $data[ 'timezone' ]       = 'Europe/Paris';
-        } else {
-            /* En cas de modification du mot de passe. */
-            if ($validator->getInput('password_new') !== '') {
-                $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
-            }
+        } elseif ($validator->getInput('password_new') !== '') {
+            $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
         }
 
         /* Si l'utilisateur à les droits d'administrer les autres utilisateurs. */

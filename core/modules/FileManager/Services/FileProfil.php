@@ -70,9 +70,9 @@ class FileProfil
     {
         $data = $this->getRolesUserByProfil($profilId);
 
-        return $data
-            ? array_column($data, 'role_id')
-            : [];
+        return $data === []
+            ? []
+            : array_column($data, 'role_id');
     }
 
     public function getProfilsFileByUser(?int $userId): array

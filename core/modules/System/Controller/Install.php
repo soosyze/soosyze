@@ -128,13 +128,7 @@ class Install extends \Soosyze\Controller
         $step = [];
         $this->container->callHook('step', [ &$step ]);
         uasort($step, static function ($a, $b) {
-            if ($a[ 'weight' ] === $b[ 'weight' ]) {
-                return 0;
-            }
-
-            return ($a[ 'weight' ] < $b[ 'weight' ])
-                ? -1
-                : 1;
+            return $a[ 'weight' ] <=> $b[ 'weight' ];
         });
 
         return $step;
@@ -171,7 +165,7 @@ class Install extends \Soosyze\Controller
 
         self::module()->loadTranslations($composer);
 
-        foreach ($this->modules as $title => $namespace) {
+        foreach (array_keys($this->modules) as $title) {
             /* Charge la version du coeur à ses modules. */
             $composer[$title]['version'] = $this->container->get(Composer::class)->getVersionCore();
 
