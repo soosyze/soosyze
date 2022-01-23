@@ -186,7 +186,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->orderBy('date_created')
             ->fetch();
 
-        if ($next) {
+        if ($next !== []) {
             /** @var string $linkNext */
             $linkNext = $this->alias->getAlias('node/' . $next[ 'id' ], 'node/' . $next[ 'id' ]);
 
@@ -210,7 +210,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->orderBy('date_created', SORT_DESC)
             ->fetch();
 
-        if ($previous) {
+        if ($previous !== []) {
             /** @var string $linkPrevious */
             $linkPrevious = $this->alias->getAlias('node/' . $previous[ 'id' ], 'node/' . $previous[ 'id' ]);
 
@@ -260,9 +260,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->from('node_type')
             ->fetchAll();
 
-        return $nodeTypes
-            ? array_column($nodeTypes, 'node_type')
-            : [];
+        return $nodeTypes === []
+            ? []
+            : array_column($nodeTypes, 'node_type');
     }
 
     private function getListNameOptionsDisplay(): string

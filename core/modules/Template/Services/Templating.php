@@ -245,9 +245,9 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this;
     }
 
-    public function addFilterOutput(string $selector, string $key, callable $function): self
+    public function addFilterOutput(string $selector, callable $function): self
     {
-        $this->getBlock($selector)->addFilterOutput($key, $function);
+        $this->getBlock($selector)->addFilterOutput($function);
 
         return $this;
     }

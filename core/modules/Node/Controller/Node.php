@@ -120,7 +120,7 @@ class Node extends \Soosyze\Controller
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $fieldsInsert[ $key ] = '';
-                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                } elseif ($value[ 'field_type' ] === 'one_to_many') {
                     $fieldsRelation = true;
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fieldsInsert[ $key ] = implode(',', $validator->getInput($key, []));
@@ -293,7 +293,7 @@ class Node extends \Soosyze\Controller
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $this->saveFile($node, $key, $validator);
-                } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+                } elseif ($value[ 'field_type' ] === 'one_to_many') {
                     $this->updateWeightEntity(
                         $value,
                         $validator->getInput($key, [])
@@ -502,7 +502,7 @@ class Node extends \Soosyze\Controller
         }
         unset($link);
 
-        if ($menu) {
+        if ($menu !== []) {
             $nodeShow = [
                 'key'        => 'node.show',
                 'request'    => self::router()->getRequestByRoute('node.show', [
@@ -600,7 +600,7 @@ class Node extends \Soosyze\Controller
         $canPublish = true;
         foreach ($fields as $value) {
             /* Si une node possède une relation requise, elle ne peut-être publié. */
-            if (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+            if ($value[ 'field_type' ] == 'one_to_many') {
                 $rules = self::node()->getRules($value);
 
                 if (empty($rules[ 'required' ])) {

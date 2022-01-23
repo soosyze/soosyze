@@ -365,9 +365,9 @@ class FilePermission extends \Soosyze\Controller
             'file_copy'           => (bool) $validator->getInput('file_copy'),
             'file_size'           => (int) $validator->getInput('file_size'),
             'file_extensions_all' => (bool) $validator->getInput('file_extensions_all'),
-            'file_extensions'     => !$validator->getInput('file_extensions_all')
-            ? implode(',', $validator->getInput('file_extensions', []))
-            : ''
+            'file_extensions'     => $validator->getInput('file_extensions_all')
+                ? ''
+                : implode(',', $validator->getInput('file_extensions', []))
         ];
     }
 

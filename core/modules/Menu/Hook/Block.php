@@ -71,7 +71,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     public function hookMenu(ServiceBlock $tpl, array $options): ServiceBlock
     {
         $menu = $this->menu->renderMenu($options[ 'name' ], $options[ 'parent' ], $options[ 'depth' ]);
-        if ($menu) {
+        if ($menu !== null) {
             return $menu->setNamesOverride([ "components/block/menu-{$options[ 'name' ]}.php" ]);
         }
 
@@ -156,7 +156,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('options', 'like', '%' . $nameMenu . '%')
             ->fetch();
 
-        if (!$isBlock) {
+        if ($isBlock === []) {
             return;
         }
 
@@ -166,7 +166,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     ':content' => t('This menu is displayed by a block. By removing this menu, you will remove the block.')
                 ]);
             }, [ 'class' => 'alert alert-warning' ]);
-        }, [ 'class' => 'form-group' ]);
+        });
     }
 
     public function hookMenuDeleteBefore(Validator $validator, string $nameMenu): void

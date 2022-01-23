@@ -185,9 +185,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->rules($value);
 
         return $form->group("$key-group", 'div', function ($form) use ($value, $key) {
-            $options = !empty($value[ 'field_option' ])
-                    ? json_decode($value[ 'field_option' ], true)
-                    : [];
+            $options = empty($value[ 'field_option' ])
+                    ? []
+                    : json_decode($value[ 'field_option' ], true);
             switch ($value[ 'field_type' ]) {
                     case 'checkbox':
                         $this->makeCheckbox($form, $key, $value, $options);
