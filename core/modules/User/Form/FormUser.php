@@ -140,7 +140,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
 
     public function eulaGroup(FormGroupBuilder &$form, Router $router): self
     {
-        if (!$this->config) {
+        if (!$this->config instanceof Config) {
             return $this;
         }
         if ($this->config->get('settings.terms_of_service_show', false)) {
@@ -297,8 +297,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
 
     public function rolesFieldset(array $roles): self
     {
-        return $roles
-            ? $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
+        return $roles === []
+            ? $this
+            : $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
                 $form->legend('role-legend', t('User Roles'));
                 foreach ($roles as $role) {
                     $attrRole = [
@@ -320,8 +321,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
                             );
                     }, self::$attrGrp);
                 }
-            })
-        : $this;
+            });
     }
 
     /**

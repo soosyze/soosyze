@@ -85,11 +85,13 @@ class Menu
             ->where('node_id', '=', $idNode)
             ->fetch();
 
-        if ($link) {
-            $data[ 'active' ]     = (bool) $link[ 'menu_link_id' ];
-            $data[ 'menu_title' ] = $link[ 'menu' ];
-            $data[ 'title_link' ] = $link[ 'title_link' ];
+        if ($link === []) {
+            return;
         }
+
+        $data[ 'active' ]     = (bool) $link[ 'menu_link_id' ];
+        $data[ 'menu_title' ] = $link[ 'menu' ];
+        $data[ 'title_link' ] = $link[ 'title_link' ];
     }
 
     public function hookCreateForm(FormBuilder $form, array $data): void
@@ -252,17 +254,19 @@ class Menu
             ->where('node_id', '=', $item)
             ->fetch();
 
-        if ($nodeMenuLink) {
-            $this->query->from('node_menu_link')
-                ->where('node_id', '=', $item)
-                ->delete()
-                ->execute();
-
-            $this->query->from('menu_link')
-                ->where('id', '=', $nodeMenuLink[ 'menu_link_id' ])
-                ->delete()
-                ->execute();
+        if ($nodeMenuLink === []) {
+            return;
         }
+
+        $this->query->from('node_menu_link')
+            ->where('node_id', '=', $item)
+            ->delete()
+            ->execute();
+
+        $this->query->from('menu_link')
+            ->where('id', '=', $nodeMenuLink[ 'menu_link_id' ])
+            ->delete()
+            ->execute();
     }
 
     public function hookLinkDeleteValid(Validator $validator, int $id): void
@@ -291,9 +295,9 @@ class Menu
     private function getListNamesMenu(): string
     {
         $menus = $this->query->from('menu')->fetchAll();
-        $names = $menus
-            ? array_column($menus, 'name')
-            : [];
+        $names = $menus === []
+            ? []
+            : array_column($menus, 'name');
 
         return implode(',', $names);
     }

@@ -78,7 +78,7 @@ class NodeClone extends \Soosyze\Controller
             } elseif (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
                 /* Copie ses fichiers. */
                 $this->replaceFileLink($fieldName, $this->entityNode);
-            } elseif (in_array($value[ 'field_type' ], [ 'one_to_many' ])) {
+            } elseif ($value[ 'field_type' ] == 'one_to_many') {
                 /* Si elle possède des sous entités. */
                 $this->duplicateEntity($fieldName, json_decode($value[ 'field_option' ], true));
             }

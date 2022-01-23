@@ -149,9 +149,9 @@ class File extends \Soosyze\Controller
             'folder' => '!required',
         ];
 
-        $rules[ 'file' ] .= !empty($profil[ 'file_extensions_all' ])
-            ? implode(',', FileManager::getExtAllowed())
-            : $profil[ 'file_extensions' ];
+        $rules[ 'file' ] .= empty($profil[ 'file_extensions_all' ])
+            ? $profil[ 'file_extensions' ]
+            : implode(',', FileManager::getExtAllowed());
 
         if (!empty($profil[ 'file_size' ])) {
             $rules[ 'file' ] .= '|max:' . $profil[ 'file_size' ] . 'mb';

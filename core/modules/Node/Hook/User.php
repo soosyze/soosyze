@@ -64,7 +64,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if (!$node) {
+        if ($node === []) {
             return null;
         }
 
@@ -107,7 +107,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if (!$node) {
+        if ($node === []) {
             return null;
         }
 
@@ -126,7 +126,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if (!$node) {
+        if ($node === []) {
             return null;
         }
 
@@ -145,7 +145,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if (!$node) {
+        if ($node === []) {
             return null;
         }
 

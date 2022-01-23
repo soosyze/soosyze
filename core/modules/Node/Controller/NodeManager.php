@@ -119,7 +119,7 @@ class NodeManager extends \Soosyze\Controller
         $linkPagination = self::router()->getRequestByRoute('node.filter.page', [], false)->getUri();
         $linkSort       = self::router()->getRequestByRoute('node.filter')->getUri();
 
-        if ($params) {
+        if ($params !== []) {
             $linkPagination = $linkPagination->withQuery(
                 http_build_query($params)
             );

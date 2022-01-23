@@ -31,16 +31,7 @@ class RouteApi extends \Soosyze\Controller
         }
 
         usort($routes, static function ($a, $b) use ($search) {
-            $aPos = stripos($a[ 'title' ], $search);
-            $bPos = stripos($b[ 'title' ], $search);
-
-            if ($aPos == $bPos) {
-                return 0;
-            }
-
-            return ($aPos < $bPos)
-                ? -1
-                : 1;
+            return stripos($a[ 'title' ], $search) <=> stripos($b[ 'title' ], $search);
         });
 
         return $this->json(
