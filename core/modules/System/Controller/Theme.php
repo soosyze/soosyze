@@ -52,7 +52,7 @@ class Theme extends \Soosyze\Controller
                 $themes[ $key ] = $composer;
 
                 $uriActivate = self::router()
-                    ->getRequestByRoute('system.theme.active', [
+                    ->generateRequest('system.theme.active', [
                         ':type' => $type,
                         ':name' => $theme[ 'title' ]
                     ])

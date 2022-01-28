@@ -27,7 +27,7 @@ class Tool implements \SoosyzeCore\System\ToolInterface
                 'background-color' => '#ac1b1b',
                 'color'            => '#fff'
             ],
-            'link'        => $this->router->getRequestByRoute('backupmanager.admin'),
+            'link'        => $this->router->generateRequest('backupmanager.admin'),
             'title'       => 'BackupManager'
         ];
     }

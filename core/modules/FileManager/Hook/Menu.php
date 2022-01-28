@@ -33,7 +33,7 @@ class Menu
 
         $menu[] = [
             'key'        => 'filemanager.admin',
-            'request'    => $this->router->getRequestByRoute('filemanager.admin'),
+            'request'    => $this->router->generateRequest('filemanager.admin'),
             'title_link' => t('File')
         ];
     }
@@ -42,7 +42,7 @@ class Menu
     {
         $menu[] = [
             'key'        => 'filemanager.permission.admin',
-            'request'    => $this->router->getRequestByRoute('filemanager.permission.admin'),
+            'request'    => $this->router->generateRequest('filemanager.permission.admin'),
             'title_link' => t('Files permissions')
         ];
     }
