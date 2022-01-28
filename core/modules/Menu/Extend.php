@@ -24,26 +24,26 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('menu', static function (TableBuilder $table): void {
-                $table->string('name')
-                ->string('title')
-                ->text('description');
+            ->createTableIfNotExists('menu', static function (TableBuilder $tb): void {
+                $tb->string('name');
+                $tb->string('title');
+                $tb->text('description');
             })
-            ->createTableIfNotExists('menu_link', static function (TableBuilder $table): void {
-                $table->increments('id')
-                ->string('key')->nullable()
-                ->string('icon')->nullable()
-                ->string('link')
-                ->string('link_router')->nullable()
-                ->string('query')->nullable()
-                ->string('fragment')->nullable()
-                ->string('title_link')
-                ->boolean('target_link')->valueDefault(false)
-                ->string('menu')
-                ->integer('weight')->valueDefault(1)
-                ->integer('parent')
-                ->boolean('has_children')->valueDefault(false)
-                ->boolean('active')->valueDefault(true);
+            ->createTableIfNotExists('menu_link', static function (TableBuilder $tb): void {
+                $tb->increments('id');
+                $tb->string('key')->nullable();
+                $tb->string('icon')->nullable();
+                $tb->string('link');
+                $tb->string('link_router')->nullable();
+                $tb->string('query')->nullable();
+                $tb->string('fragment')->nullable();
+                $tb->string('title_link');
+                $tb->boolean('target_link')->valueDefault(false);
+                $tb->string('menu');
+                $tb->integer('weight')->valueDefault(1);
+                $tb->integer('parent');
+                $tb->boolean('has_children')->valueDefault(false);
+                $tb->boolean('active')->valueDefault(true);
             });
 
         $ci->query()
