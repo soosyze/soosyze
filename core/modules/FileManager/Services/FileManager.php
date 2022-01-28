@@ -102,7 +102,7 @@ class FileManager
                 'title_link' => empty($value)
                 ? '<i class="fa fa-home" aria-hidden="true"></i> ' . t('Home')
                 : $value,
-                'link'       => $this->router->getRoute($keyRoute, [
+                'link'       => $this->router->generateUrl($keyRoute, [
                     ':path' => Util::cleanPath($nextPath)
                 ]),
                 'active'     => ''
@@ -126,7 +126,7 @@ class FileManager
         return [
             'actions'    => $this->getActionsFolder($path . $name, $info),
             'ext'        => 'dir',
-            'link_show'  => $this->router->getRoute($keyRoute, [
+            'link_show'  => $this->router->generateUrl($keyRoute, [
                 ':path' => Util::cleanPath("$path/" . $name)
             ]),
             'name'       => $name,
@@ -150,7 +150,7 @@ class FileManager
         return [
             'actions'    => $this->getActionsFile($file, $path),
             'ext'        => $ext,
-            'link_show'  => $this->router->getRoute('filemanager.file.show', [
+            'link_show'  => $this->router->generateUrl('filemanager.file.show', [
                 ':path' => $path, ':name' => '/' . $name, ':ext'  => '.' . $ext
             ]),
             'name'       => $name,
@@ -173,7 +173,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'fa fa-edit',
                 'key'        => 'filemanager.folder.edit',
-                'link'       => $this->router->getRoute('filemanager.folder.edit', [
+                'link'       => $this->router->generateUrl('filemanager.folder.edit', [
                     ':path' => $path
                 ]),
                 'title_link' => t('Rename')
@@ -184,7 +184,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'fa fa-times',
                 'key'        => 'filemanager.folder.remove',
-                'link'       => $this->router->getRoute('filemanager.folder.remove', [
+                'link'       => $this->router->generateUrl('filemanager.folder.remove', [
                     ':path' => $path
                 ]),
                 'title_link' => t('Delete')
@@ -195,7 +195,7 @@ class FileManager
                 'class'      => '',
                 'icon'       => 'fa fa-download',
                 'key'        => 'filemanager.folder.download',
-                'link'       => $this->router->getRoute('filemanager.folder.download', [
+                'link'       => $this->router->generateUrl('filemanager.folder.download', [
                     ':path' => $path
                 ]),
                 'title_link' => 'Download',
@@ -248,7 +248,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'far fa-eye',
                 'key'        => 'filemanager.file.show',
-                'link'       => $this->router->getRoute('filemanager.file.show', [
+                'link'       => $this->router->generateUrl('filemanager.file.show', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => 'View',
@@ -260,7 +260,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'fa fa-edit',
                 'key'        => 'filemanager.file.edit',
-                'link'       => $this->router->getRoute('filemanager.file.edit', [
+                'link'       => $this->router->generateUrl('filemanager.file.edit', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => 'Rename',
@@ -272,7 +272,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'fa fa-times',
                 'key'        => 'filemanager.file.remove',
-                'link'       => $this->router->getRoute('filemanager.file.remove', [
+                'link'       => $this->router->generateUrl('filemanager.file.remove', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => 'Delete',
@@ -284,7 +284,7 @@ class FileManager
                 'class'      => '',
                 'icon'       => 'fa fa-download',
                 'key'        => 'filemanager.file.download',
-                'link'       => $this->router->getRoute('filemanager.file.download', [
+                'link'       => $this->router->generateUrl('filemanager.file.download', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => 'Download',
@@ -306,7 +306,7 @@ class FileManager
                 'class'      => 'mod',
                 'icon'       => 'fa fa-copy',
                 'key'        => 'filemanager.copy.admin',
-                'link'       => $this->router->getRoute('filemanager.copy.admin', [
+                'link'       => $this->router->generateUrl('filemanager.copy.admin', [
                     ':path' => $path, ':name' => $name, ':ext'  => '.' . $ext
                 ]),
                 'title_link' => 'Deplace or copy',

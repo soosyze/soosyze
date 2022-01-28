@@ -23,7 +23,7 @@ class FilePermission extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('filemanager.permission.create.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('filemanager.permission.store');
+        $action = self::router()->generateUrl('filemanager.permission.store');
 
         $form = (new FormPermission([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
@@ -82,7 +82,7 @@ class FilePermission extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
-                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+                    'redirect' => self::router()->generateUrl('filemanager.permission.admin')
             ]);
         }
 
@@ -104,7 +104,7 @@ class FilePermission extends \Soosyze\Controller
 
         $this->container->callHook('filemanager.permission.edit.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('filemanager.permission.update', [ ':id' => $id ]);
+        $action = self::router()->generateUrl('filemanager.permission.update', [ ':id' => $id ]);
 
         $form = (new FormPermission([ 'action' => $action, 'method' => 'put' ]))
             ->setRoles(self::query()->from('role')->fetchAll())
@@ -170,7 +170,7 @@ class FilePermission extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+                    'redirect' => self::router()->generateUrl('filemanager.permission.admin')
             ]);
         }
 
@@ -186,7 +186,7 @@ class FilePermission extends \Soosyze\Controller
             $this->get404($req);
         }
 
-        $action = self::router()->getRoute('filemanager.permission.delete', [
+        $action = self::router()->generateUrl('filemanager.permission.delete', [
             ':id' => $id
         ]);
 
@@ -257,7 +257,7 @@ class FilePermission extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+                    'redirect' => self::router()->generateUrl('filemanager.permission.admin')
             ]);
         }
 

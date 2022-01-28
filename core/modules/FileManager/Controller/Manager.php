@@ -54,7 +54,7 @@ class Manager extends \Soosyze\Controller
         }
 
         $form = (new FormBuilder([
-                'action' => self::router()->getRoute('filemanager.filter', [
+                'action' => self::router()->generateUrl('filemanager.filter', [
                     ':path' => Util::cleanPath('/' . $path)
                 ]),
                 'id'     => 'form_filter_file',
@@ -172,10 +172,10 @@ class Manager extends \Soosyze\Controller
                 ->createBlock('filemanager/table-files.php', $this->pathViews)
                 ->addVars([
                     'files'       => $files,
-                    'link_search' => self::router()->getRoute('filemanager.filter', [
+                    'link_search' => self::router()->generateUrl('filemanager.filter', [
                         ':path' => $path
                     ]),
-                    'link_show'   => self::router()->getRoute('filemanager.show', [
+                    'link_show'   => self::router()->generateUrl('filemanager.show', [
                         ':path' => $path
                     ]),
                     'nb_dir'      => $nbDir,
@@ -198,7 +198,7 @@ class Manager extends \Soosyze\Controller
             ->addVars([
             'granted_folder_create' => $hookUser->hookFolderStore($path),
             'links'                 => self::filemanager()->getBreadcrumb($path),
-            'link_folder_create'    => self::router()->getRoute('filemanager.folder.create', [
+            'link_folder_create'    => self::router()->generateUrl('filemanager.folder.create', [
                 ':path' => $path
             ]),
         ]);
@@ -208,10 +208,10 @@ class Manager extends \Soosyze\Controller
                 ->createBlock('filemanager/content-file_manager-show.php', $this->pathViews)
                 ->addVars([
                     'granted_file_create' => $hookUser->hookFileStore($path),
-                    'link_show'           => self::router()->getRoute('filemanager.show', [
+                    'link_show'           => self::router()->generateUrl('filemanager.show', [
                         ':path' => $path
                     ]),
-                    'link_file_create'    => self::router()->getRoute('filemanager.file.create', [
+                    'link_file_create'    => self::router()->generateUrl('filemanager.file.create', [
                         ':path' => $path
                     ])
                 ])

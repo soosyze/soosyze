@@ -74,9 +74,9 @@ class Theme extends \Soosyze\Controller
                 ->make('page.content', 'system/content-themes-admin.php', $this->pathViews, [
                     'active_theme' => $activeTheme,
                     'link_edit'    => self::module()->has('Block')
-                        ? self::router()->getRoute('block.section.admin', [ ':theme' => $type ])
+                        ? self::router()->generateUrl('block.section.admin', [ ':theme' => $type ])
                         : null,
-                    'link_setting' => self::router()->getRoute('system.theme.edit', [
+                    'link_setting' => self::router()->generateUrl('system.theme.edit', [
                         ':type' => $type
                     ]),
                     'themes'       => $themes
@@ -106,7 +106,7 @@ class Theme extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('system.theme.admin', [
+                    'redirect' => self::router()->generateUrl('system.theme.admin', [
                         ':type' => $type
                     ])
             ]);
@@ -122,7 +122,7 @@ class Theme extends \Soosyze\Controller
         $values = self::config()->get('settings');
 
         $attr = [
-            'action'  => self::router()->getRoute('system.theme.update', [
+            'action'  => self::router()->generateUrl('system.theme.update', [
                 ':type' => $type
             ]),
             'class'   => 'form-api',
@@ -145,7 +145,7 @@ class Theme extends \Soosyze\Controller
                 ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-form.php', $this->pathViews, [
                     'form'      => $form,
-                    'link_edit' => self::router()->getRoute('system.theme.admin', [
+                    'link_edit' => self::router()->generateUrl('system.theme.admin', [
                         ':type' => $type
                     ])
                 ]);
@@ -192,7 +192,7 @@ class Theme extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                'redirect' => self::router()->getRoute('system.theme.admin', [ ':type' => $type ])
+                'redirect' => self::router()->generateUrl('system.theme.admin', [ ':type' => $type ])
             ]);
         }
 
@@ -207,13 +207,13 @@ class Theme extends \Soosyze\Controller
         $menus = [
             [
                 'key'        => self::TYPE_PUBLIC,
-                'link'       => self::router()->getRoute('system.theme.admin', [
+                'link'       => self::router()->generateUrl('system.theme.admin', [
                     ':type' => self::TYPE_PUBLIC
                 ]),
                 'title_link' => t('Public theme')
             ], [
                 'key'        => self::TYPE_ADMIN,
-                'link'       => self::router()->getRoute('system.theme.admin', [
+                'link'       => self::router()->generateUrl('system.theme.admin', [
                     ':type' => self::TYPE_ADMIN
                 ]),
                 'title_link' => t('Admin theme')

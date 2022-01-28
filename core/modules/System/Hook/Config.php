@@ -117,7 +117,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_index', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->getRoute('api.route'),
+                                'data-link'   => $this->router->generateUrl('api.route'),
                                 'required'    => 1,
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_index' ]
@@ -135,7 +135,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_access_denied', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->getRoute('api.route'),
+                                'data-link'   => $this->router->generateUrl('api.route'),
                                 'placeholder' => t('Example: user/login'),
                                 'value'       => $data[ 'path_access_denied' ]
                             ]);
@@ -152,7 +152,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_no_found', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->getRoute('api.route'),
+                                'data-link'   => $this->router->generateUrl('api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_no_found' ]
                             ]);
@@ -169,7 +169,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_maintenance', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->getRoute('api.route'),
+                                'data-link'   => $this->router->generateUrl('api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_maintenance' ]
                             ]);

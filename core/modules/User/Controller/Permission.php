@@ -66,7 +66,7 @@ class Permission extends \Soosyze\Controller
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.permission.admin'))
                 ->make('page.content', 'user/content-permission-admin.php', $this->pathViews, [
                     'count'       => $count,
-                    'link_update' => self::router()->getRoute('user.permission.update'),
+                    'link_update' => self::router()->generateUrl('user.permission.update'),
                     'modules'     => $output,
                     'roles'       => $roles
                 ]);
@@ -93,7 +93,7 @@ class Permission extends \Soosyze\Controller
         $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
         return $this->json(200, [
-                'redirect' => self::router()->getRoute('user.permission.admin')
+                'redirect' => self::router()->generateUrl('user.permission.admin')
         ]);
     }
 

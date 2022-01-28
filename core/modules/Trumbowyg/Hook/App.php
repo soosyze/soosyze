@@ -48,7 +48,7 @@ class App
         $response
             ->addConfigJs('trumbowyg', [
                 'lang'       => $lang,
-                'serverPath' => $this->router->getRoute('trumbowyg.upload'),
+                'serverPath' => $this->router->generateUrl('trumbowyg.upload'),
                 'vendor'     => $vendor
             ])
             /* Scripts */

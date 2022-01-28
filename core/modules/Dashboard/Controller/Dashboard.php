@@ -25,7 +25,7 @@ class Dashboard extends \Soosyze\Controller
                     'title_main' => t('Dashboard')
                 ])
                 ->make('page.content', 'dashboard/content-dashboard-dashboard.php', $this->pathViews, [
-                    'link_info'    => self::router()->getRoute('dashboard.info'),
+                    'link_info'    => self::router()->generateUrl('dashboard.info'),
                     'size_backup'  => self::dashboard()->getSizeBackups(),
                     'size_data'    => self::dashboard()->getSizeDatabase(),
                     'size_file'    => self::dashboard()->getSizeFiles(),

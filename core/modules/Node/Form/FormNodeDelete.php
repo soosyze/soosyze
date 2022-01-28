@@ -75,7 +75,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                                 ->text('path', [
                                     'class'        => 'form-control api_route',
                                     'data-exclude' => $this->values[ 'current_path' ],
-                                    'data-link'    => $this->router->getRoute('api.route'),
+                                    'data-link'    => $this->router->generateUrl('api.route'),
                                     'maxlength'    => 512,
                                     'placeholder'  => t('Example: node/1'),
                                     'required'     => !empty($this->useInPath[ 'required' ]),

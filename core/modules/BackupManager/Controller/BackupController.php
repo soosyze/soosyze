@@ -27,7 +27,7 @@ class BackupController extends \Soosyze\Controller
         }
         $doBackupRoute = empty($backups)
             ? null
-            : self::router()->getRoute('backupmanager.delete.all');
+            : self::router()->generateUrl('backupmanager.delete.all');
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -38,7 +38,7 @@ class BackupController extends \Soosyze\Controller
                 ->make('page.content', 'backupmanager/content-backup-admin.php', $this->pathViews, [
                     'backups'          => $backups,
                     'delete_all_route' => $doBackupRoute,
-                    'do_backup_route'  => self::router()->getRoute('backupmanager.dobackup'),
+                    'do_backup_route'  => self::router()->generateUrl('backupmanager.dobackup'),
                     'is_repository'    => $isRepository,
                     'name_repository'  => self::backupmanager()->getRepository(),
                     'max_backups'      => self::config()->get('settings.max_backups')
@@ -52,7 +52,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backups delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin'),
+            self::router()->generateUrl('backupmanager.admin'),
             302
         );
     }
@@ -76,7 +76,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup restore failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin')
+            self::router()->generateUrl('backupmanager.admin')
         );
     }
 
@@ -87,7 +87,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup delete failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin'),
+            self::router()->generateUrl('backupmanager.admin'),
             302
         );
     }
@@ -99,7 +99,7 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup failed') ] ];
 
         return new Redirect(
-            self::router()->getRoute('backupmanager.admin'),
+            self::router()->generateUrl('backupmanager.admin'),
             302
         );
     }

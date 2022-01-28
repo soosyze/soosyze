@@ -85,7 +85,7 @@ class News extends \Soosyze\Controller
             ->where('type', '=', 'article')
             ->fetchAll();
 
-        $link = self::router()->getRoute('news.page', [], false);
+        $link = self::router()->generateUrl('news.page', [], false);
 
         return self::template()
                 ->getTheme('theme')
@@ -95,7 +95,7 @@ class News extends \Soosyze\Controller
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'default'  => $default,
                     'news'     => $query,
-                    'link_rss' => self::router()->getRoute('news.rss'),
+                    'link_rss' => self::router()->generateUrl('news.rss'),
                     'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link)
         ]);
     }
@@ -106,7 +106,7 @@ class News extends \Soosyze\Controller
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => $years ]);
-        $this->link        = self::router()->getRoute('news.years.page', [ ':year' => $years ], false);
+        $this->link        = self::router()->generateUrl('news.years.page', [ ':year' => $years ], false);
 
         return $this->renderNews($page, $req);
     }
@@ -117,7 +117,7 @@ class News extends \Soosyze\Controller
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%B %Y', $this->dateCurrent) ]);
-        $this->link        = self::router()->getRoute('news.month.page', [
+        $this->link        = self::router()->generateUrl('news.month.page', [
             ':year'  => $years,
             ':month' => $month
             ], false);
@@ -131,7 +131,7 @@ class News extends \Soosyze\Controller
         $this->dateCurrent = strtotime($date);
         $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%d %B %Y', $this->dateCurrent) ]);
-        $this->link        = self::router()->getRoute('news.day.page', [
+        $this->link        = self::router()->generateUrl('news.day.page', [
             ':year'  => $years,
             ':month' => $month,
             ':day'   => $day
@@ -226,7 +226,7 @@ class News extends \Soosyze\Controller
                     'news'     => $news,
                     'paginate' => new Paginator(count($nodesAll), self::$limit, $page, $this->link),
                     'default'  => $default,
-                    'link_rss' => self::router()->getRoute('news.rss')
+                    'link_rss' => self::router()->generateUrl('news.rss')
         ]);
     }
 

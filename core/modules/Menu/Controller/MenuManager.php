@@ -26,7 +26,7 @@ class MenuManager extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $action = self::router()->getRoute('menu.check', [ ':menu' => $name ]);
+        $action = self::router()->generateUrl('menu.check', [ ':menu' => $name ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'patch' ]))
             ->group('submit-group', 'div', function ($form) {
@@ -43,10 +43,10 @@ class MenuManager extends \Soosyze\Controller
                 ->view('page.submenu', self::menu()->getMenuSubmenu('menu.show', $menu[ 'name' ]))
                 ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
                     'form'              => $form,
-                    'link_create_link'  => self::router()->getRoute('menu.link.create', [
+                    'link_create_link'  => self::router()->generateUrl('menu.link.create', [
                         ':menu' => $name
                     ]),
-                    'link_create_menu'  => self::router()->getRoute('menu.create'),
+                    'link_create_menu'  => self::router()->generateUrl('menu.create'),
                     'list_menu_submenu' => $this->getListMenuSubmenu($name),
                     'menu'              => $this->renderMenu($name),
                     'menu_name'         => $menu[ 'title' ]
@@ -55,7 +55,7 @@ class MenuManager extends \Soosyze\Controller
 
     public function check(string $name, ServerRequestInterface $req): ResponseInterface
     {
-        $route = self::router()->getRoute('menu.show', [ ':menu' => $name ]);
+        $route = self::router()->generateUrl('menu.show', [ ':menu' => $name ]);
         if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
             return $this->json(200, [ 'redirect' => $route ]);
         }
@@ -116,7 +116,7 @@ class MenuManager extends \Soosyze\Controller
 
         foreach ($menus as &$menu) {
             $menu[ 'link' ] = self::router()
-                ->getRoute('menu.show', [ ':menu' => $menu[ 'name' ] ]);
+                ->generateUrl('menu.show', [ ':menu' => $menu[ 'name' ] ]);
         }
         unset($menu);
 
@@ -139,9 +139,9 @@ class MenuManager extends \Soosyze\Controller
 
         foreach ($query as &$link) {
             $link[ 'link_edit' ]   = self::router()
-                ->getRoute('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+                ->generateUrl('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'link_remove' ] = self::router()
-                ->getRoute('menu.link.remove.modal', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+                ->generateUrl('menu.link.remove.modal', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
             $link[ 'submenu' ]     = $link[ 'has_children' ]
                 ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
                 : $this->createBlockMenuShowForm($nameMenu, null, $level + 1);

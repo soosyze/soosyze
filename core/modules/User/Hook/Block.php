@@ -59,7 +59,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         }
 
         $form = (new FormUser([
-                'action' => $this->router->getRoute('user.login.check', [ ':url' => '' ]),
+                'action' => $this->router->generateUrl('user.login.check', [ ':url' => '' ]),
                 'method' => 'post'
                 ], null, $this->config));
 
@@ -74,10 +74,10 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 'form'             => $form,
                 'granted_register' => $this->config->get('settings.user_register'),
                 'granted_relogin'  => $this->config->get('settings.user_relogin'),
-                'url_relogin'      => $this->router->getRoute('user.relogin', [
+                'url_relogin'      => $this->router->generateUrl('user.relogin', [
                     ':url' => ''
                 ]),
-                'url_register'     => $this->router->getRoute('user.register.create')
+                'url_register'     => $this->router->generateUrl('user.register.create')
         ]);
     }
 }

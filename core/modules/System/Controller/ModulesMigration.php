@@ -17,7 +17,7 @@ class ModulesMigration extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Your site is up to date');
         }
 
-        return new Redirect(self::router()->getRoute('system.module.edit'), 302);
+        return new Redirect(self::router()->generateUrl('system.module.edit'), 302);
     }
 
     public function update(): ResponseInterface
@@ -29,6 +29,6 @@ class ModulesMigration extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'error' ][] = t('An error occurred during the update');
         }
 
-        return new Redirect(self::router()->getRoute('system.module.edit'), 302);
+        return new Redirect(self::router()->generateUrl('system.module.edit'), 302);
     }
 }

@@ -25,7 +25,7 @@ class Menu extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('menu.create.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('menu.store');
+        $action = self::router()->generateUrl('menu.store');
 
         $form = (new FormMenu([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
@@ -63,7 +63,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
-                    'redirect' => self::router()->getRoute('menu.show', [ ':menu' => $data[ 'name' ] ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $data[ 'name' ] ])
             ]);
         }
 
@@ -81,7 +81,7 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('menu.update', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.update', [ ':menu' => $nameMenu ]);
 
         $form = (new FormMenu(['action' => $action, 'method' => 'put' ]))
             ->setValues($values)
@@ -128,7 +128,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $nameMenu ])
             ]);
         }
 
@@ -146,7 +146,7 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.remove.form.data', [ &$values, $nameMenu ]);
 
-        $action = self::router()->getRoute('menu.delete', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.delete', [ ':menu' => $nameMenu ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
             ->group('menu-fieldset', 'fieldset', function ($form) {
@@ -218,7 +218,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('menu.admin')
+                    'redirect' => self::router()->generateUrl('menu.admin')
             ]);
         }
 

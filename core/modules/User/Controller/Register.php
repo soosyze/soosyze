@@ -23,7 +23,7 @@ class Register extends \Soosyze\Controller
         $values = [];
 
         $form = (new FormUser([
-            'action' => self::router()->getRoute('user.register.store'),
+            'action' => self::router()->generateUrl('user.register.store'),
             'method' => 'post'
             ], null, self::config()))
             ->setValues($values);
@@ -49,7 +49,7 @@ class Register extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'user/content-register-create.php', $this->pathViews, [
                     'form'        => $form,
-                    'url_relogin' => self::router()->getRoute('user.login', [
+                    'url_relogin' => self::router()->generateUrl('user.login', [
                         ':url' => $connectUrl
                     ])
         ]);
@@ -140,7 +140,7 @@ class Register extends \Soosyze\Controller
                 );
 
                 return $this->json(201, [
-                        'redirect' => self::router()->getRoute('user.register.create')
+                        'redirect' => self::router()->generateUrl('user.register.create')
                 ]);
             } else {
                 return $this->json(400, [
@@ -170,13 +170,13 @@ class Register extends \Soosyze\Controller
 
         $_SESSION[ 'messages' ][ 'success' ][] = t('Your user account has just been activated, you can now login.');
 
-        return new Redirect(self::router()->getRoute('user.login', [ ':url' => '' ]), 302);
+        return new Redirect(self::router()->generateUrl('user.login', [ ':url' => '' ]), 302);
     }
 
     private function sendMailRegister(string $from): bool
     {
         $user     = self::user()->getUser($from);
-        $urlReset = self::router()->getRoute('user.activate', [
+        $urlReset = self::router()->generateUrl('user.activate', [
             ':id'    => $user[ 'user_id' ],
             ':token' => $user[ 'token_actived' ]
         ]);
