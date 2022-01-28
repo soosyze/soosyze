@@ -376,13 +376,13 @@ class FilePermission extends \Soosyze\Controller
         $menu = [
             [
                 'key'        => 'filemanager.permission.edit',
-                'request'    => self::router()->getRequestByRoute('filemanager.permission.edit', [
+                'request'    => self::router()->generateRequest('filemanager.permission.edit', [
                     ':id' => $idPermission
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'filemanager.permission.remove',
-                'request'    => self::router()->getRequestByRoute('filemanager.permission.remove', [
+                'request'    => self::router()->generateRequest('filemanager.permission.remove', [
                     ':id' => $idPermission
                 ]),
                 'title_link' => t('Delete')

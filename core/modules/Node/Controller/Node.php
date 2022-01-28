@@ -28,7 +28,7 @@ class Node extends \Soosyze\Controller
             ->fetchAll();
 
         foreach ($nodeType as $key => &$value) {
-            $reqGranted = self::router()->getRequestByRoute('node.create', [
+            $reqGranted = self::router()->generateRequest('node.create', [
                 ':node' => $value[ 'node_type' ]
             ]);
             if (!$this->container->callHook('app.granted.request', [ $reqGranted ])) {
@@ -476,13 +476,13 @@ class Node extends \Soosyze\Controller
         $menu = [
             [
                 'key'        => 'node.edit',
-                'request'    => self::router()->getRequestByRoute('node.edit', [
+                'request'    => self::router()->generateRequest('node.edit', [
                     ':id_node' => $idNode
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'node.delete',
-                'request'    => self::router()->getRequestByRoute('node.remove', [
+                'request'    => self::router()->generateRequest('node.remove', [
                     ':id_node' => $idNode
                 ]),
                 'title_link' => t('Delete')
@@ -505,7 +505,7 @@ class Node extends \Soosyze\Controller
         if ($menu !== []) {
             $nodeShow = [
                 'key'        => 'node.show',
-                'request'    => self::router()->getRequestByRoute('node.show', [
+                'request'    => self::router()->generateRequest('node.show', [
                     ':id_node' => $idNode
                 ]),
                 'title_link' => t('View')

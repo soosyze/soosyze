@@ -126,8 +126,8 @@ class UsersManager extends \Soosyze\Controller
         $params[ 'sort' ]     = $sort;
 
         /* Liens */
-        $linkPagination = self::router()->getRequestByRoute('user.filter.page', [], false)->getUri();
-        $linkSort       = self::router()->getRequestByRoute('user.filter')->getUri();
+        $linkPagination = self::router()->generateRequest('user.filter.page', [], false)->getUri();
+        $linkSort       = self::router()->generateRequest('user.filter')->getUri();
 
         if ($params !== []) {
             $linkPagination = $linkPagination->withQuery(

@@ -233,19 +233,19 @@ class Menu
         $menu = [
             [
                 'key'        => 'menu.show',
-                'request'    => $this->router->getRequestByRoute('menu.show', [
+                'request'    => $this->router->generateRequest('menu.show', [
                     ':menu' => $nameMenu
                 ]),
                 'title_link' => 'View'
             ], [
                 'key'        => 'menu.edit',
-                'request'    => $this->router->getRequestByRoute('menu.edit', [
+                'request'    => $this->router->generateRequest('menu.edit', [
                     ':menu' => $nameMenu
                 ]),
                 'title_link' => 'Edit'
             ], [
                 'key'        => 'menu.remove',
-                'request'    => $this->router->getRequestByRoute('menu.remove', [
+                'request'    => $this->router->generateRequest('menu.remove', [
                     ':menu' => $nameMenu
                 ]),
                 'title_link' => 'Delete'
@@ -274,13 +274,13 @@ class Menu
         $menu = [
             [
                 'key'        => 'menu.link.edit',
-                'request'    => $this->router->getRequestByRoute('menu.link.edit', [
+                'request'    => $this->router->generateRequest('menu.link.edit', [
                     ':menu' => $nameMenu, ':id' => $id
                 ]),
                 'title_link' => 'Edit'
             ], [
                 'key'        => 'menu.link.remove',
-                'request'    => $this->router->getRequestByRoute('menu.link.remove', [
+                'request'    => $this->router->generateRequest('menu.link.remove', [
                     ':menu' => $nameMenu, ':id' => $id
                 ]),
                 'title_link' => 'Delete'
