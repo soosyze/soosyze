@@ -364,19 +364,21 @@ class User
     {
         $route = $this->router->parse($request);
 
+        if ($route === null) {
+            return false;
+        }
         /* Si la permission n'existe pas. */
-        if ($this->hasPermission($route[ 'key' ])) {
-            return $this->isGranted($route[ 'key' ]);
+        if ($this->hasPermission($route->getKey())) {
+            return $this->isGranted($route->getKey());
         }
 
-        if (isset($route[ 'with' ])) {
-            $query  = $this->router->parseQueryFromRequest($request);
-            $params = $this->router->parseParam($route[ 'path' ], $query, $route[ 'with' ]);
+        if ($route->getWiths() !== null) {
+            $withs = $this->router->parseWiths($route, $request);
         }
 
-        $params[]    = $request;
-        $params[]    = $this->isConnected();
-        $permissions = $this->core->callHook('route.' . $route[ 'key' ], $params);
+        $withs[]     = $request;
+        $withs[]     = $this->isConnected();
+        $permissions = $this->core->callHook('route.' . $route->getKey(), $withs);
 
         return $this->isGrantedPermission($permissions);
     }

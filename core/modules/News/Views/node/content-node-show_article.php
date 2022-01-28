@@ -11,7 +11,7 @@
     <?php if (!empty($user)): ?>
         <?php if (isset($user[ 'picture' ])): ?>
         <img alt="<?php echo htmlspecialchars($user[ 'username' ]); ?> picture"
-             src="<?php echo $base_path . $user[ 'picture' ]; ?>"
+             src="<?php echo $base_path . '/' . $user[ 'picture' ]; ?>"
              class="user-picture">
         <?php endif; ?>
 
