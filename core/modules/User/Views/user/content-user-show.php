@@ -3,7 +3,7 @@
     <div class="col-sm-3">
         <?php if ($user[ 'picture' ]): ?>
 
-        <img src="<?php echo $base_path . $user[ 'picture' ]; ?>" class="user-picture img-responsive" alt="Picture user">
+        <img src="<?php echo $base_path . '/' . $user[ 'picture' ]; ?>" class="user-picture img-responsive" alt="Picture user">
         <?php else: ?>
 
         <div class="user-picture_default">

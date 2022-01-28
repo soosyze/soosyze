@@ -6,6 +6,7 @@ namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Form\FormGroupBuilder;
+use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Services\Node;
@@ -98,16 +99,10 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', '=', 'article')
             ->fetchAll();
 
-        $query      = $this->router->parseQueryFromRequest();
-        $paramMonth = $this->router->parseParam('news/:year/:month:id', $query, [
-            ':year'  => '\d{4}',
-            ':month' => '0[1-9]|1[0-2]',
-            ':id'    => '(/page/[1-9]\d*)?'
-        ]);
-        $paramYear  = $this->router->parseParam('news/:year:id', $query, [
-            ':year' => '\d{4}',
-            ':id'   => '(/page/[1-9]\d*)?'
-        ]);
+        $route      = RouteCollection::getRoute('news.month');
+        $paramMonth = $this->router->parseWiths($route);
+        $routeYears = RouteCollection::getRoute('news.years');
+        $paramYear  = $this->router->parseWiths($routeYears);
 
         $optionsSelect[] = [
             'label' => t('-- Select --'),
@@ -178,11 +173,8 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', '=', 'article')
             ->fetchAll();
 
-        $query = $this->router->parseQueryFromRequest();
-        $param = $this->router->parseParam('news/:year:id', $query, [
-            ':year' => '\d{4}',
-            ':id'   => '(/page/[1-9]\d*)?'
-        ]);
+        $route = RouteCollection::getRoute('news.years');
+        $param = $this->router->parseWiths($route);
 
         $output = [];
         foreach ($data as $value) {
