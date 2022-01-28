@@ -1,7 +1,8 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\Trumbowyg\Controller');
-
-R::post('trumbowyg.upload', '/trumbowyg/upload', 'Trumbowyg@upload');
+RouteCollection::setNamespace('SoosyzeCore\Trumbowyg\Controller\Trumbowyg')->prefix('/api')->group(function (RouteGroup $r): void {
+    $r->get('trumbowyg.upload', '/trumbowyg/upload', '@upload');
+});

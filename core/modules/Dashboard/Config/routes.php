@@ -1,8 +1,9 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\Dashboard\Controller')->name('dashboard.')->prefix('admin/dashboard')->group(function () {
-    R::get('index', '/', 'Dashboard@index');
-    R::get('info', '/info', 'Dashboard@info');
+RouteCollection::setNamespace('SoosyzeCore\Dashboard\Controller\Dashboard')->name('dashboard.')->prefix('/admin/dashboard')->group(function (RouteGroup $r): void {
+    $r->get('index', '/', '@index');
+    $r->get('info', '/info', '@info');
 });
