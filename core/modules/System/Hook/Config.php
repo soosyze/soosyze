@@ -113,7 +113,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->group('path_index-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:content</span>', [
-                                ':content' => $this->router->makeRoute('')
+                                ':content' => $this->router->makeUrl('')
                             ])
                             ->text('path_index', [
                                 'class'       => 'form-control',
@@ -131,7 +131,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->group('path_access_denied-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:content</span>', [
-                                ':content' => $this->router->makeRoute('')
+                                ':content' => $this->router->makeUrl('')
                             ])
                             ->text('path_access_denied', [
                                 'class'       => 'form-control',
@@ -148,7 +148,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->group('path_no_found-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path', '<span:attr>:content</span>', [
-                                ':content' => $this->router->makeRoute('')
+                                ':content' => $this->router->makeUrl('')
                             ])
                             ->text('path_no_found', [
                                 'class'       => 'form-control',
@@ -165,7 +165,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->group('path_maintenance-flex', 'div', function ($form) use ($data) {
                             $form->html('base_path_maintenance', '<span:attr>:content</span>', [
-                                ':content' => $this->router->makeRoute(''),
+                                ':content' => $this->router->makeUrl(''),
                             ])
                             ->text('path_maintenance', [
                                 'class'       => 'form-control',

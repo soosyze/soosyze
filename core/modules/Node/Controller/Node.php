@@ -514,7 +514,7 @@ class Node extends \Soosyze\Controller
                 $alias     = self::alias()->getAlias('node/' . $idNode, 'node/' . $idNode);
                 $pathIndex = self::config()->get('settings.path_index');
 
-                $nodeShow[ 'link' ] = self::router()->makeRoute(
+                $nodeShow[ 'link' ] = self::router()->makeUrl(
                     in_array($pathIndex, [ $alias, 'node/' . $idNode ])
                         ? ''
                         : $alias
@@ -712,7 +712,7 @@ class Node extends \Soosyze\Controller
                 'content'  => self::config()->get('settings.meta_title')
             ], [
                 'property' => 'og:url',
-                'content'  => self::router()->makeRoute($alias)
+                'content'  => self::router()->makeUrl($alias)
             ],
         ];
 

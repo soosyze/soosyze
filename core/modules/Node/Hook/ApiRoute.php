@@ -45,7 +45,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
             $alias = $this->alias->getAlias("node/{$node[ 'id' ]}", "node/{$node[ 'id' ]}");
 
             $routes[] = [
-                'link'  => $this->router->makeRoute($alias),
+                'link'  => $this->router->makeUrl($alias),
                 'route' => $alias,
                 'title' => $node[ 'title' ]
             ];
