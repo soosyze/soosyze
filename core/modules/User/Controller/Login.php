@@ -247,7 +247,7 @@ class Login extends \Soosyze\Controller
         if (($redirect = self::config()->get('settings.connect_redirect', ''))) {
             $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);
 
-            return self::router()->makeRoute($redirect);
+            return self::router()->makeUrl($redirect);
         }
 
         return self::router()->generateUrl('user.account');

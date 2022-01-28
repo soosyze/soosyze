@@ -127,7 +127,7 @@ class NodeUser
                 ? ''
                 : $alias;
 
-            $node[ 'link_view' ] = $this->router->makeRoute($linkView);
+            $node[ 'link_view' ] = $this->router->makeUrl($linkView);
 
             $nodeEdit = $this->hookUser->hookNodeEdited($node[ 'id' ], null, $user);
 

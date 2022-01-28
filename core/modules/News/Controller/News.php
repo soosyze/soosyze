@@ -75,7 +75,7 @@ class News extends \Soosyze\Controller
 
             $alias = self::alias()->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
 
-            $value[ 'link_view' ] = self::router()->makeRoute($alias);
+            $value[ 'link_view' ] = self::router()->makeUrl($alias);
         }
         unset($value);
 
@@ -157,7 +157,7 @@ class News extends \Soosyze\Controller
 
             $alias = self::alias()->getAlias('node/' . $item[ 'id' ], 'node/' . $item[ 'id' ]);
 
-            $item[ 'link' ] = self::router()->makeRoute($alias);
+            $item[ 'link' ] = self::router()->makeUrl($alias);
         }
         unset($item);
 
@@ -211,7 +211,7 @@ class News extends \Soosyze\Controller
 
             $alias = self::alias()->getAlias('node/' . $new[ 'id' ], 'node/' . $new[ 'id' ]);
 
-            $new[ 'link_view' ] = self::router()->makeRoute($alias);
+            $new[ 'link_view' ] = self::router()->makeUrl($alias);
         }
         unset($new);
 
