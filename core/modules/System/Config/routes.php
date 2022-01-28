@@ -1,28 +1,31 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\System\Controller');
+RouteCollection::setNamespace('SoosyzeCore\System\Controller')->name('system.')->prefix('/admin')->group(function (RouteGroup $r): void {
+    $r->get('api.route', '/api/route', 'RouteApi@index');
 
-R::get('api.route', 'api/route', 'RouteApi@index');
-
-R::useNamespace('SoosyzeCore\System\Controller')->name('system.module.')->prefix('admin/modules')->group(function () {
-    R::get('edit', '/', 'ModulesManager@edit');
-    R::post('update', '/', 'ModulesManager@update');
-});
-R::useNamespace('SoosyzeCore\System\Controller')->name('system.migration.')->prefix('admin/migration')->group(function () {
-    R::get('check', '/check', 'ModulesMigration@check');
-    R::get('update', '/update', 'ModulesMigration@update');
-});
-R::useNamespace('SoosyzeCore\System\Controller')->name('system.theme.')->prefix('admin/theme')->group(function () {
-    R::get('index', '/', 'Theme@index');
-    R::get('admin', '/:type', 'Theme@admin', [ ':type' => 'admin|public' ]);
-    R::get('active', '/:type/active/:name', 'Theme@active', [ ':type' => 'admin|public', ':name' => '\w+' ]);
-    R::get('edit', '/:type/edit', 'Theme@edit', [ ':type' => 'admin|public' ]);
-    R::post('update', '/:type/edit', 'Theme@update', [ ':type' => 'admin|public' ]);
-});
-R::useNamespace('SoosyzeCore\System\Controller')->name('system.tool.')->prefix('admin/tool')->group(function () {
-    R::get('admin', '/', 'Tool@admin');
-    R::get('cron', '/cron', 'Tool@cron');
-    R::get('trans', '/trans', 'Tool@updateTranslations');
+    $r->prefix('/modules')->name('module.')->setNamespace('\ModulesManager')->group(function (RouteGroup $r): void {
+        $r->get('edit', '/', '@edit');
+        $r->post('update', '/', '@update');
+    });
+    $r->prefix('/migration')->name('migration.')->setNamespace('\ModulesMigration')->group(function (RouteGroup $r): void {
+        $r->get('check', '/check', '@check');
+        $r->get('update', '/update', '@update');
+    });
+    $r->prefix('/theme')->name('theme.')->setNamespace('\Theme')->group(function (RouteGroup $r): void {
+        $r->get('index', '/', '@index');
+        $r->get('admin', '/:type', '@admin', [ ':type' => 'admin|public' ]);
+        $r->get('active', '/:type/active/:name', '@active', [
+            ':type' => 'admin|public', ':name' => '\w+'
+        ]);
+        $r->get('edit', '/:type/edit', '@edit', [ ':type' => 'admin|public' ]);
+        $r->post('update', '/:type/edit', '@update', [ ':type' => 'admin|public' ]);
+    });
+    $r->prefix('/tool')->name('tool.')->setNamespace('\Tool')->group(function (RouteGroup $r): void {
+        $r->get('admin', '/', '@admin');
+        $r->get('cron', '/cron', '@cron');
+        $r->get('trans', '/trans', '@updateTranslations');
+    });
 });

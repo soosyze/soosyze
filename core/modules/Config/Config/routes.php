@@ -1,9 +1,10 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\Config\Controller')->name('config.')->prefix('admin/config')->group(function () {
-    R::get('admin', '', 'Config@admin');
-    R::get('edit', '/:id', 'Config@edit', [ ':id' => '\w+' ]);
-    R::put('update', '/:id', 'Config@update', [ ':id' => '\w+' ]);
+RouteCollection::setNamespace('SoosyzeCore\Config\Controller\Config')->name('config.')->prefix('/admin/config')->group(function (RouteGroup $r): void {
+    $r->get('admin', '/', '@admin');
+    $r->get('edit', '/:id', '@edit')->whereWords(':id');
+    $r->put('update', '/:id', '@update')->whereWords(':id');
 });
