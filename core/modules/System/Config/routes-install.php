@@ -1,10 +1,11 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\System\Controller')->name('install.')->prefix('install')->group(function () {
-    R::get('index', '/', 'Install@index');
-    R::get('step', '/step/:id', 'Install@step', [ ':id' => '\w+' ]);
-    R::post('step.check', '/step/:id', 'Install@stepCheck', [ ':id' => '\w+' ]);
-    R::post('language', '/language/:id', 'Install@language', [ ':id' => '\w+' ]);
+RouteCollection::setNamespace('SoosyzeCore\System\Controller\Install')->name('install.')->prefix('/install')->group(function (RouteGroup $r): void {
+    $r->get('index', '/', '@index');
+    $r->get('step', '/step/:id', '@step')->whereWords(':id');
+    $r->post('step.check', '/step/:id', '@stepCheck')->whereWords(':id');
+    $r->post('language', '/language/:id', 'Install@language')->whereWords(':id');
 });

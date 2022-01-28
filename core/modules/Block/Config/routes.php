@@ -1,32 +1,26 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-define('BLOCK_WITH_THEME', [
+define('BLOCK_WITHS_THEME', [
     ':theme' => 'public|admin'
 ]);
-define('BLOCK_WITH', [
-    ':theme' => 'public|admin',
-    ':section' => '\w+'
-]);
-define('BLOCK_WITH_ID', [
-    ':theme' => 'public|admin',
-     ':id' => '\d+'
-]);
 
-R::useNamespace('SoosyzeCore\Block\Controller');
+RouteCollection::setNamespace('SoosyzeCore\Block\Controller')->name('block.')->group(function (RouteGroup $r): void {
+    $r->setNamespace('\Section')->name('section.')->prefix('/admin')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
+        $r->get('admin', '/theme/:theme/section', '@admin');
+        $r->post('update', '/section/:id/edit', '@update')->whereDigits(':id');
+    });
+    $r->setNamespace('\Block')->prefix('/block')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
+        $r->get('create.list', '/:theme/create/:section', '@createList')->whereWords(':section');
+        $r->get('create.show', '/create/:id', '@createShow', [ ':id' => '[\w\.\-]+' ]);
+        $r->post('create.form', '/:theme/create/form', '@createForm');
 
-R::get('block.section.admin', 'admin/theme/:theme/section', 'Section@admin', [ ':theme' => 'public|admin' ]);
-R::post('block.section.update', 'admin/section/:id/edit', 'Section@update', [ ':id' => '\d+' ]);
-
-R::useNamespace('SoosyzeCore\Block\Controller')->name('block.')->prefix('block')->group(function () {
-    R::get('create.list', '/:theme/create/:section', 'Block@createList', BLOCK_WITH);
-    R::get('create.show', '/create/:id', 'Block@createShow', [ ':id' => '[\w\.\-]+' ]);
-    R::post('create.form', '/:theme/create/form', 'Block@createForm', BLOCK_WITH_THEME);
-
-    R::post('store', '/:theme', 'Block@store', BLOCK_WITH_THEME);
-    R::get('edit', '/:theme/:id/edit', 'Block@edit', BLOCK_WITH_ID);
-    R::put('update', '/:theme/:id', 'Block@update', BLOCK_WITH_ID);
-    R::get('remove', '/:theme/:id/delete', 'Block@remove', BLOCK_WITH_ID);
-    R::delete('delete', '/:theme/:id', 'Block@delete', BLOCK_WITH_ID);
+        $r->post('store', '/:theme', '@store');
+        $r->get('edit', '/:theme/:id/edit', '@edit')->whereDigits(':id');
+        $r->put('update', '/:theme/:id', '@update')->whereDigits(':id');
+        $r->get('remove', '/:theme/:id/delete', '@remove')->whereDigits(':id');
+        $r->delete('delete', '/:theme/:id', '@delete')->whereDigits(':id');
+    });
 });

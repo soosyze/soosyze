@@ -1,8 +1,9 @@
 <?php
 
-use Soosyze\Components\Router\Route as R;
+use Soosyze\Components\Router\RouteCollection;
+use Soosyze\Components\Router\RouteGroup;
 
-R::useNamespace('SoosyzeCore\Contact\Controller')->name('contact.')->prefix('contact')->group(function () {
-    R::get('form', '/', 'Contact@form');
-    R::post('check', '/', 'Contact@formCheck');
+RouteCollection::setNamespace('SoosyzeCore\Contact\Controller\Contact')->name('contact.')->prefix('/contact')->group(function (RouteGroup $r): void {
+    $r->get('form', '/', '@form');
+    $r->post('check', '/', '@formCheck');
 });
