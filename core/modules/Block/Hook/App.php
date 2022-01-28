@@ -106,7 +106,7 @@ class App
 
     private function isAdmin(): bool
     {
-        return in_array($this->router->parseQueryFromRequest(), [
+        return in_array($this->router->getPathFromRequest(), [
                 'admin/theme/public/section',
                 'admin/theme/admin/section'
             ]) && $this->core->callHook('app.granted', [ 'block.administer' ]);
@@ -170,7 +170,7 @@ class App
 
     private function isVisibilityPages(array $block): bool
     {
-        $path = $this->router->parseQueryFromRequest();
+        $path = $this->router->getPathFromRequest();
 
         $visibility = $block[ 'visibility_pages' ];
         $pages      = explode(PHP_EOL, $block[ 'pages' ]);

@@ -72,7 +72,7 @@ class App
 
     public function hookSys(RequestInterface &$request, ResponseInterface &$response): void
     {
-        $path = $this->router->parseQueryFromRequest();
+        $path = $this->router->getPathFromRequest();
         $path = $this->alias->getSource($path, $path);
 
         $request = $request
@@ -265,7 +265,7 @@ class App
         if ($maintenance && $granted) {
             $_SESSION['messages']['infos'][] = t('Site under maintenance');
         }
-        if ($this->router->parseQueryFromRequest() === '/' &&
+        if ($this->router->getPathFromRequest() === '/' &&
             (!$maintenance ||
             ($maintenance && $granted))) {
             $response->getBlock('page')->setNamesOverride([ 'page-front.php' ]);
