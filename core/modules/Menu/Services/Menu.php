@@ -313,7 +313,7 @@ class Menu
      */
     private function getGrantedLink(array $query): array
     {
-        $route   = $this->router->parseQueryFromRequest();
+        $route   = $this->router->getPathFromRequest();
         $request = $this->core->getRequest()->withMethod('GET');
 
         foreach ($query as $key => &$menu) {
