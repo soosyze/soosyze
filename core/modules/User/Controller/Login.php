@@ -25,14 +25,14 @@ class Login extends \Soosyze\Controller
         }
 
         if (self::user()->isConnected()) {
-            return new Redirect(self::router()->getRoute('user.account'), 302);
+            return new Redirect(self::router()->generateUrl('user.account'), 302);
         }
 
         $values = [];
         $this->container->callHook('login.form.data', [ &$values ]);
 
         $form = (new FormUser([
-            'action' => self::router()->getRoute('user.login.check', [ ':url' => $url ]),
+            'action' => self::router()->generateUrl('user.login.check', [ ':url' => $url ]),
             'method' => 'post'
             ], null, self::config()))
             ->setValues($values);
@@ -52,10 +52,10 @@ class Login extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'user/content-login-login.php', $this->pathViews, [
                     'form'             => $form,
-                    'url_relogin'      => self::router()->getRoute('user.relogin', [
+                    'url_relogin'      => self::router()->generateUrl('user.relogin', [
                         ':url' => $url
                     ]),
-                    'url_register'     => self::router()->getRoute('user.register.create'),
+                    'url_register'     => self::router()->generateUrl('user.register.create'),
                     'granted_relogin'  => self::config()->get('settings.user_relogin'),
                     'granted_register' => self::config()->get('settings.user_register')
         ]);
@@ -120,7 +120,7 @@ class Login extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('relogin.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('user.relogin.check', [ ':url' => $url ]);
+        $action = self::router()->generateUrl('user.relogin.check', [ ':url' => $url ]);
 
         $form = (new FormUser([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values);
@@ -138,7 +138,7 @@ class Login extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'user/content-login-relogin.php', $this->pathViews, [
                     'form'      => $form,
-                    'url_login' => self::router()->getRoute('user.login', [ ':url' => $url ])
+                    'url_login' => self::router()->generateUrl('user.login', [ ':url' => $url ])
         ]);
     }
 
@@ -172,7 +172,7 @@ class Login extends \Soosyze\Controller
                     ->where('email', '=', $validator->getInput('email'))
                     ->execute();
 
-                $urlReset = self::router()->getRoute('user.reset', [
+                $urlReset = self::router()->generateUrl('user.reset', [
                     ':id'    => $user[ 'user_id' ],
                     ':token' => $token
                 ]);
@@ -192,7 +192,7 @@ class Login extends \Soosyze\Controller
                     ;
 
                     return $this->json(200, [
-                            'redirect' => self::router()->getRoute('user.login', [
+                            'redirect' => self::router()->generateUrl('user.login', [
                                 ':url' => $url
                             ])
                     ]);
@@ -239,7 +239,7 @@ class Login extends \Soosyze\Controller
 
         self::auth()->login($user[ 'email' ], $pwd);
 
-        return new Redirect(self::router()->getRoute('user.edit', [ ':id' => $id ]));
+        return new Redirect(self::router()->generateUrl('user.edit', [ ':id' => $id ]));
     }
 
     private function getRedirectLogin(array $user): string
@@ -250,6 +250,6 @@ class Login extends \Soosyze\Controller
             return self::router()->makeRoute($redirect);
         }
 
-        return self::router()->getRoute('user.account');
+        return self::router()->generateUrl('user.account');
     }
 }

@@ -70,7 +70,7 @@ class Block
                 'class'      => 'mod',
                 'icon'       => 'fa fa-edit',
                 'key'        => 'block.edit',
-                'link'       => $this->router->getRoute('block.edit', [
+                'link'       => $this->router->generateUrl('block.edit', [
                     ':theme'   => $theme,
                     ':id'      => $id
                 ]),
@@ -79,7 +79,7 @@ class Block
                 'class'      => 'mod',
                 'icon'       => 'fa fa-times',
                 'key'        => 'block.remove',
-                'link'       => $this->router->getRoute('block.remove', [
+                'link'       => $this->router->generateUrl('block.remove', [
                     ':theme'   => $theme,
                     ':id'      => $id
                 ]),

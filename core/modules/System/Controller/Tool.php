@@ -37,8 +37,8 @@ class Tool extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'system/content-tools-admin.php', $this->pathViews, [
                     'is_granted_action' => self::user()->isGranted('system.tool.action'),
-                    'link_cron'         => self::router()->getRoute('system.tool.cron'),
-                    'link_trans'        => self::router()->getRoute('system.tool.trans'),
+                    'link_cron'         => self::router()->generateUrl('system.tool.cron'),
+                    'link_trans'        => self::router()->generateUrl('system.tool.trans'),
                     'tools'             => $tools
                 ]);
     }
@@ -49,7 +49,7 @@ class Tool extends \Soosyze\Controller
 
         $_SESSION[ 'messages' ][ 'success' ][] = t('The cron task has been successfully executed');
 
-        return new Redirect(self::router()->getRoute('system.tool.admin'), 302);
+        return new Redirect(self::router()->generateUrl('system.tool.admin'), 302);
     }
 
     public function updateTranslations(): ResponseInterface
@@ -76,6 +76,6 @@ class Tool extends \Soosyze\Controller
 
         $_SESSION[ 'messages' ][ 'success' ][] = t('The translation files have been updated');
 
-        return new Redirect(self::router()->getRoute('system.tool.admin'), 302);
+        return new Redirect(self::router()->generateUrl('system.tool.admin'), 302);
     }
 }

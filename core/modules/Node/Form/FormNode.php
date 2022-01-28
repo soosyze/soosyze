@@ -344,7 +344,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
                     $form->html("$key-$idEntity-show", '<div class="table-min-width-100"><a:attr>:content</a></div>', [
                             ':content' => $content,
-                            'href'     => $this->router->getRoute('entity.edit', [
+                            'href'     => $this->router->generateUrl('entity.edit', [
                                 ':id_node'   => $this->values[ 'id' ],
                                 ':entity'    => $key,
                                 ':id_entity' => $field[ "{$key}_id" ]
@@ -354,7 +354,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                             $form->html("$key-$idEntity-edit", '<a:attr>:content</a>', [
                                 ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
                                 'class'    => 'btn',
-                                'href'     => $this->router->getRoute('entity.edit', [
+                                'href'     => $this->router->generateUrl('entity.edit', [
                                     ':id_node'   => $this->values[ 'id' ],
                                     ':entity'    => $key,
                                     ':id_entity' => $field[ "{$key}_id" ]
@@ -363,7 +363,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                             ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
                                 ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
                                 'class'    => 'btn',
-                                'href'     => $this->router->getRoute('entity.delete', [
+                                'href'     => $this->router->generateUrl('entity.delete', [
                                     ':id_node'   => $this->values[ 'id' ],
                                     ':entity'    => $key,
                                     ':id_entity' => $field[ "{$key}_id" ]
@@ -379,7 +379,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 $form->html('add-' . $key, '<a:attr>:content</a>', [
                     ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content'),
                     'class'    => 'btn btn-primary',
-                    'href'     => $this->router->getRoute('entity.create', [
+                    'href'     => $this->router->generateUrl('entity.create', [
                         ':id_node' => $this->values[ 'id' ],
                         ':entity'  => $key,
                     ])
@@ -485,7 +485,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                             ':selected'        => $this->values[ 'user_id' ],
                             'class'            => 'form-control select-ajax',
                             'data-placeholder' => t('Anonymous'),
-                            'data-link'        => $this->router->getRoute('user.api.select'),
+                            'data-link'        => $this->router->generateUrl('user.api.select'),
                             'disabled'         => $this->isDisabledUserCurrent,
                         ]);
                     }, self::$attrGrp);

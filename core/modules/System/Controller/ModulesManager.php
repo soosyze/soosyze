@@ -27,7 +27,7 @@ class ModulesManager extends \Soosyze\Controller
         $composer = self::composer()->getModuleComposers();
 
         $form = new FormBuilder([
-            'action' => self::router()->getRoute('system.module.update'),
+            'action' => self::router()->generateUrl('system.module.update'),
             'class'  => 'form-api',
             'id'     => 'form-package',
             'method' => 'post'
@@ -98,8 +98,8 @@ class ModulesManager extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'system/content-modules_manager-admin.php', $this->pathViews, [
                     'module_update'      => self::config()->get('settings.module_update'),
-                    'link_module_check'  => self::router()->getRoute('system.migration.check'),
-                    'link_module_update' => self::router()->getRoute('system.migration.update'),
+                    'link_module_check'  => self::router()->generateUrl('system.migration.check'),
+                    'link_module_update' => self::router()->generateUrl('system.migration.update'),
                     'count'             => count($composer),
                     'form'              => $form,
                     'packages'          => $packages
@@ -108,7 +108,7 @@ class ModulesManager extends \Soosyze\Controller
 
     public function update(ServerRequestInterface $req): ResponseInterface
     {
-        $route     = self::router()->getRoute('system.module.edit');
+        $route     = self::router()->generateUrl('system.module.edit');
         $validator = (new Validator())
             ->setRules([
                 'modules'           => '!required|array',

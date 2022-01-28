@@ -88,7 +88,7 @@ class Config extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('config.edit', [ ':id' => $id ])
+                    'redirect' => self::router()->generateUrl('config.edit', [ ':id' => $id ])
             ]);
         }
 
@@ -115,7 +115,7 @@ class Config extends \Soosyze\Controller
         $this->container->callHook("config.edit.$id.form.data", [ &$data, $id ]);
 
         $form = new FormBuilder([
-            'action'  => self::router()->getRoute('config.update', [ ':id' => $id ]),
+            'action'  => self::router()->generateUrl('config.update', [ ':id' => $id ]),
             'class'   => 'form-api',
             'enctype' => 'multipart/form-data',
             'method'  => 'put'
@@ -153,7 +153,7 @@ class Config extends \Soosyze\Controller
         $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
         foreach ($menu as $key => &$link) {
             if ($all || $this->container->callHook('app.granted', [ $key . '.config.manage' ])) {
-                $link[ 'link' ] = self::router()->getRoute('config.edit', [ ':id' => $key ]);
+                $link[ 'link' ] = self::router()->generateUrl('config.edit', [ ':id' => $key ]);
 
                 continue;
             }

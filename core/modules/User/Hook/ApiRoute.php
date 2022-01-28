@@ -29,29 +29,29 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
     {
         $values = [
             [
-                'link'  => $this->router->getRoute('user.account'),
+                'link'  => $this->router->generateUrl('user.account'),
                 'route' => 'user/account',
                 'title' => t('My account')
             ], [
-                'link'  => $this->router->getRoute('user.login', [
+                'link'  => $this->router->generateUrl('user.login', [
                     ':url' => $this->connectUrl
                 ]),
                 'route' => 'user/login',
                 'title' => t('Sign in')
             ], [
-                'link'  => $this->router->getRoute('user.relogin', [
+                'link'  => $this->router->generateUrl('user.relogin', [
                     ':url' => $this->connectUrl
                 ]),
                 'route' => 'user/relogin',
                 'title' => t('Request a new password')
             ], [
-                'link'  => $this->router->getRoute('user.logout', [
+                'link'  => $this->router->generateUrl('user.logout', [
                     ':url' => $this->connectUrl
                 ]),
                 'route' => 'user/logout',
                 'title' => t('Sign out')
             ], [
-                'link'  => $this->router->getRoute('user.register.create'),
+                'link'  => $this->router->generateUrl('user.register.create'),
                 'route' => 'user/register',
                 'title' => t('Sign up')
             ]

@@ -183,7 +183,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ->group('social-group', 'div', function ($form) use ($values) {
                     $form->html('code_integration-label', '<a:attr>:content</a>', [
                         ':content' => t('Configure the list of your social networks from the configuration interface of your site'),
-                        'href'     => $this->router->getRoute('config.edit', [
+                        'href'     => $this->router->generateUrl('config.edit', [
                             ':id' => 'social'
                         ]),
                         'target'   => '_blank'

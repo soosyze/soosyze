@@ -87,7 +87,7 @@ class File extends \Soosyze\Controller
         $max      = $hookUser->getMaxUpload($path);
 
         $form = (new FormBuilder([
-                'action'  => self::router()->getRoute('filemanager.file.store', [
+                'action'  => self::router()->generateUrl('filemanager.file.store', [
                     ':path' => $path
                 ]),
                 'class'   => 'filemanager-dropfile',
@@ -246,7 +246,7 @@ class File extends \Soosyze\Controller
         }
         $data = self::filemanager()->parseFile($spl, $path);
 
-        $action = self::router()->getRoute('filemanager.file.update', [
+        $action = self::router()->generateUrl('filemanager.file.update', [
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);
 
@@ -336,7 +336,7 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $action = self::router()->getRoute('filemanager.file.delete', [
+        $action = self::router()->generateUrl('filemanager.file.delete', [
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);
 

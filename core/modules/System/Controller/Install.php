@@ -107,7 +107,7 @@ class Install extends \Soosyze\Controller
         /* Validation de l'étape. */
         $this->container->callHook("step.$id.check", [ $id, $req ]);
 
-        $route = self::router()->getRoute('install.step', [ ':id' => $id ]);
+        $route = self::router()->generateUrl('install.step', [ ':id' => $id ]);
         if (!empty($_SESSION[ 'inputs' ][ $id ]) && empty($_SESSION[ 'messages' ][ $id ])) {
             $this->position($steps, $id);
             if (($next = next($steps)) === false && key($steps) === null) {
@@ -117,7 +117,7 @@ class Install extends \Soosyze\Controller
                 return $this->installFinish();
             }
 
-            $route = self::router()->getRoute('install.step', [ ':id' => $next[ 'key' ] ]);
+            $route = self::router()->generateUrl('install.step', [ ':id' => $next[ 'key' ] ]);
         }
 
         return new Redirect($route);
