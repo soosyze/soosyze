@@ -35,12 +35,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('entity_article', static function (TableBuilder $table): void {
-                $table->increments('article_id')
-                ->string('image')
-                ->text('summary')
-                ->text('body')
-                ->integer('reading_time')->comment('In minute');
+            ->createTableIfNotExists('entity_article', static function (TableBuilder $tb): void {
+                $tb->increments('article_id');
+                $tb->string('image');
+                $tb->text('summary');
+                $tb->text('body');
+                $tb->integer('reading_time')->comment('In minute');
             });
         $ci->query()->insertInto('node_type', [
                 'node_type',
