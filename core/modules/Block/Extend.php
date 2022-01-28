@@ -24,22 +24,22 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('block', static function (TableBuilder $table): void {
-                $table->increments('block_id')
-                ->string('title')
-                ->boolean('is_title')->valueDefault(true)
-                ->string('section')
-                ->text('content')->nullable()
-                ->string('class')->valueDefault('')
-                ->text('hook')->nullable()
-                ->integer('weight')
-                ->boolean('visibility_pages')->valueDefault(false)
-                ->string('pages')->valueDefault('user/%')
-                ->boolean('visibility_roles')->valueDefault(true)
-                ->string('roles')->valueDefault('1,2')
-                ->string('key_block')->nullable()
-                ->text('options')->nullable()
-                ->text('theme')->valueDefault('public');
+            ->createTableIfNotExists('block', static function (TableBuilder $tb): void {
+                $tb->increments('block_id');
+                $tb->string('title');
+                $tb->boolean('is_title')->valueDefault(true);
+                $tb->string('section');
+                $tb->text('content')->nullable();
+                $tb->string('class')->valueDefault('');
+                $tb->text('hook')->nullable();
+                $tb->integer('weight');
+                $tb->boolean('visibility_pages')->valueDefault(false);
+                $tb->string('pages')->valueDefault('user/%');
+                $tb->boolean('visibility_roles')->valueDefault(true);
+                $tb->string('roles')->valueDefault('1,2');
+                $tb->string('key_block')->nullable();
+                $tb->text('options')->nullable();
+                $tb->text('theme')->valueDefault('public');
             });
 
         $ci->config()->set('settings.icon_socials', [

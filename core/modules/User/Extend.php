@@ -24,43 +24,43 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('user', static function (TableBuilder $table): void {
-                $table->increments('user_id')
-                ->string('email')
-                ->string('username')
-                ->text('password')
-                ->string('key_api')->nullable()
-                ->string('color', 7)->valueDefault('#e6e7f4')
-                ->string('picture')->nullable()
-                ->string('bio')->nullable()
-                ->string('firstname')->nullable()
-                ->string('name')->nullable()
-                ->boolean('actived')->valueDefault(false)
-                ->text('token_connected')->nullable()
-                ->text('token_forget')->nullable()
-                ->text('token_actived')->nullable()
-                ->string('time_reset')->nullable()
-                ->string('time_installed')
-                ->string('time_access')->nullable()
-                ->boolean('rgpd')->valueDefault(false)
-                ->boolean('terms_of_service')->valueDefault(false)
-                ->text('timezone');
+            ->createTableIfNotExists('user', static function (TableBuilder $tb): void {
+                $tb->increments('user_id');
+                $tb->string('email');
+                $tb->string('username');
+                $tb->text('password');
+                $tb->string('key_api')->nullable();
+                $tb->string('color', 7)->valueDefault('#e6e7f4');
+                $tb->string('picture')->nullable();
+                $tb->string('bio')->nullable();
+                $tb->string('firstname')->nullable();
+                $tb->string('name')->nullable();
+                $tb->boolean('actived')->valueDefault(false);
+                $tb->text('token_connected')->nullable();
+                $tb->text('token_forget')->nullable();
+                $tb->text('token_actived')->nullable();
+                $tb->string('time_reset')->nullable();
+                $tb->string('time_installed');
+                $tb->string('time_access')->nullable();
+                $tb->boolean('rgpd')->valueDefault(false);
+                $tb->boolean('terms_of_service')->valueDefault(false);
+                $tb->text('timezone');
             })
-            ->createTableIfNotExists('role', static function (TableBuilder $table): void {
-                $table->increments('role_id')
-                ->string('role_description')->nullable()
-                ->string('role_label')
-                ->string('role_color', 7)->valueDefault('#e6e7f4')
-                ->string('role_icon')->nullable()
-                ->integer('role_weight')->valueDefault(1);
+            ->createTableIfNotExists('role', static function (TableBuilder $tb): void {
+                $tb->increments('role_id');
+                $tb->string('role_description')->nullable();
+                $tb->string('role_label');
+                $tb->string('role_color', 7)->valueDefault('#e6e7f4');
+                $tb->string('role_icon')->nullable();
+                $tb->integer('role_weight')->valueDefault(1);
             })
-            ->createTableIfNotExists('user_role', static function (TableBuilder $table): void {
-                $table->integer('user_id')
-                ->integer('role_id');
+            ->createTableIfNotExists('user_role', static function (TableBuilder $tb): void {
+                $tb->integer('user_id');
+                $tb->integer('role_id');
             })
-            ->createTableIfNotExists('role_permission', static function (TableBuilder $table): void {
-                $table->integer('role_id')
-                ->string('permission_id');
+            ->createTableIfNotExists('role_permission', static function (TableBuilder $tb): void {
+                $tb->integer('role_id');
+                $tb->string('permission_id');
             });
 
         $ci->query()

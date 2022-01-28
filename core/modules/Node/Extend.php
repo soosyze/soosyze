@@ -24,65 +24,65 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('node', static function (TableBuilder $table): void {
-                $table->increments('id')
-                ->string('date_changed')
-                ->string('date_created')
-                ->integer('entity_id')->nullable()
-                ->string('meta_description')->valueDefault('')
-                ->boolean('meta_noarchive')->valueDefault(false)
-                ->boolean('meta_nofollow')->valueDefault(false)
-                ->boolean('meta_noindex')->valueDefault(false)
-                ->string('meta_title')->valueDefault('')
-                ->integer('node_status_id')->valueDefault(3)
-                ->boolean('sticky')->valueDefault(false)
-                ->string('title')
-                ->string('type', 32)
-                ->integer('user_id')->nullable();
+            ->createTableIfNotExists('node', static function (TableBuilder $tb): void {
+                $tb->increments('id');
+                $tb->string('date_changed');
+                $tb->string('date_created');
+                $tb->integer('entity_id')->nullable();
+                $tb->string('meta_description')->valueDefault('');
+                $tb->boolean('meta_noarchive')->valueDefault(false);
+                $tb->boolean('meta_nofollow')->valueDefault(false);
+                $tb->boolean('meta_noindex')->valueDefault(false);
+                $tb->string('meta_title')->valueDefault('');
+                $tb->integer('node_status_id')->valueDefault(3);
+                $tb->boolean('sticky')->valueDefault(false);
+                $tb->string('title');
+                $tb->string('type', 32);
+                $tb->integer('user_id')->nullable();
             })
-            ->createTableIfNotExists('node_type', static function (TableBuilder $table): void {
-                $table->string('node_type')
-                ->string('node_type_name')
-                ->string('node_type_icon')
-                ->text('node_type_description')
-                ->string('node_type_color', 7)->valueDefault('#ddd');
+            ->createTableIfNotExists('node_type', static function (TableBuilder $tb): void {
+                $tb->string('node_type');
+                $tb->string('node_type_name');
+                $tb->string('node_type_icon');
+                $tb->text('node_type_description');
+                $tb->string('node_type_color', 7)->valueDefault('#ddd');
             })
-            ->createTableIfNotExists('node_status', static function (TableBuilder $table): void {
-                $table->increments('node_status_id')
-                ->text('node_status_name');
+            ->createTableIfNotExists('node_status', static function (TableBuilder $tb): void {
+                $tb->increments('node_status_id');
+                $tb->text('node_status_name');
             })
-            ->createTableIfNotExists('field', static function (TableBuilder $table): void {
-                $table->increments('field_id')
-                ->string('field_name')
-                ->string('field_type');
+            ->createTableIfNotExists('field', static function (TableBuilder $tb): void {
+                $tb->increments('field_id');
+                $tb->string('field_name');
+                $tb->string('field_type');
             })
             /* Table pivot. */
-            ->createTableIfNotExists('node_type_field', static function (TableBuilder $table): void {
-                $table->string('node_type')
-                ->integer('field_id')
-                ->string('field_label')
-                ->string('field_rules')
+            ->createTableIfNotExists('node_type_field', static function (TableBuilder $tb): void {
+                $tb->string('node_type');
+                $tb->integer('field_id');
+                $tb->string('field_label');
+                $tb->string('field_rules');
                 /* Si la donnée doit-être affichée. */
-                ->boolean('field_show')->valueDefault(true)
+                $tb->boolean('field_show')->valueDefault(true);
                 /* Si la donnée doit-être affichée dans le formulaire. */
-                ->boolean('field_show_form')->valueDefault(true)
+                $tb->boolean('field_show_form')->valueDefault(true);
                 /* Si le label doit-être affiché. */
-                ->boolean('field_show_label')->valueDefault(false)
-                ->text('field_description')->valueDefault('')
-                ->text('field_option')->valueDefault('')
-                ->text('field_default_value')->nullable()
+                $tb->boolean('field_show_label')->valueDefault(false);
+                $tb->text('field_description')->valueDefault('');
+                $tb->text('field_option')->valueDefault('');
+                $tb->text('field_default_value')->nullable();
                 /* Poisition du champ. */
-                ->integer('field_weight')->valueDefault(1)
+                $tb->integer('field_weight')->valueDefault(1);
                 /* Poisition de la donnée dans l'affichage. */
-                ->integer('field_weight_form')->valueDefault(1);
+                $tb->integer('field_weight_form')->valueDefault(1);
             })
-            ->createTableIfNotExists('entity_page', static function (TableBuilder $table): void {
-                $table->increments('page_id')
-                ->text('body');
+            ->createTableIfNotExists('entity_page', static function (TableBuilder $tb): void {
+                $tb->increments('page_id');
+                $tb->text('body');
             })
-            ->createTableIfNotExists('entity_page_private', static function (TableBuilder $table): void {
-                $table->increments('page_private_id')
-                ->text('body');
+            ->createTableIfNotExists('entity_page_private', static function (TableBuilder $tb): void {
+                $tb->increments('page_private_id');
+                $tb->text('body');
             });
 
         $ci->query()->insertInto('node_status', [
@@ -173,9 +173,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->schema()
-            ->createTableIfNotExists('node_menu_link', static function (TableBuilder $table): void {
-                $table->integer('node_id')
-                ->integer('menu_link_id');
+            ->createTableIfNotExists('node_menu_link', static function (TableBuilder $tb): void {
+                $tb->integer('node_id');
+                $tb->integer('menu_link_id');
             });
     }
 

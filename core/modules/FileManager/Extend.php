@@ -24,31 +24,29 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     public function install(ContainerInterface $ci): void
     {
         $ci->schema()
-            ->createTableIfNotExists('profil_file', static function (TableBuilder $table): void {
-                $table
-                ->increments('profil_file_id')
-                ->text('folder_show')
-                ->boolean('folder_show_sub')->valueDefault(true)
-                ->integer('profil_weight')->valueDefault(1)
-                ->boolean('folder_store')->valueDefault(true)
-                ->boolean('folder_update')->valueDefault(false)
-                ->boolean('folder_delete')->valueDefault(true)
-                ->boolean('folder_download')->valueDefault(false)
-                ->integer('folder_size')->valueDefault(10)
-                ->boolean('file_store')->valueDefault(true)
-                ->boolean('file_update')->valueDefault(false)
-                ->boolean('file_delete')->valueDefault(false)
-                ->boolean('file_download')->valueDefault(true)
-                ->boolean('file_clipboard')->valueDefault(true)
-                ->boolean('file_copy')->valueDefault(true)
-                ->integer('file_size')->valueDefault(1)
-                ->boolean('file_extensions_all')->valueDefault(false)
-                ->text('file_extensions')->valueDefault('');
+            ->createTableIfNotExists('profil_file', static function (TableBuilder $tb): void {
+                $tb->increments('profil_file_id');
+                $tb->text('folder_show');
+                $tb->boolean('folder_show_sub')->valueDefault(true);
+                $tb->integer('profil_weight')->valueDefault(1);
+                $tb->boolean('folder_store')->valueDefault(true);
+                $tb->boolean('folder_update')->valueDefault(false);
+                $tb->boolean('folder_delete')->valueDefault(true);
+                $tb->boolean('folder_download')->valueDefault(false);
+                $tb->integer('folder_size')->valueDefault(10);
+                $tb->boolean('file_store')->valueDefault(true);
+                $tb->boolean('file_update')->valueDefault(false);
+                $tb->boolean('file_delete')->valueDefault(false);
+                $tb->boolean('file_download')->valueDefault(true);
+                $tb->boolean('file_clipboard')->valueDefault(true);
+                $tb->boolean('file_copy')->valueDefault(true);
+                $tb->integer('file_size')->valueDefault(1);
+                $tb->boolean('file_extensions_all')->valueDefault(false);
+                $tb->text('file_extensions')->valueDefault('');
             })
-            ->createTableIfNotExists('profil_file_role', static function (TableBuilder $table): void {
-                $table
-                ->integer('profil_file_id')
-                ->integer('role_id');
+            ->createTableIfNotExists('profil_file_role', static function (TableBuilder $tb): void {
+                $tb->integer('profil_file_id');
+                $tb->integer('role_id');
             });
         $ci->config()->set('settings.replace_file', 1);
 
