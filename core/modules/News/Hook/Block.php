@@ -283,7 +283,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
             $alias = $this->alias->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
 
-            $value[ 'link_view' ] = $this->router->makeRoute($alias);
+            $value[ 'link_view' ] = $this->router->makeUrl($alias);
         }
         unset($value);
 

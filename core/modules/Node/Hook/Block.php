@@ -190,7 +190,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             /** @var string $linkNext */
             $linkNext = $this->alias->getAlias('node/' . $next[ 'id' ], 'node/' . $next[ 'id' ]);
 
-            $next[ 'link' ] = $this->router->makeRoute($linkNext);
+            $next[ 'link' ] = $this->router->makeUrl($linkNext);
         }
 
         return $next;
@@ -214,7 +214,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             /** @var string $linkPrevious */
             $linkPrevious = $this->alias->getAlias('node/' . $previous[ 'id' ], 'node/' . $previous[ 'id' ]);
 
-            $previous[ 'link' ] = $this->router->makeRoute($linkPrevious);
+            $previous[ 'link' ] = $this->router->makeUrl($linkPrevious);
         }
 
         return $previous;

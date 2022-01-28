@@ -152,7 +152,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             }, self::$attrGrp)
                 ->html('terms_of_service-info', '<p><a :attr>:content</a></p>', [
                     ':content' => t('Read the terms of service'),
-                    'href'     => $router->makeRoute($this->config->get('settings.terms_of_service_page')),
+                    'href'     => $router->makeUrl($this->config->get('settings.terms_of_service_page')),
                     'target'   => '_blank'
             ]);
         }
@@ -165,7 +165,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             }, self::$attrGrp)
                 ->html('rgpd-info', '<p><a :attr>:content</a></p>', [
                     ':content' => t('Read the privacy policy'),
-                    'href'     => $router->makeRoute($this->config->get('settings.rgpd_page')),
+                    'href'     => $router->makeUrl($this->config->get('settings.rgpd_page')),
                     'target'   => '_blank'
             ]);
         }

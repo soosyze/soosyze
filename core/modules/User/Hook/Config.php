@@ -95,7 +95,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ])
                     ->group('connect_redirect-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:content</span>', [
-                            ':content' => $this->router->makeRoute('')
+                            ':content' => $this->router->makeUrl('')
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
@@ -157,7 +157,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ])
                     ->group('terms_of_service_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:content</span>', [
-                            ':content' => $this->router->makeRoute('')
+                            ':content' => $this->router->makeUrl('')
                         ])
                         ->text('terms_of_service_page', [
                             'class'       => 'form-control',
@@ -181,7 +181,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ])
                     ->group('rgpd_page-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:content</span>', [
-                            ':content' => $this->router->makeRoute('')
+                            ':content' => $this->router->makeUrl('')
                         ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
