@@ -33,7 +33,7 @@ class NodeManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        $requestNodeAdd = self::router()->getRequestByRoute('node.add');
+        $requestNodeAdd = self::router()->generateRequest('node.add');
         $linkAdd        = $this->container->callHook('app.granted.request', [ $requestNodeAdd ])
             ? $requestNodeAdd->getUri()
             : null;
@@ -116,8 +116,8 @@ class NodeManager extends \Soosyze\Controller
         $params[ 'sort' ]     = $sort;
 
         /* Liens */
-        $linkPagination = self::router()->getRequestByRoute('node.filter.page', [], false)->getUri();
-        $linkSort       = self::router()->getRequestByRoute('node.filter')->getUri();
+        $linkPagination = self::router()->generateRequest('node.filter.page', [], false)->getUri();
+        $linkSort       = self::router()->generateRequest('node.filter')->getUri();
 
         if ($params !== []) {
             $linkPagination = $linkPagination->withQuery(

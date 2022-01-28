@@ -89,7 +89,7 @@ class NodeUser
 
         $this->nodeuser->hydrateNodesLinks($nodes);
 
-        $requestLinkAdd = $this->router->getRequestByRoute('node.add');
+        $requestLinkAdd = $this->router->generateRequest('node.add');
 
         $contentNothing = 'The user has no content at the moment.';
         if (($userConnected  = $this->user->isConnected()) && $userConnected[ 'user_id' ] == $user[ 'user_id' ]) {

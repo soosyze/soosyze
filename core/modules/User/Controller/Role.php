@@ -263,13 +263,13 @@ class Role extends \Soosyze\Controller
         $menu = [
             [
                 'key'        => 'user.role.edit',
-                'request'    => self::router()->getRequestByRoute('user.role.edit', [
+                'request'    => self::router()->generateRequest('user.role.edit', [
                     ':id' => $idRole
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'user.role.remove',
-                'request'    => self::router()->getRequestByRoute('user.role.remove', [
+                'request'    => self::router()->generateRequest('user.role.remove', [
                     ':id' => $idRole
                 ]),
                 'title_link' => t('Delete')

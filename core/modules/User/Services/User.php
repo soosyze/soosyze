@@ -168,19 +168,19 @@ class User
         $menu = [
             [
                 'key'        => 'user.show',
-                'request'    => $this->router->getRequestByRoute('user.show', [
+                'request'    => $this->router->generateRequest('user.show', [
                     ':id' => $id
                 ]),
                 'title_link' => t('View')
             ], [
                 'key'        => 'user.edit',
-                'request'    => $this->router->getRequestByRoute('user.edit', [
+                'request'    => $this->router->generateRequest('user.edit', [
                     ':id' => $id
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'user.remove',
-                'request'    => $this->router->getRequestByRoute('user.remove', [
+                'request'    => $this->router->generateRequest('user.remove', [
                     ':id' => $id
                 ]),
                 'title_link' => t('Delete')
@@ -212,15 +212,15 @@ class User
         $menu = [
             [
                 'key'        => 'user.admin',
-                'request'    => $this->router->getRequestByRoute('user.admin'),
+                'request'    => $this->router->generateRequest('user.admin'),
                 'title_link' => t('Users')
             ], [
                 'key'        => 'user.role.admin',
-                'request'    => $this->router->getRequestByRoute('user.role.admin'),
+                'request'    => $this->router->generateRequest('user.role.admin'),
                 'title_link' => t('Roles')
             ], [
                 'key'        => 'user.permission.admin',
-                'request'    => $this->router->getRequestByRoute('user.permission.admin'),
+                'request'    => $this->router->generateRequest('user.permission.admin'),
                 'title_link' => t('Permissions')
             ]
         ];
