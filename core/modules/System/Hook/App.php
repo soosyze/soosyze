@@ -77,7 +77,7 @@ class App
 
         $request = $request
             ->withUri(
-                Uri::create($this->router->getBasePath() . $path)
+                Uri::create($this->router->getBasePath() . '/' . ltrim($path, '/'))
             );
 
         if (
@@ -90,7 +90,9 @@ class App
 
     public function hooks404(RequestInterface $request, ResponseInterface &$response): void
     {
-        if (($path = $this->config->get('settings.path_no_found', '')) !== '') {
+        $path = '/' . ltrim($this->config->get('settings.path_no_found', ''), '/');
+
+        if ($path !== '') {
             $path = $this->alias->getSource($path, $path);
 
             $requestNoFound = $request
@@ -126,7 +128,9 @@ class App
 
     public function hooks403(RequestInterface $request, ResponseInterface &$response): void
     {
-        if (($path = $this->config->get('settings.path_access_denied', '')) !== '') {
+        $path = '/' . ltrim($this->config->get('settings.path_access_denied', ''), '/');
+
+        if ($path !== '') {
             $path = $this->alias->getSource($path, $path);
 
             $requestDenied = $request
@@ -157,7 +161,9 @@ class App
 
     public function hooks503(RequestInterface $request, ResponseInterface &$response): void
     {
-        if (($path = $this->config->get('settings.path_maintenance', '')) !== '') {
+        $path = '/' . ltrim($this->config->get('settings.path_maintenance', ''), '/');
+
+        if ($path !== '') {
             $path = $this->alias->getSource($path, $path);
 
             $requestMaintenance = $request

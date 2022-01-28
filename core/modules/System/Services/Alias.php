@@ -43,7 +43,7 @@ class Alias
             $default = $index;
         }
 
-        $source = $this->query->from('system_alias_url')->where('alias', '=', $alias)->fetch();
+        $source = $this->query->from('system_alias_url')->where('alias', '=', ltrim($alias, '/'))->fetch();
 
         return $source[ 'source' ] ?? $default;
     }
