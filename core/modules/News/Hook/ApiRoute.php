@@ -40,7 +40,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         }
 
         $routes[] = [
-            'link'  => $this->router->getRoute('news.index'),
+            'link'  => $this->router->generateUrl('news.index'),
             'route' => $this->alias->getAlias('news', 'news'),
             'title' => $title
         ];

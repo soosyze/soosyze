@@ -54,7 +54,7 @@ class NodeClone extends \Soosyze\Controller
         if (mb_strlen($this->node[ 'title' ] . ' clone') > 255) {
             $_SESSION[ 'messages' ][ 'errors' ][] = t('Clone content title is too long');
 
-            return new Redirect(self::router()->getRoute('node.admin'));
+            return new Redirect(self::router()->generateUrl('node.admin'));
         }
 
         /* Construit l'entity principale */
@@ -89,7 +89,7 @@ class NodeClone extends \Soosyze\Controller
             ->execute();
 
         return new Redirect(
-            self::router()->getRoute('node.edit', [
+            self::router()->generateUrl('node.edit', [
                 ':id_node' => $this->node[ 'id' ]
             ]),
             302

@@ -132,7 +132,7 @@ class NodeUser
             $nodeEdit = $this->hookUser->hookNodeEdited($node[ 'id' ], null, $user);
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeEdit)) {
-                $node[ 'link_edit' ] = $this->router->getRoute('node.edit', [
+                $node[ 'link_edit' ] = $this->router->generateUrl('node.edit', [
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
@@ -140,7 +140,7 @@ class NodeUser
             $nodeClone = $this->hookUser->hookNodeClone($node[ 'id' ], null, $user);
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeClone)) {
-                $node[ 'link_clone' ] = $this->router->getRoute('node.clone', [
+                $node[ 'link_clone' ] = $this->router->generateUrl('node.clone', [
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
@@ -148,7 +148,7 @@ class NodeUser
             $nodeRemove = $this->hookUser->hookNodeDeleted($node[ 'id' ], null, $user);
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeRemove)) {
-                $node[ 'link_remove' ] = $this->router->getRoute('node.api.remove', [
+                $node[ 'link_remove' ] = $this->router->generateUrl('node.api.remove', [
                     ':id_node' => $node[ 'id' ]
                 ]);
             }
@@ -171,7 +171,7 @@ class NodeUser
             ->fetch();
 
         if ($this->user->isGranted('user.showed')) {
-            $user[ 'link' ] = $this->router->getRoute('user.show', [
+            $user[ 'link' ] = $this->router->generateUrl('user.show', [
                 ':id' => $node[ 'user_id' ]
             ]);
         }

@@ -22,7 +22,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.create.form.data', [ &$values ]);
 
         $form = (new FormUserRole([
-            'action' => self::router()->getRoute('user.role.store'),
+            'action' => self::router()->generateUrl('user.role.store'),
             'method' => 'post'
             ]))
             ->setValues($values)
@@ -57,7 +57,7 @@ class Role extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
-                    'redirect' => self::router()->getRoute('user.role.admin')
+                    'redirect' => self::router()->generateUrl('user.role.admin')
             ]);
         }
 
@@ -76,7 +76,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
 
         $form = (new FormUserRole([
-            'action' => self::router()->getRoute('user.role.update', [ ':id' => $id ]),
+            'action' => self::router()->generateUrl('user.role.update', [ ':id' => $id ]),
             'method' => 'put'
             ]))
             ->setValues($values)
@@ -122,7 +122,7 @@ class Role extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('user.role.admin')
+                    'redirect' => self::router()->generateUrl('user.role.admin')
             ]);
         }
 
@@ -141,7 +141,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.remove.form.data', [ &$data, $id ]);
 
         $form = (new FormUserRole([
-            'action' => self::router()->getRoute('user.role.delete', [ ':id' => $id ]),
+            'action' => self::router()->generateUrl('user.role.delete', [ ':id' => $id ]),
             'method' => 'delete'
             ]))
             ->makeFieldsDelete();
@@ -201,7 +201,7 @@ class Role extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('user.role.admin')
+                    'redirect' => self::router()->generateUrl('user.role.admin')
             ]);
         }
 

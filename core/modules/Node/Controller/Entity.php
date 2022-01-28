@@ -36,7 +36,7 @@ class Entity extends \Soosyze\Controller
         $this->container->callHook('entity.create.form.data', [ &$values, $node, $entity ]);
 
         $form = (new FormNode([
-            'action'  => self::router()->getRoute('entity.store', [
+            'action'  => self::router()->generateUrl('entity.store', [
                 ':id_node' => $idNode,
                 ':entity'  => $entity
             ]),
@@ -146,7 +146,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Your content has been saved.');
 
             return $this->json(201, [
-                'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ ':id_node' => $idNode ])
             ]);
         }
 
@@ -176,7 +176,7 @@ class Entity extends \Soosyze\Controller
         ]);
 
         $form = (new FormNode([
-            'action'  => self::router()->getRoute('entity.update', [
+            'action'  => self::router()->generateUrl('entity.update', [
                 ':id_node'   => $idNode,
                 ':entity'    => $entity,
                 ':id_entity' => $idEntity
@@ -280,7 +280,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                'redirect' => self::router()->getRoute('node.edit', [ ':id_node' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ ':id_node' => $idNode ])
             ]);
         }
 
@@ -335,7 +335,7 @@ class Entity extends \Soosyze\Controller
             $this->deleteFile($fieldsEntity, $entity);
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('node.edit', [
+                    'redirect' => self::router()->generateUrl('node.edit', [
                         ':id_node'   => $idNode,
                         ':entity'    => $typeEntity,
                         ':id_entity' => $idEntity

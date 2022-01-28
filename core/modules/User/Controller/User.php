@@ -65,7 +65,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.create.form.data', [ &$values ]);
 
         $form = (new FormUser([
-            'action'  => self::router()->getRoute('user.store'),
+            'action'  => self::router()->generateUrl('user.store'),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::config()))
             ->setValues($values)
@@ -132,7 +132,7 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
-                    'redirect' => self::router()->getRoute('user.admin')
+                    'redirect' => self::router()->generateUrl('user.admin')
             ]);
         }
 
@@ -151,7 +151,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.edit.form.data', [ &$values, $id ]);
 
         $form = (new FormUser([
-            'action'  => self::router()->getRoute('user.update', [ ':id' => $id ]),
+            'action'  => self::router()->generateUrl('user.update', [ ':id' => $id ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'put' ], self::file(), self::config()))
             ->setValues($values)
@@ -238,7 +238,7 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('user.edit', [ ':id' => $id ])
+                    'redirect' => self::router()->generateUrl('user.edit', [ ':id' => $id ])
             ]);
         }
 
@@ -257,7 +257,7 @@ class User extends \Soosyze\Controller
         $this->container->callHook('user.remove.form.data', [ &$values, $id ]);
 
         $form = (new FormBuilder([
-                'action' => self::router()->getRoute('user.delete', [ ':id' => $id ]),
+                'action' => self::router()->generateUrl('user.delete', [ ':id' => $id ]),
                 'class' => 'form-api',
                 'method' => 'delete'
                 ]))
@@ -336,7 +336,7 @@ class User extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('user.admin')
+                    'redirect' => self::router()->generateUrl('user.admin')
             ]);
         }
 

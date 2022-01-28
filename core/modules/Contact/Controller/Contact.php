@@ -23,7 +23,7 @@ class Contact extends \Soosyze\Controller
         $values = [];
         $this->container->callHook('contact.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('contact.check');
+        $action = self::router()->generateUrl('contact.check');
 
         $form = (new FormContact([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
@@ -82,7 +82,7 @@ class Contact extends \Soosyze\Controller
             if ($mail->send()) {
                 $_SESSION[ 'messages' ][ 'success' ][] = t('Your message has been sent.');
 
-                return $this->json(200, [ 'redirect' => self::router()->getRoute('contact.form') ]);
+                return $this->json(200, [ 'redirect' => self::router()->generateUrl('contact.form') ]);
             } else {
                 return $this->json(400, [
                         'messages'    => [ 'errors' => t('An error prevented your email from being sent.') ]

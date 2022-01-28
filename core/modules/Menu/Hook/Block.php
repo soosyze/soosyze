@@ -191,7 +191,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         foreach ($menus as $menu) {
             $options[] = [
                 'attr'  => [
-                    'data-link' => $this->router->getRoute('menu.api.show', [
+                    'data-link' => $this->router->generateUrl('menu.api.show', [
                         ':menu' => $menu[ 'name' ]
                     ])
                 ],

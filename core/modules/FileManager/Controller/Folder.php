@@ -35,7 +35,7 @@ class Folder extends \Soosyze\Controller
 
         $values = [];
 
-        $action = self::router()->getRoute('filemanager.folder.store', [ ':path' => $path ]);
+        $action = self::router()->generateUrl('filemanager.folder.store', [ ':path' => $path ]);
 
         $form = (new FormFolder([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
@@ -100,7 +100,7 @@ class Folder extends \Soosyze\Controller
 
         $values = self::filemanager()->parseDir($spl, $path);
 
-        $action = self::router()->getRoute('filemanager.folder.update', [ ':path' => $path ]);
+        $action = self::router()->generateUrl('filemanager.folder.update', [ ':path' => $path ]);
 
         $form = (new FormFolder([ 'action' => $action, 'method' => 'put' ]))
             ->setValues($values)
@@ -167,7 +167,7 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $action = self::router()->getRoute('filemanager.folder.delete', [
+        $action = self::router()->generateUrl('filemanager.folder.delete', [
             ':path' => $path
         ]);
 

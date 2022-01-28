@@ -47,11 +47,11 @@ class NodeManager extends \Soosyze\Controller
                     'title_main' => t('Contents')
                 ])
                 ->make('page.content', 'node/content-node_manager-admin.php', $this->pathViews, [
-                    'action_filter'         => self::router()->getRoute('node.filter'),
+                    'action_filter'         => self::router()->generateUrl('node.filter'),
                     'link_add'              => $linkAdd,
-                    'link_index'            => self::router()->getRoute('node.admin'),
-                    'link_search_status'    => self::router()->getRoute('node.status.search'),
-                    'link_search_node_type' => self::router()->getRoute('node.type.search'),
+                    'link_index'            => self::router()->generateUrl('node.admin'),
+                    'link_search_status'    => self::router()->generateUrl('node.status.search'),
+                    'link_search_node_type' => self::router()->generateUrl('node.type.search'),
                 ])
                 ->addBlock('content.table', $this->filterPage(1, $req));
     }

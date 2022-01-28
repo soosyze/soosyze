@@ -23,17 +23,17 @@ class RoleManager extends \Soosyze\Controller
         $this->container->callHook('user.role.admin.form.data', [ &$values ]);
 
         $form = new FormBuilder([
-            'action' => self::router()->getRoute('user.role.admin.check'),
+            'action' => self::router()->generateUrl('user.role.admin.check'),
             'class'  => 'form-api',
             'method' => 'patch'
         ]);
 
         foreach ($values as &$role) {
-            $role[ 'link_edit' ] = self::router()->getRoute('user.role.edit', [
+            $role[ 'link_edit' ] = self::router()->generateUrl('user.role.edit', [
                 ':id' => $role[ 'role_id' ]
             ]);
             if ($role[ 'role_id' ] > 3) {
-                $role[ 'link_remove' ] = self::router()->getRoute('user.role.remove', [
+                $role[ 'link_remove' ] = self::router()->generateUrl('user.role.remove', [
                     ':id' => $role[ 'role_id' ]
                 ]);
             }
@@ -68,7 +68,7 @@ class RoleManager extends \Soosyze\Controller
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.role.admin'))
                 ->make('page.content', 'user/content-role_manager-admin.php', $this->pathViews, [
                     'form'     => $form,
-                    'link_add' => self::router()->getRoute('user.role.create'),
+                    'link_add' => self::router()->generateUrl('user.role.create'),
                     'roles'    => $values
                 ]);
     }
@@ -110,7 +110,7 @@ class RoleManager extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('user.role.admin')
+                    'redirect' => self::router()->generateUrl('user.role.admin')
             ]);
         }
 

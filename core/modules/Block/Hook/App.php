@@ -95,7 +95,7 @@ class App
                 'content'     => $blocks[ $section ] ?? [],
                 'is_admin'    => $isAdmin,
                 'link_create' => ($isAdmin && ($section !== 'main_menu' || ($section === 'main_menu' && empty($blocks['main_menu']))))
-                    ? $this->router->getRoute('block.create.list', [
+                    ? $this->router->generateUrl('block.create.list', [
                         ':theme'   => $theme,
                         ':section' => $section
                     ])
@@ -157,9 +157,9 @@ class App
                     ':id'    => $block[ 'block_id' ]
                 ];
 
-                $block[ 'link_edit' ]   = $this->router->getRoute('block.edit', $params);
-                $block[ 'link_remove' ] = $this->router->getRoute('block.remove', $params);
-                $block[ 'link_update' ] = $this->router->getRoute('block.section.update', $params);
+                $block[ 'link_edit' ]   = $this->router->generateUrl('block.edit', $params);
+                $block[ 'link_remove' ] = $this->router->generateUrl('block.remove', $params);
+                $block[ 'link_update' ] = $this->router->generateUrl('block.section.update', $params);
                 $block[ 'title_admin' ] = $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
             }
             $out[ $block[ 'section' ] ][] = $block;

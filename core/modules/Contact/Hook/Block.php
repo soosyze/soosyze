@@ -51,7 +51,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             return null;
         }
 
-        $action = $this->router->getRoute('contact.check');
+        $action = $this->router->generateUrl('contact.check');
 
         $form = (new FormContact([ 'action' => $action, 'method' => 'post' ]))
             ->makeFields();

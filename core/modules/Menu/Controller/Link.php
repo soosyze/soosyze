@@ -25,7 +25,7 @@ class Link extends \Soosyze\Controller
         $values = [ 'menu' => $nameMenu ];
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('menu.link.store', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.link.store', [ ':menu' => $nameMenu ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($values)
@@ -71,7 +71,7 @@ class Link extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(201, [
-                    'redirect' => self::router()->getRoute('menu.show', [
+                    'redirect' => self::router()->generateUrl('menu.show', [
                         ':menu' => $nameMenu
                     ])
             ]);
@@ -91,7 +91,7 @@ class Link extends \Soosyze\Controller
 
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('menu.link.update', [
+        $action = self::router()->generateUrl('menu.link.update', [
             ':menu' => $nameMenu, ':id' => $id
         ]);
 
@@ -140,7 +140,7 @@ class Link extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('menu.show', [
+                    'redirect' => self::router()->generateUrl('menu.show', [
                         ':menu' => $nameMenu
                     ])
             ]);
@@ -227,7 +227,7 @@ class Link extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('menu.show', [ ':menu' => $nameMenu ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $nameMenu ])
             ]);
         }
 
@@ -241,7 +241,7 @@ class Link extends \Soosyze\Controller
     {
         $this->container->callHook('menu.link.remove.form.data', [ &$values ]);
 
-        $action = self::router()->getRoute('menu.link.delete', [
+        $action = self::router()->generateUrl('menu.link.delete', [
             ':menu' => $values['menu'], ':id'   => $values['id']
         ]);
 

@@ -68,7 +68,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     $form->label('connect_url-label', t('Protection of connection paths'), [
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
                         . ' ' . t('Example: :value ', [
-                            ':value' => $this->router->getRoute('user.login', [
+                            ':value' => $this->router->generateUrl('user.login', [
                                 ':url' => '/Ab1P-9eM_s8Y'
                             ])
                         ]),
@@ -76,7 +76,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ])
                     ->group('connect_url-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:content</span>', [
-                            ':content' => $this->router->getRoute('user.login', [
+                            ':content' => $this->router->generateUrl('user.login', [
                                 ':url' => ''
                             ])
                         ])
@@ -99,7 +99,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->getRoute('api.route'),
+                            'data-link'   => $this->router->generateUrl('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => '',
                             'required'    => 1,
@@ -161,7 +161,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('terms_of_service_page', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->getRoute('api.route'),
+                            'data-link'   => $this->router->generateUrl('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'terms_of_service_page' ]
@@ -185,7 +185,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->getRoute('api.route'),
+                            'data-link'   => $this->router->generateUrl('api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'rgpd_page' ]

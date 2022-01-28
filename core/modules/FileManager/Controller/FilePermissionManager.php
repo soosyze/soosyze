@@ -23,7 +23,7 @@ class FilePermissionManager extends \Soosyze\Controller
         $this->container->callHook('filemanager.permission.admin.form.data', [ &$values ]);
 
         $form = new FormBuilder([
-            'action' => self::router()->getRoute('filemanager.permission.admin.check'),
+            'action' => self::router()->generateUrl('filemanager.permission.admin.check'),
             'class'  => 'form-api',
             'method' => 'patch'
         ]);
@@ -63,7 +63,7 @@ class FilePermissionManager extends \Soosyze\Controller
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('filemanager.permission.admin'))
                 ->make('page.content', 'filemanager/content-file_permission_manager-admin.php', $this->pathViews, [
                     'form'     => $form,
-                    'link_add' => self::router()->getRoute('filemanager.permission.create'),
+                    'link_add' => self::router()->generateUrl('filemanager.permission.create'),
                     'profils'  => $values,
                     'router'   => self::router()
                 ]);
@@ -109,7 +109,7 @@ class FilePermissionManager extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('filemanager.permission.admin')
+                    'redirect' => self::router()->generateUrl('filemanager.permission.admin')
             ]);
         }
 

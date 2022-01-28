@@ -51,9 +51,9 @@ class UsersManager extends \Soosyze\Controller
                 ])
                 ->view('page.submenu', self::user()->getUserManagerSubmenu('user.admin'))
                 ->make('page.content', 'user/content-user_manager-admin.php', $this->pathViews, [
-                    'link_create_user' => self::router()->getRoute('user.create'),
-                    'link_filter_user' => self::router()->getRoute('user.filter'),
-                    'link_user_admin'  => self::router()->getRoute('user.admin')
+                    'link_create_user' => self::router()->generateUrl('user.create'),
+                    'link_filter_user' => self::router()->generateUrl('user.filter'),
+                    'link_user_admin'  => self::router()->generateUrl('user.admin')
                 ])
                 ->addBlock('content.table', $this->filterPage(1, $req));
     }
@@ -190,13 +190,13 @@ class UsersManager extends \Soosyze\Controller
     private function hydrateUsersLinks(array &$users): void
     {
         foreach ($users as &$user) {
-            $user[ 'link_show' ]   = self::router()->getRoute('user.show', [
+            $user[ 'link_show' ]   = self::router()->generateUrl('user.show', [
                 ':id' => $user[ 'user_id' ]
             ]);
-            $user[ 'link_edit' ]   = self::router()->getRoute('user.edit', [
+            $user[ 'link_edit' ]   = self::router()->generateUrl('user.edit', [
                 ':id' => $user[ 'user_id' ]
             ]);
-            $user[ 'link_remove' ] = self::router()->getRoute('user.remove', [
+            $user[ 'link_remove' ] = self::router()->generateUrl('user.remove', [
                 ':id' => $user[ 'user_id' ]
             ]);
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);

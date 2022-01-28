@@ -35,7 +35,7 @@ class FileCopy extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $action = self::router()->getRoute('filemanager.copy.update', [
+        $action = self::router()->generateUrl('filemanager.copy.update', [
             ':path' => $path, ':name' => $name, ':ext'  => $ext
         ]);
 
@@ -116,7 +116,7 @@ class FileCopy extends \Soosyze\Controller
                 ->createBlock('filemanager/table-files_copy.php', $this->pathViews)
                 ->addVars([
                     'files'        => $files,
-                    'link_show'    => self::router()->getRoute('filemanager.copy.show', [
+                    'link_show'    => self::router()->generateUrl('filemanager.copy.show', [
                         ':path' => $path
                     ]),
                     'path'         => $path,

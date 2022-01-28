@@ -111,7 +111,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
         $optionsSelect[] = [
             'label' => t('-- Select --'),
-            'value' => $this->router->getRoute('news.index')
+            'value' => $this->router->generateUrl('news.index')
         ];
         foreach ($data as $value) {
             $year  = date('Y', (int) $value[ 'date_created' ]);
@@ -123,7 +123,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     'value' => [
                         $year => [
                             'label' => t('All :year', [ ':year' => $year ]),
-                            'value' => $this->router->getRoute('news.years', [
+                            'value' => $this->router->generateUrl('news.years', [
                                 ':year' => $year,
                                 ':id'   => ''
                             ])
@@ -138,7 +138,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
             $optionsSelect[ $year ][ 'value' ][ $month ] = [
                 'label' => strftime('%b', (int) $value[ 'date_created' ]),
-                'value' => $this->router->getRoute('news.month', [
+                'value' => $this->router->generateUrl('news.month', [
                     ':year'  => $year,
                     ':month' => $month,
                     ':id'    => ''
@@ -148,13 +148,13 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
         $selected = '#';
         if (!empty($paramMonth)) {
-            $selected = $this->router->getRoute('news.month', [
+            $selected = $this->router->generateUrl('news.month', [
                 ':year'  => $paramMonth[ 0 ],
                 ':month' => $paramMonth[ 1 ],
                 ':id'    => ''
             ]);
         } elseif (!empty($paramYear)) {
-            $selected = $this->router->getRoute('news.years', [
+            $selected = $this->router->generateUrl('news.years', [
                 ':year' => $paramYear[ 0 ],
                 ':id'   => ''
             ]);
@@ -193,7 +193,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ++$output[ $year ][ 'number' ];
             } else {
                 $output[ $year ] = [
-                    'link'   => $this->router->getRoute('news.years', [
+                    'link'   => $this->router->generateUrl('news.years', [
                         ':year' => $year,
                         ':id'   => ''
                     ]),
@@ -210,7 +210,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ++$output[ $year ][ 'months' ][ $month ][ 'number' ];
             } else {
                 $output[ $year ][ 'months' ][ $month ] = [
-                    'link'   => $this->router->getRoute('news.month', [
+                    'link'   => $this->router->generateUrl('news.month', [
                         ':year'  => $year,
                         ':month' => $month,
                         ':id'    => ''
@@ -224,7 +224,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         $output[ 'all' ] = [
             'number' => count($data),
             'year'   => t('All'),
-            'link'   => $this->router->getRoute('news.index')
+            'link'   => $this->router->generateUrl('news.index')
         ];
 
         return $tpl->addVar('years', $output);
@@ -290,7 +290,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $tpl->addVars([
                 'is_link_more' => $options[ 'more' ] === 1 || ($options[ 'more' ] === 2 && $isMore),
                 'limit'        => $options[ 'limit' ],
-                'link_more'    => $this->router->getRoute('news.index'),
+                'link_more'    => $this->router->generateUrl('news.index'),
                 'news'         => $news,
                 'offset'       => $options[ 'offset' ],
                 'text_more'    => $options[ 'text_more' ],

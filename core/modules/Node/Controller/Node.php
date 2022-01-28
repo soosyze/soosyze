@@ -34,7 +34,7 @@ class Node extends \Soosyze\Controller
             if (!$this->container->callHook('app.granted.request', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
-            $value[ 'link' ] = self::router()->getRoute('node.create', [
+            $value[ 'link' ] = self::router()->generateUrl('node.create', [
                 ':node' => $value[ 'node_type' ]
             ]);
         }
@@ -62,7 +62,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.create.form.data', [ &$values, $type ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->getRoute('node.store', [ ':node' => $type ]),
+                'action'        => self::router()->generateUrl('node.store', [ ':node' => $type ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -159,8 +159,8 @@ class Node extends \Soosyze\Controller
 
             return $this->json(201, [
                 'redirect' => $fieldsRelation
-                    ? self::router()->getRoute('node.edit', [ ':id_node' => $data[ 'id' ] ])
-                    : self::router()->getRoute('node.admin')
+                    ? self::router()->generateUrl('node.edit', [ ':id_node' => $data[ 'id' ] ])
+                    : self::router()->generateUrl('node.admin')
             ]);
         }
 
@@ -235,7 +235,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.edit.form.data', [ &$values, $idNode ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->getRoute('node.update', [ ':id_node' => $idNode ]),
+                'action'        => self::router()->generateUrl('node.update', [ ':id_node' => $idNode ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -331,7 +331,7 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('node.edit', [
+                    'redirect' => self::router()->generateUrl('node.edit', [
                         ':id_node' => $idNode
                     ])
             ]);
@@ -371,7 +371,7 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $action = self::router()->getRoute('node.delete', [ ':id_node' => $idNode ]);
+        $action = self::router()->generateUrl('node.delete', [ ':id_node' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'delete' ], self::router()))
             ->setValues($values)
@@ -461,7 +461,7 @@ class Node extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ]);
 
             return $this->json(200, [
-                    'redirect' => self::router()->getRoute('node.admin')
+                    'redirect' => self::router()->generateUrl('node.admin')
             ]);
         }
 
