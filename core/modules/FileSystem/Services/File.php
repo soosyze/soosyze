@@ -297,7 +297,7 @@ class File
 
     public function getName(): string
     {
-        return $this->nameResolved
+        return $this->nameResolved !== ''
             ? $this->nameResolved
             : $this->name;
     }
