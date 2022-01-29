@@ -12,6 +12,9 @@ jobs:
       matrix:
         php: [7.2, 7.3, 7.4]
         experimental: [false]
+        include:
+          - php: 7.2
+            analysis: true
 
     steps:
       - name: Checkout
@@ -27,4 +30,9 @@ jobs:
         uses: ramsey/composer-install@v1
 
       - name: Coding standards
+        if: matrix.analysis
         run: bin/php-cs-fixer fix --ansi --dry-run --using-cache=no --verbose
+
+      - name: Refactoring
+        if: matrix.analysis
+        run: bin/rector --dry-run
