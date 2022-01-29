@@ -30,6 +30,7 @@
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
+        "rector/rector": "^0.12",
         "soosyze/php-cs-fixer-config": "^1.0"
     },
     "suggest": {
