@@ -9,6 +9,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
+use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\QueryBuilder\Services\Query;
@@ -364,7 +365,7 @@ class User
     {
         $route = $this->router->parse($request);
 
-        if ($route === null) {
+        if (!$route instanceof Route) {
             return false;
         }
         /* Si la permission n'existe pas. */

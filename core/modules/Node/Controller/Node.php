@@ -727,7 +727,7 @@ class Node extends \Soosyze\Controller
             $robots .= 'noarchive,';
         }
 
-        if ($robots) {
+        if ($robots !== '') {
             $meta[] = [ 'name' => 'robots', 'content' => substr($robots, 0, -1) ];
         }
 

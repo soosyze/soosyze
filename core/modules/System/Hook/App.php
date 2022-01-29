@@ -101,7 +101,7 @@ class App
                 )
                 ->withMethod('GET');
 
-            if ($route = $this->router->parse($requestNoFound)) {
+            if (($route = $this->router->parse($requestNoFound)) !== null) {
                 $responseNoFound = $this->router->execute($route, $requestNoFound);
             }
         }
@@ -139,7 +139,7 @@ class App
                 )
                 ->withMethod('GET');
 
-            if ($route = $this->router->parse($requestDenied)) {
+            if (($route = $this->router->parse($requestDenied)) !== null) {
                 $responseDenied = $this->router->execute($route, $requestDenied);
             }
         }
@@ -172,7 +172,7 @@ class App
                 )
                 ->withMethod('GET');
 
-            if ($route = $this->router->parse($requestMaintenance)) {
+            if (($route = $this->router->parse($requestMaintenance)) !== null) {
                 $responseMaintenance = $this->router->execute($route, $requestMaintenance);
             }
         }

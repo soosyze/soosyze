@@ -211,7 +211,7 @@ class Step
 
         $values = [
             'lang'     => 'en',
-            'timezone' => date_default_timezone_get()
+            'timezone' => date_default_timezone_get() !== ''
             ? date_default_timezone_get()
             : 'Europe/Paris'
         ];
