@@ -87,7 +87,7 @@ class Url
 
     public function hookStoreAfter(Validator $validator): void
     {
-        if (!($alias = $this->makeAlias($validator))) {
+        if (($alias = $this->makeAlias($validator)) === '') {
             return;
         }
         $id = $this->schema->getIncrement('node');
