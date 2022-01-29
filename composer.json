@@ -30,7 +30,7 @@
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.*|8.*"
+        "soosyze/php-cs-fixer-config": "^1.0"
     },
     "suggest": {
         "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP.",
@@ -43,7 +43,9 @@
         ]
     },
     "config": {
+        "bin-dir": "bin",
         "optimize-autoloader": true,
+        "sort-packages": true,
         "classmap-authoritative": true
     }
 }
