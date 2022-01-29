@@ -15,8 +15,8 @@ class LazyLoding
     public function filter(string $str): string
     {
         return preg_replace_callback(self::PATTERN_TAG, function (array $matches): string {
-                return $this->replaceSrc($matches);
-            }, $str) ?? '';
+            return $this->replaceSrc($matches);
+        }, $str) ?? '';
     }
 
     private function replaceSrc(array $matches): string
