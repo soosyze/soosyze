@@ -6,14 +6,19 @@ class Core extends App
 {
     public function loadModules(): array
     {
+        /** @phpstan-ignore-next-line */
         if (!$this->get('config')->get('settings.time_installed')) {
             $modules[] = new SoosyzeCore\System\Controller\Install();
 
             return $modules;
         }
 
+        $modules = [];
+
+        /** @phpstan-ignore-next-line */
         $data = $this->get('query')->from('module_controller')->fetchAll();
         foreach ($data as $value) {
+            /** @var array{controller: class-string<Soosyze\Controller>} $value */
             $modules[] = new $value[ 'controller' ]();
         }
 

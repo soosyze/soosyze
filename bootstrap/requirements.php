@@ -176,7 +176,7 @@ class Requiement
     protected function validVersionPhp($version, $operator = '>=')
     {
         $phpVersion = phpversion();
-        if (!function_exists('version_compare') || $phpVersion === false) {
+        if (!function_exists('version_compare')) {
             $this->addReturn('versionphp', 'warning', 'PHP version', 'La version ne peut être comparée.');
         } elseif (version_compare($phpVersion, $version, $operator) === false) {
             $this->addReturn('versionphp', 'error', 'PHP version', 'La version PHP :version :operator est attendue. Vous êtes actuellement en version :current_version', array(
