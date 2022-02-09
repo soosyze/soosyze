@@ -23,8 +23,8 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
         /** @var Alias $alias */
         $alias  = $app->get(Alias::class);
 
-        $uri        = Uri::create($value);
-        $linkSource = $router->parseQueryFromRequest(
+        $uri        = Uri::create(is_string($value) ? $value : '');
+        $linkSource = $router->getPathFromRequest(
             $app->getRequest()->withUri($uri)
         );
 
@@ -58,11 +58,11 @@ class RouteOrUrlValue extends \RouteValue
     protected function test(string $keyRule, $value, $args, bool $not): void
     {
         $isRoute = !(new \RouteValue())
-            ->hydrate('route', $key, $args, $not)
+            ->hydrate('route', $this->getKey(), $args, $not)
             ->execute($value)
             ->hasErrors();
         $isLink = !(new \Soosyze\Components\Validator\Rules\Url())
-            ->hydrate('url', $key, $args, $not)
+            ->hydrate('url', $this->getKey(), $args, $not)
             ->execute($value)
             ->hasErrors();
 
@@ -73,4 +73,4 @@ class RouteOrUrlValue extends \RouteValue
 }
 
 Validator::addTestGlobal('route', RouteValue::class);
-Validator::addTestGlobal('route_or_url', RouteValue::class);
+Validator::addTestGlobal('route_or_url', RouteOrUrlValue::class);
