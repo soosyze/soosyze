@@ -3,7 +3,7 @@
 register_shutdown_function('handlerFatal');
 set_error_handler('handlerError');
 set_exception_handler('handlerException');
-ini_set('display_errors', 0);
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 /**
@@ -11,21 +11,30 @@ error_reporting(E_ALL);
  *
  * @global type $config Les configurations pour la gestion du débugage.
  *
- * @param int    $num     Niveau d'erreur, sous la forme d'un entier.
- * @param string $str     Message d'erreur, sous forme d'une chaîne de caractères.
- * @param string $file    Nom du fichier d'où provient l'erreur.
- * @param int    $line    Numéro de ligne du fichier d'où provient l'erreur.
- * @param array  $context Contient un tableau avec toutes les variables qui
- *                        existaient lorsque l'erreur a été déclenchée.
+ * @param int    $errno      Niveau d'erreur, sous la forme d'un entier.
+ * @param string $errstr     Message d'erreur, sous forme d'une chaîne de caractères.
+ * @param string $errfile    Nom du fichier d'où provient l'erreur.
+ * @param int    $errline    Numéro de ligne du fichier d'où provient l'erreur.
+ * @param array  $errcontext Contient un tableau avec toutes les variables qui
+ *                           existaient lorsque l'erreur a été déclenchée.
  */
-function handlerError($num, $str, $file, $line, array $context = [])
-{
+function handlerError(
+    int $errno,
+    string $errstr,
+    string $errfile,
+    int $errline,
+    array $errcontext = []
+): bool {
     global $config;
 
     if ($config[ 'debug' ]) {
-        $msg = parseCode($num) . ' ' . $str;
-        printException(new \ErrorException($msg, 0, $num, $file, $line));
+        $msg = parseCode($errno) . ' ' . $errstr;
+        printException(new \ErrorException($msg, 0, $errno, $errfile, $errline));
+
+        return true;
     }
+
+    return false;
 }
 
 /**
@@ -35,20 +44,16 @@ function handlerError($num, $str, $file, $line, array $context = [])
  *
  * @param Exception|Throwable $exp
  */
-function handlerException($exp)
+function handlerException($exp): void
 {
     global $config;
 
     if ($config[ 'debug' ]) {
-        /* Pour les exceptions PHP <= 5.6 */
-        if ($exp instanceof \Exception) {
+        /* Pour les exception PHP >= 7.0 */
+        if ($exp instanceof \Throwable) {
             header('HTTP/1.0 500 Internal Server Error');
             printException($exp);
             exit();
-        }
-        /* Pour les exception PHP >= 7.0 */
-        if ($exp instanceof \Throwable) {
-            printException($exp);
         }
     }
 }
@@ -59,7 +64,7 @@ function handlerException($exp)
  *
  * @global array $config Configurations pour la gestion du débugage.
  */
-function handlerFatal()
+function handlerFatal(): void
 {
     global $config;
 
@@ -73,7 +78,7 @@ function handlerFatal()
  *
  * @param Exception|Throwable $exp
  */
-function printException($exp)
+function printException($exp): void
 {
     $trace = array_reverse($exp->getTrace());
     $html  = '<style>
@@ -128,30 +133,32 @@ function printException($exp)
                </thead>
                <tbody>";
     foreach ($trace as $key => $stackPoint) {
-        $class = $key % 2
+        $classCss = $key % 2
             ? 'two'
             : 'one';
+        $className = isset($stackPoint[ 'class' ], $stackPoint[ 'type' ])
+            ? "<span class='exp-class'>{$stackPoint[ 'class' ]}{$stackPoint[ 'type' ]}</span>"
+            : '';
+        $closure  = strstr($stackPoint[ 'function' ], '{');
+        $stackPoint[ 'function' ] = $closure
+            ? $closure
+            : $stackPoint[ 'function' ];
         $args = isset($stackPoint[ 'args' ])
             ? parseArg($stackPoint[ 'args' ])
             : '';
-        $html .= "<tr class='$class'><th>#$key</th><td>";
-        $html .= isset($stackPoint[ 'class' ])
-            ? "<span class='exp-class'>{$stackPoint[ 'class' ]}-></span>"
-            : '';
-        if ($closure = strstr($stackPoint[ 'function' ], '{')) {
-            $html .= "<span class='exp-function'>{$closure}({$args})</span></td>";
-        } else {
-            $html .= "<span class='exp-function'>{$stackPoint[ 'function' ]}({$args})</span></td>";
-        }
-        if (!isset($stackPoint[ 'file' ])) {
-            $stackPoint[ 'file' ] = isset($trace[ $key - 1 ][ 'file' ])
-                ? $trace[ $key - 1 ][ 'file' ]
-                : '';
-            $stackPoint[ 'line' ] = isset($trace[ $key - 1 ][ 'line' ])
-                ? $trace[ $key - 1 ][ 'line' ]
-                : '';
-        }
-        $html .= '<td>' . str_replace(ROOT, '', $stackPoint[ 'file' ]) . "</td><td>{$stackPoint[ 'line' ]}</td></tr>";
+
+        $file = $stackPoint[ 'file' ] ?? $trace[ $key - 1 ][ 'file' ] ?? '';
+        $line = $stackPoint[ 'line' ] ?? $trace[ $key - 1 ][ 'line' ] ?? '';
+
+        $html .= sprintf(
+            '<tr class=\'%s\'><th>#%s</th> <td>%s%s</td> <td>%s</td> <td>%s</td></tr>',
+            $classCss,
+            $key,
+            $className,
+            "<span class='exp-function'>{$stackPoint[ 'function' ]}({$args})</span>",
+            str_replace(ROOT, '', $file),
+            $line
+        );
     }
     $html .= '</tbody>
             </table>
@@ -166,7 +173,7 @@ function printException($exp)
  *
  * @return string Mise en forme HTML.
  */
-function parseArg($args)
+function parseArg($args): string
 {
     $html = '';
     if (!is_array($args)) {
@@ -177,12 +184,7 @@ function parseArg($args)
             $html .= '<span class="arg-string">"' . htmlspecialchars($arg) . '"</span>, ';
         } elseif (is_array($arg)) {
             $html .= '<span class="arg-array">[ ' . parseArg($arg) . ' ]</span>, ';
-        }
-        /*
-         * __PHP_Incomplete_Class lorsque vous utilisez des objets en session
-         * si vous déclarez vos classes avant session_start().
-         */
-        elseif (is_object($arg) || $arg instanceof \__PHP_Incomplete_Class) {
+        } elseif (is_object($arg)) {
             $html .= '<span class="arg-object">' . get_class($arg) . '</span>, ';
         } elseif (is_numeric($arg)) {
             $html .= '<span class="arg-numeric">' . $arg . '</span>, ';
@@ -198,12 +200,7 @@ function parseArg($args)
     return substr($html, 0, -2);
 }
 
-/**
- * @param int $code
- *
- * @return string
- */
-function parseCode($code)
+function parseCode(int $code): string
 {
     $type = [
         E_ERROR             => 'E_ERROR',

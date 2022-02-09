@@ -1,0 +1,11 @@
+parameters:
+    level: max
+
+    paths:
+        - index.php
+        - app/app_core.php
+        - bootstrap
+
+    tmpDir: build/phpStan
+
+    checkMissingIterableValueType: false

@@ -1,5 +1,8 @@
 <?php
 
+use Soosyze\Components\Http\ServerRequest;
+use Soosyze\Components\Http\Uri;
+
 /* Démarrage de la session. */
 session_start();
 
@@ -11,16 +14,15 @@ if (!ini_get('date.timezone')) {
 /* Home for Linux */
 $home = isset($_SERVER[ 'HOME' ])
     ? rtrim($_SERVER[ 'HOME' ], '/')
-    : null;
+    : '';
 /* Home for Windows */
 if (empty($home) && isset($_SERVER[ 'HOMEDRIVE' ], $_SERVER[ 'HOMEPATH' ])) {
     $home = rtrim(htmlspecialchars($_SERVER[ 'HOMEDRIVE' ] . $_SERVER[ 'HOMEPATH' ]), '\\/');
 }
 /* Construit une requête dédié à PHP CLI. */
-$uri = new Soosyze\Components\Http\Uri('http', $home, '/', 80, '');
-$req = new Soosyze\Components\Http\ServerRequest(
+$req = new ServerRequest(
     'GET',
-    $uri,
+    new Uri('http', $home, '/', 80, ''),
     [],
     null,
     '1.1',
