@@ -10,6 +10,10 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 
+/**
+ * @method \SoosyzeCore\BackupManager\Services\BackupManager backupmanager()
+ * @method \SoosyzeCore\Template\Services\Templating         template()
+ */
 class BackupController extends \Soosyze\Controller
 {
     public function __construct()

@@ -30,10 +30,8 @@ class Modules
      * Si le module est installé.
      *
      * @param string $title Titre du module.
-     *
-     * @return array
      */
-    public function has(string $title): array
+    public function has(string $title): ?array
     {
         return $this->query
                 ->from('module_active')
@@ -166,6 +164,7 @@ class Modules
 
         /* Réuni tous les fichiers de traductions par langues */
         foreach ($composers as $composer) {
+            /** @phpstan-var string $lang */
             foreach ($composer[ 'translations' ] as $lang => $translations) {
                 foreach ($translations as $translation) {
                     if (isset($strTranslations[ $lang ])) {

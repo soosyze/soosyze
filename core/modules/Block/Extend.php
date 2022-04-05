@@ -7,6 +7,25 @@ namespace SoosyzeCore\Block;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type BlockEntity array{
+ *      block_id: int,
+ *      title: string,
+ *      is_title: bool,
+ *      section: string,
+ *      content: string|null,
+ *      class: string,
+ *      hook: string|null,
+ *      weight: int,
+ *      visibility_pages: bool,
+ *      pages: string,
+ *      visibility_roles: bool,
+ *      roles: string,
+ *      key_block: string|null,
+ *      options: string|null,
+ *      theme: string,
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string

@@ -56,14 +56,14 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
 
                         if ($this->useInPath) {
                             $form->html('info_path', '<p:attr>:content</p>', [
-                                ':content' => t('This content is used in the configuration as') . ' : <b>' . t($this->useInPath[ 'title' ]) . '</b>'
+                                ':content' => t('This content is used in the configuration as') . ' : <b>' . t($this->useInPath[ 'title' ] ?? '') . '</b>'
                             ]);
                         }
                     }, [ 'class' => 'alert alert-warning' ]);
 
             if ($this->useInPath) {
                 $form->group('path-group', 'div', function ($form) {
-                    $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ]), [
+                    $form->label('path-label', t('New path for') . ' ' . t($this->useInPath[ 'title' ] ?? ''), [
                                 'for'      => 'path',
                                 'required' => !empty($this->useInPath[ 'required' ])
                             ])
@@ -75,7 +75,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
                                 ->text('path', [
                                     'class'        => 'form-control api_route',
                                     'data-exclude' => $this->values[ 'current_path' ],
-                                    'data-link'    => $this->router->generateUrl('api.route'),
+                                    'data-link'    => $this->router->generateUrl('system.api.route'),
                                     'maxlength'    => 512,
                                     'placeholder'  => t('Example: node/1'),
                                     'required'     => !empty($this->useInPath[ 'required' ]),

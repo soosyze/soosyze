@@ -63,7 +63,7 @@ class User implements \SoosyzeCore\User\UserInterface
         ServerRequestInterface $req,
         ?array $user
     ) {
-        if ($id == $user[ 'user_id' ]) {
+        if ($id == ($user[ 'user_id' ] ?? null)) {
             return true;
         }
 
@@ -76,7 +76,7 @@ class User implements \SoosyzeCore\User\UserInterface
         ?array $user
     ): array {
         $output[] = 'user.people.manage';
-        if ($id == $user[ 'user_id' ]) {
+        if ($id == ($user[ 'user_id' ] ?? null)) {
             $output[] = 'user.edited';
         }
 
@@ -89,7 +89,7 @@ class User implements \SoosyzeCore\User\UserInterface
         ?array $user
     ): array {
         $output[] = 'user.people.manage';
-        if ($id == $user[ 'user_id' ]) {
+        if ($id == ($user[ 'user_id' ] ?? null)) {
             $output[] = 'user.deleted';
         }
 

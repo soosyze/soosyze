@@ -11,7 +11,6 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\System\Services\Alias;
 use SoosyzeCore\Template\Services\Templating;
 
@@ -38,11 +37,6 @@ class App
     private $pathViews;
 
     /**
-     * @var Query
-     */
-    private $query;
-
-    /**
      * @var Router
      */
     private $router;
@@ -56,14 +50,12 @@ class App
         Alias $alias,
         Config $config,
         Core $core,
-        Query $query,
         Router $router,
         Templating $template
     ) {
         $this->alias  = $alias;
         $this->config = $config;
         $this->core   = $core;
-        $this->query  = $query;
         $this->router = $router;
         $this->tpl    = $template;
 
@@ -72,7 +64,8 @@ class App
 
     public function hookSys(RequestInterface &$request, ResponseInterface &$response): void
     {
-        $path = $this->router->getPathFromRequest();
+        $path = $this->router->getPathFromRequest($request);
+        /** @phpstan-var string $path */
         $path = $this->alias->getSource($path, $path);
 
         $request = $request
@@ -90,9 +83,13 @@ class App
 
     public function hooks404(RequestInterface $request, ResponseInterface &$response): void
     {
-        $path = '/' . ltrim($this->config->get('settings.path_no_found', ''), '/');
+        /** @phpstan-var string $pathNoFound */
+        $pathNoFound     = $this->config->get('settings.path_no_found', '');
+        $path            = '/' . ltrim($pathNoFound, '/');
+        $responseNoFound = null;
 
         if ($path !== '') {
+            /** @phpstan-var string $path */
             $path = $this->alias->getSource($path, $path);
 
             $requestNoFound = $request
@@ -111,7 +108,7 @@ class App
          * une réponse sera construite à partir d'un template,
          * sinon renvoie la réponse 404 de base.
          */
-        $response = empty($responseNoFound) || $responseNoFound->getStatusCode() === 404
+        $response = !($responseNoFound instanceof ResponseInterface) || $responseNoFound->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
                     'title_main' => t('Not Found')
@@ -128,9 +125,13 @@ class App
 
     public function hooks403(RequestInterface $request, ResponseInterface &$response): void
     {
-        $path = '/' . ltrim($this->config->get('settings.path_access_denied', ''), '/');
+        /** @phpstan-var string $pathAccessDenied */
+        $pathAccessDenied = $this->config->get('settings.path_access_denied', '');
+        $path             = '/' . ltrim($pathAccessDenied, '/');
+        $responseDenied   = null;
 
         if ($path !== '') {
+            /** @phpstan-var string $path */
             $path = $this->alias->getSource($path, $path);
 
             $requestDenied = $request
@@ -144,7 +145,7 @@ class App
             }
         }
 
-        $response = empty($responseDenied) || $responseDenied->getStatusCode() === 404
+        $response = !($responseDenied instanceof ResponseInterface) || $responseDenied->getStatusCode() === 404
             ? $this->tpl
                 ->view('page', [
                     'title_main' => t('Page Forbidden')
@@ -161,7 +162,10 @@ class App
 
     public function hooks503(RequestInterface $request, ResponseInterface &$response): void
     {
-        $path = '/' . ltrim($this->config->get('settings.path_maintenance', ''), '/');
+        /** @phpstan-var string $pathMaintenance */
+        $pathMaintenance     = $this->config->get('settings.path_maintenance', '');
+        $path                = '/' . ltrim($pathMaintenance, '/');
+        $responseMaintenance = null;
 
         if ($path !== '') {
             $path = $this->alias->getSource($path, $path);
@@ -177,8 +181,8 @@ class App
             }
         }
 
-        if (empty($responseMaintenance) || in_array($responseMaintenance->getStatusCode(), [
-                403, 404 ])) {
+        if (!($responseMaintenance instanceof Templating)
+            || in_array($responseMaintenance->getStatusCode(), [ 403, 404 ])) {
             $response = $this->tpl
                 ->getTheme()
                 ->make('page', 'page-maintenance.php', $this->pathViews, [
@@ -196,9 +200,7 @@ class App
                 ->addBlock('page.content', $content);
         }
 
-        if (!$response instanceof Redirect) {
-            $response = $response->withStatus(503);
-        }
+        $response = $response->withStatus(503);
     }
 
     public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
@@ -207,34 +209,41 @@ class App
             return;
         }
 
+        /** @phpstan-var string $metaTitle */
         $metaTitle       = $this->config->get('settings.meta_title', 'Soosyze CMS');
+        /** @phpstan-var string $metaDescription */
         $metaDescription = $this->config->get('settings.meta_description', '');
+        /** @phpstan-var string $favicon */
         $favicon         = $this->config->get('settings.favicon', '')
             ? $this->router->getBasePath() . $this->config->get('settings.favicon')
             : '';
 
         $logo        = $this->config->get('settings.logo', '');
+        /** @phpstan-var bool $maintenance */
         $maintenance = $this->config->get('settings.maintenance', false);
 
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets';
 
         $html      = $response->getBlock('this');
+        /** @phpstan-var string $siteDesc */
         $siteDesc  = $html->getVar('description');
+        /** @phpstan-var string $siteTitle */
         $siteTitle = $html->getVar('title');
+        /** @phpstan-var string $pageTitle */
         $pageTitle = $response->getBlock('page')->getVar('title_main');
 
         $title = $metaTitle;
-        if ($siteTitle) {
+        if ($siteTitle !== '') {
             $title = str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
                 [ $metaDescription, $metaTitle, $pageTitle ],
                 $siteTitle
             );
-        } elseif ($pageTitle) {
+        } elseif ($pageTitle !== '') {
             $title = "$pageTitle | $title";
         }
 
-        $description = $siteDesc
+        $description = $siteDesc !== ''
             ? str_replace(
                 [ ':site_description', ':site_title', ':page_title' ],
                 [ $metaDescription, $metaTitle, $pageTitle ],
@@ -262,18 +271,17 @@ class App
             ])
             ->view('page', [
                 'logo'  => is_file(ROOT . $logo)
-                    ? $request->getBasePath() . $logo
+                    ? $this->router->getBasePath() . $logo
                     : $logo,
                 'title' => $metaTitle
         ]);
-
+        /** @phpstan-var bool $granted */
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
         if ($maintenance && $granted) {
             $_SESSION['messages']['infos'][] = t('Site under maintenance');
         }
-        if ($this->router->getPathFromRequest() === '/' &&
-            (!$maintenance ||
-            ($maintenance && $granted))) {
+        /** @phpstan-ignore-next-line */
+        if ($this->router->getPathFromRequest() === '/' && (!$maintenance|| ($maintenance && $granted))) {
             $response->getBlock('page')->setNamesOverride([ 'page-front.php' ]);
         }
     }

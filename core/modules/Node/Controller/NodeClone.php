@@ -8,6 +8,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
 
+/**
+ * @method \SoosyzeCore\System\Services\Alias        alias()
+ * @method \SoosyzeCore\Node\Services\Node           node()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
+ */
 class NodeClone extends \Soosyze\Controller
 {
     /**
@@ -38,16 +48,21 @@ class NodeClone extends \Soosyze\Controller
 
     public function duplicate(int $idNode, ServerRequestInterface $req): ResponseInterface
     {
-        $this->oldIdNode = $idNode;
-        $this->node      = self::node()->byId($idNode);
-        if (!$this->node) {
+        $node = self::node()->byId($idNode);
+        if ($node === null) {
             return $this->get404($req);
         }
-        $this->entityNode    = self::node()->getEntity($this->node[ 'type' ], $this->node[ 'entity_id' ]);
-        $this->oldEntityNode = $this->entityNode;
-        if (!$this->entityNode) {
+
+        $entityNode = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+        if ($entityNode === null) {
             return $this->get404($req);
         }
+
+        $this->oldIdNode     = $idNode;
+        $this->node          = $node;
+        $this->entityNode    = $entityNode;
+        $this->oldEntityNode = $entityNode;
+
         if (!($fields = self::node()->getFieldsForm($this->node[ 'type' ]))) {
             return $this->get404($req);
         }
@@ -64,7 +79,9 @@ class NodeClone extends \Soosyze\Controller
         $this->createNewNode();
 
         /* Copie le répertoire de fichiers */
+        /** @phpstan-var string $source */
         $source = self::core()->getDir('files_public') . '/node/' . $this->node[ 'type' ] . '/' . $idNode;
+        /** @phpstan-var string $dist */
         $dist   = self::core()->getDir('files_public') . '/node/' . $this->node[ 'type' ] . '/' . $this->node[ 'id' ];
 
         $this->duplicateFile($source, $dist);
@@ -72,15 +89,19 @@ class NodeClone extends \Soosyze\Controller
         /* Parcours les champs de l'entité principal. */
         foreach ($fields as $value) {
             $fieldName = $value[ 'field_name' ];
+            $entityData = $this->entityNode[$fieldName];
 
-            if (in_array($value[ 'field_type' ], [ 'text', 'textarea' ])) {
-                $this->replaceLink($fieldName, $this->entityNode);
-            } elseif (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
+            if (in_array($value[ 'field_type' ], [ 'text', 'textarea' ]) && is_string($entityData)) {
+                $this->entityNode[$fieldName] = $this->replaceLink($entityData);
+            } elseif (in_array($value[ 'field_type' ], [ 'file', 'image' ]) && is_string($entityData)) {
                 /* Copie ses fichiers. */
-                $this->replaceFileLink($fieldName, $this->entityNode);
+                $this->entityNode[$fieldName] = $this->replaceFileLink($entityData);
             } elseif ($value[ 'field_type' ] == 'one_to_many') {
+                /** @phpstan-var FieldOptions $options */
+                $options = json_decode($value[ 'field_option' ], true);
+
                 /* Si elle possède des sous entités. */
-                $this->duplicateEntity($fieldName, json_decode($value[ 'field_option' ], true));
+                $this->duplicateEntity($fieldName, $options);
             }
         }
         self::query()
@@ -90,7 +111,7 @@ class NodeClone extends \Soosyze\Controller
 
         return new Redirect(
             self::router()->generateUrl('node.edit', [
-                ':id_node' => $this->node[ 'id' ]
+                ':idNode' => $this->node[ 'id' ]
             ]),
             302
         );
@@ -124,6 +145,9 @@ class NodeClone extends \Soosyze\Controller
         $this->entityNode[ $this->node[ 'type' ] . '_id' ] = self::schema()->getIncrement('entity_' . $this->node[ 'type' ]);
     }
 
+    /**
+     * @param FieldOptions $options
+     */
     private function duplicateEntity(string $fieldName, array $options): void
     {
         $relationTable = $options[ 'relation_table' ];
@@ -134,15 +158,18 @@ class NodeClone extends \Soosyze\Controller
             ->where($foreignKey, '=', $this->oldEntityNode[ $foreignKey ])
             ->fetchAll();
 
+        /** @phpstan-var array<NodeTypeFieldOneFieldEntity> $fields */
         $fields = self::node()->getFieldsEntity($fieldName);
 
         /* Parcours toutes les sous entités. */
         foreach ($entities as $entity) {
             foreach ($fields as $value) {
-                if (in_array($value[ 'field_type' ], [ 'text', 'textarea' ])) {
-                    $this->replaceLink($value[ 'field_name' ], $entity);
-                } elseif (in_array($value[ 'field_type' ], [ 'file', 'image' ])) {
-                    $this->replaceFileLink($value[ 'field_name' ], $entity);
+                $entityData = $entity[ $value[ 'field_name' ] ];
+
+                if (in_array($value[ 'field_type' ], [ 'text', 'textarea' ]) && is_string($entityData)) {
+                    $entity[ $value[ 'field_name' ] ] = $this->replaceLink($entityData);
+                } elseif (in_array($value[ 'field_type' ], [ 'file', 'image' ]) && is_string($entityData)) {
+                    $entity[ $value[ 'field_name' ] ] = $this->replaceFileLink($entityData);
                 }
             }
             /* Supprime l'identifiant copié. */
@@ -168,6 +195,7 @@ class NodeClone extends \Soosyze\Controller
         $recursiveDirectory = new \RecursiveDirectoryIterator($sourceDir, \RecursiveDirectoryIterator::SKIP_DOTS);
         $iterator           = new \RecursiveIteratorIterator($recursiveDirectory, \RecursiveIteratorIterator::SELF_FIRST);
 
+        /** @phpstan-var \SplFileInfo $item */
         foreach ($iterator as $item) {
             if ($item->isDir()) {
                 mkdir($targetDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
@@ -177,7 +205,7 @@ class NodeClone extends \Soosyze\Controller
         }
     }
 
-    private function replaceLink(string $fieldName, array &$entity): string
+    private function replaceLink(string $str): string
     {
         $linkSource[] = 'node/' . $this->oldIdNode;
         $linkSource[] = self::alias()->getAlias('node/' . $this->oldIdNode, 'node/' . $this->oldIdNode);
@@ -185,19 +213,17 @@ class NodeClone extends \Soosyze\Controller
         $linkTarget = 'node/' . $this->node[ 'id' ];
 
         /* Remplace les liens de la node courant par la node clonée. */
-        $entity[ $fieldName ] = str_replace($linkSource, $linkTarget, $entity[ $fieldName ]);
+        $strReplaceLink = str_replace($linkSource, $linkTarget, $str);
 
-        $this->replaceFileLink($fieldName, $entity);
-
-        return $entity[ $fieldName ];
+        return $this->replaceFileLink($strReplaceLink);
     }
 
-    private function replaceFileLink(string $fieldName, array &$entity): void
+    private function replaceFileLink(string $str): string
     {
-        $entity[ $fieldName ] = str_replace(
+        return str_replace(
             'node/' . $this->node[ 'type' ] . '/' . $this->oldIdNode,
             'node/' . $this->node[ 'type' ] . '/' . $this->node[ 'id' ],
-            $entity[ $fieldName ]
+            $str
         );
     }
 

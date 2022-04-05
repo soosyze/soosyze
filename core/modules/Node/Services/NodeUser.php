@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\Node\Services;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Util\Util;
 use Soosyze\Config;
@@ -76,11 +77,12 @@ class NodeUser
         $this->user     = $user;
     }
 
-    public function getNodesQuery(): Query
+    public function getNodesQuery(): QueryInterface
     {
         $query = clone $this->query;
 
-        return $query->from('node')
+        return $query
+            ->from('node')
             ->leftJoin('node_type', 'type', '=', 'node_type.node_type');
     }
 
@@ -96,17 +98,18 @@ class NodeUser
             $typeNotPublish = $this->grantedNotPublish || $this->user->isGranted('node.show.not_published.' . $type[ 'node_type' ]);
 
             if ($typePublish || $typeNotPublish) {
-                $nodeQuery->orWhere(static function ($query) use ($type, $typePublish, $typeNotPublish) {
-                    $query->where('type', '=', $type[ 'node_type' ])
-                        ->where(static function ($query) use ($typePublish, $typeNotPublish) {
-                            if ($typePublish) {
-                                $query->where('node_status_id', '=', 1);
-                            }
-                            if ($typeNotPublish) {
-                                $query->orWhere('node_status_id', '!==', 1);
-                            }
-                        });
-                });
+                $nodeQuery
+                    ->orWhereGroup(static function ($query) use ($type, $typePublish, $typeNotPublish): void {
+                        $query->where('type', '=', $type[ 'node_type' ])
+                            ->whereGroup(static function ($query) use ($typePublish, $typeNotPublish): void {
+                                if ($typePublish) {
+                                    $query->where('node_status_id', '=', 1);
+                                }
+                                if ($typeNotPublish) {
+                                    $query->orWhere('node_status_id', '!==', 1);
+                                }
+                            });
+                    });
             } else {
                 $nodeQuery->where('type', '!==', $type[ 'node_type' ]);
             }
@@ -122,6 +125,7 @@ class NodeUser
         $user = $this->user->isConnected();
 
         foreach ($nodes as &$node) {
+            /** @phpstan-var string $alias */
             $alias    = $this->alias->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
             $linkView = $this->config->get('settings.path_index') === $alias
                 ? ''
@@ -133,7 +137,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeEdit)) {
                 $node[ 'link_edit' ] = $this->router->generateUrl('node.edit', [
-                    ':id_node' => $node[ 'id' ]
+                    ':idNode' => $node[ 'id' ]
                 ]);
             }
 
@@ -141,7 +145,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeClone)) {
                 $node[ 'link_clone' ] = $this->router->generateUrl('node.clone', [
-                    ':id_node' => $node[ 'id' ]
+                    ':idNode' => $node[ 'id' ]
                 ]);
             }
 
@@ -149,7 +153,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeRemove)) {
                 $node[ 'link_remove' ] = $this->router->generateUrl('node.api.remove', [
-                    ':id_node' => $node[ 'id' ]
+                    ':idNode' => $node[ 'id' ]
                 ]);
             }
 

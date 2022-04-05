@@ -8,6 +8,14 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\Menu\Services\Menu           menu()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ *
+ * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
+ */
 class MenuManager extends \Soosyze\Controller
 {
     public function __construct()
@@ -22,7 +30,9 @@ class MenuManager extends \Soosyze\Controller
 
     public function show(string $name, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($menu = self::menu()->getMenu($name)->fetch())) {
+        /** @phpstan-var MenuEntity|null $menu */
+        $menu = self::menu()->getMenu($name)->fetch();
+        if ($menu === null) {
             return $this->get404($req);
         }
 
@@ -68,16 +78,16 @@ class MenuManager extends \Soosyze\Controller
                 ->addRule("weight-{$link[ 'id' ]}", 'required|between_numeric:1,50');
         }
         $validator->addRule('token_menu', 'token')
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
             $updateParents = [];
             foreach ($links as $link) {
                 $data = [
-                    'active'       => $validator->getInput("active-{$link[ 'id' ]}") === 'on',
+                    'active'       => (bool) $validator->getInput("active-{$link[ 'id' ]}"),
                     'has_children' => false,
-                    'parent'       => (int) $validator->getInput("parent-{$link[ 'id' ]}"),
-                    'weight'       => (int) $validator->getInput("weight-{$link[ 'id' ]}")
+                    'parent'       => $validator->getInputInt("parent-{$link[ 'id' ]}"),
+                    'weight'       => $validator->getInputInt("weight-{$link[ 'id' ]}")
                 ];
 
                 self::query()
@@ -130,6 +140,7 @@ class MenuManager extends \Soosyze\Controller
 
     private function renderMenu(string $nameMenu, int $parent = -1, int $level = 1): Block
     {
+        /** @phpstan-var array<MenuLinkEntity> $query */
         $query = self::query()
             ->from('menu_link')
             ->where('menu', '=', $nameMenu)

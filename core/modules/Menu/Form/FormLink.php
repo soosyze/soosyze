@@ -57,7 +57,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                     $form->label('link-label', t('Link'))
                     ->text('link', [
                         'class'       => 'form-control api_route',
-                        'data-link'   => $this->router->generateUrl('api.route'),
+                        'data-link'   => $this->router->generateUrl('system.api.route'),
                         'placeholder' => t('Example: node/1 or http://foo.com'),
                         'required'    => 1,
                         'value'       => $this->getLinkValue()

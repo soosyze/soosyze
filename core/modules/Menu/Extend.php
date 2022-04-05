@@ -7,6 +7,29 @@ namespace SoosyzeCore\Menu;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type MenuEntity array{
+ *      name: string,
+ *      title: string,
+ *      description: string
+ * }
+ * @phpstan-type MenuLinkEntity array{
+ *      id: int,
+ *      key: string|null,
+ *      icon: string|null,
+ *      link: string,
+ *      link_router: string|null,
+ *      query: string|null,
+ *      fragment: string,
+ *      title_link: string,
+ *      target_link: bool,
+ *      menu: string,
+ *      weight: int,
+ *      parent: int,
+ *      has_children: bool,
+ *      active: bool
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string

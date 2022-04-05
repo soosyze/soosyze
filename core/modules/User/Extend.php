@@ -7,6 +7,42 @@ namespace SoosyzeCore\User;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type UserEntity array{
+ *      user_id: int,
+ *      email: string,
+ *      username: string,
+ *      password: string,
+ *      key_api: string|null,
+ *      color: string,
+ *      picture: string|null,
+ *      bio: string|null,
+ *      firstname: string|null,
+ *      name: string|null,
+ *      actived: bool,
+ *      token_connected: string|null,
+ *      token_forget: string|null,
+ *      token_actived: string|null,
+ *      time_reset: string|null,
+ *      time_installed: string,
+ *      time_access: string|null,
+ *      rgpd: bool,
+ *      terms_of_service: bool,
+ *      timezone: string
+ * }
+ * @phpstan-type RoleEntity array{
+ *      role_id: int,
+ *      role_description: string|null,
+ *      role_label: string,
+ *      role_color: string|null,
+ *      role_icon: string,
+ *      role_weight: int,
+ * }
+ * @phpstan-type UserRoleEntity array{
+ *      user_id: int,
+ *      role_id: int
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string

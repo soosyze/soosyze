@@ -42,6 +42,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
             ->fetchAll();
 
         foreach ($nodes as $node) {
+            /** @phpstan-var string $alias */
             $alias = $this->alias->getAlias("node/{$node[ 'id' ]}", "node/{$node[ 'id' ]}");
 
             $routes[] = [

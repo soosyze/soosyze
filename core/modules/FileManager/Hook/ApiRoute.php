@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SoosyzeCore\FileManager\Hook;
 
 use Soosyze\Components\Router\Router;
-use Soosyze\Config;
 use SoosyzeCore\System\Services\Alias;
 
 class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
@@ -16,19 +15,13 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
     private $alias;
 
     /**
-     * @var Config
-     */
-    private $config;
-
-    /**
      * @var Router
      */
     private $router;
 
-    public function __construct(Alias $alias, Config $config, Router $router)
+    public function __construct(Alias $alias, Router $router)
     {
         $this->alias  = $alias;
-        $this->config = $config;
         $this->router = $router;
     }
 

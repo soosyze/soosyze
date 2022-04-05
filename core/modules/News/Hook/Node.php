@@ -10,7 +10,7 @@ use SoosyzeCore\Template\Services\Templating;
 
 class Node
 {
-    const NODE_TYPE = 'article';
+    public const NODE_TYPE = 'article';
 
     /**
      * @var Config
@@ -33,8 +33,8 @@ class Node
     {
         if ($type === self::NODE_TYPE) {
             $words = str_word_count(strip_tags($fieldsInsert[ 'body' ]));
-
-            $fieldsInsert[ 'reading_time' ] = ceil($words / 200);
+            $readingTime = ceil($words / 200);
+            $fieldsInsert[ 'reading_time' ] = $readingTime == 0 ? 1 : $readingTime;
         }
     }
 
@@ -47,7 +47,8 @@ class Node
         if ($node[ 'type' ] === self::NODE_TYPE) {
             $words = str_word_count(strip_tags($fieldsUpdate[ 'body' ]));
 
-            $fieldsUpdate[ 'reading_time' ] = ceil($words / 200);
+            $readingTime = ceil($words / 200);
+            $fieldsUpdate[ 'reading_time' ] = $readingTime == 0 ? 1 : $readingTime;
         }
     }
 

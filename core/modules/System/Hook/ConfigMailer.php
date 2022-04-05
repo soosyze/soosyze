@@ -151,7 +151,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
             'smtp_encryption' => $validator->getInput('smtp_encryption'),
             'smtp_host'       => $validator->getInput('smtp_host'),
             'smtp_password'   => $validator->getInput('smtp_password'),
-            'smtp_port'       => (int) $validator->getInput('smtp_port'),
+            'smtp_port'       => $validator->getInputInt('smtp_port'),
             'smtp_username'   => $validator->getInput('smtp_username')
         ];
     }

@@ -11,24 +11,31 @@ use Soosyze\Components\Validator\Validator;
 
 final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
-    const REPLACE_WITH = 1;
+    public const REPLACE_WITH = 1;
 
-    const KEEP_RENAME = 2;
+    public const KEEP_RENAME = 2;
 
-    const KEEP_REFUSE = 3;
+    public const KEEP_REFUSE = 3;
 
-    const COPY_ABSOLUTE = 1;
+    public const COPY_ABSOLUTE = 1;
 
-    const COPY_RELATIVE = 2;
+    public const COPY_RELATIVE = 2;
 
     /**
-     * @var Core
+     * @var string
      */
-    private $core;
+    private $filesPublicPath;
+
+    /**
+     * @var string
+     */
+    private $filesPublicBasePath;
 
     public function __construct(Core $core)
     {
-        $this->core = $core;
+        $this->filesPublicPath = $core->getPath('files_public', 'public/files');
+        /** @phpstan-ignore-next-line */
+        $this->filesPublicBasePath = $core->getSetting('files_public', 'public/files');
     }
 
     public function defaultValues(): array
@@ -117,8 +124,8 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     public function before(Validator &$validator, array &$data, string $id): void
     {
         $data = [
-            'replace_file'   => (int) $validator->getInput('replace_file'),
-            'copy_link_file' => (int) $validator->getInput('copy_link_file')
+            'replace_file'   => $validator->getInputInt('replace_file'),
+            'copy_link_file' => $validator->getInputInt('copy_link_file')
         ];
     }
 
@@ -132,13 +139,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     private function getLabelCopyLinkFileFull(): string
     {
-        return t('Absolute path')
-            . " <code>{$this->core->getPath('files_public', 'public/files')}/exemple.jpg</code>";
+        return sprintf('%s <code>%s/exemple.jpg</code>', t('Absolute path'), $this->filesPublicPath);
     }
 
     private function getLabelCopyLinkFileBase(): string
     {
-        return t('Relative path')
-            . " <code>/{$this->core->getSetting('files_public', 'public/files')}/exemple.jpg</code>";
+        return sprintf('%s <code>%s/exemple.jpg</code>', t('Relative path'), $this->filesPublicBasePath);
     }
 }

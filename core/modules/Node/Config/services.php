@@ -100,11 +100,11 @@ return [
             'route.node.delete' => 'hookNodeDeleted',
             'route.node.api.remove' => 'hookNodeDeleted',
             'route.node.api.delete' => 'hookNodeDeleted',
-            'route.entity.create' => 'hookEntityCreated',
-            'route.entity.store' => 'hookEntityCreated',
-            'route.entity.edit' => 'hookEntityEdited',
-            'route.entity.update' => 'hookEntityEdited',
-            'route.entity.delete' => 'hookEntityDeleted',
+            'route.node.entity.create' => 'hookEntityCreated',
+            'route.node.entity.store' => 'hookEntityCreated',
+            'route.node.entity.edit' => 'hookEntityEdited',
+            'route.node.entity.update' => 'hookEntityEdited',
+            'route.node.entity.delete' => 'hookEntityDeleted',
             'route.node.status.search' => 'hookNodeManager',
             'route.node.type.search' => 'hookNodeManager'
         ]

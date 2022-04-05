@@ -126,12 +126,25 @@ class Url
             ->execute();
     }
 
+    private function tryDateTime(string $datetime): \DateTimeInterface
+    {
+        $date = (new \DateTime($datetime))
+            ->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
+        if ($date == false) {
+            throw new \InvalidArgumentException();
+        }
+
+        return $date;
+    }
+
     private function makeAlias(Validator $validator): string
     {
         $metaUrl = $validator->getInput('meta_url') !== ''
             ? $validator->getInput('meta_url')
             : $this->config->get('settings.node_url_' . $validator->getInput('type'));
 
+        /** @phpstan-var string $urlDefault */
         $urlDefault = empty($metaUrl)
             ? $this->config->get('settings.node_default_url', '')
             : $metaUrl;
@@ -140,7 +153,7 @@ class Url
             return '';
         }
 
-        $time = strtotime($validator->getInput('date_created'));
+        $dateTime = self::tryDateTime($validator->getInputString('date_created'));
 
         $alias = str_replace(
             [
@@ -151,9 +164,9 @@ class Url
                 ':node_type'
             ],
             [
-                date('Y', $time),
-                date('m', $time),
-                date('d', $time),
+                $dateTime->format('Y'),
+                $dateTime->format('m'),
+                $dateTime->format('d'),
                 $validator->getInput('title'),
                 $validator->getInput('type')
             ],

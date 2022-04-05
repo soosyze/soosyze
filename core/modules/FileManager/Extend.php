@@ -7,6 +7,28 @@ namespace SoosyzeCore\FileManager;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type ProfilFileEntity array{
+ *      profil_file_id: int,
+ *      folder_show: string,
+ *      folder_show_sub: bool,
+ *      profil_weight: int,
+ *      folder_store: bool,
+ *      folder_update: bool,
+ *      folder_delete: bool,
+ *      folder_download: bool,
+ *      folder_size: int,
+ *      file_store: bool,
+ *      file_update: bool,
+ *      file_delete: bool,
+ *      file_download: bool,
+ *      file_clipboard: bool,
+ *      file_copy: bool,
+ *      file_size: int,
+ *      file_extensions_all: bool,
+ *      file_extensions: string
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string

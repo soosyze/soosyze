@@ -6,10 +6,14 @@ namespace SoosyzeCore\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNodeDelete;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\System\Services\Alias        alias()
+ * @method \SoosyzeCore\Node\Services\Node           node()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
 class NodeApi extends \Soosyze\Controller
 {
     public function __construct()
@@ -17,7 +21,10 @@ class NodeApi extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function remove(int $idNode, ServerRequestInterface $req): Block
+    /**
+     * @return Block|ResponseInterface
+     */
+    public function remove(int $idNode, ServerRequestInterface $req)
     {
         if (!($node = self::node()->byId($idNode))) {
             return $this->get404($req);
@@ -38,7 +45,7 @@ class NodeApi extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $action = self::router()->generateUrl('node.delete', [ ':id_node' => $idNode ]);
+        $action = self::router()->generateUrl('node.delete', [ ':idNode' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'delete' ], self::router()))
             ->setValues($values)

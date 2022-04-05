@@ -14,6 +14,9 @@ use SoosyzeCore\Template\Services\Templating;
 use SoosyzeCore\User\Hook\Config as UserConfig;
 use SoosyzeCore\User\Services\User;
 
+/**
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ */
 class NodeUser
 {
     /**
@@ -118,6 +121,7 @@ class NodeUser
                 ->where('user_id', '=', $userId)
                 ->execute();
         } else {
+            /** @phpstan-var array<NodeEntity> $nodes */
             $nodes = $this->query
                 ->from('node')
                 ->where('user_id', '=', $userId)

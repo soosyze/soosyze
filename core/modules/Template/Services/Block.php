@@ -8,15 +8,20 @@ use Soosyze\Components\Template\Template;
 
 class Block extends Template
 {
-    public function getBlockWithParent(string $parent): Template
+    public function getBlockWithParent(string $selector): Block
     {
-        if ($block = strstr($parent, '.', true)) {
-            return $this->getBlock($block)
-                    ->getBlock(substr(strstr($parent, '.'), 1));
+        sscanf($selector, '%[a-z].%s', $parent, $child);
+
+        if ($child) {
+            /** @phpstan-ignore-next-line */
+            return $this
+                    ->getBlock($parent)
+                    ->getBlock($child);
         }
 
-        return $parent !== 'this'
-            ? $this->getBlock($parent)
+        /** @phpstan-ignore-next-line */
+        return $selector !== 'this'
+            ? $this->getBlock($selector)
             : $this;
     }
 }

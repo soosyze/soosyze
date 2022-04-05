@@ -6,6 +6,7 @@ namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Form\FormGroupBuilder;
+use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
@@ -14,6 +15,9 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\System\Services\Alias;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
+/**
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ */
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
     public const MORE_LINK_NOT_ADD = 0;
@@ -99,8 +103,10 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', '=', 'article')
             ->fetchAll();
 
-        $route      = RouteCollection::getRoute('news.month');
-        $paramMonth = $this->router->parseWiths($route);
+        /** @phpstan-var Route $routeMonth */
+        $routeMonth = RouteCollection::getRoute('news.month');
+        $paramMonth = $this->router->parseWiths($routeMonth);
+        /** @phpstan-var Route $routeYears */
         $routeYears = RouteCollection::getRoute('news.years');
         $paramYear  = $this->router->parseWiths($routeYears);
 
@@ -173,6 +179,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->where('type', '=', 'article')
             ->fetchAll();
 
+        /** @phpstan-var Route $route */
         $route = RouteCollection::getRoute('news.years');
         $param = $this->router->parseWiths($route);
 
@@ -181,7 +188,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             $year  = date('Y', (int) $value[ 'date_created' ]);
             $month = date('m', (int) $value[ 'date_created' ]);
 
-            if (isset($output[ $year ])) {
+            if (isset($output[ $year ][ 'number' ])) {
                 ++$output[ $year ][ 'number' ];
             } else {
                 $output[ $year ] = [
@@ -198,7 +205,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 continue;
             }
 
-            if (isset($output[ $year ][ 'months' ][ $month ])) {
+            if (isset($output[ $year ][ 'months' ][ $month ][ 'number' ])) {
                 ++$output[ $year ][ 'months' ][ $month ][ 'number' ];
             } else {
                 $output[ $year ][ 'months' ][ $month ] = [
@@ -254,6 +261,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     public function hookNewsLast(ServiceBlock $tpl, array $options): ServiceBlock
     {
+        /** @phpstan-var array<NodeEntity> $news */
         $news = $this->query
             ->from('node')
             ->where('node_status_id', '=', 1)
@@ -273,6 +281,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             }
             $value[ 'field' ] = $this->node->makeFieldsById('article', $value[ 'entity_id' ]);
 
+            /** @phpstan-var string $alias */
             $alias = $this->alias->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
 
             $value[ 'link_view' ] = $this->router->makeUrl($alias);
@@ -392,9 +401,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     public function hookNewsLastBefore(Validator $validator, array &$data): void
     {
         $data[ 'options' ] = json_encode([
-            'limit'     => (int) $validator->getInput('limit'),
-            'more'      => (int) $validator->getInput('more'),
-            'offset'    => (int) $validator->getInput('offset'),
+            'limit'     => $validator->getInputInt('limit'),
+            'more'      => $validator->getInputInt('more'),
+            'offset'    => $validator->getInputInt('offset'),
             'text_more' => $validator->getInput('text_more')
         ]);
     }

@@ -5,6 +5,14 @@ use Queryflatfile\Schema;
 
 return [
     'up' => function (Schema $sch, Request $req) {
+        /**
+         * @phpstan-var array<
+         *      array{
+         *          profil_file_id: int,
+         *          folder_show: string
+         *      }
+         *  > $profils
+         */
         $profils = $req->from('profil_file')->fetchAll();
         foreach ($profils as $profil) {
             if (strpos($profil[ 'folder_show' ], '%uid') === false) {

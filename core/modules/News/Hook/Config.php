@@ -123,7 +123,7 @@ class Config implements \SoosyzeCore\Config\ConfigInterface
     {
         $data = [
             'new_default_icon' => $validator->getInput('new_default_icon'),
-            'news_pagination'  => (int) $validator->getInput('news_pagination'),
+            'news_pagination'  => $validator->getInputInt('news_pagination'),
             'new_title'        => $validator->getInput('new_title')
         ];
     }

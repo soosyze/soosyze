@@ -225,7 +225,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                     }, self::$attrGrpFlex)
                     ->html('cancel', '<p>:content</p>', [
                         ':content' => t('Maximum size per file upload allowed by your server: :size', [
-                            ':size' => Util::strFileSizeFormatted(Util::getOctetUploadLimit())
+                            ':size' => Util::strFileSizeFormatted(Util::getOctetUploadLimit() ?? 0)
                         ])
                     ]);
                 }, [ 'class' => 'form-group col-sm-12' ]);
