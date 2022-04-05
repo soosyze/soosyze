@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace SoosyzeCore\Node\Services;
 
 use Core;
+use Queryflatfile\Request;
 use Soosyze\Config;
 use SoosyzeCore\Filter\Services\Filter;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Template\Services\Templating;
 
+/**
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeFieldEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
+ */
 class Node
 {
     /**
@@ -166,7 +173,7 @@ class Node
         return $this->nodeCurrent;
     }
 
-    public function byId(int $idNode): array
+    public function byId(int $idNode): ?array
     {
         return $this->query
                 ->from('node')
@@ -174,7 +181,7 @@ class Node
                 ->fetch();
     }
 
-    public function getEntity(string $entity, int $idEntity): array
+    public function getEntity(string $entity, int $idEntity): ?array
     {
         return $this->query
                 ->from('entity_' . $entity)
@@ -182,7 +189,7 @@ class Node
                 ->fetch();
     }
 
-    public function getFieldRelationByEntity(string $entity): array
+    public function getFieldRelationByEntity(string $entity): ?array
     {
         return $this->query
                 ->from('node_type_field')
@@ -245,6 +252,7 @@ class Node
 
     public function deleteByType(string $nodeType): void
     {
+        /** @phpstan-var array<NodeTypeFieldOneFieldEntity> $nodeTypeFields */
         $nodeTypeFields = $this->getNodeTypeFieldsQuery($nodeType)->fetchAll();
 
         foreach ($nodeTypeFields as $nodeTypeField) {
@@ -302,15 +310,19 @@ class Node
         /* Suppression des relations */
         $entity = $this->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
 
-        $relationNode = $this->getNodeTypeFieldsQuery($node[ 'type' ])
+        /** @phpstan-var array<NodeTypeFieldEntity> $relationNode */
+        $relationNode = $this
+            ->getNodeTypeFieldsQuery($node[ 'type' ])
             ->where('field_type', '=', 'one_to_many')
             ->fetchAll();
+
         foreach ($relationNode as $relation) {
+            /** @phpstan-var FieldOptions $options */
             $options = json_decode($relation[ 'field_option' ], true);
             $this->query
                 ->from($options[ 'relation_table' ])
                 ->delete()
-                ->where($options[ 'foreign_key' ], '=', $entity[ $options[ 'local_key' ] ])
+                ->where($options[ 'foreign_key' ], '=', $entity[ $options[ 'local_key' ] ] ?? null)
                 ->execute();
         }
 
@@ -333,6 +345,7 @@ class Node
         $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
 
         /* Supprime tous les dossiers et fichiers */
+        /** @phpstan-var \SplFileInfo $file */
         foreach ($iterator as $file) {
             $file->isDir()
                     ? \rmdir($file->getPathname())
@@ -418,7 +431,7 @@ class Node
         ];
     }
 
-    private function getNodeTypeFieldsQuery(string $nodeType): Query
+    private function getNodeTypeFieldsQuery(string $nodeType): Request
     {
         return $this->query
                 ->from('node_type_field')
@@ -458,23 +471,27 @@ class Node
                 $out[ $key ][ 'field_value' ]   = $link;
                 $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
             } elseif ($value[ 'field_type' ] === 'select') {
-                $options = json_decode($value[ 'field_option' ], true);
+                /** @phpstan-var array $options */
+                $options = json_decode($value[ 'field_option' ], true) ?? [];
 
                 $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
             } elseif ($value[ 'field_type' ] === 'radio') {
-                $options = json_decode($value[ 'field_option' ], true);
+                /** @phpstan-var array $options */
+                $options = json_decode($value[ 'field_option' ], true) ?? [];
 
                 $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
             } elseif ($value[ 'field_type' ] === 'checkbox') {
-                $options   = json_decode($value[ 'field_option' ], true);
+                /** @phpstan-var array $options */
+                $options   = json_decode($value[ 'field_option' ], true) ?? [];
                 $explode   = explode(',', $data[ $key ]);
                 $intersect = array_intersect_key($options, array_flip($explode));
 
                 $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
             } elseif ($value[ 'field_type' ] === 'one_to_many') {
-                $option = json_decode($value[ 'field_option' ], true);
+                /** @phpstan-var FieldOptions $options */
+                $options = json_decode($value[ 'field_option' ], true);
 
-                $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $option);
+                $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $options);
                 $out[ $key ][ 'field_display' ] = $this->tpl
                     ->createBlock('node/content-entity-show.php', $this->pathViews)
                     ->addVars([

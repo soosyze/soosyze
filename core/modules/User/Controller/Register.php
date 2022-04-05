@@ -11,6 +11,15 @@ use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
 
+/**
+ * @method \SoosyzeCore\User\Services\Auth           auth()
+ * @method \SoosyzeCore\Mailer\Services\Mailer       mailer()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ */
 class Register extends \Soosyze\Controller
 {
     public function __construct()
@@ -57,13 +66,13 @@ class Register extends \Soosyze\Controller
 
     public function store(ServerRequestInterface $req): ResponseInterface
     {
-        $validator = (new Validator())->setInputs($req->getParsedBody());
+        $validator = (new Validator())->setInputs((array) $req->getParsedBody());
 
-        $isEmail = ($user = self::user()->getUser($validator->getInput('email')))
+        $isEmail = ($user = self::user()->getUser($validator->getInputString('email')))
             ? $user[ 'email' ]
             : '';
 
-        $isUsername = ($user = self::user()->getUserByUsername($validator->getInput('username')))
+        $isUsername = ($user = self::user()->getUserByUsername($validator->getInputString('username')))
             ? $user[ 'username' ]
             : '';
 
@@ -109,9 +118,9 @@ class Register extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             $data = [
-                'username'         => $validator->getInput('username'),
-                'email'            => $validator->getInput('email'),
-                'password'         => self::auth()->hash($validator->getInput('password_new')),
+                'username'         => $validator->getInputString('username'),
+                'email'            => $validator->getInputString('email'),
+                'password'         => self::auth()->hash($validator->getInputString('password_new')),
                 'token_actived'    => Util::strRandom(30),
                 'time_installed'   => (string) time(),
                 'timezone'         => 'Europe/Paris',
@@ -125,6 +134,7 @@ class Register extends \Soosyze\Controller
                 ->values($data)
                 ->execute();
 
+            /** @phpstan-var array $user */
             $user = self::user()->getUserActived($data[ 'email' ], false);
 
             self::query()
@@ -157,7 +167,8 @@ class Register extends \Soosyze\Controller
 
     public function activate(int $id, string $token, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($user = self::user()->find($id)) && $user[ 'token_actived' ] !== $token) {
+        $user = self::user()->find($id);
+        if (!isset($user) || $user[ 'token_actived' ] !== $token) {
             return $this->get404($req);
         }
 
@@ -175,6 +186,7 @@ class Register extends \Soosyze\Controller
 
     private function sendMailRegister(string $from): bool
     {
+        /** @phpstan-var UserEntity $user */
         $user     = self::user()->getUser($from);
         $urlReset = self::router()->generateUrl('user.activate', [
             ':id'    => $user[ 'user_id' ],
@@ -186,8 +198,10 @@ class Register extends \Soosyze\Controller
         $message .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . "</a><br>\n";
         $message .= t('This link can only be used once.');
 
+        /** @phpstan-var string $from */
+        $from = self::config()->get('mailer.email');
         $mail = self::mailer()
-            ->from(self::config()->get('mailer.email'))
+            ->from($from)
             ->to($from)
             ->subject(t('User registration'))
             ->message($message)

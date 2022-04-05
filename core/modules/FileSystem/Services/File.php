@@ -21,21 +21,21 @@ class File
     /**
      * Fonction de suppression des données du fichier.
      *
-     * @var callable|null
+     * @var \Closure|null
      */
     private $callDelete = null;
 
     /**
      * Fonction de récupération des données du fichier.
      *
-     * @var callable|null
+     * @var \Closure|null
      */
     private $callGet = null;
 
     /**
      * Fonction de déplacement des données du fichier.
      *
-     * @var callable|null
+     * @var \Closure|null
      */
     private $callMove = null;
 
@@ -58,14 +58,14 @@ class File
      *
      * @var UploadedFileInterface
      */
-    private $file;
+    private $uploadedFile;
 
     /**
      * Le champ de fichier caché.
      *
      * @var string
      */
-    private $fileHidden;
+    private $hiddenFilename;
 
     /**
      * Si le répertoire doit-être corrigé.
@@ -91,9 +91,9 @@ class File
     /**
      * Le nouveau nom du fichier à déplacer si corrigé.
      *
-     * @var string
+     * @var string|null
      */
-    private $nameResolved;
+    private $nameResolved = null;
 
     /**
      * Le chemin d'envoie.
@@ -117,11 +117,18 @@ class File
         $this->basePath = $core->getRequest()->getBasePath();
         $this->dir      = $core->getDir('files_public', 'app/files');
         $this->path     = $core->getSettingEnv('files_public', 'app/files');
-        $this->root     = $core->getSetting('root', '');
+
+        /** @phpstan-var string $root */
+        $root       = $core->getSetting('root', '');
+        $this->root = $root;
     }
 
-    public function inputFile(string $name, FormGroupBuilder &$form, ?string $filePath = '', string $type = 'image'): void
-    {
+    public function inputFile(
+        string $name,
+        FormGroupBuilder &$form,
+        ?string $filePath = '',
+        string $type = 'image'
+    ): void {
         $this->getThumbnail($name, $form, $filePath, $type);
 
         $form->group("file-$name-flex", 'div', function ($form) use ($name, $filePath) {
@@ -156,13 +163,15 @@ class File
         }, [ 'class' => 'form-group-flex' ]);
     }
 
-    public function add(UploadedFileInterface $file, string $fileHidden = ''): self
+    public function add(UploadedFileInterface $uploadedFile, string $hiddenFilename = ''): self
     {
-        $clone             = clone $this;
-        $clone->file       = $file;
-        $clone->fileHidden = $fileHidden;
-        $clone->ext        = Util::getFileExtension($file->getClientFilename());
-        $clone->name       = Util::strSlug(pathinfo($file->getClientFilename(), PATHINFO_FILENAME));
+        $clientFilename = $uploadedFile->getClientFilename() ?? '';
+
+        $clone                 = clone $this;
+        $clone->uploadedFile   = $uploadedFile;
+        $clone->hiddenFilename = $hiddenFilename;
+        $clone->ext            = Util::getFileExtension($clientFilename);
+        $clone->name           = Util::strSlug(pathinfo($clientFilename, PATHINFO_FILENAME));
 
         return $clone;
     }
@@ -184,10 +193,10 @@ class File
         return $clone;
     }
 
-    public function isResolvePath(bool $resolve = true, int $mode = 0755): self
+    public function isResolvePath(bool $isResolveDir = true, int $mode = 0755): self
     {
         $clone               = clone $this;
-        $clone->isResolveDir = $resolve;
+        $clone->isResolveDir = $isResolveDir;
         $clone->mode         = $mode;
 
         return $clone;
@@ -197,8 +206,8 @@ class File
     {
         if (
             !$this->name &&
-            (!($this->file instanceof UploadedFileInterface) ||
-            $this->file->getError() !== UPLOAD_ERR_NO_FILE)
+            (!($this->uploadedFile instanceof UploadedFileInterface) ||
+            $this->uploadedFile->getError() !== UPLOAD_ERR_NO_FILE)
         ) {
             throw new \Exception('To resolve the file name, the file must be present.');
         }
@@ -217,58 +226,45 @@ class File
         return $clone;
     }
 
-    public function callGet(callable $callback): self
+    public function callGet(\Closure $closure): self
     {
         $clone          = clone $this;
-        $clone->callGet = $callback;
+        $clone->callGet = $closure;
 
         return $clone;
     }
 
-    public function callMove(callable $callback): self
+    public function callMove(\Closure $closure): self
     {
         $clone           = clone $this;
-        $clone->callMove = $callback;
+        $clone->callMove = $closure;
 
         return $clone;
     }
 
-    public function callDelete(callable $callback): self
+    public function callDelete(\Closure $closure): self
     {
         $clone             = clone $this;
-        $clone->callDelete = $callback;
+        $clone->callDelete = $closure;
 
         return $clone;
     }
 
     public function save(): self
     {
-        if (!($this->file instanceof UploadedFileInterface)) {
-            throw new \Exception('A file must be present to be saved.');
+        if (!$this->uploadedFile instanceof UploadedFileInterface) {
+            throw new \InvalidArgumentException('A file must be present to be saved.');
         }
 
-        if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $this->resolveDir();
-            $move = $this->getMoveDir();
-            $this->file->moveTo($move);
-
-            call_user_func_array($this->callMove, [
-                $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
-            ]);
-        } elseif ($this->file->getError() === UPLOAD_ERR_NO_FILE) {
-            $file = call_user_func_array($this->callGet, [
-                $this->name, "{$this->name}.{$this->ext}"
-            ]);
-
-            if (empty($this->fileHidden) && $file) {
-                call_user_func_array($this->callDelete, [
-                    $this->name, "{$this->name}.{$this->ext}", $file
-                ]);
-
-                if (file_exists($file)) {
-                    unlink($file);
-                }
+        if ($this->uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $this->moveUploadedFile();
+        } elseif ($this->uploadedFile->getError() === UPLOAD_ERR_NO_FILE && empty($this->hiddenFilename)) {
+            $filename = $this->getUploadedFilename();
+            if ($filename === null) {
+                return $this;
             }
+
+            $this->deleteUploadedFile($filename);
         }
 
         return $this;
@@ -276,20 +272,12 @@ class File
 
     public function saveOne(): self
     {
-        if (!($this->file instanceof UploadedFileInterface)) {
+        if (!$this->uploadedFile instanceof UploadedFileInterface) {
             throw new \Exception('A file must be present to be saved.');
         }
 
-        if ($this->file->getError() === UPLOAD_ERR_OK) {
-            $this->resolveDir();
-            $move = $this->getMoveDir();
-            $this->file->moveTo($move);
-
-            if ($this->callMove) {
-                call_user_func_array($this->callMove, [
-                    $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
-                ]);
-            }
+        if ($this->uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $this->moveUploadedFile();
         }
 
         return $this;
@@ -297,9 +285,7 @@ class File
 
     public function getName(): string
     {
-        return $this->nameResolved !== ''
-            ? $this->nameResolved
-            : $this->name;
+        return $this->nameResolved ?? $this->name;
     }
 
     /**
@@ -338,8 +324,60 @@ class File
         return "{$this->basePath}{$this->path}/{$filename}.{$this->ext}";
     }
 
-    private function getThumbnail(string $name, FormGroupBuilder &$form, ?string $filePath, string $type): void
+    private function moveUploadedFile(): void
     {
+        $this->resolveDir();
+        $move = $this->getMoveDir();
+
+        if (!$this->callMove instanceof \Closure) {
+            throw new \InvalidArgumentException('The callback function to move the file must be defined.');
+        }
+
+        $this->uploadedFile->moveTo($move);
+
+        call_user_func_array($this->callMove, [
+            $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
+        ]);
+    }
+
+    private function getUploadedFilename(): ?string
+    {
+        if (!$this->callGet instanceof \Closure) {
+            throw new \InvalidArgumentException('The callback function to get the file must be defined.');
+        }
+
+        $file = call_user_func_array($this->callGet, [
+            $this->name, "{$this->name}.{$this->ext}"
+        ]);
+
+        if (!is_string($file) && $file !== null) {
+            throw new \RuntimeException('The callback function to get the file should return a string.');
+        }
+
+        return $file;
+    }
+
+    private function deleteUploadedFile(string $file): void
+    {
+        if (!$this->callDelete instanceof \Closure) {
+            throw new \InvalidArgumentException('The callback function to delete the file must be defined.');
+        }
+
+        call_user_func_array($this->callDelete, [
+            $this->name, "{$this->name}.{$this->ext}", $file
+        ]);
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    private function getThumbnail(
+        string $name,
+        FormGroupBuilder &$form,
+        ?string $filePath,
+        string $type
+    ): void {
         $src = is_file($this->root . $filePath)
             ? $this->basePath . $filePath
             : '';
@@ -352,7 +390,10 @@ class File
             ? '<div class="img-thumbnail img-thumbnail-light"><a href="' . $src . '"/><img alt="Thumbnail" src="' . $src . '" class="img-responsive"/></a></div>'
             : '<a href="' . $src . '"/><i class="fa fa-download" aria-hidden="true"></i> ' . $src . '</a>';
 
-        $form->group("file-$name-thumbnail-group", 'div', function ($form) use ($content, $name) {
+        $form->group("file-$name-thumbnail-group", 'div', function ($form) use (
+            $content,
+            $name
+        ) {
             $form->html("file-$name-thumbnail", '<div:attr>:content</div>', [
                 ':content' => $content
             ]);

@@ -11,6 +11,21 @@ use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\FileManager\Form\FormPermission;
 use SoosyzeCore\FileManager\Services\FileManager;
 
+/**
+ * @method \SoosyzeCore\FileManager\Services\FileProfil fileprofil()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query     query()
+ * @method \SoosyzeCore\QueryBuilder\Services\Schema    schema()
+ * @method \SoosyzeCore\Template\Services\Templating    template()
+ * @method \SoosyzeCore\User\Services\User              user()
+ *
+ * @phpstan-type Submenu array<
+ *      array{
+ *          key: string,
+ *          request: \Psr\Http\Message\RequestInterface,
+ *          title_link: string
+ *      }
+ *  >
+ */
 class FilePermission extends \Soosyze\Controller
 {
     public function __construct()
@@ -51,15 +66,8 @@ class FilePermission extends \Soosyze\Controller
 
         $this->container->callHook('filemanager.permission.store.validator', [ &$validator ]);
 
-        $validatorExtension = new Validator();
+        $validatorExtension = $this->getValidatorExtensionList($validator);
 
-        $listExtension = implode(',', FileManager::getExtAllowed());
-        foreach ($validator->getInput('file_extensions') as $key => $extension) {
-            $validatorExtension
-                ->addRule($key, 'inarray:' . $listExtension)
-                ->addLabel($key, $extension)
-                ->addInput($key, $key);
-        }
         $isValid = $validator->isValid() && $validatorExtension->isValid();
 
         if ($isValid) {
@@ -141,15 +149,8 @@ class FilePermission extends \Soosyze\Controller
             &$validator, $id
         ]);
 
-        $validatorExtension = new Validator();
+        $validatorExtension = $this->getValidatorExtensionList($validator);
 
-        $listExtension = implode(',', FileManager::getExtAllowed());
-        foreach ($validator->getInput('file_extensions') as $key => $extension) {
-            $validatorExtension
-                ->addRule($key, 'inarray:' . $listExtension)
-                ->addLabel($key, $extension)
-                ->addInput($key, $key);
-        }
         $isValid = $validator->isValid() && $validatorExtension->isValid();
 
         if ($isValid) {
@@ -231,7 +232,7 @@ class FilePermission extends \Soosyze\Controller
         }
         $validator = (new Validator())
             ->addRule('token_file_permission', 'token')
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
         $this->container->callHook('filemanager.permission.delete.validator', [
             &$validator, $id
         ]);
@@ -269,10 +270,10 @@ class FilePermission extends \Soosyze\Controller
 
     private function storeProfilRole(Validator $validator, int $profilFileId): void
     {
-        self::query()->insertInto('profil_file_role', [
-            'profil_file_id', 'role_id'
-        ]);
-        foreach (array_keys($validator->getInput('roles')) as $roleId) {
+        $rolesId = array_keys($validator->getInputArray('roles'));
+
+        self::query()->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ]);
+        foreach ($rolesId as $roleId) {
             self::query()->values([ $profilFileId, $roleId ]);
         }
         self::query()->execute();
@@ -283,10 +284,13 @@ class FilePermission extends \Soosyze\Controller
         self::query()
             ->from('profil_file_role')
             ->where('profil_file_id', '=', $profilFileId)
-            ->delete()->execute();
-        self::query()
-            ->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ]);
-        foreach (array_keys($validator->getInput('roles', [])) as $roleId) {
+            ->delete()
+            ->execute();
+
+        $rolesId = array_keys($validator->getInputArray('roles'));
+
+        self::query()->insertInto('profil_file_role', [ 'profil_file_id', 'role_id' ]);
+        foreach ($rolesId as $roleId) {
             self::query()->values([ $profilFileId, $roleId ]);
         }
         self::query()->execute();
@@ -334,7 +338,7 @@ class FilePermission extends \Soosyze\Controller
                 'file_size'       => t('Size limit by file'),
                 'file_extensions' => t('File extensions'),
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if (!$validator->getInput('roles')) {
             $validator->addInput('roles', []);
@@ -346,33 +350,50 @@ class FilePermission extends \Soosyze\Controller
         return $validator;
     }
 
+    private function getValidatorExtensionList(Validator $validator): Validator
+    {
+        $validatorExtension  = new Validator();
+        $fileExtensionsInput = $validator->getInputArray('file_extensions');
+
+        $listExtension = implode(',', FileManager::getExtAllowed());
+        foreach ($fileExtensionsInput as $key => $extension) {
+            $validatorExtension
+                ->addRule($key, 'inarray:' . $listExtension)
+                ->addLabel($key, $extension)
+                ->addInput($key, $key);
+        }
+
+        return $validatorExtension;
+    }
+
     private function getData(Validator $validator): array
     {
         return [
             'folder_show'         => $validator->getInput('folder_show'),
             'folder_show_sub'     => (bool) $validator->getInput('folder_show_sub'),
-            'profil_weight'       => (int) $validator->getInput('profil_weight'),
+            'profil_weight'       => $validator->getInputInt('profil_weight'),
             'folder_store'        => (bool) $validator->getInput('folder_store'),
             'folder_update'       => (bool) $validator->getInput('folder_update'),
             'folder_delete'       => (bool) $validator->getInput('folder_delete'),
             'folder_download'     => (bool) $validator->getInput('folder_download'),
-            'folder_size'         => (int) $validator->getInput('folder_size'),
+            'folder_size'         => $validator->getInputInt('folder_size'),
             'file_store'          => (bool) $validator->getInput('file_store'),
             'file_update'         => (bool) $validator->getInput('file_update'),
             'file_delete'         => (bool) $validator->getInput('file_delete'),
             'file_download'       => (bool) $validator->getInput('file_download'),
             'file_clipboard'      => (bool) $validator->getInput('file_clipboard'),
             'file_copy'           => (bool) $validator->getInput('file_copy'),
-            'file_size'           => (int) $validator->getInput('file_size'),
+            'file_size'           => $validator->getInputInt('file_size'),
             'file_extensions_all' => (bool) $validator->getInput('file_extensions_all'),
             'file_extensions'     => $validator->getInput('file_extensions_all')
                 ? ''
-                : implode(',', $validator->getInput('file_extensions', []))
+                : implode(',', $validator->getInputArray('file_extensions'))
         ];
     }
 
     private function getPermissionSubmenu(string $keyRoute, int $idPermission): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'filemanager.permission.edit',

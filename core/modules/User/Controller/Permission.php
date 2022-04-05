@@ -7,6 +7,14 @@ namespace SoosyzeCore\User\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type PermissionsEntity from \SoosyzeCore\User\UserInterface
+ * @phpstan-import-type UserRoleEntity from \SoosyzeCore\User\Extend
+ */
 class Permission extends \Soosyze\Controller
 {
     public function __construct()
@@ -17,6 +25,7 @@ class Permission extends \Soosyze\Controller
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
         /* Récupère toutes les permissions par module. */
+        /** @phpstan-var PermissionsEntity $modules */
         $modules = [];
         $this->container->callHook('user.permission.module', [ &$modules ]);
         ksort($modules);
@@ -28,8 +37,10 @@ class Permission extends \Soosyze\Controller
             ->leftJoin('role_permission', 'role_id', '=', 'role_permission.role_id')
             ->fetchAll();
 
+        /** @phpstan-var array<UserRoleEntity> $fetchRoles */
         $fetchRoles = self::query()->from('role')->orderBy('role_weight')->fetchAll();
 
+        /** @phpstan-var array<int, UserRoleEntity> $roles */
         $roles = array_combine(array_column($fetchRoles, 'role_id'), $fetchRoles);
 
         /* Simplifie les permissions par roles. */
@@ -44,9 +55,9 @@ class Permission extends \Soosyze\Controller
         $count  = 0;
         foreach ($modules as $keyModule => $module) {
             foreach ($module as $keyPermission => $permission) {
-                $output[ $keyModule ][ $keyPermission ][ 'name' ] = isset($permission[ 'name' ])
-                    ? t($permission[ 'name' ], isset($permission['attr']) ? $permission['attr'] : [])
-                    : $permission;
+                $output[ $keyModule ][ $keyPermission ][ 'name' ] = is_string($permission)
+                    ? $permission
+                    : t($permission[ 'name' ], $permission['attr'] ?? []);
                 foreach ($roles as $role) {
                     $output[ $keyModule ][ $keyPermission ][ 'roles' ][ $role[ 'role_id' ] ] =
                         isset($permissionsByRole[ $keyPermission ][ $role[ 'role_id' ] ])
@@ -74,8 +85,9 @@ class Permission extends \Soosyze\Controller
 
     public function udpate(ServerRequestInterface $req): ResponseInterface
     {
-        $data = $req->getParsedBody();
+        $data = (array) $req->getParsedBody();
 
+        /** @phpstan-var array<int> $rolesId */
         $rolesId           = self::query()->from('role')->lists('role_id');
         $permissionsByRole = self::query()->from('role_permission')->fetchAll();
 
@@ -126,7 +138,7 @@ class Permission extends \Soosyze\Controller
 
         self::query()->from('role_permission')->delete()
             ->where('role_id', '=', $idRole)
-            ->where(static function ($query) use ($diffDelete) {
+            ->whereGroup(static function ($query) use ($diffDelete) {
                 foreach ($diffDelete as $delete) {
                     $query->orWhere('permission_id', '==', $delete);
                 }

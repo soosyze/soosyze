@@ -6,9 +6,9 @@ namespace SoosyzeCore\Template\Services;
 
 use Core;
 use Soosyze\Components\Http\Stream;
-use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
 use Soosyze\Config;
+use Soosyze\ResponseEmitter;
 
 class Templating extends \Soosyze\Components\Http\Response
 {
@@ -27,7 +27,7 @@ class Templating extends \Soosyze\Components\Http\Response
     private static $stylesGlobal = [];
 
     /**
-     * @var Block
+     * @var Block|null
      */
     private $template;
 
@@ -110,21 +110,17 @@ class Templating extends \Soosyze\Components\Http\Response
      */
     private $basePath;
 
-    /**
-     * @var string
-     */
-    private $filesPublic;
-
     public function __construct(Core $core, Config $config)
     {
         parent::__construct();
 
-        $this->core        = $core;
-        $this->config      = $config;
-        $this->themesPath  = $core->getSetting('themes_path');
-        $this->filesPublic = $core->getPath('files_public');
-        $this->basePath    = $core->getRequest()->getBasePath();
-        $this->pathViews   = dirname(__DIR__) . '/Views/';
+        $this->core       = $core;
+        $this->config     = $config;
+        /** @phpstan-var string[] $themePath */
+        $themePath        = $core->getSetting('themes_path');
+        $this->themesPath = $themePath;
+        $this->basePath   = $core->getRequest()->getBasePath();
+        $this->pathViews  = dirname(__DIR__) . '/Views/';
 
         $this->loadAssets();
     }
@@ -142,7 +138,7 @@ class Templating extends \Soosyze\Components\Http\Response
         $content    = $this->getThemplate()->render();
         $this->body = new Stream($content);
 
-        return parent::__toString();
+        return (new ResponseEmitter)->emit($this);
     }
 
     public function init(): void
@@ -184,7 +180,7 @@ class Templating extends \Soosyze\Components\Http\Response
 
         if ($theme === self::THEME_ADMIN && $granted) {
             $this->defaultThemeName = self::THEME_ADMIN;
-            $this->isDarkTheme      = $this->config[ 'settings.theme_admin_dark' ];
+            $this->isDarkTheme      = (bool) $this->config->get('settings.theme_admin_dark');
         } else {
             $this->defaultThemeName = self::THEME_PUBLIC;
         }
@@ -259,7 +255,7 @@ class Templating extends \Soosyze\Components\Http\Response
         return $this;
     }
 
-    public function getBlock(string $selector): Template
+    public function getBlock(string $selector): Block
     {
         return $this->getThemplate()->getBlockWithParent($selector);
     }
@@ -274,18 +270,18 @@ class Templating extends \Soosyze\Components\Http\Response
                 ->addPathOverride($this->getPathTheme());
     }
 
-    public function addBlock(string $selector, ?Block $template, array $vars = []): self
+    public function addBlock(string $selector, ?Block $block, array $vars = []): self
     {
-        if ($template !== null) {
-            $template->addVars($vars);
+        if ($block !== null) {
+            $block->addVars($vars);
         }
 
         sscanf($selector, '%[a-z].%s', $parent, $child);
 
         if ($child) {
-            $this->getBlock($parent)->addBlock($child, $template);
+            $this->getBlock($parent)->addBlock($child, $block);
         } else {
-            $this->getThemplate()->addBlock($parent, $template);
+            $this->getThemplate()->addBlock($parent, $block);
         }
 
         return $this;
@@ -298,6 +294,9 @@ class Templating extends \Soosyze\Components\Http\Response
             : $this->defaultThemePath;
     }
 
+    /**
+     * @phpstan-return array<string>
+     */
     public function getSections(): array
     {
         if (!$this->composer) {
@@ -311,7 +310,7 @@ class Templating extends \Soosyze\Components\Http\Response
     {
         $pathTheme = $this->getPathTheme();
         if (is_file($pathTheme . 'composer.json')) {
-            $this->composer = Util::getJson($pathTheme . 'composer.json');
+            $this->composer = (array) Util::getJson($pathTheme . 'composer.json');
         }
     }
 
@@ -414,10 +413,15 @@ class Templating extends \Soosyze\Components\Http\Response
 
     private function getThemplate(): Block
     {
-        if ($this->template) {
+        if ($this->template !== null) {
             return $this->template;
         }
+
         $this->getTheme();
+
+        if ($this->template === null) {
+            throw new \Exception('The template must initialize.');
+        }
 
         return $this->template;
     }

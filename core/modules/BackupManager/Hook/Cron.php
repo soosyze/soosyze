@@ -29,9 +29,11 @@ class Cron
     {
         if ($this->config->get('settings.backup_cron')) {
             $dateFrenquency = $this->config->get('settings.backup_frequency', '1 day');
+            /** @phpstan-var int $backupTime */
+            $backupTime = $this->config->get('settings.backup_time', 0);
 
             $dateOld = (new \DateTime())
-                ->setTimestamp($this->config->get('settings.backup_time', 0))
+                ->setTimestamp($backupTime)
                 ->modify('+' . $dateFrenquency)
                 ->getTimestamp();
 

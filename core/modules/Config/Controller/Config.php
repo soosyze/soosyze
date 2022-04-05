@@ -6,9 +6,17 @@ namespace SoosyzeCore\Config\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Config\ConfigInterface;
 
+/**
+ * @method \SoosyzeCore\FileSystem\Services\File     file()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ *
+ * @phpstan-import-type ConfigMenuEntity from \SoosyzeCore\Config\ConfigInterface
+ */
 class Config extends \Soosyze\Controller
 {
     public function __construct()
@@ -20,7 +28,9 @@ class Config extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        if (($menu = $this->getMenuConfig()) && !empty($menu)) {
+        /** @phpstan-var ConfigMenuEntity $menu */
+        $menu = $this->getMenuConfig();
+        if (!empty($menu)) {
             return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
         }
 
@@ -46,7 +56,9 @@ class Config extends \Soosyze\Controller
 
     public function update(string $id, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($menu = $this->getMenuConfig()) || !isset($menu[ $id ])) {
+        /** @phpstan-var ConfigMenuEntity $menu */
+        $menu = $this->getMenuConfig();
+        if (!isset($menu[ $id ])) {
             return $this->get404($req);
         }
         if ($req->isMaxSize()) {
@@ -61,9 +73,10 @@ class Config extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->addRule('token_' . $id . '_config', 'token')
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles());
         $inputsFile = [];
 
+        /** @phpstan-var ConfigInterface $config */
         $config = $this->container->get("$id.hook.config");
 
         $config->validator($validator);
@@ -98,19 +111,22 @@ class Config extends \Soosyze\Controller
         ]);
     }
 
+    /**
+     * @param ConfigMenuEntity $menu
+     */
     private function getConfig(array $menu, string $id, ServerRequestInterface $req): ResponseInterface
     {
         if (!isset($menu[ $id ])) {
             return $this->get404($req);
         }
 
+        /** @phpstan-var ConfigInterface $config */
         $config = $this->container->get("$id.hook.config");
 
+        /** @phpstan-var array $values */
+        $values = self::config()->get($menu[ $id ][ 'config' ] ?? 'settings', []);
         /* Replace les valeurs par défaut si la données et présente dans la config. */
-        $data = array_replace_recursive(
-            $config->defaultValues(),
-            self::config()->get($menu[ $id ][ 'config' ] ?? 'settings', [])
-        );
+        $data = array_replace_recursive($config->defaultValues(), $values);
 
         $this->container->callHook("config.edit.$id.form.data", [ &$data, $id ]);
 
@@ -146,8 +162,12 @@ class Config extends \Soosyze\Controller
 
     private function getMenuConfig(): array
     {
+        /** @phpstan-var ConfigMenuEntity $menu */
         $menu = [];
         $this->container->callHook('config.edit.menu', [ &$menu ]);
+        if ($menu === []) {
+            return [];
+        }
         ksort($menu);
 
         $all = $this->container->callHook('app.granted', [ 'config.manage' ]);
@@ -166,8 +186,11 @@ class Config extends \Soosyze\Controller
 
     private function saveFile(string $key, Validator $validator): void
     {
+        /** @phpstan-var UploadedFileInterface $uploadedFile */
+        $uploadedFile = $validator->getInput($key);
+
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
+            ->add($uploadedFile, $validator->getInputString("file-$key-name"))
             ->setName($key)
             ->setPath('/config')
             ->isResolvePath()

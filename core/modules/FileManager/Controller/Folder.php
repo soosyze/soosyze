@@ -17,6 +17,10 @@ use SoosyzeCore\FileManager\Services\FileManager;
 use SoosyzeCore\Template\Services\Block;
 use ZipArchive;
 
+/**
+ * @method \SoosyzeCore\FileManager\Services\FileManager filemanager()
+ * @method \SoosyzeCore\Template\Services\Templating     template()
+ */
 class Folder extends \Soosyze\Controller
 {
     public function __construct()
@@ -59,7 +63,7 @@ class Folder extends \Soosyze\Controller
                 'token_folder' => 'token'
             ])
             ->addLabel('name', t('Name'))
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if (!$validator->isValid()) {
             return $this->json(400, [
@@ -68,7 +72,7 @@ class Folder extends \Soosyze\Controller
             ]);
         }
 
-        $folder = Util::strSlug($validator->getInput('name'));
+        $folder = Util::strSlug($validator->getInputString('name'));
         $newDir = "$dir/$folder";
 
         if (!is_dir($newDir)) {
@@ -127,7 +131,7 @@ class Folder extends \Soosyze\Controller
                 'token_folder' => 'token'
             ])
             ->addLabel('name', t('Name'))
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir);
 
         if (!$validator->isValid()) {
@@ -137,7 +141,7 @@ class Folder extends \Soosyze\Controller
             ]);
         }
 
-        $folder    = Util::strSlug($validator->getInput('name'));
+        $folder    = Util::strSlug($validator->getInputString('name'));
         $dirUpdate = dirname($dir) . "/$folder";
 
         /* Si le nouveau nom du répertoire est déjà utilisé. */
@@ -204,7 +208,7 @@ class Folder extends \Soosyze\Controller
                 'dir'                 => 'required|dir',
                 'token_folder_delete' => 'token'
             ])
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir);
 
         if ($validator->isValid()) {
@@ -212,6 +216,7 @@ class Folder extends \Soosyze\Controller
             $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
 
             /* Supprime tous les dossiers et fichiers */
+            /** @phpstan-var \SplFileInfo $file */
             foreach ($iterator as $file) {
                 $file->isDir()
                         ? rmdir((string) $file)

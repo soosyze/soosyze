@@ -13,6 +13,9 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\Template\Services\Templating;
 use SoosyzeCore\User\Services\User;
 
+/**
+ * @phpstan-import-type BlockEntity from \SoosyzeCore\Block\Extend
+ */
 class App
 {
     /**
@@ -121,6 +124,7 @@ class App
 
     private function getBlocks(string $theme, bool $isAdmin): array
     {
+        /** @phpstan-var BlockEntity[] $blocks */
         $blocks = $this->query
             ->from('block')
             ->where('theme', '=', $theme)
@@ -134,7 +138,7 @@ class App
             if (!$isAdmin && (!$this->isVisibilityPages($block) || !$this->isVisibilityRoles($block))) {
                 continue;
             }
-            if (!empty($block[ 'hook' ])) {
+            if (!empty($block[ 'key_block' ])) {
                 $tplBlock = $this->tpl->createBlock(
                     $listBlock[ $block[ 'key_block' ] ][ 'tpl' ],
                     $listBlock[ $block[ 'key_block' ] ][ 'path' ]
@@ -143,13 +147,15 @@ class App
                 /* Construit les options avec les option présentent dans le bloc et les données en base. */
                 $options = array_merge(
                     $listBlock[ $block[ 'key_block' ] ][ 'options' ] ?? [],
-                    json_decode($block[ 'options' ] ?? '{}', true) ?? []
+                    $this->block->decodeOptions($block[ 'options' ])
                 );
 
-                $block[ 'content' ] .= (string) $this->core->callHook(
+                /** @var string|object $content */
+                $content = $this->core->callHook(
                     "block.{$block[ 'hook' ]}",
                     [ $tplBlock, $options ]
                 );
+                $block[ 'content' ] .= (string) $content;
             }
             if ($isAdmin) {
                 $params = [
@@ -160,7 +166,9 @@ class App
                 $block[ 'link_edit' ]   = $this->router->generateUrl('block.edit', $params);
                 $block[ 'link_remove' ] = $this->router->generateUrl('block.remove', $params);
                 $block[ 'link_update' ] = $this->router->generateUrl('block.section.update', $params);
-                $block[ 'title_admin' ] = $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
+                $block[ 'title_admin' ] = empty($block[ 'key_block' ])
+                    ? ''
+                    : $listBlock[ $block[ 'key_block' ] ][ 'title' ] ?? '';
             }
             $out[ $block[ 'section' ] ][] = $block;
         }

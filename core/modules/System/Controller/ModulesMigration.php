@@ -7,6 +7,9 @@ namespace SoosyzeCore\System\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Http\Redirect;
 
+/**
+ * @method \SoosyzeCore\System\Services\Migration migration()
+ */
 class ModulesMigration extends \Soosyze\Controller
 {
     public function check(): ResponseInterface

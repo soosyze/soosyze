@@ -7,6 +7,77 @@ namespace SoosyzeCore\Node;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type NodeEntity array{
+ *      id: int,
+ *      date_changed: string,
+ *      date_created: string,
+ *      entity_id: int,
+ *      meta_description: string,
+ *      meta_noarchive: bool,
+ *      meta_nofollow: bool,
+ *      meta_noindex: bool,
+ *      meta_title: string,
+ *      node_status_id: int,
+ *      sticky: bool,
+ *      title: string,
+ *      type: string,
+ *      user_id: int|null
+ * }
+ * @phpstan-type NodeTypeEntity array{
+ *      node_type: string,
+ *      node_type_name: string,
+ *      node_type_icon: string,
+ *      node_type_description: string,
+ *      node_type_color: string
+ * }
+ * @phpstan-type NodeStatusEntity array{
+ *      node_status_id: int,
+ *      node_status_name: string
+ * }
+ * @phpstan-type NodeTypeFieldOneFieldEntity array{
+ *      field_name: string,
+ *      field_type: string,
+ *      node_type: string,
+ *      field_id: int,
+ *      field_label: string,
+ *      field_rules: string,
+ *      field_show: bool,
+ *      field_show_form: bool,
+ *      field_show_label: bool,
+ *      field_description: string,
+ *      field_option: string,
+ *      field_default_value: null|string,
+ *      field_weight: int,
+ *      field_weight_form: int
+ * }
+ * @phpstan-type NodeTypeFieldEntity array{
+ *      node_type: string,
+ *      field_id: int,
+ *      field_label: string,
+ *      field_rules: string,
+ *      field_show: bool,
+ *      field_show_form: bool,
+ *      field_show_label: bool,
+ *      field_description: string,
+ *      field_option: string,
+ *      field_default_value: null|string,
+ *      field_weight: int,
+ *      field_weight_form: int
+ * }
+ * @phpstan-type NodeMenuLinkEntity array{
+ *      node_id: int,
+ *      menu_link_id: int
+ * }
+ * @phpstan-type FieldOptions array{
+ *      count: int,
+ *      local_key: string,
+ *      foreign_key: string,
+ *      order_by: string,
+ *      relation_table: string,
+ *      sort: string
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string
@@ -28,7 +99,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 $tb->increments('id');
                 $tb->string('date_changed');
                 $tb->string('date_created');
-                $tb->integer('entity_id')->nullable();
+                $tb->integer('entity_id');
                 $tb->string('meta_description')->valueDefault('');
                 $tb->boolean('meta_noarchive')->valueDefault(false);
                 $tb->boolean('meta_nofollow')->valueDefault(false);

@@ -12,6 +12,15 @@ use SoosyzeCore\Block\Form\FormDeleteBlock;
 use SoosyzeCore\Block\Form\FormListBlock;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
+/**
+ * @method \SoosyzeCore\Block\Services\Block         block()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ * @method \SoosyzeCore\Filter\Services\Xss          xss()
+ *
+ * @phpstan-import-type BlockEntity from \SoosyzeCore\Block\Extend
+ */
 class Block extends \Soosyze\Controller
 {
     public function __construct()
@@ -165,11 +174,11 @@ class Block extends \Soosyze\Controller
 
         $this->container->callHook('block.store.validator', [ &$validator, $theme ]);
 
-        $block = self::block()->getBlock($validator->getInput('key_block'));
-
         $isValid = $validator->isValid();
 
         if ($isValid) {
+            $block = self::block()->getBlock($validator->getInputString('key_block'));
+
             $hook = $block[ 'hook' ] ?? null;
 
             if ($hook) {
@@ -183,9 +192,7 @@ class Block extends \Soosyze\Controller
         }
 
         if (!$validator->hasError('roles')) {
-            $validatorRole = $this->getValidatorRoles(
-                $validator->getInput('roles', [])
-            );
+            $validatorRole = $this->getValidatorRoles($validator->getInputArray('roles'));
 
             /* Ajoute à la validation générale la validation des rôles. */
             $isValid &= $validatorRole->isValid();
@@ -244,10 +251,10 @@ class Block extends \Soosyze\Controller
 
         $values[ 'roles' ]   = explode(',', $values[ 'roles' ]);
 
-        if (!empty($values[ 'hook' ])) {
+        if (!empty($values[ 'key_block' ])) {
             $values[ 'options' ] = array_merge(
                 self::block()->getBlock($values[ 'key_block' ])[ 'options' ] ?? [],
-                json_decode($values[ 'options' ] ?? '{}', true) ?? []
+                self::block()->decodeOptions($values[ 'options' ])
             );
         }
 
@@ -303,7 +310,7 @@ class Block extends \Soosyze\Controller
 
         $validator = $this->getValidator($req, $theme, $id);
 
-        if ($block[ 'hook' ]) {
+        if (!empty($block[ 'hook' ])) {
             $this->container->callHook("block.{$block[ 'hook' ]}.update.validator", [
                 &$validator, $id
             ]);
@@ -314,9 +321,7 @@ class Block extends \Soosyze\Controller
         $isValid = $validator->isValid();
 
         if (!$validator->hasError('roles')) {
-            $validatorRole = $this->getValidatorRoles(
-                $validator->getInput('roles', [])
-            );
+            $validatorRole = $this->getValidatorRoles($validator->getInputArray('roles'));
 
             /* Ajoute à la validation générale la validation des rôles. */
             $isValid &= $validatorRole->isValid();
@@ -325,7 +330,7 @@ class Block extends \Soosyze\Controller
         if ($isValid) {
             $data = $this->getData($validator);
 
-            if ($block[ 'hook' ]) {
+            if (!empty($block[ 'hook' ])) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.before", [
                     &$validator, &$data, $id
                 ]);
@@ -339,7 +344,7 @@ class Block extends \Soosyze\Controller
                 ->where('block_id', '=', $id)
                 ->execute();
 
-            if ($block[ 'hook' ]) {
+            if (!empty($block[ 'hook' ])) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.after", [
                     $validator, $data, $id
                 ]);
@@ -369,7 +374,7 @@ class Block extends \Soosyze\Controller
         }
 
         $values[ 'roles' ]   = explode(',', $values[ 'roles' ]);
-        $values[ 'options' ] = json_decode($values[ 'options' ] ?? '{}', true);
+        $values[ 'options' ] = self::block()->decodeOptions($values[ 'options' ]);
 
         $this->container->callHook('block.remove.form.data', [ &$values, $theme, $id ]);
 
@@ -401,10 +406,9 @@ class Block extends \Soosyze\Controller
 
     public function delete(
         string $theme,
-        int $id,
-        ServerRequestInterface $req
+        int $id
     ): ResponseInterface {
-        if (!$block = $this->find($id)) {
+        if (!$this->find($id)) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -434,7 +438,7 @@ class Block extends \Soosyze\Controller
         ]);
     }
 
-    private function find(int $id): array
+    private function find(int $id): ?array
     {
         return self::query()->from('block')->where('block_id', '=', $id)->fetch();
     }
@@ -483,7 +487,7 @@ class Block extends \Soosyze\Controller
                     'weight'    => t('Weight')
                 ])
                 ->setInputs(
-                    $req->getParsedBody()
+                    (array) $req->getParsedBody()
                 )
                 ->setAttributs([
                     'key_block' => [
@@ -533,13 +537,13 @@ class Block extends \Soosyze\Controller
             'is_title'         => (bool) $validator->getInput('is_title'),
             'key_block'        => $validator->getInput('key_block'),
             'pages'            => $validator->getInput('pages'),
-            'roles'            => implode(',', array_keys($validator->getInput('roles', []))),
+            'roles'            => implode(',', array_keys($validator->getInputArray('roles'))),
             'section'          => $validator->getInput('section'),
             'theme'            => $validator->getInput('theme'),
             'title'            => $validator->getInput('title'),
             'visibility_pages' => (bool) $validator->getInput('visibility_pages'),
             'visibility_roles' => (bool) $validator->getInput('visibility_roles'),
-            'weight'           => (int) $validator->getInput('weight'),
+            'weight'           => $validator->getInputInt('weight')
         ];
     }
 }

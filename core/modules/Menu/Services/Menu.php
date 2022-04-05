@@ -7,25 +7,33 @@ namespace SoosyzeCore\Menu\Services;
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Http\Uri;
+use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
-use Soosyze\Config;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\System\Services\Alias;
 use SoosyzeCore\Template\Services\Block;
 use SoosyzeCore\Template\Services\Templating;
 
+/**
+ * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
+ *
+ * @phpstan-type Submenu array<
+ *      array{
+ *          key: string,
+ *          request: \Psr\Http\Message\RequestInterface,
+ *          title_link: string
+ *      }
+ *  >
+ */
 class Menu
 {
     /**
      * @var Alias
      */
     private $alias;
-
-    /**
-     * @var Config
-     */
-    private $config;
 
     /**
      * @var Core
@@ -52,10 +60,9 @@ class Menu
      */
     private $templating;
 
-    public function __construct(Alias $alias, Config $config, Core $core, Query $query, Router $router, Templating $templating)
+    public function __construct(Alias $alias, Core $core, Query $query, Router $router, Templating $templating)
     {
         $this->alias      = $alias;
-        $this->config     = $config;
         $this->core       = $core;
         $this->query      = $query;
         $this->router     = $router;
@@ -69,7 +76,7 @@ class Menu
         return $this->pathViews;
     }
 
-    public function find(int $id): array
+    public function find(int $id): ?array
     {
         return $this->query
                 ->from('menu_link')
@@ -94,7 +101,7 @@ class Menu
         }
     }
 
-    public function getMenu(string $name): Query
+    public function getMenu(string $name): QueryInterface
     {
         return $this->query
                 ->from('menu')
@@ -108,8 +115,9 @@ class Menu
                 ->fetchAll();
     }
 
-    public function getLinkPerMenu(string $name): Query
+    public function getLinkPerMenu(string $name): QueryInterface
     {
+        /** @phpstan-var MenuEntity $menu */
         $menu = $this->getMenu($name)->fetch();
 
         return $this->query
@@ -129,16 +137,18 @@ class Menu
             ];
         }
 
-        $uri        = Uri::create($link);
+        $uri = Uri::create($link);
+
+        /** @phpstan-var string $linkSource */
         $linkSource = $this->alias->getSource($uri->getPath(), $uri->getPath());
         $uriSource  = $uri->withPath($linkSource);
 
         $route = $this->router->parse($request->withUri($uriSource)->withMethod('get'));
 
         return [
-            'key'         => $route[ 'key' ] ?? null,
+            'key'         => $route instanceof Route ? $route->getKey() : null,
             'link'        => $uri->getPath(),
-            'link_router' => isset($route[ 'key' ]) && $linkSource !== $uri->getPath()
+            'link_router' => $route !== null && $linkSource !== $uri->getPath()
                 ? $linkSource
                 : null,
             'query'       => $uri->getQuery(),
@@ -148,6 +158,7 @@ class Menu
 
     public function renderMenuSelect(string $nameMenu, int $parent = -1, int $level = 1): array
     {
+        /** @phpstan-var array<MenuLinkEntity> $query */
         $query = $this->query
             ->from('menu_link')
             ->where('active', '==', 1)
@@ -190,6 +201,7 @@ class Menu
 
     public function renderMenu(string $nameMenu, int $parent = -1, int $depth = 10, int $level = 1): ?Block
     {
+        /** @phpstan-var array<MenuLinkEntity> $query */
         $query = $this->query
             ->from('menu_link')
             ->where('active', '==', 1)
@@ -221,15 +233,16 @@ class Menu
 
     public function rewiteUri(string $link, ?string $query, ?string $fragment): UriInterface
     {
-        $basePath = $this->core->getRequest()->getBasePath() . trim($link, '//');
+        $basePath = rtrim($this->core->getRequest()->getBasePath(), '/') . '/' . trim($link, '//');
 
         return Uri::create($basePath)
-                ->withQuery($query)
-                ->withFragment($fragment);
+                ->withQuery($query ?? '')
+                ->withFragment($fragment ?? '');
     }
 
     public function getMenuSubmenu(string $keyRoute, string $nameMenu): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'menu.show',
@@ -271,6 +284,7 @@ class Menu
 
     public function getMenuLinkSubmenu(string $keyRoute, string $nameMenu, int $id): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'menu.link.edit',
@@ -323,11 +337,13 @@ class Menu
                 continue;
             }
 
-            $linkRouter = $menu[ 'link_router' ]
-                ? $menu[ 'link_router' ]
-                : $menu[ 'link' ];
-
-            $link = $request->withUri($this->rewiteUri($linkRouter, $menu['query'], $menu['fragment']));
+            $link = $request->withUri(
+                $this->rewiteUri(
+                    $menu[ 'link_router' ] ?? $menu[ 'link' ],
+                    $menu['query'],
+                    $menu['fragment']
+                )
+            );
 
             /* Test avec un hook si le menu doit-être affiché à partir du lien du menu. */
             if (!$this->core->callHook('app.granted.request', [ $link ])) {
@@ -336,7 +352,7 @@ class Menu
                 continue;
             }
 
-            $menu[ 'link_active' ] = strpos($route, $menu[ 'link' ]) === 0
+            $menu[ 'link_active' ] = $route === '/' . trim($menu[ 'link' ], '/')
                 ? 'active'
                 : '';
 

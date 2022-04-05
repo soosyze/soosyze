@@ -88,7 +88,7 @@ class Auth
         return $hash;
     }
 
-    public function getUserActived(string $email, bool $actived = true): array
+    public function getUserActived(string $email, bool $actived = true): ?array
     {
         return $this->query
                 ->from('user')
@@ -97,7 +97,7 @@ class Auth
                 ->fetch();
     }
 
-    public function getUserActivedToken(string $token, bool $actived = true): array
+    public function getUserActivedToken(string $token, bool $actived = true): ?array
     {
         return $this->query
                 ->from('user')

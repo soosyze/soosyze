@@ -8,6 +8,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
+/**
+ * @phpstan-type ConfigMenuEntity array<string, array{
+ *      title_link: string,
+ *      link?: string,
+ *      config?: string
+ *  }>
+ */
 interface ConfigInterface
 {
     public function defaultValues(): array;

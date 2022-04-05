@@ -7,6 +7,7 @@ namespace SoosyzeCore\System\Services;
 use Soosyze\Config;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
+use SoosyzeCore\System\ExtendModule;
 
 class Migration
 {
@@ -47,7 +48,9 @@ class Migration
      */
     public function isMigration(): bool
     {
+        /** @phpstan-var array<string> $titleModulesActive */
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
+        /** @phpstan-var array<string> $migrationsInstalled */
         $migrationsInstalled = $this->query->from('migration')->lists('migration');
         $composers           = $this->composer->getModuleComposers();
 
@@ -55,6 +58,7 @@ class Migration
             if (!isset($composers[ $title ])) {
                 continue;
             }
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = $this->composer->getExtendClass($title, $composers);
 
             $dir = (new $extendClass)->getDir() . DS . 'Migrations';
@@ -81,7 +85,9 @@ class Migration
      */
     public function migrate(): void
     {
+        /** @phpstan-var array<string> $titleModulesActive */
         $titleModulesActive  = $this->query->from('module_active')->lists('title');
+        /** @phpstan-var array<string> $migrationsInstalled */
         $migrationsInstalled = $this->query->from('migration')->lists('migration');
         $composers           = $this->composer->getModuleComposers();
 
@@ -90,6 +96,7 @@ class Migration
             if (!isset($composers[ $title ])) {
                 continue;
             }
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = $this->composer->getExtendClass($title, $composers);
 
             $dir = (new $extendClass)->getDir() . DS . 'Migrations';

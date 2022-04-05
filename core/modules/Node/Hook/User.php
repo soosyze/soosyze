@@ -64,7 +64,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if ($node === []) {
+        if ($node === null) {
             return null;
         }
 
@@ -107,7 +107,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if ($node === []) {
+        if ($node === null) {
             return null;
         }
 
@@ -126,7 +126,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if ($node === []) {
+        if ($node === null) {
             return null;
         }
 
@@ -145,7 +145,7 @@ class User implements \SoosyzeCore\User\UserInterface
     ): ?array {
         $node = $this->getNode($idNode);
 
-        if ($node === []) {
+        if ($node === null) {
             return null;
         }
 
@@ -162,10 +162,12 @@ class User implements \SoosyzeCore\User\UserInterface
         string $entity,
         ?ServerRequestInterface $req,
         ?array $user
-    ): array {
+    ): ?array {
         $node = $this->getNode($idNode);
 
-        return $this->hookNodeCreated($node[ 'type' ]);
+        return $node === null
+            ? null
+            : $this->hookNodeCreated($node[ 'type' ]);
     }
 
     public function hookEntityEdited(
@@ -188,7 +190,7 @@ class User implements \SoosyzeCore\User\UserInterface
         return $this->hookNodeDeleted($idNode, $req, $user);
     }
 
-    private function getNode(int $idNode): array
+    private function getNode(int $idNode): ?array
     {
         if (isset($this->nodes[ $idNode ])) {
             return $this->nodes[ $idNode ];

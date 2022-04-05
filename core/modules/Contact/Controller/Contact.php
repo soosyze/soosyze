@@ -9,6 +9,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Contact\Form\FormContact;
 
+/**
+ * @method \SoosyzeCore\Mailer\Services\Mailer       mailer()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
 class Contact extends \Soosyze\Controller
 {
     public function __construct()
@@ -60,17 +64,19 @@ class Contact extends \Soosyze\Controller
                 'message' => t('Message'),
                 'copy'    => t('Send me a copy of the mail'),
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         $this->container->callHook('contact.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
             $inputs = $validator->getInputs();
+            /** @phpstan-var string $to */
+            $to = self::config()->get('mailer.email');
 
             $this->container->callHook('contact.before', [ &$validator, &$inputs ]);
             $mail = self::mailer()
                 ->from($inputs[ 'email' ], $inputs[ 'name' ])
-                ->to(self::config()->get('mailer.email'))
+                ->to($to)
                 ->subject($inputs[ 'object' ])
                 ->message($inputs[ 'message' ]);
 

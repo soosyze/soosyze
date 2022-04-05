@@ -99,7 +99,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('connect_redirect', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->generateUrl('api.route'),
+                            'data-link'   => $this->router->generateUrl('system.api.route'),
                             'maxlength'   => 255,
                             'placeholder' => '',
                             'required'    => 1,
@@ -161,7 +161,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('terms_of_service_page', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->generateUrl('api.route'),
+                            'data-link'   => $this->router->generateUrl('system.api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'terms_of_service_page' ]
@@ -185,7 +185,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         ])
                         ->text('rgpd_page', [
                             'class'       => 'form-control',
-                            'data-link'   => $this->router->generateUrl('api.route'),
+                            'data-link'   => $this->router->generateUrl('system.api.route'),
                             'maxlength'   => 255,
                             'placeholder' => 'Exemple : node/1',
                             'value'       => $data[ 'rgpd_page' ]
@@ -362,7 +362,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     public function before(Validator &$validator, array &$data, string $id): void
     {
         $data = [
-            'user_delete'            => (int) $validator->getInput('user_delete'),
+            'user_delete'            => $validator->getInputInt('user_delete'),
             'user_register'          => (bool) $validator->getInput('user_register'),
             'user_relogin'           => (bool) $validator->getInput('user_relogin'),
             'terms_of_service_show'  => (bool) $validator->getInput('terms_of_service_show'),
@@ -373,10 +373,10 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
             'connect_redirect'       => $validator->getInput('connect_redirect'),
             'password_show'          => (bool) $validator->getInput('password_show'),
             'password_policy'        => (bool) $validator->getInput('password_policy'),
-            'password_length'        => (int) $validator->getInput('password_length'),
-            'password_upper'         => (int) $validator->getInput('password_upper'),
-            'password_digit'         => (int) $validator->getInput('password_digit'),
-            'password_special'       => (int) $validator->getInput('password_special'),
+            'password_length'        => $validator->getInputInt('password_length'),
+            'password_upper'         => $validator->getInputInt('password_upper'),
+            'password_digit'         => $validator->getInputInt('password_digit'),
+            'password_special'       => $validator->getInputInt('password_special'),
             'password_reset_timeout' => $validator->getInput('password_reset_timeout')
         ];
     }

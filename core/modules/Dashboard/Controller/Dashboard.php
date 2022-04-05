@@ -7,6 +7,11 @@ namespace SoosyzeCore\Dashboard\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @method \SoosyzeCore\System\Services\Composer     composer()
+ * @method \SoosyzeCore\Dashboard\Services\Dashboard dashboard()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
 class Dashboard extends \Soosyze\Controller
 {
     public function __construct()
@@ -37,17 +42,23 @@ class Dashboard extends \Soosyze\Controller
     {
         ob_start();
         phpinfo();
-        $info = ob_get_contents();
+        $phpInfo = ob_get_contents();
         ob_end_clean();
+
+        if ($phpInfo === false) {
+            $info = t('No content');
+        } else {
+            $info = str_replace(
+                'module_Zend Optimizer',
+                'module_Zend_Optimizer',
+                preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $phpInfo) ?? ''
+            );
+        }
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->make('page.content', 'dashboard/content-dashboard-info.php', $this->pathViews, [
-                    'info' => str_replace(
-                        'module_Zend Optimizer',
-                        'module_Zend_Optimizer',
-                        preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info)
-                    )
+                    'info' => $info
         ]);
     }
 }

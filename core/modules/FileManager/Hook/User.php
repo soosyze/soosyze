@@ -207,18 +207,19 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function getMaxUpload(string $path): int
     {
-        $profil = $this->getRight($path);
+        $profil      = $this->getRight($path);
+        $uploadLimit = Util::getOctetUploadLimit() ?? 0;
 
         if (empty($profil[ 'file_size' ])) {
-            return Util::getOctetUploadLimit();
+            return $uploadLimit;
         }
 
         $maxUpload = $profil[ 'file_size' ] * self::OCTET_IN_MEGAOCTET;
 
-        return min(Util::getOctetUploadLimit(), $maxUpload);
+        return min($uploadLimit, $maxUpload);
     }
 
-    private function rightExtension(string $ext, array $right = []): bool
+    private function rightExtension(string $ext, array $right): bool
     {
         if ($right[ 'file_extensions_all' ]) {
             return true;

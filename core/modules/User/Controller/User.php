@@ -6,11 +6,22 @@ namespace SoosyzeCore\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
 
+/**
+ * @method \SoosyzeCore\System\Services\Alias        alias()
+ * @method \SoosyzeCore\User\Services\Auth           auth()
+ * @method \SoosyzeCore\FileSystem\Services\file     file()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ */
 class User extends \Soosyze\Controller
 {
     public function __construct()
@@ -105,7 +116,8 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.store.validator', [ &$validator ]);
 
-        $validatorRoles = $this->validRole($validator->getInput('roles', []));
+        $rolesInput     = $validator->getInputArray('roles');
+        $validatorRoles = $this->validRole($rolesInput);
 
         if ($validator->isValid() && $validatorRoles->isValid()) {
             $data = $this->getData($validator);
@@ -115,13 +127,14 @@ class User extends \Soosyze\Controller
                 ->values($data)
                 ->execute();
 
-            $user = self::user()->getUser($validator->getInput('email'));
+            /** @phpstan-var UserEntity $user */
+            $user = self::user()->getUser($validator->getInputString('email'));
 
             self::query()
                 ->insertInto('user_role', [ 'user_id', 'role_id' ])
                 ->values([ $user[ 'user_id' ], 2 ]);
 
-            foreach ($validator->getInput('roles', []) as $role) {
+            foreach ($rolesInput as $role) {
                 self::query()->values([ $user[ 'user_id' ], $role ]);
             }
             self::query()->execute();
@@ -205,16 +218,9 @@ class User extends \Soosyze\Controller
 
         $this->container->callHook('user.update.validator', [ &$validator, $id ]);
 
-        $isValid = $validator->isValid();
+        $validatorRole = $this->validRole($validator->getInputArray('roles'));
 
-        /* Valide les données du tableau de rôles */
-        if (!$validator->hasError('roles')) {
-            $validatorRole = $this->validRole($validator->getInput('roles', []));
-            /* Ajoute à la validation générale la validation des rôles. */
-            $isValid &= $validatorRole->isValid();
-        }
-
-        if ($isValid) {
+        if ($validator->isValid() && $validatorRole->isValid()) {
             /* Prépare les donnée à mettre à jour. */
             $data = $this->getData($validator, $id);
 
@@ -230,10 +236,10 @@ class User extends \Soosyze\Controller
 
             if (($userCurrent = self::user()->isConnected()) && $userCurrent[ 'user_id' ] == $id) {
                 $pwd = empty($data[ 'password' ])
-                    ? $validator->getInput('password')
-                    : $validator->getInput('password_new');
+                    ? $validator->getInputString('password')
+                    : $validator->getInputString('password_new');
 
-                self::auth()->login($validator->getInput('email'), $pwd);
+                self::auth()->login($validator->getInputString('email'), $pwd);
             }
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -307,7 +313,7 @@ class User extends \Soosyze\Controller
                 'id'                => 'required|int|!equal:1',
                 'token_user_remove' => 'token'
             ])
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('id', $id)
             ->setMessages([
                 'id' => [
@@ -387,7 +393,7 @@ class User extends \Soosyze\Controller
         $passwordPolicy = self::user()->passwordPolicy();
 
         $validator = (new Validator())
-                ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+                ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles())
                 ->setRules([
                     'actived'          => 'bool',
                     'bio'              => '!required|string|max:255',
@@ -435,17 +441,17 @@ class User extends \Soosyze\Controller
             if ($isUpdateEmail || $isUpdateUsername) {
                 $validator->addRule('password', 'required|string');
 
-                if (!self::auth()->hashVerify($validator->getInput('password'), $user)) {
+                if (!self::auth()->hashVerify($validator->getInputString('password'), $user)) {
                     $validator->addInput('password', '');
                 }
             }
         }
 
-        $isUsername = $isUpdateUsername && ($userName = self::user()->getUserByUsername($validator->getInput('username')))
+        $isUsername = $isUpdateUsername && ($userName = self::user()->getUserByUsername($validator->getInputString('username')))
             ? $userName[ 'username' ]
             : '';
 
-        $isEmail   = $isUpdateEmail && ($userEmail = self::user()->getUser($validator->getInput('email')))
+        $isEmail   = $isUpdateEmail && ($userEmail = self::user()->getUser($validator->getInputString('email')))
             ? $userEmail[ 'email' ]
             : '';
 
@@ -468,11 +474,11 @@ class User extends \Soosyze\Controller
         ];
 
         if ($id === null) {
-            $data[ 'password' ]       = self::auth()->hash($validator->getInput('password_new'));
+            $data[ 'password' ]       = self::auth()->hash($validator->getInputString('password_new'));
             $data[ 'time_installed' ] = (string) time();
             $data[ 'timezone' ]       = 'Europe/Paris';
         } elseif ($validator->getInput('password_new') !== '') {
-            $data[ 'password' ] = self::auth()->hash($validator->getInput('password_new'));
+            $data[ 'password' ] = self::auth()->hash($validator->getInputString('password_new'));
         }
 
         /* Si l'utilisateur à les droits d'administrer les autres utilisateurs. */
@@ -498,7 +504,7 @@ class User extends \Soosyze\Controller
 
         self::query()->insertInto('user_role', [ 'user_id', 'role_id' ]);
 
-        foreach (array_keys($validator->getInput('roles', [])) as $idRole) {
+        foreach (array_keys($validator->getInputArray('roles')) as $idRole) {
             self::query()->values([ $idUser, $idRole ]);
         }
 
@@ -511,18 +517,23 @@ class User extends \Soosyze\Controller
     {
         $key = 'picture';
 
+        /** @phpstan-var UploadedFileInterface $uploadedFile */
+        $uploadedFile = $validator->getInput($key);
+
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
+            ->add($uploadedFile, $validator->getInputString("file-$key-name"))
             ->setName($key)
             ->setPath("/user/$id")
             ->isResolvePath()
-            ->callGet(function ($key, $name) use ($id) {
-                return self::user()->find($id)[ $key ];
+            ->callGet(function (string $key, string $name) use ($id) {
+                $user = self::user()->find($id);
+
+                return $user[ $key ] ?? null;
             })
-            ->callMove(function ($key, $name, $move) use ($id) {
+            ->callMove(function (string $key, string $name, string $move) use ($id) {
                 self::query()->update('user', [ $key => $move ])->where('user_id', '=', $id)->execute();
             })
-            ->callDelete(function ($key, $name) use ($id) {
+            ->callDelete(function (string $key, string $name) use ($id) {
                 self::query()->update('user', [ $key => '' ])->where('user_id', '=', $id)->execute();
             })
             ->save();

@@ -43,6 +43,7 @@ class App
 
         $assets = $this->core->getPath('modules', 'core/modules', false) . '/Trumbowyg/Assets';
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/Trumbowyg/vendor/trumbowyg/dist';
+        /** @phpstan-var string $lang */
         $lang   = $this->config->get('settings.lang', 'en');
 
         $response
