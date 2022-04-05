@@ -326,11 +326,12 @@ class FileManager
         $time = 0;
 
         $iterator->rewind();
+        /** @phpstan-var \SplFileInfo $file */
         foreach ($iterator as $file) {
             if ($iterator->isDot() || $iterator->isLink()) {
                 continue;
             }
-            /* Fichier instance de SplFileInfo */
+
             $size += $file->getSize();
             if ($file->getMTime() > $time) {
                 $time = $file->getMTime();

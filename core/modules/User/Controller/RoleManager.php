@@ -9,6 +9,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type RoleEntity from \SoosyzeCore\User\Extend
+ */
 class RoleManager extends \Soosyze\Controller
 {
     public function __construct()
@@ -18,6 +25,7 @@ class RoleManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
+        /** @phpstan-var array<RoleEntity> $values */
         $values = self::query()->from('role')->orderBy('role_weight')->fetchAll();
 
         $this->container->callHook('user.role.admin.form.data', [ &$values ]);
@@ -75,11 +83,12 @@ class RoleManager extends \Soosyze\Controller
 
     public function adminCheck(ServerRequestInterface $req): ResponseInterface
     {
+        /** @phpstan-var array<RoleEntity> $roles */
         $roles = self::query()->from('role')->fetchAll();
 
         $validator = (new Validator())
             ->addRule('token_role_form', 'token')
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         foreach ($roles as $role) {
             $validator
@@ -92,7 +101,7 @@ class RoleManager extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($roles as $role) {
                 $data = [
-                    'role_weight' => (int) $validator->getInput("role_weight-{$role[ 'role_id' ]}")
+                    'role_weight' => $validator->getInputInt("role_weight-{$role[ 'role_id' ]}")
                 ];
 
                 $this->container->callHook('user.role.admin.check.before', [

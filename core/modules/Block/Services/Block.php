@@ -9,6 +9,9 @@ use Soosyze\Components\Router\Router;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 use SoosyzeCore\Template\Services\Templating;
 
+/**
+ * @phpstan-import-type BlockHook from \SoosyzeCore\Block\Hook\Block
+ */
 class Block
 {
     /**
@@ -45,6 +48,9 @@ class Block
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
+    /**
+     * @phpstan-return BlockHook[]
+     */
     public function getBlocks(): array
     {
         if (empty($this->blocks)) {
@@ -58,9 +64,19 @@ class Block
         return $this->blocks;
     }
 
-    public function getBlock(string $key, ?array $default = null): ?array
+    /**
+     * @phpstan-return ?BlockHook
+     */
+    public function getBlock(string $key): ?array
     {
-        return $this->getBlocks()[ $key ] ?? $default;
+        return $this->getBlocks()[ $key ] ?? null;
+    }
+
+    public function decodeOptions(?string $options): array
+    {
+        return is_string($options)
+            ? (array) json_decode($options, true)
+            : [];
     }
 
     public function getBlockSubmenu(string $keyRoute, string $theme, int $id): ServiceBlock

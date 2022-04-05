@@ -8,8 +8,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
+use Soosyze\Controller;
+use SoosyzeCore\System\ExtendModule;
 
-class ModulesManager extends \Soosyze\Controller
+/**
+ * @method \SoosyzeCore\System\Services\Composer     composer()
+ * @method \SoosyzeCore\System\Services\Migration    migration()
+ * @method \SoosyzeCore\System\Services\Modules      module()
+ * @method \SoosyzeCore\System\Services\Semver       semver()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
+class ModulesManager extends Controller
 {
     public function __construct()
     {
@@ -114,7 +123,7 @@ class ModulesManager extends \Soosyze\Controller
                 'modules'           => '!required|array',
                 'token_module_edit' => 'token'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if (!$validator->isValid()) {
             return $this->json(400, [
@@ -122,7 +131,7 @@ class ModulesManager extends \Soosyze\Controller
             ]);
         }
 
-        $data = $validator->getInput('modules', []);
+        $data = $validator->getInputArray('modules');
 
         $moduleActive = array_flip(self::module()->listModuleActiveNotRequire());
 
@@ -177,6 +186,7 @@ class ModulesManager extends \Soosyze\Controller
         /* Installation */
         $composerInstall = [];
         foreach ($modules as $title) {
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = self::composer()->getExtendClass($title, $composers);
             $extend      = new $extendClass();
 
@@ -239,6 +249,7 @@ class ModulesManager extends \Soosyze\Controller
 
         $instances = [];
         foreach ($modules as $title) {
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = self::composer()->getExtendClass($title, $composers);
 
             $extend = new $extendClass();
@@ -319,8 +330,9 @@ class ModulesManager extends \Soosyze\Controller
 
     private function loadContainer(array $composer): void
     {
-        $obj  = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
-        if (!($path = $obj->getPathServices())) {
+        /** @phpstan-var Controller $controller */
+        $controller = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
+        if (($path = $controller->getPathServices()) === '') {
             return;
         }
 

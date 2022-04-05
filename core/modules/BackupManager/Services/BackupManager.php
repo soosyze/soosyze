@@ -93,8 +93,9 @@ class BackupManager
         if (($backup = $this->getFreshZip()) === null) {
             return false;
         }
-
-        $backup = $this->zipRecursivly($this->core->getSetting('root'), $backup);
+        /** @phpstan-var string @dir */
+        $dir = $this->core->getSetting('root');
+        $backup = $this->zipRecursivly($dir, $backup);
 
         return $backup->close();
     }
@@ -103,9 +104,12 @@ class BackupManager
     {
         $file = $this->repository . DS . $date . self::SUFFIX;
         if (file_exists($file)) {
+            /** @phpstan-var string @dir */
+            $dir = $this->core->getSetting('root');
+
             $zip = new \ZipArchive();
             $zip->open($file);
-            $zip->extractTo($this->core->getSetting('root'));
+            $zip->extractTo($dir);
 
             return $zip->close();
         }
@@ -155,6 +159,7 @@ class BackupManager
         $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
 
         if ($maxBackups &&
+            is_array($dir) &&
             count($dir) - 2 >= $maxBackups &&
             preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[ 2 ])
         ) {
@@ -188,7 +193,9 @@ class BackupManager
                     $zip = $this->zipRecursivly($file->getPathname(), $zip);
                 }
             } else {
-                $zip->addFile($file->getPathname(), str_replace($this->core->getSetting('root'), '', $file->getPathname()));
+                /** @phpstan-var string @dir */
+                $dir = $this->core->getSetting('root');
+                $zip->addFile($file->getPathname(), str_replace($dir, '', $file->getPathname()));
             }
         }
 

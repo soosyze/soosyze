@@ -23,7 +23,7 @@ class FileProfil
         $this->query = $query;
     }
 
-    public function find(int $profilId): array
+    public function find(int $profilId): ?array
     {
         return $this->query->from('profil_file')
                 ->where('profil_file_id', '=', $profilId)

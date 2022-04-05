@@ -7,6 +7,7 @@ namespace SoosyzeCore\Node\Hook;
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Soosyze\Components\Form\FormBuilder;
+use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
 use SoosyzeCore\System\Services\Modules;
 
@@ -18,7 +19,7 @@ class FileManager
     private $core;
 
     /**
-     * @var array
+     * @var bool
      */
     private $hasFileManager;
 
@@ -32,7 +33,7 @@ class FileManager
         $this->core   = $core;
         $this->router = $router;
 
-        $this->hasFileManager = $module->has('FileManager');
+        $this->hasFileManager = (bool) $module->has('FileManager');
     }
 
     public function hookNodeCreateForm(FormBuilder &$form, array $content, string $type): void
@@ -92,7 +93,7 @@ class FileManager
             . '</div>';
 
         if ($this->core->callHook('app.granted.request', [ $request ])) {
-            /** @var array @route */
+            /** @var Route @route */
             $route    = $this->router->parse($request);
             $response = $this->router->execute($route, $request);
         }

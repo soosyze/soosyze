@@ -11,9 +11,19 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
+use Soosyze\Controller;
+use SoosyzeCore\System\ExtendModule;
+use SoosyzeCore\System\ExtendTheme;
 use SoosyzeCore\System\Services\Composer;
 
-class Install extends \Soosyze\Controller
+/**
+ * @method \SoosyzeCore\System\Services\Migration   migration()
+ * @method \SoosyzeCore\System\Services\Modules     module()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query query()
+ *
+ * @phpstan-import-type StepEntity from \Soosyzecore\System\Hook\Step
+ */
+class Install extends Controller
 {
     /**
      * Liste des modules à installer.
@@ -120,13 +130,14 @@ class Install extends \Soosyze\Controller
             $route = self::router()->generateUrl('install.step', [ ':id' => $next[ 'key' ] ]);
         }
 
-        return new Redirect($route);
+        return new Redirect($route, 302);
     }
 
     private function getSteps(): array
     {
         $step = [];
         $this->container->callHook('step', [ &$step ]);
+        /** @phpstan-var array<StepEntity> $step */
         uasort($step, static function ($a, $b) {
             return $a[ 'weight' ] <=> $b[ 'weight' ];
         });
@@ -142,6 +153,7 @@ class Install extends \Soosyze\Controller
         $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
 
         foreach ($this->modules as $title => $namespace) {
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = $namespace . 'Extend';
 
             $extend = new $extendClass();
@@ -152,7 +164,7 @@ class Install extends \Soosyze\Controller
             /* Lance les scripts de remplissages de la base de données. */
             $extend->seeders($this->container);
 
-            $composer[ $title ] = Util::getJson($extend->getDir() . '/composer.json');
+            $composer[ $title ] = (array) Util::getJson($extend->getDir() . '/composer.json');
 
             $composer[ $title ] += [
                 'dir'          => $extend->getDir(),
@@ -165,9 +177,12 @@ class Install extends \Soosyze\Controller
 
         self::module()->loadTranslations($composer);
 
+        /** @phpstan-var Composer  $composerService */
+        $composerService = $this->container->get(Composer::class);
+
         foreach (array_keys($this->modules) as $title) {
             /* Charge la version du coeur à ses modules. */
-            $composer[$title]['version'] = $this->container->get(Composer::class)->getVersionCore();
+            $composer[$title]['version'] = $composerService->getVersionCore();
 
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
@@ -195,13 +210,14 @@ class Install extends \Soosyze\Controller
         $composer = [];
 
         foreach ($this->themes as $title => $namespace) {
+            /** @phpstan-var class-string<ExtendTheme> $extendClass */
             $extendClass = $namespace . 'Extend';
 
             $extend = new $extendClass();
 
             $extend->boot();
 
-            $composer[ $title ] = Util::getJson($extend->getDir() . '/composer.json');
+            $composer[ $title ] = (array) Util::getJson($extend->getDir() . '/composer.json');
 
             $composer[ $title ] += [
                 'dir'          => $extend->getDir(),
@@ -285,8 +301,9 @@ class Install extends \Soosyze\Controller
 
     private function loadContainer(array $composer): void
     {
-        $obj  = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
-        if (!($path = $obj->getPathServices())) {
+        /** @phpstan-var Controller $controller */
+        $controller  = new $composer[ 'extra' ][ 'soosyze' ][ 'controller' ]();
+        if (($path = $controller->getPathServices()) === '') {
             return;
         }
 

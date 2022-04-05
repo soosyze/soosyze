@@ -6,9 +6,19 @@ namespace SoosyzeCore\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 
+/**
+ * @method \SoosyzeCore\FileSystem\Services\file     file()
+ * @method \SoosyzeCore\Node\Services\Node           node()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ *
+ * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
+ */
 class Entity extends \Soosyze\Controller
 {
     public function __construct()
@@ -24,11 +34,13 @@ class Entity extends \Soosyze\Controller
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
             return $this->get404($req);
         }
-        $options      = json_decode($fieldNode[ 'field_option' ]);
+        /** @phpstan-var FieldOptions $options */
+        $options = json_decode($fieldNode[ 'field_option' ], true);
+
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
             return $this->get404($req);
         }
-        if (self::node()->isMaxEntity($entity, $options->foreign_key, $idNode, $options->count)) {
+        if (self::node()->isMaxEntity($entity, $options[ 'foreign_key' ], $idNode, $options[ 'count' ])) {
             return $this->get404($req);
         }
 
@@ -36,9 +48,9 @@ class Entity extends \Soosyze\Controller
         $this->container->callHook('entity.create.form.data', [ &$values, $node, $entity ]);
 
         $form = (new FormNode([
-            'action'  => self::router()->generateUrl('entity.store', [
-                ':id_node' => $idNode,
-                ':entity'  => $entity
+            'action'  => self::router()->generateUrl('node.entity.store', [
+                ':idNode' => $idNode,
+                ':entity' => $entity
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
@@ -77,6 +89,11 @@ class Entity extends \Soosyze\Controller
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
+        if (!($data = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]))) {
+            return $this->json(404, [
+                    'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
+            ]);
+        }
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
@@ -87,14 +104,15 @@ class Entity extends \Soosyze\Controller
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
-        $options = json_decode($fieldNode[ 'field_option' ]);
-        if (self::node()->isMaxEntity($entity, $options->foreign_key, $idNode, $options->count)) {
+        /** @phpstan-var FieldOptions $options */
+        $options = json_decode($fieldNode[ 'field_option' ], true);
+        if (self::node()->isMaxEntity($entity, $options[ 'foreign_key' ], $idNode, $options[ 'count' ])) {
             return $this->get404($req);
         }
 
         $validator = (new Validator())
             ->setRules([ 'token_entity' => 'token' ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles());
 
         /* Test des champs personnalisés de la node. */
         $files = [];
@@ -110,28 +128,27 @@ class Entity extends \Soosyze\Controller
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
-            $fields = [];
+            $fieldsInsert = [];
             foreach ($fieldsEntity as $value) {
+                /** @phpstan-var string $key */
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
-                    $fields[ $key ] = '';
+                    $fieldsInsert[ $key ] = '';
                 } elseif ($value[ 'field_type' ] === 'number') {
-                    $fields[ $key ] = (int) $validator->getInput($key, '');
+                    $fieldsInsert[ $key ] = $validator->getInputInt($key);
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fields[ $key ] = implode(',', $validator->getInput($key, []));
+                    $fieldsInsert[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
-                    $fields[ $key ] = $validator->getInput($key, '');
+                    $fieldsInsert[ $key ] = $validator->getInputString($key);
                 }
             }
 
-            $data = self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+            $fieldsInsert[ $node[ 'type' ] . '_id' ] = $data[ $node[ 'type' ] . '_id' ];
 
-            $fields[ $node[ 'type' ] . '_id' ] = $data[ $node[ 'type' ] . '_id' ];
-
-            $this->container->callHook('entity.store.before', [ $validator, &$fields, $node, $entity ]);
+            $this->container->callHook('entity.store.before', [ $validator, &$fieldsInsert, $node, $entity ]);
             self::query()
-                ->insertInto('entity_' . $entity, array_keys($fields))
-                ->values($fields)
+                ->insertInto('entity_' . $entity, array_keys($fieldsInsert))
+                ->values($fieldsInsert)
                 ->execute();
             $this->container->callHook('entity.store.after', [ $validator, $node, $entity ]);
 
@@ -146,7 +163,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Your content has been saved.');
 
             return $this->json(201, [
-                'redirect' => self::router()->generateUrl('node.edit', [ ':id_node' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ ':idNode' => $idNode ])
             ]);
         }
 
@@ -176,10 +193,10 @@ class Entity extends \Soosyze\Controller
         ]);
 
         $form = (new FormNode([
-            'action'  => self::router()->generateUrl('entity.update', [
-                ':id_node'   => $idNode,
-                ':entity'    => $entity,
-                ':id_entity' => $idEntity
+            'action'  => self::router()->generateUrl('node.entity.update', [
+                ':idNode'   => $idNode,
+                ':entity'   => $entity,
+                ':idEntity' => $idEntity
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'put' ], self::file(), self::query(), self::router(), self::config()))
@@ -236,7 +253,7 @@ class Entity extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([ 'token_entity' => 'token' ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles());
 
         /* Test des champs personnalisé de la node. */
         $files = [];
@@ -252,25 +269,26 @@ class Entity extends \Soosyze\Controller
         ]);
 
         if ($validator->isValid()) {
-            $fields = [];
+            $fieldsUpdate = [];
             foreach ($fieldsEntity as $value) {
+                /** @phpstan-var string $key */
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $this->saveFile($node['type'], $idNode, $entity, $idEntity, $key, $validator);
                 } elseif ($value[ 'field_type' ] === 'number') {
-                    $fields[ $key ] = (int) $validator->getInput($key, '');
+                    $fieldsUpdate[ $key ] = $validator->getInputInt($key);
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fields[ $key ] = implode(',', $validator->getInput($key, []));
+                    $fieldsUpdate[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
-                    $fields[ $key ] = $validator->getInput($key, '');
+                    $fieldsUpdate[ $key ] = $validator->getInputString($key);
                 }
             }
 
             $this->container->callHook('entity.update.before', [
-                $validator, &$fields, $node, $entity, $idEntity
+                $validator, &$fieldsUpdate, $node, $entity, $idEntity
             ]);
             self::query()
-                ->update('entity_' . $entity, $fields)
+                ->update('entity_' . $entity, $fieldsUpdate)
                 ->where($entity . '_id', '=', $idEntity)
                 ->execute();
             $this->container->callHook('entity.update.after', [
@@ -280,7 +298,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                'redirect' => self::router()->generateUrl('node.edit', [ ':id_node' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ ':idNode' => $idNode ])
             ]);
         }
 
@@ -336,9 +354,9 @@ class Entity extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('node.edit', [
-                        ':id_node'   => $idNode,
-                        ':entity'    => $typeEntity,
-                        ':id_entity' => $idEntity
+                        ':idNode'   => $idNode,
+                        ':entity'   => $typeEntity,
+                        ':idEntity' => $idEntity
                     ])
             ]);
         }
@@ -372,28 +390,31 @@ class Entity extends \Soosyze\Controller
         string $nameField,
         Validator $validator
     ): void {
+        /** @phpstan-var UploadedFileInterface $uploadedFile */
+        $uploadedFile = $validator->getInput($nameField);
+
         self::file()
-            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
+            ->add($uploadedFile, $validator->getInputString("file-$nameField-name"))
             ->setPath("/node/$typeNode/{$idNode}/$typeEntity")
             ->isResolvePath()
             ->isResolveName()
-            ->callGet(function ($key, $name) use ($typeEntity, $idEntity) {
+            ->callGet(function (string $key, string $name) use ($typeEntity, $idEntity) {
                 return self::query()
                     ->from('entity_' . $typeEntity)
                     ->where($typeEntity . '_id', '=', $idEntity)
                     ->fetch();
             })
-            ->callMove(function ($key, $name, $move) use ($typeEntity, $idEntity, $nameField) {
+            ->callMove(function (string $key, string $name, string $move) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $typeEntity, [ $nameField => $move ])
-                ->where($typeEntity . '_id', '=', $idEntity)
-                ->execute();
+                    ->update('entity_' . $typeEntity, [ $nameField => $move ])
+                    ->where($typeEntity . '_id', '=', $idEntity)
+                    ->execute();
             })
-            ->callDelete(function ($key, $name) use ($typeEntity, $idEntity, $nameField) {
+            ->callDelete(function (string $key, string $name) use ($typeEntity, $idEntity, $nameField) {
                 self::query()
-                ->update('entity_' . $typeEntity, [ $nameField => '' ])
-                ->where($typeEntity . '_id', '=', $idEntity)
-                ->execute();
+                    ->update('entity_' . $typeEntity, [ $nameField => '' ])
+                    ->where($typeEntity . '_id', '=', $idEntity)
+                    ->execute();
             })
             ->save();
     }

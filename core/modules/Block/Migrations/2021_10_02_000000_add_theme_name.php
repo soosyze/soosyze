@@ -15,6 +15,7 @@ return [
             ->execute();
 
         $blocks = $req->from('block')->fetchAll();
+        /** @phpstan-var array{ pages: string, block_id: int } $block */
         foreach ($blocks as $block) {
             $req->update('block', [
                     'pages' => str_replace('admin/%' . PHP_EOL, '', $block[ 'pages' ])

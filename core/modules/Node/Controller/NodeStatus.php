@@ -6,10 +6,16 @@ namespace SoosyzeCore\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query query()
+ *
+ * @phpstan-import-type NodeStatusEntity from \SoosyzeCore\Node\Extend
+ */
 class NodeStatus extends \Soosyze\Controller
 {
     public function search(): ResponseInterface
     {
+        /** @phpstan-var array<NodeStatusEntity> $data */
         $data = self::query()
             ->from('node_status')
             ->fetchAll();

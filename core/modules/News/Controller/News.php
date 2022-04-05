@@ -10,13 +10,16 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Paginate\Paginator;
 
+/**
+ * @method \SoosyzeCore\System\Services\Alias        alias()
+ * @method \SoosyzeCore\Node\Services\Node           node()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ *
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ */
 class News extends \Soosyze\Controller
 {
-    /**
-     * @var int
-     */
-    public static $limit;
-
     /**
      * @var int
      */
@@ -51,31 +54,34 @@ class News extends \Soosyze\Controller
 
     public function page(int $page, ServerRequestInterface $req): ResponseInterface
     {
-        self::$limit = self::config()->get('settings.news_pagination', 6);
+        /** @phpstan-var int $limit */
+        $limit = self::config()->get('settings.news_pagination', 6);
 
+        /** @phpstan-var array<NodeEntity> $query */
         $query = self::query()
             ->from('node')
             ->where('node_status_id', '=', 1)
             ->where('type', '=', 'article')
             ->orderBy('sticky', SORT_DESC)
             ->orderBy('date_created', SORT_DESC)
-            ->limit(self::$limit, self::$limit * ($page - 1))
+            ->limit($limit, $limit * ($page - 1))
             ->fetchAll();
 
         if ($page !== 1 && !$query) {
             return $this->get404($req);
         }
 
-        $default = $query
-            ? ''
-            : t('No articles for the moment');
+        $default = $query === []
+            ? t('No articles for the moment')
+            : '';
 
         foreach ($query as &$value) {
             $value[ 'field' ] = self::node()->makeFieldsById('article', $value[ 'entity_id' ]);
 
+            /** @phpstan-var string $alias */
             $alias = self::alias()->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
 
-            $value[ 'link_view' ] = self::router()->makeUrl($alias);
+            $value[ 'link_view' ] = self::router()->makeUrl('/' . ltrim($alias, '/'));
         }
         unset($value);
 
@@ -87,24 +93,27 @@ class News extends \Soosyze\Controller
 
         $link = self::router()->generateUrl('news.page', [], false);
 
+        /** @phpstan-var string $titleMain */
+        $titleMain = self::config()->get('settings.new_title', 'Articles');
+
         return self::template()
                 ->getTheme('theme')
                 ->view('page', [
-                    'title_main' => t(self::config()->get('settings.new_title'))
+                    'title_main' => t($titleMain)
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'default'  => $default,
                     'news'     => $query,
                     'link_rss' => self::router()->generateUrl('news.rss'),
-                    'paginate' => new Paginator(count($queryAll), self::$limit, $page, $link)
+                    'paginate' => new Paginator(count($queryAll), $limit, $page, $link)
         ]);
     }
 
     public function viewYears(string $years, string $page, ServerRequestInterface $req): ResponseInterface
     {
         $date              = '01/01/' . $years;
-        $this->dateCurrent = strtotime($date);
-        $this->dateNext    = strtotime($date . ' +1 year -1 seconds');
+        $this->dateCurrent = self::tryStrtotime($date);
+        $this->dateNext    = self::tryStrtotime($date . ' +1 year -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => $years ]);
         $this->link        = self::router()->generateUrl('news.years.page', [ ':year' => $years ], false);
 
@@ -114,8 +123,8 @@ class News extends \Soosyze\Controller
     public function viewMonth(string $years, string $month, string $page, ServerRequestInterface $req): ResponseInterface
     {
         $date              = $month . '/01/' . $years;
-        $this->dateCurrent = strtotime($date);
-        $this->dateNext    = strtotime($date . ' +1 month -1 seconds');
+        $this->dateCurrent = self::tryStrtotime($date);
+        $this->dateNext    = self::tryStrtotime($date . ' +1 month -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%B %Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.month.page', [
             ':year'  => $years,
@@ -128,8 +137,8 @@ class News extends \Soosyze\Controller
     public function viewDay(string $years, string $month, string $day, string $page, ServerRequestInterface $req): ResponseInterface
     {
         $date              = $month . '/' . $day . '/' . $years;
-        $this->dateCurrent = strtotime($date);
-        $this->dateNext    = strtotime($date . ' +1 day -1 seconds');
+        $this->dateCurrent = self::tryStrtotime($date);
+        $this->dateNext    = self::tryStrtotime($date . ' +1 day -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%d %B %Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.day.page', [
             ':year'  => $years,
@@ -142,28 +151,29 @@ class News extends \Soosyze\Controller
 
     public function viewRss(ServerRequestInterface $req): ResponseInterface
     {
-        self::$limit = self::config()->get('settings.news_pagination', 6);
+        /** @phpstan-var int $limit */
+        $limit = self::config()->get('settings.news_pagination', 6);
 
+        /** @phpstan-var array<NodeEntity> $items */
         $items = self::query()
             ->from('node')
             ->where('node_status_id', '=', 1)
             ->where('type', '=', 'article')
             ->orderBy('date_created', SORT_DESC)
-            ->limit(self::$limit)
+            ->limit($limit)
             ->fetchAll();
 
         foreach ($items as &$item) {
             $item[ 'field' ] = self::node()->makeFieldsById('article', $item[ 'entity_id' ]);
 
+            /** @phpstan-var string $alias */
             $alias = self::alias()->getAlias('node/' . $item[ 'id' ], 'node/' . $item[ 'id' ]);
 
-            $item[ 'link' ] = self::router()->makeUrl($alias);
+            $item[ 'link' ] = self::router()->makeUrl('/' . ltrim($alias, '/'));
         }
         unset($item);
 
-        $lastBuildDate = isset($items[ 0 ][ 'date_created' ])
-            ? $items[ 0 ][ 'date_created' ]
-            : '';
+        $lastBuildDate = $items[ 0 ][ 'date_created' ] ?? '';
 
         $stream = new Stream(
             self::template()
@@ -192,12 +202,13 @@ class News extends \Soosyze\Controller
     {
         $page = empty($page)
             ? 1
-            : substr(strrchr($page, '/'), 1);
+            : (int) ltrim($page, '/page/');
 
-        self::$limit = self::config()->get('settings.news_pagination', 6);
+        /** @phpstan-var int $limit */
+        $limit = self::config()->get('settings.news_pagination', 6);
 
-        $offset = self::$limit * ($page - 1);
-        $news   = $this->getNews($this->dateCurrent, $this->dateNext, $offset);
+        $offset = $limit * ($page - 1);
+        $news   = $this->getNews($this->dateCurrent, $this->dateNext, $limit, $offset);
 
         $isCurrent = (time() >= $this->dateCurrent && time() <= $this->dateNext);
 
@@ -209,9 +220,10 @@ class News extends \Soosyze\Controller
         foreach ($news as &$new) {
             $new[ 'field' ] = self::node()->makeFieldsById('article', $new[ 'entity_id' ]);
 
+            /** @phpstan-var string $alias */
             $alias = self::alias()->getAlias('node/' . $new[ 'id' ], 'node/' . $new[ 'id' ]);
 
-            $new[ 'link_view' ] = self::router()->makeUrl($alias);
+            $new[ 'link_view' ] = self::router()->makeUrl('/' . ltrim($alias, '/'));
         }
         unset($new);
 
@@ -224,13 +236,13 @@ class News extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $news,
-                    'paginate' => new Paginator(count($nodesAll), self::$limit, $page, $this->link),
+                    'paginate' => new Paginator(count($nodesAll), $limit, $page, $this->link),
                     'default'  => $default,
                     'link_rss' => self::router()->generateUrl('news.rss')
         ]);
     }
 
-    private function getNews(int $dateCurrent, int $dateNext, int $offset = 0): array
+    private function getNews(int $dateCurrent, int $dateNext, int $limit, int $offset = 0): array
     {
         return self::query()
                 ->from('node')
@@ -239,7 +251,7 @@ class News extends \Soosyze\Controller
                 ->where('node_status_id', '=', 1)
                 ->orderBy('sticky', SORT_DESC)
                 ->orderBy('date_created', SORT_DESC)
-                ->limit(self::$limit, $offset)
+                ->limit($limit, $offset)
                 ->fetchAll();
     }
 
@@ -251,5 +263,15 @@ class News extends \Soosyze\Controller
                 ->between('date_created', (string) $dateCurrent, (string) $dateNext)
                 ->where('node_status_id', '=', 1)
                 ->fetchAll();
+    }
+
+    private static function tryStrtotime(string $datetime): int
+    {
+        $time = strtotime($datetime);
+        if ($time === false) {
+            throw new \InvalidArgumentException('The date must be in valid format.');
+        }
+
+        return $time;
     }
 }

@@ -6,10 +6,19 @@ namespace SoosyzeCore\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\System\ExtendTheme;
 use SoosyzeCore\System\Form\FormThemeAdmin;
 use SoosyzeCore\System\Form\FormThemePublic;
 
+/**
+ * @method \SoosyzeCore\System\Services\Composer     composer()
+ * @method \SoosyzeCore\FileSystem\Services\file     file()
+ * @method \SoosyzeCore\System\Services\Modules      module()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ */
 class Theme extends \Soosyze\Controller
 {
     const TYPE_ADMIN = 'admin';
@@ -119,6 +128,7 @@ class Theme extends \Soosyze\Controller
 
     public function edit(string $type): ResponseInterface
     {
+        /** @phpstan-var array $values */
         $values = self::config()->get('settings');
 
         $attr = [
@@ -168,7 +178,7 @@ class Theme extends \Soosyze\Controller
                 'favicon' => t('Favicon'),
                 'logo'    => t('Logo')
             ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles());
 
         $inputsFile = self::TYPE_ADMIN === $type
             ? []
@@ -248,6 +258,7 @@ class Theme extends \Soosyze\Controller
         }
 
         /* Installation */
+        /** @phpstan-var class-string<ExtendTheme> $extendClass */
         $extendClass = self::composer()->getExtendClass($title, $composers);
 
         $extend = new $extendClass();
@@ -304,18 +315,21 @@ class Theme extends \Soosyze\Controller
 
     private function saveFile(string $key, Validator $validator): void
     {
+        /** @phpstan-var UploadedFileInterface $uploadedFile */
+        $uploadedFile = $validator->getInput($key);
+
         self::file()
-            ->add($validator->getInput($key), $validator->getInput("file-$key-name"))
+            ->add($uploadedFile, $validator->getInputString("file-$key-name"))
             ->setName($key)
             ->setPath('/config')
             ->isResolvePath()
-            ->callGet(function ($key, $name) {
+            ->callGet(function (string $key, string $name) {
                 return self::config()->get("settings.$key");
             })
-            ->callMove(function ($key, $name, $move) {
+            ->callMove(function (string $key, string $name, string $move) {
                 self::config()->set("settings.$key", $move);
             })
-            ->callDelete(function ($key, $name) {
+            ->callDelete(function (string $key, string $name) {
                 self::config()->set("settings.$key", '');
             })
             ->save();

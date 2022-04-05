@@ -6,6 +6,9 @@ namespace SoosyzeCore\Config\Hook;
 
 use Core;
 
+/**
+ * @phpstan-import-type ConfigMenuEntity from \SoosyzeCore\Config\ConfigInterface
+ */
 class User implements \SoosyzeCore\User\UserInterface
 {
     /**
@@ -20,10 +23,15 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookUserPermissionModule(array &$permissions): void
     {
+        /** @phpstan-var ConfigMenuEntity $menu */
         $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
 
         $permissions[ 'Configuration' ][ 'config.manage' ] = 'Administer all configurations';
+        if ($menu === []) {
+            return;
+        }
+
         foreach ($menu as $key => $link) {
             $permissions[ 'Configuration' ][ $key . '.config.manage' ] = [
                 'name' => 'Administer :name configurations',
@@ -34,10 +42,15 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookConfigAdmin(): array
     {
-        $menu  = [];
+        /** @phpstan-var ConfigMenuEntity $menu */
+        $menu = [];
         $this->core->callHook('config.edit.menu', [ &$menu ]);
 
         $out[] = 'config.manage';
+        if ($menu === []) {
+            return $out;
+        }
+
         foreach (array_keys($menu) as $key) {
             $out[] = $key . '.config.manage';
         }

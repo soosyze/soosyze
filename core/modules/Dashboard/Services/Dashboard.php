@@ -54,6 +54,7 @@ class Dashboard
             $iterator    = new \RecursiveIteratorIterator($dirIterator);
 
             $iterator->rewind();
+            /** @phpstan-var \SplFileInfo $file */
             foreach ($iterator as $file) {
                 if ($iterator->isDot() || $iterator->isLink()) {
                     continue;

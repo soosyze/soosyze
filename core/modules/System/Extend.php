@@ -7,6 +7,13 @@ namespace SoosyzeCore\System;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 
+/**
+ * @phpstan-type AliasEntity array{
+ *      id: int,
+ *      source: string,
+ *      alias: string,
+ * }
+ */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
     public function getDir(): string

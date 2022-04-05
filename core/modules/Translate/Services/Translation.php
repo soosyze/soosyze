@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace SoosyzeCore\Translate\Services;
 
-class Translation extends \Soosyze\Config
+use Soosyze\Config;
+
+class Translation extends Config
 {
     /**
      * @var string
@@ -12,9 +14,9 @@ class Translation extends \Soosyze\Config
     private $lang;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
-    private $iso639_1 = [
+    private $iso_639_1 = [
         'aa'  => 'Afar',
         'ab'  => 'Abkhazian',
         'ae'  => 'Avestan',
@@ -204,14 +206,15 @@ class Translation extends \Soosyze\Config
         'zu'  => 'Zulu'
     ];
 
-    public function __construct(\Soosyze\Config $config, string $dir, string $langDefault = 'en')
+    public function __construct(Config $config, string $dir, string $langDefault = 'en')
     {
         parent::__construct($dir);
-        $this->lang = isset($config[ 'settings.lang' ])
-            ? $config[ 'settings.lang' ]
-            : $langDefault;
-        if (isset($_SESSION[ 'lang' ]) && !in_array($_SESSION[ 'lang' ], $this->iso639_1)) {
+        if (isset($_SESSION[ 'lang' ]) && !in_array($_SESSION[ 'lang' ], $this->iso_639_1)) {
             $this->lang = $_SESSION[ 'lang' ];
+        } else {
+            /** @phpstan-var string $lang */
+            $lang = $config->get('settings.lang', $langDefault);
+            $this->lang = $lang;
         }
     }
 
@@ -220,6 +223,7 @@ class Translation extends \Soosyze\Config
         if (empty($str)) {
             return '';
         }
+        /** @phpstan-var string $subject */
         $subject = $this->get($str, $str);
         $out     = str_replace(array_keys($vars), $vars, $subject);
 
@@ -241,10 +245,10 @@ class Translation extends \Soosyze\Config
             }
             $name = $file->getBasename('.' . $file->getExtension());
 
-            if (isset($this->iso639_1[ $name ])) {
+            if (isset($this->iso_639_1[ $name ])) {
                 $output[ $name ] = [
                     'value' => $name,
-                    'label' => $this->iso639_1[ $name ]
+                    'label' => $this->iso_639_1[ $name ]
                 ];
             }
         }

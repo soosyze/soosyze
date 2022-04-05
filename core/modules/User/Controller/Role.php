@@ -9,6 +9,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUserRole;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type RoleEntity from \SoosyzeCore\User\Extend
+ * @phpstan-type Submenu array<
+ *      array{
+ *          key: string,
+ *          link?: string,
+ *          request: \Psr\Http\Message\RequestInterface,
+ *          title_link: string
+ *      }
+ *  >
+ */
 class Role extends \Soosyze\Controller
 {
     public function __construct()
@@ -173,7 +188,7 @@ class Role extends \Soosyze\Controller
                 'id'                => 'required|int|!inarray:1,2,3',
                 'token_role_delete' => 'required|token'
             ])
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('id', $id);
 
         $this->container->callHook('role.delete.validator', [ &$validator, $id ]);
@@ -229,14 +244,13 @@ class Role extends \Soosyze\Controller
                     'role_icon'        => t('Icon'),
                     'role_weight'      => t('Weight')
                 ])
-                ->setInputs($req->getParsedBody());
+                ->setInputs((array) $req->getParsedBody());
     }
 
     private function getData(Validator $validator): array
     {
-        $roleWeight = $validator->getInput('role_weight');
-        $roleColor  = $validator->getInput('role_color');
-        $roleIcon   = $validator->getInput('role_icon');
+        $roleColor  = $validator->getInputString('role_color');
+        $roleIcon   = $validator->getInputString('role_icon');
 
         return [
             'role_description' => $validator->getInput('role_description'),
@@ -247,19 +261,18 @@ class Role extends \Soosyze\Controller
             'role_icon'        => empty($roleIcon)
                 ? 'fa fa-user'
                 : strtolower($roleIcon),
-            'role_weight'      => empty($roleWeight)
-                ? 1
-                : (int) $roleWeight,
+            'role_weight'      => $validator->getInputInt('role_weight', 1),
         ];
     }
 
-    private function find(int $id): array
+    private function find(int $id): ?array
     {
         return self::query()->from('role')->where('role_id', '=', $id)->fetch();
     }
 
     private function getRoleSubmenu(string $keyRoute, int $idRole): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'user.role.edit',

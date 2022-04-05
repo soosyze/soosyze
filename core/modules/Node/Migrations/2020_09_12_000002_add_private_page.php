@@ -6,9 +6,9 @@ use Queryflatfile\TableBuilder;
 
 return [
     'up' => function (Schema $sch, Request $req) {
-        $sch->createTableIfNotExists('entity_page_private', function (TableBuilder $table) {
-            $table->increments('page_private_id')
-                    ->text('body');
+        $sch->createTableIfNotExists('entity_page_private', function (TableBuilder $tb) {
+            $tb->increments('page_private_id');
+            $tb->text('body');
         });
         $req->insertInto('node_type', [
                 'node_type',

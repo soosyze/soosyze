@@ -10,6 +10,11 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\System\Services\Alias;
 
+/**
+ * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type NodeMenuLinkEntity from \SoosyzeCore\Node\Extend
+ */
 class Menu
 {
     const MENU_DEFAULT = 'menu-main';
@@ -75,23 +80,22 @@ class Menu
             return;
         }
 
-        $data[ 'active' ]     = '';
-        $data[ 'menu_title' ] = self::MENU_DEFAULT;
-        $data[ 'title_link' ] = '';
-
+        /** @phpstan-var array{
+         *      menu_link_id: int,
+         *      menu: string,
+         *      title_link: string
+         * }|null $link
+         */
         $link = $this->query
+            ->select('menu_link_id', 'menu', 'title_link')
             ->from('node_menu_link')
             ->leftJoin('menu_link', 'menu_link_id', '=', 'menu_link.id')
             ->where('node_id', '=', $idNode)
             ->fetch();
 
-        if ($link === []) {
-            return;
-        }
-
-        $data[ 'active' ]     = (bool) $link[ 'menu_link_id' ];
-        $data[ 'menu_title' ] = $link[ 'menu' ];
-        $data[ 'title_link' ] = $link[ 'title_link' ];
+        $data[ 'active' ]     = (bool) ($link[ 'menu_link_id' ] ?? false);
+        $data[ 'menu_title' ] = $link[ 'menu' ] ?? self::MENU_DEFAULT;
+        $data[ 'title_link' ] = $link[ 'title_link' ] ?? '';
     }
 
     public function hookCreateForm(FormBuilder $form, array $data): void
@@ -163,6 +167,7 @@ class Menu
         }
 
         $id   = $this->schema->getIncrement('node');
+        /** @phpstan-var string $link */
         $link = $this->alias->getAlias("node/$id", "node/$id");
 
         $this->query->insertInto('menu_link', [
@@ -171,10 +176,10 @@ class Menu
             ])
             ->values([
                 'node.show',
-                $validator->getInput('title_link'),
+                $validator->getInputString('title_link'),
                 $link,
                 "node/$id",
-                $validator->getInput('menu_title'),
+                $validator->getInputString('menu_title'),
                 1,
                 -1,
                 $validator->getInput('node_status_id') == 1,
@@ -194,6 +199,7 @@ class Menu
             return;
         }
 
+        /** @phpstan-var NodeMenuLinkEntity|null $nodeMenuLink */
         $nodeMenuLink = $this->query->from('node_menu_link')
             ->where('node_id', '=', $id)
             ->fetch();
@@ -204,8 +210,8 @@ class Menu
             $this->query->update('menu_link', [
                     'active'     => $validator->getInput('node_status_id') == 1,
                     'link'       => $link,
-                    'menu'       => $validator->getInput('menu_title'),
-                    'title_link' => $validator->getInput('title_link')
+                    'menu'       => $validator->getInputString('menu_title'),
+                    'title_link' => $validator->getInputString('title_link')
                 ])
                 ->where('id', '=', $nodeMenuLink[ 'menu_link_id' ])
                 ->execute();
@@ -216,10 +222,10 @@ class Menu
                 ])
                 ->values([
                     'node.show',
-                    $validator->getInput('title_link'),
+                    $validator->getInputString('title_link'),
                     $link,
                     "node/$id",
-                    $validator->getInput('menu_title'),
+                    $validator->getInputString('menu_title'),
                     1,
                     -1,
                     $validator->getInput('node_status_id') == 1
@@ -250,11 +256,12 @@ class Menu
             return;
         }
 
+        /** @phpstan-var NodeMenuLinkEntity|null $nodeMenuLink */
         $nodeMenuLink = $this->query->from('node_menu_link')
             ->where('node_id', '=', $item)
             ->fetch();
 
-        if ($nodeMenuLink === []) {
+        if ($nodeMenuLink === null) {
             return;
         }
 
@@ -279,6 +286,7 @@ class Menu
 
     private function getOptions(): array
     {
+        /** @phpstan-var array<MenuEntity> $menus */
         $menus = $this->query->from('menu')->fetchAll();
 
         $options = [];

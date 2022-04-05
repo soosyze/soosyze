@@ -10,6 +10,9 @@ use Soosyze\Config;
 use SoosyzeCore\FileSystem\Services\File;
 use SoosyzeCore\QueryBuilder\Services\Query;
 
+/**
+ * @phpstan-import-type NodeStatusEntity from \SoosyzeCore\Node\Extend
+ */
 class FormNode extends \Soosyze\Components\Form\FormBuilder
 {
     /**
@@ -107,7 +110,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->config = $config;
     }
 
-    public function setFields(array $fields)
+    public function setFields(array $fields): self
     {
         $this->fields  = $fields;
 
@@ -185,6 +188,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->rules($value);
 
         return $form->group("$key-group", 'div', function ($form) use ($value, $key) {
+            /** @phpstan-var array $options */
             $options = empty($value[ 'field_option' ])
                     ? []
                     : json_decode($value[ 'field_option' ], true);
@@ -242,7 +246,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 $form->number($key, [
                     ':actions' => 1,
                     'class'    => 'form-control',
-                    'value'    => $default
+                    'value'    => (int) $default
                     ] + $value[ 'attr' ]);
             }, [ 'class' => 'form-group-flex' ]);
     }
@@ -344,29 +348,29 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
                     $form->html("$key-$idEntity-show", '<div class="table-min-width-100"><a:attr>:content</a></div>', [
                             ':content' => $content,
-                            'href'     => $this->router->generateUrl('entity.edit', [
-                                ':id_node'   => $this->values[ 'id' ],
-                                ':entity'    => $key,
-                                ':id_entity' => $field[ "{$key}_id" ]
+                            'href'     => $this->router->generateUrl('node.entity.edit', [
+                                ':idNode'   => $this->values[ 'id' ],
+                                ':entity'   => $key,
+                                ':idEntity' => $field[ "{$key}_id" ]
                             ]),
                         ])
                         ->group("$key-$idEntity-actions", 'div', function ($form) use ($field, $idEntity, $key) {
                             $form->html("$key-$idEntity-edit", '<a:attr>:content</a>', [
                                 ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
                                 'class'    => 'btn',
-                                'href'     => $this->router->generateUrl('entity.edit', [
-                                    ':id_node'   => $this->values[ 'id' ],
-                                    ':entity'    => $key,
-                                    ':id_entity' => $field[ "{$key}_id" ]
+                                'href'     => $this->router->generateUrl('node.entity.edit', [
+                                    ':idNode'   => $this->values[ 'id' ],
+                                    ':entity'   => $key,
+                                    ':idEntity' => $field[ "{$key}_id" ]
                                 ]),
                             ])
                             ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
                                 ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
                                 'class'    => 'btn',
-                                'href'     => $this->router->generateUrl('entity.delete', [
-                                    ':id_node'   => $this->values[ 'id' ],
-                                    ':entity'    => $key,
-                                    ':id_entity' => $field[ "{$key}_id" ]
+                                'href'     => $this->router->generateUrl('node.entity.delete', [
+                                    ':idNode'   => $this->values[ 'id' ],
+                                    ':entity'   => $key,
+                                    ':idEntity' => $field[ "{$key}_id" ]
                                 ]),
                             ]);
                         }, [ 'class' => 'table-width-300' ]);
@@ -379,8 +383,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 $form->html('add-' . $key, '<a:attr>:content</a>', [
                     ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content'),
                     'class'    => 'btn btn-primary',
-                    'href'     => $this->router->generateUrl('entity.create', [
-                        ':id_node' => $this->values[ 'id' ],
+                    'href'     => $this->router->generateUrl('node.entity.create', [
+                        ':idNode' => $this->values[ 'id' ],
                         ':entity'  => $key,
                     ])
                 ]);
@@ -467,10 +471,12 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ->where('user_id', '==', $this->values[ 'user_id' ])
                 ->fetch();
 
-            $options[] = [
-                'label' => $user[ 'username' ],
-                'value' => $this->values[ 'user_id' ]
-            ];
+            if ($user !== null) {
+                $options[] = [
+                    'label' => $user[ 'username' ],
+                    'value' => $this->values[ 'user_id' ]
+                ];
+            }
         }
 
         return $this->group('user-fieldset', 'fieldset', function ($form) use ($options) {
@@ -560,6 +566,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                         if (!$this->config->get('settings.node_cron')) {
                             $this->query->where('node_status_id', '!=', 2);
                         }
+                        /** @phpstan-var array<NodeStatusEntity> $status */
                         $status = $this->query->fetchAll();
                         foreach ($status as $value) {
                             $form->group("node_status_id-{$value[ 'node_status_id' ]}-group", 'div', function ($form) use ($value) {

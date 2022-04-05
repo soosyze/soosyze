@@ -8,18 +8,20 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\Node\Services\NodeUser       nodeuser()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ */
 class NodeManager extends \Soosyze\Controller
 {
     /**
      * @var int
      */
     private static $limit = 25;
-
-    /**
-     * @var int
-     */
-    private static $page = 1;
 
     /**
      * @var bool
@@ -56,12 +58,12 @@ class NodeManager extends \Soosyze\Controller
                 ->addBlock('content.table', $this->filterPage(1, $req));
     }
 
-    public function filter(ServerRequestInterface $req)
+    public function filter(ServerRequestInterface $req): Block
     {
         return $this->filterPage(1, $req);
     }
 
-    public function filterPage(int $page, ServerRequestInterface $req)
+    public function filterPage(int $page, ServerRequestInterface $req): Block
     {
         $validator = (new Validator())
             ->setRules([
@@ -84,18 +86,26 @@ class NodeManager extends \Soosyze\Controller
             ->orderNodes($query, $req);
 
         $params = [];
-        if ($validator->getInput('title', '')) {
-            $params[ 'title' ] = $validator->getInput('title');
-            self::nodeuser()->title = $validator->getInput('title');
-            $query->where('title', 'ilike', '%' . $validator->getInput('title') . '%');
-        }
-        if ($validator->getInput('types', [])) {
-            $params[ 'types' ] = $validator->getInput('types');
-            $query->in('type', $validator->getInput('types'));
-        }
-        if ($validator->getInput('node_status_id', [])) {
-            $params[ 'node_status_id' ] = $validator->getInput('node_status_id');
-            $query->in('node_status_id', $validator->getInput('node_status_id'));
+
+        if ($validator->isValid()) {
+            $titleInput = $validator->getInputString('title');
+            if (!empty($titleInput)) {
+                $params[ 'title' ] = $titleInput;
+                self::nodeuser()->title = $titleInput;
+                $query->where('title', 'ilike', '%' . $titleInput . '%');
+            }
+
+            $typesInput = $validator->getInputArray('types');
+            if (!empty($typesInput)) {
+                $params[ 'types' ] = $typesInput;
+                $query->in('type', $typesInput);
+            }
+
+            $nodeStatusIdInput = $validator->getInputArray('node_status_id');
+            if (!empty($nodeStatusIdInput)) {
+                $params[ 'node_status_id' ] = $nodeStatusIdInput;
+                $query->in('node_status_id', $nodeStatusIdInput);
+            }
         }
 
         $paramsDateChangedSort = $params;

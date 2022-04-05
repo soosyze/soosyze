@@ -4,13 +4,35 @@ declare(strict_types=1);
 
 namespace SoosyzeCore\Node\Controller;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 use SoosyzeCore\Node\Form\FormNodeDelete;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\System\Services\Alias        alias()
+ * @method \SoosyzeCore\FileSystem\Services\file     file()
+ * @method \SoosyzeCore\Node\Services\Node           node()
+ * @method \SoosyzeCore\Node\Services\NodeUser       nodeuser()
+ * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ *
+ * @phpstan-type Submenu array{
+ *      key: string,
+ *      link?: string,
+ *      request: RequestInterface,
+ *      title_link: string
+ * }
+ */
 class Node extends \Soosyze\Controller
 {
     public function __construct()
@@ -117,15 +139,16 @@ class Node extends \Soosyze\Controller
             $fieldsInsert   = [];
             $fieldsRelation = false;
             foreach ($fields as $value) {
+                /** @phpstan-var string $key */
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $fieldsInsert[ $key ] = '';
                 } elseif ($value[ 'field_type' ] === 'one_to_many') {
                     $fieldsRelation = true;
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fieldsInsert[ $key ] = implode(',', $validator->getInput($key, []));
+                    $fieldsInsert[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
-                    $fieldsInsert[ $key ] = $validator->getInput($key, '');
+                    $fieldsInsert[ $key ] = $validator->getInputString($key);
                 }
             }
 
@@ -159,7 +182,7 @@ class Node extends \Soosyze\Controller
 
             return $this->json(201, [
                 'redirect' => $fieldsRelation
-                    ? self::router()->generateUrl('node.edit', [ ':id_node' => $data[ 'id' ] ])
+                    ? self::router()->generateUrl('node.edit', [ ':idNode' => $data[ 'id' ] ])
                     : self::router()->generateUrl('node.admin')
             ]);
         }
@@ -230,12 +253,12 @@ class Node extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $values = $node + self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]);
+        $values = $node + (self::node()->getEntity($node[ 'type' ], $node[ 'entity_id' ]) ?? []);
 
         $this->container->callHook('node.edit.form.data', [ &$values, $idNode ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->generateUrl('node.update', [ ':id_node' => $idNode ]),
+                'action'        => self::router()->generateUrl('node.update', [ ':idNode' => $idNode ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -290,19 +313,16 @@ class Node extends \Soosyze\Controller
         if ($validator->isValid()) {
             $fieldsUpdate = [];
             foreach ($fields as $value) {
+                /** @phpstan-var string $key */
                 $key = $value[ 'field_name' ];
                 if (in_array($value[ 'field_type' ], [ 'image', 'file' ])) {
                     $this->saveFile($node, $key, $validator);
                 } elseif ($value[ 'field_type' ] === 'one_to_many') {
-                    $this->updateWeightEntity(
-                        $value,
-                        $validator->getInput($key, [])
-                    );
+                    $this->updateWeightEntity($value, $validator->getInputArray($key));
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
-                    $fieldsUpdate[ $key ] = implode(',', $validator->getInput($key, [
-                        ]));
+                    $fieldsUpdate[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
-                    $fieldsUpdate[ $key ] = $validator->getInput($key, '');
+                    $fieldsUpdate[ $key ] = $validator->getInputString($key);
                 }
             }
 
@@ -332,7 +352,7 @@ class Node extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('node.edit', [
-                        ':id_node' => $idNode
+                        ':idNode' => $idNode
                     ])
             ]);
         }
@@ -371,7 +391,7 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $action = self::router()->generateUrl('node.delete', [ ':id_node' => $idNode ]);
+        $action = self::router()->generateUrl('node.delete', [ ':idNode' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'delete' ], self::router()))
             ->setValues($values)
@@ -406,7 +426,7 @@ class Node extends \Soosyze\Controller
                 'files' => 'bool',
                 'id'    => 'required'
             ])
-            ->setInputs([ 'id' => $idNode ] + $req->getParsedBody());
+            ->setInputs([ 'id' => $idNode ] + (array) $req->getParsedBody());
 
         $pathsSettings = self::node()->getPathSettings();
 
@@ -455,7 +475,10 @@ class Node extends \Soosyze\Controller
             $this->container->callHook('node.delete.after', [ $validator, $idNode ]);
 
             if ($validator->getInput('path')) {
-                self::config()->set($validator->getInput('path_key'), $validator->getInput('path'));
+                self::config()->set(
+                    $validator->getInputString('path_key'),
+                    $validator->getInputString('path')
+                );
             }
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Content :title has been deleted', [ ':title' => $node[ 'title' ] ]);
@@ -473,17 +496,18 @@ class Node extends \Soosyze\Controller
 
     public function getSubmenuNode(string $keyRoute, int $idNode): array
     {
+        /** @phpstan-var array<Submenu> $menu */
         $menu = [
             [
                 'key'        => 'node.edit',
                 'request'    => self::router()->generateRequest('node.edit', [
-                    ':id_node' => $idNode
+                    ':idNode' => $idNode
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'node.delete',
                 'request'    => self::router()->generateRequest('node.remove', [
-                    ':id_node' => $idNode
+                    ':idNode' => $idNode
                 ]),
                 'title_link' => t('Delete')
             ]
@@ -506,11 +530,12 @@ class Node extends \Soosyze\Controller
             $nodeShow = [
                 'key'        => 'node.show',
                 'request'    => self::router()->generateRequest('node.show', [
-                    ':id_node' => $idNode
+                    ':idNode' => $idNode
                 ]),
                 'title_link' => t('View')
             ];
             if ($this->container->callHook('app.granted.request', [ $nodeShow[ 'request' ] ])) {
+                /** @phpstan-var string $alias */
                 $alias     = self::alias()->getAlias('node/' . $idNode, 'node/' . $idNode);
                 $pathIndex = self::config()->get('settings.path_index');
 
@@ -560,7 +585,7 @@ class Node extends \Soosyze\Controller
                 ->addVar('menu', $menu);
     }
 
-    private function getValidator($req, string $type, array $fields, int $idNode = null): Validator
+    private function getValidator(ServerRequestInterface $req, string $type, array $fields, int $idNode = null): Validator
     {
         $node      = self::node()->getCurrentNode($idNode);
         /* Test les champs par defauts de la node. */
@@ -589,7 +614,7 @@ class Node extends \Soosyze\Controller
                 'title'            => t('Title of the content'),
                 'user_id'          => t('User')
             ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles())
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles())
             ->addInput('type', $type);
 
         $validator->addRule($node
@@ -609,6 +634,7 @@ class Node extends \Soosyze\Controller
 
                 /* Si la node existe. */
                 if ($node) {
+                    /** @phpstan-var FieldOptions $options */
                     $options = json_decode($value[ 'field_option' ], true);
 
                     $entitys = self::query()
@@ -659,20 +685,23 @@ class Node extends \Soosyze\Controller
 
     private function getData(Validator $validator, ?string $type = null): array
     {
+        /** @phpstan-var numeric|string $userIdInput */
+        $userIdInput = $validator->getInput('user_id');
+
         $data = [
             'date_changed'     => (string) time(),
-            'date_created'     => (string) strtotime($validator->getInput('date_created')),
+            'date_created'     => (string) strtotime($validator->getInputString('date_created')) ?: '',
             'meta_description' => $validator->getInput('meta_description'),
             'meta_noarchive'   => (bool) $validator->getInput('meta_noarchive'),
             'meta_nofollow'    => (bool) $validator->getInput('meta_nofollow'),
             'meta_noindex'     => (bool) $validator->getInput('meta_noindex'),
             'meta_title'       => $validator->getInput('meta_title'),
-            'node_status_id'   => (int) $validator->getInput('node_status_id'),
+            'node_status_id'   => $validator->getInputInt('node_status_id'),
             'sticky'           => (bool) $validator->getInput('sticky'),
             'title'            => $validator->getInput('title'),
-            'user_id'          => $validator->getInput('user_id') === ''
-                ? null
-                : (int) $validator->getInput('user_id')
+            'user_id'          => is_numeric($userIdInput)
+                ? (int) $userIdInput
+                : null
         ];
 
         if ($type !== null) {
@@ -695,6 +724,7 @@ class Node extends \Soosyze\Controller
             $description = self::config()->get('settings.meta_description');
         }
 
+        /** @phpstan-var string $alias */
         $alias = self::alias()->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
 
         $meta = [
@@ -745,13 +775,14 @@ class Node extends \Soosyze\Controller
         $str = strip_tags($str);
         $str = htmlentities($str);
         $str = trim($str);
-        $str = preg_replace('#[ \n\r\t\v\0]+#', ' ', $str);
+        $str = preg_replace('#[ \n\r\t\v\0]+#', ' ', $str) ?? '';
 
         return mb_strcut($str, 0, 200);
     }
 
     private function updateWeightEntity(array $field, array $data): void
     {
+        /** @phpstan-var FieldOptions $options */
         $options = json_decode($field[ 'field_option' ], true);
         if ($options[ 'sort' ] !== 'weight') {
             return;
@@ -775,28 +806,33 @@ class Node extends \Soosyze\Controller
 
     private function saveFile(array $node, string $nameField, Validator $validator): void
     {
+        /** @phpstan-var UploadedFileInterface $uploadedFile */
+        $uploadedFile = $validator->getInput($nameField);
+
         self::file()
-            ->add($validator->getInput($nameField), $validator->getInput("file-$nameField-name"))
+            ->add($uploadedFile, $validator->getInputString("file-$nameField-name"))
             ->setName($nameField)
             ->setPath("/node/{$node[ 'type' ]}/{$node[ 'id' ]}")
             ->isResolvePath()
-            ->callGet(function ($key, $name) use ($node) {
-                return self::query()
+            ->callGet(function (string $key, string $name) use ($node) {
+                $entityType = self::query()
                     ->from('entity_' . $node[ 'type' ])
                     ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
-                    ->fetch()[ $key ];
+                    ->fetch();
+
+                return $entityType[ $key ] ?? null;
             })
-            ->callMove(function ($key, $name, $move) use ($node) {
+            ->callMove(function (string $key, string $name, string $move) use ($node): void {
                 self::query()
-                ->update('entity_' . $node[ 'type' ], [ $key => $move ])
-                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
-                ->execute();
+                    ->update('entity_' . $node[ 'type' ], [ $key => $move ])
+                    ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
+                    ->execute();
             })
-            ->callDelete(function ($key, $name) use ($node) {
+            ->callDelete(function (string $key, string $name) use ($node): void {
                 self::query()
-                ->update('entity_' . $node[ 'type' ], [ $key => '' ])
-                ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
-                ->execute();
+                    ->update('entity_' . $node[ 'type' ], [ $key => '' ])
+                    ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
+                    ->execute();
             })
             ->save();
     }

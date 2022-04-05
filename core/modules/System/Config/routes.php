@@ -4,7 +4,7 @@ use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
 
 RouteCollection::setNamespace('SoosyzeCore\System\Controller')->name('system.')->prefix('/admin')->group(function (RouteGroup $r): void {
-    $r->get('api.route', '/api/route', 'RouteApi@index');
+    $r->get('api.route', '/api/route', '\RouteApi@index');
 
     $r->prefix('/modules')->name('module.')->setNamespace('\ModulesManager')->group(function (RouteGroup $r): void {
         $r->get('edit', '/', '@edit');

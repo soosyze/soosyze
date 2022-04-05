@@ -16,6 +16,13 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Translate\Services\Translation;
 
+/**
+ * @phpstan-type StepEntity array{
+ *      weight: int,
+ *      title: string,
+ *      key:string
+ * }
+ */
 class Step
 {
     /**
@@ -188,7 +195,7 @@ class Step
                 'profil'             => 'required|inarray:' . implode(',', $profils),
                 'token_step_install' => 'token'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'inputs' ][ $id ] = [ 'profil' => $validator->getInput('profil') ];
@@ -263,7 +270,7 @@ class Step
                 'lang'     => 'required|inarray:' . $langs,
                 'timezone' => 'required|timezone'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'lang' ]          = $validator->getInput('lang');
@@ -374,7 +381,7 @@ class Step
                 'password'         => 'required|string',
                 'password_confirm' => 'required|string|equal:@password'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
             $_SESSION[ 'inputs' ][ $id ] = [

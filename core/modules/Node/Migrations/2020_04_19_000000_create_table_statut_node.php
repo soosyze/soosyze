@@ -6,9 +6,9 @@ use Queryflatfile\TableBuilder;
 
 return [
     'up' => function (Schema $sch, Request $req) {
-        $sch->createTableIfNotExists('node_status', function (TableBuilder $table) {
-            $table->increments('node_status_id')
-                    ->text('node_status_name');
+        $sch->createTableIfNotExists('node_status', function (TableBuilder $tb) {
+            $tb->increments('node_status_id');
+            $tb->text('node_status_name');
         });
 
         $req->insertInto('node_status', [

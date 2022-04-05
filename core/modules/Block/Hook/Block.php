@@ -12,6 +12,17 @@ use SoosyzeCore\Filter\Services\LazyLoding;
 use SoosyzeCore\Filter\Services\Xss;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
+/**
+ * @phpstan-type BlockHook array{
+ *     description: string,
+ *     hook?: string,
+ *     icon: string,
+ *     options?: array,
+ *     path: string,
+ *     title: string,
+ *     tpl: string
+ * }
+ */
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
     private const TAG_IFRAME = [
@@ -155,7 +166,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         return $tpl->addVar(
             'code_integration',
-            $this->filterIframe($options[ 'code_integration' ])
+            $this->filterIframe($options[ 'code_integration' ] ?? '')
         );
     }
 
@@ -178,9 +189,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     public function hookSocialForm(FormGroupBuilder &$form, array $values): void
     {
-        $form->group('social-fieldset', 'fieldset', function ($form) use ($values) {
+        $form->group('social-fieldset', 'fieldset', function ($form) {
             $form->legend('social-legend', t('Settings'))
-                ->group('social-group', 'div', function ($form) use ($values) {
+                ->group('social-group', 'div', function ($form) {
                     $form->html('code_integration-label', '<a:attr>:content</a>', [
                         ':content' => t('Configure the list of your social networks from the configuration interface of your site'),
                         'href'     => $this->router->generateUrl('config.edit', [

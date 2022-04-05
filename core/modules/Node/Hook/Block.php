@@ -12,6 +12,10 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\System\Services\Alias;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 
+/**
+ * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeEntity from \SoosyzeCore\Node\Extend
+ */
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
     const DISPLAY_DEFAULT = 'meta-title';
@@ -164,6 +168,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     private function getNodeTypeName(string $type): string
     {
+        /** @phpstan-var NodeTypeEntity|null $nodeType */
         $nodeType = $this->query
             ->from('node_type')
             ->where('node_type', '=', $type)
@@ -172,10 +177,12 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $nodeType[ 'node_type' ] ?? '';
     }
 
-    private function getNextNode(array $node): array
+    private function getNextNode(array $node): ?array
     {
-        $next = $this->query->from('node')
-            ->where(static function ($query) use ($node) {
+        /** @phpstan-var NodeEntity|null $next */
+        $next = $this->query
+            ->from('node')
+            ->whereGroup(static function ($query) use ($node) {
                 return $query
                     ->where('date_created', '>=', $node[ 'date_created' ])
                     ->where('id', '>', $node[ 'id' ]);
@@ -186,7 +193,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->orderBy('date_created')
             ->fetch();
 
-        if ($next !== []) {
+        if ($next !== null) {
             /** @var string $linkNext */
             $linkNext = $this->alias->getAlias('node/' . $next[ 'id' ], 'node/' . $next[ 'id' ]);
 
@@ -196,10 +203,12 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         return $next;
     }
 
-    private function getPreviousNode(array $node): array
+    private function getPreviousNode(array $node): ?array
     {
-        $previous = $this->query->from('node')
-            ->where(static function ($query) use ($node) {
+        /** @phpstan-var NodeEntity|null $previous */
+        $previous = $this->query
+            ->from('node')
+            ->whereGroup(static function ($query) use ($node) {
                 return $query
                     ->where('date_created', '<=', $node[ 'date_created' ])
                     ->where('id', '<', $node[ 'id' ]);
@@ -210,7 +219,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->orderBy('date_created', SORT_DESC)
             ->fetch();
 
-        if ($previous !== []) {
+        if ($previous !== null) {
             /** @var string $linkPrevious */
             $linkPrevious = $this->alias->getAlias('node/' . $previous[ 'id' ], 'node/' . $previous[ 'id' ]);
 
@@ -222,6 +231,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     private function getOptionsType(): array
     {
+        /** @phpstan-var array<NodeTypeEntity> $nodeTypes */
         $nodeTypes = $this->query
             ->from('node_type')
             ->orderBy('node_type_name')

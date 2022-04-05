@@ -14,6 +14,10 @@ use SoosyzeCore\FileManager\Hook\User;
 use SoosyzeCore\FileManager\Services\FilterManagerIterator;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\FileManager\Services\FileManager filemanager()
+ * @method \SoosyzeCore\Template\Services\Templating     template()
+ */
 class FileCopy extends \Soosyze\Controller
 {
     public function __construct()
@@ -80,6 +84,7 @@ class FileCopy extends \Soosyze\Controller
             $iterator = $this->get(FilterManagerIterator::class);
             $iterator = $iterator->load($path, $dirIterator);
 
+            /** @phpstan-var \DirectoryIterator $file */
             foreach ($iterator as $file) {
                 try {
                     if ($file->isDir()) {
@@ -151,7 +156,7 @@ class FileCopy extends \Soosyze\Controller
                 'dir'     => t('Directory'),
                 'file'    => t('File')
             ])
-            ->setInputs(array_replace([ 'copy' => '', 'deplace' => '' ], $req->getParsedBody()))
+            ->setInputs(array_replace([ 'copy' => '', 'deplace' => '' ], (array) $req->getParsedBody()))
             ->addInput('file_current', $fileCurrent);
 
         $dirTarget = self::core()->getDir('files_public', 'app/files') . $validator->getInput('dir');

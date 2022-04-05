@@ -6,6 +6,7 @@ namespace SoosyzeCore\FileManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
@@ -16,6 +17,11 @@ use SoosyzeCore\FileManager\Hook\User;
 use SoosyzeCore\FileManager\Services\FileManager;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\FileSystem\Services\File         file()
+ * @method \SoosyzeCore\FileManager\Services\FileManager filemanager()
+ * @method \SoosyzeCore\Template\Services\Templating     template()
+ */
 class File extends \Soosyze\Controller
 {
     /**
@@ -175,11 +181,11 @@ class File extends \Soosyze\Controller
                     ]
                 ]
             ])
-            ->setInputs($req->getParsedBody() + $req->getUploadedFiles());
+            ->setInputs((array) $req->getParsedBody() + $req->getUploadedFiles());
 
         $validator->addInput('folder', 0);
         if (is_dir($dir)) {
-            $sizeFile   = $validator->getInput('file', 0)
+            $sizeFile   = $validator->getInput('file') instanceof UploadedFileInterface
                 ? $validator->getInput('file')->getSize()
                 : 0;
             $sizefolder = self::filemanager()->parseRecursive($dir)[ 'size' ];
@@ -196,13 +202,16 @@ class File extends \Soosyze\Controller
             ]);
         }
 
-        $file = $validator->getInput('file');
+        /** @phpstan-var UploadedFileInterface $fileInput */
+        $fileInput = $validator->getInput('file');
+        /** @phpstan-var string $clientFilename */
+        $clientFilename = $fileInput->getClientFilename();
 
-        $filename = Util::strSlug(pathinfo($file->getClientFilename(), PATHINFO_FILENAME));
-        $ext      = Util::getFileExtension($file->getClientFilename());
+        $filename = Util::strSlug(pathinfo($clientFilename, PATHINFO_FILENAME));
+        $ext      = Util::getFileExtension($clientFilename);
 
         $serviceFile = self::file()
-            ->add($file)
+            ->add($fileInput)
             ->setPath($path)
             ->isResolvePath();
 
@@ -294,7 +303,7 @@ class File extends \Soosyze\Controller
                 'token_file_update' => 'token'
             ])
             ->addLabel('name', t('Name'))
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir)
             ->addInput('file_current', $fileCurrent);
 
@@ -306,7 +315,7 @@ class File extends \Soosyze\Controller
             ]);
         }
 
-        $nameUpdate = Util::strSlug($validator->getInput('name'));
+        $nameUpdate = Util::strSlug($validator->getInputString('name'));
         $fileUpdate = "$dir/$nameUpdate$ext";
 
         /* Si le nouveau nom du fichier est déjà utilisé. */
@@ -378,7 +387,7 @@ class File extends \Soosyze\Controller
                 'file'              => 'required|is_file',
                 'token_file_delete' => 'token'
             ])
-            ->setInputs($req->getParsedBody())
+            ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir)
             ->addInput('file', $file);
 
@@ -427,7 +436,7 @@ class File extends \Soosyze\Controller
             ];
         }
         if (in_array($info[ 'ext' ], self::$extensionCode)) {
-            $code = file_get_contents($path);
+            $code = file_get_contents($path) ?: '';
 
             return [
                 'block' => self::template()
