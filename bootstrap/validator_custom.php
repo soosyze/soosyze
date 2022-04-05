@@ -30,7 +30,7 @@ class RouteValue extends \Soosyze\Components\Validator\Rule
 
         $linkSource = $alias->getSource($linkSource, $linkSource);
 
-        $uriSource = Uri::create($router->getBasePath() . $linkSource);
+        $uriSource = Uri::create($router->getBasePath() . '/' . $linkSource);
 
         $isRoute = $router->parse(
             $app->getRequest()

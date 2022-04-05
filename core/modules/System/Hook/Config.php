@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\FileSystem\Services\File;
 use SoosyzeCore\Translate\Services\Translation;
 
 final class Config implements \SoosyzeCore\Config\ConfigInterface
@@ -17,11 +16,6 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
      * @var array
      */
     private static $attrGrp = [ 'class' => 'form-group' ];
-
-    /**
-     * @var File
-     */
-    private $file;
 
     /**
      * @var Router
@@ -33,9 +27,8 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
      */
     private $translate;
 
-    public function __construct(File $file, Router $router, Translation $translate)
+    public function __construct(Router $router, Translation $translate)
     {
-        $this->file      = $file;
         $this->router    = $router;
         $this->translate = $translate;
     }
@@ -117,7 +110,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_index', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->generateUrl('api.route'),
+                                'data-link'   => $this->router->generateUrl('system.api.route'),
                                 'required'    => 1,
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_index' ]
@@ -135,7 +128,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_access_denied', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->generateUrl('api.route'),
+                                'data-link'   => $this->router->generateUrl('system.api.route'),
                                 'placeholder' => t('Example: user/login'),
                                 'value'       => $data[ 'path_access_denied' ]
                             ]);
@@ -152,7 +145,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_no_found', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->generateUrl('api.route'),
+                                'data-link'   => $this->router->generateUrl('system.api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_no_found' ]
                             ]);
@@ -169,7 +162,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text('path_maintenance', [
                                 'class'       => 'form-control',
-                                'data-link'   => $this->router->generateUrl('api.route'),
+                                'data-link'   => $this->router->generateUrl('system.api.route'),
                                 'placeholder' => t('Example: node/1'),
                                 'value'       => $data[ 'path_maintenance' ]
                             ]);

@@ -1,10 +1,25 @@
 parameters:
     level: max
 
+    fileExtensions:
+        - php
+
     paths:
         - index.php
         - app/app_core.php
         - bootstrap
+        - core/modules
+
+    excludePaths:
+        - core/modules/*/Config/*
+        - core/modules/*/Views/*
+        - core/modules/*/Extend.php
+
+    ignoreErrors:
+        - '#Call to an undefined method Psr\\Container\\ContainerInterface::addServices\(\).#'
+        - '#Call to an undefined method Psr\\Container\\ContainerInterface::callHook\(\).#'
+        - '#Call to an undefined method Psr\\Http\\Message\\ServerRequestInterface::getBasePath\(\)#'
+        - '#Call to an undefined method Psr\\Http\\Message\\ServerRequestInterface::isMaxSize\(\).#'
 
     tmpDir: build/phpStan
 

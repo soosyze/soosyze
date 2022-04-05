@@ -87,6 +87,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
                 'for'          => 'picture',
                 'data-tooltip' => t('200ko maximum. Allowed extensions: jpeg, jpg, png.')
             ]);
+            if (!$this->file instanceof File) {
+                throw new \InvalidArgumentException('The file parameter must be an instance of the File service');
+            }
             $this->file->inputFile('picture', $form, $this->values[ 'picture' ]);
         }, self::$attrGrp);
 
@@ -144,6 +147,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             return $this;
         }
         if ($this->config->get('settings.terms_of_service_show', false)) {
+            /** @phpstan-var string $termsOfServicePage */
+            $termsOfServicePage = $this->config->get('settings.terms_of_service_page', '');
+
             $form->group('terms_of_service-group', 'div', function ($form) {
                 $form->checkbox('terms_of_service', [ 'checked' => $this->values[ 'terms_of_service' ] ])
                     ->label('terms_of_service-label', '<span class="ui"></span> ' . t('I have read and accept your terms of service (Required)'), [
@@ -152,11 +158,14 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             }, self::$attrGrp)
                 ->html('terms_of_service-info', '<p><a :attr>:content</a></p>', [
                     ':content' => t('Read the terms of service'),
-                    'href'     => $router->makeUrl($this->config->get('settings.terms_of_service_page')),
+                    'href'     => $router->makeUrl($termsOfServicePage),
                     'target'   => '_blank'
             ]);
         }
         if ($this->config->get('settings.rgpd_show', false)) {
+            /** @phpstan-var string $rgpdPage */
+            $rgpdPage = $this->config->get('settings.rgpd_page', '');
+
             $form->group('rgpd-group', 'div', function ($form) {
                 $form->checkbox('rgpd', [ 'checked' => $this->values[ 'rgpd' ] ])
                     ->label('rgpd-label', '<span class="ui"></span> ' . t('I have read and accept your privacy policy (Required)'), [
@@ -165,7 +174,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             }, self::$attrGrp)
                 ->html('rgpd-info', '<p><a :attr>:content</a></p>', [
                     ':content' => t('Read the privacy policy'),
-                    'href'     => $router->makeUrl($this->config->get('settings.rgpd_page')),
+                    'href'     => $router->makeUrl($rgpdPage),
                     'target'   => '_blank'
             ]);
         }
@@ -182,6 +191,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
 
     public function passwordNewGroup(FormGroupBuilder &$form): self
     {
+        if (!$this->config instanceof Config) {
+            throw new \InvalidArgumentException('The config parameter must be an instance of the Config service');
+        }
         $this->password(
             $form,
             'password_new',
@@ -270,8 +282,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         $content = '';
         foreach ($this->getPasswordPolicies() as $key => $passwordPolicy) {
             [ $lenghtDefault, $pattern, $label ] = $passwordPolicy;
-
-            if (($length = (int) $this->config->get("settings.$key", $lenghtDefault)) < $lenghtDefault) {
+            /** @phpstan-var numeric $length */
+            $length = $this->config->get("settings.$key", $lenghtDefault);
+            if ((int) $length < $lenghtDefault) {
                 $length = $lenghtDefault;
             }
             $content .= sprintf('<li data-pattern="(%s){%d}">%s : %d</li>', $pattern, $length, t($label), $length);
@@ -347,6 +360,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
+    /**
+     * @phpstan-return \Generator<string, array>
+     */
     private function getPasswordPolicies(): \Generator
     {
         yield 'password_length' => [ 8, '.', 'Minimum length' ];

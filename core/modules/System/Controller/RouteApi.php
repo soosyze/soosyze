@@ -7,6 +7,9 @@ namespace SoosyzeCore\System\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @phpstan-import-type RouteApiEntity from \SoosyzeCore\System\ApiRouteInterface
+ */
 class RouteApi extends \Soosyze\Controller
 {
     const LIMIT_ROUTE = 5;
@@ -19,6 +22,7 @@ class RouteApi extends \Soosyze\Controller
         $exclude = $get[ 'exclude' ] ?? '';
         $limit   = $get[ 'limit' ] ?? self::LIMIT_ROUTE;
 
+        /** @phpstan-var array<RouteApiEntity> $routes */
         $routes = [];
         $this->container->callHook('api.route', [ &$routes, $search, $exclude, $limit ]);
 

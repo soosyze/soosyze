@@ -11,6 +11,13 @@ use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Menu\Form\FormMenu;
 
+/**
+ * @method \SoosyzeCore\Menu\Services\Menu           menu()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ *
+ * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
+ */
 class Menu extends \Soosyze\Controller
 {
     public function __construct()
@@ -75,7 +82,9 @@ class Menu extends \Soosyze\Controller
 
     public function edit(string $nameMenu, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($values = self::menu()->getMenu($nameMenu)->fetch())) {
+        /** @phpstan-var MenuEntity|null $values */
+        $values = self::menu()->getMenu($nameMenu)->fetch();
+        if ($values === null) {
             return $this->get404($req);
         }
 
@@ -140,7 +149,9 @@ class Menu extends \Soosyze\Controller
 
     public function remove(string $nameMenu, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($values = self::menu()->getMenu($nameMenu)->fetch())) {
+        /** @phpstan-var MenuEntity|null $values */
+        $values = self::menu()->getMenu($nameMenu)->fetch();
+        if ($values === null) {
             return $this->get404($req);
         }
 
@@ -239,7 +250,7 @@ class Menu extends \Soosyze\Controller
                     'description' => t('Description'),
                     'title'       => t('Menu title')
                 ])
-                ->setInputs($req->getParsedBody());
+                ->setInputs((array) $req->getParsedBody());
     }
 
     private function getData(Validator $validator, ?string $nameMenu = null): array
@@ -250,7 +261,7 @@ class Menu extends \Soosyze\Controller
         ];
 
         if ($nameMenu === null) {
-            $data[ 'name' ] = Util::strSlug($validator->getInput('title'), '-');
+            $data[ 'name' ] = Util::strSlug($validator->getInputString('title'), '-');
         }
 
         return $data;

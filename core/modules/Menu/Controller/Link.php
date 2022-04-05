@@ -9,7 +9,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Menu\Form\FormLink;
+use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\Menu\Services\Menu           menu()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
 class Link extends \Soosyze\Controller
 {
     public function __construct()
@@ -56,7 +62,7 @@ class Link extends \Soosyze\Controller
 
         $this->container->callHook('menu.link.store.validator', [ &$validator ]);
 
-        $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
+        $infoUrlOrRoute = self::menu()->getInfo($validator->getInputString('link'), $req);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator, $infoUrlOrRoute);
@@ -125,7 +131,7 @@ class Link extends \Soosyze\Controller
 
         $this->container->callHook('menu.link.update.validator', [ &$validator ]);
 
-        $infoUrlOrRoute = self::menu()->getInfo($validator->getInput('link'), $req);
+        $infoUrlOrRoute = self::menu()->getInfo($validator->getInputString('link'), $req);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator, $infoUrlOrRoute, $id);
@@ -179,7 +185,7 @@ class Link extends \Soosyze\Controller
     }
 
     /**
-     * @return ServiceBlock|ResponseInterface
+     * @return Block|ResponseInterface
      */
     public function removeModal(string $nameMenu, int $id, ServerRequestInterface $req)
     {
@@ -286,7 +292,7 @@ class Link extends \Soosyze\Controller
                     'title_link'  => t('Link title'),
                     'weight'      => t('Weight')
                 ])
-                ->setInputs($req->getParsedBody());
+                ->setInputs((array) $req->getParsedBody());
     }
 
     private function getData(
@@ -305,7 +311,7 @@ class Link extends \Soosyze\Controller
             'query'       => $infoUrlOrRoute[ 'query' ],
             'target_link' => (bool) $validator->getInput('target_link'),
             'title_link'  => $validator->getInput('title_link'),
-            'weight'      => (int) $validator->getInput('weight')
+            'weight'      => $validator->getInputInt('weight')
         ];
 
         if ($id === null) {
@@ -320,9 +326,9 @@ class Link extends \Soosyze\Controller
     private function getListNamesMenu(): string
     {
         $menus = self::query()->from('menu')->fetchAll();
-        $names = $menus
-            ? array_column($menus, 'name')
-            : [];
+        $names = $menus === []
+            ? []
+            : array_column($menus, 'name');
 
         return implode(',', $names);
     }

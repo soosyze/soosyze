@@ -7,7 +7,16 @@ namespace SoosyzeCore\System\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
+use SoosyzeCore\System\ExtendModule;
 
+/**
+ * @method \SoosyzeCore\System\Services\Composer     composer()
+ * @method \SoosyzeCore\System\Services\Modules      module()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type ToolEntity from \SoosyzeCore\System\ToolInterface
+ */
 class Tool extends \Soosyze\Controller
 {
     public function __construct()
@@ -17,6 +26,7 @@ class Tool extends \Soosyze\Controller
 
     public function admin(): ResponseInterface
     {
+        /** @phpstan-var array<ToolEntity> $tools */
         $tools = [];
         $this->container->callHook('tools.admin', [ &$tools ]);
 
@@ -62,6 +72,7 @@ class Tool extends \Soosyze\Controller
 
         $composersActive = [];
         foreach ($extensions as $title) {
+            /** @phpstan-var class-string<ExtendModule> $extendClass */
             $extendClass = self::composer()->getExtendClass($title, $composers);
             $extend      = new $extendClass();
 

@@ -12,17 +12,19 @@ use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ *
+ * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ */
 class UsersManager extends \Soosyze\Controller
 {
     /**
      * @var int
      */
     private static $limit = 20;
-
-    /**
-     * @var int
-     */
-    private static $page = 1;
 
     /**
      * @var bool
@@ -43,6 +45,11 @@ class UsersManager extends \Soosyze\Controller
     {
         $this->isAdmin = true;
 
+        $block = $this->filterPage(1, $req);
+        if ($block instanceof ResponseInterface) {
+            return $block;
+        }
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
@@ -55,7 +62,7 @@ class UsersManager extends \Soosyze\Controller
                     'link_filter_user' => self::router()->generateUrl('user.filter'),
                     'link_user_admin'  => self::router()->generateUrl('user.admin')
                 ])
-                ->addBlock('content.table', $this->filterPage(1, $req));
+                ->addBlock('content.table', $block);
     }
 
     /**
@@ -91,19 +98,25 @@ class UsersManager extends \Soosyze\Controller
             $params[ 'actived' ] = $validator->getInput('actived');
             self::query()->where('actived', '=', (bool) $validator->getInput('actived'));
         }
-        self::query()->where(function ($query) use ($validator, &$params) {
-            if ($validator->getInput('firstname', '')) {
-                $params[ 'firstname' ] = $validator->getInput('firstname');
-                $query->orWhere('firstname', 'ilike', '%' . $validator->getInput('firstname') . '%');
+        self::query()->whereGroup(function ($query) use ($validator, &$params): void {
+            /** @phpstan-var string $firstname */
+            $firstname = $validator->getInput('firstname');
+            if (!empty($firstname)) {
+                $params[ 'firstname' ] = $firstname;
+                $query->orWhere('firstname', 'ilike', '%' . $firstname . '%');
             }
-            if ($validator->getInput('name', '')) {
-                $params[ 'name' ] = $validator->getInput('name');
-                $query->orWhere('name', 'ilike', '%' . $validator->getInput('name') . '%');
+            /** @phpstan-var string $name */
+            $name = $validator->getInput('name');
+            if (!empty($name)) {
+                $params[ 'name' ] = $name;
+                $query->orWhere('name', 'ilike', '%' . $name . '%');
             }
-            if ($validator->getInput('username', '')) {
-                $params[ 'username' ] = $validator->getInput('username');
-                $this->username       = $validator->getInput('username');
-                $query->orWhere('username', 'ilike', '%' . $validator->getInput('username') . '%');
+            /** @phpstan-var string $username */
+            $username = $validator->getInput('username');
+            if (!empty($username)) {
+                $params[ 'username' ] = $username;
+                $this->username       = $username;
+                $query->orWhere('username', 'ilike', '%' . $username . '%');
             }
         });
 
@@ -114,6 +127,7 @@ class UsersManager extends \Soosyze\Controller
 
         $this->sortUser(self::query(), $req);
 
+        /** @phpstan-var array<UserEntity> $data */
         $data = self::query()->fetchAll();
 
         $countData = count($data);

@@ -23,7 +23,7 @@ class FilterManagerIterator extends \FilterIterator
         $this->hookUser = $hookUser;
     }
 
-    public function load(string $path, \Iterator $iterator): self
+    public function load(string $path, \DirectoryIterator $iterator): self
     {
         parent::__construct($iterator);
         $this->path = $path;

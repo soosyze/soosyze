@@ -11,6 +11,13 @@ use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
 
+/**
+ * @method \SoosyzeCore\User\Services\Auth           auth()
+ * @method \SoosyzeCore\Mailer\Services\Mailer       mailer()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \SoosyzeCore\User\Services\User           user()
+ */
 class Login extends \Soosyze\Controller
 {
     public function __construct()
@@ -75,7 +82,7 @@ class Login extends \Soosyze\Controller
                 'password'        => 'required|string',
                 'token_user_form' => 'token'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if (!$validator->isValid()) {
             return $this->json(400, [
@@ -84,7 +91,10 @@ class Login extends \Soosyze\Controller
             ]);
         }
 
-        $user = self::auth()->attempt($validator->getInput('email'), $validator->getInput('password'));
+        $user = self::auth()->attempt(
+            $validator->getInputString('email'),
+            $validator->getInputString('password')
+        );
         if ($user === null) {
             return $this->json(400, [
                     'messages' => [ 'errors' => [ t('E-mail or password not recognized.') ] ]
@@ -97,7 +107,10 @@ class Login extends \Soosyze\Controller
             ]);
         }
 
-        self::auth()->login($validator->getInput('email'), $validator->getInput('password'));
+        self::auth()->login(
+            $validator->getInputString('email'),
+            $validator->getInputString('password')
+        );
         $route = $this->getRedirectLogin($user);
 
         return $this->json(200, [ 'redirect' => $route ]);
@@ -155,21 +168,24 @@ class Login extends \Soosyze\Controller
                 'email'           => 'required|email|max:254',
                 'token_user_form' => 'required|token'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
-            $user = self::user()->getUserActived($validator->getInput('email'));
+            $user = self::user()->getUserActived($validator->getInputString('email'));
 
             if ($user) {
                 $token = Util::strRandom();
-                $timeReset = date_create('now ' . self::config()->get('settings.password_reset_timeout'));
+                /** @phpstan-var string $passwordResetTimeout */
+                $passwordResetTimeout = self::config()->get('settings.password_reset_timeout', '1 day');
 
                 self::query()
                     ->update('user', [
                         'token_forget' => $token,
-                        'time_reset'   =>  $timeReset->getTimestamp()
+                        'time_reset'   =>  (new \DateTime)
+                            ->add(new \DateInterval($passwordResetTimeout))
+                            ->getTimestamp()
                     ])
-                    ->where('email', '=', $validator->getInput('email'))
+                    ->where('email', '=', $validator->getInputString('email'))
                     ->execute();
 
                 $urlReset = self::router()->generateUrl('user.reset', [
@@ -179,8 +195,10 @@ class Login extends \Soosyze\Controller
                 $message  = t('A request for renewal of the password has been made. You can now login by clicking on this link or by copying it to your browser:') . "\n";
                 $message  .= '<a target="_blank" href="' . $urlReset . '" rel="noopener noreferrer" data-auth="NotApplicable">' . $urlReset . '</a>';
 
+                /** @phpstan-var string $from */
+                $from = self::config()->get('mailer.email');
                 $mail = self::mailer()
-                    ->from(self::config()->get('mailer.email'))
+                    ->from($from)
                     ->to($user[ 'email' ])
                     ->subject(t('New Password'))
                     ->message($message)
@@ -226,7 +244,7 @@ class Login extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $pwd = time();
+        $pwd = (string) time();
 
         self::query()
             ->update('user', [
@@ -244,10 +262,12 @@ class Login extends \Soosyze\Controller
 
     private function getRedirectLogin(array $user): string
     {
-        if (($redirect = self::config()->get('settings.connect_redirect', ''))) {
+        /** @phpstan-var string $redirect */
+        $redirect = self::config()->get('settings.connect_redirect', '');
+        if ($redirect !== '') {
             $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);
 
-            return self::router()->makeUrl($redirect);
+            return self::router()->makeUrl('/' . ltrim($redirect, '/'));
         }
 
         return self::router()->generateUrl('user.account');

@@ -9,6 +9,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
+/**
+ * @method \SoosyzeCore\FileManager\Services\FileProfil fileprofil()
+ * @method \SoosyzeCore\QueryBuilder\Services\Query     query()
+ * @method \SoosyzeCore\Template\Services\Templating    template()
+ * @method \SoosyzeCore\User\Services\User              user()
+ *
+ * @phpstan-import-type ProfilFileEntity from \SoosyzeCore\FileManager\Extend
+ */
 class FilePermissionManager extends \Soosyze\Controller
 {
     public function __construct()
@@ -18,6 +26,7 @@ class FilePermissionManager extends \Soosyze\Controller
 
     public function admin(): ResponseInterface
     {
+        /** @phpstan-var array<ProfilFileEntity> $values */
         $values = self::query()->from('profil_file')->orderBy('profil_weight')->fetchAll();
 
         $this->container->callHook('filemanager.permission.admin.form.data', [ &$values ]);
@@ -71,11 +80,12 @@ class FilePermissionManager extends \Soosyze\Controller
 
     public function adminCheck(ServerRequestInterface $req): ResponseInterface
     {
+        /** @phpstan-var array<ProfilFileEntity> $profils */
         $profils = self::query()->from('profil_file')->fetchAll();
 
         $validator = (new Validator())
             ->addRule('token_profil_form', 'token')
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         foreach ($profils as $profil) {
             $validator
@@ -89,7 +99,7 @@ class FilePermissionManager extends \Soosyze\Controller
         if ($validator->isValid()) {
             foreach ($profils as $profil) {
                 $data = [
-                    'profil_weight' => (int) $validator->getInput("profil_weight-{$profil[ 'profil_file_id' ]}")
+                    'profil_weight' => $validator->getInputInt("profil_weight-{$profil[ 'profil_file_id' ]}")
                 ];
 
                 $this->container->callHook('filemanager.permission.admin.check.before', [

@@ -22,7 +22,7 @@ return [
 
         foreach ($roles as $role) {
             $roleCurrent = $req->from('role')->where('role_id', '=', $role[ 'id' ])->fetch();
-            if ($roleCurrent[ 'role_color' ] !== '#e6e7f4') {
+            if (isset($roleCurrent) && $roleCurrent[ 'role_color' ] !== '#e6e7f4') {
                 continue;
             }
 

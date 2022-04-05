@@ -169,7 +169,7 @@ class Composer
                         ':title'       => $title,
                         ':version_ext' => $version
                     ]);
-                } elseif (!$this->semver->satisfies(phpversion($moduleRequire), $version)) {
+                } elseif (!$this->semver->satisfies(phpversion($moduleRequire) ?: '', $version)) {
                     $errors[] = t('Le module :title nécessite le la bibliothèque PHP :ext_name (:version_ext) actuellement (:version_current_ext)', [
                         ':ext_name'            => $match[ 1 ],
                         ':title'               => $title,
@@ -215,8 +215,8 @@ class Composer
                 $errors[] = t('The :title1 module require the :title2 (:version) module, currently (:version_current).', [
                     ':title1'          => $title,
                     ':title2'          => $requiredModuleTitle,
-                    ':version'         => $requiredModuleVersion,
-                    ':version_current' => $require[ 'version' ]
+                    ':version_current' => $require[ 'version' ],
+                    ':version'         => $requiredModuleVersion
                 ]);
             }
         }
@@ -234,7 +234,7 @@ class Composer
     public function getComposerCore(): array
     {
         if (!$this->coreComposer) {
-            $this->coreComposer = Util::getJson(ROOT . '/composer.json');
+            $this->coreComposer = (array) Util::getJson(ROOT . '/composer.json');
         }
 
         return $this->coreComposer;
@@ -246,6 +246,7 @@ class Composer
             return $this->themeComposers;
         }
 
+        /** @phpstan-var array $themes */
         $themes = $this->core->getSetting('themes_path', []);
 
         foreach ($themes as $theme) {
@@ -359,7 +360,7 @@ class Composer
                 continue;
             }
 
-            $composer = Util::getJson($file);
+            $composer = (array) Util::getJson($file);
 
             if (empty($composer[ 'type' ]) || $composer[ 'type' ] !== $type || empty($composer[ 'extra' ][ 'soosyze' ][ 'title' ])) {
                 continue;

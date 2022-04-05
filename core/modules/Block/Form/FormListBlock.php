@@ -12,16 +12,6 @@ class FormListBlock extends \Soosyze\Components\Form\FormBuilder
         'section' => ''
     ];
 
-    /** @var string */
-    private $section;
-
-    public function setSection(string $section): self
-    {
-        $this->section = $section;
-
-        return $this;
-    }
-
     public function makeFields(): self
     {
         $this->group('block-cards', 'div', function ($form) {

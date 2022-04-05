@@ -13,6 +13,12 @@ use SoosyzeCore\FileManager\Hook\User;
 use SoosyzeCore\FileManager\Services\FilterManagerIterator;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\FileManager\Services\FileProfil  fileprofil()
+ * @method \SoosyzeCore\FileManager\Services\FileManager filemanager()
+ * @method \SoosyzeCore\Template\Services\Templating     template()
+ * @method \SoosyzeCore\User\Services\User               user()
+ */
 class Manager extends \Soosyze\Controller
 {
     public function __construct()
@@ -24,9 +30,8 @@ class Manager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        $user    = self::user()->isConnected();
-        $profils = self::fileprofil()->getProfilsFileByUser($user[ 'user_id' ]);
-
+        $user = self::user()->isConnected();
+        $profils = self::fileprofil()->getProfilsFileByUser($user[ 'user_id' ] ?? null);
         if (empty($profils)) {
             return $this->get404();
         }
@@ -41,7 +46,7 @@ class Manager extends \Soosyze\Controller
          */
         foreach ($profils as $profil) {
             $path = $profil[ 'folder_show' ];
-            $path = str_replace(':user_id', $user[ 'user_id' ], $path);
+            $path = str_replace(':user_id', $user[ 'user_id' ] ?? '0', $path);
             /* Si le profil est mal écrit. */
             $path = Util::strSlug($path, '-', '\/');
 
@@ -109,8 +114,9 @@ class Manager extends \Soosyze\Controller
             ->setInputs($req->getQueryParams());
 
         $params = [ 'name' => '' ];
-        if ($validator->getInput('name', '')) {
-            $params[ 'name' ] = preg_quote($validator->getInput('name'));
+
+        if ($validator->isValid()) {
+            $params[ 'name' ] = preg_quote($validator->getInputString('name'), '/');
         }
 
         $filesPublic = self::core()->getDir('files_public', 'app/files') . $path;
@@ -120,16 +126,14 @@ class Manager extends \Soosyze\Controller
         $size   = 0;
         $nbFile = 0;
 
-        $pattern = empty($params[ 'name' ])
-            ? ''
-            : preg_quote($params[ 'name' ], '/');
-
         if (is_dir($filesPublic)) {
             $dirIterator = new \DirectoryIterator($filesPublic);
 
             /** @var FilterManagerIterator $iterator */
             $iterator = $this->get(FilterManagerIterator::class);
             $iterator = $iterator->load($path, $dirIterator);
+
+            /** @phpstan-var \DirectoryIterator $file */
             foreach ($iterator as $file) {
                 try {
                     $spl = $file->isDir()
@@ -137,7 +141,7 @@ class Manager extends \Soosyze\Controller
                         : self::filemanager()->parseFile($file, $path);
 
                     if (!empty($params[ 'name' ])) {
-                        if (!preg_match("/$pattern/i", $spl[ 'name' ])) {
+                        if (!preg_match('/' . $params[ 'name' ] . '/i', $spl[ 'name' ])) {
                             continue;
                         }
                         $spl[ 'name' ] = Util::strHighlight($params[ 'name' ], $spl[ 'name' ]);

@@ -2,12 +2,12 @@
 
 use Queryflatfile\Request;
 use Queryflatfile\Schema;
-use Queryflatfile\TableBuilder;
+use Queryflatfile\TableAlter;
 
 return [
     'up' => function (Schema $sch, Request $req) {
-        $sch->alterTable('node', function (TableBuilder $table) {
-            $table->dropColumn('field');
+        $sch->alterTable('node', function (TableAlter $ta) {
+            $ta->dropColumn('field');
         });
     }
 ];

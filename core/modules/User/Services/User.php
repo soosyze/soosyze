@@ -15,6 +15,17 @@ use Soosyze\Config;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\Template\Services\Templating;
 
+/**
+ * @phpstan-import-type PermissionsEntity from \SoosyzeCore\User\UserInterface
+ * @phpstan-type Submenu array<
+ *      array{
+ *          key: string,
+ *          link?: string,
+ *          request: RequestInterface,
+ *          title_link: string
+ *      }
+ *  >
+ */
 class User
 {
     /**
@@ -58,22 +69,15 @@ class User
      */
     private $router;
 
-    /**
-     * @var string
-     */
-    private $pathViews;
-
     public function __construct(Core $core, Config $config, Query $query, Router $router)
     {
         $this->core   = $core;
         $this->config = $config;
         $this->query  = $query;
         $this->router = $router;
-
-        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function find(int $id): array
+    public function find(int $id): ?array
     {
         return $this->query
                 ->from('user')
@@ -81,7 +85,7 @@ class User
                 ->fetch();
     }
 
-    public function findActived(int $id, bool $actived = true): array
+    public function findActived(int $id, bool $actived = true): ?array
     {
         return $this->query
                 ->from('user')
@@ -90,7 +94,7 @@ class User
                 ->fetch();
     }
 
-    public function getUser(string $email): array
+    public function getUser(string $email): ?array
     {
         return $this->query
                 ->from('user')
@@ -98,7 +102,7 @@ class User
                 ->fetch();
     }
 
-    public function getUserByUsername(string $username): array
+    public function getUserByUsername(string $username): ?array
     {
         return $this->query
                 ->from('user')
@@ -106,7 +110,7 @@ class User
                 ->fetch();
     }
 
-    public function getUserActived(string $email, bool $actived = true): array
+    public function getUserActived(string $email, bool $actived = true): ?array
     {
         return $this->query
                 ->from('user')
@@ -115,7 +119,7 @@ class User
                 ->fetch();
     }
 
-    public function getUserActivedToken(string $token, bool $actived = true): array
+    public function getUserActivedToken(string $token, bool $actived = true): ?array
     {
         return $this->query
                 ->from('user')
@@ -166,6 +170,7 @@ class User
 
     public function getUserSubmenu(string $keyRoute, int $id): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'user.show',
@@ -210,6 +215,7 @@ class User
 
     public function getUserManagerSubmenu(string $keyRoute): array
     {
+        /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'user.admin',
@@ -247,6 +253,7 @@ class User
             return isset($this->permissions[ $idPermission ]);
         }
 
+        /** @phpstan-var PermissionsEntity $permission */
         $permission = [];
         $this->core->callHook('user.permission.module', [ &$permission ]);
         foreach ($permission as $value) {
@@ -324,16 +331,24 @@ class User
 
     public function passwordPolicy(): string
     {
-        if (($length = (int) $this->config->get('settings.password_length', 8)) < 8) {
+        /** @phpstan-var numeric $length */
+        $length = $this->config->get('settings.password_length', 8);
+        if ($length < 8) {
             $length = 8;
         }
-        if (($upper = (int) $this->config->get('settings.password_upper', 1)) < 1) {
+        /** @phpstan-var numeric $upper */
+        $upper = $this->config->get('settings.password_upper', 1);
+        if ($upper < 1) {
             $upper = 1;
         }
-        if (($digit = (int) $this->config->get('settings.password_digit', 1)) < 1) {
+        /** @phpstan-var numeric $digit */
+        $digit = $this->config->get('settings.password_digit', 1);
+        if ($digit < 1) {
             $digit = 1;
         }
-        if (($special = (int) $this->config->get('settings.password_special', 1)) < 1) {
+        /** @phpstan-var numeric $special */
+        $special = $this->config->get('settings.password_special', 1);
+        if ($special < 1) {
             $special = 1;
         }
 
@@ -379,6 +394,7 @@ class User
 
         $withs[]     = $request;
         $withs[]     = $this->isConnected();
+        /** @phpstan-var array|bool|string|null $permissions */
         $permissions = $this->core->callHook('route.' . $route->getKey(), $withs);
 
         return $this->isGrantedPermission($permissions);

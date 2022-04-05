@@ -2,12 +2,12 @@
 
 use Queryflatfile\Request;
 use Queryflatfile\Schema;
-use Queryflatfile\TableBuilder;
+use Queryflatfile\TableAlter;
 
 return [
     'up' => function (Schema $sch, Request $req) {
-        $sch->alterTable('field', function (TableBuilder $table) {
-            $table->dropColumn('field_rules');
+        $sch->alterTable('field', function (TableAlter $ta) {
+            $ta->dropColumn('field_rules');
         });
         $sch->truncateTable('field');
         $req->insertInto('field', [
@@ -20,13 +20,13 @@ return [
             ->values([ 'weight', 'number' ])
             ->execute();
 
-        $sch->alterTable('node_type_field', function (TableBuilder $table) {
-            $table->string('field_rules')->valueDefault('')
-                    ->boolean('field_show')->valueDefault(true)
-                    ->boolean('field_show_form')->valueDefault(true)
-                    ->boolean('field_show_label')->valueDefault(false)
-                    ->text('field_option')->valueDefault('')
-                    ->integer('field_weight_form')->valueDefault(1);
+        $sch->alterTable('node_type_field', function (TableAlter $ta) {
+            $ta->string('field_rules')->valueDefault('');
+            $ta->boolean('field_show')->valueDefault(true);
+            $ta->boolean('field_show_form')->valueDefault(true);
+            $ta->boolean('field_show_label')->valueDefault(false);
+            $ta->text('field_option')->valueDefault('');
+            $ta->integer('field_weight_form')->valueDefault(1);
         });
         $sch->truncateTable('node_type_field');
         $req->insertInto('node_type_field', [

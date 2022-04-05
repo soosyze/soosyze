@@ -34,15 +34,18 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
 
     public function apiRoute(array &$routes, string $search, string $exclude, int $limit): void
     {
-        $title = t($this->config[ 'settings.new_title' ]);
-        if ($title === $exclude || stristr($title, $search) === false) {
+        /** @phpstan-var string $title */
+        $title = $this->config->get('settings.new_title', 'Articles');
+
+        $titleI18n = t($title);
+        if ($titleI18n === $exclude || stristr($titleI18n, $search) === false) {
             return;
         }
 
         $routes[] = [
             'link'  => $this->router->generateUrl('news.index'),
             'route' => $this->alias->getAlias('news', 'news'),
-            'title' => $title
+            'title' => $titleI18n
         ];
     }
 }

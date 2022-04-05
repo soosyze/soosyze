@@ -10,6 +10,10 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Template\Services\Block;
 
+/**
+ * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\Template\Services\Templating template()
+ */
 class Section extends \Soosyze\Controller
 {
     public function __construct()
@@ -59,13 +63,13 @@ class Section extends \Soosyze\Controller
                 'weight'  => 'required|numeric|between_numeric:0,50',
                 'section' => 'required|string|max:50'
             ])
-            ->setInputs($req->getParsedBody());
+            ->setInputs((array) $req->getParsedBody());
 
         if ($validator->isValid()) {
             self::query()
                 ->update('block', [
-                    'weight'  => (int) $validator->getInput('weight'),
-                    'section' => $validator->getInput('section')
+                    'weight'  => $validator->getInputInt('weight'),
+                    'section' => $validator->getInputString('section')
                 ])
                 ->where('block_id', '=', $id)
                 ->execute();

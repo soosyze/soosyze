@@ -9,10 +9,18 @@ return [
             return;
         }
 
+        /**
+         * @phpstan-var array<
+         *      array{
+         *          block_id: int,
+         *          options: string
+         *      }
+         * > $blockMenus
+         */
         $blockMenus = $req->from('block')->where('hook', '=', 'menu')->fetchAll();
 
         foreach ($blockMenus as $value) {
-            $options             = json_decode($value[ 'options' ], true);
+            $options             = (array) json_decode($value[ 'options' ], true);
             $options[ 'parent' ] = -1;
 
             $req->update('block', [

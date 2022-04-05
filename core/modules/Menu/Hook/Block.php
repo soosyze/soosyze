@@ -135,9 +135,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     public function hookMenuBefore(Validator $validator, array &$data): void
     {
         $data[ 'options' ] = json_encode([
-            'depth'  => (int) $validator->getInput('depth'),
+            'depth'  => $validator->getInputInt('depth'),
             'name'   => $validator->getInput('name'),
-            'parent' => (int) $validator->getInput('parent'),
+            'parent' => $validator->getInputInt('parent'),
         ]);
     }
 

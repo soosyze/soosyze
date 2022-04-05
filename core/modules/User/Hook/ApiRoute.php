@@ -21,7 +21,9 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
 
     public function __construct(Config $config, Router $router)
     {
-        $this->connectUrl = $config->get('connect_url', '');
+        /** @phpstan-var string $connectUrl */
+        $connectUrl       = $config->get('connect_url', '');
+        $this->connectUrl = $connectUrl;
         $this->router     = $router;
     }
 
