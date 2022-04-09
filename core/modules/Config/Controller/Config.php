@@ -194,13 +194,17 @@ class Config extends \Soosyze\Controller
             ->setName($key)
             ->setPath('/config')
             ->isResolvePath()
-            ->callGet(function ($key, $name) {
-                return self::config()->get("settings.$key");
+            ->callGet(function ($key, $name): ?string {
+                $filename = self::config()->get("settings.$key");
+
+                return is_string($filename)
+                    ? $filename
+                    : null;
             })
-            ->callMove(function ($key, $name, $move) {
+            ->callMove(function ($key, $name, $move): void {
                 self::config()->set("settings.$key", $move);
             })
-            ->callDelete(function ($key, $name) {
+            ->callDelete(function ($key, $name): void {
                 self::config()->set("settings.$key", '');
             })
             ->save();

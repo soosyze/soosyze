@@ -56,7 +56,7 @@ class Block
         if (empty($this->blocks)) {
             $this->core->callHook('block.create.form.data', [ &$this->blocks ]);
 
-            uasort($this->blocks, static function ($a, $b) {
+            uasort($this->blocks, static function (array $a, array $b): int {
                 return strcmp($a['title'], $b['title']);
             });
         }
