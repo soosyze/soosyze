@@ -814,13 +814,15 @@ class Node extends \Soosyze\Controller
             ->setName($nameField)
             ->setPath("/node/{$node[ 'type' ]}/{$node[ 'id' ]}")
             ->isResolvePath()
-            ->callGet(function (string $key, string $name) use ($node) {
+            ->callGet(function (string $key, string $name) use ($node): ?string {
                 $entityType = self::query()
                     ->from('entity_' . $node[ 'type' ])
                     ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                     ->fetch();
 
-                return $entityType[ $key ] ?? null;
+                return isset($entityType[$key]) && is_string($entityType[ $key ])
+                    ? $entityType[ $key ]
+                    : null;
             })
             ->callMove(function (string $key, string $name, string $move) use ($node): void {
                 self::query()

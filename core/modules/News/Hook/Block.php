@@ -390,7 +390,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->setAttributs([
                 'more' => [
                     'inarray' => [
-                        ':list' => static function (string $label) use ($optionsMore) {
+                        ':list' => static function (string $label) use ($optionsMore): string {
                             return implode(', ', $optionsMore);
                         }
                     ]

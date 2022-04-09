@@ -492,14 +492,14 @@ class Block extends \Soosyze\Controller
                 ->setAttributs([
                     'key_block' => [
                         'inarray' => [
-                            ':list' => static function (string $label) use ($blocks) {
+                            ':list' => static function (string $label) use ($blocks): string {
                                 return implode(', ', array_column($blocks, 'title'));
                             }
                         ]
                     ],
                     'section' => [
                         'inarray' => [
-                            ':list' => static function (string $label) use ($section) {
+                            ':list' => static function (string $label) use ($section): string {
                                 return implode(', ', $section);
                             }
                         ]
