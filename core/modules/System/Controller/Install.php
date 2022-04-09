@@ -138,7 +138,7 @@ class Install extends Controller
         $step = [];
         $this->container->callHook('step', [ &$step ]);
         /** @phpstan-var array<StepEntity> $step */
-        uasort($step, static function ($a, $b) {
+        uasort($step, static function (array $a, array $b): int {
             return $a[ 'weight' ] <=> $b[ 'weight' ];
         });
 

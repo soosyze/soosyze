@@ -398,19 +398,23 @@ class Entity extends \Soosyze\Controller
             ->setPath("/node/$typeNode/{$idNode}/$typeEntity")
             ->isResolvePath()
             ->isResolveName()
-            ->callGet(function (string $key, string $name) use ($typeEntity, $idEntity) {
-                return self::query()
+            ->callGet(function (string $key, string $name) use ($typeEntity, $idEntity): ?string {
+                $entity = self::query()
                     ->from('entity_' . $typeEntity)
                     ->where($typeEntity . '_id', '=', $idEntity)
                     ->fetch();
+
+                return isset($entity[$key]) && is_string($entity[ $key ])
+                    ? $entity[ $key ]
+                    : null;
             })
-            ->callMove(function (string $key, string $name, string $move) use ($typeEntity, $idEntity, $nameField) {
+            ->callMove(function (string $key, string $name, string $move) use ($typeEntity, $idEntity, $nameField): void {
                 self::query()
                     ->update('entity_' . $typeEntity, [ $nameField => $move ])
                     ->where($typeEntity . '_id', '=', $idEntity)
                     ->execute();
             })
-            ->callDelete(function (string $key, string $name) use ($typeEntity, $idEntity, $nameField) {
+            ->callDelete(function (string $key, string $name) use ($typeEntity, $idEntity, $nameField): void {
                 self::query()
                     ->update('entity_' . $typeEntity, [ $nameField => '' ])
                     ->where($typeEntity . '_id', '=', $idEntity)

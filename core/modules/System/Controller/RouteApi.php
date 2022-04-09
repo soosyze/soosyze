@@ -34,7 +34,7 @@ class RouteApi extends \Soosyze\Controller
             ];
         }
 
-        usort($routes, static function ($a, $b) use ($search) {
+        usort($routes, static function (array $a, array $b) use ($search): int {
             return stripos($a[ 'title' ], $search) <=> stripos($b[ 'title' ], $search);
         });
 

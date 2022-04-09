@@ -525,15 +525,15 @@ class User extends \Soosyze\Controller
             ->setName($key)
             ->setPath("/user/$id")
             ->isResolvePath()
-            ->callGet(function (string $key, string $name) use ($id) {
+            ->callGet(function (string $key, string $name) use ($id): ?string {
                 $user = self::user()->find($id);
 
                 return $user[ $key ] ?? null;
             })
-            ->callMove(function (string $key, string $name, string $move) use ($id) {
+            ->callMove(function (string $key, string $name, string $move) use ($id): void {
                 self::query()->update('user', [ $key => $move ])->where('user_id', '=', $id)->execute();
             })
-            ->callDelete(function (string $key, string $name) use ($id) {
+            ->callDelete(function (string $key, string $name) use ($id): void {
                 self::query()->update('user', [ $key => '' ])->where('user_id', '=', $id)->execute();
             })
             ->save();

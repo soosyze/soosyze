@@ -323,13 +323,17 @@ class Theme extends \Soosyze\Controller
             ->setName($key)
             ->setPath('/config')
             ->isResolvePath()
-            ->callGet(function (string $key, string $name) {
-                return self::config()->get("settings.$key");
+            ->callGet(function (string $key, string $name): ?string {
+                $filename = self::config()->get("settings.$key");
+
+                return is_string($filename)
+                    ? $filename
+                    : null;
             })
-            ->callMove(function (string $key, string $name, string $move) {
+            ->callMove(function (string $key, string $name, string $move): void {
                 self::config()->set("settings.$key", $move);
             })
-            ->callDelete(function (string $key, string $name) {
+            ->callDelete(function (string $key, string $name): void {
                 self::config()->set("settings.$key", '');
             })
             ->save();
