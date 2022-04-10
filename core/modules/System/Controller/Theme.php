@@ -21,9 +21,9 @@ use SoosyzeCore\System\Form\FormThemePublic;
  */
 class Theme extends \Soosyze\Controller
 {
-    const TYPE_ADMIN = 'admin';
+    private const TYPE_ADMIN = 'admin';
 
-    const TYPE_PUBLIC = 'public';
+    private const TYPE_PUBLIC = 'public';
 
     public function __construct()
     {
