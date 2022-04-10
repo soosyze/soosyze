@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Validator\Validator;
-use Soosyze\Config;
-use SoosyzeCore\News\Hook\Config as HookConfig;
+use SoosyzeCore\News\Hook\Config;
 use SoosyzeCore\Template\Services\Templating;
 
 class Node
@@ -14,13 +13,21 @@ class Node
     public const NODE_TYPE = 'article';
 
     /**
-     * @var Config
+     * @var string
      */
-    private $config;
+    private $newDefaultImage;
 
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
+    /**
+     * @var string
+     */
+    private $newDefaultIcon;
+
+    public function __construct(
+        string $newDefaultImage = Config::DEFAULT_IMAGE,
+        string $newDefaultIcon = Config::DEFAULT_ICON
+    ) {
+        $this->newDefaultImage = $newDefaultImage;
+        $this->newDefaultIcon = $newDefaultIcon;
     }
 
     public function hookNodeShowTpl(Templating $tpl, array $node, int $idNode): void
@@ -61,15 +68,15 @@ class Node
                 'field_type' => 'text'
             ];
 
-            $data[ 'image' ] = $this->config->get('settings.new_default_image', HookConfig::DEFAULT_IMAGE);
-            $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', HookConfig::DEFAULT_ICON);
+            $data[ 'image' ] = $this->newDefaultImage;
+            $data[ 'icon' ]  = $this->newDefaultIcon;
         }
     }
 
     public function hookNodeFormData(array &$content, string $type): void
     {
         if ($type === self::NODE_TYPE && empty($content[ 'image' ])) {
-            $content[ 'image' ] = $this->config->get('settings.new_default_image', HookConfig::DEFAULT_IMAGE);
+            $content[ 'image' ] = $this->newDefaultImage;
         }
     }
 }
