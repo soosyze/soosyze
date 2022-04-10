@@ -10,6 +10,9 @@ return [
     ],
     'news.hook.api.route' => [
         'class' => 'SoosyzeCore\News\Hook\ApiRoute',
+        'arguments' => [
+            'newTitle' => '#settings.new_title'
+        ],
         'hooks' => [
             'api.route' => 'apiRoute'
         ]
@@ -57,6 +60,10 @@ return [
     ],
     'news.hook.node' => [
         'class' => 'SoosyzeCore\News\Hook\Node',
+        'arguments' => [
+            'newDefaultImage' => '#settings.new_default_image',
+            'newDefaultIcon' => '#settings.new_default_icon'
+        ],
         'hooks' => [
             'node.makefields' => 'hookNodeMakefields',
             'node.create.form.data' => 'hookNodeFormData',
