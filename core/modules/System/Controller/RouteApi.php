@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RouteApi extends \Soosyze\Controller
 {
-    const LIMIT_ROUTE = 5;
+    private const LIMIT_ROUTE = 5;
 
     public function index(ServerRequestInterface $req): ResponseInterface
     {

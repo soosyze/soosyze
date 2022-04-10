@@ -11,9 +11,39 @@ use Soosyze\Components\Validator\Validator;
 
 final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
-    const DELETE_ACCOUNT = 1;
+    public const DELETE_ACCOUNT = 1;
 
-    const DELETE_ACCOUNT_AND_ASSIGN = 2;
+    public const DELETE_ACCOUNT_AND_ASSIGN = 2;
+
+    public const USER_REGISTER = false;
+
+    public const USER_RELOGIN = true;
+
+    public const TERMS_OF_SERVICE_SHOW = false;
+
+    public const TERMS_OF_SERVICE_PAGE = '';
+
+    public const RGPD_SHOW = false;
+
+    public const RGPD_PAGE = '';
+
+    public const CONNECT_URL = '';
+
+    public const CONNECT_REDIRECT = 'user/account';
+
+    public const PASSWORD_SHOW = true;
+
+    public const PASSWORD_POLICY = true;
+
+    public const PASSWORD_LENGTH = 8;
+
+    public const PASSWORD_UPPER = 1;
+
+    public const PASSWORD_DIGIT = 1;
+
+    public const PASSWORD_SPECIAL = 1;
+
+    public const PASSWORD_RESET_TIMEOUT = '1 day';
 
     /**
      * @var array
@@ -33,22 +63,22 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     public function defaultValues(): array
     {
         return [
-            'user_delete'            => '',
-            'user_register'          => '',
-            'user_relogin'           => '',
-            'terms_of_service_show'  => '',
-            'terms_of_service_page'  => '',
-            'rgpd_show'              => '',
-            'rgpd_page'              => '',
-            'connect_url'            => '',
-            'connect_redirect'       => '',
-            'password_show'          => '',
-            'password_policy'        => '',
-            'password_length'        => '',
-            'password_upper'         => '',
-            'password_digit'         => '',
-            'password_special'       => '',
-            'password_reset_timeout' => ''
+            'user_delete'            => self::DELETE_ACCOUNT_AND_ASSIGN,
+            'user_register'          => self::USER_REGISTER,
+            'user_relogin'           => self::USER_RELOGIN,
+            'terms_of_service_show'  => self::TERMS_OF_SERVICE_SHOW,
+            'terms_of_service_page'  => self::TERMS_OF_SERVICE_PAGE,
+            'rgpd_show'              => self::RGPD_SHOW,
+            'rgpd_page'              => self::RGPD_PAGE,
+            'connect_url'            => self::CONNECT_URL,
+            'connect_redirect'       => self::CONNECT_REDIRECT,
+            'password_show'          => self::PASSWORD_SHOW,
+            'password_policy'        => self::PASSWORD_POLICY,
+            'password_length'        => self::PASSWORD_LENGTH,
+            'password_upper'         => self::PASSWORD_UPPER,
+            'password_digit'         => self::PASSWORD_DIGIT,
+            'password_special'       => self::PASSWORD_SPECIAL,
+            'password_reset_timeout' => self::PASSWORD_RESET_TIMEOUT,
         ];
     }
 

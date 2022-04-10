@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Paginate\Paginator;
+use SoosyzeCore\News\Hook\Config;
 
 /**
  * @method \SoosyzeCore\System\Services\Alias        alias()
@@ -55,7 +56,7 @@ class News extends \Soosyze\Controller
     public function page(int $page, ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var int $limit */
-        $limit = self::config()->get('settings.news_pagination', 6);
+        $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
 
         /** @phpstan-var array<NodeEntity> $query */
         $query = self::query()
@@ -94,7 +95,7 @@ class News extends \Soosyze\Controller
         $link = self::router()->generateUrl('news.page', [], false);
 
         /** @phpstan-var string $titleMain */
-        $titleMain = self::config()->get('settings.new_title', 'Articles');
+        $titleMain = self::config()->get('settings.new_title', Config::TITLE);
 
         return self::template()
                 ->getTheme('theme')
@@ -152,7 +153,7 @@ class News extends \Soosyze\Controller
     public function viewRss(ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var int $limit */
-        $limit = self::config()->get('settings.news_pagination', 6);
+        $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
 
         /** @phpstan-var array<NodeEntity> $items */
         $items = self::query()
@@ -205,7 +206,7 @@ class News extends \Soosyze\Controller
             : (int) ltrim($page, '/page/');
 
         /** @phpstan-var int $limit */
-        $limit = self::config()->get('settings.news_pagination', 6);
+        $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
 
         $offset = $limit * ($page - 1);
         $news   = $this->getNews($this->dateCurrent, $this->dateNext, $limit, $offset);

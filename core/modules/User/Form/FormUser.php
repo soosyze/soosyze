@@ -8,6 +8,7 @@ use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\FileSystem\Services\File;
+use SoosyzeCore\User\Hook\Config as HookConfig;
 
 class FormUser extends \Soosyze\Components\Form\FormBuilder
 {
@@ -146,9 +147,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         if (!$this->config instanceof Config) {
             return $this;
         }
-        if ($this->config->get('settings.terms_of_service_show', false)) {
+        if ($this->config->get('settings.terms_of_service_show', HookConfig::TERMS_OF_SERVICE_SHOW)) {
             /** @phpstan-var string $termsOfServicePage */
-            $termsOfServicePage = $this->config->get('settings.terms_of_service_page', '');
+            $termsOfServicePage = $this->config->get('settings.terms_of_service_page', HookConfig::TERMS_OF_SERVICE_PAGE);
 
             $form->group('terms_of_service-group', 'div', function ($form) {
                 $form->checkbox('terms_of_service', [ 'checked' => $this->values[ 'terms_of_service' ] ])
@@ -162,9 +163,9 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
                     'target'   => '_blank'
             ]);
         }
-        if ($this->config->get('settings.rgpd_show', false)) {
+        if ($this->config->get('settings.rgpd_show', HookConfig::RGPD_SHOW)) {
             /** @phpstan-var string $rgpdPage */
-            $rgpdPage = $this->config->get('settings.rgpd_page', '');
+            $rgpdPage = $this->config->get('settings.rgpd_page', HookConfig::RGPD_PAGE);
 
             $form->group('rgpd-group', 'div', function ($form) {
                 $form->checkbox('rgpd', [ 'checked' => $this->values[ 'rgpd' ] ])
@@ -198,7 +199,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             $form,
             'password_new',
             t('New Password'),
-            $this->config->get('settings.password_show', true)
+            $this->config->get('settings.password_show', HookConfig::PASSWORD_SHOW)
                 ? [ 'onkeyup' => 'passwordPolicy(this)' ]
                 : []
         );
@@ -219,7 +220,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             $form->label("$id-label", $label, [ 'for' => $id ])
                 ->group("$id-flex", 'div', function ($form) use ($id, $attr) {
                     $form->password($id, [ 'class' => 'form-control' ] + $attr);
-                    if ($this->config && $this->config->get('settings.password_show', true)) {
+                    if ($this->config && $this->config->get('settings.password_show', HookConfig::PASSWORD_SHOW)) {
                         $form->html("{$id}_show", '<button:attr>:content</button>', [
                             'class'        => 'btn btn-toogle-password',
                             'onclick'      => "togglePassword(this, '$id')",
@@ -275,7 +276,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
 
     public function passwordPolicy(FormGroupBuilder &$form): self
     {
-        if (!$this->config || !$this->config->get('settings.password_policy', true)) {
+        if (!$this->config || !$this->config->get('settings.password_policy', HookConfig::PASSWORD_POLICY)) {
             return $this;
         }
 

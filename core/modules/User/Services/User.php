@@ -14,6 +14,7 @@ use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\Template\Services\Templating;
+use SoosyzeCore\User\Hook\Config as HookConfig;
 
 /**
  * @phpstan-import-type PermissionsEntity from \SoosyzeCore\User\UserInterface
@@ -324,7 +325,7 @@ class User
 
     public function isConnectUrl(string $url): bool
     {
-        $connectUrl = $this->config->get('settings.connect_url', '');
+        $connectUrl = $this->config->get('settings.connect_url', HookConfig::CONNECT_URL);
 
         return !empty($connectUrl) && $url !== '/' . $connectUrl;
     }
@@ -332,22 +333,22 @@ class User
     public function passwordPolicy(): string
     {
         /** @phpstan-var numeric $length */
-        $length = $this->config->get('settings.password_length', 8);
+        $length = $this->config->get('settings.password_length', HookConfig::PASSWORD_LENGTH);
         if ($length < 8) {
             $length = 8;
         }
         /** @phpstan-var numeric $upper */
-        $upper = $this->config->get('settings.password_upper', 1);
+        $upper = $this->config->get('settings.password_upper', HookConfig::PASSWORD_UPPER);
         if ($upper < 1) {
             $upper = 1;
         }
         /** @phpstan-var numeric $digit */
-        $digit = $this->config->get('settings.password_digit', 1);
+        $digit = $this->config->get('settings.password_digit', HookConfig::PASSWORD_DIGIT);
         if ($digit < 1) {
             $digit = 1;
         }
         /** @phpstan-var numeric $special */
-        $special = $this->config->get('settings.password_special', 1);
+        $special = $this->config->get('settings.password_special', HookConfig::PASSWORD_SPECIAL);
         if ($special < 1) {
             $special = 1;
         }

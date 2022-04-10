@@ -11,6 +11,14 @@ use SoosyzeCore\FileSystem\Services\File;
 
 class Config implements \SoosyzeCore\Config\ConfigInterface
 {
+    public const DEFAULT_ICON  = 'fas fa-newspaper';
+
+    public const DEFAULT_IMAGE = '';
+
+    public const PAGINATION = 6;
+
+    public const TITLE = 'Articles';
+
     /**
      * @var array
      */
@@ -29,10 +37,10 @@ class Config implements \SoosyzeCore\Config\ConfigInterface
     public function defaultValues(): array
     {
         return [
-            'new_default_icon'  => '',
-            'new_default_image' => '',
-            'news_pagination'   => 6,
-            'new_title'         => 'Articles'
+            'new_default_icon'  => self::DEFAULT_ICON,
+            'new_default_image' => self::DEFAULT_IMAGE,
+            'news_pagination'   => self::PAGINATION,
+            'new_title'         => self::TITLE
         ];
     }
 

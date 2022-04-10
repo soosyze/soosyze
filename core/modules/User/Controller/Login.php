@@ -10,6 +10,7 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
+use SoosyzeCore\User\Hook\Config;
 
 /**
  * @method \SoosyzeCore\User\Services\Auth           auth()
@@ -63,8 +64,8 @@ class Login extends \Soosyze\Controller
                         ':url' => $url
                     ]),
                     'url_register'     => self::router()->generateUrl('user.register.create'),
-                    'granted_relogin'  => self::config()->get('settings.user_relogin'),
-                    'granted_register' => self::config()->get('settings.user_register')
+                    'granted_relogin'  => self::config()->get('settings.user_relogin', Config::USER_RELOGIN),
+                    'granted_register' => self::config()->get('settings.user_register', Config::USER_REGISTER)
         ]);
     }
 
@@ -176,7 +177,7 @@ class Login extends \Soosyze\Controller
             if ($user) {
                 $token = Util::strRandom();
                 /** @phpstan-var string $passwordResetTimeout */
-                $passwordResetTimeout = self::config()->get('settings.password_reset_timeout', '1 day');
+                $passwordResetTimeout = self::config()->get('settings.password_reset_timeout', Config::PASSWORD_RESET_TIMEOUT);
 
                 self::query()
                     ->update('user', [
@@ -263,7 +264,7 @@ class Login extends \Soosyze\Controller
     private function getRedirectLogin(array $user): string
     {
         /** @phpstan-var string $redirect */
-        $redirect = self::config()->get('settings.connect_redirect', '');
+        $redirect = self::config()->get('settings.connect_redirect', Config::CONNECT_REDIRECT);
         if ($redirect !== '') {
             $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);
 

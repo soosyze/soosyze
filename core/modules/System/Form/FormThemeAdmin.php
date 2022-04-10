@@ -6,11 +6,13 @@ namespace SoosyzeCore\System\Form;
 
 class FormThemeAdmin extends \Soosyze\Components\Form\FormBuilder
 {
+    public const THEME_ADMIN_DARK = true;
+
     /**
      * @var array
      */
     protected $values = [
-        'theme_admin_dark' => ''
+        'theme_admin_dark' => self::THEME_ADMIN_DARK
     ];
 
     /**

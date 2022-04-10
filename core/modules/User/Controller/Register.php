@@ -10,6 +10,7 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\User\Form\FormUser;
+use SoosyzeCore\User\Hook\Config;
 
 /**
  * @method \SoosyzeCore\User\Services\Auth           auth()
@@ -47,7 +48,7 @@ class Register extends \Soosyze\Controller
                 ->eulaGroup($formbuilder, self::router());
         })->submitForm(t('Registration'));
 
-        if (($connectUrl = self::config()->get('settings.connect_url', ''))) {
+        if (($connectUrl = self::config()->get('settings.connect_url', Config::CONNECT_URL))) {
             $connectUrl = '/' . $connectUrl;
         }
 
@@ -76,11 +77,11 @@ class Register extends \Soosyze\Controller
             ? $user[ 'username' ]
             : '';
 
-        $isRgpd = self::config()->get('settings.rgpd_show', false) === false
+        $isRgpd = self::config()->get('settings.rgpd_show', Config::RGPD_SHOW) === false
             ? ''
             : true;
 
-        $isTermsOfService = self::config()->get('settings.terms_of_service_show', false) === false
+        $isTermsOfService = self::config()->get('settings.terms_of_service_show', Config::TERMS_OF_SERVICE_SHOW) === false
             ? ''
             : true;
 

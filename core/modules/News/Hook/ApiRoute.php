@@ -6,6 +6,7 @@ namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
+use SoosyzeCore\News\Hook\Config as HookConfig;
 use SoosyzeCore\System\Services\Alias;
 
 class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
@@ -35,7 +36,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
     public function apiRoute(array &$routes, string $search, string $exclude, int $limit): void
     {
         /** @phpstan-var string $title */
-        $title = $this->config->get('settings.new_title', 'Articles');
+        $title = $this->config->get('settings.new_title', HookConfig::TITLE);
 
         $titleI18n = t($title);
         if ($titleI18n === $exclude || stristr($titleI18n, $search) === false) {
