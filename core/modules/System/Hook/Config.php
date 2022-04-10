@@ -12,6 +12,26 @@ use SoosyzeCore\Translate\Services\Translation;
 
 final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
+    public const LANG = 'en';
+
+    public const MAINTENANCE = false;
+
+    public const META_DESCRIPTION = 'Site powered by Soosyze';
+
+    public const META_KEYBOARD = '';
+
+    public const META_TITLE = 'Soosyze';
+
+    public const PATH_ACCESS_DENIED = 'user/login';
+
+    public const PATH_INDEX = 'node/2';
+
+    public const PATH_MAINTENANCE = '';
+
+    public const PATH_NOT_FOUND = 'node/1';
+
+    public const TIMEZONE = 'Europe/Paris';
+
     /**
      * @var array
      */
@@ -36,16 +56,16 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     public function defaultValues(): array
     {
         return [
-            'lang'               => '',
-            'maintenance'        => '',
-            'meta_description'   => '',
-            'meta_keyboard'      => '',
-            'meta_title'         => '',
-            'path_access_denied' => '',
-            'path_index'         => '',
-            'path_maintenance'   => '',
-            'path_no_found'      => '',
-            'timezone'           => ''
+            'lang'               => self::LANG,
+            'maintenance'        => self::MAINTENANCE,
+            'meta_description'   => self::META_DESCRIPTION,
+            'meta_keyboard'      => self::META_KEYBOARD,
+            'meta_title'         => self::META_TITLE,
+            'path_access_denied' => self::PATH_ACCESS_DENIED,
+            'path_index'         => self::PATH_INDEX,
+            'path_maintenance'   => self::PATH_MAINTENANCE,
+            'path_no_found'      => self::PATH_NOT_FOUND,
+            'timezone'           => self::TIMEZONE,
         ];
     }
 

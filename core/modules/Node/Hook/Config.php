@@ -11,6 +11,12 @@ use SoosyzeCore\QueryBuilder\Services\Query;
 
 final class Config implements \SoosyzeCore\Config\ConfigInterface
 {
+    public const CRON = false;
+
+    public const DEFAULT_URL = ':node_type/:node_title';
+
+    public const MARKDOWN = false;
+
     /**
      * @var array
      */
@@ -31,9 +37,9 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
     public function defaultValues(): array
     {
         return [
-            'node_default_url' => '',
-            'node_cron'        => '',
-            'node_markdown'    => false
+            'node_default_url' => self::DEFAULT_URL,
+            'node_cron'        => self::CRON,
+            'node_markdown'    => self::MARKDOWN
         ];
     }
 

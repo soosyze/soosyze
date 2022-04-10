@@ -6,6 +6,7 @@ namespace SoosyzeCore\News\Hook;
 
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
+use SoosyzeCore\News\Hook\Config as HookConfig;
 use SoosyzeCore\Template\Services\Templating;
 
 class Node
@@ -60,15 +61,15 @@ class Node
                 'field_type' => 'text'
             ];
 
-            $data[ 'image' ] = $this->config->get('settings.new_default_image', null);
-            $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', null);
+            $data[ 'image' ] = $this->config->get('settings.new_default_image', HookConfig::DEFAULT_IMAGE);
+            $data[ 'icon' ]  = $this->config->get('settings.new_default_icon', HookConfig::DEFAULT_ICON);
         }
     }
 
     public function hookNodeFormData(array &$content, string $type): void
     {
         if ($type === self::NODE_TYPE && empty($content[ 'image' ])) {
-            $content[ 'image' ] = $this->config->get('settings.new_default_image', '');
+            $content[ 'image' ] = $this->config->get('settings.new_default_image', HookConfig::DEFAULT_IMAGE);
         }
     }
 }

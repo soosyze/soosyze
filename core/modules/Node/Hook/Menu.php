@@ -17,7 +17,7 @@ use SoosyzeCore\System\Services\Alias;
  */
 class Menu
 {
-    const MENU_DEFAULT = 'menu-main';
+    public const MENU_DEFAULT = 'menu-main';
 
     /**
      * @var Alias

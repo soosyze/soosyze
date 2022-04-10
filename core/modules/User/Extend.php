@@ -6,6 +6,7 @@ namespace SoosyzeCore\User;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\User\Hook\Config;
 
 /**
  * @phpstan-type UserEntity array{
@@ -121,23 +122,23 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->config()
-            ->set('settings.user_delete', 2)
-            ->set('settings.user_register', false)
-            ->set('settings.user_relogin', true)
-            ->set('settings.terms_of_service_show', false)
-            ->set('settings.terms_of_service_page', '')
-            ->set('settings.rgpd_show', false)
-            ->set('settings.rgpd_page', '')
-            ->set('settings.connect_url', '')
-            ->set('settings.connect_redirect', 'user/account')
+            ->set('settings.user_delete', Config::DELETE_ACCOUNT_AND_ASSIGN)
+            ->set('settings.user_register', Config::USER_REGISTER)
+            ->set('settings.user_relogin', Config::USER_RELOGIN)
+            ->set('settings.terms_of_service_show', Config::TERMS_OF_SERVICE_SHOW)
+            ->set('settings.terms_of_service_page', Config::TERMS_OF_SERVICE_PAGE)
+            ->set('settings.rgpd_show', Config::RGPD_SHOW)
+            ->set('settings.rgpd_page', Config::RGPD_PAGE)
+            ->set('settings.connect_url', Config::CONNECT_URL)
+            ->set('settings.connect_redirect', Config::CONNECT_REDIRECT)
             ->set('settings.connect_https', true)
-            ->set('settings.password_show', true)
-            ->set('settings.password_policy', true)
-            ->set('settings.password_length', 8)
-            ->set('settings.password_upper', 1)
-            ->set('settings.password_digit', 1)
-            ->set('settings.password_special', 1)
-            ->set('settings.password_reset_timeout', '1 day');
+            ->set('settings.password_show', Config::PASSWORD_SHOW)
+            ->set('settings.password_policy', Config::PASSWORD_POLICY)
+            ->set('settings.password_length', Config::PASSWORD_LENGTH)
+            ->set('settings.password_upper', Config::PASSWORD_UPPER)
+            ->set('settings.password_digit', Config::PASSWORD_DIGIT)
+            ->set('settings.password_special', Config::PASSWORD_SPECIAL)
+            ->set('settings.password_reset_timeout', Config::PASSWORD_RESET_TIMEOUT);
     }
 
     public function seeders(ContainerInterface $ci): void

@@ -6,6 +6,7 @@ namespace SoosyzeCore\Node;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\Node\Hook\Config;
 
 /**
  * @phpstan-type NodeEntity array{
@@ -208,10 +209,10 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->config()
-            ->set('settings.node_default_url', ':node_type/:node_title')
+            ->set('settings.node_default_url', Config::DEFAULT_URL)
             ->set('settings.node_url_page_private', 'page/:node_title')
-            ->set('settings.node_cron', false)
-            ->set('settings.node_markdown', false);
+            ->set('settings.node_cron', Config::CRON)
+            ->set('settings.node_markdown', Config::MARKDOWN);
     }
 
     public function seeders(ContainerInterface $ci): void

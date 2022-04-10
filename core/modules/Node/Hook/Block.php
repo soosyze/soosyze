@@ -18,13 +18,13 @@ use SoosyzeCore\Template\Services\Block as ServiceBlock;
  */
 class Block implements \SoosyzeCore\Block\BlockInterface
 {
-    const DISPLAY_DEFAULT = 'meta-title';
+    private const DISPLAY_DEFAULT = 'meta-title';
 
-    const NEXT_TEXT_DEFAULT = 'Next :node_type_name';
+    private const NEXT_TEXT_DEFAULT = 'Next :node_type_name';
 
-    const PREVIOUS_TEXT_DEFAULT = 'Previous :node_type_name';
+    private const PREVIOUS_TEXT_DEFAULT = 'Previous :node_type_name';
 
-    const TYPE_DEFAULT = 'page';
+    private const TYPE_DEFAULT = 'page';
 
     /**
      * @var Alias

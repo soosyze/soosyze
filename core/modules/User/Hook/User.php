@@ -6,6 +6,7 @@ namespace SoosyzeCore\User\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Config;
+use SoosyzeCore\User\Hook\Config as HookConfig;
 use SoosyzeCore\User\Services\User as ServiceUser;
 
 class User implements \SoosyzeCore\User\UserInterface
@@ -98,7 +99,7 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookRegister(ServerRequestInterface $req, ?array $user): bool
     {
-        return empty($user) && $this->config->get('settings.user_register');
+        return empty($user) && $this->config->get('settings.user_register', HookConfig::USER_REGISTER);
     }
 
     public function hookActivate(
@@ -107,7 +108,7 @@ class User implements \SoosyzeCore\User\UserInterface
         ServerRequestInterface $req,
         ?array $user
     ): bool {
-        return empty($user) && $this->config->get('settings.user_register');
+        return empty($user) && $this->config->get('settings.user_register', HookConfig::USER_REGISTER);
     }
 
     public function hookLogin(
@@ -146,7 +147,7 @@ class User implements \SoosyzeCore\User\UserInterface
             return false;
         }
 
-        return empty($user) && $this->config->get('settings.user_relogin');
+        return empty($user) && $this->config->get('settings.user_relogin', HookConfig::USER_RELOGIN);
     }
 
     public function hookRoleDeleted(int $idRole): ?string

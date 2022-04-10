@@ -8,6 +8,7 @@ use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\Template\Services\Block as ServiceBlock;
 use SoosyzeCore\User\Form\FormUser;
+use SoosyzeCore\User\Hook\Config as HookConfig;
 use SoosyzeCore\User\Services\User;
 
 class Block implements \SoosyzeCore\Block\BlockInterface
@@ -72,8 +73,8 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
         return $tpl->addVars([
                 'form'             => $form,
-                'granted_register' => $this->config->get('settings.user_register'),
-                'granted_relogin'  => $this->config->get('settings.user_relogin'),
+                'granted_register' => $this->config->get('settings.user_register', HookConfig::USER_REGISTER),
+                'granted_relogin'  => $this->config->get('settings.user_relogin', HookConfig::USER_RELOGIN),
                 'url_relogin'      => $this->router->generateUrl('user.relogin', [
                     ':url' => ''
                 ]),

@@ -13,9 +13,9 @@ use SoosyzeCore\System\Services\Semver;
 
 class Composer
 {
-    const TYPE_MODULE = 'soosyze-module';
+    private const TYPE_MODULE = 'soosyze-module';
 
-    const TYPE_THEME = 'soosyze-theme';
+    private const TYPE_THEME = 'soosyze-theme';
 
     /**
      * @var Core
@@ -347,7 +347,7 @@ class Composer
         return $validator->getKeyErrors();
     }
 
-    private function getComposer(string $dir, string $type = 'soosyze-module'): array
+    private function getComposer(string $dir, string $type = self::TYPE_MODULE): array
     {
         $out = [];
 
