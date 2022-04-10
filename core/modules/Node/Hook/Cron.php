@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\Node\Hook;
 
 use Soosyze\Config;
+use SoosyzeCore\Node\Hook\Config as HookConfig;
 use SoosyzeCore\QueryBuilder\Services\Query;
 
 class Cron
@@ -27,7 +28,7 @@ class Cron
 
     public function hookCron(): void
     {
-        if ($this->config->get('settings.node_cron', false)) {
+        if ($this->config->get('settings.node_cron', HookConfig::CRON)) {
             $this->query
                 ->update('node', [ 'node_status_id' => 1 ])
                 ->where('node_status_id', '=', 2)

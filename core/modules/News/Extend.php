@@ -7,6 +7,7 @@ namespace SoosyzeCore\News;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 use Soosyze\Components\Template\Template;
+use SoosyzeCore\News\Hook\Config;
 
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
@@ -95,10 +96,10 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->execute();
 
         $ci->config()
-            ->set('settings.new_title', 'Articles')
-            ->set('settings.news_pagination', 6)
-            ->set('settings.new_default_image', '')
-            ->set('settings.new_default_icon', 'fas fa-newspaper')
+            ->set('settings.new_title', Config::TITLE)
+            ->set('settings.news_pagination', Config::PAGINATION)
+            ->set('settings.new_default_image', Config::DEFAULT_IMAGE)
+            ->set('settings.new_default_icon', Config::DEFAULT_ICON)
             ->set('settings.new_default_color', '#fff')
             ->set('settings.node_url_article', 'news/:date_created_year/:date_created_month/:date_created_day/:node_title');
     }

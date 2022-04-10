@@ -6,6 +6,9 @@ namespace SoosyzeCore\System;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\System\Form\FormThemeAdmin;
+use SoosyzeCore\System\Form\FormThemePublic;
+use SoosyzeCore\System\Hook\Config;
 
 /**
  * @phpstan-type AliasEntity array{
@@ -65,20 +68,20 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             });
 
         $ci->config()
-            ->set('settings.maintenance', false)
+            ->set('settings.maintenance', Config::MAINTENANCE)
             ->set('settings.module_update_time', '')
             ->set('settings.module_update', false)
-            ->set('settings.path_no_found', 'node/1')
-            ->set('settings.path_index', 'node/2')
-            ->set('settings.path_access_denied', 'user/login')
-            ->set('settings.path_maintenance', '')
-            ->set('settings.meta_title', 'Soosyze')
-            ->set('settings.meta_description', 'Hello world !')
-            ->set('settings.meta_keyboard', '')
-            ->set('settings.favicon', '')
-            ->set('settings.lang', 'en')
-            ->set('settings.timezone', 'Europe/Paris')
-            ->set('settings.theme_admin_dark', true);
+            ->set('settings.path_no_found', Config::PATH_NOT_FOUND)
+            ->set('settings.path_index', Config::PATH_INDEX)
+            ->set('settings.path_access_denied', Config::PATH_ACCESS_DENIED)
+            ->set('settings.path_maintenance', Config::PATH_MAINTENANCE)
+            ->set('settings.meta_title', Config::META_TITLE)
+            ->set('settings.meta_description', Config::META_DESCRIPTION)
+            ->set('settings.meta_keyboard', Config::META_KEYBOARD)
+            ->set('settings.favicon', FormThemePublic::FAVICON)
+            ->set('settings.lang', Config::LANG)
+            ->set('settings.timezone', Config::TIMEZONE)
+            ->set('settings.theme_admin_dark', FormThemeAdmin::THEME_ADMIN_DARK);
     }
 
     public function seeders(ContainerInterface $ci): void

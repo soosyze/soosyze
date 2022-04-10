@@ -6,6 +6,7 @@ namespace SoosyzeCore\FileManager;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\FileManager\Hook\Config;
 
 /**
  * @phpstan-type ProfilFileEntity array{
@@ -70,7 +71,8 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 $tb->integer('profil_file_id');
                 $tb->integer('role_id');
             });
-        $ci->config()->set('settings.replace_file', 1);
+        $ci->config()->set('settings.replace_file', Config::REPLACE_WITH);
+        $ci->config()->set('settings.copy_link_file', Config::COPY_ABSOLUTE);
 
         $dir = $ci->core()->getDir('files_public', 'app/files');
         if (!is_dir($dir)) {

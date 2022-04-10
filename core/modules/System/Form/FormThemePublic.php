@@ -8,12 +8,16 @@ use SoosyzeCore\FileSystem\Services\File;
 
 class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
 {
+    public const FAVICON = '';
+
+    public const LOGO = '';
+
     /**
      * @var array
      */
     protected $values = [
-        'favicon' => '',
-        'logo'    => ''
+        'favicon' => self::FAVICON,
+        'logo'    => self::LOGO
     ];
 
     /**

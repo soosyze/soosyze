@@ -11,7 +11,7 @@ use SoosyzeCore\System\ExtendModule;
 
 class Migration
 {
-    const REGEX_MIGRATION_NAME = '/^2[\d]{3}_(0[1-9]|1[0-2])_(0[1-9]|[12][\d]|3[01])_\d{6}_[a-z0-9_]+/';
+    private const REGEX_MIGRATION_NAME = '/^2[\d]{3}_(0[1-9]|1[0-2])_(0[1-9]|[12][\d]|3[01])_\d{6}_[a-z0-9_]+/';
 
     /**
      * @var Composer

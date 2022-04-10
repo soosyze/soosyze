@@ -11,6 +11,7 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
+use SoosyzeCore\System\Hook\Config as HookConfig;
 use SoosyzeCore\System\Services\Alias;
 use SoosyzeCore\Template\Services\Templating;
 
@@ -74,7 +75,7 @@ class App
             );
 
         if (
-            $this->config->get('settings.maintenance') &&
+            $this->config->get('settings.maintenance', HookConfig::MAINTENANCE) &&
             $path !== 'user/login' &&
             !$this->core->callHook('app.granted', [ 'system.config.maintenance' ])) {
             $response = $response->withStatus(503);
@@ -210,9 +211,9 @@ class App
         }
 
         /** @phpstan-var string $metaTitle */
-        $metaTitle       = $this->config->get('settings.meta_title', 'Soosyze CMS');
+        $metaTitle       = $this->config->get('settings.meta_title', HookConfig::META_TITLE);
         /** @phpstan-var string $metaDescription */
-        $metaDescription = $this->config->get('settings.meta_description', '');
+        $metaDescription = $this->config->get('settings.meta_description', HookConfig::META_DESCRIPTION);
         /** @phpstan-var string $favicon */
         $favicon         = $this->config->get('settings.favicon', '')
             ? $this->router->getBasePath() . $this->config->get('settings.favicon')
@@ -220,7 +221,7 @@ class App
 
         $logo        = $this->config->get('settings.logo', '');
         /** @phpstan-var bool $maintenance */
-        $maintenance = $this->config->get('settings.maintenance', false);
+        $maintenance = $this->config->get('settings.maintenance', HookConfig::MAINTENANCE);
 
         $vendor = $this->core->getPath('modules', 'core/modules', false) . '/System/Assets';
 

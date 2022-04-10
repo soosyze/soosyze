@@ -8,6 +8,7 @@ use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\FileSystem\Services\File;
+use SoosyzeCore\Node\Hook\Config as HookConfig;
 use SoosyzeCore\QueryBuilder\Services\Query;
 
 /**
@@ -563,7 +564,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ->label('date_created-label', t('Publication status'))
                     ->group('node_status-group', 'div', function ($form) {
                         $this->query->from('node_status');
-                        if (!$this->config->get('settings.node_cron')) {
+                        if (!$this->config->get('settings.node_cron', HookConfig::CRON)) {
                             $this->query->where('node_status_id', '!=', 2);
                         }
                         /** @phpstan-var array<NodeStatusEntity> $status */
