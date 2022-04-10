@@ -118,6 +118,9 @@ return [
     ],
     'node.hook.cron' => [
         'class' => 'SoosyzeCore\Node\Hook\Cron',
+        'arguments' => [
+            'nodeCron' => '#settings.node_cron'
+        ],
         'hooks' => [
             'app.cron' => 'hookCron'
         ]
