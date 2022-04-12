@@ -7,6 +7,7 @@ namespace SoosyzeCore\News;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 use Soosyze\Components\Template\Template;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\News\Hook\Config;
 
 class Extend extends \SoosyzeCore\System\ExtendModule
@@ -167,7 +168,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->insertInto('menu_link', [
                 'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
             ])
-            ->values([ 'news.index', 'Blog', 'news', 'menu-main', 3, -1, false ])
+            ->values([ 'news.index', 'Blog', 'news', Menu::MAIN_MENU, 3, -1, false ])
             ->execute();
     }
 

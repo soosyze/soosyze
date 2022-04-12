@@ -14,6 +14,7 @@ use SoosyzeCore\Menu\Form\FormMenu;
 /**
  * @method \SoosyzeCore\Menu\Services\Menu           menu()
  * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
+ * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
  * @method \SoosyzeCore\Template\Services\Templating template()
  *
  * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
@@ -69,8 +70,10 @@ class Menu extends \Soosyze\Controller
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
+            $menuId = self::schema()->getIncrement('menu');
+
             return $this->json(201, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $data[ 'name' ] ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
             ]);
         }
 
@@ -80,17 +83,17 @@ class Menu extends \Soosyze\Controller
         ]);
     }
 
-    public function edit(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function edit(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var MenuEntity|null $values */
-        $values = self::menu()->getMenu($nameMenu)->fetch();
+        $values = self::menu()->getMenu($menuId)->fetch();
         if ($values === null) {
             return $this->get404($req);
         }
 
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
-        $action = self::router()->generateUrl('menu.update', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.update', [ ':menuId' => $menuId ]);
 
         $form = (new FormMenu(['action' => $action, 'method' => 'put' ]))
             ->setValues($values)
@@ -106,15 +109,15 @@ class Menu extends \Soosyze\Controller
                         ':name' => t($values[ 'title' ])
                     ])
                 ])
-                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.edit', $nameMenu))
+                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.edit', $menuId))
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
                     'form' => $form
                 ]);
     }
 
-    public function update(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function update(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+        if (!self::menu()->getMenu($menuId)->fetch()) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -125,19 +128,19 @@ class Menu extends \Soosyze\Controller
         $this->container->callHook('menu.update.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
-            $data = $this->getData($validator, $nameMenu);
+            $data = $this->getData($validator);
 
             $this->container->callHook('menu.update.before', [ $validator, &$data ]);
             self::query()
                 ->update('menu', $data)
-                ->where('name', '=', $nameMenu)
+                ->where('menu_id', '=', $menuId)
                 ->execute();
             $this->container->callHook('menu.update.after', [ $validator ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $nameMenu ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
             ]);
         }
 
@@ -147,17 +150,17 @@ class Menu extends \Soosyze\Controller
         ]);
     }
 
-    public function remove(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function remove(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var MenuEntity|null $values */
-        $values = self::menu()->getMenu($nameMenu)->fetch();
+        $values = self::menu()->getMenu($menuId)->fetch();
         if ($values === null) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('menu.remove.form.data', [ &$values, $nameMenu ]);
+        $this->container->callHook('menu.remove.form.data', [ &$values, $menuId ]);
 
-        $action = self::router()->generateUrl('menu.delete', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.delete', [ ':menuId' => $menuId ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
             ->group('menu-fieldset', 'fieldset', function ($form) {
@@ -179,7 +182,7 @@ class Menu extends \Soosyze\Controller
                 ]);
             });
 
-        $this->container->callHook('menu.remove.form', [ &$form, $values, $nameMenu ]);
+        $this->container->callHook('menu.remove.form', [ &$form, $values, $menuId ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -189,15 +192,15 @@ class Menu extends \Soosyze\Controller
                         ':name' => t($values[ 'title' ])
                     ])
                 ])
-                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.remove', $nameMenu))
+                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.remove', $menuId))
                 ->make('page.content', 'menu/content-menu-form.php', $this->pathViews, [
                     'form' => $form
                 ]);
     }
 
-    public function delete(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function delete(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+        if (!self::menu()->getMenu($menuId)->fetch()) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -205,26 +208,26 @@ class Menu extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'name' => 'required|string|max:255',
+                'menu_id' => 'required|int',
             ])
-            ->setInputs([ 'name' => $nameMenu ]);
+            ->setInputs([ 'menu_id' => $menuId ]);
 
-        $this->container->callHook('menu.delete.validator', [ &$validator, $nameMenu ]);
+        $this->container->callHook('menu.delete.validator', [ &$validator, $menuId ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('menu.delete.before', [ $validator, $nameMenu ]);
+            $this->container->callHook('menu.delete.before', [ $validator, $menuId ]);
 
             self::query()
                 ->from('menu_link')
                 ->delete()
-                ->where('menu', '=', $nameMenu)
+                ->where('menu_id', '=', $menuId)
                 ->execute();
             self::query()
                 ->from('menu')
                 ->delete()
-                ->where('name', '=', $nameMenu)
+                ->where('menu_id', '=', $menuId)
                 ->execute();
-            $this->container->callHook('menu.delete.after', [ $validator, $nameMenu ]);
+            $this->container->callHook('menu.delete.after', [ $validator, $menuId ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -244,7 +247,7 @@ class Menu extends \Soosyze\Controller
         return (new Validator())
                 ->setRules([
                     'description' => 'required|string|max:255',
-                    'title'       => 'required|string|max:255|!equal:create'
+                    'title'       => 'required|string|max:255'
                 ])
                 ->setLabels([
                     'description' => t('Description'),
@@ -253,17 +256,11 @@ class Menu extends \Soosyze\Controller
                 ->setInputs((array) $req->getParsedBody());
     }
 
-    private function getData(Validator $validator, ?string $nameMenu = null): array
+    private function getData(Validator $validator): array
     {
-        $data = [
+        return [
             'description' => $validator->getInput('description'),
             'title'       => $validator->getInput('title')
         ];
-
-        if ($nameMenu === null) {
-            $data[ 'name' ] = Util::strSlug($validator->getInputString('title'), '-');
-        }
-
-        return $data;
     }
 }

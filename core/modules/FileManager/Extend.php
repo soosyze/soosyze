@@ -7,6 +7,7 @@ namespace SoosyzeCore\FileManager;
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 use SoosyzeCore\FileManager\Hook\Config;
+use SoosyzeCore\Menu\Enum\Menu;
 
 /**
  * @phpstan-type ProfilFileEntity array{
@@ -231,11 +232,11 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([
                 'filemanager.admin', 'fa fa-folder', 'File', 'admin/filemanager/show',
-                'menu-admin', 50, -1
+                Menu::ADMIN_MENU, 50, -1
             ])
             ->execute();
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\Config;
 
 use Psr\Container\ContainerInterface;
+use SoosyzeCore\Menu\Enum\Menu;
 
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
@@ -40,11 +41,11 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([
                 'config.admin', 'fa fa-cog', 'Configuration', 'admin/config',
-                'menu-admin', 5, -1
+                Menu::ADMIN_MENU, 5, -1
             ])
             ->execute();
     }

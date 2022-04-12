@@ -76,11 +76,11 @@ class Menu
         return $this->pathViews;
     }
 
-    public function find(int $id): ?array
+    public function find(int $linkId): ?array
     {
         return $this->query
                 ->from('menu_link')
-                ->where('id', '=', $id)
+                ->where('link_id', '=', $linkId)
                 ->fetch();
     }
 
@@ -92,20 +92,20 @@ class Menu
             $this->query
                 ->from('menu_link')
                 ->delete()
-                ->where('id', '=', $link['id'])
+                ->where('link_id', '=', $link['link_id'])
                 ->execute();
             $this->query
                 ->update('menu_link', [ 'parent' => $link[ 'parent' ] ])
-                ->where('parent', '=', $link['id'])
+                ->where('parent', '=', $link['link_id'])
                 ->execute();
         }
     }
 
-    public function getMenu(string $name): QueryInterface
+    public function getMenu(int $menuId): QueryInterface
     {
         return $this->query
                 ->from('menu')
-                ->where('name', '=', $name);
+                ->where('menu_id', '=', $menuId);
     }
 
     public function getAllMenu(): array
@@ -115,14 +115,11 @@ class Menu
                 ->fetchAll();
     }
 
-    public function getLinkPerMenu(string $name): QueryInterface
+    public function getLinkPerMenu(int $menuId): QueryInterface
     {
-        /** @phpstan-var MenuEntity $menu */
-        $menu = $this->getMenu($name)->fetch();
-
         return $this->query
                 ->from('menu_link')
-                ->where('menu', '=', $menu[ 'name' ]);
+                ->where('menu_id', '=', $menuId);
     }
 
     public function getInfo(string $link, RequestInterface $request): array
@@ -156,13 +153,13 @@ class Menu
         ];
     }
 
-    public function renderMenuSelect(string $nameMenu, int $parent = -1, int $level = 1): array
+    public function renderMenuSelect(int $menuId, int $parent = -1, int $level = 1): array
     {
         /** @phpstan-var array<MenuLinkEntity> $query */
         $query = $this->query
             ->from('menu_link')
-            ->where('active', '==', 1)
-            ->where('menu', '=', $nameMenu)
+            ->where('active', '=', true)
+            ->where('menu_id', '=', $menuId)
             ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
@@ -178,20 +175,20 @@ class Menu
         $space = str_repeat('│··· ', $level - 1);
         $count = count($query) - 1;
 
-        foreach ($query as $key => $menu) {
+        foreach ($query as $key => $link) {
             $seperator = $count === $key
                 ? '└─ '
                 : '├─ ';
 
             $options[] = [
-                'label' => $space . $seperator . t($menu[ 'title_link' ]),
-                'value' => $menu[ 'id' ]
+                'label' => $space . $seperator . t($link[ 'title_link' ]),
+                'value' => $link[ 'link_id' ]
             ];
 
             $options = array_merge(
                 $options,
-                ($menu[ 'has_children' ]
-                    ? $this->renderMenuSelect($nameMenu, $menu[ 'id' ], $level + 1)
+                ($link[ 'has_children' ]
+                    ? $this->renderMenuSelect($link['menu_id'], $link[ 'link_id' ], $level + 1)
                     : [])
             );
         }
@@ -199,13 +196,13 @@ class Menu
         return $options;
     }
 
-    public function renderMenu(string $nameMenu, int $parent = -1, int $depth = 10, int $level = 1): ?Block
+    public function renderMenu(int $menuId, int $parent = -1, int $depth = 10, int $level = 1): ?Block
     {
         /** @phpstan-var array<MenuLinkEntity> $query */
         $query = $this->query
             ->from('menu_link')
-            ->where('active', '==', 1)
-            ->where('menu', '=', $nameMenu)
+            ->where('active', '=', true)
+            ->where('menu_id', '=', $menuId)
             ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
@@ -217,14 +214,14 @@ class Menu
         foreach ($query as &$link) {
             $link[ 'title_link' ] = t($link[ 'title_link' ]);
             $link[ 'submenu' ]    = $link[ 'has_children' ] && $depth >= $level
-                ? $this->renderMenu($nameMenu, $link[ 'id' ], $depth, $level + 1)
+                ? $this->renderMenu($menuId, $link[ 'link_id' ], $depth, $level + 1)
                 : null;
         }
         unset($link);
 
         return $this->templating
                 ->createBlock('menu.php', $this->pathViews)
-                ->addNameOverride($nameMenu . '.php')
+                ->addNameOverride("menu-$menuId.php")
                 ->addVars([
                     'level' => $level,
                     'menu'  => $this->getGrantedLink($query)
@@ -240,26 +237,26 @@ class Menu
                 ->withFragment($fragment ?? '');
     }
 
-    public function getMenuSubmenu(string $keyRoute, string $nameMenu): array
+    public function getMenuSubmenu(string $keyRoute, int $menuId): array
     {
         /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'menu.show',
                 'request'    => $this->router->generateRequest('menu.show', [
-                    ':menu' => $nameMenu
+                    ':menuId' => $menuId
                 ]),
                 'title_link' => 'View'
             ], [
                 'key'        => 'menu.edit',
                 'request'    => $this->router->generateRequest('menu.edit', [
-                    ':menu' => $nameMenu
+                    ':menuId' => $menuId
                 ]),
                 'title_link' => 'Edit'
             ], [
                 'key'        => 'menu.remove',
                 'request'    => $this->router->generateRequest('menu.remove', [
-                    ':menu' => $nameMenu
+                    ':menuId' => $menuId
                 ]),
                 'title_link' => 'Delete'
             ]
@@ -282,20 +279,20 @@ class Menu
         ];
     }
 
-    public function getMenuLinkSubmenu(string $keyRoute, string $nameMenu, int $id): array
+    public function getMenuLinkSubmenu(string $keyRoute, int $menuId, int $linkId): array
     {
         /** @phpstan-var Submenu $menu */
         $menu = [
             [
                 'key'        => 'menu.link.edit',
                 'request'    => $this->router->generateRequest('menu.link.edit', [
-                    ':menu' => $nameMenu, ':id' => $id
+                    ':menuId' => $menuId, ':linkId' => $linkId
                 ]),
                 'title_link' => 'Edit'
             ], [
                 'key'        => 'menu.link.remove',
                 'request'    => $this->router->generateRequest('menu.link.remove', [
-                    ':menu' => $nameMenu, ':id' => $id
+                    ':menuId' => $menuId, ':linkId' => $linkId
                 ]),
                 'title_link' => 'Delete'
             ]

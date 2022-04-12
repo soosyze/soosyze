@@ -6,6 +6,7 @@ namespace SoosyzeCore\System;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\System\Form\FormThemeAdmin;
 use SoosyzeCore\System\Form\FormThemePublic;
 use SoosyzeCore\System\Hook\Config;
@@ -102,19 +103,19 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([
                 'system.module.edit', 'fa fa-th-large', 'Modules', 'admin/modules',
-                'menu-admin', 5, -1
+                Menu::ADMIN_MENU, 5, -1
             ])
             ->values([
                 'system.theme.index', 'fa fa-paint-brush', 'Themes', 'admin/theme',
-                'menu-admin', 6, -1
+                Menu::ADMIN_MENU, 6, -1
             ])
             ->values([
                 'system.tool.admin', 'fa fa-tools', 'Tools', 'admin/tool',
-                'menu-admin', 7, -1
+                Menu::ADMIN_MENU, 7, -1
             ])
             ->execute();
     }
