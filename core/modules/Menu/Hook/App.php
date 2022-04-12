@@ -7,7 +7,6 @@ namespace SoosyzeCore\Menu\Hook;
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use SoosyzeCore\Menu\Services\Menu;
 use SoosyzeCore\Template\Services\Templating;
 
 class App

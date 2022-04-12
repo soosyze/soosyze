@@ -1,7 +1,7 @@
 
 function sortMenu(evt) {
     let weight = 1;
-    let id = $(evt.to).parent("li").children('input[name^="id"]').val();
+    let id = $(evt.to).parent("li").children('input[name^="link_id"]').val();
 
     if (id === undefined) {
         id = -1;

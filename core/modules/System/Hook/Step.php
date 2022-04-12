@@ -12,6 +12,7 @@ use Soosyze\Components\Router\Router;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Translate\Services\Translation;
@@ -29,7 +30,7 @@ class Step
      * @var string[]
      */
     private static $columnsMenu = [
-        'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
+        'key', 'icon', 'title_link', 'link', 'link_router', 'menu_id', 'weight', 'parent'
     ];
 
     /**
@@ -446,20 +447,20 @@ class Step
             ->execute();
 
         $idMenuBasic    = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', 'fa fa-bolt', 'Basic', 'page/basic', 'node/4', 'menu-main', 1, 7
+            'node.show', 'fa fa-bolt', 'Basic', 'page/basic', 'node/4', Menu::MAIN_MENU, 1, 7
         ]);
         $idMenuStandard = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', 'fa fa-anchor', 'Standard', 'page/standard', 'node/5', 'menu-main',
+            'node.show', 'fa fa-anchor', 'Standard', 'page/standard', 'node/5', Menu::MAIN_MENU,
             2, 7
         ]);
         $idMenuPremium  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', 'fa fa-gem', 'Premium', 'page/premium', 'node/6', 'menu-main', 3, 7
+            'node.show', 'fa fa-gem', 'Premium', 'page/premium', 'node/6', Menu::MAIN_MENU, 3, 7
         ]);
         $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'news.index', '', 'Blog', 'news', null, 'menu-main', 2, -1
+            'news.index', '', 'Blog', 'news', null, Menu::MAIN_MENU, 2, -1
         ]);
         $idMenuAbout    = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'About', 'page/about', 'node/7', 'menu-main', 3, -1
+            'node.show', '', 'About', 'page/about', 'node/7', Menu::MAIN_MENU, 3, -1
         ]);
 
         /* Add children Home */
@@ -664,7 +665,7 @@ class Step
         $idMenuAbout = $this->lastInsertId(
             'menu_link',
             self::$columnsMenu,
-            [ 'node.show', '', 'About', 'page/about', 'node/' . $idNodeAbout, 'menu-main', 3, -1 ]
+            [ 'node.show', '', 'About', 'page/about', 'node/' . $idNodeAbout, Menu::MAIN_MENU, 3, -1 ]
         );
 
         $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
@@ -734,22 +735,22 @@ class Step
             ->execute();
 
         $idMenuEducation = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Education', 'education', 'node/' . $idNodeEducation, 'menu-main', 3, -1
+            'node.show', '', 'Education', 'education', 'node/' . $idNodeEducation, Menu::MAIN_MENU, 3, -1
         ]);
         $idMenuProjects  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Projects', 'project', 'node/' . $idNodeProjects, 'menu-main', 3, -1
+            'node.show', '', 'Projects', 'project', 'node/' . $idNodeProjects, Menu::MAIN_MENU, 3, -1
         ]);
         $idMenuProject1  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Project 1', 'project/1', 'node/' . $idNodeProject1, 'menu-main', 4, $idMenuProjects
+            'node.show', '', 'Project 1', 'project/1', 'node/' . $idNodeProject1, Menu::MAIN_MENU, 4, $idMenuProjects
         ]);
         $idMenuProject2  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Project 2', 'project/2', 'node/' . $idNodeProject2, 'menu-main', 5, $idMenuProjects
+            'node.show', '', 'Project 2', 'project/2', 'node/' . $idNodeProject2, Menu::MAIN_MENU, 5, $idMenuProjects
         ]);
         $idMenuProject3  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Project 3', 'project/3', 'node/' . $idNodeProject3, 'menu-main', 6, $idMenuProjects
+            'node.show', '', 'Project 3', 'project/3', 'node/' . $idNodeProject3, Menu::MAIN_MENU, 6, $idMenuProjects
         ]);
         $idMenuProject4  = $this->lastInsertId('menu_link', self::$columnsMenu, [
-            'node.show', '', 'Project 4', 'project/4', 'node/' . $idNodeProject4, 'menu-main', 7, $idMenuProjects
+            'node.show', '', 'Project 4', 'project/4', 'node/' . $idNodeProject4, Menu::MAIN_MENU, 7, $idMenuProjects
         ]);
 
         $this->query->update('menu_link', [ 'has_children' => true ])->where('id', '=', $idMenuProjects)->execute();
@@ -827,12 +828,12 @@ class Step
 
         $this->query
             ->insertInto('menu_link', [
-                'key', 'menu', 'link', 'link_router', 'weight', 'parent', 'title_link', 'fragment'
+                'key', 'menu_id', 'link', 'link_router', 'weight', 'parent', 'title_link', 'fragment'
             ])
-            ->values([ 'node.show', 'menu-main', '/', 'node/' . $idNodeSite, 2, -1, 'Introduction', 'text' ])
-            ->values([ 'node.show', 'menu-main', '/', 'node/' . $idNodeSite, 3, -1, 'Features', 'features' ])
-            ->values([ 'node.show', 'menu-main', '/', 'node/' . $idNodeSite, 5, -1, 'About', 'img' ])
-            ->values([ 'node.show', 'menu-main', '/', 'node/' . $idNodeSite, 6, -1, 'Social media', 'social' ])
+            ->values([ 'node.show', Menu::MAIN_MENU, '/', 'node/' . $idNodeSite, 2, -1, 'Introduction', 'text' ])
+            ->values([ 'node.show', Menu::MAIN_MENU, '/', 'node/' . $idNodeSite, 3, -1, 'Features', 'features' ])
+            ->values([ 'node.show', Menu::MAIN_MENU, '/', 'node/' . $idNodeSite, 5, -1, 'About', 'img' ])
+            ->values([ 'node.show', Menu::MAIN_MENU, '/', 'node/' . $idNodeSite, 6, -1, 'Social media', 'social' ])
             ->execute();
 
         /* Block content. */

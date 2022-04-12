@@ -6,6 +6,7 @@ namespace SoosyzeCore\Node;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\Node\Hook\Config;
 
 /**
@@ -233,14 +234,14 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'link_router', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'link_router', 'menu_id', 'weight', 'parent'
             ])
             ->values([
-                'node.admin', 'fa fa-file', 'Contents', 'admin/node', null, 'menu-admin',
+                'node.admin', 'fa fa-file', 'Contents', 'admin/node', null, Menu::ADMIN_MENU,
                 2, -1
             ])
             ->values([
-                'node.show', null, 'Home', '/',  'node/3', 'menu-main', 1, -1
+                'node.show', null, 'Home', '/',  'node/3', Menu::MAIN_MENU, 1, -1
             ])
             ->execute();
 
