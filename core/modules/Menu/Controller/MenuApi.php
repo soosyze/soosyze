@@ -12,8 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class MenuApi extends \Soosyze\Controller
 {
-    public function show(string $name, ServerRequestInterface $req): ResponseInterface
+    public function show(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        return $this->json(200, self::menu()->renderMenuSelect($name));
+        return $this->json(200, self::menu()->renderMenuSelect($menuId));
     }
 }

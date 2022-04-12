@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\Contact;
 
 use Psr\Container\ContainerInterface;
+use SoosyzeCore\Menu\Enum\Menu;
 
 class Extend extends \SoosyzeCore\System\ExtendModule
 {
@@ -44,7 +45,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->insertInto('menu_link', [
                 'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
             ])
-            ->values([ 'contact.form', '', 'Contact', 'contact', 'menu-main', 50, -1 ])
+            ->values([ 'contact.form', '', 'Contact', 'contact', Menu::MAIN_MENU, 50, -1 ])
             ->execute();
     }
 

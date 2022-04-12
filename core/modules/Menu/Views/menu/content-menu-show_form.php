@@ -19,12 +19,12 @@
             </div>
 
             <div class="table-width-100">
-                <input type="checkbox" name="active-<?php echo $link[ 'id' ]; ?>"
-                       id="active-<?php echo $link[ 'id' ]; ?>" 
+                <input type="checkbox" name="active-<?php echo $link[ 'link_id' ]; ?>"
+                       id="active-<?php echo $link[ 'link_id' ]; ?>" 
                        <?php echo if_or($link[ 'active' ], 'checked'); ?>
                     >
 
-                <label for="active-<?php echo $link[ 'id' ]; ?>">
+                <label for="active-<?php echo $link[ 'link_id' ]; ?>">
                     <span class="ui"></span> <?php echo t('Active'); ?>
                 </label>
             </div>
@@ -43,9 +43,9 @@
             </div>
         </div>
 
-        <input type="hidden" name="id-<?php echo $link[ 'id' ]; ?>" value="<?php echo $link[ 'id' ]; ?>">
-        <input type="hidden" name="weight-<?php echo $link[ 'id' ]; ?>" value="<?php echo $link[ 'weight' ]; ?>">
-        <input type="hidden" name="parent-<?php echo $link[ 'id' ]; ?>" value="<?php echo $link[ 'parent' ]; ?>">
+        <input type="hidden" name="link_id-<?php echo $link[ 'link_id' ]; ?>" value="<?php echo $link[ 'link_id' ]; ?>">
+        <input type="hidden" name="weight-<?php echo $link[ 'link_id' ]; ?>" value="<?php echo $link[ 'weight' ]; ?>">
+        <input type="hidden" name="parent-<?php echo $link[ 'link_id' ]; ?>" value="<?php echo $link[ 'parent' ]; ?>">
 
         <?php echo $link[ 'submenu' ]; ?>
 

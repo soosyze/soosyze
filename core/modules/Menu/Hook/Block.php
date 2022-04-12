@@ -7,6 +7,7 @@ namespace SoosyzeCore\Menu\Hook;
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Menu\Enum\Menu as EnumMenu;
 use SoosyzeCore\Menu\Services\Menu;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\System\Services\Modules;
@@ -58,9 +59,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             'hook'      => 'menu',
             'icon'      => 'fas fa-bars',
             'options'     => [
-                'depth'  => 10,
-                'name'   => 'menu-main',
-                'parent' => -1,
+                'depth'   => 10,
+                'menu_id' => EnumMenu::MAIN_MENU,
+                'parent'  => -1,
             ],
             'path'      => self::PATH_VIEWS,
             'title'     => 'Menu',
@@ -70,9 +71,9 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     public function hookMenu(ServiceBlock $tpl, array $options): ServiceBlock
     {
-        $menu = $this->menu->renderMenu($options[ 'name' ], $options[ 'parent' ], $options[ 'depth' ]);
+        $menu = $this->menu->renderMenu($options[ 'menu_id' ], $options[ 'parent' ], $options[ 'depth' ]);
         if ($menu !== null) {
-            return $menu->setNamesOverride([ "components/block/menu-{$options[ 'name' ]}.php" ]);
+            return $menu->setNamesOverride([ "components/block/menu-{$options[ 'menu_id' ]}.php" ]);
         }
 
         return $tpl;
@@ -82,21 +83,19 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     {
         $form->group('menu-fieldset', 'fieldset', function ($form) use ($values) {
             $form->legend('menu-legend', t('Settings'))
-                ->group('name-group', 'div', function ($form) use ($values) {
-                    $form->label('name-label', t('Menu to display'))
-                    ->select('name', $this->getOptionsName(), [
-                        ':selected'   => $values[ 'options' ][ 'name' ],
+                ->group('menu_id-group', 'div', function ($form) use ($values) {
+                    $form->label('menu_id-label', t('Menu to display'))
+                    ->select('menu_id', $this->getOptions(), [
+                        ':selected'   => $values[ 'options' ][ 'menu_id' ],
                         'class'       => 'form-control ajax-control',
-                        'data-target' => 'select[name="parent"]',
-                        'max'         => 4,
-                        'min'         => 1
+                        'data-target' => 'select[name="parent"]'
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('parent-group', 'div', function ($form) use ($values) {
                     $form->label('parent-label', t('Parent link'), [
                         'data-tooltip' => t('Show child links of the selected one.')
                     ])
-                    ->select('parent', $this->menu->renderMenuSelect($values[ 'options' ][ 'name' ]), [
+                    ->select('parent', $this->menu->renderMenuSelect($values[ 'options' ][ 'menu_id' ]), [
                         ':selected' => $values[ 'options' ][ 'parent' ],
                         'class'     => 'form-control',
                     ]);
@@ -120,31 +119,41 @@ class Block implements \SoosyzeCore\Block\BlockInterface
     public function hookMenuValidator(Validator &$validator): void
     {
         $menus = $this->menu->getAllMenu();
-        $names = array_column($menus, 'name');
 
         $validator
-            ->addRule('depth', 'required|numeric|between_numeric:0,10')
-            ->addRule('name', 'required|inarray:' . implode(',', $names))
-            ->addRule('parent', 'required|numeric');
+            ->addRule('depth', 'required|int|between_numeric:0,10')
+            ->addRule('menu_id', 'required|int|inarray:' . implode(',', array_column($menus, 'menu_id')))
+            ->addRule('parent', 'required|int');
         $validator
             ->addLabel('depth', t('Menu depth'))
-            ->addLabel('name', t('Menu to display'))
+            ->addLabel('menu_id', t('Menu to display'))
             ->addLabel('parent', t('Parent link'));
+        $validator
+            ->setAttributs([
+                'menu_id' => [
+                    'inarray' => [
+                        ':list' => static function () use ($menus): string {
+                            return implode(', ', array_column($menus, 'title'));
+                        }
+                    ]
+                ],
+            ])
+        ;
     }
 
     public function hookMenuBefore(Validator $validator, array &$data): void
     {
         $data[ 'options' ] = json_encode([
-            'depth'  => $validator->getInputInt('depth'),
-            'name'   => $validator->getInput('name'),
-            'parent' => $validator->getInputInt('parent'),
+            'depth'   => $validator->getInputInt('depth'),
+            'menu_id' => $validator->getInputInt('menu_id'),
+            'parent'  => $validator->getInputInt('parent'),
         ]);
     }
 
     public function hookMenuRemoveForm(
         FormGroupBuilder &$form,
         array $values,
-        string $nameMenu
+        int $menuId
     ): void {
         if (!$this->modules->has('Block')) {
             return;
@@ -153,10 +162,10 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         $isBlock = $this->query
             ->from('block')
             ->where('key_block', '=', 'menu')
-            ->where('options', 'like', '%' . $nameMenu . '%')
+            ->where('options', 'like', '%"menu_id":' . $menuId . '%')
             ->fetch();
 
-        if ($isBlock === []) {
+        if ($isBlock === null) {
             return;
         }
 
@@ -169,7 +178,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         });
     }
 
-    public function hookMenuDeleteBefore(Validator $validator, string $nameMenu): void
+    public function hookMenuDeleteBefore(Validator $validator, int $menuId): void
     {
         if (!($this->modules->has('Block') && $validator->getInput('delete_block'))) {
             return;
@@ -179,11 +188,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             ->from('block')
             ->delete()
             ->where('key_block', '=', 'menu')
-            ->where('options', 'like', '%' . $nameMenu . '%')
+            ->where('options', 'like', '%"menu_id":' . $menuId . '%')
             ->execute();
     }
 
-    private function getOptionsName(): array
+    private function getOptions(): array
     {
         $menus = $this->menu->getAllMenu();
 
@@ -192,11 +201,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             $options[] = [
                 'attr'  => [
                     'data-link' => $this->router->generateUrl('menu.api.show', [
-                        ':menu' => $menu[ 'name' ]
+                        ':menuId' => $menu[ 'menu_id' ]
                     ])
                 ],
                 'label' => t($menu[ 'title' ]),
-                'value' => $menu[ 'name' ]
+                'value' => $menu[ 'menu_id' ]
             ];
         }
 

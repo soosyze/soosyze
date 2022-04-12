@@ -6,15 +6,16 @@ namespace SoosyzeCore\Menu;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\Menu\Enum\Menu;
 
 /**
  * @phpstan-type MenuEntity array{
- *      name: string,
+ *      menu_id: int,
  *      title: string,
  *      description: string
  * }
  * @phpstan-type MenuLinkEntity array{
- *      id: int,
+ *      link_id: int,
  *      key: string|null,
  *      icon: string|null,
  *      link: string,
@@ -23,7 +24,7 @@ use Queryflatfile\TableBuilder;
  *      fragment: string,
  *      title_link: string,
  *      target_link: bool,
- *      menu: string,
+ *      menu_id: int,
  *      weight: int,
  *      parent: int,
  *      has_children: bool,
@@ -48,12 +49,12 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->schema()
             ->createTableIfNotExists('menu', static function (TableBuilder $tb): void {
-                $tb->string('name');
+                $tb->increments('menu_id');
                 $tb->string('title');
                 $tb->text('description');
             })
             ->createTableIfNotExists('menu_link', static function (TableBuilder $tb): void {
-                $tb->increments('id');
+                $tb->increments('link_id');
                 $tb->string('key')->nullable();
                 $tb->string('icon')->nullable();
                 $tb->string('link');
@@ -62,7 +63,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
                 $tb->string('fragment')->nullable();
                 $tb->string('title_link');
                 $tb->boolean('target_link')->valueDefault(false);
-                $tb->string('menu');
+                $tb->integer('menu_id');
                 $tb->integer('weight')->valueDefault(1);
                 $tb->integer('parent');
                 $tb->boolean('has_children')->valueDefault(false);
@@ -70,18 +71,18 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             });
 
         $ci->query()
-            ->insertInto('menu', [ 'name', 'title', 'description' ])
-            ->values([ 'menu-admin', 'Administration menu', 'Menu for the management of the site' ])
-            ->values([ 'menu-main', 'Main Menu', 'Main menu of the site' ])
-            ->values([ 'menu-user', 'User Menu', 'User links menu' ])
+            ->insertInto('menu', [ 'title', 'description' ])
+            ->values([ 'Administration menu', 'Menu for the management of the site' ])
+            ->values([ 'Main Menu', 'Main menu of the site' ])
+            ->values([ 'User Menu', 'User links menu' ])
             ->execute();
 
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([
-                'menu.admin', 'fa fa-bars', 'Menu', 'admin/menu', 'menu-admin',
+                'menu.admin', 'fa fa-bars', 'Menu', 'admin/menu', Menu::ADMIN_MENU,
                 3, -1
             ])
             ->execute();
@@ -91,11 +92,11 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent',
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent',
                 'target_link'
             ])
             ->values([
-                null, null, 'Soosyze website', 'https://soosyze.com', 'menu-main',
+                null, null, 'Soosyze website', 'https://soosyze.com', Menu::MAIN_MENU,
                 50, -1, true
             ])
             ->execute();
@@ -123,25 +124,25 @@ class Extend extends \SoosyzeCore\System\ExtendModule
             ->values([
                 'Administration menu', false, 'main_menu', 'menu',
                 0, '', 'menu',
-                json_encode([ 'depth' => 10, 'name' => 'menu-admin', 'parent' => -1 ]),
+                json_encode([ 'depth' => 10, 'menu_id' => Menu::ADMIN_MENU, 'parent' => -1 ]),
                 'admin'
             ])
             ->values([
                 'User Menu', false, 'second_menu', 'menu',
                 1, '', 'menu',
-                json_encode([ 'depth' => 10, 'name' => 'menu-user', 'parent' => -1 ]),
+                json_encode([ 'depth' => 10, 'menu_id' => Menu::USER_MENU, 'parent' => -1 ]),
                 'admin'
             ])
             ->values([
                 'Main Menu', false, 'main_menu', 'menu',
                 0, '', 'menu',
-                json_encode([ 'depth' => 10, 'name' => 'menu-main', 'parent' => -1 ]),
+                json_encode([ 'depth' => 10, 'menu_id' => Menu::MAIN_MENU, 'parent' => -1 ]),
                 'public'
             ])
             ->values([
                 'User Menu', false, 'second_menu', 'menu',
                 1, '', 'menu',
-                json_encode([ 'depth' => 10, 'name' => 'menu-user', 'parent' => -1 ]),
+                json_encode([ 'depth' => 10, 'menu_id' => Menu::USER_MENU, 'parent' => -1 ]),
                 'public'
             ])
             ->execute();

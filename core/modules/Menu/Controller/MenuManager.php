@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\Template\Services\Block;
 
 /**
@@ -25,18 +26,18 @@ class MenuManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        return $this->show('menu-main', $req);
+        return $this->show(Menu::MAIN_MENU, $req);
     }
 
-    public function show(string $name, ServerRequestInterface $req): ResponseInterface
+    public function show(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var MenuEntity|null $menu */
-        $menu = self::menu()->getMenu($name)->fetch();
+        $menu = self::menu()->getMenu($menuId)->fetch();
         if ($menu === null) {
             return $this->get404($req);
         }
 
-        $action = self::router()->generateUrl('menu.check', [ ':menu' => $name ]);
+        $action = self::router()->generateUrl('menu.check', [ ':menuId' => $menuId ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'patch' ]))
             ->group('submit-group', 'div', function ($form) {
@@ -50,32 +51,32 @@ class MenuManager extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-bars" aria-hidden="true"></i>',
                     'title_main' => t($menu[ 'title' ])
                 ])
-                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.show', $menu[ 'name' ]))
+                ->view('page.submenu', self::menu()->getMenuSubmenu('menu.show', $menu[ 'menu_id' ]))
                 ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
                     'form'              => $form,
                     'link_create_link'  => self::router()->generateUrl('menu.link.create', [
-                        ':menu' => $name
+                        ':menuId' => $menuId
                     ]),
                     'link_create_menu'  => self::router()->generateUrl('menu.create'),
-                    'list_menu_submenu' => $this->getListMenuSubmenu($name),
-                    'menu'              => $this->renderMenu($name),
+                    'list_menu_submenu' => $this->getListMenuSubmenu($menuId),
+                    'menu'              => $this->renderMenu($menuId),
                     'menu_name'         => $menu[ 'title' ]
         ]);
     }
 
-    public function check(string $name, ServerRequestInterface $req): ResponseInterface
+    public function check(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        $route = self::router()->generateUrl('menu.show', [ ':menu' => $name ]);
-        if (!($links = self::menu()->getLinkPerMenu($name)->fetchAll())) {
+        $route = self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ]);
+        if (!($links = self::menu()->getLinkPerMenu($menuId)->fetchAll())) {
             return $this->json(200, [ 'redirect' => $route ]);
         }
 
         $validator = new Validator();
         foreach ($links as $link) {
             $validator
-                ->addRule("active-{$link[ 'id' ]}", 'bool')
-                ->addRule("parent-{$link[ 'id' ]}", 'required|numeric')
-                ->addRule("weight-{$link[ 'id' ]}", 'required|between_numeric:1,50');
+                ->addRule("active-{$link[ 'link_id' ]}", 'bool')
+                ->addRule("parent-{$link[ 'link_id' ]}", 'required|numeric')
+                ->addRule("weight-{$link[ 'link_id' ]}", 'required|between_numeric:1,50');
         }
         $validator->addRule('token_menu', 'token')
             ->setInputs((array) $req->getParsedBody());
@@ -84,15 +85,15 @@ class MenuManager extends \Soosyze\Controller
             $updateParents = [];
             foreach ($links as $link) {
                 $data = [
-                    'active'       => (bool) $validator->getInput("active-{$link[ 'id' ]}"),
+                    'active'       => (bool) $validator->getInput("active-{$link[ 'link_id' ]}"),
                     'has_children' => false,
-                    'parent'       => $validator->getInputInt("parent-{$link[ 'id' ]}"),
-                    'weight'       => $validator->getInputInt("weight-{$link[ 'id' ]}")
+                    'parent'       => $validator->getInputInt("parent-{$link[ 'link_id' ]}"),
+                    'weight'       => $validator->getInputInt("weight-{$link[ 'link_id' ]}")
                 ];
 
                 self::query()
                     ->update('menu_link', $data)
-                    ->where('id', '=', $link[ 'id' ])
+                    ->where('link_id', '=', $link[ 'link_id' ])
                     ->execute();
 
                 if ($data[ 'parent' ] >= 1 && !in_array($data[ 'parent' ], $updateParents)) {
@@ -103,7 +104,7 @@ class MenuManager extends \Soosyze\Controller
             foreach ($updateParents as $parent) {
                 self::query()
                     ->update('menu_link', [ 'has_children' => true ])
-                    ->where('id', '=', $parent)
+                    ->where('link_id', '=', $parent)
                     ->execute();
             }
 
@@ -118,7 +119,7 @@ class MenuManager extends \Soosyze\Controller
         ]);
     }
 
-    private function getListMenuSubmenu(string $nameMenu): Block
+    private function getListMenuSubmenu(int $menuId): Block
     {
         $menus = self::query()
             ->from('menu')
@@ -126,36 +127,48 @@ class MenuManager extends \Soosyze\Controller
 
         foreach ($menus as &$menu) {
             $menu[ 'link' ] = self::router()
-                ->generateUrl('menu.show', [ ':menu' => $menu[ 'name' ] ]);
+                ->generateUrl('menu.show', [ ':menuId' => $menu[ 'menu_id' ] ]);
         }
         unset($menu);
 
         return self::template()
                 ->createBlock('menu/submenu-menu-list.php', $this->pathViews)
                 ->addVars([
-                    'key_route' => $nameMenu,
+                    'key_route' => $menuId,
                     'menu'      => $menus
         ]);
     }
 
-    private function renderMenu(string $nameMenu, int $parent = -1, int $level = 1): Block
+    private function renderMenu(int $menuId, int $parent = -1, int $level = 1): Block
     {
         /** @phpstan-var array<MenuLinkEntity> $query */
         $query = self::query()
             ->from('menu_link')
-            ->where('menu', '=', $nameMenu)
+            ->where('menu_id', '=', $menuId)
             ->where('parent', '=', $parent)
             ->orderBy('weight')
             ->fetchAll();
 
         foreach ($query as &$link) {
             $link[ 'link_edit' ]   = self::router()
-                ->generateUrl('menu.link.edit', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+                ->generateUrl(
+                    'menu.link.edit',
+                    [
+                        ':menuId' => $link[ 'menu_id' ],
+                        ':linkId' => $link[ 'link_id' ]
+                    ]
+                );
             $link[ 'link_remove' ] = self::router()
-                ->generateUrl('menu.link.remove.modal', [ ':menu' => $link[ 'menu' ], ':id' => $link[ 'id' ] ]);
+                ->generateUrl(
+                    'menu.link.remove.modal',
+                    [
+                        ':menuId' => $link[ 'menu_id' ],
+                        ':linkId' => $link[ 'link_id' ]
+                    ]
+                );
             $link[ 'submenu' ]     = $link[ 'has_children' ]
-                ? $this->renderMenu($nameMenu, $link[ 'id' ], $level + 1)
-                : $this->createBlockMenuShowForm($nameMenu, null, $level + 1);
+                ? $this->renderMenu($menuId, $link[ 'link_id' ], $level + 1)
+                : $this->createBlockMenuShowForm($menuId, null, $level + 1);
 
             if (!$link[ 'key' ]) {
                 continue;
@@ -165,14 +178,14 @@ class MenuManager extends \Soosyze\Controller
         }
         unset($link);
 
-        return $this->createBlockMenuShowForm($nameMenu, $query, $level);
+        return $this->createBlockMenuShowForm($menuId, $query, $level);
     }
 
-    private function createBlockMenuShowForm(string $nameMenu, ?array $query, int $level): Block
+    private function createBlockMenuShowForm(int $menuId, ?array $query, int $level): Block
     {
         return self::template()
                 ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
-                ->addNameOverride("menu-show-$nameMenu.php")
+                ->addNameOverride("menu-show-$menuId.php")
                 ->addVars([ 'level' => $level, 'menu' => $query ]);
     }
 }

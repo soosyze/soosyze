@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SoosyzeCore\Menu\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
+use SoosyzeCore\Menu\Enum\Menu;
 
 class User implements \SoosyzeCore\User\UserInterface
 {
@@ -20,14 +21,14 @@ class User implements \SoosyzeCore\User\UserInterface
         return 'menu.administer';
     }
 
-    public function hookMenuDelete(string $name): ?string
+    public function hookMenuDelete(int $menuId): ?string
     {
-        return in_array($name, [ 'menu-main', 'menu-admin', 'menu-user' ])
+        return in_array($menuId, Menu::DEFAULT_MENU)
             ? null
             : 'menu.administer';
     }
 
-    public function hookMenuApiShow(string $menu, ?ServerRequestInterface $req, ?array $user): bool
+    public function hookMenuApiShow(int $menuId, ?ServerRequestInterface $req, ?array $user): bool
     {
         return !empty($user);
     }
