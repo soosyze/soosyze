@@ -6,6 +6,7 @@ namespace SoosyzeCore\User;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
+use SoosyzeCore\Menu\Enum\Menu;
 use SoosyzeCore\User\Hook\Config;
 
 /**
@@ -156,27 +157,27 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([
                 'user.admin', 'fa fa-user', 'User', 'admin/user',
-                'menu-admin', 4, -1
+                Menu::ADMIN_MENU, 4, -1
             ])
             ->values([
-                'user.account', null, 'My account', 'user/account', 'menu-user',
+                'user.account', null, 'My account', 'user/account', Menu::USER_MENU,
                 1, -1
             ])
             ->values([
-                'user.login', null, 'Sign in', 'user/login', 'menu-user', 2,
+                'user.login', null, 'Sign in', 'user/login', Menu::USER_MENU, 2,
                 -1
             ])
             ->values([
                 'user.logout', 'fa fa-power-off', 'Sign out', 'user/logout',
-                'menu-user', 3, -1
+                Menu::USER_MENU, 3, -1
             ])
             ->values([
                 'user.register.create', 'fas fa-user-circle', 'Sign up', 'user/register',
-                'menu-user', 4, -1
+                Menu::USER_MENU, 4, -1
             ])
             ->execute();
     }

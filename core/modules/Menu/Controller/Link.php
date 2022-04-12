@@ -23,15 +23,15 @@ class Link extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function create(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function create(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+        if (!self::menu()->getMenu($menuId)->fetch()) {
             return $this->get404($req);
         }
-        $values = [ 'menu' => $nameMenu ];
+        $values = [ 'menu_id' => $menuId ];
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
-        $action = self::router()->generateUrl('menu.link.store', [ ':menu' => $nameMenu ]);
+        $action = self::router()->generateUrl('menu.link.store', [ ':menuId' => $menuId ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($values)
@@ -50,9 +50,9 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    public function store(string $nameMenu, ServerRequestInterface $req): ResponseInterface
+    public function store(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::menu()->getMenu($nameMenu)->fetch()) {
+        if (!self::menu()->getMenu($menuId)->fetch()) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -78,7 +78,7 @@ class Link extends \Soosyze\Controller
 
             return $this->json(201, [
                     'redirect' => self::router()->generateUrl('menu.show', [
-                        ':menu' => $nameMenu
+                        ':menuId' => $menuId
                     ])
             ]);
         }
@@ -89,16 +89,17 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    public function edit(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
+    public function edit(int $menuId, int $linkId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($values = self::menu()->find($id))) {
+        if (!($values = self::menu()->find($linkId))) {
             return $this->get404($req);
         }
 
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         $action = self::router()->generateUrl('menu.link.update', [
-            ':menu' => $nameMenu, ':id' => $id
+            ':menuId' => $menuId,
+            ':linkId' => $linkId
         ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'put' ], self::router()))
@@ -113,15 +114,15 @@ class Link extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' => t('Edit a link')
                 ])
-                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.edit', $values[ 'menu' ], $id))
+                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.edit', $values[ 'menu_id' ], $linkId))
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
     }
 
-    public function update(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
+    public function update(int $menuId, int $linkId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!self::menu()->find($id)) {
+        if (!self::menu()->find($linkId)) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -134,12 +135,12 @@ class Link extends \Soosyze\Controller
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInputString('link'), $req);
 
         if ($validator->isValid()) {
-            $data = $this->getData($validator, $infoUrlOrRoute, $id);
+            $data = $this->getData($validator, $infoUrlOrRoute, $linkId);
 
             $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
             self::query()
                 ->update('menu_link', $data)
-                ->where('id', '=', $id)
+                ->where('link_id', '=', $linkId)
                 ->execute();
             $this->container->callHook('menu.link.update.after', [ $validator ]);
 
@@ -147,7 +148,7 @@ class Link extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('menu.show', [
-                        ':menu' => $nameMenu
+                        ':menuId' => $menuId
                     ])
             ]);
         }
@@ -158,9 +159,9 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    public function remove(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
+    public function remove(int $menuId, int $linkId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($values = self::menu()->find($id))) {
+        if (!($values = self::menu()->find($linkId))) {
             return $this->get404($req);
         }
 
@@ -178,7 +179,7 @@ class Link extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' => t('Delete a link')
                 ])
-                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.remove', $values[ 'menu' ], $id))
+                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.remove', $values[ 'menu' ], $linkId))
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
@@ -187,9 +188,9 @@ class Link extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function removeModal(string $nameMenu, int $id, ServerRequestInterface $req)
+    public function removeModal(int $menuId, int $linkId, ServerRequestInterface $req)
     {
-        if (!($values = self::menu()->find($id))) {
+        if (!($values = self::menu()->find($linkId))) {
             return $this->get404($req);
         }
 
@@ -204,9 +205,9 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    public function delete(string $nameMenu, int $id, ServerRequestInterface $req): ResponseInterface
+    public function delete(int $menuId, int $linkId, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($linkMenu = self::menu()->find($id))) {
+        if (!($linkMenu = self::menu()->find($linkId))) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
@@ -214,26 +215,26 @@ class Link extends \Soosyze\Controller
 
         $validator = (new Validator())
             ->setRules([
-                'id'   => 'required|int',
-                'name' => 'required|string|max:255'
+                'link_id' => 'required|int',
+                'menu_id' => 'required|int'
             ])
-            ->setInputs([ 'name' => $nameMenu, 'id' => $id ]);
+            ->setInputs([ 'menu_id' => $menuId, 'link_id' => $linkId ]);
 
-        $this->container->callHook('menu.link.delete.validator', [ &$validator, $id ]);
+        $this->container->callHook('menu.link.delete.validator', [ &$validator, $linkId ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('menu.link.delete.before', [ $validator, $id ]);
+            $this->container->callHook('menu.link.delete.before', [ $validator, $linkId ]);
 
             self::menu()->deleteLinks(static function () use ($linkMenu): array {
                 return [ $linkMenu ];
             });
 
-            $this->container->callHook('menu.link.delete.after', [ $validator, $id ]);
+            $this->container->callHook('menu.link.delete.after', [ $validator, $linkId ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menu' => $nameMenu ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
             ]);
         }
 
@@ -248,7 +249,8 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.remove.form.data', [ &$values ]);
 
         $action = self::router()->generateUrl('menu.link.delete', [
-            ':menu' => $values['menu'], ':id'   => $values['id']
+            ':menuId' => $values[ 'menu_id' ],
+            ':linkId' => $values[ 'link_id' ]
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
@@ -272,12 +274,14 @@ class Link extends \Soosyze\Controller
 
     private function getValidator(ServerRequestInterface $req): Validator
     {
+        $menus = self::menu()->getAllMenu();
+
         return (new Validator())
                 ->setRules([
                     'active'          => 'bool',
                     'icon'            => '!required|max:255|fontawesome:solid,brands',
                     'link'            => 'required|route_or_url',
-                    'menu'            => 'required|inarray:' . $this->getListNamesMenu(),
+                    'menu_id'         => 'required|int|inarray:' . implode(',', array_column($menus, 'menu_id')),
                     'target_link'     => 'bool',
                     'title_link'      => 'required|string|max:255',
                     'token_link_form' => 'required|token',
@@ -287,18 +291,28 @@ class Link extends \Soosyze\Controller
                     'active'      => t('Active'),
                     'icon'        => t('Icon'),
                     'link'        => t('Link'),
-                    'menu'        => t('Menu'),
+                    'menu_id'     => t('Menu'),
                     'target_link' => t('Target'),
                     'title_link'  => t('Link title'),
                     'weight'      => t('Weight')
                 ])
-                ->setInputs((array) $req->getParsedBody());
+                ->setInputs((array) $req->getParsedBody())
+                ->setAttributs([
+                    'menu_id' => [
+                        'inarray' => [
+                            ':list' => static function () use ($menus): string {
+                                return implode(', ', array_column($menus, 'title'));
+                            }
+                        ]
+                    ],
+                ])
+        ;
     }
 
     private function getData(
         Validator $validator,
         array $infoUrlOrRoute,
-        ?int $id = null
+        ?int $linkId = null
     ): array {
         $data = [
             'active'      => (bool) $validator->getInput('active'),
@@ -307,29 +321,19 @@ class Link extends \Soosyze\Controller
             'key'         => $infoUrlOrRoute[ 'key' ],
             'link'        => $infoUrlOrRoute[ 'link' ],
             'link_router' => $infoUrlOrRoute[ 'link_router' ],
-            'menu'        => $validator->getInput('menu'),
+            'menu_id'     => $validator->getInputInt('menu_id'),
             'query'       => $infoUrlOrRoute[ 'query' ],
             'target_link' => (bool) $validator->getInput('target_link'),
             'title_link'  => $validator->getInput('title_link'),
             'weight'      => $validator->getInputInt('weight')
         ];
 
-        if ($id === null) {
+        if ($linkId === null) {
             $data += [
                 'parent' => -1,
             ];
         }
 
         return $data;
-    }
-
-    private function getListNamesMenu(): string
-    {
-        $menus = self::query()->from('menu')->fetchAll();
-        $names = $menus === []
-            ? []
-            : array_column($menus, 'name');
-
-        return implode(',', $names);
     }
 }

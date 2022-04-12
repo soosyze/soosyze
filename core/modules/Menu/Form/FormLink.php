@@ -16,7 +16,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
         'fragment'    => '',
         'icon'        => '',
         'link'        => '',
-        'menu'        => '',
+        'menu_id'     => '',
         'query'       => '',
         'target_link' => false,
         'title_link'  => '',
@@ -97,7 +97,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
             ->group('submit-group', 'div', function ($form) {
                 $form
                 ->hidden('active', [ 'value' => $this->values[ 'active' ] ])
-                ->hidden('menu', [ 'value' => $this->values[ 'menu' ] ])
+                ->hidden('menu_id', [ 'value' => $this->values[ 'menu_id' ] ])
                 ->hidden('weight', [ 'value' => $this->values[ 'weight' ] ])
                 ->token('token_link_form')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
