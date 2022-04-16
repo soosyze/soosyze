@@ -111,7 +111,7 @@ class NodeClone extends \Soosyze\Controller
 
         return new Redirect(
             self::router()->generateUrl('node.edit', [
-                ':idNode' => $this->node[ 'id' ]
+                'idNode' => $this->node[ 'id' ]
             ]),
             302
         );

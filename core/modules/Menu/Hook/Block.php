@@ -201,7 +201,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             $options[] = [
                 'attr'  => [
                     'data-link' => $this->router->generateUrl('menu.api.show', [
-                        ':menuId' => $menu[ 'menu_id' ]
+                        'menuId' => $menu[ 'menu_id' ]
                     ])
                 ],
                 'label' => t($menu[ 'title' ]),

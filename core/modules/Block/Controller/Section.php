@@ -43,7 +43,7 @@ class Section extends \Soosyze\Controller
                         : 'Edit admin theme blocks',
                     'link_theme_index' => self::router()->generateUrl('system.theme.index'),
                     'link_section'     => self::router()->generateUrl('block.section.admin', [
-                        ':theme' => $theme === 'admin'
+                        'theme' => $theme === 'admin'
                         ? 'public'
                         : 'admin'
                     ])

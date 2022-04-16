@@ -60,7 +60,7 @@ class Manager extends \Soosyze\Controller
 
         $form = (new FormBuilder([
                 'action' => self::router()->generateUrl('filemanager.filter', [
-                    ':path' => Util::cleanPath('/' . $path)
+                    'path' => Util::cleanPath('/' . $path)
                 ]),
                 'id'     => 'form_filter_file',
                 'method' => 'get'
@@ -177,10 +177,10 @@ class Manager extends \Soosyze\Controller
                 ->addVars([
                     'files'       => $files,
                     'link_search' => self::router()->generateUrl('filemanager.filter', [
-                        ':path' => $path
+                        'path' => $path
                     ]),
                     'link_show'   => self::router()->generateUrl('filemanager.show', [
-                        ':path' => $path
+                        'path' => $path
                     ]),
                     'nb_dir'      => $nbDir,
                     'nb_file'     => $nbFile,
@@ -203,7 +203,7 @@ class Manager extends \Soosyze\Controller
             'granted_folder_create' => $hookUser->hookFolderStore($path),
             'links'                 => self::filemanager()->getBreadcrumb($path),
             'link_folder_create'    => self::router()->generateUrl('filemanager.folder.create', [
-                ':path' => $path
+                'path' => $path
             ]),
         ]);
 
@@ -213,10 +213,10 @@ class Manager extends \Soosyze\Controller
                 ->addVars([
                     'granted_file_create' => $hookUser->hookFileStore($path),
                     'link_show'           => self::router()->generateUrl('filemanager.show', [
-                        ':path' => $path
+                        'path' => $path
                     ]),
                     'link_file_create'    => self::router()->generateUrl('filemanager.file.create', [
-                        ':path' => $path
+                        'path' => $path
                     ])
                 ])
                 ->addBlock('breadcrumb', $breadcrumb)

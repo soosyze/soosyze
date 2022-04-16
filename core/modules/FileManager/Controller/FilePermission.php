@@ -112,7 +112,7 @@ class FilePermission extends \Soosyze\Controller
 
         $this->container->callHook('filemanager.permission.edit.form.data', [ &$values ]);
 
-        $action = self::router()->generateUrl('filemanager.permission.update', [ ':id' => $id ]);
+        $action = self::router()->generateUrl('filemanager.permission.update', [ 'id' => $id ]);
 
         $form = (new FormPermission([ 'action' => $action, 'method' => 'put' ]))
             ->setRoles(self::query()->from('role')->fetchAll())
@@ -188,7 +188,7 @@ class FilePermission extends \Soosyze\Controller
         }
 
         $action = self::router()->generateUrl('filemanager.permission.delete', [
-            ':id' => $id
+            'id' => $id
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
@@ -398,13 +398,13 @@ class FilePermission extends \Soosyze\Controller
             [
                 'key'        => 'filemanager.permission.edit',
                 'request'    => self::router()->generateRequest('filemanager.permission.edit', [
-                    ':id' => $idPermission
+                    'id' => $idPermission
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'filemanager.permission.remove',
                 'request'    => self::router()->generateRequest('filemanager.permission.remove', [
-                    ':id' => $idPermission
+                    'id' => $idPermission
                 ]),
                 'title_link' => t('Delete')
             ]

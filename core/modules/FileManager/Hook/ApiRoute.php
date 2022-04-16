@@ -35,7 +35,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         $routes[] = [
             'link'  => $this->router->generateUrl(
                 'filemanager.public',
-                [ ':path' => '/download' ]
+                [ 'path' => '/download' ]
             ),
             'route' => $this->alias->getAlias(
                 'filemanager/public/download',

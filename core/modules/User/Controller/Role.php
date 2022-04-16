@@ -91,7 +91,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
 
         $form = (new FormUserRole([
-            'action' => self::router()->generateUrl('user.role.update', [ ':id' => $id ]),
+            'action' => self::router()->generateUrl('user.role.update', [ 'id' => $id ]),
             'method' => 'put'
             ]))
             ->setValues($values)
@@ -156,7 +156,7 @@ class Role extends \Soosyze\Controller
         $this->container->callHook('role.remove.form.data', [ &$data, $id ]);
 
         $form = (new FormUserRole([
-            'action' => self::router()->generateUrl('user.role.delete', [ ':id' => $id ]),
+            'action' => self::router()->generateUrl('user.role.delete', [ 'id' => $id ]),
             'method' => 'delete'
             ]))
             ->makeFieldsDelete();
@@ -277,13 +277,13 @@ class Role extends \Soosyze\Controller
             [
                 'key'        => 'user.role.edit',
                 'request'    => self::router()->generateRequest('user.role.edit', [
-                    ':id' => $idRole
+                    'id' => $idRole
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'user.role.remove',
                 'request'    => self::router()->generateRequest('user.role.remove', [
-                    ':id' => $idRole
+                    'id' => $idRole
                 ]),
                 'title_link' => t('Delete')
             ]
