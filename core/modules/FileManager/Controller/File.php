@@ -94,7 +94,7 @@ class File extends \Soosyze\Controller
 
         $form = (new FormBuilder([
                 'action'  => self::router()->generateUrl('filemanager.file.store', [
-                    ':path' => $path
+                    'path' => $path
                 ]),
                 'class'   => 'filemanager-dropfile',
                 'method'  => 'post',
@@ -256,7 +256,7 @@ class File extends \Soosyze\Controller
         $data = self::filemanager()->parseFile($spl, $path);
 
         $action = self::router()->generateUrl('filemanager.file.update', [
-            ':path' => $path, ':name' => $name, ':ext'  => $ext
+            'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'method' => 'put']))
@@ -346,7 +346,7 @@ class File extends \Soosyze\Controller
         }
 
         $action = self::router()->generateUrl('filemanager.file.delete', [
-            ':path' => $path, ':name' => $name, ':ext'  => $ext
+            'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'method' => 'delete' ]))

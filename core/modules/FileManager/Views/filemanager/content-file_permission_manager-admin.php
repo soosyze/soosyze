@@ -100,7 +100,7 @@
                     <div class="btn-group" role="group" aria-label="action">
                         <a class="btn btn-action" href="<?php
                             echo $router->generateUrl('filemanager.permission.edit', [
-                                ':id' => $profil[ 'profil_file_id' ] ]);
+                                'id' => $profil[ 'profil_file_id' ] ]);
                         ?>">
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
 
@@ -115,7 +115,7 @@
                                 <li>
                                     <a class="btn btn-action dropdown-item" href="<?php
                                         echo $router->generateUrl('filemanager.permission.remove', [
-                                            ':id' => $profil[ 'profil_file_id' ] ]);
+                                            'id' => $profil[ 'profil_file_id' ] ]);
                                     ?>">
                                         <i class="fa fa-times" aria-hidden="true"></i> <?php echo t('Delete'); ?>
 

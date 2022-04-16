@@ -67,7 +67,7 @@ class FileManager
         }
 
         $request = $this->router->generateRequest('filemanager.show', [
-            ':path' => "/node/{$content[ 'type' ]}/{$content[ 'id' ]}"
+            'path' => "/node/{$content[ 'type' ]}/{$content[ 'id' ]}"
         ]);
         $this->getFileManager($form, $request);
     }
@@ -79,7 +79,7 @@ class FileManager
         }
 
         $request = $this->router->generateRequest('filemanager.show', [
-            ':path' => "/node/{$node[ 'type' ]}/{$node[ 'id' ]}/$entity"
+            'path' => "/node/{$node[ 'type' ]}/{$node[ 'id' ]}/$entity"
         ]);
         $this->getFileManager($form, $request);
     }

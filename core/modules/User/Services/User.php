@@ -176,19 +176,19 @@ class User
             [
                 'key'        => 'user.show',
                 'request'    => $this->router->generateRequest('user.show', [
-                    ':id' => $id
+                    'id' => $id
                 ]),
                 'title_link' => t('View')
             ], [
                 'key'        => 'user.edit',
                 'request'    => $this->router->generateRequest('user.edit', [
-                    ':id' => $id
+                    'id' => $id
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'user.remove',
                 'request'    => $this->router->generateRequest('user.remove', [
-                    ':id' => $id
+                    'id' => $id
                 ]),
                 'title_link' => t('Delete')
             ]

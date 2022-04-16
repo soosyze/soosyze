@@ -51,13 +51,13 @@ class Node extends \Soosyze\Controller
 
         foreach ($nodeType as $key => &$value) {
             $reqGranted = self::router()->generateRequest('node.create', [
-                ':node' => $value[ 'node_type' ]
+                'node' => $value[ 'node_type' ]
             ]);
             if (!$this->container->callHook('app.granted.request', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->generateUrl('node.create', [
-                ':node' => $value[ 'node_type' ]
+                'node' => $value[ 'node_type' ]
             ]);
         }
         unset($value);
@@ -84,7 +84,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.create.form.data', [ &$values, $type ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->generateUrl('node.store', [ ':node' => $type ]),
+                'action'        => self::router()->generateUrl('node.store', [ 'node' => $type ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -182,7 +182,7 @@ class Node extends \Soosyze\Controller
 
             return $this->json(201, [
                 'redirect' => $fieldsRelation
-                    ? self::router()->generateUrl('node.edit', [ ':idNode' => $data[ 'id' ] ])
+                    ? self::router()->generateUrl('node.edit', [ 'idNode' => $data[ 'id' ] ])
                     : self::router()->generateUrl('node.admin')
             ]);
         }
@@ -258,7 +258,7 @@ class Node extends \Soosyze\Controller
         $this->container->callHook('node.edit.form.data', [ &$values, $idNode ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->generateUrl('node.update', [ ':idNode' => $idNode ]),
+                'action'        => self::router()->generateUrl('node.update', [ 'idNode' => $idNode ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -352,7 +352,7 @@ class Node extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('node.edit', [
-                        ':idNode' => $idNode
+                        'idNode' => $idNode
                     ])
             ]);
         }
@@ -391,7 +391,7 @@ class Node extends \Soosyze\Controller
 
         $this->container->callHook('node.remove.form.data', [ &$node, $idNode ]);
 
-        $action = self::router()->generateUrl('node.delete', [ ':idNode' => $idNode ]);
+        $action = self::router()->generateUrl('node.delete', [ 'idNode' => $idNode ]);
 
         $form = (new FormNodeDelete([ 'action' => $action, 'method' => 'delete' ], self::router()))
             ->setValues($values)
@@ -501,13 +501,13 @@ class Node extends \Soosyze\Controller
             [
                 'key'        => 'node.edit',
                 'request'    => self::router()->generateRequest('node.edit', [
-                    ':idNode' => $idNode
+                    'idNode' => $idNode
                 ]),
                 'title_link' => t('Edit')
             ], [
                 'key'        => 'node.delete',
                 'request'    => self::router()->generateRequest('node.remove', [
-                    ':idNode' => $idNode
+                    'idNode' => $idNode
                 ]),
                 'title_link' => t('Delete')
             ]
@@ -530,7 +530,7 @@ class Node extends \Soosyze\Controller
             $nodeShow = [
                 'key'        => 'node.show',
                 'request'    => self::router()->generateRequest('node.show', [
-                    ':idNode' => $idNode
+                    'idNode' => $idNode
                 ]),
                 'title_link' => t('View')
             ];

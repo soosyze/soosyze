@@ -87,8 +87,8 @@ class Block
                 'icon'       => 'fa fa-edit',
                 'key'        => 'block.edit',
                 'link'       => $this->router->generateUrl('block.edit', [
-                    ':theme'   => $theme,
-                    ':id'      => $id
+                    'theme'   => $theme,
+                    'id'      => $id
                 ]),
                 'title_link' => t('Edit')
             ], [
@@ -96,8 +96,8 @@ class Block
                 'icon'       => 'fa fa-times',
                 'key'        => 'block.remove',
                 'link'       => $this->router->generateUrl('block.remove', [
-                    ':theme'   => $theme,
-                    ':id'      => $id
+                    'theme'   => $theme,
+                    'id'      => $id
                 ]),
                 'title_link' => t('Delete')
             ]
