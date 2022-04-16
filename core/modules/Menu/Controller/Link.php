@@ -31,7 +31,7 @@ class Link extends \Soosyze\Controller
         $values = [ 'menu_id' => $menuId ];
         $this->container->callHook('menu.link.create.form.data', [ &$values ]);
 
-        $action = self::router()->generateUrl('menu.link.store', [ ':menuId' => $menuId ]);
+        $action = self::router()->generateUrl('menu.link.store', [ 'menuId' => $menuId ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'post' ], self::router()))
             ->setValues($values)
@@ -78,7 +78,7 @@ class Link extends \Soosyze\Controller
 
             return $this->json(201, [
                     'redirect' => self::router()->generateUrl('menu.show', [
-                        ':menuId' => $menuId
+                        'menuId' => $menuId
                     ])
             ]);
         }
@@ -98,8 +98,8 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
 
         $action = self::router()->generateUrl('menu.link.update', [
-            ':menuId' => $menuId,
-            ':linkId' => $linkId
+            'menuId' => $menuId,
+            'linkId' => $linkId
         ]);
 
         $form = (new FormLink([ 'action' => $action, 'method' => 'put' ], self::router()))
@@ -148,7 +148,7 @@ class Link extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('menu.show', [
-                        ':menuId' => $menuId
+                        'menuId' => $menuId
                     ])
             ]);
         }
@@ -234,7 +234,7 @@ class Link extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ 'menuId' => $menuId ])
             ]);
         }
 
@@ -249,8 +249,8 @@ class Link extends \Soosyze\Controller
         $this->container->callHook('menu.link.remove.form.data', [ &$values ]);
 
         $action = self::router()->generateUrl('menu.link.delete', [
-            ':menuId' => $values[ 'menu_id' ],
-            ':linkId' => $values[ 'link_id' ]
+            'menuId' => $values[ 'menu_id' ],
+            'linkId' => $values[ 'link_id' ]
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))

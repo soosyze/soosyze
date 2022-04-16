@@ -163,7 +163,7 @@ class Step
 
         $profils = $this->getProfils();
         $form    = new FormBuilder([
-            'action' => $this->router->generateUrl('install.step.check', [ ':id' => $id ]),
+            'action' => $this->router->generateUrl('install.step.check', [ 'id' => $id ]),
             'method' => 'post'
         ]);
 
@@ -229,7 +229,7 @@ class Step
         }
 
         $form = (new FormBuilder([
-                'action' => $this->router->generateUrl('install.step.check', [ ':id' => $id ]),
+                'action' => $this->router->generateUrl('install.step.check', [ 'id' => $id ]),
                 'id'     => 'form_lang',
                 'method' => 'post'
                 ])
@@ -302,7 +302,7 @@ class Step
         }
 
         $form = (new FormBuilder([
-            'action' => $this->router->generateUrl('install.step.check', [ ':id' => $id ]),
+            'action' => $this->router->generateUrl('install.step.check', [ 'id' => $id ]),
             'method' => 'post'
             ]))
             ->group('fieldset', 'fieldset', function ($form) use ($values) {

@@ -73,7 +73,7 @@ class Menu extends \Soosyze\Controller
             $menuId = self::schema()->getIncrement('menu');
 
             return $this->json(201, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ 'menuId' => $menuId ])
             ]);
         }
 
@@ -93,7 +93,7 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.store.form.data', [ &$values ]);
 
-        $action = self::router()->generateUrl('menu.update', [ ':menuId' => $menuId ]);
+        $action = self::router()->generateUrl('menu.update', [ 'menuId' => $menuId ]);
 
         $form = (new FormMenu(['action' => $action, 'method' => 'put' ]))
             ->setValues($values)
@@ -140,7 +140,7 @@ class Menu extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                    'redirect' => self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ])
+                    'redirect' => self::router()->generateUrl('menu.show', [ 'menuId' => $menuId ])
             ]);
         }
 
@@ -160,7 +160,7 @@ class Menu extends \Soosyze\Controller
 
         $this->container->callHook('menu.remove.form.data', [ &$values, $menuId ]);
 
-        $action = self::router()->generateUrl('menu.delete', [ ':menuId' => $menuId ]);
+        $action = self::router()->generateUrl('menu.delete', [ 'menuId' => $menuId ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
             ->group('menu-fieldset', 'fieldset', function ($form) {

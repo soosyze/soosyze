@@ -195,7 +195,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     $form->html('code_integration-label', '<a:attr>:content</a>', [
                         ':content' => t('Configure the list of your social networks from the configuration interface of your site'),
                         'href'     => $this->router->generateUrl('config.edit', [
-                            ':id' => 'social'
+                            'id' => 'social'
                         ]),
                         'target'   => '_blank'
                     ]);

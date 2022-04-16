@@ -350,9 +350,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     $form->html("$key-$idEntity-show", '<div class="table-min-width-100"><a:attr>:content</a></div>', [
                             ':content' => $content,
                             'href'     => $this->router->generateUrl('node.entity.edit', [
-                                ':idNode'   => $this->values[ 'id' ],
-                                ':entity'   => $key,
-                                ':idEntity' => $field[ "{$key}_id" ]
+                                'idNode'   => $this->values[ 'id' ],
+                                'entity'   => $key,
+                                'idEntity' => $field[ "{$key}_id" ]
                             ]),
                         ])
                         ->group("$key-$idEntity-actions", 'div', function ($form) use ($field, $idEntity, $key) {
@@ -360,18 +360,18 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                                 ':content' => '<i class="fa fa-edit" aria-hidden="true"></i> ' . t('Edit'),
                                 'class'    => 'btn',
                                 'href'     => $this->router->generateUrl('node.entity.edit', [
-                                    ':idNode'   => $this->values[ 'id' ],
-                                    ':entity'   => $key,
-                                    ':idEntity' => $field[ "{$key}_id" ]
+                                    'idNode'   => $this->values[ 'id' ],
+                                    'entity'   => $key,
+                                    'idEntity' => $field[ "{$key}_id" ]
                                 ]),
                             ])
                             ->html("$key-$idEntity-delete", '<a:attr>:content</a>', [
                                 ':content' => '<i class="fa fa-times" aria-hidden="true"></i> ' . t('Delete'),
                                 'class'    => 'btn',
                                 'href'     => $this->router->generateUrl('node.entity.delete', [
-                                    ':idNode'   => $this->values[ 'id' ],
-                                    ':entity'   => $key,
-                                    ':idEntity' => $field[ "{$key}_id" ]
+                                    'idNode'   => $this->values[ 'id' ],
+                                    'entity'   => $key,
+                                    'idEntity' => $field[ "{$key}_id" ]
                                 ]),
                             ]);
                         }, [ 'class' => 'table-width-300' ]);
@@ -385,8 +385,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     ':content' => '<i class="fa fa-plus" aria-hidden="true"></i> ' . t('Add content'),
                     'class'    => 'btn btn-primary',
                     'href'     => $this->router->generateUrl('node.entity.create', [
-                        ':idNode' => $this->values[ 'id' ],
-                        ':entity'  => $key,
+                        'idNode' => $this->values[ 'id' ],
+                        'entity'  => $key,
                     ])
                 ]);
             });

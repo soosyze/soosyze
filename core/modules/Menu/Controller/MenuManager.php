@@ -37,7 +37,7 @@ class MenuManager extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $action = self::router()->generateUrl('menu.check', [ ':menuId' => $menuId ]);
+        $action = self::router()->generateUrl('menu.check', [ 'menuId' => $menuId ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'patch' ]))
             ->group('submit-group', 'div', function ($form) {
@@ -55,7 +55,7 @@ class MenuManager extends \Soosyze\Controller
                 ->make('page.content', 'menu/content-menu-show.php', $this->pathViews, [
                     'form'              => $form,
                     'link_create_link'  => self::router()->generateUrl('menu.link.create', [
-                        ':menuId' => $menuId
+                        'menuId' => $menuId
                     ]),
                     'link_create_menu'  => self::router()->generateUrl('menu.create'),
                     'list_menu_submenu' => $this->getListMenuSubmenu($menuId),
@@ -66,7 +66,7 @@ class MenuManager extends \Soosyze\Controller
 
     public function check(int $menuId, ServerRequestInterface $req): ResponseInterface
     {
-        $route = self::router()->generateUrl('menu.show', [ ':menuId' => $menuId ]);
+        $route = self::router()->generateUrl('menu.show', [ 'menuId' => $menuId ]);
         if (!($links = self::menu()->getLinkPerMenu($menuId)->fetchAll())) {
             return $this->json(200, [ 'redirect' => $route ]);
         }
@@ -127,7 +127,7 @@ class MenuManager extends \Soosyze\Controller
 
         foreach ($menus as &$menu) {
             $menu[ 'link' ] = self::router()
-                ->generateUrl('menu.show', [ ':menuId' => $menu[ 'menu_id' ] ]);
+                ->generateUrl('menu.show', [ 'menuId' => $menu[ 'menu_id' ] ]);
         }
         unset($menu);
 
@@ -154,16 +154,16 @@ class MenuManager extends \Soosyze\Controller
                 ->generateUrl(
                     'menu.link.edit',
                     [
-                        ':menuId' => $link[ 'menu_id' ],
-                        ':linkId' => $link[ 'link_id' ]
+                        'menuId' => $link[ 'menu_id' ],
+                        'linkId' => $link[ 'link_id' ]
                     ]
                 );
             $link[ 'link_remove' ] = self::router()
                 ->generateUrl(
                     'menu.link.remove.modal',
                     [
-                        ':menuId' => $link[ 'menu_id' ],
-                        ':linkId' => $link[ 'link_id' ]
+                        'menuId' => $link[ 'menu_id' ],
+                        'linkId' => $link[ 'link_id' ]
                     ]
                 );
             $link[ 'submenu' ]     = $link[ 'has_children' ]

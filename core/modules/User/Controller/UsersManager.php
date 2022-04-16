@@ -76,7 +76,7 @@ class UsersManager extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function filterPage(int $page, ServerRequestInterface $req)
+    public function filterPage(int $pageId, ServerRequestInterface $req)
     {
         if (!$this->isAdmin) {
             return $this->get404($req);
@@ -131,7 +131,7 @@ class UsersManager extends \Soosyze\Controller
         $data = self::query()->fetchAll();
 
         $countData = count($data);
-        $users     = array_slice($data, self::$limit * ($page - 1), self::$limit);
+        $users     = array_slice($data, self::$limit * ($pageId - 1), self::$limit);
 
         $this->hydrateUsersLinks($users);
 
@@ -179,7 +179,7 @@ class UsersManager extends \Soosyze\Controller
                     'link_time_access_sort'    => $linkSort->withQuery(http_build_query($paramsTimeAccessSort)),
                     'link_time_installed_sort' => $linkSort->withQuery(http_build_query($paramsTimeInstalledSort)),
                     'order_by'                 => $orderBy,
-                    'paginate'                 => new Paginator($countData, self::$limit, $page, (string) $linkPagination),
+                    'paginate'                 => new Paginator($countData, self::$limit, $pageId, (string) $linkPagination),
                     'users'                    => $users
         ]);
     }
@@ -205,13 +205,13 @@ class UsersManager extends \Soosyze\Controller
     {
         foreach ($users as &$user) {
             $user[ 'link_show' ]   = self::router()->generateUrl('user.show', [
-                ':id' => $user[ 'user_id' ]
+                'id' => $user[ 'user_id' ]
             ]);
             $user[ 'link_edit' ]   = self::router()->generateUrl('user.edit', [
-                ':id' => $user[ 'user_id' ]
+                'id' => $user[ 'user_id' ]
             ]);
             $user[ 'link_remove' ] = self::router()->generateUrl('user.remove', [
-                ':id' => $user[ 'user_id' ]
+                'id' => $user[ 'user_id' ]
             ]);
             $user[ 'roles' ]       = self::user()->getRolesUser($user[ 'user_id' ]);
             $user[ 'username' ]    = Util::strHighlight($this->username, $user[ 'username' ]);

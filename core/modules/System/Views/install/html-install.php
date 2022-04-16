@@ -23,7 +23,7 @@
                         <li class="<?php echo $key === $step_active ? 'step-active' : ''; ?>">
                             <?php ++$i; ?>
                             <?php if ($steps[$step_active]['weight'] > $step['weight']): ?>
-                            <a href="<?php echo $router->generateUrl('install.step', [ ':id' => $key ]); ?>">
+                            <a href="<?php echo $router->generateUrl('install.step', [ 'id' => $key ]); ?>">
                                 <span style="color: #16ab39">✔</span> <?php echo t($step[ 'title' ]); ?>
                             </a>
                             <?php else: ?>

@@ -99,7 +99,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         'data-tooltip' => t('If the site is managed by a restricted team, you can choose a suffix for the URL to better protect your login form.')
                         . ' ' . t('Example: :value ', [
                             ':value' => $this->router->generateUrl('user.login', [
-                                ':url' => '/Ab1P-9eM_s8Y'
+                                'url' => '/Ab1P-9eM_s8Y'
                             ])
                         ]),
                         'for'          => 'connect_url'
@@ -107,7 +107,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                     ->group('connect_url-flex', 'div', function ($form) use ($data) {
                         $form->html('base_path', '<span:attr>:content</span>', [
                             ':content' => $this->router->generateUrl('user.login', [
-                                ':url' => ''
+                                'url' => ''
                             ])
                         ])
                         ->text('connect_url', [

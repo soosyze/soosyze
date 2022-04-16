@@ -38,11 +38,11 @@ class RoleManager extends \Soosyze\Controller
 
         foreach ($values as &$role) {
             $role[ 'link_edit' ] = self::router()->generateUrl('user.role.edit', [
-                ':id' => $role[ 'role_id' ]
+                'id' => $role[ 'role_id' ]
             ]);
             if ($role[ 'role_id' ] > 3) {
                 $role[ 'link_remove' ] = self::router()->generateUrl('user.role.remove', [
-                    ':id' => $role[ 'role_id' ]
+                    'id' => $role[ 'role_id' ]
                 ]);
             }
             $form->group("role_{$role[ 'role_id' ]}-group", 'div', function ($form) use ($role) {

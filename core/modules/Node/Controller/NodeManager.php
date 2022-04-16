@@ -63,7 +63,7 @@ class NodeManager extends \Soosyze\Controller
         return $this->filterPage(1, $req);
     }
 
-    public function filterPage(int $page, ServerRequestInterface $req): Block
+    public function filterPage(int $pageId, ServerRequestInterface $req): Block
     {
         $validator = (new Validator())
             ->setRules([
@@ -116,7 +116,7 @@ class NodeManager extends \Soosyze\Controller
         /* Met en forme les donnes du tableau. */
         $data      = $query->fetchAll();
         $countData = count($data);
-        $nodes     = array_slice($data, self::$limit * ($page - 1), self::$limit);
+        $nodes     = array_slice($data, self::$limit * ($pageId - 1), self::$limit);
         unset($data);
 
         self::nodeuser()->hydrateNodesLinks($nodes);
@@ -167,7 +167,7 @@ class NodeManager extends \Soosyze\Controller
                     'link_type_sort'         => $linkSort->withQuery(http_build_query($paramsTypeSort)),
                     'nodes'                  => $nodes,
                     'order_by'               => $orderBy,
-                    'paginate'               => new Paginator($countData, self::$limit, $page, (string) $linkPagination)
+                    'paginate'               => new Paginator($countData, self::$limit, $pageId, (string) $linkPagination)
         ]);
     }
 

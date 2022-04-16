@@ -60,7 +60,7 @@ class Register extends \Soosyze\Controller
                 ->make('page.content', 'user/content-register-create.php', $this->pathViews, [
                     'form'        => $form,
                     'url_relogin' => self::router()->generateUrl('user.login', [
-                        ':url' => $connectUrl
+                        'url' => $connectUrl
                     ])
         ]);
     }
@@ -182,7 +182,7 @@ class Register extends \Soosyze\Controller
 
         $_SESSION[ 'messages' ][ 'success' ][] = t('Your user account has just been activated, you can now login.');
 
-        return new Redirect(self::router()->generateUrl('user.login', [ ':url' => '' ]), 302);
+        return new Redirect(self::router()->generateUrl('user.login', [ 'url' => '' ]), 302);
     }
 
     private function sendMailRegister(string $from): bool
@@ -190,8 +190,8 @@ class Register extends \Soosyze\Controller
         /** @phpstan-var UserEntity $user */
         $user     = self::user()->getUser($from);
         $urlReset = self::router()->generateUrl('user.activate', [
-            ':id'    => $user[ 'user_id' ],
-            ':token' => $user[ 'token_actived' ]
+            'id'    => $user[ 'user_id' ],
+            'token' => $user[ 'token_actived' ]
         ]);
 
         $message = t('A user registration request has been made.') . "<br><br>\n";

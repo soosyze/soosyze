@@ -16,12 +16,12 @@ RouteCollection::setNamespace('SoosyzeCore\System\Controller')->name('system.')-
     });
     $r->prefix('/theme')->name('theme.')->setNamespace('\Theme')->group(function (RouteGroup $r): void {
         $r->get('index', '/', '@index');
-        $r->get('admin', '/:type', '@admin', [ ':type' => 'admin|public' ]);
-        $r->get('active', '/:type/active/:name', '@active', [
-            ':type' => 'admin|public', ':name' => '\w+'
+        $r->get('admin', '/{type}', '@admin', [ 'type' => 'admin|public' ]);
+        $r->get('active', '/{type}/active/{name}', '@active', [
+            'type' => 'admin|public', 'name' => '\w+'
         ]);
-        $r->get('edit', '/:type/edit', '@edit', [ ':type' => 'admin|public' ]);
-        $r->post('update', '/:type/edit', '@update', [ ':type' => 'admin|public' ]);
+        $r->get('edit', '/{type}/edit', '@edit', [ 'type' => 'admin|public' ]);
+        $r->post('update', '/{type}/edit', '@update', [ 'type' => 'admin|public' ]);
     });
     $r->prefix('/tool')->name('tool.')->setNamespace('\Tool')->group(function (RouteGroup $r): void {
         $r->get('admin', '/', '@admin');
