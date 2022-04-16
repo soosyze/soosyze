@@ -53,7 +53,7 @@ class News extends \Soosyze\Controller
         return $this->page(1, $req);
     }
 
-    public function page(int $page, ServerRequestInterface $req): ResponseInterface
+    public function page(int $pageId, ServerRequestInterface $req): ResponseInterface
     {
         /** @phpstan-var int $limit */
         $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
@@ -65,10 +65,10 @@ class News extends \Soosyze\Controller
             ->where('type', '=', 'article')
             ->orderBy('sticky', SORT_DESC)
             ->orderBy('date_created', SORT_DESC)
-            ->limit($limit, $limit * ($page - 1))
+            ->limit($limit, $limit * ($pageId - 1))
             ->fetchAll();
 
-        if ($page !== 1 && !$query) {
+        if ($pageId !== 1 && !$query) {
             return $this->get404($req);
         }
 
@@ -106,48 +106,48 @@ class News extends \Soosyze\Controller
                     'default'  => $default,
                     'news'     => $query,
                     'link_rss' => self::router()->generateUrl('news.rss'),
-                    'paginate' => new Paginator(count($queryAll), $limit, $page, $link)
+                    'paginate' => new Paginator(count($queryAll), $limit, $pageId, $link)
         ]);
     }
 
-    public function viewYears(string $years, string $page, ServerRequestInterface $req): ResponseInterface
+    public function viewYears(string $year, string $pageId, ServerRequestInterface $req): ResponseInterface
     {
-        $date              = '01/01/' . $years;
+        $date              = '01/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 year -1 seconds');
-        $this->titleMain   = t('Articles from :date', [ ':date' => $years ]);
-        $this->link        = self::router()->generateUrl('news.years.page', [ ':year' => $years ], false);
+        $this->titleMain   = t('Articles from :date', [ ':date' => $year ]);
+        $this->link        = self::router()->generateUrl('news.years.page', [ 'year' => $year ], false);
 
-        return $this->renderNews($page, $req);
+        return $this->renderNews($pageId, $req);
     }
 
-    public function viewMonth(string $years, string $month, string $page, ServerRequestInterface $req): ResponseInterface
+    public function viewMonth(string $year, string $month, string $pageId, ServerRequestInterface $req): ResponseInterface
     {
-        $date              = $month . '/01/' . $years;
+        $date              = $month . '/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 month -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%B %Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.month.page', [
-            ':year'  => $years,
-            ':month' => $month
+            'year'  => $year,
+            'month' => $month
             ], false);
 
-        return $this->renderNews($page, $req);
+        return $this->renderNews($pageId, $req);
     }
 
-    public function viewDay(string $years, string $month, string $day, string $page, ServerRequestInterface $req): ResponseInterface
+    public function viewDay(string $year, string $month, string $day, string $pageId, ServerRequestInterface $req): ResponseInterface
     {
-        $date              = $month . '/' . $day . '/' . $years;
+        $date              = $month . '/' . $day . '/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 day -1 seconds');
         $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%d %B %Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.day.page', [
-            ':year'  => $years,
-            ':month' => $month,
-            ':day'   => $day
+            'year'  => $year,
+            'month' => $month,
+            'day'   => $day
             ], false);
 
-        return $this->renderNews($page, $req);
+        return $this->renderNews($pageId, $req);
     }
 
     public function viewRss(ServerRequestInterface $req): ResponseInterface
@@ -199,22 +199,22 @@ class News extends \Soosyze\Controller
                 ->withHeader('expires', '0');
     }
 
-    private function renderNews(string $page, ServerRequestInterface $req): ResponseInterface
+    private function renderNews(string $pageId, ServerRequestInterface $req): ResponseInterface
     {
-        $page = empty($page)
+        $pageId = empty($pageId)
             ? 1
-            : (int) ltrim($page, '/page/');
+            : (int) ltrim($pageId, '/page/');
 
         /** @phpstan-var int $limit */
         $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
 
-        $offset = $limit * ($page - 1);
+        $offset = $limit * ($pageId - 1);
         $news   = $this->getNews($this->dateCurrent, $this->dateNext, $limit, $offset);
 
         $isCurrent = (time() >= $this->dateCurrent && time() <= $this->dateNext);
 
         $default = t('No articles for the moment');
-        if (!$news && !($page == 1 && $isCurrent)) {
+        if (!$news && !($pageId == 1 && $isCurrent)) {
             return $this->get404($req);
         }
 
@@ -237,7 +237,7 @@ class News extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $news,
-                    'paginate' => new Paginator(count($nodesAll), $limit, $page, $this->link),
+                    'paginate' => new Paginator(count($nodesAll), $limit, $pageId, $this->link),
                     'default'  => $default,
                     'link_rss' => self::router()->generateUrl('news.rss')
         ]);

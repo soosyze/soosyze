@@ -99,8 +99,8 @@ class App
                 'is_admin'    => $isAdmin,
                 'link_create' => ($isAdmin && ($section !== 'main_menu' || ($section === 'main_menu' && empty($blocks['main_menu']))))
                     ? $this->router->generateUrl('block.create.list', [
-                        ':theme'   => $theme,
-                        ':section' => $section
+                        'theme'   => $theme,
+                        'section' => $section
                     ])
                     : null
             ]);
@@ -110,8 +110,8 @@ class App
     private function isAdmin(): bool
     {
         return in_array($this->router->getPathFromRequest(), [
-                'admin/theme/public/section',
-                'admin/theme/admin/section'
+                '/admin/theme/public/section',
+                '/admin/theme/admin/section'
             ]) && $this->core->callHook('app.granted', [ 'block.administer' ]);
     }
 
@@ -159,8 +159,8 @@ class App
             }
             if ($isAdmin) {
                 $params = [
-                    ':theme' => $theme,
-                    ':id'    => $block[ 'block_id' ]
+                    'theme' => $theme,
+                    'id'    => $block[ 'block_id' ]
                 ];
 
                 $block[ 'link_edit' ]   = $this->router->generateUrl('block.edit', $params);

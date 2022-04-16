@@ -49,8 +49,8 @@ class Entity extends \Soosyze\Controller
 
         $form = (new FormNode([
             'action'  => self::router()->generateUrl('node.entity.store', [
-                ':idNode' => $idNode,
-                ':entity' => $entity
+                'idNode' => $idNode,
+                'entity' => $entity
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'post' ], self::file(), self::query(), self::router(), self::config()))
@@ -163,7 +163,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Your content has been saved.');
 
             return $this->json(201, [
-                'redirect' => self::router()->generateUrl('node.edit', [ ':idNode' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ 'idNode' => $idNode ])
             ]);
         }
 
@@ -194,9 +194,9 @@ class Entity extends \Soosyze\Controller
 
         $form = (new FormNode([
             'action'  => self::router()->generateUrl('node.entity.update', [
-                ':idNode'   => $idNode,
-                ':entity'   => $entity,
-                ':idEntity' => $idEntity
+                'idNode'   => $idNode,
+                'entity'   => $entity,
+                'idEntity' => $idEntity
             ]),
             'enctype' => 'multipart/form-data',
             'method'  => 'put' ], self::file(), self::query(), self::router(), self::config()))
@@ -298,7 +298,7 @@ class Entity extends \Soosyze\Controller
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
-                'redirect' => self::router()->generateUrl('node.edit', [ ':idNode' => $idNode ])
+                'redirect' => self::router()->generateUrl('node.edit', [ 'idNode' => $idNode ])
             ]);
         }
 
@@ -354,9 +354,9 @@ class Entity extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('node.edit', [
-                        ':idNode'   => $idNode,
-                        ':entity'   => $typeEntity,
-                        ':idEntity' => $idEntity
+                        'idNode'   => $idNode,
+                        'entity'   => $typeEntity,
+                        'idEntity' => $idEntity
                     ])
             ]);
         }

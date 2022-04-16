@@ -40,7 +40,7 @@ class FileCopy extends \Soosyze\Controller
         }
 
         $action = self::router()->generateUrl('filemanager.copy.update', [
-            ':path' => $path, ':name' => $name, ':ext'  => $ext
+            'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'method' => 'post' ]))
@@ -122,7 +122,7 @@ class FileCopy extends \Soosyze\Controller
                 ->addVars([
                     'files'        => $files,
                     'link_show'    => self::router()->generateUrl('filemanager.copy.show', [
-                        ':path' => $path
+                        'path' => $path
                     ]),
                     'path'         => $path,
                     'profil'       => $hookUser->getRight($path),

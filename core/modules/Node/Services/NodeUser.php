@@ -137,7 +137,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeEdit)) {
                 $node[ 'link_edit' ] = $this->router->generateUrl('node.edit', [
-                    ':idNode' => $node[ 'id' ]
+                    'idNode' => $node[ 'id' ]
                 ]);
             }
 
@@ -145,7 +145,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeClone)) {
                 $node[ 'link_clone' ] = $this->router->generateUrl('node.clone', [
-                    ':idNode' => $node[ 'id' ]
+                    'idNode' => $node[ 'id' ]
                 ]);
             }
 
@@ -153,7 +153,7 @@ class NodeUser
 
             if ($nodeAdminister || $this->user->isGrantedPermission($nodeRemove)) {
                 $node[ 'link_remove' ] = $this->router->generateUrl('node.api.remove', [
-                    ':idNode' => $node[ 'id' ]
+                    'idNode' => $node[ 'id' ]
                 ]);
             }
 
@@ -176,7 +176,7 @@ class NodeUser
 
         if ($this->user->isGranted('user.showed')) {
             $user[ 'link' ] = $this->router->generateUrl('user.show', [
-                ':id' => $node[ 'user_id' ]
+                'id' => $node[ 'user_id' ]
             ]);
         }
 

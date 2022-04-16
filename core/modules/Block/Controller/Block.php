@@ -36,12 +36,13 @@ class Block extends \Soosyze\Controller
 
         foreach ($blocks as $key => &$block) {
             $block[ 'link_show_create' ] = self::router()->generateUrl('block.create.show', [
-                ':id' => $key
+                'theme' => $theme,
+                'id'    => $key
             ]);
         }
 
         $action = self::router()->generateUrl('block.create.form', [
-            ':theme'   => $theme
+            'theme'   => $theme
         ]);
 
         $form = (new FormListBlock([ 'action' => $action, 'method' => 'post' ]))
@@ -66,9 +67,9 @@ class Block extends \Soosyze\Controller
     /**
      * @return ServiceBlock|ResponseInterface
      */
-    public function createShow(string $name)
+    public function createShow(string $id)
     {
-        $block = self::block()->getBlock($name);
+        $block = self::block()->getBlock($id);
 
         if (!$block) {
             return $this->get404();
@@ -130,7 +131,7 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.create.form.data', [ &$values, $theme ]);
 
         $action = self::router()->generateUrl('block.store', [
-            ':theme'   => $theme
+            'theme'   => $theme
         ]);
 
         $form = (new FormBlock([
@@ -226,7 +227,7 @@ class Block extends \Soosyze\Controller
 
             return $this->json(201, [
                     'redirect' => self::router()->generateUrl('block.section.admin', [
-                        ':theme'   => $theme
+                        'theme'   => $theme
                     ])
             ]);
         }
@@ -261,8 +262,8 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.edit.form.data', [ &$values, $theme, $id ]);
 
         $action = self::router()->generateUrl('block.update', [
-            ':theme'   => $theme,
-            ':id'      => $values[ 'block_id' ]
+            'theme'   => $theme,
+            'id'      => $values[ 'block_id' ]
         ]);
 
         $form = (new FormBlock([
@@ -353,7 +354,7 @@ class Block extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect'    => self::router()->generateUrl('block.section.admin', [
-                        ':theme'   => $theme
+                        'theme'   => $theme
                     ])
             ]);
         }
@@ -379,8 +380,8 @@ class Block extends \Soosyze\Controller
         $this->container->callHook('block.remove.form.data', [ &$values, $theme, $id ]);
 
         $action = self::router()->generateUrl('block.delete', [
-            ':theme'   => $theme,
-            ':id'      => $values[ 'block_id' ]
+            'theme'   => $theme,
+            'id'      => $values[ 'block_id' ]
         ]);
 
         $form = (new FormDeleteBlock([
@@ -427,7 +428,7 @@ class Block extends \Soosyze\Controller
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('block.section.admin', [
-                        ':theme' => $theme
+                        'theme' => $theme
                     ])
             ]);
         }

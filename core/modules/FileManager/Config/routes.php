@@ -4,30 +4,30 @@ use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
 
 define('FILEMANAGER_FILE_WITH', [
-    ':path' => '(/[-\w]+){0,255}',
-    ':name' => '/[-\w ]{1,255}',
-    ':ext'  => '\.[a-zA-Z0-9]{1,10}'
+    'path' => '(/[-\w]+){0,255}',
+    'name' => '/[-\w ]{1,255}',
+    'ext'  => '\.[a-zA-Z0-9]{1,10}'
 ]);
-define('FILEMANAGER_PATH_WITH', [ ':path' => '(/[-\w]+){0,255}' ]);
+define('FILEMANAGER_PATH_WITH', [ 'path' => '(/[-\w]+){0,255}' ]);
 
 RouteCollection::setNamespace('SoosyzeCore\FileManager\Controller')->prefix('/filemanager')->name('filemanager.')->group(function (RouteGroup $r): void {
     $r->prefix('/file')->name('file.')->setNamespace('\File')->group(function (RouteGroup $r): void {
-        $r->get('show', ':path:name:ext', '@show', FILEMANAGER_FILE_WITH);
-        $r->get('create', ':path', '@create', FILEMANAGER_PATH_WITH);
-        $r->post('store', ':path', '@store', FILEMANAGER_PATH_WITH);
-        $r->get('edit', ':path:name:ext/edit', '@edit', FILEMANAGER_FILE_WITH);
-        $r->put('update', ':path:name:ext', '@update', FILEMANAGER_FILE_WITH);
-        $r->get('remove', ':path:name:ext/delete', '@remove', FILEMANAGER_FILE_WITH);
-        $r->delete('delete', ':path:name:ext', '@delete', FILEMANAGER_FILE_WITH);
-        $r->get('download', ':path:name:ext/download', '@download', FILEMANAGER_FILE_WITH);
+        $r->get('show', '{path}{name}{ext}', '@show', FILEMANAGER_FILE_WITH);
+        $r->get('create', 'path', '@create', FILEMANAGER_PATH_WITH);
+        $r->post('store', 'path', '@store', FILEMANAGER_PATH_WITH);
+        $r->get('edit', '{path}{name}{ext}/edit', '@edit', FILEMANAGER_FILE_WITH);
+        $r->put('update', '{path}{name}{ext}', '@update', FILEMANAGER_FILE_WITH);
+        $r->get('remove', '{path}{name}{ext}/delete', '@remove', FILEMANAGER_FILE_WITH);
+        $r->delete('delete', '{path}{name}{ext}', '@delete', FILEMANAGER_FILE_WITH);
+        $r->get('download', '{path}{name}{ext}/download', '@download', FILEMANAGER_FILE_WITH);
     });
     /* Affichage du filemanager uniquement les répertoires. */
     $r->prefix('/copy')->name('copy.')->setNamespace('\FileCopy')->group(function (RouteGroup $r): void {
-        $r->get('admin', ':path:name:ext', '@admin', FILEMANAGER_FILE_WITH);
-        $r->post('update', ':path:name:ext', 'y@update', FILEMANAGER_FILE_WITH);
-        $r->get('show', ':path', '@show', FILEMANAGER_PATH_WITH);
+        $r->get('admin', '{path}{name}{ext}', '@admin', FILEMANAGER_FILE_WITH);
+        $r->post('update', '{path}{name}{ext}', '@update', FILEMANAGER_FILE_WITH);
+        $r->get('show', 'path', '@show', FILEMANAGER_PATH_WITH);
     });
-    $r->prefix('/folder:path')->withs([':path' => '(/[-\w]+){1,255}' ])->name('folder.')->setNamespace('\Folder')->group(function (RouteGroup $r): void {
+    $r->prefix('/folder{path}')->withs(['path' => '(/[-\w]+){1,255}' ])->name('folder.')->setNamespace('\Folder')->group(function (RouteGroup $r): void {
         $r->get('create', '/create', '@create', FILEMANAGER_PATH_WITH);
         $r->post('store', '/', '@store', FILEMANAGER_PATH_WITH);
         $r->get('edit', '/edit', '@edit');
@@ -41,9 +41,9 @@ RouteCollection::prefix('/admin')->name('filemanager.')->setNamespace('SoosyzeCo
     /* Affichage du filemanager complet. */
     $r->prefix('/filemanager')->setNamespace('\Manager')->group(function (RouteGroup $r): void {
         $r->get('admin', '/show', '@admin');
-        $r->get('public', '/public:path', '@showPublic', FILEMANAGER_PATH_WITH);
-        $r->get('show', '/show:path', '@show', FILEMANAGER_PATH_WITH);
-        $r->get('filter', '/filter:path', '@filter', FILEMANAGER_PATH_WITH);
+        $r->get('public', '/public{path}', '@showPublic', FILEMANAGER_PATH_WITH);
+        $r->get('show', '/show{path}', '@show', FILEMANAGER_PATH_WITH);
+        $r->get('filter', '/filter{path}', '@filter', FILEMANAGER_PATH_WITH);
     });
     $r->prefix('/user/permission/filemanager')->name('permission.')->group(function (RouteGroup $r): void {
         $r->setNamespace('\FilePermissionManager')->group(function (RouteGroup $r): void {
@@ -53,10 +53,10 @@ RouteCollection::prefix('/admin')->name('filemanager.')->setNamespace('SoosyzeCo
         $r->setNamespace('\FilePermission')->group(function (RouteGroup $r): void {
             $r->get('create', '/create', '@create');
             $r->post('store', '/', '@store');
-            $r->get('edit', '/:id/edit', '@edit')->whereDigits(':id');
-            $r->put('update', '/:id', '@update')->whereDigits(':id');
-            $r->get('remove', '/:id/delete', '@remove')->whereDigits(':id');
-            $r->delete('delete', '/:id', '@delete')->whereDigits(':id');
+            $r->get('edit', '/{id}/edit', '@edit')->whereDigits('id');
+            $r->put('update', '/{id}', '@update')->whereDigits('id');
+            $r->get('remove', '/{id}/delete', '@remove')->whereDigits('id');
+            $r->delete('delete', '/{id}', '@delete')->whereDigits('id');
         });
     });
 });
