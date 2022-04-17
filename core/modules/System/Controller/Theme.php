@@ -30,12 +30,7 @@ class Theme extends \Soosyze\Controller
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function index(): ResponseInterface
-    {
-        return $this->admin(self::TYPE_PUBLIC);
-    }
-
-    public function admin(string $type): ResponseInterface
+    public function admin(string $type = self::TYPE_PUBLIC): ResponseInterface
     {
         $composers = self::composer()->getThemeComposers();
 

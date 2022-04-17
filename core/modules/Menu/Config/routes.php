@@ -8,7 +8,7 @@ RouteCollection::setNamespace('SoosyzeCore\Menu\Controller')->name('menu.')->gro
 
     $r->prefix('/admin/menu')->group(function (RouteGroup $r): void {
         $r->setNamespace('\MenuManager')->group(function (RouteGroup $r): void {
-            $r->get('admin', '/', '@admin');
+            $r->get('admin', '/', '@show');
             $r->get('show', '/{menuId}', '@show')->whereDigits('menuId');
             $r->patch('check', '/{menuId}', '@check')->whereDigits('menuId');
         });

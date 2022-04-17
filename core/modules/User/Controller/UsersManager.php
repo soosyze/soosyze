@@ -45,7 +45,7 @@ class UsersManager extends \Soosyze\Controller
     {
         $this->isAdmin = true;
 
-        $block = $this->filterPage(1, $req);
+        $block = $this->filter($req);
         if ($block instanceof ResponseInterface) {
             return $block;
         }
@@ -68,15 +68,7 @@ class UsersManager extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function filter(ServerRequestInterface $req)
-    {
-        return $this->filterPage(1, $req);
-    }
-
-    /**
-     * @return Block|ResponseInterface
-     */
-    public function filterPage(int $pageId, ServerRequestInterface $req)
+    public function filter(ServerRequestInterface $req, int $pageId = 1)
     {
         if (!$this->isAdmin) {
             return $this->get404($req);
