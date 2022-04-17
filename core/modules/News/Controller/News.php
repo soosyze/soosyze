@@ -48,12 +48,7 @@ class News extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function index(ServerRequestInterface $req): ResponseInterface
-    {
-        return $this->page(1, $req);
-    }
-
-    public function page(int $pageId, ServerRequestInterface $req): ResponseInterface
+    public function page(ServerRequestInterface $req, int $pageId = 1): ResponseInterface
     {
         /** @phpstan-var int $limit */
         $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
@@ -110,7 +105,7 @@ class News extends \Soosyze\Controller
         ]);
     }
 
-    public function viewYears(string $year, string $pageId, ServerRequestInterface $req): ResponseInterface
+    public function viewYears(string $year, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
     {
         $date              = '01/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
@@ -121,7 +116,7 @@ class News extends \Soosyze\Controller
         return $this->renderNews($pageId, $req);
     }
 
-    public function viewMonth(string $year, string $month, string $pageId, ServerRequestInterface $req): ResponseInterface
+    public function viewMonth(string $year, string $month, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
     {
         $date              = $month . '/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
@@ -135,7 +130,7 @@ class News extends \Soosyze\Controller
         return $this->renderNews($pageId, $req);
     }
 
-    public function viewDay(string $year, string $month, string $day, string $pageId, ServerRequestInterface $req): ResponseInterface
+    public function viewDay(string $year, string $month, string $day, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
     {
         $date              = $month . '/' . $day . '/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
@@ -199,12 +194,8 @@ class News extends \Soosyze\Controller
                 ->withHeader('expires', '0');
     }
 
-    private function renderNews(string $pageId, ServerRequestInterface $req): ResponseInterface
+    private function renderNews(int $pageId, ServerRequestInterface $req): ResponseInterface
     {
-        $pageId = empty($pageId)
-            ? 1
-            : (int) ltrim($pageId, '/page/');
-
         /** @phpstan-var int $limit */
         $limit = self::config()->get('settings.news_pagination', Config::PAGINATION);
 

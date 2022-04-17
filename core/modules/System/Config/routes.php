@@ -15,7 +15,7 @@ RouteCollection::setNamespace('SoosyzeCore\System\Controller')->name('system.')-
         $r->get('update', '/update', '@update');
     });
     $r->prefix('/theme')->name('theme.')->setNamespace('\Theme')->group(function (RouteGroup $r): void {
-        $r->get('index', '/', '@index');
+        $r->get('index', '/', '@admin');
         $r->get('admin', '/{type}', '@admin', [ 'type' => 'admin|public' ]);
         $r->get('active', '/{type}/active/{name}', '@active', [
             'type' => 'admin|public', 'name' => '\w+'
