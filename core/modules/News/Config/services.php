@@ -23,11 +23,11 @@ return [
             'route.news.index' => 'hookNewShow',
             'route.news.page' => 'hookNewShow',
             'route.news.years' => 'hookNewShow',
-            'route.news.page.years' => 'hookNewShow',
+            'route.news.years.page' => 'hookNewShow',
             'route.news.month' => 'hookNewShow',
-            'route.news.page.month' => 'hookNewShow',
+            'route.news.month.page' => 'hookNewShow',
             'route.news.day' => 'hookNewShow',
-            'route.news.page.day' => 'hookNewShow',
+            'route.news.day.page' => 'hookNewShow',
             'route.news.rss' => 'hookNewShow'
         ]
     ],
