@@ -27,11 +27,6 @@ class UsersManager extends \Soosyze\Controller
     private static $limit = 20;
 
     /**
-     * @var bool
-     */
-    private $isAdmin = false;
-
-    /**
      * @var string
      */
     private $username = '';
@@ -43,8 +38,6 @@ class UsersManager extends \Soosyze\Controller
 
     public function admin(ServerRequestInterface $req): ResponseInterface
     {
-        $this->isAdmin = true;
-
         $block = $this->filter($req);
         if ($block instanceof ResponseInterface) {
             return $block;
@@ -70,10 +63,6 @@ class UsersManager extends \Soosyze\Controller
      */
     public function filter(ServerRequestInterface $req, int $pageId = 1)
     {
-        if (!$this->isAdmin) {
-            return $this->get404($req);
-        }
-
         $validator = (new Validator())
             ->setRules([
                 'actived'   => '!required|between_numeric:0,1',
