@@ -38,7 +38,7 @@ RouteCollection::setNamespace('SoosyzeCore\User\Controller')->name('user.')->pre
     $r->setNamespace('\UsersManager')->group(function (RouteGroup $r): void {
         $r->get('admin', '/', '@admin');
         $r->get('filter', '/filter', '@filter');
-        $r->get('filter.page', '/filter/{pageId}', '@filterPage', [ 'pageId' => '[1-9]\d*' ]);
+        $r->get('filter.page', '/filter/{pageId}', '@filter', [ 'pageId' => '[1-9]\d*' ]);
     });
     $r->setNamespace('\Permission')->name('permission.')->prefix('/permission')->group(function (RouteGroup $r): void {
         $r->get('admin', '/', '@admin');

@@ -24,12 +24,7 @@ class MenuManager extends \Soosyze\Controller
         $this->pathViews    = dirname(__DIR__) . '/Views/';
     }
 
-    public function admin(ServerRequestInterface $req): ResponseInterface
-    {
-        return $this->show(Menu::MAIN_MENU, $req);
-    }
-
-    public function show(int $menuId, ServerRequestInterface $req): ResponseInterface
+    public function show(ServerRequestInterface $req, int $menuId = Menu::MAIN_MENU): ResponseInterface
     {
         /** @phpstan-var MenuEntity|null $menu */
         $menu = self::menu()->getMenu($menuId)->fetch();
