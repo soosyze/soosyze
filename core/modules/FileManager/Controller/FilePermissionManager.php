@@ -103,7 +103,7 @@ class FilePermissionManager extends \Soosyze\Controller
                 ];
 
                 $this->container->callHook('filemanager.permission.admin.check.before', [
-                    &$validator, &$data
+                    $validator, &$data
                 ]);
 
                 self::query()

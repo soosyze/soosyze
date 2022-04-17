@@ -105,7 +105,7 @@ class RoleManager extends \Soosyze\Controller
                 ];
 
                 $this->container->callHook('user.role.admin.check.before', [
-                    &$validator, &$data
+                    $validator, &$data
                 ]);
 
                 self::query()
@@ -113,7 +113,9 @@ class RoleManager extends \Soosyze\Controller
                     ->where('role_id', '=', $role[ 'role_id' ])
                     ->execute();
 
-                $this->container->callHook('user.role.admin.check.after', [ &$validator ]);
+                $this->container->callHook('user.role.admin.check.after', [
+                    $validator, $data
+                ]);
             }
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');

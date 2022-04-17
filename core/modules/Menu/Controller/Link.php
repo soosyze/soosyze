@@ -60,19 +60,19 @@ class Link extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('menu.link.store.validator', [ &$validator ]);
+        $this->container->callHook('menu.link.store.validator', [ &$validator, $menuId ]);
 
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInputString('link'), $req);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator, $infoUrlOrRoute);
 
-            $this->container->callHook('menu.link.store.before', [ $validator, &$data ]);
+            $this->container->callHook('menu.link.store.before', [ $validator, &$data, $menuId ]);
             self::query()
                 ->insertInto('menu_link', array_keys($data))
                 ->values($data)
                 ->execute();
-            $this->container->callHook('menu.link.store.after', [ $validator ]);
+            $this->container->callHook('menu.link.store.after', [ $validator, $menuId ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -95,7 +95,9 @@ class Link extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $this->container->callHook('menu.link.edit.form.data', [ &$values ]);
+        $this->container->callHook('menu.link.edit.form.data', [
+            &$values, $menuId, $linkId
+        ]);
 
         $action = self::router()->generateUrl('menu.link.update', [
             'menuId' => $menuId,
@@ -106,7 +108,9 @@ class Link extends \Soosyze\Controller
             ->setValues($values)
             ->makeFields();
 
-        $this->container->callHook('menu.link.edit.form', [ &$form, $values ]);
+        $this->container->callHook('menu.link.edit.form', [
+            &$form, $values, $menuId, $linkId
+        ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -130,19 +134,25 @@ class Link extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('menu.link.update.validator', [ &$validator ]);
+        $this->container->callHook('menu.link.update.validator', [
+            &$validator, $menuId, $linkId
+        ]);
 
         $infoUrlOrRoute = self::menu()->getInfo($validator->getInputString('link'), $req);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator, $infoUrlOrRoute, $linkId);
 
-            $this->container->callHook('menu.link.update.before', [ $validator, &$data ]);
+            $this->container->callHook('menu.link.update.before', [
+                $validator, &$data, $menuId, $linkId
+            ]);
             self::query()
                 ->update('menu_link', $data)
                 ->where('link_id', '=', $linkId)
                 ->execute();
-            $this->container->callHook('menu.link.update.after', [ $validator ]);
+            $this->container->callHook('menu.link.update.after', [
+                $validator, $data, $menuId, $linkId
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -165,7 +175,7 @@ class Link extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $form = $this->formDelete($values)
+        $form = $this->formRemove($values, $menuId, $linkId)
             ->html('cancel', '<button:attr>:content</button>', [
             ':content' => t('Cancel'),
             'class'    => 'btn btn-default',
@@ -194,7 +204,7 @@ class Link extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $form = $this->formDelete($values);
+        $form = $this->formRemove($values, $menuId, $linkId);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -214,22 +224,25 @@ class Link extends \Soosyze\Controller
         }
 
         $validator = (new Validator())
-            ->setRules([
-                'link_id' => 'required|int',
-                'menu_id' => 'required|int'
-            ])
-            ->setInputs([ 'menu_id' => $menuId, 'link_id' => $linkId ]);
+            ->addRule('token_menu_remove', 'token')
+            ->setInputs((array) $req->getParsedBody());
 
-        $this->container->callHook('menu.link.delete.validator', [ &$validator, $linkId ]);
+        $this->container->callHook('menu.link.delete.validator', [
+            &$validator, $menuId, $linkId
+        ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('menu.link.delete.before', [ $validator, $linkId ]);
+            $this->container->callHook('menu.link.delete.before', [
+                $validator, $menuId, $linkId
+            ]);
 
             self::menu()->deleteLinks(static function () use ($linkMenu): array {
                 return [ $linkMenu ];
             });
 
-            $this->container->callHook('menu.link.delete.after', [ $validator, $linkId ]);
+            $this->container->callHook('menu.link.delete.after', [
+                $validator, $menuId, $linkId
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -244,13 +257,15 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    private function formDelete(array $values): FormBuilder
+    private function formRemove(array $values, int $menuId, int $linkId): FormBuilder
     {
-        $this->container->callHook('menu.link.remove.form.data', [ &$values ]);
+        $this->container->callHook('menu.link.remove.form.data', [
+            &$values, $menuId, $linkId
+        ]);
 
         $action = self::router()->generateUrl('menu.link.delete', [
-            'menuId' => $values[ 'menu_id' ],
-            'linkId' => $values[ 'link_id' ]
+            'menuId' => $menuId,
+            'linkId' => $linkId
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'class' => 'form-api', 'method' => 'delete' ]))
@@ -267,7 +282,9 @@ class Link extends \Soosyze\Controller
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
             });
 
-        $this->container->callHook('menu.link.remove.form', [ &$form, $values ]);
+        $this->container->callHook('menu.link.remove.form', [
+            &$form, $values, $menuId, $linkId
+        ]);
 
         return $form;
     }
