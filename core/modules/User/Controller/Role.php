@@ -34,7 +34,7 @@ class Role extends \Soosyze\Controller
     public function create(ServerRequestInterface $req): ResponseInterface
     {
         $values = [];
-        $this->container->callHook('role.create.form.data', [ &$values ]);
+        $this->container->callHook('user.role.create.form.data', [ &$values ]);
 
         $form = (new FormUserRole([
             'action' => self::router()->generateUrl('user.role.store'),
@@ -43,7 +43,7 @@ class Role extends \Soosyze\Controller
             ->setValues($values)
             ->makeFields();
 
-        $this->container->callHook('role.create.form', [ &$form, $values ]);
+        $this->container->callHook('user.role.create.form', [ &$form, $values ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -60,14 +60,14 @@ class Role extends \Soosyze\Controller
     {
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('role.store.validator', [ &$validator ]);
+        $this->container->callHook('user.role.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('role.store.before', [ &$validator, &$data ]);
+            $this->container->callHook('user.role.store.before', [ $validator, &$data ]);
             self::query()->insertInto('role', array_keys($data))->values($data)->execute();
-            $this->container->callHook('role.store.after', [ $validator ]);
+            $this->container->callHook('user.role.store.after', [ $validator, $data ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -88,7 +88,7 @@ class Role extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $this->container->callHook('role.edit.form.data', [ &$values, $id ]);
+        $this->container->callHook('user.role.edit.form.data', [ &$values, $id ]);
 
         $form = (new FormUserRole([
             'action' => self::router()->generateUrl('user.role.update', [ 'id' => $id ]),
@@ -97,7 +97,7 @@ class Role extends \Soosyze\Controller
             ->setValues($values)
             ->makeFields();
 
-        $this->container->callHook('role.edit.form', [ &$form, $values, $id ]);
+        $this->container->callHook('user.role.edit.form', [ &$form, $values, $id ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -121,16 +121,16 @@ class Role extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('role.update.validator', [ &$validator ]);
+        $this->container->callHook('user.role.update.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('role.udpate.before', [
-                &$validator, &$data, $id
+            $this->container->callHook('user.role.udpate.before', [
+                $validator, &$data, $id
             ]);
             self::query()->update('role', $data)->where('role_id', '=', $id)->execute();
-            $this->container->callHook('role.udpate.after', [
+            $this->container->callHook('user.role.udpate.after', [
                 $validator, $data, $id
             ]);
 
@@ -149,11 +149,11 @@ class Role extends \Soosyze\Controller
 
     public function remove(int $id, ServerRequestInterface $req): ResponseInterface
     {
-        if (!($data = $this->find($id))) {
+        if (!($values = $this->find($id))) {
             return $this->get404($req);
         }
 
-        $this->container->callHook('role.remove.form.data', [ &$data, $id ]);
+        $this->container->callHook('user.role.remove.form.data', [ &$values, $id ]);
 
         $form = (new FormUserRole([
             'action' => self::router()->generateUrl('user.role.delete', [ 'id' => $id ]),
@@ -161,13 +161,13 @@ class Role extends \Soosyze\Controller
             ]))
             ->makeFieldsDelete();
 
-        $this->container->callHook('role.remove.form', [ &$form, $data, $id ]);
+        $this->container->callHook('user.role.remove.form', [ &$form, $values, $id ]);
 
         return self::template()
                 ->getTheme('theme_admin')
                 ->view('page', [
                     'icon'       => '<i class="fa fa-user-tag" aria-hidden="true"></i>',
-                    'title_main' => t('Remove :name role', [ ':name' => $data[ 'role_label' ] ])
+                    'title_main' => t('Remove :name role', [ ':name' => $values[ 'role_label' ] ])
                 ])
                 ->view('page.submenu', $this->getRoleSubmenu('user.role.remove', $id))
                 ->make('page.content', 'user/content-role-form.php', $this->pathViews, [
@@ -191,10 +191,10 @@ class Role extends \Soosyze\Controller
             ->setInputs((array) $req->getParsedBody())
             ->addInput('id', $id);
 
-        $this->container->callHook('role.delete.validator', [ &$validator, $id ]);
+        $this->container->callHook('user.role.delete.validator', [ &$validator, $id ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('role.delete.before', [ $validator, $id ]);
+            $this->container->callHook('user.role.delete.before', [ $validator, $id ]);
 
             self::query()->from('user_role')
                 ->where('role_id', '=', $id)
@@ -211,7 +211,7 @@ class Role extends \Soosyze\Controller
                 ->delete()
                 ->execute();
 
-            $this->container->callHook('role.delete.after', [ $validator, $id ]);
+            $this->container->callHook('user.role.delete.after', [ $validator, $id ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 

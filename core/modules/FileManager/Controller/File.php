@@ -92,6 +92,11 @@ class File extends \Soosyze\Controller
         $hookUser = $this->get(User::class);
         $max      = $hookUser->getMaxUpload($path);
 
+        $values = [];
+        $this->container->callHook('filemanager.file.create.form.data', [
+            &$values, $path
+        ]);
+
         $form = (new FormBuilder([
                 'action'  => self::router()->generateUrl('filemanager.file.store', [
                     'path' => $path
@@ -120,6 +125,10 @@ class File extends \Soosyze\Controller
                     'style'    => 'display:none'
                 ]);
             });
+
+        $this->container->callHook('filemanager.file.create.form', [
+            &$form, $values, $path
+        ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -193,6 +202,10 @@ class File extends \Soosyze\Controller
             $validator->addInput('folder', $sizefolder + $sizeFile);
         }
 
+        $this->container->callHook('filemanager.file.store.validator', [
+            &$validator, $path
+        ]);
+
         if (!$validator->isValid()) {
             return $this->json(400, [
                 'messages' => [
@@ -253,16 +266,20 @@ class File extends \Soosyze\Controller
         if (!$spl->isFile()) {
             return $this->get404($req);
         }
-        $data = self::filemanager()->parseFile($spl, $path);
+
+        $values = self::filemanager()->parseFile($spl, $path);
+        $this->container->callHook('filemanager.file.edit.form.data', [
+            &$values, $path, $name, $ext
+        ]);
 
         $action = self::router()->generateUrl('filemanager.file.update', [
             'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
 
         $form = (new FormBuilder([ 'action' => $action, 'method' => 'put']))
-            ->group('file-fieldset', 'fieldset', function ($form) use ($data) {
+            ->group('file-fieldset', 'fieldset', function ($form) use ($values) {
                 $form->legend('file-legend', t('Rename the file'))
-                ->group('name-group', 'div', function ($form) use ($data) {
+                ->group('name-group', 'div', function ($form) use ($values) {
                     $form->label('name-label', t('Name'), [
                         'data-tooltip' => t('All non-alphanumeric characters or hyphens will be replaced by an underscore (_) or their unaccented equivalent.')
                     ])
@@ -270,7 +287,7 @@ class File extends \Soosyze\Controller
                         'class'     => 'form-control',
                         'maxlenght' => 255,
                         'required'  => 1,
-                        'value'     => $data[ 'name' ]
+                        'value'     => $values[ 'name' ]
                     ]);
                 }, [ 'class' => 'form-group' ]);
             })
@@ -279,12 +296,16 @@ class File extends \Soosyze\Controller
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ]);
             });
 
+        $this->container->callHook('filemanager.file.edit.form', [
+            &$form, $values, $path, $name, $ext
+        ]);
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/modal-form.php', $this->pathViews)
                 ->addVars([
                     'form'  => $form,
-                    'info'  => $data,
+                    'info'  => $values,
                     'menu'  => self::filemanager()->getFileSubmenu('filemanager.file.edit', $spl, $path),
                     'title' => t('Rename the file'),
         ]);
@@ -306,6 +327,10 @@ class File extends \Soosyze\Controller
             ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir)
             ->addInput('file_current', $fileCurrent);
+
+        $this->container->callHook('filemanager.file.update.validator', [
+            &$validator, $path, $name, $ext
+        ]);
 
         /* Si les valeur attendues sont les bonnes. */
         if (!$validator->isValid()) {
@@ -345,6 +370,11 @@ class File extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $values = [];
+        $this->container->callHook('filemanager.file.remove.form.data', [
+            &$values, $path, $name, $ext
+        ]);
+
         $action = self::router()->generateUrl('filemanager.file.delete', [
             'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
@@ -364,6 +394,10 @@ class File extends \Soosyze\Controller
                 $form->token('token_file_delete')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
             });
+
+        $this->container->callHook('filemanager.file.remove.form', [
+            &$form, $values, $path, $name, $ext
+        ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -390,6 +424,10 @@ class File extends \Soosyze\Controller
             ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir)
             ->addInput('file', $file);
+
+        $this->container->callHook('filemanager.file.delete.validator', [
+            &$validator, $path, $name, $ext
+        ]);
 
         if ($validator->isValid()) {
             unlink($file);

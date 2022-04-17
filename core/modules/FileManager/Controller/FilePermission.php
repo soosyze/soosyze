@@ -230,9 +230,11 @@ class FilePermission extends \Soosyze\Controller
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
+
         $validator = (new Validator())
             ->addRule('token_file_permission', 'token')
             ->setInputs((array) $req->getParsedBody());
+
         $this->container->callHook('filemanager.permission.delete.validator', [
             &$validator, $id
         ]);
