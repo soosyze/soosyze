@@ -18,7 +18,7 @@ RouteCollection::setNamespace('SoosyzeCore\Node\Controller')->name('node.')->pre
     $r->get('status.search', '/status/search', '\NodeStatus@search');
     $r->get('type.search', '/type/search', '\NodeType@search');
     $r->get('filter', '/filter', '\NodeManager@filter');
-    $r->get('filter.page', '/filter/{pageId}', '\NodeManager@filterPage', [ 'pageId' => '[1-9]\d*' ]);
+    $r->get('filter.page', '/filter/{pageId}', '\NodeManager@filter', [ 'pageId' => '[1-9]\d*' ]);
 });
 RouteCollection::setNamespace('SoosyzeCore\Node\Controller\NodeApi')->name('node.api.')->prefix('/api/node/{idNode}')->group(function (RouteGroup $r): void {
     $r->get('remove', '/remove', '@remove', [ 'idNode' => '\d+' ]);

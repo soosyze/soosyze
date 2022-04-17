@@ -125,8 +125,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                         $year => [
                             'label' => t('All {year}', [ 'year' => $year ]),
                             'value' => $this->router->generateUrl('news.years', [
-                                'year'   => $year,
-                                'pageId' => ''
+                                'year'   => $year
                             ])
                         ]
                     ]
@@ -141,8 +140,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 'label' => strftime('%b', (int) $value[ 'date_created' ]),
                 'value' => $this->router->generateUrl('news.month', [
                     'year'   => $year,
-                    'month'  => $month,
-                    'pageId' => ''
+                    'month'  => $month
                 ])
             ];
         }
@@ -151,13 +149,11 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         if (!empty($paramMonth)) {
             $selected = $this->router->generateUrl('news.month', [
                 'year'   => $paramMonth[ 0 ],
-                'month'  => $paramMonth[ 1 ],
-                'pageId' => ''
+                'month'  => $paramMonth[ 1 ]
             ]);
         } elseif (!empty($paramYear)) {
             $selected = $this->router->generateUrl('news.years', [
-                'year'   => $paramYear[ 0 ],
-                'pageId' => ''
+                'year'   => $paramYear[ 0 ]
             ]);
         }
 
@@ -193,8 +189,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             } else {
                 $output[ $year ] = [
                     'link'   => $this->router->generateUrl('news.years', [
-                        'year'   => $year,
-                        'pageId' => ''
+                        'year'   => $year
                     ]),
                     'number' => 1,
                     'year'   => $year
@@ -211,8 +206,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 $output[ $year ][ 'months' ][ $month ] = [
                     'link'   => $this->router->generateUrl('news.month', [
                         'year'   => $year,
-                        'month'  => $month,
-                        'pageId' => ''
+                        'month'  => $month
                     ]),
                     'month'  => strftime('%b', (int) $value[ 'date_created' ]),
                     'number' => 1,

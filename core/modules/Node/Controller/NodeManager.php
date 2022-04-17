@@ -55,15 +55,10 @@ class NodeManager extends \Soosyze\Controller
                     'link_search_status'    => self::router()->generateUrl('node.status.search'),
                     'link_search_node_type' => self::router()->generateUrl('node.type.search'),
                 ])
-                ->addBlock('content.table', $this->filterPage(1, $req));
+                ->addBlock('content.table', $this->filter($req));
     }
 
-    public function filter(ServerRequestInterface $req): Block
-    {
-        return $this->filterPage(1, $req);
-    }
-
-    public function filterPage(int $pageId, ServerRequestInterface $req): Block
+    public function filter(ServerRequestInterface $req, int $pageId = 1): Block
     {
         $validator = (new Validator())
             ->setRules([
