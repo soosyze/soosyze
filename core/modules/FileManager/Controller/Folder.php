@@ -38,12 +38,19 @@ class Folder extends \Soosyze\Controller
         );
 
         $values = [];
+        $this->container->callHook('filemanager.folder.create.from.data', [
+            &$values, $path
+        ]);
 
         $action = self::router()->generateUrl('filemanager.folder.store', [ 'path' => $path ]);
 
         $form = (new FormFolder([ 'action' => $action, 'method' => 'post' ]))
             ->setValues($values)
             ->makeFields();
+
+        $this->container->callHook('filemanager.folder.create.from', [
+            &$form, $values, $path
+        ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -65,6 +72,10 @@ class Folder extends \Soosyze\Controller
             ->addLabel('name', t('Name'))
             ->setInputs((array) $req->getParsedBody());
 
+        $this->container->callHook('filemanager.folder.store.validator', [
+            &$validator, $path
+        ]);
+
         if (!$validator->isValid()) {
             return $this->json(400, [
                     'messages'    => [ 'errors' => $validator->getKeyErrors() ],
@@ -75,8 +86,16 @@ class Folder extends \Soosyze\Controller
         $folder = Util::strSlug($validator->getInputString('name'));
         $newDir = "$dir/$folder";
 
+        $this->container->callHook('filemanager.folder.store.before', [
+            $validator, &$newDir, $path
+        ]);
+
         if (!is_dir($newDir)) {
             mkdir($newDir, 0755, true);
+
+            $this->container->callHook('filemanager.folder.store.after', [
+                $validator, $newDir, $path
+            ]);
 
             return $this->json(201, [
                 'messages' => [ 'success' => [ t('The directory is created') ] ]
@@ -104,11 +123,19 @@ class Folder extends \Soosyze\Controller
 
         $values = self::filemanager()->parseDir($spl, $path);
 
+        $this->container->callHook('filemanager.folder.edit.from.data', [
+            &$values, $path
+        ]);
+
         $action = self::router()->generateUrl('filemanager.folder.update', [ 'path' => $path ]);
 
         $form = (new FormFolder([ 'action' => $action, 'method' => 'put' ]))
             ->setValues($values)
             ->makeFields();
+
+        $this->container->callHook('filemanager.folder.edit.from', [
+            &$form, $values, $path
+        ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -134,6 +161,10 @@ class Folder extends \Soosyze\Controller
             ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir);
 
+        $this->container->callHook('filemanager.folder.update.validator', [
+            &$validator, $path
+        ]);
+
         if (!$validator->isValid()) {
             return $this->json(400, [
                     'messages'    => [ 'errors' => $validator->getKeyErrors() ],
@@ -144,9 +175,17 @@ class Folder extends \Soosyze\Controller
         $folder    = Util::strSlug($validator->getInputString('name'));
         $dirUpdate = dirname($dir) . "/$folder";
 
+        $this->container->callHook('filemanager.folder.update.before', [
+            $validator, &$dirUpdate, $path
+        ]);
+
         /* Si le nouveau nom du répertoire est déjà utilisé. */
         if ($dir === $dirUpdate || !is_dir($dirUpdate)) {
             rename($dir, $dirUpdate);
+
+            $this->container->callHook('filemanager.folder.store.after', [
+                $validator, $dirUpdate, $path
+            ]);
 
             return $this->json(200, [
                 'messages' => [ 'success' => [ t('The directory is renamed') ] ]
@@ -171,6 +210,11 @@ class Folder extends \Soosyze\Controller
             return $this->get404($req);
         }
 
+        $values = [];
+        $this->container->callHook('filemanager.folder.remove.from.data', [
+            &$values, $path
+        ]);
+
         $action = self::router()->generateUrl('filemanager.folder.delete', [
             'path' => $path
         ]);
@@ -189,6 +233,10 @@ class Folder extends \Soosyze\Controller
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
             });
 
+        $this->container->callHook('filemanager.folder.remove.from', [
+            &$form, $values, $path
+        ]);
+
         return self::template()
                 ->getTheme('theme_admin')
                 ->createBlock('filemanager/modal-form.php', $this->pathViews)
@@ -203,6 +251,7 @@ class Folder extends \Soosyze\Controller
     public function delete(string $path, ServerRequestInterface $req): ResponseInterface
     {
         $dir       = self::core()->getDir('files_public', 'app/files') . $path;
+
         $validator = (new Validator())
             ->setRules([
                 'dir'                 => 'required|dir',
@@ -211,7 +260,15 @@ class Folder extends \Soosyze\Controller
             ->setInputs((array) $req->getParsedBody())
             ->addInput('dir', $dir);
 
+        $this->container->callHook('filemanager.folder.delete.validator', [
+            &$validator, $path
+        ]);
+
         if ($validator->isValid()) {
+            $this->container->callHook('filemanager.folder.delete.before', [
+                $validator, $path
+            ]);
+
             $dirIterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
             $iterator    = new \RecursiveIteratorIterator($dirIterator, \RecursiveIteratorIterator::CHILD_FIRST);
 
@@ -224,6 +281,10 @@ class Folder extends \Soosyze\Controller
             }
             /* Supprime le dossier cible. */
             rmdir($dir);
+
+            $this->container->callHook('filemanager.folder.delete.after', [
+                $validator, $path
+            ]);
 
             return $this->json(200, [
                 'messages' => [ 'success' => [ t('The directory has been deleted') ] ]

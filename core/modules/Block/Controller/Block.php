@@ -184,7 +184,7 @@ class Block extends \Soosyze\Controller
 
             if ($hook) {
                 $this->container->callHook("block.{$hook}.store.validator", [
-                    &$validator
+                    &$validator, $theme
                 ]);
             }
 
@@ -208,7 +208,7 @@ class Block extends \Soosyze\Controller
 
             if (!empty($block[ 'hook' ])) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.store.before", [
-                    &$validator, &$data
+                    $validator, &$data, $theme
                 ]);
             }
             $this->container->callHook('block.store.before', [ $validator, &$data, $theme ]);
@@ -313,7 +313,7 @@ class Block extends \Soosyze\Controller
 
         if (!empty($block[ 'hook' ])) {
             $this->container->callHook("block.{$block[ 'hook' ]}.update.validator", [
-                &$validator, $id
+                &$validator, $theme, $id
             ]);
         }
 
@@ -333,7 +333,7 @@ class Block extends \Soosyze\Controller
 
             if (!empty($block[ 'hook' ])) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.before", [
-                    &$validator, &$data, $id
+                    $validator, &$data, $theme, $id
                 ]);
             }
             $this->container->callHook('block.update.before', [
@@ -347,7 +347,7 @@ class Block extends \Soosyze\Controller
 
             if (!empty($block[ 'hook' ])) {
                 $this->container->callHook("block.{$block[ 'hook' ]}.update.after", [
-                    $validator, $data, $id
+                    $validator, $data, $theme, $id
                 ]);
             }
             $this->container->callHook('block.update.after', [ $validator, $data, $theme, $id ]);
@@ -407,7 +407,8 @@ class Block extends \Soosyze\Controller
 
     public function delete(
         string $theme,
-        int $id
+        int $id,
+        ServerRequestInterface $req
     ): ResponseInterface {
         if (!$this->find($id)) {
             return $this->json(404, [
@@ -415,16 +416,22 @@ class Block extends \Soosyze\Controller
             ]);
         }
 
-        $validator = new Validator();
+        $validator = (new Validator())
+            ->addRule('token_block_delete', 'token')
+            ->setInputs((array) $req->getParsedBody());
+
+        $this->container->callHook('block.delete.validator', [
+            &$validator, $theme, $id
+        ]);
 
         if ($validator->isValid()) {
-            $this->container->callHook('block.delete.before', [ $id ]);
+            $this->container->callHook('block.delete.before', [ $validator, $theme, $id ]);
             self::query()
                 ->from('block')
                 ->where('block_id', '=', $id)
                 ->delete()
                 ->execute();
-            $this->container->callHook('block.delete.after', [ $id ]);
+            $this->container->callHook('block.delete.after', [ $validator, $theme, $id ]);
 
             return $this->json(200, [
                     'redirect' => self::router()->generateUrl('block.section.admin', [

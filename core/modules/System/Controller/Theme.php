@@ -126,6 +126,8 @@ class Theme extends \Soosyze\Controller
         /** @phpstan-var array $values */
         $values = self::config()->get('settings');
 
+        $this->container->callHook('system.theme.edit.form.data', [ &$values ]);
+
         $attr = [
             'action'  => self::router()->generateUrl('system.theme.update', [
                 'type' => $type
@@ -140,6 +142,8 @@ class Theme extends \Soosyze\Controller
 
         $form->setValues($values)
             ->makeFields();
+
+        $this->container->callHook('system.theme.edit.form', [ &$form, $values ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -179,12 +183,18 @@ class Theme extends \Soosyze\Controller
             ? []
             : [ 'favicon', 'logo' ];
 
+        $this->container->callHook('system.theme.update.validator', [ &$validator, $type ]);
+
         if ($validator->isValid()) {
             $data = self::TYPE_ADMIN === $type
                 ? [
                 'theme_admin_dark' => (bool) $validator->getInput('theme_admin_dark')
                 ]
                 : [];
+
+            $this->container->callHook('system.theme.update.before', [
+                $validator, &$data, $type
+            ]);
 
             foreach ($data as $key => $value) {
                 self::config()->set('settings.' . $key, $value);
@@ -193,6 +203,10 @@ class Theme extends \Soosyze\Controller
             foreach ($inputsFile as $file) {
                 $this->saveFile($file, $validator);
             }
+
+            $this->container->callHook('system.theme.update.after', [
+                $validator, $data, $type
+            ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 

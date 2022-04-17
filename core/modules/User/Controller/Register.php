@@ -31,6 +31,7 @@ class Register extends \Soosyze\Controller
     public function create(): ResponseInterface
     {
         $values = [];
+        $this->container->callHook('user.register.create.form.data', [ &$values ]);
 
         $form = (new FormUser([
             'action' => self::router()->generateUrl('user.register.store'),
@@ -47,6 +48,8 @@ class Register extends \Soosyze\Controller
                 ->passwordPolicy($formbuilder)
                 ->eulaGroup($formbuilder, self::router());
         })->submitForm(t('Registration'));
+
+        $this->container->callHook('user.register.create.form', [ &$form, $values ]);
 
         if (($connectUrl = self::config()->get('settings.connect_url', Config::CONNECT_URL))) {
             $connectUrl = '/' . $connectUrl;
@@ -115,7 +118,7 @@ class Register extends \Soosyze\Controller
                 ]
         ]);
 
-        $this->container->callHook('register.store.validator', [ &$validator ]);
+        $this->container->callHook('user.register.store.validator', [ &$validator ]);
 
         if ($validator->isValid()) {
             $data = [
@@ -129,7 +132,7 @@ class Register extends \Soosyze\Controller
                 'rgpd'             => (bool) $validator->hasInput('rgpd'),
             ];
 
-            $this->container->callHook('register.store.before', [ $validator, &$data ]);
+            $this->container->callHook('user.register.store.before', [ $validator, &$data ]);
             self::query()
                 ->insertInto('user', array_keys($data))
                 ->values($data)
@@ -143,7 +146,7 @@ class Register extends \Soosyze\Controller
                 ->values([ $user[ 'user_id' ], 2 ])
                 ->execute();
 
-            $this->container->callHook('register.store.after', [ $validator ]);
+            $this->container->callHook('user.register.store.after', [ $validator ]);
 
             if ($this->sendMailRegister($data[ 'email' ])) {
                 $_SESSION[ 'messages' ][ 'success' ][] = t(
@@ -173,12 +176,14 @@ class Register extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $this->container->callHook('register.activate.before', [ $id ]);
+        $data = [ 'token_actived' => null, 'actived' => true ];
+
+        $this->container->callHook('user.register.activate.before', [ &$data, $id ]);
         self::query()
-            ->update('user', [ 'token_actived' => null, 'actived' => true ])
+            ->update('user', $data)
             ->where('user_id', '=', $id)
             ->execute();
-        $this->container->callHook('register.activate.after', [ $id ]);
+        $this->container->callHook('user.register.activate.after', [ $data, $id ]);
 
         $_SESSION[ 'messages' ][ 'success' ][] = t('Your user account has just been activated, you can now login.');
 

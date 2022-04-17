@@ -37,7 +37,7 @@ class Login extends \Soosyze\Controller
         }
 
         $values = [];
-        $this->container->callHook('login.form.data', [ &$values ]);
+        $this->container->callHook('user.login.form.data', [ &$values ]);
 
         $form = (new FormUser([
             'action' => self::router()->generateUrl('user.login.check', [ 'url' => $url ]),
@@ -51,7 +51,7 @@ class Login extends \Soosyze\Controller
                 ->passwordCurrentGroup($formbuilder);
         })->submitForm(t('Sign in'));
 
-        $this->container->callHook('login.form', [ &$form, $values ]);
+        $this->container->callHook('user.login.form', [ &$form, $values ]);
 
         return self::template()
                 ->view('page', [
@@ -84,6 +84,8 @@ class Login extends \Soosyze\Controller
                 'token_user_form' => 'token'
             ])
             ->setInputs((array) $req->getParsedBody());
+
+        $this->container->callHook('user.login.check.validator', [ &$validator, $url ]);
 
         if (!$validator->isValid()) {
             return $this->json(400, [
@@ -132,7 +134,7 @@ class Login extends \Soosyze\Controller
         }
 
         $values = [];
-        $this->container->callHook('relogin.form.data', [ &$values ]);
+        $this->container->callHook('user.relogin.form.data', [ &$values, $url ]);
 
         $action = self::router()->generateUrl('user.relogin.check', [ 'url' => $url ]);
 
@@ -143,7 +145,7 @@ class Login extends \Soosyze\Controller
             $form->emailGroup($formBuilder);
         })->submitForm();
 
-        $this->container->callHook('relogin.form', [ &$form, $values ]);
+        $this->container->callHook('user.relogin.form', [ &$form, $values, $url ]);
 
         return self::template()
                 ->view('page', [
@@ -170,6 +172,8 @@ class Login extends \Soosyze\Controller
                 'token_user_form' => 'required|token'
             ])
             ->setInputs((array) $req->getParsedBody());
+
+        $this->container->callHook('user.relogin.check.validator', [ &$validator, $url ]);
 
         if ($validator->isValid()) {
             $user = self::user()->getUserActived($validator->getInputString('email'));
