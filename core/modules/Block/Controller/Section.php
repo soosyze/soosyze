@@ -65,14 +65,28 @@ class Section extends \Soosyze\Controller
             ])
             ->setInputs((array) $req->getParsedBody());
 
+        $this->container->callHook('block.section.update.validator', [
+            &$validator, $id
+        ]);
+
         if ($validator->isValid()) {
+            $data = [
+                'weight'  => $validator->getInputInt('weight'),
+                'section' => $validator->getInputString('section')
+            ];
+
+            $this->container->callHook('block.section.update.before', [
+                $validator, &$data, $id
+            ]);
+
             self::query()
-                ->update('block', [
-                    'weight'  => $validator->getInputInt('weight'),
-                    'section' => $validator->getInputString('section')
-                ])
+                ->update('block', $data)
                 ->where('block_id', '=', $id)
                 ->execute();
+
+            $this->container->callHook('block.section.update.after', [
+                $validator, $data, $id
+            ]);
         }
 
         return $this->json(200);

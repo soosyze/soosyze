@@ -122,7 +122,7 @@ class User extends \Soosyze\Controller
         if ($validator->isValid() && $validatorRoles->isValid()) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('user.store.before', [ &$validator, &$data ]);
+            $this->container->callHook('user.store.before', [ $validator, &$data ]);
             self::query()->insertInto('user', array_keys($data))
                 ->values($data)
                 ->execute();
@@ -140,7 +140,7 @@ class User extends \Soosyze\Controller
             self::query()->execute();
 
             $this->savePicture($user[ 'user_id' ], $validator);
-            $this->container->callHook('user.store.after', [ &$validator ]);
+            $this->container->callHook('user.store.after', [ $validator, $data ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -225,14 +225,14 @@ class User extends \Soosyze\Controller
             $data = $this->getData($validator, $id);
 
             $this->container->callHook('user.update.before', [
-                &$validator, &$data, $id
+                $validator, &$data, $id
             ]);
             self::query()->update('user', $data)->where('user_id', '=', $id)->execute();
 
             $this->updateRole($validator, $id);
 
             $this->savePicture($id, $validator);
-            $this->container->callHook('user.update.after', [ &$validator, $id ]);
+            $this->container->callHook('user.update.after', [ &$validator, $data, $id ]);
 
             if (($userCurrent = self::user()->isConnected()) && $userCurrent[ 'user_id' ] == $id) {
                 $pwd = empty($data[ 'password' ])

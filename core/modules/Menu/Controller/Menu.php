@@ -91,7 +91,7 @@ class Menu extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $this->container->callHook('menu.store.form.data', [ &$values ]);
+        $this->container->callHook('menu.store.form.data', [ &$values, $menuId ]);
 
         $action = self::router()->generateUrl('menu.update', [ 'menuId' => $menuId ]);
 
@@ -99,7 +99,7 @@ class Menu extends \Soosyze\Controller
             ->setValues($values)
             ->makeFields();
 
-        $this->container->callHook('menu.store.form', [ &$form, $values ]);
+        $this->container->callHook('menu.store.form', [ &$form, $values, $menuId ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -125,17 +125,17 @@ class Menu extends \Soosyze\Controller
 
         $validator = $this->getValidator($req);
 
-        $this->container->callHook('menu.update.validator', [ &$validator ]);
+        $this->container->callHook('menu.update.validator', [ &$validator, $menuId ]);
 
         if ($validator->isValid()) {
             $data = $this->getData($validator);
 
-            $this->container->callHook('menu.update.before', [ $validator, &$data ]);
+            $this->container->callHook('menu.update.before', [ $validator, &$data, $menuId ]);
             self::query()
                 ->update('menu', $data)
                 ->where('menu_id', '=', $menuId)
                 ->execute();
-            $this->container->callHook('menu.update.after', [ $validator ]);
+            $this->container->callHook('menu.update.after', [ $validator, $data, $menuId ]);
 
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
@@ -207,10 +207,8 @@ class Menu extends \Soosyze\Controller
         }
 
         $validator = (new Validator())
-            ->setRules([
-                'menu_id' => 'required|int',
-            ])
-            ->setInputs([ 'menu_id' => $menuId ]);
+            ->addRule('token_menu_remove', 'token')
+            ->setInputs((array) $req->getParsedBody());
 
         $this->container->callHook('menu.delete.validator', [ &$validator, $menuId ]);
 

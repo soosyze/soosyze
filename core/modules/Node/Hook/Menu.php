@@ -290,10 +290,10 @@ class Menu
             ->execute();
     }
 
-    public function hookLinkDeleteValid(Validator $validator, int $id): void
+    public function hookLinkDeleteValid(Validator $validator, int $menuId, int $linkId): void
     {
         $this->query->from('node_menu_link')
-            ->where('menu_link_id', '=', $id)
+            ->where('menu_link_id', '=', $linkId)
             ->delete()
             ->execute();
     }
