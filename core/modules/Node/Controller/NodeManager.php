@@ -21,7 +21,7 @@ class NodeManager extends \Soosyze\Controller
     /**
      * @var int
      */
-    private static $limit = 25;
+    private static $limit = 5;
 
     /**
      * @var bool
@@ -162,7 +162,8 @@ class NodeManager extends \Soosyze\Controller
                     'link_type_sort'         => $linkSort->withQuery(http_build_query($paramsTypeSort)),
                     'nodes'                  => $nodes,
                     'order_by'               => $orderBy,
-                    'paginate'               => new Paginator($countData, self::$limit, $pageId, (string) $linkPagination)
+                    'paginate'               => (new Paginator($countData, self::$limit, $pageId, (string) $linkPagination))
+                        ->setKey('%7BpageId%7D')
         ]);
     }
 
