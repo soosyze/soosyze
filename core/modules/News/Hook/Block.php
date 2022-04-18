@@ -123,7 +123,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     'label' => $year,
                     'value' => [
                         $year => [
-                            'label' => t('All {year}', [ 'year' => $year ]),
+                            'label' => t('All :year', [ ':year' => $year ]),
                             'value' => $this->router->generateUrl('news.years', [
                                 'year'   => $year
                             ])
@@ -148,12 +148,12 @@ class Block implements \SoosyzeCore\Block\BlockInterface
         $selected = '#';
         if (!empty($paramMonth)) {
             $selected = $this->router->generateUrl('news.month', [
-                'year'   => $paramMonth[ 0 ],
-                'month'  => $paramMonth[ 1 ]
+                'year'   => $paramMonth[ 'year' ],
+                'month'  => $paramMonth[ 'month' ]
             ]);
         } elseif (!empty($paramYear)) {
             $selected = $this->router->generateUrl('news.years', [
-                'year'   => $paramYear[ 0 ]
+                'year'   => $paramYear[ 'year' ]
             ]);
         }
 
@@ -196,7 +196,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 ];
             }
 
-            if (empty($options[ 'expand' ]) && (empty($param[ 0 ]) || $param[ 0 ] != $year)) {
+            if (empty($options[ 'expand' ]) && (empty($param[ 'year' ]) || $param[ 'year' ] != $year)) {
                 continue;
             }
 
