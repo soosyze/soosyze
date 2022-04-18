@@ -30,8 +30,8 @@ RouteCollection::setNamespace('SoosyzeCore\Node\Controller')->prefix('/admin/nod
     });
     $r->setNamespace('\Node')->group(function (RouteGroup $r): void {
         $r->get('add', '/add', '@add');
-        $r->get('create', '/{node}/create', '@create', [ 'node' => '[_a-z]+' ]);
-        $r->post('store', '/{node}/create', '@store', [ 'node' => '[_a-z]+' ]);
+        $r->get('create', '/{nodeType}/create', '@create', [ 'nodeType' => '[_a-z]+' ]);
+        $r->post('store', '/{nodeType}/create', '@store', [ 'nodeType' => '[_a-z]+' ]);
         $r->get('edit', '/{idNode}/edit', '@edit', [ 'idNode' => '\d+' ]);
         $r->put('update', '/{idNode}/edit', '@update', [ 'idNode' => '\d+' ]);
         $r->get('remove', '/{idNode}/remove', '@remove', [ 'idNode' => '\d+' ]);
