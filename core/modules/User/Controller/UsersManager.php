@@ -160,7 +160,8 @@ class UsersManager extends \Soosyze\Controller
                     'link_time_access_sort'    => $linkSort->withQuery(http_build_query($paramsTimeAccessSort)),
                     'link_time_installed_sort' => $linkSort->withQuery(http_build_query($paramsTimeInstalledSort)),
                     'order_by'                 => $orderBy,
-                    'paginate'                 => new Paginator($countData, self::$limit, $pageId, (string) $linkPagination),
+                    'paginate'                 => (new Paginator($countData, self::$limit, $pageId, (string) $linkPagination))
+                        ->setKey('%7BpageId%7D'),
                     'users'                    => $users
         ]);
     }
