@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SoosyzeCore\BackupManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
@@ -61,21 +60,21 @@ class BackupController extends \Soosyze\Controller
         );
     }
 
-    public function download(string $path): ResponseInterface
+    public function download(string $file): ResponseInterface
     {
-        if ($content = self::backupmanager()->getBackup($path)) {
+        if ($content = self::backupmanager()->getBackup($file)) {
             return new Response(200, new Stream($content), [
                 'content-type'        => 'application/zip',
-                'content-disposition' => 'attachement; filename="' . $path . '.zip"'
+                'content-disposition' => 'attachement; filename="' . $file . '.zip"'
             ]);
         }
 
         return $this->get404();
     }
 
-    public function restore(string $path): ResponseInterface
+    public function restore(string $file): ResponseInterface
     {
-        $_SESSION[ 'messages' ] = self::backupmanager()->restore($path)
+        $_SESSION[ 'messages' ] = self::backupmanager()->restore($file)
             ? [ 'success' => [ t('Backup restored successfuly') ] ]
             : [ 'errors' => [ t('Backup restore failed') ] ];
 
@@ -84,9 +83,9 @@ class BackupController extends \Soosyze\Controller
         );
     }
 
-    public function delete(string $path, ServerRequestInterface $req): ResponseInterface
+    public function delete(string $file): ResponseInterface
     {
-        $_SESSION[ 'messages' ] = self::backupmanager()->delete($path)
+        $_SESSION[ 'messages' ] = self::backupmanager()->delete($file)
             ? [ 'success' => [ t('Backup deleted successfuly') ] ]
             : [ 'errors' => [ t('Backup delete failed') ] ];
 
