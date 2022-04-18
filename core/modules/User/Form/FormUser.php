@@ -349,12 +349,12 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
             $form->token('token_user_form')
                 ->submit('submit', t($label), [ 'class' => 'btn btn-success' ]);
             if ($cancel) {
-                $this->html('cancel', '<button:attr>:content</button>', [
-                        ':content' => t('Cancel'),
-                        'class'    => 'btn btn-danger',
-                        'onclick'  => 'javascript:history.back();',
-                        'type'     => 'button'
-                    ]);
+                $form->html('cancel', '<button:attr>:content</button>', [
+                    ':content' => t('Cancel'),
+                    'class'    => 'btn btn-danger',
+                    'onclick'  => 'javascript:history.back();',
+                    'type'     => 'button'
+                ]);
             }
         });
 
