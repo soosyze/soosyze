@@ -51,13 +51,13 @@ class Node extends \Soosyze\Controller
 
         foreach ($nodeType as $key => &$value) {
             $reqGranted = self::router()->generateRequest('node.create', [
-                'node' => $value[ 'node_type' ]
+                'nodeType' => $value[ 'node_type' ]
             ]);
             if (!$this->container->callHook('app.granted.request', [ $reqGranted ])) {
                 unset($nodeType[ $key ]);
             }
             $value[ 'link' ] = self::router()->generateUrl('node.create', [
-                'node' => $value[ 'node_type' ]
+                'nodeType' => $value[ 'node_type' ]
             ]);
         }
         unset($value);
@@ -73,18 +73,18 @@ class Node extends \Soosyze\Controller
         ]);
     }
 
-    public function create(string $type, ServerRequestInterface $req): ResponseInterface
+    public function create(string $nodeType, ServerRequestInterface $req): ResponseInterface
     {
-        if (!$fields = self::node()->getFieldsDisplay($type)) {
+        if (!$fields = self::node()->getFieldsDisplay($nodeType)) {
             return $this->get404($req);
         }
 
         $values = [];
 
-        $this->container->callHook('node.create.form.data', [ &$values, $type ]);
+        $this->container->callHook('node.create.form.data', [ &$values, $nodeType ]);
 
         $form = (new FormNode([
-                'action'        => self::router()->generateUrl('node.store', [ 'node' => $type ]),
+                'action'        => self::router()->generateUrl('node.store', [ 'nodeType' => $nodeType ]),
                 'data-tab-pane' => '.pane-node',
                 'enctype'       => 'multipart/form-data',
                 'id'            => 'form-node',
@@ -95,7 +95,7 @@ class Node extends \Soosyze\Controller
             ->setDisabledUserCurrent(!self::user()->isGranted('node.user.edit'))
             ->makeFields();
 
-        $this->container->callHook('node.create.form', [ &$form, $values, $type ]);
+        $this->container->callHook('node.create.form', [ &$form, $values, $nodeType ]);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -112,7 +112,7 @@ class Node extends \Soosyze\Controller
                 ->override('page.content', [ 'node/content-node-form_create.php' ]);
     }
 
-    public function store(string $type, ServerRequestInterface $req): ResponseInterface
+    public function store(string $nodeType, ServerRequestInterface $req): ResponseInterface
     {
         if ($req->isMaxSize()) {
             return $this->json(400, [
@@ -123,16 +123,16 @@ class Node extends \Soosyze\Controller
                     ]
             ]);
         }
-        if (!($fields = self::node()->getFieldsForm($type))) {
+        if (!($fields = self::node()->getFieldsForm($nodeType))) {
             return $this->json(404, [
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
 
         /* Test les champs par defauts de la node. */
-        $validator = $this->getValidator($req, $type, $fields);
+        $validator = $this->getValidator($req, $nodeType, $fields);
 
-        $this->container->callHook('node.store.validator', [ &$validator, $type ]);
+        $this->container->callHook('node.store.validator', [ &$validator, $nodeType ]);
 
         if ($validator->isValid()) {
             /* Prépare les champs de la table enfant. */
@@ -152,15 +152,15 @@ class Node extends \Soosyze\Controller
                 }
             }
 
-            $this->container->callHook('node.entity.store.before', [ $validator, &$fieldsInsert, $type ]);
+            $this->container->callHook('node.entity.store.before', [ $validator, &$fieldsInsert, $nodeType ]);
             self::query()
-                ->insertInto('entity_' . $type, array_keys($fieldsInsert))
+                ->insertInto('entity_' . $nodeType, array_keys($fieldsInsert))
                 ->values($fieldsInsert)
                 ->execute();
-            $this->container->callHook('node.entity.store.after', [ $validator, $type ]);
+            $this->container->callHook('node.entity.store.after', [ $validator, $nodeType ]);
 
             /* Rassemble les champs personnalisés dans la node. */
-            $data = $this->getData($validator, $type);
+            $data = $this->getData($validator, $nodeType);
 
             $this->container->callHook('node.store.before', [ $validator, &$data ]);
             self::query()
