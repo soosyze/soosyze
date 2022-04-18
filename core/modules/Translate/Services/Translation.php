@@ -234,6 +234,10 @@ class Translation extends Config
     {
         $path = $this->getPath();
 
+        if (!is_dir($path)) {
+            return [];
+        }
+
         $dirIterator = new \DirectoryIterator($path);
 
         /* On supprime chaque dossier et chaque fichier	du dossier cible */
