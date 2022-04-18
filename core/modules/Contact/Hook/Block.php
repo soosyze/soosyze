@@ -47,7 +47,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
 
     public function hookContact(ServiceBlock $tpl, ?array $options): ?ServiceBlock
     {
-        if (!$this->user->isGranted('contact.form')) {
+        if (!$this->user->isGranted('contact.main')) {
             return null;
         }
 
