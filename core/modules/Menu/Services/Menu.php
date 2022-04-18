@@ -138,9 +138,13 @@ class Menu
 
         /** @phpstan-var string $linkSource */
         $linkSource = $this->alias->getSource($uri->getPath(), $uri->getPath());
-        $uriSource  = $uri->withPath($linkSource);
 
-        $route = $this->router->parse($request->withUri($uriSource)->withMethod('get'));
+        $route = $this->router->parse(
+            $request
+                ->withUri($uri->withPath('/' . ltrim($linkSource, '/')))
+                ->withMethod('get')
+                ->withoutHeader('x-http-method-override')
+        );
 
         return [
             'key'         => $route instanceof Route ? $route->getKey() : null,
