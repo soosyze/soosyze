@@ -101,7 +101,8 @@ class News extends \Soosyze\Controller
                     'default'  => $default,
                     'news'     => $query,
                     'link_rss' => self::router()->generateUrl('news.rss'),
-                    'paginate' => new Paginator(count($queryAll), $limit, $pageId, $link)
+                    'paginate' => (new Paginator(count($queryAll), $limit, $pageId, $link))
+                        ->setKey('{pageId}')
         ]);
     }
 
@@ -228,7 +229,8 @@ class News extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'news/content-news-index.php', $this->pathViews, [
                     'news'     => $news,
-                    'paginate' => new Paginator(count($nodesAll), $limit, $pageId, $this->link),
+                    'paginate' => (new Paginator(count($nodesAll), $limit, $pageId, $this->link))
+                        ->setKey('{pageId}'),
                     'default'  => $default,
                     'link_rss' => self::router()->generateUrl('news.rss')
         ]);
