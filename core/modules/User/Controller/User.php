@@ -180,7 +180,7 @@ class User extends \Soosyze\Controller
         $rolesUser = self::user()->getIdRolesUser($id);
         $form->setValues([ 'roles' => $rolesUser ])
             ->rolesFieldset($this->getRoleByPermission())
-            ->submitForm();
+            ->submitForm('Save', true);
 
         $this->container->callHook('user.edit.form', [ &$form, $values, $id ]);
 
@@ -278,11 +278,9 @@ class User extends \Soosyze\Controller
             ->group('submit-group', 'div', function ($form) {
                 $form->token('token_user_remove')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-                ->html('cancel', '<button:attr>:content</button>', [
-                    ':content' => t('Cancel'),
+                ->button('cancel', t('Cancel'), [
                     'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();',
-                    'type'     => 'button'
+                    'onclick'  => 'javascript:history.back();'
                 ]);
             });
 
