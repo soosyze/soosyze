@@ -50,11 +50,9 @@ class FormMenu extends \Soosyze\Components\Form\FormBuilder
             ->group('submit-group', 'div', function ($form) {
                 $form->token('token_link_form')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
-                ->html('cancel', '<button:attr>:content</button>', [
-                    ':content' => t('Cancel'),
-                    'class'    => 'btn btn-danger',
+                ->button('cancel', t('Cancel'), [
+                    'class'    => 'btn btn-default',
                     'onclick'  => 'javascript:history.back();',
-                    'type'     => 'button'
                 ]);
             });
 

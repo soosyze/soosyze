@@ -203,11 +203,9 @@ class FilePermission extends \Soosyze\Controller
             ->group('submit-group', 'div', function ($form) {
                 $form->token('token_file_permission')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
-                ->html('cancel', '<button:attr>:content</button>', [
-                    ':content' => t('Cancel'),
+                ->button('cancel', t('Cancel'), [
                     'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();',
-                    'type'     => 'button'
+                    'onclick'  => 'javascript:history.back();'
                 ]);
             });
 
