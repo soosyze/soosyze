@@ -175,13 +175,7 @@ class Link extends \Soosyze\Controller
             return $this->get404($req);
         }
 
-        $form = $this->formRemove($values, $menuId, $linkId)
-            ->html('cancel', '<button:attr>:content</button>', [
-            ':content' => t('Cancel'),
-            'class'    => 'btn btn-default',
-            'onclick'  => 'javascript:history.back();',
-            'type'     => 'button'
-        ]);
+        $form = $this->formRemove($values, $menuId, $linkId, true);
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -257,7 +251,7 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    private function formRemove(array $values, int $menuId, int $linkId): FormBuilder
+    private function formRemove(array $values, int $menuId, int $linkId, bool $hasCancelButton = false): FormBuilder
     {
         $this->container->callHook('menu.link.remove.form.data', [
             &$values, $menuId, $linkId
@@ -277,9 +271,16 @@ class Link extends \Soosyze\Controller
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
             })
-            ->group('submit-group', 'div', function ($form) {
+            ->group('submit-group', 'div', function ($form) use ($hasCancelButton) {
                 $form->token('token_menu_remove')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ]);
+
+                if ($hasCancelButton) {
+                    $form->button('cancel', t('Cancel'), [
+                        'class'   => 'btn btn-default',
+                        'onclick' => 'javascript:history.back();'
+                    ]);
+                }
             });
 
         $this->container->callHook('menu.link.remove.form', [
