@@ -37,6 +37,9 @@ jobs:
         if: matrix.analysis
         run: bin/phpstan --memory-limit=1G analyse
 
+      - name: Unit tests
+        run: bin/phpunit --coverage-clover clover.xml
+
       - name: Refactoring
         if: matrix.analysis
         run: bin/rector --dry-run
