@@ -43,7 +43,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'icon', 'title_link', 'link', 'menu', 'weight', 'parent'
+                'key', 'icon', 'title_link', 'link', 'menu_id', 'weight', 'parent'
             ])
             ->values([ 'contact.form', '', 'Contact', 'contact', Menu::MAIN_MENU, 50, -1 ])
             ->execute();
