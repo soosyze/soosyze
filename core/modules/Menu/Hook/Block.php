@@ -88,7 +88,8 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     ->select('menu_id', $this->getOptions(), [
                         ':selected'   => $values[ 'options' ][ 'menu_id' ],
                         'class'       => 'form-control ajax-control',
-                        'data-target' => 'select[name="parent"]'
+                        'data-target' => 'select[name="parent"]',
+                        'required'    => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('parent-group', 'div', function ($form) use ($values) {
@@ -98,6 +99,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                     ->select('parent', $this->menu->renderMenuSelect($values[ 'options' ][ 'menu_id' ]), [
                         ':selected' => $values[ 'options' ][ 'parent' ],
                         'class'     => 'form-control',
+                        'required'  => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('depth-group', 'div', function ($form) use ($values) {

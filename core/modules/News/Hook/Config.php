@@ -58,8 +58,9 @@ class Config implements \SoosyzeCore\Config\ConfigInterface
                 ->group('new_title-group', 'div', function ($form) use ($data) {
                     $form->label('new_title-label', t('Blog title'))
                     ->text('new_title', [
-                        'class' => 'form-control',
-                        'value' => $data[ 'new_title' ]
+                        'class'    => 'form-control',
+                        'required' => 1,
+                        'value'    => $data[ 'new_title' ]
                     ]);
                 }, self::$attrGrp)
                 ->group('news_pagination-group', 'div', function ($form) use ($data) {
