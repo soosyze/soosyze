@@ -166,7 +166,7 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->query()
             ->insertInto('menu_link', [
-                'key', 'title_link', 'link', 'menu', 'weight', 'parent', 'active'
+                'key', 'title_link', 'link', 'menu_id', 'weight', 'parent', 'active'
             ])
             ->values([ 'news.index', 'Blog', 'news', Menu::MAIN_MENU, 3, -1, false ])
             ->execute();

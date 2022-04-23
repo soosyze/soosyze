@@ -464,7 +464,7 @@ class Step
         ]);
 
         /* Add children Home */
-        $this->query->update('menu_link', [ 'has_children' => true ])->where('id', '=', 7)->execute();
+        $this->query->update('menu_link', [ 'has_children' => true ])->where('link_id', '=', 7)->execute();
 
         $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
             ->values([ 4, $idMenuBasic ])
@@ -721,7 +721,7 @@ class Step
         ]);
 
         /* Add children Project */
-        $this->query->update('menu_link', [ 'has_children' => true ])->where('id', '=', $idNodeProjects)->execute();
+        $this->query->update('menu_link', [ 'has_children' => true ])->where('link_id', '=', $idNodeProjects)->execute();
 
         $this->query
             ->insertInto('system_alias_url', [ 'source', 'alias' ])

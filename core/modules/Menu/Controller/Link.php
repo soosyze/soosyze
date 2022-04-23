@@ -183,7 +183,7 @@ class Link extends \Soosyze\Controller
                     'icon'       => '<i class="fa fa-link" aria-hidden="true"></i>',
                     'title_main' => t('Delete a link')
                 ])
-                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.remove', $values[ 'menu' ], $linkId))
+                ->view('page.submenu', self::menu()->getMenuLinkSubmenu('menu.link.remove', $menuId, $linkId))
                 ->make('page.content', 'menu/content-link-form.php', $this->pathViews, [
                     'form' => $form
         ]);
