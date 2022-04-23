@@ -309,15 +309,18 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                         ':selected' => $values[ 'options' ][ 'limit' ],
                         'class'     => 'form-control',
                         'max'       => 4,
-                        'min'       => 1
+                        'min'       => 1,
+                        'required'  => 1
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->group('offset-group', 'div', function ($form) use ($values) {
                     $form->label('offset-label', t('Offset (number of items to skip)'))
                     ->number('offset', [
-                        'class' => 'form-control',
-                        'min'   => 0,
-                        'value' => $values[ 'options' ][ 'offset' ]
+                        ':actions' => 1,
+                        'class'    => 'form-control',
+                        'min'      => 0,
+                        'required' => 1,
+                        'value'    => $values[ 'options' ][ 'offset' ]
                     ]);
                 }, [ 'class' => 'form-group' ])
                 ->legend('more-legend', t('More link'))

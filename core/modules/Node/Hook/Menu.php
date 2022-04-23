@@ -118,14 +118,14 @@ class Menu
                     }, [ 'class' => 'form-group' ])
                     ->group('menu_id-group', 'div', function ($form) use ($data) {
                         $form->group('menu_id-group', 'div', function ($form) use ($data) {
-                            $form->label('menu_id-label', t('Menu title'))
+                            $form->label('menu_id-label', t('Menu title'), [ 'required' => 1 ])
                             ->select('menu_id', $this->getOptions(), [
                                 ':selected' => $data[ 'menu_id' ],
                                 'class'     => 'form-control'
                             ]);
                         }, [ 'class' => 'form-group' ])
                         ->group('title_link-group', 'div', function ($form) use ($data) {
-                            $form->label('title_link-label', t('Link title'))
+                            $form->label('title_link-label', t('Link title'), [ 'required' => 1 ])
                             ->text('title_link', [
                                 'class'       => 'form-control',
                                 'placeholder' => t('Example: Home'),
