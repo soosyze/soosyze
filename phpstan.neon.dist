@@ -9,6 +9,7 @@ parameters:
         - app/app_core.php
         - bootstrap
         - core/modules
+        - tests/unit
 
     excludePaths:
         - core/modules/*/Config/*
