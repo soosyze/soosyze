@@ -91,7 +91,7 @@ class Contact extends \Soosyze\Controller
                 return $this->json(200, [ 'redirect' => self::router()->generateUrl('contact.form') ]);
             } else {
                 return $this->json(400, [
-                        'messages'    => [ 'errors' => t('An error prevented your email from being sent.') ]
+                        'messages'    => [ 'errors' => [ t('An error prevented your email from being sent.') ] ]
                 ]);
             }
         }
