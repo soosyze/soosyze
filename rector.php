@@ -11,7 +11,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // get parameters
     $parameters = $containerConfigurator->parameters();
     $parameters->set(Option::PATHS, [
-        __DIR__ . '/core/modules'
+        __DIR__ . '/core/modules',
+        __DIR__ . '/tests/unit',
     ]);
     $parameters->set(Option::SKIP, [
         __DIR__ . '/core/modules/*/Assets/*',
