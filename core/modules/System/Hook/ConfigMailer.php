@@ -67,7 +67,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
             ->group('smtp-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('smtp-legend', t('SMTP Configuration'))
                 ->group('smtp_host-group', 'div', function ($form) use ($data) {
-                    $form->label('smtp_host-label', t('Host Address'))
+                    $form->label('smtp_host-label', t('Host Address'), [ 'required' => 1 ])
                     ->text('smtp_host', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
@@ -76,7 +76,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                     ]);
                 }, self::$attrGrp)
                 ->group('smtp_port-group', 'div', function ($form) use ($data) {
-                    $form->label('smtp_port-label', t('Host Port'))
+                    $form->label('smtp_port-label', t('Host Port'), [ 'required' => 1 ])
                     ->text('smtp_port', [
                         'class'       => 'form-control',
                         'maxlength'   => 5,
@@ -85,14 +85,14 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                     ]);
                 }, self::$attrGrp)
                 ->group('smtp_encryption-group', 'div', function ($form) use ($data) {
-                    $form->label('smtp_encryption-label', t('Encryption Protocol'))
+                    $form->label('smtp_encryption-label', t('Encryption Protocol'), [ 'required' => 1 ])
                     ->select('smtp_encryption', self::getOptionsEncryption(), [
                         ':selected' => $data[ 'smtp_encryption' ],
                         'class'     => 'form-control'
                     ]);
                 }, self::$attrGrp)
                 ->group('smtp_username-group', 'div', function ($form) use ($data) {
-                    $form->label('smtp_username-label', t('Serveur Username'))
+                    $form->label('smtp_username-label', t('Serveur Username'), [ 'required' => 1 ])
                     ->text('smtp_username', [
                         'class'       => 'form-control',
                         'maxlength'   => 255,
@@ -101,7 +101,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
                     ]);
                 }, self::$attrGrp)
                 ->group('smtp_password-group', 'div', function ($form) use ($data) {
-                    $form->label('smtp_password-label', t('Server Password'))
+                    $form->label('smtp_password-label', t('Server Password'), [ 'required' => 1 ])
                     ->password('smtp_password', [
                         'class'     => 'form-control',
                         'maxlength' => 255,
