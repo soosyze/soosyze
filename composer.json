@@ -32,6 +32,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.1",
+        "phpunit/phpunit": "8.5",
         "rector/rector": "^0.12",
         "soosyze/php-cs-fixer-config": "^1.0"
     },
@@ -41,9 +42,17 @@
     },
     "autoload": {
         "classmap": [
+            "app/",
             "core/modules/",
-            "app/modules/"
+            "core/themes/",
+            "app/modules/",
+            "app/themes/"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\unit\\": "tests/unit/"
+        }
     },
     "config": {
         "bin-dir": "bin",

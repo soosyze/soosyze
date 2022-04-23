@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="true"
+         bootstrap="tests/bootstrap.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Tests Soosyze">
+            <directory>tests/unit/core/modules/System</directory>
+            <directory>tests/unit/core/modules/User</directory>
+            <directory>tests/unit/core/modules/News</directory>
+            <directory>tests/unit/core/modules/Contact</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>core/modules</directory>
+            <exclude>
+                <directory>core/modules/*/Views</directory>
+                <directory>core/modules/*/Config</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="build/phpUnit" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
+</phpunit>
