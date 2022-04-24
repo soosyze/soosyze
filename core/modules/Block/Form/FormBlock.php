@@ -55,7 +55,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
         $this->group('block-fieldset', 'fieldset', function ($form) {
             $form->group('title-group', 'div', function ($form) {
                 $form->label('title-label', t('Title'), [
-                        'data-tooltip' => t('Le titre est obligatoire pour l\'administration, vous pouvez choisir de l\'afficher/cacher pour vos visiteurs')
+                        'data-tooltip' => t('The title is mandatory for the administration, you can choose to show/hide it for your visitors')
                     ])
                     ->text('title', [
                         'class'     => 'form-control',
@@ -70,7 +70,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
                     ])
                     ->label(
                         'is_title-label',
-                        '<span class="ui"></span>' . t('Afficher le titre'),
+                        '<span class="ui"></span>' . t('Display the title'),
                         [ 'for' => 'is_title' ]
                     );
                 }, self::$attrGrp);

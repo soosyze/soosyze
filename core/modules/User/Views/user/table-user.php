@@ -81,7 +81,7 @@
 
                 </td>
                 <td class="cell-actions" data-title="<?php echo t('Actions'); ?>">
-                    <div class="btn-group" role="group" aria-label="action">
+                    <div class="btn-group" role="group" aria-label="<?php echo t('Actions'); ?>">
                         <a class="btn btn-action" href="<?php echo $user[ 'link_edit' ] ?>">
                             <i class="fa fa-edit" aria-hidden="true"></i> <?php echo t('Edit'); ?>
                         </a>

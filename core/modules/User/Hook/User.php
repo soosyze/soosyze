@@ -41,7 +41,7 @@ class User implements \SoosyzeCore\User\UserInterface
         foreach ($this->user->getRolesAttribuable() as $role) {
             $permissions[ 'User role' ][ 'role.' . $role[ 'role_id' ] ] = [
                 'name' => 'Assign the role :name',
-                'attr' => [ ':name' => $role[ 'role_label' ] ]
+                'attr' => [ ':name' => t($role[ 'role_label' ]) ]
             ];
         }
     }

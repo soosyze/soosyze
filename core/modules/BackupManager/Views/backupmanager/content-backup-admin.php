@@ -51,7 +51,7 @@
                     </span>
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right cell-actions">
-                    <div class="btn-group" role="group" aria-label="action">
+                    <div class="btn-group" role="group" aria-label="<?php echo t('Action'); ?>">
                         <a class="btn btn-action"
                            onclick="return confirm('<?php echo t('Restore the backup ?') ?>');"
                            href="<?php echo $backup[ 'restore_link' ] ?>"

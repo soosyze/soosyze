@@ -107,7 +107,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 }, self::$attrGrp);
         })
             ->group('roles-fieldset', 'fieldset', function ($form) {
-                $form->legend('roles-legend', t('User Roles'));
+                $form->legend('roles-legend', t('User roles'));
                 foreach ($this->roles as $role) {
                     $form->group('roles-' . $role[ 'role_id' ] . '-group', 'div', function ($form) use ($role) {
                         $form->checkbox("roles[{$role[ 'role_id' ]}]", [

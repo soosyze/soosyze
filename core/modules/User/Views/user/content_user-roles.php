@@ -1,6 +1,6 @@
 
 <fieldset>
-    <legend><?php echo t('Roles'); ?></legend>
+    <legend><?php echo t('User roles'); ?></legend>
 
     <?php foreach ($roles as $role): ?>
 

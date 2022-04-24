@@ -488,7 +488,7 @@ class Block extends \Soosyze\Controller
                     'is_title'  => t('Afficher le titre'),
                     'key_block' => t('Clé du bloc'),
                     'pages'     => t('List of pages'),
-                    'roles'     => t('User Roles'),
+                    'roles'     => t('User roles'),
                     'section'   => t('Section'),
                     'theme'     => t('Theme'),
                     'title'     => t('Title'),

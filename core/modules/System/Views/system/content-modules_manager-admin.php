@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-3 sticky">
         <div class="form-group">
-            <div id="result-search" style="height: 2em;"><?php echo $count; ?> modules</div>
+            <div id="result-search" style="height: 2em;"><?php echo $count; ?> <?php echo t('modules'); ?></div>
             <input type="text" id="search" class="form-control" placeholder="<?php echo t('Search modules'); ?>" aria-label="<?php echo t('Search modules'); ?>" onkeyup="search();" autofocus>
         </div>
         <div class="form-group">
@@ -37,7 +37,7 @@
                 <?php foreach (array_keys($packages) as $package): ?>
 
                 <li id="nav-<?php echo $package; ?>">
-                    <a href="#<?php echo $package; ?>"><?php echo $package; ?></a>
+                    <a href="#<?php echo $package; ?>"><?php echo t($package); ?></a>
                 </li>
                 <?php endforeach; ?>
 
@@ -49,7 +49,7 @@
         <?php foreach ($packages as $package => $modules): ?>
 
         <fieldset id="<?php echo $package; ?>" class="responsive package">
-            <legend><?php echo $package; ?></legend>
+            <legend><?php echo t($package); ?></legend>
             <table class="table table-hover table-striped table-responsive table-modules">
                 <thead>
                     <tr class="form-head">

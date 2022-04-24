@@ -1,5 +1,8 @@
 {
     "Menu": "Menu",
     "Displays a menu.": "Affiche un menu.",
+    "Parent link": "Lien parent",
+    "Show child links of the selected one.": "Afficher les liens enfants de celui sélectionné.",
+    "Number of submenus to display": "Nombre de sous-menus à afficher",
     "This menu is displayed by a block. By removing this menu, you will remove the block.": "Ce menu est affiché par un bloc. En supprimant ce menu, vous supprimerez le bloc."
 }

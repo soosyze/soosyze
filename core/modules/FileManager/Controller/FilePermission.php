@@ -333,7 +333,7 @@ class FilePermission extends \Soosyze\Controller
                 'folder_show'     => t('Directory path'),
                 'folder_show_sub' => t('Sub directories included'),
                 'profil_weight'   => t('Weight'),
-                'roles'           => t('User Roles'),
+                'roles'           => t('User roles'),
                 'folder_size'     => t('Size limit by directory'),
                 'file_size'       => t('Size limit by file'),
                 'file_extensions' => t('File extensions'),
