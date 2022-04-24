@@ -5,6 +5,7 @@
     "Link title": "Titre du lien",
     "Add a menu": "Ajouter un menu",
     "Edit the menu :name": "Éditer le menu :name",
+    "Fill in the following fields": "Remplissez les champs suivants",
     "Menu title": "Titre du menu",
     "Add a link in the menu": "Ajouter un lien dans le menu",
     "Example: Home": "Exemple: Accueil",
@@ -26,8 +27,6 @@
     "Menu to display": "Menu à afficher",
     "Return to site": "Retour au site",
     "Open in a new window": "Ouvrir dans une nouvelle fenêtre",
-    "Parent link": "Lien parent",
-    "Show child links of the selected one.": "Afficher les liens enfants de celui sélectionné.",
     "Warning ! The deletion of the link is final.": "Attention ! La suppression du lien est définitive.",
     "Delete a link": "Supprimer un lien",
     "Link deletion": "Suppression de lien"

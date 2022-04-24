@@ -1,4 +1,6 @@
 {
+    "Display the title": "Afficher le titre",
+    "The title is mandatory for the administration, you can choose to show/hide it for your visitors": "Le titre est obligatoire pour l'administration, vous pouvez choisir de le montrer/masquer pour vos visiteurs",
     "Advanced": "Avancée",
     "Class CSS": "Class CSS",
     "Visibility by pages": "Visibilité par pages",

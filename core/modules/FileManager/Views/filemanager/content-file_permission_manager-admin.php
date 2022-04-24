@@ -14,7 +14,7 @@
         <thead>
             <tr>
                 <th><?php echo t('Directory'); ?></th>
-                <th><?php echo t('User Roles'); ?></th>
+                <th><?php echo t('User roles'); ?></th>
                 <th><?php echo t('Directory permissions'); ?></th>
                 <th><?php echo t('Files permissions'); ?></th>
                 <th><?php echo t('Weight'); ?></th>
@@ -36,7 +36,7 @@
                     <?php endif; ?>
 
                 </th>
-                <td data-title="<?php echo t('User Roles'); ?>">
+                <td data-title="<?php echo t('User roles'); ?>">
                 <?php foreach ($profil[ 'roles' ] as $role): ?>
 
                     <span data-tooltip="<?php echo t($role[ 'role_label' ]); ?>"
@@ -97,7 +97,7 @@
                     <?php echo $form->form_group("profil_{$profil[ 'profil_file_id' ]}-group"); ?>
                 </td>
                 <td class="cell-actions" data-title="<?php echo t('Actions'); ?>">
-                    <div class="btn-group" role="group" aria-label="action">
+                    <div class="btn-group" role="group" aria-label="<?php echo t('Actions'); ?>">
                         <a class="btn btn-action" href="<?php
                             echo $router->generateUrl('filemanager.permission.edit', [
                                 'id' => $profil[ 'profil_file_id' ] ]);

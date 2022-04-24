@@ -104,7 +104,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 }, [ 'class' => 'form-group' ])
                 ->group('depth-group', 'div', function ($form) use ($values) {
                     $form->label('depth-label', t('Menu depth'), [
-                        'data-tooltip' => t('Nombre de sous menu à afficher')
+                        'data-tooltip' => t('Number of submenus to display')
                     ])
                     ->number('depth', [
                         ':actions' => 1,

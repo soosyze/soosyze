@@ -314,7 +314,7 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $roles === []
             ? $this
             : $this->group('role-fieldset', 'fieldset', function ($form) use ($roles) {
-                $form->legend('role-legend', t('User Roles'));
+                $form->legend('role-legend', t('User roles'));
                 foreach ($roles as $role) {
                     $attrRole = [
                         'checked'  => $role[ 'role_id' ] <= 2 || isset($this->values[ 'roles' ][ $role[ 'role_id' ] ]),

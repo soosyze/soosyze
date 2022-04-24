@@ -108,7 +108,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 'tpl'         => 'components/block/block-img.php'
             ],
             'map'     => [
-                'description' => t('Displays map.'),
+                'description' => t('Displays a map.'),
                 'hook'        => 'map',
                 'icon'        => 'fas fa-map',
                 'options'     => [
@@ -141,7 +141,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
                 'tpl'         => 'components/block/block-text.php'
             ],
             'video'   => [
-                'description' => t('Displays video.'),
+                'description' => t('Displays a video.'),
                 'hook'        => 'video',
                 'icon'        => 'fas fa-video',
                 'options'     => [
@@ -176,7 +176,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             $form->legend('map-legend', t('Settings'))
                 ->group('limit-group', 'div', function ($form) use ($values) {
                     $form->label('code_integration-label', t('Embed code'), [
-                        'data-tooltip' => t('Integration code provided by map sites in sharing options.')
+                        'data-tooltip' => t('Embed code provided by map sites in sharing options.')
                     ])
                     ->text('code_integration', [
                         'class'    => 'form-control',
