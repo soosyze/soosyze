@@ -151,14 +151,14 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                 }, self::$attrGrp);
             })
             ->group('user_delete-fieldset', 'fieldset', function ($form) use ($data) {
-                $form->legend('user_delete-legend', t('Supression du compte'))
+                $form->legend('user_delete-legend', t('Account deletion'))
                 ->group('user_delete_1-group', 'div', function ($form) use ($data) {
                     $form->radio('user_delete', [
                         'checked'  => $data[ 'user_delete' ] === self::DELETE_ACCOUNT,
                         'id'       => 'user_delete_1',
                         'required' => 1,
                         'value'    => self::DELETE_ACCOUNT
-                    ])->label('user_delete-label', t('Supprimer le compte et son contenu'), [
+                    ])->label('user_delete-label', t('Delete account and its contents'), [
                         'for' => 'user_delete_1'
                     ]);
                 }, self::$attrGrp)
@@ -168,7 +168,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                         'id'       => 'user_delete_2',
                         'required' => 1,
                         'value'    => self::DELETE_ACCOUNT_AND_ASSIGN
-                    ])->label('user_delete-label', t('Supprimer le compte et attribuer son contenu à l\'utilisateur Anonyme.'), [
+                    ])->label('user_delete-label', t('Delete account and assign its content to user Anonymous'), [
                         'for' => 'user_delete_2'
                     ]);
                 }, self::$attrGrp);

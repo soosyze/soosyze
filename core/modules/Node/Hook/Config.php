@@ -118,7 +118,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
             'node_cron'        => 'bool'
         ])->setLabels([
             'node_default_url' => t('Default url'),
-            'node_cron'        => t('Default url'),
+            'node_cron'        => t('Activate automatic publication of CRON content'),
         ])->addMessage('node_default_url', [
             'regex' => [
                 'must' => t('The: label field must contain allowed variables, alphanumeric characters, slashes (/), hyphens (-) or underscores (_).')

@@ -416,7 +416,7 @@ class User extends \Soosyze\Controller
                     'password_confirm' => t('Confirmation of the new password'),
                     'password_new'     => t('New Password'),
                     'picture'          => t('Picture'),
-                    'roles'            => t('User Roles'),
+                    'roles'            => t('User roles'),
                     'username'         => t('User name')
                 ])
                 ->setMessages([

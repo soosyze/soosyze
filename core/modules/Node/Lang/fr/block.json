@@ -4,6 +4,7 @@
     "Buttons are displayed when the user browses the content type": "Les boutons s'affichent lorsque l'utilisateur parcourt le type de contenu",
     "Next :node_type_name": ":node_type_name suivant",
     "Previous :node_type_name": ":node_type_name précédent",
+    "Content type": "Type de contenu",
     "Display type": "Type d'affichage",
     "Next text": "Texte suivant",
     "Previous text": "Texte précédent",

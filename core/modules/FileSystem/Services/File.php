@@ -143,7 +143,7 @@ class File
                 ':content'   => '<i class="fa fa-times" aria-hidden="true"></i>',
                 'id'         => "file-$name-reset",
                 'type'       => 'button',
-                'aria-label' => 'Supprimer le fichier',
+                'aria-label' => t('Delete file'),
                 'disabled'   => empty($filePath)
             ];
 

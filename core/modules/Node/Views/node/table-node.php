@@ -85,7 +85,7 @@
 
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right cell-actions">
-                    <div class="btn-group" role="group" aria-label="action">
+                    <div class="btn-group" role="group" aria-label="<?php echo t('Action'); ?>">
                         <?php if (isset($node[ 'link_edit' ])): ?>
 
                         <a href=" <?php echo $node[ 'link_edit' ]; ?>" class="btn btn-action dropdown-item">

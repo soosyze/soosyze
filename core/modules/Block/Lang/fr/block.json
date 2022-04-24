@@ -1,6 +1,8 @@
 {
     "Map": "Carte",
+    "Displays a map.": "Affiche une carte.",
     "Video": "Vidéo",
+    "Displays a video.": "Affiche une vidéo.",
     "Code": "Code",
     "Displays a block of code.": "Affiche un bloc de code.",
     "Contact": "Contact",

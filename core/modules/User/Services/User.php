@@ -225,7 +225,7 @@ class User
             ], [
                 'key'        => 'user.role.admin',
                 'request'    => $this->router->generateRequest('user.role.admin'),
-                'title_link' => t('Roles')
+                'title_link' => t('User roles')
             ], [
                 'key'        => 'user.permission.admin',
                 'request'    => $this->router->generateRequest('user.permission.admin'),

@@ -5,6 +5,8 @@
     "Add a token to your connection routes (10 characters minimum)": "Ajouter un token à vos routes de connexions (minimum 10 caractères)",
     "Redirect page after connection": "Page de redirection après connexion",
     "Open registration": "Ouvrir l'inscription",
+    "Delete account and its contents": "Supprimer le compte et son contenu",
+    "Delete account and assign its content to user Anonymous": "Supprimer le compte et attribuer son contenu à l'utilisateur anonyme",
     "Terms and GDPR": "CGU et RGPD",
     "Activate the Terms": "Activer les CGU",
     "Terms page": "Page des CGU",
