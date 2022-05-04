@@ -104,7 +104,7 @@
                     <tr>
                         <th>
                             <span data-tooltip="<?php echo t('Maximum size of data received by the POST method'); ?>">
-                                post_max_size <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> <code>post_max_size</code>
                             </span>
                         </th>
                         <td><?php echo ini_get('post_max_size'); ?></td>
@@ -112,7 +112,7 @@
                     <tr>
                         <th>
                             <span data-tooltip="<?php echo t('Maximum size in bytes that a script is allowed to allocate'); ?>">
-                                memory_limit <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> <code>memory_limit</code>
                             </span>
                         </th>
                         <td><?php echo ini_get('memory_limit'); ?></td>
@@ -120,7 +120,7 @@
                     <tr>
                         <th>
                             <span data-tooltip="<?php echo t('Maximum script execution time, in seconds'); ?>">
-                                max_execution_time <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> <code>max_execution_time</code>
                             </span>
                         </th>
                         <td><?php echo ini_get('max_execution_time'); ?> sec</td>
@@ -128,7 +128,7 @@
                     <tr>
                         <th>
                             <span data-tooltip="<?php echo t('If you are allowed to upload files with forms'); ?>">
-                                file_uploads <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> <code>file_uploads</code>
                             </span>
                         </th>
                         <td>
@@ -138,7 +138,7 @@
                     <tr>
                         <th>
                             <span data-tooltip="<?php echo t('The maximum size in bytes of a file to load'); ?>">
-                                upload_max_filesize <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> <code>upload_max_filesize</code>
                             </span>
                         </th>
                         <td><?php echo ini_get('upload_max_filesize'); ?></td>
