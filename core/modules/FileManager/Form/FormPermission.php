@@ -69,8 +69,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                         'for'      => 'folder_show',
                         'required' => 1
                     ])
-                    ->group('profil_weight-flex', 'div', function ($form) {
-                        $form->html('cancel', '<span:attr>:content</span>', [
+                    ->group('folder_show-flex', 'div', function ($form) {
+                        $form->html('folder_show-prefix', '<span:attr>:content</span>', [
                             ':content' => t('<root>')
                         ])
                         ->text('folder_show', [
@@ -79,7 +79,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'value'    => $this->values[ 'folder_show' ]
                         ]);
                     }, self::$attrGrpFlex)
-                    ->html('cancel', '<p>:content</p>', [
+                    ->html('folder_show-info', '<p>:content</p>', [
                         ':content' => t('Variables allowed') . ' <code>:user_id</code>'
                     ]);
                 }, self::$attrGrp)
@@ -223,7 +223,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                             'data-tooltip' => 'Mega octet'
                         ]);
                     }, self::$attrGrpFlex)
-                    ->html('cancel', '<p>:content</p>', [
+                    ->html('file_size-info', '<p>:content</p>', [
                         ':content' => t('Maximum size per file upload allowed by your server: :size', [
                             ':size' => Util::strFileSizeFormatted(Util::getOctetUploadLimit() ?? 0)
                         ])
