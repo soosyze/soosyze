@@ -7,6 +7,7 @@ namespace SoosyzeCore\Node\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
+use SoosyzeCore\Node\Model\Field\OneToManyOption;
 
 /**
  * @method \SoosyzeCore\System\Services\Alias        alias()
@@ -15,7 +16,6 @@ use Soosyze\Components\Http\Redirect;
  * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
  * @method \SoosyzeCore\User\Services\User           user()
  *
- * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
  * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
  */
 class NodeClone extends \Soosyze\Controller
@@ -97,11 +97,10 @@ class NodeClone extends \Soosyze\Controller
                 /* Copie ses fichiers. */
                 $this->entityNode[$fieldName] = $this->replaceFileLink($entityData);
             } elseif ($value[ 'field_type' ] == 'one_to_many') {
-                /** @phpstan-var FieldOptions $options */
-                $options = json_decode($value[ 'field_option' ], true);
+                $oneToManyOption = OneToManyOption::createFromJson($value[ 'field_option' ]);
 
                 /* Si elle possède des sous entités. */
-                $this->duplicateEntity($fieldName, $options);
+                $this->duplicateEntity($fieldName, $oneToManyOption);
             }
         }
         self::query()
@@ -145,16 +144,12 @@ class NodeClone extends \Soosyze\Controller
         $this->entityNode[ $this->node[ 'type' ] . '_id' ] = self::schema()->getIncrement('entity_' . $this->node[ 'type' ]);
     }
 
-    /**
-     * @param FieldOptions $options
-     */
-    private function duplicateEntity(string $fieldName, array $options): void
+    private function duplicateEntity(string $fieldName, OneToManyOption $oneToManyOption): void
     {
-        $relationTable = $options[ 'relation_table' ];
-        $foreignKey    = $options[ 'foreign_key' ];
+        $foreignKey = $oneToManyOption->getForeignKey();
 
         $entities = self::query()
-            ->from($relationTable)
+            ->from($oneToManyOption->getRelationTable())
             ->where($foreignKey, '=', $this->oldEntityNode[ $foreignKey ])
             ->fetchAll();
 
@@ -177,7 +172,7 @@ class NodeClone extends \Soosyze\Controller
             /* Copie l'identifiant de l'entité principal pour la sous node. */
             $entity[ $foreignKey ] = $this->entityNode[ $foreignKey ];
             self::query()
-                ->insertInto($relationTable, array_keys($entity))
+                ->insertInto($oneToManyOption->getRelationTable(), array_keys($entity))
                 ->values($entity)
                 ->execute();
         }

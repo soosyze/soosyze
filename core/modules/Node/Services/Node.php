@@ -8,13 +8,13 @@ use Core;
 use Queryflatfile\Request;
 use Soosyze\Config;
 use SoosyzeCore\Filter\Services\Filter;
+use SoosyzeCore\Node\Model\Field\OneToManyOption;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Template\Services\Templating;
 
 /**
  * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
- * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
  * @phpstan-import-type NodeTypeFieldEntity from \SoosyzeCore\Node\Extend
  * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
  */
@@ -118,21 +118,14 @@ class Node
         return $this->makeFields($entity, $this->getFields($entity), $data);
     }
 
-    public function makeFieldsByEntity(string $entity, array $data, array $options): array
+    public function makeFieldsByEntity(string $entity, array $data, OneToManyOption $oneToManyOption): array
     {
         $this->query
             ->from('entity_' . $entity)
-            ->where($options[ 'foreign_key' ], '=', $data[ $options[ 'foreign_key' ] ]);
+            ->where($oneToManyOption->getForeignKey(), '=', $data[ $oneToManyOption->getForeignKey() ]);
 
-        if (isset($options[ 'order_by' ])) {
-            $this->query->orderBy(
-                $options[ 'order_by' ],
-                $options[ 'sort' ] === 'weight'
-                    ? SORT_ASC
-                    : ($options[ 'sort' ] === 'desc' || $options[ 'sort' ] === SORT_ASC
-                        ? SORT_ASC
-                        : SORT_DESC)
-            );
+        if ($oneToManyOption->getOrderBy() && $oneToManyOption->getSort()) {
+            $this->query->orderBy($oneToManyOption->getOrderBy(), $oneToManyOption->getSort());
         }
 
         $data   = $this->query->fetchAll();
@@ -317,12 +310,11 @@ class Node
             ->fetchAll();
 
         foreach ($relationNode as $relation) {
-            /** @phpstan-var FieldOptions $options */
-            $options = json_decode($relation[ 'field_option' ], true);
+            $oneToManyOption = OneToManyOption::createFromJson($relation[ 'field_option' ]);
             $this->query
-                ->from($options[ 'relation_table' ])
+                ->from($oneToManyOption->getRelationTable())
                 ->delete()
-                ->where($options[ 'foreign_key' ], '=', $entity[ $options[ 'local_key' ] ] ?? null)
+                ->where($oneToManyOption->getForeignKey(), '=', $entity[ $oneToManyOption->getLocalKey() ] ?? null)
                 ->execute();
         }
 
@@ -488,10 +480,9 @@ class Node
 
                 $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
             } elseif ($value[ 'field_type' ] === 'one_to_many') {
-                /** @phpstan-var FieldOptions $options */
-                $options = json_decode($value[ 'field_option' ], true);
+                $oneToManyOption = OneToManyOption::createFromJson($value[ 'field_option' ]);
 
-                $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $options);
+                $out[ $key ][ 'field_value' ]   = $this->makeFieldsByEntity($key, $data, $oneToManyOption);
                 $out[ $key ][ 'field_display' ] = $this->tpl
                     ->createBlock('node/content-entity-show.php', $this->pathViews)
                     ->addVars([
