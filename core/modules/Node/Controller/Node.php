@@ -11,6 +11,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
 use SoosyzeCore\Node\Form\FormNodeDelete;
+use SoosyzeCore\Node\Model\Field\OneToManyOption;
 use SoosyzeCore\Template\Services\Block;
 
 /**
@@ -23,7 +24,6 @@ use SoosyzeCore\Template\Services\Block;
  * @method \SoosyzeCore\Template\Services\Templating template()
  * @method \SoosyzeCore\User\Services\User           user()
  *
- * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
  * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
  *
  * @phpstan-type Submenu array{
@@ -634,12 +634,11 @@ class Node extends \Soosyze\Controller
 
                 /* Si la node existe. */
                 if ($node) {
-                    /** @phpstan-var FieldOptions $options */
-                    $options = json_decode($value[ 'field_option' ], true);
+                    $oneToManyOption = OneToManyOption::createFromJson($value[ 'field_option' ]);
 
                     $entitys = self::query()
-                        ->from($options[ 'relation_table' ])
-                        ->where($options[ 'foreign_key' ], '=', $node[ 'entity_id' ])
+                        ->from($oneToManyOption->getRelationTable())
+                        ->where($oneToManyOption->getForeignKey(), '=', $node[ 'entity_id' ])
                         ->limit(2)
                         ->fetchAll();
 
@@ -782,17 +781,16 @@ class Node extends \Soosyze\Controller
 
     private function updateWeightEntity(array $field, array $data): void
     {
-        /** @phpstan-var FieldOptions $options */
-        $options = json_decode($field[ 'field_option' ], true);
-        if ($options[ 'sort' ] !== 'weight') {
+        $oneToManyOption = OneToManyOption::createFromJson($field[ 'field_option' ]);
+        if ($oneToManyOption->getOrderBy() !== OneToManyOption::WEIGHT_FIELD) {
             return;
         }
         foreach ($data as $value) {
             self::query()
                 ->update('entity_' . $field[ 'field_name' ], [
-                    'weight' => $value[ 'weight' ]
+                    OneToManyOption::WEIGHT_FIELD => $value[ OneToManyOption::WEIGHT_FIELD ]
                 ])
-                ->where($field[ 'field_name' ] . '_id', '=', $value[ 'id' ])
+                ->where($field[ 'field_name' ] . '_id', '=', (int) $value[ 'id' ])
                 ->execute();
         }
     }

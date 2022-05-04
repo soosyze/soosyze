@@ -9,6 +9,10 @@ use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 use SoosyzeCore\FileSystem\Services\File;
 use SoosyzeCore\Node\Hook\Config as HookConfig;
+use SoosyzeCore\Node\Model\Field\CheckboxOption;
+use SoosyzeCore\Node\Model\Field\OneToManyOption;
+use SoosyzeCore\Node\Model\Field\RadioOption;
+use SoosyzeCore\Node\Model\Field\SelectOption;
 use SoosyzeCore\QueryBuilder\Services\Query;
 
 /**
@@ -189,13 +193,9 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         $this->rules($value);
 
         return $form->group("$key-group", 'div', function ($form) use ($value, $key) {
-            /** @phpstan-var array $options */
-            $options = empty($value[ 'field_option' ])
-                    ? []
-                    : json_decode($value[ 'field_option' ], true);
             switch ($value[ 'field_type' ]) {
                     case 'checkbox':
-                        $this->makeCheckbox($form, $key, $value, $options);
+                        $this->makeCheckbox($form, $key, $value, CheckboxOption::createFromJson($value[ 'field_option' ]));
 
                         break;
                     case 'file':
@@ -207,34 +207,34 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
                         break;
                     case 'one_to_many':
-                        $this->makeOneToMany($form, $key, $value, $options);
+                        $this->makeOneToMany($form, $key, $value, OneToManyOption::createFromJson($value[ 'field_option' ]));
 
                         break;
                     case 'radio':
-                        $this->makeRadio($form, $key, $value, $options);
+                        $this->makeRadio($form, $key, $value, RadioOption::createFromJson($value[ 'field_option' ]));
 
                         break;
                     case 'select':
-                        $this->makeSelect($form, $key, $value, $options);
+                        $this->makeSelect($form, $key, $value, SelectOption::createFromJson($value[ 'field_option' ]));
 
                         break;
                     case 'textarea':
-                        $this->makeTextarea($form, $key, $value, $options);
+                        $this->makeTextarea($form, $key, $value);
 
                         break;
                     case 'number':
-                        $this->makeNumber($form, $key, $value, $options);
+                        $this->makeNumber($form, $key, $value);
 
                         break;
                     default:
-                        $this->makeInput($form, $key, $value, $options);
+                        $this->makeInput($form, $key, $value);
 
                         break;
                 }
         }, self::$attrGrp);
     }
 
-    public function makeNumber(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeNumber(FormGroupBuilder &$form, string $key, array $value): void
     {
         $default = $this->values[ $key ] ?? $value[ 'field_default_value' ];
 
@@ -252,7 +252,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
             }, [ 'class' => 'form-group-flex' ]);
     }
 
-    public function makeInput(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeInput(FormGroupBuilder &$form, string $key, array $value): void
     {
         $type    = $value[ 'field_type' ];
         $default = $this->values[ $key ] ?? $value[ 'field_default_value' ];
@@ -266,26 +266,27 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ] + $value[ 'attr' ]);
     }
 
-    public function makeCheckbox(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeCheckbox(FormGroupBuilder &$form, string $key, array $value, CheckboxOption $checkboxOption): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
-            'data-tooltip' => t($value[ 'field_description' ])
+            'data-tooltip' => t($value[ 'field_description' ]),
+            'required'     => isset($value[ 'attr' ][ 'required' ]),
         ]);
-        foreach ($options as $keyRadio => $option) {
-            $form->group("$keyRadio-group", 'div', function ($form) use ($key, $keyRadio, $value, $option) {
-                $form->checkbox("{$key}[$keyRadio]", [
-                        'id'      => "$key-$keyRadio",
-                        'checked' => in_array($keyRadio, explode(',', $this->values[ $key ])),
-                        'value'   => $keyRadio
+        foreach ($checkboxOption->getOptions() as $keyCheckbox => $option) {
+            $form->group("$keyCheckbox-group", 'div', function ($form) use ($key, $keyCheckbox, $option) {
+                $form->checkbox("{$key}[$keyCheckbox]", [
+                        'id'      => "$key-$keyCheckbox",
+                        'checked' => in_array($keyCheckbox, explode(',', $this->values[ $key ])),
+                        'value'   => $keyCheckbox
                     ])
-                    ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
-                        'for' => "$key-$keyRadio"
-                        ] + $value[ 'attr' ]);
+                    ->label("$key-$keyCheckbox-label", '<span class="ui"></span> ' . t($option), [
+                        'for' => "$key-$keyCheckbox"
+                        ]);
             }, self::$attrGrp);
         }
     }
 
-    public function makeOneToMany(FormGroupBuilder $form, string $key, array $value, array $options): void
+    public function makeOneToMany(FormGroupBuilder $form, string $key, array $value, OneToManyOption $oneToManyOption): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
             'required'     => !empty($value[ 'attr' ][ 'required' ]),
@@ -302,24 +303,18 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
 
         $data = $this->query
-            ->from($options[ 'relation_table' ])
-            ->where($options[ 'foreign_key' ], '=', $this->values[ 'entity_id' ]);
-        if (isset($options[ 'order_by' ])) {
-            $data->orderBy(
-                $options[ 'order_by' ],
-                $options[ 'sort' ] === 'weight'
-                    ? SORT_ASC
-                    : ($options[ 'sort' ] === 'desc' || $options[ 'sort' ] === SORT_ASC
-                        ? SORT_ASC
-                        : SORT_DESC)
-            );
+            ->from($oneToManyOption->getRelationTable())
+            ->where($oneToManyOption->getForeignKey(), '=', $this->values[ 'entity_id' ]);
+
+        if ($oneToManyOption->getOrderBy() && $oneToManyOption->getSort()) {
+            $data->orderBy($oneToManyOption->getOrderBy(), $oneToManyOption->getSort());
         }
 
         $subFields = $data->fetchAll();
         $dir = $this->router->getBasePath();
 
         $attrSortable = ['class' => 'form-group'];
-        if ($options[ 'sort' ] === 'weight') {
+        if ($oneToManyOption->getOrderBy() === OneToManyOption::WEIGHT_FIELD) {
             $attrSortable = [
                 'class'           => 'form-group',
                 'data-ghostClass' => 'placeholder',
@@ -328,22 +323,22 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
             ];
         }
 
-        $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $options, $dir) {
+        $form->group("$key-group", 'div', function ($form) use ($key, $subFields, $oneToManyOption, $dir) {
             foreach ($subFields as $field) {
                 $idEntity = $field[ "{$key}_id" ];
-                $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $options, $field, $dir) {
-                    if (isset($options[ 'order_by' ]) && $options[ 'sort' ] == 'weight') {
+                $form->group("$key-$idEntity-group", 'div', function ($form) use ($key, $idEntity, $oneToManyOption, $field, $dir) {
+                    if ($oneToManyOption->getOrderBy() === OneToManyOption::WEIGHT_FIELD) {
                         $form->html("$key-$idEntity-drag", '<div class="table-width-minimum"><i class="fa fa-arrows-alt-v" aria-hidden="true"></i></div>')
                             ->hidden("{$key}[$idEntity][weight]", [
-                                'value' => $field[ 'weight' ]
+                                'value' => $field[ OneToManyOption::WEIGHT_FIELD]
                             ])->hidden("{$key}[$idEntity][id]", [
                             'value' => $idEntity
                         ]);
                     }
 
-                    $content = $field[ $options[ 'field_show' ] ];
-                    if ($this->isShowFile($options, $field)) {
-                        $src     = $dir . $field[ $options[ 'field_type_show' ] ];
+                    $content = $field[ $oneToManyOption->getFieldShow()];
+                    if ($this->isShowFile($oneToManyOption, $field)) {
+                        $src     = $dir . $field[ $oneToManyOption->getFieldTypeShow() ];
                         $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
                     }
 
@@ -393,23 +388,24 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    public function isShowFile(array $options, array $field): bool
+    public function isShowFile(OneToManyOption $oneToManyOption, array $field): bool
     {
-        return isset($options[ 'field_type_show' ]) && $options[ 'field_type_show' ] === 'image' && is_file($field[ $options[ 'field_type_show' ] ]);
+        return $oneToManyOption->getFieldTypeShow() === 'image' && is_file($field[ $oneToManyOption->getFieldTypeShow() ]);
     }
 
-    public function makeRadio(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeRadio(FormGroupBuilder &$form, string $key, array $value, RadioOption $radioOption): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
-            'data-tooltip' => t($value[ 'field_description' ])
+            'data-tooltip' => t($value[ 'field_description' ]),
+            'required'     => isset($value[ 'attr' ][ 'required' ])
         ]);
-        foreach ($options as $keyRadio => $option) {
-            $form->group("$keyRadio-group", 'div', function ($form) use ($key, $value, $keyRadio, $option) {
+        foreach ($radioOption->getOptions() as $keyRadio => $option) {
+            $form->group("$keyRadio-group", 'div', function ($form) use ($key, $keyRadio, $option) {
                 $form->radio($key, [
                         'id'      => "$key-$keyRadio",
                         'checked' => $this->values[ $key ] == $keyRadio,
                         'value'   => $keyRadio
-                        ] + $value[ 'attr' ])
+                        ])
                     ->label("$key-$keyRadio-label", '<span class="ui"></span> ' . t($option), [
                         'for' => "$key-$keyRadio"
                 ]);
@@ -417,23 +413,18 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
     }
 
-    public function makeSelect(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeSelect(FormGroupBuilder &$form, string $key, array $value, SelectOption $selectOption): void
     {
-        $selectOptions = [];
-        foreach ($options as $keyOption => $option) {
-            $selectOptions[ $keyOption ] = [ 'label' => $option, 'value' => $keyOption ];
-            if ($keyOption == $this->values[ $key ]) {
-                $selectOptions[ $keyOption ][ 'selected' ] = 1;
-            }
-        }
-
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])
             ])
-            ->select($key, $selectOptions, [ 'class' => 'form-control' ] + $value[ 'attr' ]);
+            ->select($key, $selectOption->getOptions(), [
+                ':selected' => $this->values[ $key ],
+                'class'     => 'form-control'
+                ] + $value[ 'attr' ]);
     }
 
-    public function makeTextarea(FormGroupBuilder &$form, string $key, array $value, array $options): void
+    public function makeTextarea(FormGroupBuilder &$form, string $key, array $value): void
     {
         $form->label("$key-label", t($value[ 'field_label' ]), [
                 'data-tooltip' => t($value[ 'field_description' ])

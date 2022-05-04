@@ -71,14 +71,6 @@ use SoosyzeCore\Node\Hook\Config;
  *      node_id: int,
  *      menu_link_id: int
  * }
- * @phpstan-type FieldOptions array{
- *      count: int,
- *      local_key: string,
- *      foreign_key: string,
- *      order_by: string,
- *      relation_table: string,
- *      sort: string
- * }
  */
 class Extend extends \SoosyzeCore\System\ExtendModule
 {

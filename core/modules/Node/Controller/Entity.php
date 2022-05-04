@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Node\Form\FormNode;
+use SoosyzeCore\Node\Model\Field\OneToManyOption;
 
 /**
  * @method \SoosyzeCore\FileSystem\Services\file     file()
@@ -16,8 +17,6 @@ use SoosyzeCore\Node\Form\FormNode;
  * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
  * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
  * @method \SoosyzeCore\Template\Services\Templating template()
- *
- * @phpstan-import-type FieldOptions from \SoosyzeCore\Node\Extend
  */
 class Entity extends \Soosyze\Controller
 {
@@ -34,13 +33,19 @@ class Entity extends \Soosyze\Controller
         if (!($fieldNode = self::node()->getFieldRelationByEntity($entity))) {
             return $this->get404($req);
         }
-        /** @phpstan-var FieldOptions $options */
-        $options = json_decode($fieldNode[ 'field_option' ], true);
+        $oneToManyOption = OneToManyOption::createFromJson($fieldNode[ 'field_option' ]);
 
         if (!($fieldsEntity = self::node()->getFieldsEntity($entity))) {
             return $this->get404($req);
         }
-        if (self::node()->isMaxEntity($entity, $options[ 'foreign_key' ], $idNode, $options[ 'count' ])) {
+        if (
+            self::node()->isMaxEntity(
+                $entity,
+                $oneToManyOption->getForeignKey(),
+                $idNode,
+                $oneToManyOption->getCount()
+            )
+        ) {
             return $this->get404($req);
         }
 
@@ -104,9 +109,15 @@ class Entity extends \Soosyze\Controller
                     'messages' => [ 'errors' => [ t('The requested resource does not exist.') ] ]
             ]);
         }
-        /** @phpstan-var FieldOptions $options */
-        $options = json_decode($fieldNode[ 'field_option' ], true);
-        if (self::node()->isMaxEntity($entity, $options[ 'foreign_key' ], $idNode, $options[ 'count' ])) {
+        $oneToManyOption = OneToManyOption::createFromJson($fieldNode[ 'field_option' ]);
+        if (
+            self::node()->isMaxEntity(
+                $entity,
+                $oneToManyOption->getForeignKey(),
+                $idNode,
+                $oneToManyOption->getCount()
+            )
+        ) {
             return $this->get404($req);
         }
 
