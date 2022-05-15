@@ -521,6 +521,7 @@ class User extends \Soosyze\Controller
         self::file()
             ->add($uploadedFile, $validator->getInputString("file-$key-name"))
             ->setName($key)
+            ->withRandomPrefix()
             ->setPath("/user/$id")
             ->isResolvePath()
             ->callGet(function (string $key, string $name) use ($id): ?string {

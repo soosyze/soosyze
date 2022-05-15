@@ -810,6 +810,7 @@ class Node extends \Soosyze\Controller
         self::file()
             ->add($uploadedFile, $validator->getInputString("file-$nameField-name"))
             ->setName($nameField)
+            ->withRandomPrefix()
             ->setPath("/node/{$node[ 'type' ]}/{$node[ 'id' ]}")
             ->isResolvePath()
             ->callGet(function (string $key, string $name) use ($node): ?string {

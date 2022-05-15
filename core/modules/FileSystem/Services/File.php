@@ -100,7 +100,12 @@ class File
      *
      * @var string
      */
-    private $path = null;
+    private $path;
+
+    /**
+     * @var string|null
+     */
+    private $randomPrefix = null;
 
     /**
      * Le répertoire racine.
@@ -226,6 +231,13 @@ class File
         return $clone;
     }
 
+    public function withRandomPrefix(): self
+    {
+        $this->randomPrefix = Util::strRandom(10, '0123456789') . '-' . Util::strRandom(5, '0123456789');
+
+        return $this;
+    }
+
     public function callGet(\Closure $closure): self
     {
         $clone          = clone $this;
@@ -285,7 +297,7 @@ class File
 
     public function getName(): string
     {
-        return $this->nameResolved ?? $this->name;
+        return ($this->randomPrefix ? $this->randomPrefix . '-' : '') . ($this->nameResolved ?? $this->name);
     }
 
     /**
