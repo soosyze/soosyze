@@ -192,6 +192,7 @@ class Config extends \Soosyze\Controller
         self::file()
             ->add($uploadedFile, $validator->getInputString("file-$key-name"))
             ->setName($key)
+            ->withRandomPrefix()
             ->setPath('/config')
             ->isResolvePath()
             ->callGet(function ($key, $name): ?string {
