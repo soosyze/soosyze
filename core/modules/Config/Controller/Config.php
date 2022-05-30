@@ -195,17 +195,17 @@ class Config extends \Soosyze\Controller
             ->withRandomPrefix()
             ->setPath('/config')
             ->isResolvePath()
-            ->callGet(function ($key, $name): ?string {
+            ->callGet(function (string $key): ?string {
                 $filename = self::config()->get("settings.$key");
 
                 return is_string($filename)
                     ? $filename
                     : null;
             })
-            ->callMove(function ($key, $name, $move): void {
-                self::config()->set("settings.$key", $move);
+            ->callMove(function (string $key, \SplFileInfo $fileInfo): void {
+                self::config()->set("settings.$key", $fileInfo->getPathname());
             })
-            ->callDelete(function ($key, $name): void {
+            ->callDelete(function (string $key): void {
                 self::config()->set("settings.$key", '');
             })
             ->save();
