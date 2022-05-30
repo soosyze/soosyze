@@ -26,6 +26,23 @@ final class SelectOption implements \JsonSerializable
     /**
      * @param numeric|string $value
      */
+    public function getOption($value): ?array
+    {
+        foreach ($this->options as $option) {
+            if (is_array($option[ 'value' ])) {
+                return $this->getOption($value);
+            }
+            if ($option[ 'value' ] === $value) {
+                return $option;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param numeric|string $value
+     */
     public function addOption(string $label, $value, array $attr = []): self
     {
         $this->options[] = [ 'label' => $label, 'value' => $value, 'attr' => $attr ];
