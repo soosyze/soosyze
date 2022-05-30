@@ -524,16 +524,22 @@ class User extends \Soosyze\Controller
             ->withRandomPrefix()
             ->setPath("/user/$id")
             ->isResolvePath()
-            ->callGet(function (string $key, string $name) use ($id): ?string {
+            ->callGet(function (string $key) use ($id): ?string {
                 $user = self::user()->find($id);
 
                 return $user[ $key ] ?? null;
             })
-            ->callMove(function (string $key, string $name, string $move) use ($id): void {
-                self::query()->update('user', [ $key => $move ])->where('user_id', '=', $id)->execute();
+            ->callMove(function (string $key, \SplFileInfo $fileInfo) use ($id): void {
+                self::query()
+                    ->update('user', [ $key => $fileInfo->getPathname() ])
+                    ->where('user_id', '=', $id)
+                    ->execute();
             })
-            ->callDelete(function (string $key, string $name) use ($id): void {
-                self::query()->update('user', [ $key => '' ])->where('user_id', '=', $id)->execute();
+            ->callDelete(function (string $key) use ($id): void {
+                self::query()
+                    ->update('user', [ $key => '' ])
+                    ->where('user_id', '=', $id)
+                    ->execute();
             })
             ->save();
     }

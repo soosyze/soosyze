@@ -409,7 +409,7 @@ class Entity extends \Soosyze\Controller
             ->setPath("/node/$typeNode/{$idNode}/$typeEntity")
             ->isResolvePath()
             ->isResolveName()
-            ->callGet(function (string $key, string $name) use ($typeEntity, $idEntity): ?string {
+            ->callGet(function (string $key) use ($typeEntity, $idEntity): ?string {
                 $entity = self::query()
                     ->from('entity_' . $typeEntity)
                     ->where($typeEntity . '_id', '=', $idEntity)
@@ -419,13 +419,13 @@ class Entity extends \Soosyze\Controller
                     ? $entity[ $key ]
                     : null;
             })
-            ->callMove(function (string $key, string $name, string $move) use ($typeEntity, $idEntity, $nameField): void {
+            ->callMove(function (string $key, \SplFileInfo $fileInfo) use ($typeEntity, $idEntity, $nameField): void {
                 self::query()
-                    ->update('entity_' . $typeEntity, [ $nameField => $move ])
+                    ->update('entity_' . $typeEntity, [ $nameField => $fileInfo->getPathname() ])
                     ->where($typeEntity . '_id', '=', $idEntity)
                     ->execute();
             })
-            ->callDelete(function (string $key, string $name) use ($typeEntity, $idEntity, $nameField): void {
+            ->callDelete(function () use ($typeEntity, $idEntity, $nameField): void {
                 self::query()
                     ->update('entity_' . $typeEntity, [ $nameField => '' ])
                     ->where($typeEntity . '_id', '=', $idEntity)

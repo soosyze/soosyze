@@ -813,7 +813,7 @@ class Node extends \Soosyze\Controller
             ->withRandomPrefix()
             ->setPath("/node/{$node[ 'type' ]}/{$node[ 'id' ]}")
             ->isResolvePath()
-            ->callGet(function (string $key, string $name) use ($node): ?string {
+            ->callGet(function (string $key) use ($node): ?string {
                 $entityType = self::query()
                     ->from('entity_' . $node[ 'type' ])
                     ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
@@ -823,13 +823,13 @@ class Node extends \Soosyze\Controller
                     ? $entityType[ $key ]
                     : null;
             })
-            ->callMove(function (string $key, string $name, string $move) use ($node): void {
+            ->callMove(function (string $key, \SplFileInfo $fileInfo) use ($node): void {
                 self::query()
-                    ->update('entity_' . $node[ 'type' ], [ $key => $move ])
+                    ->update('entity_' . $node[ 'type' ], [ $key => $fileInfo->getPathname() ])
                     ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])
                     ->execute();
             })
-            ->callDelete(function (string $key, string $name) use ($node): void {
+            ->callDelete(function (string $key) use ($node): void {
                 self::query()
                     ->update('entity_' . $node[ 'type' ], [ $key => '' ])
                     ->where($node[ 'type' ] . '_id', '=', $node[ 'entity_id' ])

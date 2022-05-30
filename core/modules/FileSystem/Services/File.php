@@ -16,7 +16,7 @@ class File
      *
      * @var string
      */
-    private $basePath = '';
+    private $basePath;
 
     /**
      * Fonction de suppression des données du fichier.
@@ -44,7 +44,7 @@ class File
      *
      * @var string
      */
-    private $dir = null;
+    private $dir;
 
     /**
      * L'extension du fichier a déplacer.
@@ -347,9 +347,10 @@ class File
 
         $this->uploadedFile->moveTo($move);
 
-        call_user_func_array($this->callMove, [
-            $this->name, "{$this->name}.{$this->ext}", $this->getMovePath()
-        ]);
+        call_user_func_array(
+            $this->callMove,
+            [ $this->name, new \SplFileInfo($this->getMovePath()) ]
+        );
     }
 
     private function getUploadedFilename(): ?string
@@ -358,9 +359,7 @@ class File
             throw new \InvalidArgumentException('The callback function to get the file must be defined.');
         }
 
-        $file = call_user_func_array($this->callGet, [
-            $this->name, "{$this->name}.{$this->ext}"
-        ]);
+        $file = call_user_func_array($this->callGet, [ $this->name ]);
 
         if (!is_string($file) && $file !== null) {
             throw new \RuntimeException('The callback function to get the file should return a string.');
@@ -369,18 +368,19 @@ class File
         return $file;
     }
 
-    private function deleteUploadedFile(string $file): void
+    private function deleteUploadedFile(string $filename): void
     {
         if (!$this->callDelete instanceof \Closure) {
             throw new \InvalidArgumentException('The callback function to delete the file must be defined.');
         }
 
-        call_user_func_array($this->callDelete, [
-            $this->name, "{$this->name}.{$this->ext}", $file
-        ]);
+        call_user_func_array(
+            $this->callDelete,
+            [ $this->name, new \SplFileInfo($filename) ]
+        );
 
-        if (file_exists($file)) {
-            unlink($file);
+        if (file_exists($filename)) {
+            unlink($filename);
         }
     }
 
