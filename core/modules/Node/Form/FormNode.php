@@ -330,7 +330,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     if ($oneToManyOption->getOrderBy() === OneToManyOption::WEIGHT_FIELD) {
                         $form->html("$key-$idEntity-drag", '<div class="table-width-minimum"><i class="fa fa-arrows-alt-v" aria-hidden="true"></i></div>')
                             ->hidden("{$key}[$idEntity][weight]", [
-                                'value' => $field[ OneToManyOption::WEIGHT_FIELD]
+                                'value' => $field[ OneToManyOption::WEIGHT_FIELD ]
                             ])->hidden("{$key}[$idEntity][id]", [
                             'value' => $idEntity
                         ]);

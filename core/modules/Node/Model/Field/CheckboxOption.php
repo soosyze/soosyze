@@ -21,6 +21,16 @@ final class CheckboxOption implements \JsonSerializable
     }
 
     /**
+     * @param numeric|string $key
+     *
+     * @return numeric|string|null
+     */
+    public function getOption($key)
+    {
+        return $this->options[ $key ] ?? null;
+    }
+
+    /**
      * @param numeric|string $value
      */
     public function addOption(string $label, $value): self

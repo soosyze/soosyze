@@ -8,7 +8,10 @@ use Core;
 use Queryflatfile\Request;
 use Soosyze\Config;
 use SoosyzeCore\Filter\Services\Filter;
+use SoosyzeCore\Node\Model\Field\CheckboxOption;
 use SoosyzeCore\Node\Model\Field\OneToManyOption;
+use SoosyzeCore\Node\Model\Field\RadioOption;
+use SoosyzeCore\Node\Model\Field\SelectOption;
 use SoosyzeCore\QueryBuilder\Services\Query;
 use SoosyzeCore\QueryBuilder\Services\Schema;
 use SoosyzeCore\Template\Services\Templating;
@@ -463,22 +466,17 @@ class Node
                 $out[ $key ][ 'field_value' ]   = $link;
                 $out[ $key ][ 'field_display' ] = '<a href="' . $link . '">' . $data[ $key ] . '</a>';
             } elseif ($value[ 'field_type' ] === 'select') {
-                /** @phpstan-var array $options */
-                $options = json_decode($value[ 'field_option' ], true) ?? [];
+                $options = SelectOption::createFromJson($value[ 'field_option' ]);
 
-                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
+                $out[ $key ][ 'field_display' ] = '<p>' . ($options->getOption($data[ $key ])['label'] ?? '') . '</p>';
             } elseif ($value[ 'field_type' ] === 'radio') {
-                /** @phpstan-var array $options */
-                $options = json_decode($value[ 'field_option' ], true) ?? [];
+                $options = RadioOption::createFromJson($value[ 'field_option' ]);
 
-                $out[ $key ][ 'field_display' ] = '<p>' . $options[ $data[ $key ] ] . '</p>';
+                $out[ $key ][ 'field_display' ] = '<p>' . ($options->getOption($data[ $key ]) ?? '') . '</p>';
             } elseif ($value[ 'field_type' ] === 'checkbox') {
-                /** @phpstan-var array $options */
-                $options   = json_decode($value[ 'field_option' ], true) ?? [];
-                $explode   = explode(',', $data[ $key ]);
-                $intersect = array_intersect_key($options, array_flip($explode));
+                $options   = CheckboxOption::createFromJson($value[ 'field_option' ]);
 
-                $out[ $key ][ 'field_display' ] = '<p>' . implode(', ', $intersect) . '</p>';
+                $out[ $key ][ 'field_display' ] = '<p>' . ($options->getOption($data[ $key ]) ?? '') . '</p>';
             } elseif ($value[ 'field_type' ] === 'one_to_many') {
                 $oneToManyOption = OneToManyOption::createFromJson($value[ 'field_option' ]);
 
