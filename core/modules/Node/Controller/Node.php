@@ -542,7 +542,7 @@ class Node extends \Soosyze\Controller
                 $nodeShow[ 'link' ] = self::router()->makeUrl(
                     in_array($pathIndex, [ $alias, 'node/' . $idNode ])
                         ? ''
-                        : $alias
+                        : '/' . ltrim($alias, '/')
                 );
 
                 $menu = array_merge([ $nodeShow ], $menu);
@@ -741,7 +741,7 @@ class Node extends \Soosyze\Controller
                 'content'  => self::config()->get('settings.meta_title')
             ], [
                 'property' => 'og:url',
-                'content'  => self::router()->makeUrl($alias)
+                'content'  => self::router()->makeUrl('/' . ltrim($alias, '/'))
             ],
         ];
 
