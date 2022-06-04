@@ -129,7 +129,7 @@ class NodeUser
             $alias    = $this->alias->getAlias('node/' . $node[ 'id' ], 'node/' . $node[ 'id' ]);
             $linkView = $this->config->get('settings.path_index') === $alias
                 ? ''
-                : $alias;
+                : '/' . ltrim($alias, '/');
 
             $node[ 'link_view' ] = $this->router->makeUrl($linkView);
 

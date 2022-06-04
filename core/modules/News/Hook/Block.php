@@ -278,7 +278,7 @@ class Block implements \SoosyzeCore\Block\BlockInterface
             /** @phpstan-var string $alias */
             $alias = $this->alias->getAlias('node/' . $value[ 'id' ], 'node/' . $value[ 'id' ]);
 
-            $value[ 'link_view' ] = $this->router->makeUrl($alias);
+            $value[ 'link_view' ] = $this->router->makeUrl('/' . ltrim($alias, '/'));
         }
         unset($value);
 
