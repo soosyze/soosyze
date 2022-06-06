@@ -14,6 +14,7 @@
         <i aria-hidden="true"
            class="fa fa-arrows-alt"
            data-link_update="<?php echo $block[ 'link_update' ]; ?>"
+           data-id="<?php echo $block[ 'block_id' ]; ?>"
            title="<?php echo t('Move'); ?>"></i>
     </span>
     <?php if ($block[ 'title' ]): ?>
