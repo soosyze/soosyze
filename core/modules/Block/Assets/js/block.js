@@ -22,14 +22,27 @@ $(function () {
 function sortSection(evt, target)
 {
     let weight = 0;
+    let data = '';
+    const section = $(evt.to).data('id');
+    const url = $(evt.to).find('.fa-arrows-alt').data('link_update');
 
     $(evt.to).find('.block').each(function () {
-        $.ajax({
-            url: $(this).find('.fa-arrows-alt').data('link_update'),
-            type: 'POST',
-            data: `weight=${weight}&section=${$(evt.to).data('id')}`
-        });
+        let id = $(this).find('.fa-arrows-alt').data('id');
         weight++;
+
+        data += `&block[${id}][weight]=${weight}&block[${id}][section]=${section}`;
+    });
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: function (data) {
+            renderMessage(data);
+        },
+        error: function (data) {
+            renderMessage(data.responseJSON);
+        }
     });
 }
 

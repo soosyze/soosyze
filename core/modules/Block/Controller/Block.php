@@ -352,6 +352,8 @@ class Block extends \Soosyze\Controller
             }
             $this->container->callHook('block.update.after', [ $validator, $data, $theme, $id ]);
 
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
+
             return $this->json(200, [
                     'redirect'    => self::router()->generateUrl('block.section.admin', [
                         'theme'   => $theme
