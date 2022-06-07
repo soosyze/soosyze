@@ -115,7 +115,8 @@ $(document).delegate('.form-api input[type="submit"], .form-api button[type="sub
         data.append(activeEl.name, activeEl.value);
     }
 
-    method = $($form).find('input[name="__method"]').attr('value');
+    $this.prop('disabled', true);
+    $this.css('cursor', 'progress');
 
     $.ajax({
         url: $form.attr('action'),
@@ -124,7 +125,9 @@ $(document).delegate('.form-api input[type="submit"], .form-api button[type="sub
         dataType: 'json',
         processData: false,
         contentType: false,
-        headers: {"X-HTTP-Method-Override": method},
+        headers: {
+            "X-HTTP-Method-Override": $($form).find('input[name="__method"]').attr('value')
+        },
         success: function (data) {
             window.location.replace(data.redirect);
         },
@@ -133,6 +136,9 @@ $(document).delegate('.form-api input[type="submit"], .form-api button[type="sub
             renderMessage(data.responseJSON);
             fieldIsInvalid($form, data.responseJSON)
             fieldsetErrorFormApi($form, $classTabPane);
+
+            $this.prop('disabled', false);
+            $this.css('cursor', '');
         }
     });
 });
