@@ -2,7 +2,12 @@ $(function () {
     addEditor();
 });
 function addEditor() {
-    $.trumbowyg.svgPath = config.trumbowyg.vendor  + '/icons.svg';
+    if ($('body').hasClass('dark')) {
+        $('body').addClass('trumbowyg-dark');
+    }
+
+    $.trumbowyg.svgPath = config.trumbowyg.vendor + '/icons.svg';
+
     $("textarea.editor").trumbowyg({
         lang: config.trumbowyg.lang,
         btnsDef: {
