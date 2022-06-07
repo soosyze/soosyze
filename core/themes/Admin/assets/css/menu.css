@@ -5,11 +5,11 @@
 }
 .nestable-body {
     padding: 16px 12px;
-    margin-top: -1px;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
 }
-.dark .nestable-body {
+.table-head {
+    border-bottom: 2px solid #ddd;
+}
+.dark .table-head {
     border-color: #393f4f;
 }
 .table-width-minimum {
