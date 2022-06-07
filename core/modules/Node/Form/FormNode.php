@@ -311,15 +311,16 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
         }
 
         $subFields = $data->fetchAll();
-        $dir = $this->router->getBasePath();
+        $dir       = $this->router->getBasePath();
 
-        $attrSortable = ['class' => 'form-group'];
+        $attrSortable = [ 'class' => 'form-group divide-y' ];
         if ($oneToManyOption->getOrderBy() === OneToManyOption::WEIGHT_FIELD) {
             $attrSortable = [
-                'class'           => 'form-group',
+                'class'           => 'form-group divide-y',
                 'data-ghostClass' => 'placeholder',
                 'data-draggable'  => 'sortable',
-                'data-onEnd'      => 'sortEntity'
+                'data-onEnd'      => 'sortEntity',
+                'style'           => 'cursor: grab'
             ];
         }
 
@@ -338,8 +339,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
                     $content = $field[ $oneToManyOption->getFieldShow()];
                     if ($this->isShowFile($oneToManyOption, $field)) {
-                        $src     = $dir . $field[ $oneToManyOption->getFieldTypeShow() ];
-                        $content = "<img src='$src' class='img-thumbnail img-thumbnail-light'/>";
+                        $src     = $dir . '/' . $field[ $oneToManyOption->getFieldTypeShow() ];
+                        $content = "<img alt='$content' src='$src' class='img-thumbnail img-thumbnail-light'/>";
                     }
 
                     $form->html("$key-$idEntity-show", '<div class="table-min-width-100"><a:attr>:content</a></div>', [

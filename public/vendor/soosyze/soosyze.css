@@ -160,6 +160,15 @@ pre code {
         position: sticky;
     }
 }
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-y-reverse: 0;
+    border: 0 solid #ddd;
+    border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+    border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+.dark .divide-y > :not([hidden]) ~ :not([hidden]) {
+    border-color: #393f4f;
+}
 
 /* --------------------------- */
 /* ---------- FILE ----------- */
