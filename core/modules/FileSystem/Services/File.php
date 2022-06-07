@@ -341,16 +341,14 @@ class File
         $this->resolveDir();
         $move = $this->getMoveDir();
 
-        if (!$this->callMove instanceof \Closure) {
-            throw new \InvalidArgumentException('The callback function to move the file must be defined.');
-        }
-
         $this->uploadedFile->moveTo($move);
 
-        call_user_func_array(
-            $this->callMove,
-            [ $this->name, new \SplFileInfo($this->getMovePath()) ]
-        );
+        if ($this->callMove instanceof \Closure) {
+            call_user_func_array(
+                $this->callMove,
+                [ $this->name, new \SplFileInfo($this->getMovePath()) ]
+            );
+        }
     }
 
     private function getUploadedFilename(): ?string
