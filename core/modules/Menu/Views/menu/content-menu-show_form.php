@@ -3,7 +3,7 @@
     data-draggable="sortable" data-group="nested-menu" data-ghostClass="placeholder" data-onEnd="sortMenu">
     <?php if ($menu): foreach ($menu as $link): ?>
 
-    <li style="cursor: move">
+    <li style="cursor: move" class="divide-y">
         <div class="nestable-body table-row">
             <div class="table-width-minimum">
                 <i class="fa fa-arrows-alt handle" aria-hidden="true"></i>

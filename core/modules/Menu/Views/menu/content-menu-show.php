@@ -20,7 +20,7 @@
         <fieldset>
         <?php if ($menu->getVar('menu')): ?>
 
-            <div class="table-row">
+            <div class="table-row table-head">
                 <div class="table-min-width-100">Titre</div>
                 <div class="table-width-100">Statut</div>
                 <div class="table-width-300">Actions</div>
