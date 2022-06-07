@@ -19,19 +19,6 @@ $(function () {
         }
         return false;
     });
-    /* NUMBER TEXTAREA */
-    var textarea = document.querySelectorAll('textarea');
-    Array.prototype.forEach.call(textarea, function (el) {
-        if (el.maxLength > 0) {
-            $('<div class="maxlength_show">' + el.value.length + '/' + el.maxLength + '<div>').appendTo(el.parentNode);
-        }
-    });
-    $('textarea').keyup(function () {
-        $this = $(this);
-        $this.parent()
-                .find('.maxlength_show')
-                .html('<div class="maxlength_show">' + $this.val().length + '/' + $this.attr('maxLength') + '<div>');
-    });
     /* INPUT ICON RENDER */
     $('.text_icon').keyup(function () {
         $(this).parent().find('.render_icon i').attr('class', this.value);
