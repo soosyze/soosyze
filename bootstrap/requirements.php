@@ -1,18 +1,5 @@
 <?php
 
-$requiement = new Requiement();
-$require    = $requiement
-    ->versionPhp('5.5')
-    ->memoryLimit(8)
-    ->extensions(array(
-        'date', 'fileinfo', 'filter', 'gd', 'json', 'mbstring', 'openssl', 'session', 'zip'
-    ));
-
-if (!$require->isValid()) {
-    echo $require;
-    exit();
-}
-
 class Requiement
 {
     /**
@@ -259,4 +246,17 @@ class Requiement
             $this->warning = true;
         }
     }
+}
+
+$requiement = new Requiement();
+$require    = $requiement
+    ->versionPhp('7.2')
+    ->memoryLimit(8)
+    ->extensions(array(
+        'date', 'fileinfo', 'filter', 'gd', 'json', 'mbstring', 'openssl', 'session', 'zip'
+    ));
+
+if (!$require->isValid()) {
+    echo $require;
+    exit();
 }
