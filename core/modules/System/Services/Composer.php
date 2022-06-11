@@ -158,19 +158,19 @@ class Composer
 
         foreach ($data[ 'require' ] as $moduleRequire => $version) {
             if (preg_match('{^ext-(.+)$}iD', $moduleRequire, $match) && !extension_loaded($match[ 1 ])) {
-                $errors[] = t('Module :title requires PHP extension :ext_name', [
+                $errors[] = t('The :title module requires PHP extension :ext_name', [
                     ':ext_name' => $match[ 1 ],
                     ':title'    => $title
                 ]);
             } elseif (preg_match('{^lib-(.+)$}iD', $moduleRequire, $match)) {
                 if (!extension_loaded($match[ 1 ])) {
-                    $errors[] = t('Module :title requires PHP library :ext_name (:version_ext)', [
+                    $errors[] = t('The :title module requires PHP library :ext_name (:version_ext)', [
                         ':ext_name'    => $match[ 1 ],
                         ':title'       => $title,
                         ':version_ext' => $version
                     ]);
                 } elseif (!$this->semver->satisfies(phpversion($moduleRequire) ?: '', $version)) {
-                    $errors[] = t('Le module :title nécessite le la bibliothèque PHP :ext_name (:version_ext) actuellement (:version_current_ext)', [
+                    $errors[] = t('The :title module requires the PHP library :ext_name (:version_ext) currently (:version_current_ext)', [
                         ':ext_name'            => $match[ 1 ],
                         ':title'               => $title,
                         ':version_ext'         => $version,

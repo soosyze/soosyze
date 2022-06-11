@@ -73,8 +73,7 @@ En choisissant les versions PHP 7.x vous aurez un gain de performance sur la mé
 * `json` pour sauvegarder les données et les configurations,
 * `mbstring` pour vos emails,
 * `openssl` pour interroger des ressources ou flux en HTTPS,
-* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre,
-* `zip` pour créer des sauvegardes et les restaurer en cas d'erreur.
+* `session` pour garder en mémoire vos données (coté serveur) d'une page à l'autre.
 
 Ces extensions sont généralement actives par défaut. Mais si l'une venait à manquer un message d'erreur viendrait vous en informer.
 

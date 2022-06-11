@@ -73,8 +73,7 @@ With PHP 7.x, your performance in terms of memory and performance will increase 
 * `json` to save data and configurations,
 * `mbstring` for your emails,
 * `openssl` to query resources or flows in HTTPS,
-* `session` to store your data (server side) from one page to another,
-* `zip` to create backups and restore them in case of error.
+* `session` to store your data (server side) from one page to another.
 
 These extensions are usually active by default. But if he missed an error message, he would come to inform you.
 
