@@ -3,6 +3,9 @@
     "type": "soosyze-module",
     "description": "Backup of the CMS",
     "version": "1.0.0",
+    "require": {
+        "ext-zip": "*"
+    },
     "autoload": {
         "psr-4": {
             "SoosyzeCore\\BackupManager\\": "/"
