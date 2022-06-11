@@ -78,6 +78,13 @@
                             </div>
 
                             <?php echo t($module[ 'description' ]); ?>
+                            <?php if (!empty($module[ 'isRequiredForPhp' ])): ?>
+                            <br>
+                            <span class="module-is_required_danger">
+                                <?php echo implode(', <br>', $module[ 'isRequiredForPhp' ]); ?>
+
+                            </span>
+                            <?php endif; ?>
                             <?php if (!empty($module[ 'isRequired' ])): ?>
 
                                 <br><?php echo t('Requires'); ?> 

@@ -200,6 +200,10 @@ class User implements \SoosyzeCore\User\UserInterface
 
     public function hookFolderDownload(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
     {
+        if (!extension_loaded('zip')) {
+            return false;
+        }
+
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'folder_download' ]) && !empty($right[ 'folder_show_sub' ]);

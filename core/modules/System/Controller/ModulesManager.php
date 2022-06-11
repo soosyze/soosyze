@@ -56,6 +56,11 @@ class ModulesManager extends Controller
                 $attr[ 'disabled' ] = 'disabled';
             }
 
+            /* Si le module require une version php, un module ou une librairie */
+            if ($isRequiredForPhp = self::composer()->validRequireExtLib($title, $composer)) {
+                $attr[ 'disabled' ] = 'disabled';
+            }
+
             /* Si un module requis est non conforme. */
             if ($isRequired = $this->isRequired($module, $composer, $data)) {
                 $attr[ 'disabled' ] = 'disabled';
@@ -83,6 +88,7 @@ class ModulesManager extends Controller
                     ? null
                     : htmlspecialchars($values[ 'description' ]),
                 'isRequired'          => $isRequired,
+                'isRequiredForPhp'    => $isRequiredForPhp,
                 'isRequiredForModule' => $isRequiredForModule,
                 'version'             => empty($values[ 'version' ])
                     ? null
