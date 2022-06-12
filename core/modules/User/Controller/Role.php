@@ -249,8 +249,8 @@ class Role extends \Soosyze\Controller
 
     private function getData(Validator $validator): array
     {
-        $roleColor  = $validator->getInputString('role_color');
-        $roleIcon   = $validator->getInputString('role_icon');
+        $roleColor = $validator->getInputString('role_color');
+        $roleIcon  = $validator->getInputString('role_icon');
 
         return [
             'role_description' => $validator->getInput('role_description'),

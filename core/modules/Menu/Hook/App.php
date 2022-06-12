@@ -21,7 +21,10 @@ class App
         $this->core = $core;
     }
 
-    public function hookMenuShowResponseAfter(RequestInterface $request, ResponseInterface &$response): void
+    public function hookMenuShowResponseAfter(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void
     {
         if (!($response instanceof Templating)) {
             return;

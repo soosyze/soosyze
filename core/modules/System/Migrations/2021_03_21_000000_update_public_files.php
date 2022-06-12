@@ -36,7 +36,7 @@ return [
         foreach ($pages as $page) {
             $req
                 ->update('entity_page', [
-                    'body'    => str_replace($search, $replace, $page[ 'body' ])
+                    'body' => str_replace($search, $replace, $page[ 'body' ])
                 ])
                 ->where('page_id', '=', $page[ 'page_id' ])
                 ->execute();

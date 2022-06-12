@@ -84,8 +84,11 @@ class User implements \SoosyzeCore\User\UserInterface
         return $this->rightExtension($ext, $right);
     }
 
-    public function hookFileStore(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFileStore(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'file_store' ]);
@@ -163,43 +166,60 @@ class User implements \SoosyzeCore\User\UserInterface
         return $this->rightExtension($ext, $right);
     }
 
-    public function hookFolderAdmin(?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderAdmin(
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $profils = $this->fileProfil->getProfilsFileByUser($user[ 'user_id' ] ?? null);
 
         return !empty($profils);
     }
 
-    public function hookFolderShow(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderShow(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right);
     }
 
-    public function hookFolderStore(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderStore(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'folder_store' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
-    public function hookFolderUpdate(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderUpdate(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'folder_update' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
-    public function hookFolderDelete(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderDelete(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
         return !empty($right[ 'folder_delete' ]) && !empty($right[ 'folder_show_sub' ]);
     }
 
-    public function hookFolderDownload(string $path, ?ServerRequestInterface $req = null, ?array $user = null): bool
-    {
+    public function hookFolderDownload(
+        string $path,
+        ?ServerRequestInterface $req = null,
+        ?array $user = null
+    ): bool {
         if (!extension_loaded('zip')) {
             return false;
         }

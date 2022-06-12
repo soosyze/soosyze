@@ -76,8 +76,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $optionTimezone = [];
         foreach (timezone_identifiers_list() as $value) {
             $optionTimezone[] = [ 'value' => $value, 'label' => $value ];
@@ -226,7 +229,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     public function validator(Validator &$validator): void
     {
-        $langs  = implode(',', array_keys($this->translate->getLang())) . ',en';
+        $langs = implode(',', array_keys($this->translate->getLang())) . ',en';
         $validator->setRules([
             'lang'               => 'required|inarray:' . $langs,
             'maintenance'        => '!required|bool',

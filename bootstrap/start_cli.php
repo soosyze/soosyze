@@ -31,7 +31,7 @@ $req = new ServerRequest(
     []
 );
 
-$app = Core::getInstance($req);
+$app = \Core::getInstance($req);
 
 $app->setSettings([
     'root'                => ROOT,

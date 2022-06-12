@@ -26,7 +26,7 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(array $attr)
     {
-        parent::__construct($attr + ['class' => 'form-api']);
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
     }
 
     public function labelGroup(FormGroupBuilder &$form): self
@@ -154,8 +154,8 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
             $form->token('token_role_submit')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->button('cancel', t('Cancel'), [
-                    'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();'
+                    'class'   => 'btn btn-default',
+                    'onclick' => 'javascript:history.back();'
             ]);
         });
 
@@ -176,8 +176,8 @@ class FormUserRole extends \Soosyze\Components\Form\FormBuilder
                 $form->token('token_role_delete')
                 ->submit('submit', t('Delete'), [ 'class' => 'btn btn-danger' ])
                 ->button('cancel', t('Cancel'), [
-                    'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();'
+                    'class'   => 'btn btn-default',
+                    'onclick' => 'javascript:history.back();'
                 ]);
             });
 

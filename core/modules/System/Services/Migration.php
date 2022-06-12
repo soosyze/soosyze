@@ -33,7 +33,12 @@ class Migration
      */
     private $schema;
 
-    public function __construct(Composer $composer, Config $config, Query $query, Schema $schema)
+    public function __construct(
+        Composer $composer,
+        Config $config,
+        Query $query,
+        Schema $schema
+    )
     {
         $this->composer = $composer;
         $this->config   = $config;
@@ -109,7 +114,7 @@ class Migration
                     !$fileInfo->isFile() ||
                     in_array($fileInfo->getBasename('.php'), $migrationsInstalled) ||
                     !preg_match(self::REGEX_MIGRATION_NAME, $fileInfo->getBasename('.php'))
-                    ) {
+                ) {
                     continue;
                 }
 

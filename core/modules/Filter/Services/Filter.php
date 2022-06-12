@@ -11,7 +11,11 @@ class Filter
      */
     private $filters;
 
-    public function __construct(LazyLoding $lazyLoding, Parsedown $parsdown, Xss $xss)
+    public function __construct(
+        LazyLoding $lazyLoding,
+        Parsedown $parsdown,
+        Xss $xss
+    )
     {
         $this->filters = [
             $xss, $parsdown, $lazyLoding

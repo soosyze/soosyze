@@ -19,14 +19,14 @@ use SoosyzeCore\User\Services\User;
 class App
 {
     /**
-     * @var Core
-     */
-    private $core;
-
-    /**
      * @var Block
      */
     private $block;
+
+    /**
+     * @var Core
+     */
+    private $core;
 
     /**
      * @var Query
@@ -60,10 +60,16 @@ class App
      */
     private $userCurrent;
 
-    public function __construct(Core $core, Block $block, Query $query, Router $router, Templating $template, User $user)
-    {
-        $this->core   = $core;
+    public function __construct(
+        Block $block,
+        Core $core,
+        Query $query,
+        Router $router,
+        Templating $template,
+        User $user
+    ) {
         $this->block  = $block;
+        $this->core   = $core;
         $this->query  = $query;
         $this->router = $router;
         $this->tpl    = $template;
@@ -79,8 +85,10 @@ class App
         }
     }
 
-    public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hookResponseAfter(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         if (!($response instanceof Templating) || $response->getStatusCode() !== 200) {
             return;
         }
@@ -97,7 +105,7 @@ class App
                 'section_id'  => $section,
                 'content'     => $blocks[ $section ] ?? [],
                 'is_admin'    => $isAdmin,
-                'link_create' => ($isAdmin && ($section !== 'main_menu' || ($section === 'main_menu' && empty($blocks['main_menu']))))
+                'link_create' => ($isAdmin && ($section !== 'main_menu' || ($section === 'main_menu' && empty($blocks[ 'main_menu' ]))))
                     ? $this->router->generateUrl('block.create.list', [
                         'theme'   => $theme,
                         'section' => $section
@@ -200,8 +208,8 @@ class App
 
     private function isVisibilityRoles(array $block): bool
     {
-        $rolesBlock  = explode(',', $block[ 'roles' ]);
-        $visibility  = $block[ 'visibility_roles' ];
+        $rolesBlock = explode(',', $block[ 'roles' ]);
+        $visibility = $block[ 'visibility_roles' ];
 
         /* S'il n'y a pas d'utilisateur et que l'on demande de suivre les utilisateurs non connectés. */
         if (!$this->userCurrent && in_array(1, $rolesBlock)) {

@@ -63,8 +63,10 @@ class App
         $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function hookSys(RequestInterface &$request, ResponseInterface &$response): void
-    {
+    public function hookSys(
+        RequestInterface &$request,
+        ResponseInterface &$response
+    ): void {
         $path = $this->router->getPathFromRequest($request);
         /** @phpstan-var string $path */
         $path = $this->alias->getSource($path, $path);
@@ -82,8 +84,10 @@ class App
         }
     }
 
-    public function hooks404(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hooks404(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         /** @phpstan-var string $pathNoFound */
         $pathNoFound     = $this->config->get('settings.path_no_found', '');
         $path            = '/' . ltrim($pathNoFound, '/');
@@ -124,8 +128,10 @@ class App
         }
     }
 
-    public function hooks403(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hooks403(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         /** @phpstan-var string $pathAccessDenied */
         $pathAccessDenied = $this->config->get('settings.path_access_denied', '');
         $path             = '/' . ltrim($pathAccessDenied, '/');
@@ -161,8 +167,10 @@ class App
         }
     }
 
-    public function hooks503(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hooks503(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         /** @phpstan-var string $pathMaintenance */
         $pathMaintenance     = $this->config->get('settings.path_maintenance', '');
         $path                = '/' . ltrim($pathMaintenance, '/');
@@ -191,7 +199,7 @@ class App
                     'title_main' => t('Site under maintenance'),
                 ]);
         } else {
-            $content = $responseMaintenance->getBlock('page.content');
+            $content  = $responseMaintenance->getBlock('page.content');
             $response = $this->tpl
                 ->getTheme()
                 ->make('page', 'page-maintenance.php', $this->pathViews, [
@@ -204,8 +212,10 @@ class App
         $response = $response->withStatus(503);
     }
 
-    public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hookResponseAfter(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         if (!($response instanceof Templating)) {
             return;
         }
@@ -253,8 +263,8 @@ class App
             : $metaDescription;
 
         $response->view('this', [
-                'favicon'     => $favicon,
-                'title'       => $title
+                'favicon' => $favicon,
+                'title'   => $title
             ])
             ->addScript('system', "$vendor/js/system.js")
             ->addStyle('system', "$vendor/css/system.css")
@@ -279,10 +289,10 @@ class App
         /** @phpstan-var bool $granted */
         $granted = $this->core->callHook('app.granted', [ 'system.config.maintenance' ]);
         if ($maintenance && $granted) {
-            $_SESSION['messages']['infos'][] = t('Site under maintenance');
+            $_SESSION[ 'messages' ][ 'infos' ][] = t('Site under maintenance');
         }
         /** @phpstan-ignore-next-line */
-        if ($this->router->getPathFromRequest() === '/' && (!$maintenance|| ($maintenance && $granted))) {
+        if ($this->router->getPathFromRequest() === '/' && (!$maintenance || ($maintenance && $granted))) {
             $response->getBlock('page')->setNamesOverride([ 'page-front.php' ]);
         }
     }

@@ -21,7 +21,10 @@ class App
         $this->core = $core;
     }
 
-    public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
+    public function hookResponseAfter(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void
     {
         if (!($response instanceof Templating)) {
             return;
@@ -32,7 +35,7 @@ class App
         $response->addScript('filemanager', "$vendor/js/filemanager.js")
             ->addStyle('filemanager', "$vendor/css/filemanager.css")
             ->addConfigJs('filemanager', [
-                'copy'       => t('Copied link')
-            ]);
+                'copy' => t('Copied link')
+        ]);
     }
 }

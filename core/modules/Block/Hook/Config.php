@@ -46,8 +46,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $form->group('social-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('social-legend', t('Social networks'));
             foreach ($this->socials as $key => $social) {
@@ -59,7 +62,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
                             ])
                             ->text($key, [
                                 'class' => 'form-control',
-                                'value' => $data['icon_socials'][ $key ]
+                                'value' => $data[ 'icon_socials' ][ $key ]
                             ]);
                         }, [ 'class' => 'form-group-flex' ]);
                 }, [ 'class' => 'form-group' ]);

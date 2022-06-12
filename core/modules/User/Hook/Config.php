@@ -89,8 +89,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $form
             ->group('login-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('login-legend', t('Sign in'))
@@ -411,7 +414,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function after(Validator&$validator, array $data, string $id): void
+    public function after(Validator &$validator, array $data, string $id): void
     {
     }
 

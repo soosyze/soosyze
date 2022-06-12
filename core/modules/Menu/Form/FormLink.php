@@ -35,7 +35,7 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(array $attr, Router $router)
     {
-        parent::__construct($attr + ['class' => 'form-api']);
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
         $this->router = $router;
     }
 
@@ -102,8 +102,8 @@ class FormLink extends \Soosyze\Components\Form\FormBuilder
                 ->token('token_link_form')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->button('cancel', t('Cancel'), [
-                    'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();'
+                    'class'   => 'btn btn-default',
+                    'onclick' => 'javascript:history.back();'
                 ]);
             });
 

@@ -35,7 +35,7 @@ class User implements \SoosyzeCore\User\UserInterface
         foreach ($menu as $key => $link) {
             $permissions[ 'Configuration' ][ $key . '.config.manage' ] = [
                 'name' => 'Administer :name configurations',
-                'attr'  => [ ':name' => $link[ 'title_link' ] ]
+                'attr' => [ ':name' => $link[ 'title_link' ] ]
             ];
         }
     }

@@ -35,7 +35,10 @@ class App
         $this->router = $router;
     }
 
-    public function getEditor(RequestInterface $request, ResponseInterface &$response): void
+    public function getEditor(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void
     {
         if (!($response instanceof Templating)) {
             return;

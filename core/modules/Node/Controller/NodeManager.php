@@ -21,7 +21,7 @@ class NodeManager extends \Soosyze\Controller
     /**
      * @var int
      */
-    private static $limit = 5;
+    private static $limit = 20;
 
     /**
      * @var bool

@@ -27,7 +27,7 @@ RouteCollection::setNamespace('SoosyzeCore\FileManager\Controller')->prefix('/fi
         $r->post('update', '{path}{name}{ext}', '@update', FILEMANAGER_FILE_WITH);
         $r->get('show', '{path}', '@show', FILEMANAGER_PATH_WITH);
     });
-    $r->prefix('/folder{path}')->withs(['path' => '(/[-\w]+){1,255}' ])->name('folder.')->setNamespace('\Folder')->group(function (RouteGroup $r): void {
+    $r->prefix('/folder{path}')->withs([ 'path' => '(/[-\w]+){1,255}' ])->name('folder.')->setNamespace('\Folder')->group(function (RouteGroup $r): void {
         $r->get('create', '/create', '@create', FILEMANAGER_PATH_WITH);
         $r->post('store', '/', '@store', FILEMANAGER_PATH_WITH);
         $r->get('edit', '/edit', '@edit');

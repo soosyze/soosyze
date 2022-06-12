@@ -23,7 +23,7 @@ class FormContact extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(array $attr)
     {
-        parent::__construct($attr + ['class' => 'form-api']);
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
     }
 
     public function makeFields(): self

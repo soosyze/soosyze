@@ -168,8 +168,10 @@ class File
         }, [ 'class' => 'form-group-flex' ]);
     }
 
-    public function add(UploadedFileInterface $uploadedFile, string $hiddenFilename = ''): self
-    {
+    public function add(
+        UploadedFileInterface $uploadedFile,
+        string $hiddenFilename = ''
+    ): self {
         $clientFilename = $uploadedFile->getClientFilename() ?? '';
 
         $clone                 = clone $this;

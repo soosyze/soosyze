@@ -43,6 +43,6 @@ return [
             ->execute();
 
         $req->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
-            ->values(['Menu', 'Block', '1.0.*']);
+            ->values([ 'Menu', 'Block', '1.0.*' ]);
     }
 ];

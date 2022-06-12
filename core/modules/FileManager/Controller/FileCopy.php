@@ -28,8 +28,12 @@ class FileCopy extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function admin(string $path, string $name, string $ext, ServerRequestInterface $req)
-    {
+    public function admin(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ) {
         $path = Util::cleanPath('/' . $path);
         $spl  = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
@@ -136,8 +140,12 @@ class FileCopy extends \Soosyze\Controller
         ]);
     }
 
-    public function update(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
-    {
+    public function update(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         $path = Util::cleanPath('/' . $path);
 
         $fileCurrent = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";

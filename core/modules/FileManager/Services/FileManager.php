@@ -67,8 +67,13 @@ class FileManager
      */
     private $templating;
 
-    public function __construct(Core $core, Config $config, HookUser $hookUser, Router $router, Templating $templating)
-    {
+    public function __construct(
+        Core $core,
+        Config $config,
+        HookUser $hookUser,
+        Router $router,
+        Templating $templating
+    ) {
         $this->core       = $core;
         $this->hookUser   = $hookUser;
         $this->router     = $router;
@@ -86,8 +91,10 @@ class FileManager
         return self::$extAllowed;
     }
 
-    public function getBreadcrumb(string $path, string $keyRoute = 'filemanager.show'): array
-    {
+    public function getBreadcrumb(
+        string $path,
+        string $keyRoute = 'filemanager.show'
+    ): array {
         $path       = rtrim($path, '/');
         $nextPath   = '';
         $breadcrumb = [];
@@ -190,7 +197,7 @@ class FileManager
                 'title_link' => t('Delete')
             ];
         }
-        if (!empty($info['size']) && $this->hookUser->hookFolderDownload($path)) {
+        if (!empty($info[ 'size' ]) && $this->hookUser->hookFolderDownload($path)) {
             $actions[] = [
                 'class'      => '',
                 'icon'       => 'fa fa-download',
@@ -206,8 +213,11 @@ class FileManager
         return $actions;
     }
 
-    public function getFileSubmenu(string $keyRoute, \SplFileInfo $file, string $path): Block
-    {
+    public function getFileSubmenu(
+        string $keyRoute,
+        \SplFileInfo $file,
+        string $path
+    ): Block {
         $menu = $this->getActionsFile($file, $path);
 
         $this->core->callHook('filemanager.file.submenu', [ &$menu ]);
