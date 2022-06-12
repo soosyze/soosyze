@@ -21,11 +21,13 @@ class MenuManager extends \Soosyze\Controller
 {
     public function __construct()
     {
-        $this->pathViews    = dirname(__DIR__) . '/Views/';
+        $this->pathViews = dirname(__DIR__) . '/Views/';
     }
 
-    public function show(ServerRequestInterface $req, int $menuId = Menu::MAIN_MENU): ResponseInterface
-    {
+    public function show(
+        ServerRequestInterface $req,
+        int $menuId = Menu::MAIN_MENU
+    ): ResponseInterface {
         /** @phpstan-var MenuEntity|null $menu */
         $menu = self::menu()->getMenu($menuId)->fetch();
         if ($menu === null) {
@@ -169,15 +171,18 @@ class MenuManager extends \Soosyze\Controller
                 continue;
             }
 
-            $link[ 'link' ] = self::menu()->rewiteUri($link['link'], $link['query'], $link['fragment']);
+            $link[ 'link' ] = self::menu()->rewiteUri($link[ 'link' ], $link[ 'query' ], $link[ 'fragment' ]);
         }
         unset($link);
 
         return $this->createBlockMenuShowForm($menuId, $query, $level);
     }
 
-    private function createBlockMenuShowForm(int $menuId, ?array $query, int $level): Block
-    {
+    private function createBlockMenuShowForm(
+        int $menuId,
+        ?array $query,
+        int $level
+    ): Block {
         return self::template()
                 ->createBlock('menu/content-menu-show_form.php', $this->pathViews)
                 ->addNameOverride("menu-show-$menuId.php")

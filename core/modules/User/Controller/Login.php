@@ -235,15 +235,18 @@ class Login extends \Soosyze\Controller
         ]);
     }
 
-    public function resetUser(int $id, string $token, ServerRequestInterface $req): ResponseInterface
-    {
+    public function resetUser(
+        int $id,
+        string $token,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         if (!($user = self::user()->find($id))) {
             return $this->get404($req);
         }
         if ($user[ 'token_forget' ] !== $token) {
             return $this->get404($req);
         }
-        if ($user['time_reset'] < time()) {
+        if ($user[ 'time_reset' ] < time()) {
             $_SESSION[ 'messages' ][ 'errors' ][] = t('Password reset timeout');
 
             return $this->get404($req);

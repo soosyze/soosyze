@@ -219,23 +219,33 @@ class Templating extends \Soosyze\Components\Http\Response
      * Ajoute un bloc à la template courante ou une sous template.
      * Ce bloc peut recevoir des variables fournit en dernier paramètre de la fonction.
      */
-    public function make(string $selector, string $tpl, string $tplPath, array $vars = []): self
-    {
+    public function make(
+        string $selector,
+        string $tpl,
+        string $tplPath,
+        array $vars = []
+    ): self {
         $template = $this->createBlock($tpl, $tplPath);
         $this->addBlock($selector, $template, $vars);
 
         return $this;
     }
 
-    public function addFilterVar(string $selector, string $key, callable $function): self
-    {
+    public function addFilterVar(
+        string $selector,
+        string $key,
+        callable $function
+    ): self {
         $this->getBlock($selector)->addFilterVar($key, $function);
 
         return $this;
     }
 
-    public function addFilterBlock(string $selector, string $key, callable $function): self
-    {
+    public function addFilterBlock(
+        string $selector,
+        string $key,
+        callable $function
+    ): self {
         $this->getBlock($selector)->addFilterBlock($key, $function);
 
         return $this;
@@ -330,12 +340,12 @@ class Templating extends \Soosyze\Components\Http\Response
 
     public function addScript(string $name, string $href, array $attr = []): self
     {
-        $this->scripts[$name] = [ 'src' => $href, 'type' => 'text/javascript' ] + $attr;
+        $this->scripts[ $name ] = [ 'src' => $href, 'type' => 'text/javascript' ] + $attr;
 
         return $this;
     }
 
-    public function addStyle(string $name, string $src, array $attr= []): self
+    public function addStyle(string $name, string $src, array $attr = []): self
     {
         $this->styles[ $name ] = [ 'href' => $src, 'rel' => 'stylesheet' ] + $attr;
 
@@ -364,7 +374,7 @@ class Templating extends \Soosyze\Components\Http\Response
         $vendor = $this->core->getPath('modules', 'modules/core', false) . '/Template/Assets';
 
         $this->scripts = [
-            'core'         => [
+            'core' => [
                 'src' => "$vendor/js/script.js"
             ]
         ];

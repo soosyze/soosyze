@@ -27,7 +27,7 @@ class Node
         string $newDefaultIcon = Config::DEFAULT_ICON
     ) {
         $this->newDefaultImage = $newDefaultImage;
-        $this->newDefaultIcon = $newDefaultIcon;
+        $this->newDefaultIcon  = $newDefaultIcon;
     }
 
     public function hookNodeShowTpl(Templating $tpl, array $node, int $idNode): void
@@ -37,8 +37,11 @@ class Node
         }
     }
 
-    public function hookNodeStoreBefore(Validator $validator, array &$fieldsInsert, string $type): void
-    {
+    public function hookNodeStoreBefore(
+        Validator $validator,
+        array &$fieldsInsert,
+        string $type
+    ): void {
         if ($type === self::NODE_TYPE) {
             $words = str_word_count(strip_tags($fieldsInsert[ 'body' ]));
             $readingTime = ceil($words / 200);

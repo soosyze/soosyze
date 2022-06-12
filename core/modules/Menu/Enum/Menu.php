@@ -12,7 +12,7 @@ final class Menu
 
     public const USER_MENU  = 3;
 
-    public const DEFAULT_MENU= [
+    public const DEFAULT_MENU = [
         self::ADMIN_MENU,
         self::MAIN_MENU,
         self::USER_MENU

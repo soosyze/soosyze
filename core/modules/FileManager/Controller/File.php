@@ -60,8 +60,12 @@ class File extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function show(string $path, string $name, string $ext, ServerRequestInterface $req)
-    {
+    public function show(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ) {
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -159,7 +163,7 @@ class File extends \Soosyze\Controller
         $hookUser = $this->get(User::class);
         $profil   = $hookUser->getRight($path);
 
-        $rules  = [
+        $rules = [
             'file'   => 'required|file_extensions:',
             'folder' => '!required',
         ];
@@ -258,8 +262,12 @@ class File extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function edit(string $path, string $name, string $ext, ServerRequestInterface $req)
-    {
+    public function edit(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ) {
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -276,7 +284,7 @@ class File extends \Soosyze\Controller
             'path' => $path, 'name' => $name, 'ext'  => $ext
         ]);
 
-        $form = (new FormBuilder([ 'action' => $action, 'method' => 'put']))
+        $form = (new FormBuilder([ 'action' => $action, 'method' => 'put' ]))
             ->group('file-fieldset', 'fieldset', function ($form) use ($values) {
                 $form->legend('file-legend', t('Rename the file'))
                 ->group('name-group', 'div', function ($form) use ($values) {
@@ -311,8 +319,12 @@ class File extends \Soosyze\Controller
         ]);
     }
 
-    public function update(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
-    {
+    public function update(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         $dir         = self::core()->getDir('files_public', 'app/files') . $path;
         $fileCurrent = "$dir$name$ext";
 
@@ -361,8 +373,12 @@ class File extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function remove(string $path, string $name, string $ext, ServerRequestInterface $req)
-    {
+    public function remove(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ) {
         $spl = new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
         );
@@ -410,8 +426,12 @@ class File extends \Soosyze\Controller
         ]);
     }
 
-    public function delete(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
-    {
+    public function delete(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         $dir  = self::core()->getDir('files_public', 'app/files') . $path;
         $file = "$dir$name$ext";
 
@@ -443,8 +463,12 @@ class File extends \Soosyze\Controller
         ]);
     }
 
-    public function download(string $path, string $name, string $ext, ServerRequestInterface $req): ResponseInterface
-    {
+    public function download(
+        string $path,
+        string $name,
+        string $ext,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
         if (!is_file($file)) {
             return $this->get404($req);

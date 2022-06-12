@@ -43,9 +43,12 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
      */
     private $config;
 
-    public function __construct(array $attr, ?File $file = null, ?Config $config = null)
-    {
-        parent::__construct($attr + ['class' => 'form-api']);
+    public function __construct(
+        array $attr,
+        ?File $file = null,
+        ?Config $config = null
+    ) {
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
         $this->file   = $file;
         $this->config = $config;
     }
@@ -214,8 +217,12 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
         return $this;
     }
 
-    public function password(FormGroupBuilder &$form, string $id, string $label, array $attr = []): void
-    {
+    public function password(
+        FormGroupBuilder &$form,
+        string $id,
+        string $label,
+        array $attr = []
+    ): void {
         $form->group("$id-group", 'div', function ($form) use ($id, $label, $attr) {
             $form->label("$id-label", $label, [ 'for' => $id ])
                 ->group("$id-flex", 'div', function ($form) use ($id, $attr) {
@@ -343,16 +350,18 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
      *
      * @return $this
      */
-    public function submitForm(string $label = 'Save', bool $hasCancelButton = false): self
-    {
+    public function submitForm(
+        string $label = 'Save',
+        bool $hasCancelButton = false
+    ): self {
         $this->group('submit-group', 'div', function ($form) use ($label, $hasCancelButton) {
             $form->token('token_user_form')
                 ->submit('submit', t($label), [ 'class' => 'btn btn-success' ]);
 
             if ($hasCancelButton) {
                 $form->button('cancel', t('Cancel'), [
-                    'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();'
+                    'class'   => 'btn btn-default',
+                    'onclick' => 'javascript:history.back();'
                 ]);
             }
         });

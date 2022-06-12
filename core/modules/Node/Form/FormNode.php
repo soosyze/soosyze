@@ -117,7 +117,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
     public function setFields(array $fields): self
     {
-        $this->fields  = $fields;
+        $this->fields = $fields;
 
         return $this;
     }
@@ -382,7 +382,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     'class'    => 'btn btn-primary',
                     'href'     => $this->router->generateUrl('node.entity.create', [
                         'idNode' => $this->values[ 'id' ],
-                        'entity'  => $key,
+                        'entity' => $key,
                     ])
                 ]);
             });
@@ -569,7 +569,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                                     'value'   => $value[ 'node_status_id' ]
                                 ])
                                 ->label('node_status_id-label', t($value[ 'node_status_name' ]), [
-                                    'for'    => "node_status_id-{$value[ 'node_status_id' ]}"
+                                    'for' => "node_status_id-{$value[ 'node_status_id' ]}"
                                 ]);
                             }, self::$attrGrpInline);
                         }
@@ -607,8 +607,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                 ->group('submit-group', 'div', function ($form) {
                     $form->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                     ->button('cancel', t('Cancel'), [
-                        'class'    => 'btn btn-default',
-                        'onclick'  => 'javascript:history.back();'
+                        'class'   => 'btn btn-default',
+                        'onclick' => 'javascript:history.back();'
                     ]);
                 }, self::$attrGrp);
     }
@@ -620,8 +620,8 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
                     $form->token('token_entity')
                     ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                     ->button('cancel', t('Cancel'), [
-                        'class'    => 'btn btn-default',
-                        'onclick'  => 'javascript:history.back();'
+                        'class'   => 'btn btn-default',
+                        'onclick' => 'javascript:history.back();'
                     ]);
                 }, self::$attrGrp);
     }

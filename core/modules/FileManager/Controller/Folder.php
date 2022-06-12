@@ -103,7 +103,7 @@ class Folder extends \Soosyze\Controller
         }
 
         return $this->json(400, [
-                'messages' => [ 'errors' => [ t('You can not use this directory name') ] ],
+                'messages'    => [ 'errors' => [ t('You can not use this directory name') ] ],
                 'errors_keys' => $validator->getKeyInputErrors()
         ]);
     }
@@ -250,7 +250,7 @@ class Folder extends \Soosyze\Controller
 
     public function delete(string $path, ServerRequestInterface $req): ResponseInterface
     {
-        $dir       = self::core()->getDir('files_public', 'app/files') . $path;
+        $dir = self::core()->getDir('files_public', 'app/files') . $path;
 
         $validator = (new Validator())
             ->setRules([
@@ -328,8 +328,11 @@ class Folder extends \Soosyze\Controller
                 ->withHeader('expires', '0');
     }
 
-    private function zipRecursivly(string $dir, string $path, ZipArchive $zipArchive): ZipArchive
-    {
+    private function zipRecursivly(
+        string $dir,
+        string $path,
+        ZipArchive $zipArchive
+    ): ZipArchive {
         $iterator = new \DirectoryIterator($dir);
 
         foreach ($iterator as $file) {

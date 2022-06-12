@@ -107,12 +107,12 @@ class Step
             'title'  => 'Choose language',
             'key'    => 'language'
         ];
-        $step[ 'profil' ] = [
+        $step[ 'profil' ]   = [
             'weight' => 2,
             'title'  => 'Installation profile',
             'key'    => 'profil'
         ];
-        $step[ 'user' ]   = [
+        $step[ 'user' ]     = [
             'weight' => 3,
             'title'  => 'User profile',
             'key'    => 'user'
@@ -209,7 +209,7 @@ class Step
 
     public function hookLanguage(string $id): Template
     {
-        $optionLang         =  $this->translate->getLang();
+        $optionLang         = $this->translate->getLang();
         $optionLang[ 'en' ] = [ 'value' => 'en', 'label' => 'English' ];
 
         $optionTimezone = [];

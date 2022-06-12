@@ -7,7 +7,6 @@ namespace SoosyzeCore\Menu\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
-use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use SoosyzeCore\Menu\Form\FormMenu;
 
@@ -95,7 +94,7 @@ class Menu extends \Soosyze\Controller
 
         $action = self::router()->generateUrl('menu.update', [ 'menuId' => $menuId ]);
 
-        $form = (new FormMenu(['action' => $action, 'method' => 'put' ]))
+        $form = (new FormMenu([ 'action' => $action, 'method' => 'put' ]))
             ->setValues($values)
             ->makeFields();
 

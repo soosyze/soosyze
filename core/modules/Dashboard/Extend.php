@@ -76,9 +76,9 @@ class Extend extends \SoosyzeCore\System\ExtendModule
     {
         $ci->menu()->deleteLinks(static function () use ($ci): array {
             return $ci->query()
-                    ->from('menu_link')
-                    ->where('key', 'like', 'dashboard%')
-                    ->fetchAll();
+                ->from('menu_link')
+                ->where('key', 'like', 'dashboard%')
+                ->fetchAll();
         });
     }
 

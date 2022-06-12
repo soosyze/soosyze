@@ -192,8 +192,11 @@ class Link extends \Soosyze\Controller
     /**
      * @return Block|ResponseInterface
      */
-    public function removeModal(int $menuId, int $linkId, ServerRequestInterface $req)
-    {
+    public function removeModal(
+        int $menuId,
+        int $linkId,
+        ServerRequestInterface $req
+    ) {
         if (!($values = self::menu()->find($linkId))) {
             return $this->get404($req);
         }
@@ -251,8 +254,12 @@ class Link extends \Soosyze\Controller
         ]);
     }
 
-    private function formRemove(array $values, int $menuId, int $linkId, bool $hasCancelButton = false): FormBuilder
-    {
+    private function formRemove(
+        array $values,
+        int $menuId,
+        int $linkId,
+        bool $hasCancelButton = false
+    ): FormBuilder {
         $this->container->callHook('menu.link.remove.form.data', [
             &$values, $menuId, $linkId
         ]);

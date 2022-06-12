@@ -63,7 +63,7 @@ class Config extends \Soosyze\Controller
         }
         if ($req->isMaxSize()) {
             return $this->json(400, [
-                    'messages'    => [
+                    'messages' => [
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
@@ -114,8 +114,11 @@ class Config extends \Soosyze\Controller
     /**
      * @param ConfigMenuEntity $menu
      */
-    private function getConfig(array $menu, string $id, ServerRequestInterface $req): ResponseInterface
-    {
+    private function getConfig(
+        array $menu,
+        string $id,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         if (!isset($menu[ $id ])) {
             return $this->get404($req);
         }

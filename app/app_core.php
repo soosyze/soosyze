@@ -1,13 +1,15 @@
 <?php
 
 use Soosyze\App;
+use Soosyze\Config;
+use SoosyzeCore\QueryBuilder\Services\Query;
 
 class Core extends App
 {
     public function loadModules(): array
     {
         /** @phpstan-ignore-next-line */
-        if (!$this->get('config')->get('settings.time_installed')) {
+        if (!$this->get(Config::class)->get('settings.time_installed')) {
             $modules[] = new SoosyzeCore\System\Controller\Install();
 
             return $modules;
@@ -16,9 +18,9 @@ class Core extends App
         $modules = [];
 
         /** @phpstan-ignore-next-line */
-        $data = $this->get('query')->from('module_controller')->fetchAll();
+        $data = $this->get(Query::class)->from('module_controller')->fetchAll();
+        /** @var array{controller: class-string<Soosyze\Controller>} $value */
         foreach ($data as $value) {
-            /** @var array{controller: class-string<Soosyze\Controller>} $value */
             $modules[] = new $value[ 'controller' ]();
         }
 

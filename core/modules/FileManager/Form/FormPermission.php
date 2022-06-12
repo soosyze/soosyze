@@ -50,7 +50,7 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
 
     public function __construct(array $attr)
     {
-        parent::__construct($attr + ['class' => 'form-api']);
+        parent::__construct($attr + [ 'class' => 'form-api' ]);
     }
 
     public function setRoles(array $roles): self
@@ -257,8 +257,8 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
                 $form->token('token_file_permission')
                 ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                 ->button('cancel', t('Cancel'), [
-                    'class'    => 'btn btn-default',
-                    'onclick'  => 'javascript:history.back();'
+                    'class'   => 'btn btn-default',
+                    'onclick' => 'javascript:history.back();'
                 ]);
             });
 

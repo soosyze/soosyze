@@ -27,7 +27,12 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         $this->router     = $router;
     }
 
-    public function apiRoute(array &$routes, string $search, string $exclude, int $limit): void
+    public function apiRoute(
+        array &$routes,
+        string $search,
+        string $exclude,
+        int $limit
+    ): void
     {
         $values = [
             [

@@ -25,14 +25,23 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
      */
     private $newTitle;
 
-    public function __construct(Alias $alias, Router $router, string $newTitle = Config::TITLE)
+    public function __construct(
+        Alias $alias,
+        Router $router,
+        string $newTitle = Config::TITLE
+    )
     {
         $this->alias    = $alias;
         $this->router   = $router;
         $this->newTitle = $newTitle;
     }
 
-    public function apiRoute(array &$routes, string $search, string $exclude, int $limit): void
+    public function apiRoute(
+        array &$routes,
+        string $search,
+        string $exclude,
+        int $limit
+    ): void
     {
         $titleI18n = t($this->newTitle);
         if ($titleI18n === $exclude || stristr($titleI18n, $search) === false) {

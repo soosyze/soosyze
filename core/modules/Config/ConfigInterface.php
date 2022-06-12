@@ -21,7 +21,11 @@ interface ConfigInterface
 
     public function menu(array &$menu): void;
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void;
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void;
 
     public function validator(Validator &$validator): void;
 

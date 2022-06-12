@@ -19,5 +19,10 @@ interface ApiRouteInterface
      * @param string                $exclude Le nom de la route à exclure.
      * @param int                   $limit   Le nombre maximum de routes.
      */
-    public function apiRoute(array &$routes, string $search, string $exclude, int $limit): void;
+    public function apiRoute(
+        array &$routes,
+        string $search,
+        string $exclude,
+        int $limit
+    ): void;
 }

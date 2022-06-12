@@ -51,7 +51,7 @@ class User
      *
      * @var array
      */
-    private $granted     = [];
+    private $granted = [];
 
     /**
      * La liste des permissions.
@@ -70,8 +70,12 @@ class User
      */
     private $router;
 
-    public function __construct(Core $core, Config $config, Query $query, Router $router)
-    {
+    public function __construct(
+        Core $core,
+        Config $config,
+        Query $query,
+        Router $router
+    ) {
         $this->core   = $core;
         $this->config = $config;
         $this->query  = $query;
@@ -428,15 +432,19 @@ class User
      * Fonctionnement par défaut de l'application.
      * Défini les règles du déclenchement d'un retour 403 à l'aide des hooks.
      */
-    public function hookResponseBefore(RequestInterface &$request, ResponseInterface &$response): void
-    {
+    public function hookResponseBefore(
+        RequestInterface &$request,
+        ResponseInterface &$response
+    ): void {
         if (!$this->isGrantedRequest($request)) {
             $response = new Response(403, new Stream('Error HTTP 403 Forbidden'));
         }
     }
 
-    public function hookResponseAfter(RequestInterface $request, ResponseInterface &$response): void
-    {
+    public function hookResponseAfter(
+        RequestInterface $request,
+        ResponseInterface &$response
+    ): void {
         if (!($response instanceof Templating)) {
             return;
         }

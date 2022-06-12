@@ -36,8 +36,11 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $form->group('information-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('information-legend', t('Information'))
                 ->group('email-group', 'div', function ($form) use ($data) {

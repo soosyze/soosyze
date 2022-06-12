@@ -31,7 +31,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void
     {
         $form
             ->group('backups-fieldset', 'fieldset', function ($form) use ($data) {
