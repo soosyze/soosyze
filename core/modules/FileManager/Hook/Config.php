@@ -53,8 +53,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $form->group('replace_file-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('file-legend', t('File transfer behavior'))
                 ->group('replace_file_1-group', 'div', function ($form) use ($data) {

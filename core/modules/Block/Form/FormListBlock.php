@@ -32,7 +32,7 @@ class FormListBlock extends \Soosyze\Components\Form\FormBuilder
                 $form
                 ->hidden('section', [ 'value' => $this->values[ 'section' ] ])
                 ->submit('submit', t('Add'), [ 'class' => 'btn btn-success block-create-list' ]);
-            }, [ 'class' => 'block_list-submit']);
+            }, [ 'class' => 'block_list-submit' ]);
 
         return $this;
     }

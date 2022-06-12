@@ -115,9 +115,9 @@ class ModulesManager extends Controller
                     'module_update'      => self::config()->get('settings.module_update'),
                     'link_module_check'  => self::router()->generateUrl('system.migration.check'),
                     'link_module_update' => self::router()->generateUrl('system.migration.update'),
-                    'count'             => count($composer),
-                    'form'              => $form,
-                    'packages'          => $packages
+                    'count'              => count($composer),
+                    'form'               => $form,
+                    'packages'           => $packages
         ]);
     }
 
@@ -133,7 +133,7 @@ class ModulesManager extends Controller
 
         if (!$validator->isValid()) {
             return $this->json(400, [
-                    'messages'    => [ 'errors' => $validator->getKeyErrors() ]
+                    'messages' => [ 'errors' => $validator->getKeyErrors() ]
             ]);
         }
 
@@ -151,7 +151,7 @@ class ModulesManager extends Controller
         }
 
         return $this->json(400, [
-                'messages'    => [ 'errors' => $outInstall + $outUninstall ]
+                'messages' => [ 'errors' => $outInstall + $outUninstall ]
         ]);
     }
 
@@ -163,9 +163,9 @@ class ModulesManager extends Controller
         }
 
         $composers = self::composer()->getModuleComposers();
-        $modules  = array_keys($diff);
+        $modules   = array_keys($diff);
 
-        $errors   = [];
+        $errors = [];
 
         foreach ($modules as $title) {
             if (!isset($composers[ $title ])) {
@@ -239,8 +239,8 @@ class ModulesManager extends Controller
         }
 
         $composers = self::composer()->getModuleComposers();
-        $errors   = [];
-        $modules  = array_keys($diff);
+        $errors    = [];
+        $modules   = array_keys($diff);
 
         foreach ($modules as $title) {
             /* Vérifie que le fichier composer n'est pas corrompu. */

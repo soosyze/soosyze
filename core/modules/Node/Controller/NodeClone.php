@@ -221,9 +221,4 @@ class NodeClone extends \Soosyze\Controller
             $str
         );
     }
-
-    private static function getBasename(string $pathFile): string
-    {
-        return strtolower(pathinfo($pathFile, PATHINFO_BASENAME));
-    }
 }

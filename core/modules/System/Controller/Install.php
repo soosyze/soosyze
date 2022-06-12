@@ -93,17 +93,17 @@ class Install extends Controller
             ->addVars($messages);
 
         $blockHtml = (new Template('html-install.php', $this->pathViews))
-                ->addBlock('page', $blockPage)
-                ->addBlock('messages', $blockMessages)
-                ->addVars([
-                    'base_path'     => self::router()->getBasePath(),
-                    'router'        => self::router(),
-                    'steps'         => $steps,
-                    'step_active'   => $id,
-                    'style_install' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/install.css',
-                    'style_soosyze' => self::core()->getPath('assets_public', 'public/vendor', false) . '/soosyze/soosyze.css'
-                ])
-                ->render();
+            ->addBlock('page', $blockPage)
+            ->addBlock('messages', $blockMessages)
+            ->addVars([
+                'base_path'     => self::router()->getBasePath(),
+                'router'        => self::router(),
+                'steps'         => $steps,
+                'step_active'   => $id,
+                'style_install' => self::core()->getPath('modules', 'core/modules', false) . '/System/Assets/css/install.css',
+                'style_soosyze' => self::core()->getPath('assets_public', 'public/vendor', false) . '/soosyze/soosyze.css'
+            ])
+            ->render();
 
         return new Response(200, new Stream($blockHtml));
     }
@@ -148,7 +148,7 @@ class Install extends Controller
     private function installModule(): void
     {
         $composer = [];
-        $profil    = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
+        $profil   = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);
 
         $this->container->callHook("step.install.modules.$profil", [ &$this->modules ]);
 
@@ -182,7 +182,7 @@ class Install extends Controller
 
         foreach (array_keys($this->modules) as $title) {
             /* Charge la version du coeur à ses modules. */
-            $composer[$title]['version'] = $composerService->getVersionCore();
+            $composer[ $title ][ 'version' ] = $composerService->getVersionCore();
 
             /* Enregistre le module en base de données. */
             self::module()->create($composer[ $title ]);
@@ -255,7 +255,7 @@ class Install extends Controller
         $saveLanguage = $_SESSION[ 'inputs' ][ 'language' ];
         $save         = $_SESSION[ 'inputs' ][ 'user' ];
 
-        $data     = [
+        $data = [
             'username'         => $save[ 'username' ],
             'email'            => $save[ 'email' ],
             'password'         => password_hash($save[ 'password' ], PASSWORD_DEFAULT),
@@ -263,7 +263,7 @@ class Install extends Controller
             'name'             => $save[ 'name' ],
             'actived'          => true,
             'time_installed'   => (string) time(),
-            'timezone'         => $saveLanguage['timezone'],
+            'timezone'         => $saveLanguage[ 'timezone' ],
             'rgpd'             => true,
             'terms_of_service' => true
         ];
@@ -283,8 +283,8 @@ class Install extends Controller
             ->set('mailer.email', $data[ 'email' ])
             ->set('mailer.driver', 'mail')
             ->set('settings.time_installed', time())
-            ->set('settings.lang', $saveLanguage['lang'])
-            ->set('settings.timezone', $saveLanguage['timezone'])
+            ->set('settings.lang', $saveLanguage[ 'lang' ])
+            ->set('settings.timezone', $saveLanguage[ 'timezone' ])
             ->set('settings.key_cron', Util::strRandom(50));
 
         $profil = htmlspecialchars($_SESSION[ 'inputs' ][ 'profil' ][ 'profil' ]);

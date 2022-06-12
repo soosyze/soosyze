@@ -13,7 +13,7 @@ require_once 'bootstrap/start.php';
 require_once 'bootstrap/facade.php';
 
 $response = \Core::getInstance()->run();
-if ($response instanceof SoosyzeCore\Template\Services\Templating) {
+if ($response instanceof \SoosyzeCore\Template\Services\Templating) {
     echo $response;
 } else {
     $emitter = new \Soosyze\ResponseEmitter();

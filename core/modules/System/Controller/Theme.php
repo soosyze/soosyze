@@ -87,8 +87,11 @@ class Theme extends \Soosyze\Controller
         ]);
     }
 
-    public function active(string $type, string $name, ServerRequestInterface $req): ResponseInterface
-    {
+    public function active(
+        string $type,
+        string $name,
+        ServerRequestInterface $req
+    ): ResponseInterface {
         $themes = $this->getThemes($type);
 
         $validator = (new Validator())

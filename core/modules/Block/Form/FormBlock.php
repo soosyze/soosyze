@@ -101,7 +101,7 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
                     ])->label(
                         'visibility_pages-label',
                         '<i class="fa fa-eye-slash" aria-hidden="true"></i> ' . t('Hide the block on the pages listed'),
-                        ['for' => 'visibility_pages_1']
+                        [ 'for' => 'visibility_pages_1' ]
                     );
                 }, self::$attrGrp)
                 ->group('visibility_pages_2-group', 'div', function ($form) {
@@ -214,8 +214,8 @@ class FormBlock extends \Soosyze\Components\Form\FormBuilder
 
     private function getTokenName(): string
     {
-        return $this->values['block_id'] === null
+        return $this->values[ 'block_id' ] === null
             ? 'token_block_create'
-            : "token_block_edit_{$this->values['block_id']}";
+            : "token_block_edit_{$this->values[ 'block_id' ]}";
     }
 }

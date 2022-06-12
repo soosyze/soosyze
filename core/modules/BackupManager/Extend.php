@@ -87,9 +87,9 @@ Options +FollowSymLinks
     {
         $ci->menu()->deleteLinks(static function () use ($ci): array {
             return $ci->query()
-                    ->from('menu_link')
-                    ->where('key', 'like', 'backupmanager%')
-                    ->fetchAll();
+                ->from('menu_link')
+                ->where('key', 'like', 'backupmanager%')
+                ->fetchAll();
         });
     }
 

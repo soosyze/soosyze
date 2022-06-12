@@ -51,8 +51,11 @@ class Config implements \SoosyzeCore\Config\ConfigInterface
         ];
     }
 
-    public function form(FormBuilder &$form, array $data, ServerRequestInterface $req): void
-    {
+    public function form(
+        FormBuilder &$form,
+        array $data,
+        ServerRequestInterface $req
+    ): void {
         $form->group('news_settings-fieldset', 'fieldset', function ($form) use ($data) {
             $form->legend('news_settings-legend', t('Settings'))
                 ->group('new_title-group', 'div', function ($form) use ($data) {

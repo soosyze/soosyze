@@ -97,14 +97,14 @@ class User extends \Soosyze\Controller
                 ])
                 ->make('page.content', 'user/content-user-form.php', $this->pathViews, [
                     'form' => $form
-                ]);
+        ]);
     }
 
     public function store(ServerRequestInterface $req): ResponseInterface
     {
         if ($req->isMaxSize()) {
             return $this->json(400, [
-                    'messages'    => [
+                    'messages' => [
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
@@ -206,7 +206,7 @@ class User extends \Soosyze\Controller
 
         if ($req->isMaxSize()) {
             return $this->json(400, [
-                    'messages'    => [
+                    'messages' => [
                         'errors' => [
                             t('The total amount of data received exceeds the maximum value allowed by the post_max_size directive in your php.ini file.')
                         ]
@@ -264,7 +264,7 @@ class User extends \Soosyze\Controller
 
         $form = (new FormBuilder([
                 'action' => self::router()->generateUrl('user.delete', [ 'id' => $id ]),
-                'class' => 'form-api',
+                'class'  => 'form-api',
                 'method' => 'delete'
                 ]))
             ->group('user-fieldset', 'fieldset', function ($form) {
@@ -386,8 +386,10 @@ class User extends \Soosyze\Controller
         return $roles;
     }
 
-    private function getValidator(ServerRequestInterface $req, ?array $user = null): Validator
-    {
+    private function getValidator(
+        ServerRequestInterface $req,
+        ?array $user = null
+    ): Validator {
         $passwordPolicy = self::user()->passwordPolicy();
 
         $validator = (new Validator())

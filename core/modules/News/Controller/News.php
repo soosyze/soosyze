@@ -106,8 +106,11 @@ class News extends \Soosyze\Controller
         ]);
     }
 
-    public function viewYears(string $year, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
-    {
+    public function viewYears(
+        string $year,
+        ServerRequestInterface $req,
+        int $pageId = 1
+    ): ResponseInterface {
         $date              = '01/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 year -1 seconds');
@@ -117,8 +120,12 @@ class News extends \Soosyze\Controller
         return $this->renderNews($pageId, $req);
     }
 
-    public function viewMonth(string $year, string $month, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
-    {
+    public function viewMonth(
+        string $year,
+        string $month,
+        ServerRequestInterface $req,
+        int $pageId = 1
+    ): ResponseInterface {
         $date              = $month . '/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 month -1 seconds');
@@ -131,8 +138,13 @@ class News extends \Soosyze\Controller
         return $this->renderNews($pageId, $req);
     }
 
-    public function viewDay(string $year, string $month, string $day, ServerRequestInterface $req, int $pageId = 1): ResponseInterface
-    {
+    public function viewDay(
+        string $year,
+        string $month,
+        string $day,
+        ServerRequestInterface $req,
+        int $pageId = 1
+    ): ResponseInterface {
         $date              = $month . '/' . $day . '/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 day -1 seconds');
@@ -236,8 +248,12 @@ class News extends \Soosyze\Controller
         ]);
     }
 
-    private function getNews(int $dateCurrent, int $dateNext, int $limit, int $offset = 0): array
-    {
+    private function getNews(
+        int $dateCurrent,
+        int $dateNext,
+        int $limit,
+        int $offset = 0
+    ): array {
         return self::query()
                 ->from('node')
                 ->where('type', '=', 'article')

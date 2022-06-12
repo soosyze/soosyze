@@ -64,8 +64,8 @@ class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
                     $form->token('setting_theme')
                     ->submit('submit', t('Save'), [ 'class' => 'btn btn-success' ])
                     ->button('cancel', t('Cancel'), [
-                        'class'    => 'btn btn-default',
-                        'onclick'  => 'javascript:history.back();'
+                        'class'   => 'btn btn-default',
+                        'onclick' => 'javascript:history.back();'
                     ]);
                 });
     }
