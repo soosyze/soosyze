@@ -1,6 +1,6 @@
 <?php
 
-namespace SoosyzeCore\Theme\Fez;
+namespace Soosyze\Core\Themes\Fez;
 
 class Extend extends \SoosyzeCore\System\ExtendTheme
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace SoosyzeCore\Theme\Bootstrap3;
+namespace Soosyze\Core\Themes\Bootstrap3;
 
 class Extend extends \SoosyzeCore\System\ExtendTheme
 {
