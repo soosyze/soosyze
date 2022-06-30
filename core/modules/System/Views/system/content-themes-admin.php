@@ -27,8 +27,8 @@
         <thead>
             <tr>
                 <th><?php echo t('Theme'); ?></th>
-                <th><?php echo t('Version'); ?></th>
                 <th><?php echo t('Description'); ?></th>
+                <th><?php echo t('Version'); ?></th>
                 <th><?php echo t('Action'); ?></th>
             </tr>
         </thead>
