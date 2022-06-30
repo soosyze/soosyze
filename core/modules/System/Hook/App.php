@@ -225,9 +225,7 @@ class App
         /** @phpstan-var string $metaDescription */
         $metaDescription = $this->config->get('settings.meta_description', HookConfig::META_DESCRIPTION);
         /** @phpstan-var string $favicon */
-        $favicon         = $this->config->get('settings.favicon', '')
-            ? $this->router->getBasePath() . $this->config->get('settings.favicon')
-            : '';
+        $favicon         = $this->config->get('settings.favicon', '');
 
         $logo        = $this->config->get('settings.logo', '');
         /** @phpstan-var bool $maintenance */
@@ -263,7 +261,9 @@ class App
             : $metaDescription;
 
         $response->view('this', [
-                'favicon' => $favicon,
+                'favicon' => is_file(ROOT . $favicon)
+                    ? $this->router->getBasePath() . '/' . $favicon
+                    : $favicon,
                 'title'   => $title
             ])
             ->addScript('system', "$vendor/js/system.js")
@@ -282,7 +282,7 @@ class App
             ])
             ->view('page', [
                 'logo'  => is_file(ROOT . $logo)
-                    ? $this->router->getBasePath() . $logo
+                    ? $this->router->getBasePath() . '/' . $logo
                     : $logo,
                 'title' => $metaTitle
         ]);
