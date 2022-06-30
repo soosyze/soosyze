@@ -32,8 +32,7 @@ class User implements \SoosyzeCore\User\UserInterface
         int $menuId,
         ?ServerRequestInterface $req,
         ?array $user
-    ): bool
-    {
+    ): bool {
         return !empty($user);
     }
 }

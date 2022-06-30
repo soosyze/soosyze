@@ -24,8 +24,7 @@ class AppInstall
     public function hook404(
         RequestInterface $request,
         ResponseInterface &$response
-    ): void
-    {
+    ): void {
         $response = new Redirect($this->router->generateUrl('install.index'));
     }
 }
