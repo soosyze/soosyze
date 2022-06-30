@@ -10,6 +10,11 @@ define('FILEMANAGER_FILE_WITH', [
 ]);
 define('FILEMANAGER_PATH_WITH', [ 'path' => '(/[-\w]+){0,255}' ]);
 
+RouteCollection::setNamespace('SoosyzeCore\FileManager\Controller\Manager')->prefix('/filemanager')->name('filemanager.')->group(function (RouteGroup $r): void {
+    $r->get('public', '/public{path}', '@showPublic', FILEMANAGER_PATH_WITH);
+    $r->get('show', '/show{path}', '@show', FILEMANAGER_PATH_WITH);
+    $r->get('filter', '/filter{path}', '@filter', FILEMANAGER_PATH_WITH);
+});
 RouteCollection::setNamespace('SoosyzeCore\FileManager\Controller')->prefix('/filemanager')->name('filemanager.')->group(function (RouteGroup $r): void {
     $r->prefix('/file')->name('file.')->setNamespace('\File')->group(function (RouteGroup $r): void {
         $r->get('show', '{path}{name}{ext}', '@show', FILEMANAGER_FILE_WITH);
@@ -39,11 +44,8 @@ RouteCollection::setNamespace('SoosyzeCore\FileManager\Controller')->prefix('/fi
 });
 RouteCollection::prefix('/admin')->name('filemanager.')->setNamespace('SoosyzeCore\FileManager\Controller')->group(function (RouteGroup $r): void {
     /* Affichage du filemanager complet. */
-    $r->prefix('/filemanager')->setNamespace('\Manager')->group(function (RouteGroup $r): void {
-        $r->get('admin', '/show', '@admin');
-        $r->get('public', '/public{path}', '@showPublic', FILEMANAGER_PATH_WITH);
-        $r->get('show', '/show{path}', '@show', FILEMANAGER_PATH_WITH);
-        $r->get('filter', '/filter{path}', '@filter', FILEMANAGER_PATH_WITH);
+    $r->setNamespace('\Manager')->group(function (RouteGroup $r): void {
+        $r->get('admin', '/filemanager/show', '@admin');
     });
     $r->prefix('/user/permission/filemanager')->name('permission.')->group(function (RouteGroup $r): void {
         $r->setNamespace('\FilePermissionManager')->group(function (RouteGroup $r): void {
