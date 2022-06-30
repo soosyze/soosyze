@@ -22,8 +22,16 @@ return [
         'not'  => 'Le champ :label ne doit pas être encodé en base64.'
     ],
     'bewteen'                 => [
-        'must' => 'Le champ :label doit être entre :min et :max.',
-        'not'  => 'Le champ :label ne doit pas être entre :min et :max.'
+        'must'         => 'Le champ :label doit être entre :min et :max.',
+        'not'          => 'Le champ :label ne doit pas être entre :min et :max.',
+        /** Hérite de size */
+        'size'         => 'La valeur du champ :label doit être de type entier, flottant, chaine de caractère, tableau, fichier ou ressource.',
+    ],
+    'bewteen_numeric'         => [
+        'must'         => 'Le champ :label doit être entre :min et :max.',
+        'not'          => 'Le champ :label ne doit pas être entre :min et :max.',
+        /** Hérite de size */
+        'size_numeric' => 'La valeur du champ :label doit être numérique.',
     ],
     'bool'                    => [
         'must' => 'La valeur du champ :label doit être un boolean.',
@@ -42,28 +50,32 @@ return [
         'not'  => 'Le champ :label ne doit pas être une date.'
     ],
     'date_after'              => [
+        'after'     => 'Le champ :label doit être une date supérieur au :dateafter.',
+        'not_after' => 'Le champ :label ne doit pas être une date supérieur au :dateafter.',
+        /** Hérite de date */
         'must'      => 'Le champ :label doit être une date.',
         'not'       => 'Le champ :label ne doit pas être une date.',
-        'after'     => 'Le champ :label doit être une date supérieur au :dateafter.',
-        'not_after' => 'Le champ :label ne doit pas être une date supérieur au :dateafter.'
     ],
     'date_after_or_equal'     => [
+        'after'     => 'Le champ :label doit être une supérieur ou égale au :dateafter.',
+        'not_after' => 'Le champ :label ne doit pas être une date supérieur ou égale au :dateafter.',
+        /** Hérite de date */
         'must'      => 'Le champ :label doit être une date.',
         'not'       => 'Le champ :label ne doit pas être une date.',
-        'after'     => 'Le champ :label doit être une supérieur ou égale au :dateafter.',
-        'not_after' => 'Le champ :label ne doit pas être une date supérieur ou égale au :dateafter.'
     ],
     'date_before'             => [
+        'before'     => 'Le champ :label doit être une date inférieur au :datebefore.',
+        'not_before' => 'Le champ :label ne doit pas être une date inferieur au :datebefore.',
+        /** Hérite de date */
         'must'       => 'Le champ :label doit être une date.',
         'not'        => 'Le champ :label ne doit pas être une date.',
-        'before'     => 'Le champ :label doit être une date inférieur au :datebefore.',
-        'not_before' => 'Le champ :label ne doit pas être une date inferieur au :datebefore.'
     ],
     'date_before_or_equal'    => [
+        'before'     => 'Le champ :label doit être une inferieur ou égale au :datebefore.',
+        'not_before' => 'Le champ :label ne doit pas être une date inferieur ou égale au :datebefore.',
+        /** Hérite de date */
         'must'       => 'Le champ :label doit être une date.',
         'not'        => 'Le champ :label ne doit pas être une date.',
-        'before'     => 'Le champ :label doit être une inferieur ou égale au :datebefore.',
-        'not_before' => 'Le champ :label ne doit pas être une date inferieur ou égale au :datebefore.'
     ],
     'date_format'             => [
         'must' => 'Le champ :label doit être une date au format :format.',
@@ -97,16 +109,49 @@ return [
         'extension'   => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'file_extensions'         => [
-        'ext'     => 'Le champ :label doit être un fichier de type : :list.',
-        'not_ext' => 'Le champ :label ne doit pas être un fichier de type : :list.'
+        'ext'         => 'Le champ :label doit être un fichier de type : :list.',
+        'not_ext'     => 'Le champ :label ne doit pas être un fichier de type : :list.',
+        /** Hérite de file */
+        'must'        => 'Le champ :label n\'est pas un fichier.',
+        'not'         => 'Le champ :label ne doit pas être un fichier.',
+        'ini_size'    => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+        'form_size'   => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+        'err_partial' => 'Le fichier n\'a été que partiellement téléchargé.',
+        'no_file'     => 'Aucun fichier n\'a été téléchargé.',
+        'no_tmp_dir'  => 'Un dossier temporaire est manquant.',
+        'cant_write'  => 'Échec de l\'écriture du fichier sur le disque.',
+        'extension'   => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'file_mimes'              => [
-        'mimes'     => 'Le MIME type du fichier :label doit être de type : :list',
-        'not_mimes' => 'Le MIME type du fichier :label ne doit pas être de type : :list'
+        'mimes'       => 'Le MIME type du fichier :label doit être de type : :list',
+        'not_mimes'   => 'Le MIME type du fichier :label ne doit pas être de type : :list',
+        /** Hérite de file_extensions */
+        'ext'         => 'Le champ :label doit être un fichier de type : :list.',
+        'not_ext'     => 'Le champ :label ne doit pas être un fichier de type : :list.',
+        /** Hérite de file */
+        'must'        => 'Le champ :label n\'est pas un fichier.',
+        'not'         => 'Le champ :label ne doit pas être un fichier.',
+        'ini_size'    => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+        'form_size'   => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+        'err_partial' => 'Le fichier n\'a été que partiellement téléchargé.',
+        'no_file'     => 'Aucun fichier n\'a été téléchargé.',
+        'no_tmp_dir'  => 'Un dossier temporaire est manquant.',
+        'cant_write'  => 'Échec de l\'écriture du fichier sur le disque.',
+        'extension'   => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'file_mimetype'           => [
         'mimetype'     => 'Le champ :label doit être un fichier de type : :list.',
-        'not_mimetype' => 'Le champ :label ne doit pas être un fichier de type : :list.'
+        'not_mimetype' => 'Le champ :label ne doit pas être un fichier de type : :list.',
+        /** Hérite de file */
+        'must'         => 'Le champ :label n\'est pas un fichier.',
+        'not'          => 'Le champ :label ne doit pas être un fichier.',
+        'ini_size'     => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+        'form_size'    => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+        'err_partial'  => 'Le fichier n\'a été que partiellement téléchargé.',
+        'no_file'      => 'Aucun fichier n\'a été téléchargé.',
+        'no_tmp_dir'   => 'Un dossier temporaire est manquant.',
+        'cant_write'   => 'Échec de l\'écriture du fichier sur le disque.',
+        'extension'    => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'float'                   => [
         'must' => 'La valeur du champ :label doit être un nombre flottant.',
@@ -116,13 +161,39 @@ return [
         'must' => 'Le champ :label doit correspondre à l\'un des styles de FontAwesome suivant : :list.',
         'not'  => 'Le champ :label ne doit pas correspondre à l\'un des styles de FontAwesome suivant : :list.'
     ],
+    'image'                   => [
+        'ext'     => 'Le champ :label doit être un fichier de type : :list.',
+        'not_ext' => 'Le champ :label ne doit pas être un fichier de type : :list.'
+    ],
     'image_dimensions_height' => [
-        'height'     => 'La hauteur de l\'image :label doit être comprise entre :minpx et :maxpx.',
-        'not_height' => 'La hauteur de l\'image :label ne doit pas être comprise entre :minpx et :maxpx.'
+        'must'         => 'La hauteur de l\'image :label doit être comprise entre :minpx et :maxpx.',
+        'not_must'     => 'La hauteur de l\'image :label ne doit pas être comprise entre :minpx et :maxpx.',
+        /** Hérite de file_mimetype */
+        'mimetype'     => 'Le champ :label doit être un fichier de type : :list.',
+        'not_mimetype' => 'Le champ :label ne doit pas être un fichier de type : :list.',
+        /** Hérite de file */
+        'ini_size'     => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+        'form_size'    => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+        'err_partial'  => 'Le fichier n\'a été que partiellement téléchargé.',
+        'no_file'      => 'Aucun fichier n\'a été téléchargé.',
+        'no_tmp_dir'   => 'Un dossier temporaire est manquant.',
+        'cant_write'   => 'Échec de l\'écriture du fichier sur le disque.',
+        'extension'    => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'image_dimensions_width'  => [
-        'width'     => 'La largeur de l\'image :label doit être comprise entre :minpx et :maxpx.',
-        'not_width' => 'La largeur de l\'image :label ne doit pas être comprise entre :minpx et :maxpx.'
+        'must'         => 'La largeur de l\'image :label doit être comprise entre :minpx et :maxpx.',
+        'not_must'     => 'La largeur de l\'image :label ne doit pas être comprise entre :minpx et :maxpx.',
+        /** Hérite de file_mimetype */
+        'mimetype'     => 'Le champ :label doit être un fichier de type : :list.',
+        'not_mimetype' => 'Le champ :label ne doit pas être un fichier de type : :list.',
+        /** Hérite de file */
+        'ini_size'     => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+        'form_size'    => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+        'err_partial'  => 'Le fichier n\'a été que partiellement téléchargé.',
+        'no_file'      => 'Aucun fichier n\'a été téléchargé.',
+        'no_tmp_dir'   => 'Un dossier temporaire est manquant.',
+        'cant_write'   => 'Échec de l\'écriture du fichier sur le disque.',
+        'extension'    => 'Une extension PHP a arrêté l\'envoi de fichier.'
     ],
     'inarray'                 => [
         'must' => 'Le champ :label doit être dans la liste suivante : :list.',
@@ -150,19 +221,27 @@ return [
     ],
     'max'                     => [
         'must' => 'Le champ :label ne doit pas être supérieur à :max.',
-        'not'  => 'Le champ :label doit être supérieur à :max.'
+        'not'  => 'Le champ :label doit être supérieur à :max.',
+        /** Hérite de size */
+        'size'         => 'La valeur du champ :label doit être de type entier, flottant, chaine de caractère, tableau, fichier ou ressource.',
     ],
     'max_numeric'             => [
         'must' => 'Le champ :label ne doit pas être supérieur à :max.',
-        'not'  => 'Le champ :label doit être supérieur à :max.'
+        'not'  => 'Le champ :label doit être supérieur à :max.',
+        /** Hérite de size */
+        'size_numeric' => 'La valeur du champ :label doit être numérique.',
     ],
     'min'                     => [
         'must' => 'Le champ :label ne doit pas être inférieur à :min.',
-        'not'  => 'Le champ :label doit être inférieur à :min.'
+        'not'  => 'Le champ :label doit être inférieur à :min.',
+        /** Hérite de size */
+        'size'         => 'La valeur du champ :label doit être de type entier, flottant, chaine de caractère, tableau, fichier ou ressource.',
     ],
     'min_numeric'             => [
         'must' => 'Le champ :label ne doit pas être inférieur à :min.',
-        'not'  => 'Le champ :label doit être inférieur à :min.'
+        'not'  => 'Le champ :label doit être inférieur à :min.',
+        /** Hérite de size */
+        'size_numeric' => 'La valeur du champ :label doit être numérique.',
     ],
     'null'                    => [
         'must' => 'La valeur du champ :label doit être NULL.',
