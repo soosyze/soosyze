@@ -79,7 +79,8 @@ class BackupController extends \Soosyze\Controller
             : [ 'errors' => [ t('Backup restore failed') ] ];
 
         return new Redirect(
-            self::router()->generateUrl('backupmanager.admin')
+            self::router()->generateUrl('backupmanager.admin'),
+            302
         );
     }
 
