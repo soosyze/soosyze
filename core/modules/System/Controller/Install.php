@@ -49,8 +49,8 @@ class Install extends Controller
      * @var array
      */
     private $themes = [
-        'Fez'   => 'SoosyzeCore\\Theme\\Fez\\',
-        'Admin' => 'SoosyzeCore\\Theme\\Admin\\'
+        'Fez'   => 'Soosyze\\Core\\Themes\\Fez\\',
+        'Admin' => 'Soosyze\\Core\\Themes\\Admin\\'
     ];
 
     public function __construct()
