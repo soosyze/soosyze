@@ -142,11 +142,11 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
 
     private function getLabelCopyLinkFileFull(): string
     {
-        return sprintf('%s <code>%s/exemple.jpg</code>', t('Absolute path'), $this->filesPublicPath);
+        return sprintf('%s <code>%s/%s</code>', t('Absolute path'), $this->filesPublicPath, t('example.jpg'));
     }
 
     private function getLabelCopyLinkFileBase(): string
     {
-        return sprintf('%s <code>%s/exemple.jpg</code>', t('Relative path'), $this->filesPublicBasePath);
+        return sprintf('%s <code>%s/%s</code>', t('Relative path'), $this->filesPublicBasePath, t('example.jpg'));
     }
 }
