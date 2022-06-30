@@ -30,8 +30,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         string $search,
         string $exclude,
         int $limit
-    ): void
-    {
+    ): void {
         $title = t('Contact');
         if ($title === $exclude || stristr($title, $search) === false) {
             return;

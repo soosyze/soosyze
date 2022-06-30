@@ -24,8 +24,7 @@ class App
     public function hookMenuShowResponseAfter(
         RequestInterface $request,
         ResponseInterface &$response
-    ): void
-    {
+    ): void {
         if (!($response instanceof Templating)) {
             return;
         }

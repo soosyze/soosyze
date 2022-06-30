@@ -32,8 +32,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         string $search,
         string $exclude,
         int $limit
-    ): void
-    {
+    ): void {
         $values = [
             [
                 'link'  => $this->router->generateUrl('user.account'),

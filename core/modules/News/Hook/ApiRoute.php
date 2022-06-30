@@ -29,8 +29,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         Alias $alias,
         Router $router,
         string $newTitle = Config::TITLE
-    )
-    {
+    ) {
         $this->alias    = $alias;
         $this->router   = $router;
         $this->newTitle = $newTitle;
@@ -41,8 +40,7 @@ class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
         string $search,
         string $exclude,
         int $limit
-    ): void
-    {
+    ): void {
         $titleI18n = t($this->newTitle);
         if ($titleI18n === $exclude || stristr($titleI18n, $search) === false) {
             return;

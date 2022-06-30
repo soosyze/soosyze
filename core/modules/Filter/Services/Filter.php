@@ -15,8 +15,7 @@ class Filter
         LazyLoding $lazyLoding,
         Parsedown $parsdown,
         Xss $xss
-    )
-    {
+    ) {
         $this->filters = [
             $xss, $parsdown, $lazyLoding
         ];
