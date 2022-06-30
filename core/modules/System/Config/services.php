@@ -58,8 +58,8 @@ return [
             'config.edit.menu' => 'menu'
         ]
     ],
-    'mailer.hook.config' => [
-        'class' => 'SoosyzeCore\System\Hook\ConfigMailer',
+    'email.hook.config' => [
+        'class' => 'SoosyzeCore\System\Hook\ConfigEmail',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
