@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
-class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
+class ConfigEmail implements \SoosyzeCore\Config\ConfigInterface
 {
     /**
      * @var array
@@ -30,7 +30,7 @@ class ConfigMailer implements \SoosyzeCore\Config\ConfigInterface
 
     public function menu(array &$menu): void
     {
-        $menu[ 'mailer' ] = [
+        $menu[ 'email' ] = [
             'config'     => 'mailer',
             'title_link' => 'Email'
         ];
