@@ -10,14 +10,14 @@ require_once $vendor . 'soosyze/framework/src/Autoload.php';
 require_once $vendor . 'erusev/parsedown/Parsedown.php';
 
 $autoload = new Soosyze\Autoload([
-    'Soosyze'           => $vendor . 'soosyze/framework/src',
-    'Queryflatfile'     => $vendor . 'soosyze/queryflatfile/src',
-    'SoosyzeCore'       => ROOT . 'core/modules',
-    'SoosyzeCore\Theme' => ROOT . 'core/themes',
-    'SoosyzeExtension'  => ROOT . 'app/modules',
-    'SoosyzeApp\Theme'  => ROOT . 'app/themes',
-    'Composer\Semver'   => $vendor . 'composer/semver/src'
- ]);
+    'Soosyze\Core\Themes' => ROOT . 'core/themes',
+    'Soosyze\App\Themes'  => ROOT . 'app/themes',
+    'Soosyze'             => $vendor . 'soosyze/framework/src',
+    'Queryflatfile'       => $vendor . 'soosyze/queryflatfile/src',
+    'SoosyzeCore'         => ROOT . 'core/modules',
+    'SoosyzeExtension'    => ROOT . 'app/modules',
+    'Composer\Semver'     => $vendor . 'composer/semver/src'
+]);
 
 $autoload->setPrefix([
     'Queryflatfile'           => $vendor . 'soosyze/queryflatfile/src',

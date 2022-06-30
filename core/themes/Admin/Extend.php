@@ -1,6 +1,6 @@
 <?php
 
-namespace SoosyzeCore\Theme\Admin;
+namespace Soosyze\Core\Themes\Admin;
 
 class Extend extends \SoosyzeCore\System\ExtendTheme
 {
