@@ -41,12 +41,14 @@
         "phpdocumentor/phpdocumentor": "Pour générer la documentation des services."
     },
     "autoload": {
+        "psr-4": {
+            "Soosyze\\App\\Themes\\": "app/themes/",
+            "Soosyze\\Core\\Themes\\": "core/themes/"
+        },
         "classmap": [
             "app/",
             "core/modules/",
-            "core/themes/",
-            "app/modules/",
-            "app/themes/"
+            "app/modules/"
         ]
     },
     "autoload-dev": {
