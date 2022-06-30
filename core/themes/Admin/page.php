@@ -34,6 +34,8 @@
                         </ul>
 
                         <?php echo $section[ 'main_menu' ]; ?>
+
+                        <?php echo $section[ 'second_menu' ]; ?>
                     </div>
                 </div>
             </div>
