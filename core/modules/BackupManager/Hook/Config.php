@@ -35,8 +35,7 @@ final class Config implements \SoosyzeCore\Config\ConfigInterface
         FormBuilder &$form,
         array $data,
         ServerRequestInterface $req
-    ): void
-    {
+    ): void {
         $form
             ->group('backups-fieldset', 'fieldset', function ($form) use ($data) {
                 $form->legend('backups-fieldset', t('Backups'))

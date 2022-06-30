@@ -38,8 +38,7 @@ class Migration
         Config $config,
         Query $query,
         Schema $schema
-    )
-    {
+    ) {
         $this->composer = $composer;
         $this->config   = $config;
         $this->query    = $query;

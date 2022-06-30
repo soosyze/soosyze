@@ -31,7 +31,7 @@ jobs:
 
       - name: Coding standards
         if: matrix.analysis
-        run: bin/php-cs-fixer fix --ansi --dry-run --using-cache=no --verbose
+        run: bin/php-cs-fixer fix --ansi --dry-run --using-cache=no -v --diff
 
       - name: Static analysis
         if: matrix.analysis
