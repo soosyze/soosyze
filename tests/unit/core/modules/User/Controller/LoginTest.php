@@ -9,11 +9,13 @@ class LoginTest extends WebTestCase
 {
     public function testGetLogin(): void
     {
-        /** @phpstan-var Templating $response */
         $response = self::request('GET', '/user/login');
 
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertInstanceOf(Templating::class, $response);
+
         $html = (string) $response;
+
         $this->assertStringContainsString(
             '<title>Connexion | Soosyze site</title>',
             $html

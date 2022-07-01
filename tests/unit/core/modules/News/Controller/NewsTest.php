@@ -12,10 +12,11 @@ class NewsTest extends WebTestCase
      */
     public function testGetNews(string $url, string $title): void
     {
-        /** @phpstan-var Templating $response */
         $response = self::request('GET', $url);
 
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertInstanceOf(Templating::class, $response);
+
         $html = (string) $response;
         $this->assertStringContainsString($title, $html);
     }
