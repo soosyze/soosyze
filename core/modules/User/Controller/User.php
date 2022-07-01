@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Controller;
+namespace Soosyze\Core\Modules\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,17 +10,17 @@ use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\User\Form\FormUser;
+use Soosyze\Core\Modules\User\Form\FormUser;
 
 /**
- * @method \SoosyzeCore\System\Services\Alias        alias()
- * @method \SoosyzeCore\User\Services\Auth           auth()
- * @method \SoosyzeCore\FileSystem\Services\file     file()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\System\Services\Alias        alias()
+ * @method \Soosyze\Core\Modules\User\Services\Auth           auth()
+ * @method \Soosyze\Core\Modules\FileSystem\Services\File     file()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ * @phpstan-import-type UserEntity from \Soosyze\Core\Modules\User\Extend
  */
 class User extends \Soosyze\Controller
 {

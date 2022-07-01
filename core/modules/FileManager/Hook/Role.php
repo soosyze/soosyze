@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 class Role
 {

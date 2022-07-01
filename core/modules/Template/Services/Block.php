@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Template\Services;
+namespace Soosyze\Core\Modules\Template\Services;
 
 use Soosyze\Components\Template\Template;
 

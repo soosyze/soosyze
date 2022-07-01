@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\System\Services\Modules;
+use Soosyze\Core\Modules\System\Services\Modules;
 
 class FileManager
 {

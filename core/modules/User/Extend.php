@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User;
+namespace Soosyze\Core\Modules\User;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\User\Hook\Config;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\User\Hook\Config;
 
 /**
  * @phpstan-type UserEntity array{
@@ -45,7 +45,7 @@ use SoosyzeCore\User\Hook\Config;
  *      role_id: int
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

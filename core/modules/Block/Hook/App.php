@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Hook;
+namespace Soosyze\Core\Modules\Block\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\Block\Services\Block;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\Template\Services\Templating;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\Block\Services\Block;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Template\Services\Templating;
+use Soosyze\Core\Modules\User\Services\User;
 
 /**
- * @phpstan-import-type BlockEntity from \SoosyzeCore\Block\Extend
+ * @phpstan-import-type BlockEntity from \Soosyze\Core\Modules\Block\Extend
  */
 class App
 {

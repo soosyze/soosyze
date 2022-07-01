@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node;
+namespace Soosyze\Core\Modules\Node;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\Node\Hook\Config;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\Node\Hook\Config;
 
 /**
  * @phpstan-type NodeEntity array{
@@ -72,7 +72,7 @@ use SoosyzeCore\Node\Hook\Config;
  *      menu_link_id: int
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

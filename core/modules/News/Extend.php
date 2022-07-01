@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News;
+namespace Soosyze\Core\Modules\News;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
 use Soosyze\Components\Template\Template;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\News\Hook\Config;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\News\Hook\Config;
 
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     /**
      * @var string

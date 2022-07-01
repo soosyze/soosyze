@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Contact\Controller;
+namespace Soosyze\Core\Modules\Contact\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Contact\Form\FormContact;
+use Soosyze\Core\Modules\Contact\Form\FormContact;
 
 /**
- * @method \SoosyzeCore\Mailer\Services\Mailer       mailer()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\Mailer\Services\Mailer       mailer()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class Contact extends \Soosyze\Controller
 {

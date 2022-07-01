@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Form;
+namespace Soosyze\Core\Modules\System\Form;
 
-use SoosyzeCore\FileSystem\Services\File;
+use Soosyze\Core\Modules\FileSystem\Services\File;
 
 class FormThemePublic extends \Soosyze\Components\Form\FormBuilder
 {

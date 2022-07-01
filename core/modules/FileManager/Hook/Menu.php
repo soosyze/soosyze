@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\User\Services\User;
 
 class Menu
 {

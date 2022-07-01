@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Dashboard\Hook;
+namespace Soosyze\Core\Modules\Dashboard\Hook;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     public function hookUserPermissionModule(array &$permissions): void
     {

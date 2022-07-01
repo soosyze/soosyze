@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News\Hook;
+namespace Soosyze\Core\Modules\News\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\FileSystem\Services\File;
+use Soosyze\Core\Modules\FileSystem\Services\File;
 
-class Config implements \SoosyzeCore\Config\ConfigInterface
+class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
 {
     public const DEFAULT_ICON  = 'fas fa-newspaper';
 

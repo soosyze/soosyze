@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
-use SoosyzeCore\System\ExtendModule;
+use Soosyze\Core\Modules\System\ExtendModule;
 
 /**
- * @method \SoosyzeCore\System\Services\Composer     composer()
- * @method \SoosyzeCore\System\Services\Modules      module()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\System\Services\Composer     composer()
+ * @method \Soosyze\Core\Modules\System\Services\Modules      module()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type ToolEntity from \SoosyzeCore\System\ToolInterface
+ * @phpstan-import-type ToolEntity from \Soosyze\Core\Modules\System\ToolInterface
  */
 class Tool extends \Soosyze\Controller
 {

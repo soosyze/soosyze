@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Hook;
+namespace Soosyze\Core\Modules\Menu\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class App
 {

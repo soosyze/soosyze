@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\User\\": "/"
+            "Soosyze\\Core\\Modules\\User\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "User",
             "package": "Core",
-            "controller": "SoosyzeCore\\User\\Controller\\User",
+            "controller": "Soosyze\\Core\\Modules\\User\\Controller\\User",
             "icon": {
                 "name": "fas fa-user",
                 "background-color": "#a32949",

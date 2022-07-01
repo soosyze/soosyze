@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Services;
+namespace Soosyze\Core\Modules\Block\Services;
 
 use Core;
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 /**
- * @phpstan-import-type BlockHook from \SoosyzeCore\Block\Hook\Block
+ * @phpstan-import-type BlockHook from \Soosyze\Core\Modules\Block\Hook\Block
  */
 class Block
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\BackupManager\Controller;
+namespace Soosyze\Core\Modules\BackupManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Http\Redirect;
@@ -10,8 +10,8 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 
 /**
- * @method \SoosyzeCore\BackupManager\Services\BackupManager backupmanager()
- * @method \SoosyzeCore\Template\Services\Templating         template()
+ * @method \Soosyze\Core\Modules\BackupManager\Services\BackupManager backupmanager()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating         template()
  */
 class BackupController extends \Soosyze\Controller
 {

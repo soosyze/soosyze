@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Controller;
+namespace Soosyze\Core\Modules\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type PermissionsEntity from \SoosyzeCore\User\UserInterface
- * @phpstan-import-type UserRoleEntity from \SoosyzeCore\User\Extend
+ * @phpstan-import-type PermissionsEntity from \Soosyze\Core\Modules\User\UserInterface
+ * @phpstan-import-type UserRoleEntity from \Soosyze\Core\Modules\User\Extend
  */
 class Permission extends \Soosyze\Controller
 {

@@ -2,22 +2,22 @@
 
 return [
     'alias' => [
-        'class' => 'SoosyzeCore\System\Services\Alias'
+        'class' => 'Soosyze\Core\Modules\System\Services\Alias'
     ],
     'composer' => [
-        'class' => 'SoosyzeCore\System\Services\Composer'
+        'class' => 'Soosyze\Core\Modules\System\Services\Composer'
     ],
     'semver' => [
-        'class' => 'SoosyzeCore\System\Services\Semver'
+        'class' => 'Soosyze\Core\Modules\System\Services\Semver'
     ],
     'module' => [
-        'class' => 'SoosyzeCore\System\Services\Modules'
+        'class' => 'Soosyze\Core\Modules\System\Services\Modules'
     ],
     'migration' => [
-        'class' => 'SoosyzeCore\System\Services\Migration'
+        'class' => 'Soosyze\Core\Modules\System\Services\Migration'
     ],
     'system.hook.app' => [
-        'class' => 'SoosyzeCore\System\Hook\App',
+        'class' => 'Soosyze\Core\Modules\System\Hook\App',
         'hooks' => [
             'app.response.before' => 'hookSys',
             'app.403' => 'hooks403',
@@ -27,14 +27,14 @@ return [
         ]
     ],
     'system.extend' => [
-        'class' => 'SoosyzeCore\System\Extend',
+        'class' => 'Soosyze\Core\Modules\System\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'system.hook.user' => [
-        'class' => 'SoosyzeCore\System\Hook\User',
+        'class' => 'Soosyze\Core\Modules\System\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.system.module.edit' => 'hookModuleManage',
@@ -53,13 +53,13 @@ return [
         ]
     ],
     'system.hook.config' => [
-        'class' => 'SoosyzeCore\System\Hook\Config',
+        'class' => 'Soosyze\Core\Modules\System\Hook\Config',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'email.hook.config' => [
-        'class' => 'SoosyzeCore\System\Hook\ConfigEmail',
+        'class' => 'Soosyze\Core\Modules\System\Hook\ConfigEmail',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Core;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
-final class Config implements \SoosyzeCore\Config\ConfigInterface
+final class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
 {
     public const REPLACE_WITH = 1;
 

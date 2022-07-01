@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Template\Hook;
+namespace Soosyze\Core\Modules\Template\Hook;
 
 use Psr\Container\ContainerInterface;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     public function hookUserPermissionModule(array &$permissions): void
     {

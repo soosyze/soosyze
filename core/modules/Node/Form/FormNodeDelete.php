@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Form;
+namespace Soosyze\Core\Modules\Node\Form;
 
 use Soosyze\Components\Router\Router;
 

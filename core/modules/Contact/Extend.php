@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Contact;
+namespace Soosyze\Core\Modules\Contact;
 
 use Psr\Container\ContainerInterface;
-use SoosyzeCore\Menu\Enum\Menu;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
 
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

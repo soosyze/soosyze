@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\QueryBuilder\Services;
+namespace Soosyze\Core\Modules\QueryBuilder\Services;
 
 class Query extends \Queryflatfile\Request
 {

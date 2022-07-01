@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Controller;
+namespace Soosyze\Core\Modules\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\User\Form\FormUser;
-use SoosyzeCore\User\Hook\Config;
+use Soosyze\Core\Modules\User\Form\FormUser;
+use Soosyze\Core\Modules\User\Hook\Config;
 
 /**
- * @method \SoosyzeCore\User\Services\Auth           auth()
- * @method \SoosyzeCore\Mailer\Services\Mailer       mailer()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\User\Services\Auth           auth()
+ * @method \Soosyze\Core\Modules\Mailer\Services\Mailer       mailer()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ * @phpstan-import-type UserEntity from \Soosyze\Core\Modules\User\Extend
  */
 class Register extends \Soosyze\Controller
 {

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Controller;
+namespace Soosyze\Core\Modules\Block\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class Section extends \Soosyze\Controller
 {

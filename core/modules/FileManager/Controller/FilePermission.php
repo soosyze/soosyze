@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Controller;
+namespace Soosyze\Core\Modules\FileManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\FileManager\Form\FormPermission;
-use SoosyzeCore\FileManager\Services\FileManager;
+use Soosyze\Core\Modules\FileManager\Form\FormPermission;
+use Soosyze\Core\Modules\FileManager\Services\FileManager;
 
 /**
- * @method \SoosyzeCore\FileManager\Services\FileProfil fileprofil()
- * @method \SoosyzeCore\QueryBuilder\Services\Query     query()
- * @method \SoosyzeCore\QueryBuilder\Services\Schema    schema()
- * @method \SoosyzeCore\Template\Services\Templating    template()
- * @method \SoosyzeCore\User\Services\User              user()
+ * @method \Soosyze\Core\Modules\FileManager\Services\FileProfil fileprofil()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query     query()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Schema    schema()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating    template()
+ * @method \Soosyze\Core\Modules\User\Services\User              user()
  *
  * @phpstan-type Submenu array<
  *      array{

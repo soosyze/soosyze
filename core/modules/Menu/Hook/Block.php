@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Hook;
+namespace Soosyze\Core\Modules\Menu\Hook;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Menu\Enum\Menu as EnumMenu;
-use SoosyzeCore\Menu\Services\Menu;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\System\Services\Modules;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Menu\Enum\Menu as EnumMenu;
+use Soosyze\Core\Modules\Menu\Services\Menu;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\System\Services\Modules;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
 
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     /**
      * @var string

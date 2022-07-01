@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\System\Services\Alias;
+use Soosyze\Core\Modules\System\Services\Alias;
 
-class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
+class ApiRoute implements \Soosyze\Core\Modules\System\ApiRouteInterface
 {
     /**
      * @var Alias

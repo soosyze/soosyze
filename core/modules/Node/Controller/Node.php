@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Controller;
+namespace Soosyze\Core\Modules\Node\Controller;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Node\Form\FormNode;
-use SoosyzeCore\Node\Form\FormNodeDelete;
-use SoosyzeCore\Node\Model\Field\OneToManyOption;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Node\Form\FormNode;
+use Soosyze\Core\Modules\Node\Form\FormNodeDelete;
+use Soosyze\Core\Modules\Node\Model\Field\OneToManyOption;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\System\Services\Alias        alias()
- * @method \SoosyzeCore\FileSystem\Services\file     file()
- * @method \SoosyzeCore\Node\Services\Node           node()
- * @method \SoosyzeCore\Node\Services\NodeUser       nodeuser()
- * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\System\Services\Alias        alias()
+ * @method \Soosyze\Core\Modules\FileSystem\Services\File     file()
+ * @method \Soosyze\Core\Modules\Node\Services\Node           node()
+ * @method \Soosyze\Core\Modules\Node\Services\NodeUser       nodeuser()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Schema schema()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
  *
  * @phpstan-type Submenu array{
  *      key: string,

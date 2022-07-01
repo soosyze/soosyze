@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\FileManager\\": "/"
+            "Soosyze\\Core\\Modules\\FileManager\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "FileManager",
             "package": "Core",
-            "controller": "SoosyzeCore\\FileManager\\Controller\\Manager",
+            "controller": "Soosyze\\Core\\Modules\\FileManager\\Controller\\Manager",
             "icon": {
                 "name": "fa fa-folder",
                 "background-color": "#b54b1c",

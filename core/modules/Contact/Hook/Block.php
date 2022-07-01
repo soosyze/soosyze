@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Contact\Hook;
+namespace Soosyze\Core\Modules\Contact\Hook;
 
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\Contact\Form\FormContact;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\Contact\Form\FormContact;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\User\Services\User;
 
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     /**
      * @var string

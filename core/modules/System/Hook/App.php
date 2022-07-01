@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Hook;
+namespace Soosyze\Core\Modules\System\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
@@ -11,9 +11,9 @@ use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\System\Hook\Config as HookConfig;
-use SoosyzeCore\System\Services\Alias;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\System\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\System\Services\Alias;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class App
 {

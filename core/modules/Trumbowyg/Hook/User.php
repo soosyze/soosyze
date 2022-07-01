@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Trumbowyg\Hook;
+namespace Soosyze\Core\Modules\Trumbowyg\Hook;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     public function hookUserPermissionModule(array &$permissions): void
     {

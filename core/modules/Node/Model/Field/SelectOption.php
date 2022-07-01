@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Model\Field;
+namespace Soosyze\Core\Modules\Node\Model\Field;
 
 /**
  * @phpstan-type Option array{ label: string, value: numeric|string, attr: array}

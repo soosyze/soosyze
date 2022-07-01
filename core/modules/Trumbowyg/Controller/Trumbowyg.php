@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Trumbowyg\Controller;
+namespace Soosyze\Core\Modules\Trumbowyg\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
 
 /**
- * @method \SoosyzeCore\FileSystem\Services\file file()
+ * @method \Soosyze\Core\Modules\FileSystem\Services\File file()
  *
  * @phpstan-type Data array{
  *      link?: string,

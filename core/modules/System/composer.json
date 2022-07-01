@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\System\\": "/"
+            "Soosyze\\Core\\Modules\\System\\": "/"
         }
     },
     "support": {
@@ -15,7 +15,7 @@
         "soosyze": {
             "title": "System",
             "package": "Core",
-            "controller": "SoosyzeCore\\System\\Controller\\ModulesManager",
+            "controller": "Soosyze\\Core\\Modules\\System\\Controller\\ModulesManager",
             "icon": {
                 "name": "fa fa-th-large",
                 "background-color": "#5d2ce2",

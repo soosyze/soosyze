@@ -2,13 +2,13 @@
 
 return [
     'install' => [
-        'class' => 'SoosyzeCore\System\Hook\AppInstall',
+        'class' => 'Soosyze\Core\Modules\System\Hook\AppInstall',
         'hooks' => [
             'app.404' => 'hook404'
         ]
     ],
     'install.hook.install' => [
-        'class' => 'SoosyzeCore\System\Hook\Step',
+        'class' => 'Soosyze\Core\Modules\System\Hook\Step',
         'hooks' => [
             'step' => 'hookStep',
             'step.language' => 'hookLanguage',

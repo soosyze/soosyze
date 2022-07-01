@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Hook;
+namespace Soosyze\Core\Modules\Block\Hook;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
-use SoosyzeCore\Filter\Services\LazyLoding;
-use SoosyzeCore\Filter\Services\Xss;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Filter\Services\LazyLoding;
+use Soosyze\Core\Modules\Filter\Services\Xss;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
 
 /**
  * @phpstan-type BlockHook array{
@@ -23,7 +23,7 @@ use SoosyzeCore\Template\Services\Block as ServiceBlock;
  *     tpl: string
  * }
  */
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     private const TAG_IFRAME = [
         'iframe' => [

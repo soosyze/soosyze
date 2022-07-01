@@ -2,14 +2,14 @@
 
 return [
     'news.extend' => [
-        'class' => 'SoosyzeCore\News\Extend',
+        'class' => 'Soosyze\Core\Modules\News\Extend',
         'hooks' => [
             'install.menu' => 'hookInstallMenu',
             'install.user' => 'hookInstallUser'
         ]
     ],
     'news.hook.api.route' => [
-        'class' => 'SoosyzeCore\News\Hook\ApiRoute',
+        'class' => 'Soosyze\Core\Modules\News\Hook\ApiRoute',
         'arguments' => [
             'newTitle' => '#settings.new_title'
         ],
@@ -18,7 +18,7 @@ return [
         ]
     ],
     'news.hook.user' => [
-        'class' => 'SoosyzeCore\News\Hook\User',
+        'class' => 'Soosyze\Core\Modules\News\Hook\User',
         'hooks' => [
             'route.news.index' => 'hookNewShow',
             'route.news.page' => 'hookNewShow',
@@ -32,13 +32,13 @@ return [
         ]
     ],
     'news.hook.config' => [
-        'class' => 'SoosyzeCore\News\Hook\Config',
+        'class' => 'Soosyze\Core\Modules\News\Hook\Config',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'news.hook.block' => [
-        'class' => 'SoosyzeCore\News\Hook\Block',
+        'class' => 'Soosyze\Core\Modules\News\Hook\Block',
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
             'block.news.archive.select' => 'hookNewsArchiveSelect',
@@ -59,7 +59,7 @@ return [
         ]
     ],
     'news.hook.node' => [
-        'class' => 'SoosyzeCore\News\Hook\Node',
+        'class' => 'Soosyze\Core\Modules\News\Hook\Node',
         'arguments' => [
             'newDefaultImage' => '#settings.new_default_image',
             'newDefaultIcon' => '#settings.new_default_icon'

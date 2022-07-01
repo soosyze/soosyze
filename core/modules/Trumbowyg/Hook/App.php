@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Trumbowyg\Hook;
+namespace Soosyze\Core\Modules\Trumbowyg\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class App
 {

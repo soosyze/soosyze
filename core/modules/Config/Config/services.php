@@ -2,7 +2,7 @@
 
 return [
     'config.hook.user' => [
-        'class' => 'SoosyzeCore\Config\Hook\User',
+        'class' => 'Soosyze\Core\Modules\Config\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.config.admin' => 'hookConfigAdmin',
@@ -11,7 +11,7 @@ return [
         ]
     ],
     'config.extend' => [
-        'class' => 'SoosyzeCore\Config\Extend',
+        'class' => 'Soosyze\Core\Modules\Config\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
