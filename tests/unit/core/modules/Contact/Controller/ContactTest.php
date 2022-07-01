@@ -12,7 +12,8 @@ class ContactTest extends WebTestCase
         $response = self::request('GET', '/contact');
 
         $this->assertEquals(200, $response->getStatusCode());
-        /** @phpstan-var Templating $response */
+        $this->assertInstanceOf(Templating::class, $response);
+
         $html = (string) $response;
 
         $this->assertStringContainsString(
@@ -75,8 +76,9 @@ class ContactTest extends WebTestCase
 
     public function testPostContactForm(): void
     {
-        /** @phpstan-var Templating $html */
         $html  = self::request('GET', '/contact');
+        $this->assertInstanceOf(Templating::class, $html);
+
         $token = $this->getToken('token_contact', $html);
 
         $response = self::request('POST', '/contact', [
