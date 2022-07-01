@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Form;
+namespace Soosyze\Core\Modules\Block\Form;
 
 class FormDeleteBlock extends \Soosyze\Components\Form\FormBuilder
 {

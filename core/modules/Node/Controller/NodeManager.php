@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Controller;
+namespace Soosyze\Core\Modules\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Paginate\Paginator;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\Node\Services\NodeUser       nodeuser()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\Node\Services\NodeUser       nodeuser()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  */
 class NodeManager extends \Soosyze\Controller
 {

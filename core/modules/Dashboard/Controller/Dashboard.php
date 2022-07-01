@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Dashboard\Controller;
+namespace Soosyze\Core\Modules\Dashboard\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @method \SoosyzeCore\System\Services\Composer     composer()
- * @method \SoosyzeCore\Dashboard\Services\Dashboard dashboard()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\System\Services\Composer     composer()
+ * @method \Soosyze\Core\Modules\Dashboard\Services\Dashboard dashboard()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class Dashboard extends \Soosyze\Controller
 {

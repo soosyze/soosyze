@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Form;
+namespace Soosyze\Core\Modules\User\Form;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\FileSystem\Services\File;
-use SoosyzeCore\User\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\FileSystem\Services\File;
+use Soosyze\Core\Modules\User\Hook\Config as HookConfig;
 
 class FormUser extends \Soosyze\Components\Form\FormBuilder
 {

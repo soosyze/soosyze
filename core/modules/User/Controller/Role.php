@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Controller;
+namespace Soosyze\Core\Modules\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\User\Form\FormUserRole;
+use Soosyze\Core\Modules\User\Form\FormUserRole;
 
 /**
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type RoleEntity from \SoosyzeCore\User\Extend
+ * @phpstan-import-type RoleEntity from \Soosyze\Core\Modules\User\Extend
  * @phpstan-type Submenu array<
  *      array{
  *          key: string,

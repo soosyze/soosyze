@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System;
+namespace Soosyze\Core\Modules\System;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\System\Form\FormThemeAdmin;
-use SoosyzeCore\System\Form\FormThemePublic;
-use SoosyzeCore\System\Hook\Config;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\System\Form\FormThemeAdmin;
+use Soosyze\Core\Modules\System\Form\FormThemePublic;
+use Soosyze\Core\Modules\System\Hook\Config;
 
 /**
  * @phpstan-type AliasEntity array{
@@ -18,7 +18,7 @@ use SoosyzeCore\System\Hook\Config;
  *      alias: string,
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

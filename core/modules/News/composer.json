@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\News\\": "/"
+            "Soosyze\\Core\\Modules\\News\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "News",
             "package": "Core",
-            "controller": "SoosyzeCore\\News\\Controller\\News",
+            "controller": "Soosyze\\Core\\Modules\\News\\Controller\\News",
             "require": {
                 "Node": "1.0.*"
             },

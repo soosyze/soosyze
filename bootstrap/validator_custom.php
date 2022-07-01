@@ -3,7 +3,7 @@
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\System\Services\Alias;
+use Soosyze\Core\Modules\System\Services\Alias;
 
 class RouteValue extends \Soosyze\Components\Validator\Rule
 {

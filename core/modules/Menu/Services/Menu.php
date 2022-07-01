@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Services;
+namespace Soosyze\Core\Modules\Menu\Services;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
@@ -11,14 +11,14 @@ use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\System\Services\Alias;
-use SoosyzeCore\Template\Services\Block;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\System\Services\Alias;
+use Soosyze\Core\Modules\Template\Services\Block;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 /**
- * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
- * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuEntity from \Soosyze\Core\Modules\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \Soosyze\Core\Modules\Menu\Extend
  *
  * @phpstan-type Submenu array<
  *      array{

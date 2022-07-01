@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Controller;
+namespace Soosyze\Core\Modules\Menu\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Menu\Form\FormMenu;
+use Soosyze\Core\Modules\Menu\Form\FormMenu;
 
 /**
- * @method \SoosyzeCore\Menu\Services\Menu           menu()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\Menu\Services\Menu           menu()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Schema schema()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  *
- * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuEntity from \Soosyze\Core\Modules\Menu\Extend
  */
 class Menu extends \Soosyze\Controller
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\BackupManager\Services;
+namespace Soosyze\Core\Modules\BackupManager\Services;
 
 use Core;
 use Soosyze\Components\Router\Router;

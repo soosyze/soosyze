@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\QueryBuilder\Services\Schema;
-use SoosyzeCore\System\Services\Alias;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\System\Services\Alias;
 
 class Url
 {

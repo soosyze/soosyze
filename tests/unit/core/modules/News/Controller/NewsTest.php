@@ -2,7 +2,7 @@
 
 namespace tests\unit\core\modules\News\Controller;
 
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 use tests\unit\WebTestCase;
 
 class NewsTest extends WebTestCase

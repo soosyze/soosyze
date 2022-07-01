@@ -2,22 +2,22 @@
 
 return [
     'backupmanager.extend' => [
-        'class' => 'SoosyzeCore\BackupManager\Extend',
+        'class' => 'Soosyze\Core\Modules\BackupManager\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser'
         ]
     ],
     'backupmanager' => [
-        'class' => 'SoosyzeCore\BackupManager\Services\BackupManager'
+        'class' => 'Soosyze\Core\Modules\BackupManager\Services\BackupManager'
     ],
     'backupmanager.hook.config' => [
-        'class' => 'SoosyzeCore\BackupManager\Hook\Config',
+        'class' => 'Soosyze\Core\Modules\BackupManager\Hook\Config',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'backupmanager.hook.user' => [
-        'class' => 'SoosyzeCore\BackupManager\Hook\User',
+        'class' => 'Soosyze\Core\Modules\BackupManager\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.backupmanager.admin' => 'hookBackupManage',
@@ -29,13 +29,13 @@ return [
         ]
     ],
     'backupmanager.hook.cron' => [
-        'class' => 'SoosyzeCore\BackupManager\Hook\Cron',
+        'class' => 'Soosyze\Core\Modules\BackupManager\Hook\Cron',
         'hooks' => [
             'app.cron' => 'hookAppCron'
         ]
     ],
     'backupmanager.hook.tool' => [
-        'class' => 'SoosyzeCore\BackupManager\Hook\Tool',
+        'class' => 'Soosyze\Core\Modules\BackupManager\Hook\Tool',
         'hooks' => [
             'tools.admin' => 'hookToolAdmin'
         ]

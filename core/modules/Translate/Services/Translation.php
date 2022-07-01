@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Translate\Services;
+namespace Soosyze\Core\Modules\Translate\Services;
 
 use Soosyze\Config;
 

@@ -8,14 +8,14 @@
     },
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\BackupManager\\": "/"
+            "Soosyze\\Core\\Modules\\BackupManager\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "BackupManager",
             "package": "Core",
-            "controller": "SoosyzeCore\\BackupManager\\Controller\\BackupController",
+            "controller": "Soosyze\\Core\\Modules\\BackupManager\\Controller\\BackupController",
             "icon": {
                 "name": "fa fa-file-archive",
                 "background-color": "#ac1b1b",

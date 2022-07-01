@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\BackupManager;
+namespace Soosyze\Core\Modules\BackupManager;
 
 use Psr\Container\ContainerInterface;
 
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

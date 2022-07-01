@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Contact\Form;
+namespace Soosyze\Core\Modules\Contact\Form;
 
 class FormContact extends \Soosyze\Components\Form\FormBuilder
 {

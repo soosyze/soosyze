@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Services;
+namespace Soosyze\Core\Modules\Node\Services;
 
 use Core;
 use Queryflatfile\Request;
 use Soosyze\Config;
-use SoosyzeCore\Filter\Services\Filter;
-use SoosyzeCore\Node\Model\Field\CheckboxOption;
-use SoosyzeCore\Node\Model\Field\OneToManyOption;
-use SoosyzeCore\Node\Model\Field\RadioOption;
-use SoosyzeCore\Node\Model\Field\SelectOption;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\QueryBuilder\Services\Schema;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Filter\Services\Filter;
+use Soosyze\Core\Modules\Node\Model\Field\CheckboxOption;
+use Soosyze\Core\Modules\Node\Model\Field\OneToManyOption;
+use Soosyze\Core\Modules\Node\Model\Field\RadioOption;
+use Soosyze\Core\Modules\Node\Model\Field\SelectOption;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 /**
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
- * @phpstan-import-type NodeTypeFieldEntity from \SoosyzeCore\Node\Extend
- * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
+ * @phpstan-import-type NodeTypeFieldEntity from \Soosyze\Core\Modules\Node\Extend
+ * @phpstan-import-type NodeTypeFieldOneFieldEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class Node
 {

@@ -2,17 +2,17 @@
 
 return [
     'dashboard' => [
-        'class' => 'SoosyzeCore\Dashboard\Services\Dashboard'
+        'class' => 'Soosyze\Core\Modules\Dashboard\Services\Dashboard'
     ],
     'dashboard.extend' => [
-        'class' => 'SoosyzeCore\Dashboard\Extend',
+        'class' => 'Soosyze\Core\Modules\Dashboard\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'dashboard.hook.user' => [
-        'class' => 'SoosyzeCore\Dashboard\Hook\User',
+        'class' => 'Soosyze\Core\Modules\Dashboard\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.dashboard.index' => 'hookDashboardAdminister',

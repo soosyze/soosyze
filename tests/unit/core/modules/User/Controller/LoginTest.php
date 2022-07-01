@@ -2,7 +2,7 @@
 
 namespace tests\unit\core\modules\User\Controller;
 
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 use tests\unit\WebTestCase;
 
 class LoginTest extends WebTestCase

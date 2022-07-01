@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Form;
+namespace Soosyze\Core\Modules\FileManager\Form;
 
 class FormFolder extends \Soosyze\Components\Form\FormBuilder
 {

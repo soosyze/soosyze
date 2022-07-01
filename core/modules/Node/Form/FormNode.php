@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Form;
+namespace Soosyze\Core\Modules\Node\Form;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\FileSystem\Services\File;
-use SoosyzeCore\Node\Hook\Config as HookConfig;
-use SoosyzeCore\Node\Model\Field\CheckboxOption;
-use SoosyzeCore\Node\Model\Field\OneToManyOption;
-use SoosyzeCore\Node\Model\Field\RadioOption;
-use SoosyzeCore\Node\Model\Field\SelectOption;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\FileSystem\Services\File;
+use Soosyze\Core\Modules\Node\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\Node\Model\Field\CheckboxOption;
+use Soosyze\Core\Modules\Node\Model\Field\OneToManyOption;
+use Soosyze\Core\Modules\Node\Model\Field\RadioOption;
+use Soosyze\Core\Modules\Node\Model\Field\SelectOption;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 /**
- * @phpstan-import-type NodeStatusEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeStatusEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class FormNode extends \Soosyze\Components\Form\FormBuilder
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\BackupManager\Hook;
+namespace Soosyze\Core\Modules\BackupManager\Hook;
 
 use Soosyze\Components\Router\Router;
 
-class Tool implements \SoosyzeCore\System\ToolInterface
+class Tool implements \Soosyze\Core\Modules\System\ToolInterface
 {
     /**
      * @var Router

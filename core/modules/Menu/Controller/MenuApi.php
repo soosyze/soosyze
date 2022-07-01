@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Controller;
+namespace Soosyze\Core\Modules\Menu\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @method \SoosyzeCore\Menu\Services\Menu menu()
+ * @method \Soosyze\Core\Modules\Menu\Services\Menu menu()
  */
 class MenuApi extends \Soosyze\Controller
 {

@@ -2,7 +2,7 @@
 
 namespace Soosyze\Core\Themes\Bootstrap3;
 
-class Extend extends \SoosyzeCore\System\ExtendTheme
+class Extend extends \Soosyze\Core\Modules\System\ExtendTheme
 {
     public function getDir(): string
     {

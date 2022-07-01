@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Services;
+namespace Soosyze\Core\Modules\FileManager\Services;
 
 use Core;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Util\Util;
 use Soosyze\Config;
-use SoosyzeCore\FileManager\Hook\Config as HookConfig;
-use SoosyzeCore\FileManager\Hook\User as HookUser;
-use SoosyzeCore\Template\Services\Block;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\FileManager\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\FileManager\Hook\User as HookUser;
+use Soosyze\Core\Modules\Template\Services\Block;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class FileManager
 {

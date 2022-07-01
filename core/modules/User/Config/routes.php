@@ -5,10 +5,10 @@ use Soosyze\Components\Router\RouteGroup;
 
 define('LOGIN_WITHS', [ 'url' => '(/[\d\w-]{10,})?' ]);
 
-RouteCollection::setNamespace('SoosyzeCore\User\Controller\UserApi')->prefix('/api')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace('Soosyze\Core\Modules\User\Controller\UserApi')->prefix('/api')->group(function (RouteGroup $r): void {
     $r->get('user.api.select', '/user', '@select');
 });
-RouteCollection::setNamespace('SoosyzeCore\User\Controller')->name('user.')->prefix('/user')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace('Soosyze\Core\Modules\User\Controller')->name('user.')->prefix('/user')->group(function (RouteGroup $r): void {
     $r->setNamespace('\Login')->group(function (RouteGroup $r): void {
         $r->get('login', '/login{url}', '@login', LOGIN_WITHS);
         $r->post('login.check', '/login{url}', '@loginCheck', LOGIN_WITHS);
@@ -32,7 +32,7 @@ RouteCollection::setNamespace('SoosyzeCore\User\Controller')->name('user.')->pre
         $r->delete('delete', '/{id}', '@delete')->whereDigits('id');
     });
 });
-RouteCollection::setNamespace('SoosyzeCore\User\Controller')->name('user.')->prefix('/admin/user')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace('Soosyze\Core\Modules\User\Controller')->name('user.')->prefix('/admin/user')->group(function (RouteGroup $r): void {
     $r->get('create', '/create', '\User@create');
 
     $r->setNamespace('\UsersManager')->group(function (RouteGroup $r): void {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Form;
+namespace Soosyze\Core\Modules\System\Form;
 
 class FormThemeAdmin extends \Soosyze\Components\Form\FormBuilder
 {

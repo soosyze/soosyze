@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Form;
+namespace Soosyze\Core\Modules\FileManager\Form;
 
 use Soosyze\Components\Util\Util;
-use SoosyzeCore\FileManager\Services\FileManager;
+use Soosyze\Core\Modules\FileManager\Services\FileManager;
 
 class FormPermission extends \Soosyze\Components\Form\FormBuilder
 {

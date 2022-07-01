@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
-use SoosyzeCore\Node\Hook\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Node\Hook\Config;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 class Cron
 {

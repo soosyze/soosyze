@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Services;
+namespace Soosyze\Core\Modules\FileManager\Services;
 
-use SoosyzeCore\FileManager\Hook\User;
+use Soosyze\Core\Modules\FileManager\Hook\User;
 
 class FilterManagerIterator extends \FilterIterator
 {

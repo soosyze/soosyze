@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Node\Services\Node;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\System\Services\Alias;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Node\Services\Node;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\System\Services\Alias;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
 
 /**
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
- * @phpstan-import-type NodeTypeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
+ * @phpstan-import-type NodeTypeEntity from \Soosyze\Core\Modules\Node\Extend
  */
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     private const DISPLAY_DEFAULT = 'meta-title';
 

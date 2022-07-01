@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Trumbowyg;
+namespace Soosyze\Core\Modules\Trumbowyg;
 
 use Psr\Container\ContainerInterface;
 
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

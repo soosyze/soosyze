@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News\Controller;
+namespace Soosyze\Core\Modules\News\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Paginate\Paginator;
-use SoosyzeCore\News\Hook\Config;
+use Soosyze\Core\Modules\News\Hook\Config;
 
 /**
- * @method \SoosyzeCore\System\Services\Alias        alias()
- * @method \SoosyzeCore\Node\Services\Node           node()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\System\Services\Alias        alias()
+ * @method \Soosyze\Core\Modules\Node\Services\Node           node()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  *
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class News extends \Soosyze\Controller
 {

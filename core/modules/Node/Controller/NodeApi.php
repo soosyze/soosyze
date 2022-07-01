@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Controller;
+namespace Soosyze\Core\Modules\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SoosyzeCore\Node\Form\FormNodeDelete;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Node\Form\FormNodeDelete;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\System\Services\Alias        alias()
- * @method \SoosyzeCore\Node\Services\Node           node()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\System\Services\Alias        alias()
+ * @method \Soosyze\Core\Modules\Node\Services\Node           node()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class NodeApi extends \Soosyze\Controller
 {

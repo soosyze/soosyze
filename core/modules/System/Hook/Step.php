@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Hook;
+namespace Soosyze\Core\Modules\System\Hook;
 
 use Core;
 use Psr\Container\ContainerInterface;
@@ -12,10 +12,10 @@ use Soosyze\Components\Router\Router;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\QueryBuilder\Services\Schema;
-use SoosyzeCore\Translate\Services\Translation;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\Translate\Services\Translation;
 
 /**
  * @phpstan-type StepEntity array{
@@ -401,7 +401,7 @@ class Step
 
     public function hookModules(array &$modules): void
     {
-        $modules[ 'News' ] = 'SoosyzeCore\\News\\';
+        $modules[ 'News' ] = 'Soosyze\\Core\\Modules\\News\\';
     }
 
     public function hookSite(ContainerInterface $ci): void
@@ -523,7 +523,7 @@ class Step
                 json_encode([
                     'limit'     => 3,
                     'offset'    => 0,
-                    'more'      => \SoosyzeCore\News\Hook\Block::MORE_LINK_NOT_ADD,
+                    'more'      => \Soosyze\Core\Modules\News\Hook\Block::MORE_LINK_NOT_ADD,
                     'text_more' => t('Show blog')
                 ]),
                 true, '/'

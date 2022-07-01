@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Hook;
+namespace Soosyze\Core\Modules\Menu\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
-use SoosyzeCore\Menu\Enum\Menu;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     public function hookUserPermissionModule(array &$permissions): void
     {

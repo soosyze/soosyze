@@ -2,7 +2,7 @@
 
 use Soosyze\App;
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 class Core extends App
 {
@@ -10,7 +10,7 @@ class Core extends App
     {
         /** @phpstan-ignore-next-line */
         if (!$this->get(Config::class)->get('settings.time_installed')) {
-            $modules[] = new SoosyzeCore\System\Controller\Install();
+            $modules[] = new Soosyze\Core\Modules\System\Controller\Install();
 
             return $modules;
         }
@@ -19,9 +19,15 @@ class Core extends App
 
         /** @phpstan-ignore-next-line */
         $data = $this->get(Query::class)->from('module_controller')->fetchAll();
-        /** @var array{controller: class-string<Soosyze\Controller>} $value */
         foreach ($data as $value) {
-            $modules[] = new $value[ 'controller' ]();
+            /** @var class-string<Soosyze\Controller> $controller */
+            $controller = str_replace(
+                [ 'SoosyzeCore', 'SoosyzeExtension' ],
+                [ 'Soosyze\Core\Modules', 'Soosyze\App\Modules' ],
+                $value[ 'controller' ]
+            );
+
+            $modules[] = new $controller();
         }
 
         return $modules;
@@ -31,55 +37,55 @@ class Core extends App
     {
         return [
             'schema'   => [
-                'class'     => 'SoosyzeCore\QueryBuilder\Services\Schema',
+                'class'     => 'Soosyze\Core\Modules\QueryBuilder\Services\Schema',
                 'arguments' => [
                     'host' => '#database.host',
                     'name' => '#database.schema'
                 ]
             ],
             'query'    => [
-                'class'     => 'SoosyzeCore\QueryBuilder\Services\Query',
+                'class'     => 'Soosyze\Core\Modules\QueryBuilder\Services\Query',
                 'arguments' => [
                     'schema' => '@schema'
                 ]
             ],
             'template' => [
-                'class'     => 'SoosyzeCore\Template\Services\Templating',
+                'class'     => 'Soosyze\Core\Modules\Template\Services\Templating',
             ],
             'template.hook.user' => [
-                'class' => 'SoosyzeCore\Template\Hook\User',
+                'class' => 'Soosyze\Core\Modules\Template\Hook\User',
                 'hooks' => [
                     'user.permission.module' => 'hookUserPermissionModule',
                     'install.user'           => 'hookInstallUser'
                 ]
             ],
             'file'     => [
-                'class'     => 'SoosyzeCore\FileSystem\Services\File',
+                'class'     => 'Soosyze\Core\Modules\FileSystem\Services\File',
             ],
             'translate'     => [
-                'class'     => 'SoosyzeCore\Translate\Services\Translation',
+                'class'     => 'Soosyze\Core\Modules\Translate\Services\Translation',
                 'arguments' => [
                     'dir'=> __DIR__ . '/lang',
                     'langDefault'=> 'en'
                 ]
             ],
             'mailer'        => [
-                'class'     => 'SoosyzeCore\Mailer\Services\Mailer',
+                'class'     => 'Soosyze\Core\Modules\Mailer\Services\Mailer',
                 'arguments' => [
                     '#mailer'
                 ]
             ],
             'filter' => [
-                'class' => 'SoosyzeCore\Filter\Services\Filter'
+                'class' => 'Soosyze\Core\Modules\Filter\Services\Filter'
             ],
             'xss' => [
-                'class' => 'SoosyzeCore\Filter\Services\Xss'
+                'class' => 'Soosyze\Core\Modules\Filter\Services\Xss'
             ],
             'parsedown' => [
-                'class' => 'SoosyzeCore\Filter\Services\Parsedown'
+                'class' => 'Soosyze\Core\Modules\Filter\Services\Parsedown'
             ],
             'lazyloading' => [
-                'class' => 'SoosyzeCore\Filter\Services\LazyLoding'
+                'class' => 'Soosyze\Core\Modules\Filter\Services\LazyLoding'
             ]
         ];
     }

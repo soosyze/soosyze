@@ -1,6 +1,6 @@
 <?php
 
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 $vendor = \Core::getInstance()->getPath('vendor_public', 'public/vendor', false);
 

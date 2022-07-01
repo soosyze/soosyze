@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Util\Util;
-use SoosyzeCore\FileManager\Services\FileProfil;
-use SoosyzeCore\User\Services\User as UserService;
+use Soosyze\Core\Modules\FileManager\Services\FileProfil;
+use Soosyze\Core\Modules\User\Services\User as UserService;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     const OCTET_IN_MEGAOCTET = 1048576;
 

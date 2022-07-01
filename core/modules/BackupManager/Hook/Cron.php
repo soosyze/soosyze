@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\BackupManager\Hook;
+namespace Soosyze\Core\Modules\BackupManager\Hook;
 
 use Soosyze\Config;
-use SoosyzeCore\BackupManager\Services\BackupManager;
+use Soosyze\Core\Modules\BackupManager\Services\BackupManager;
 
 class Cron
 {

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\System\ExtendTheme;
-use SoosyzeCore\System\Form\FormThemeAdmin;
-use SoosyzeCore\System\Form\FormThemePublic;
+use Soosyze\Core\Modules\System\ExtendTheme;
+use Soosyze\Core\Modules\System\Form\FormThemeAdmin;
+use Soosyze\Core\Modules\System\Form\FormThemePublic;
 
 /**
- * @method \SoosyzeCore\System\Services\Composer     composer()
- * @method \SoosyzeCore\FileSystem\Services\file     file()
- * @method \SoosyzeCore\System\Services\Modules      module()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\System\Services\Composer     composer()
+ * @method \Soosyze\Core\Modules\FileSystem\Services\File     file()
+ * @method \Soosyze\Core\Modules\System\Services\Modules      module()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  */
 class Theme extends \Soosyze\Controller
 {

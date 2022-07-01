@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News\Hook;
+namespace Soosyze\Core\Modules\News\Hook;
 
 use Soosyze\Components\Router\Router;
-use SoosyzeCore\News\Hook\Config;
-use SoosyzeCore\System\Services\Alias;
+use Soosyze\Core\Modules\News\Hook\Config;
+use Soosyze\Core\Modules\System\Services\Alias;
 
-class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
+class ApiRoute implements \Soosyze\Core\Modules\System\ApiRouteInterface
 {
     /**
      * @var Alias

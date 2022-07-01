@@ -3,7 +3,7 @@
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
 
-RouteCollection::setNamespace('SoosyzeCore\News\Controller\News')->name('news.')->prefix('/news')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace('Soosyze\Core\Modules\News\Controller\News')->name('news.')->prefix('/news')->group(function (RouteGroup $r): void {
     $r->get('index', '/', '@page');
     $r->get('page', '/page/{pageId}', '@page', [ 'pageId' => '[1-9]\d*' ]);
 

@@ -7,7 +7,7 @@ define('BLOCK_WITHS_THEME', [
     'theme' => 'public|admin'
 ]);
 
-RouteCollection::setNamespace('SoosyzeCore\Block\Controller')->name('block.')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace('Soosyze\Core\Modules\Block\Controller')->name('block.')->group(function (RouteGroup $r): void {
     $r->setNamespace('\Section')->name('section.')->prefix('/admin')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
         $r->get('admin', '/theme/{theme}/section', '@admin');
         $r->post('update', '/section/{id}/edit', '@update')->whereDigits('id');

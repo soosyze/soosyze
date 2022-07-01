@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Hook;
+namespace Soosyze\Core\Modules\User\Hook;
 
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
 
-class ApiRoute implements \SoosyzeCore\System\ApiRouteInterface
+class ApiRoute implements \Soosyze\Core\Modules\System\ApiRouteInterface
 {
     /**
      * @var string

@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Config\\": "/"
+            "Soosyze\\Core\\Modules\\Config\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Config",
             "package": "Core",
-            "controller": "SoosyzeCore\\Config\\Controller\\Config",
+            "controller": "Soosyze\\Core\\Modules\\Config\\Controller\\Config",
             "icon": {
                 "name": "fas fa-cog",
                 "background-color": "#E5A342",
