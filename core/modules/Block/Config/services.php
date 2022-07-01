@@ -2,16 +2,16 @@
 
 return [
     'block' => [
-        'class' => 'SoosyzeCore\Block\Services\Block'
+        'class' => 'Soosyze\Core\Modules\Block\Services\Block'
     ],
     'block.hook.app' => [
-        'class' => 'SoosyzeCore\Block\Hook\App',
+        'class' => 'Soosyze\Core\Modules\Block\Hook\App',
         'hooks' => [
             'app.response.after' => 'hookResponseAfter'
         ]
     ],
     'block.hook.block' => [
-        'class' => 'SoosyzeCore\Block\Hook\Block',
+        'class' => 'Soosyze\Core\Modules\Block\Hook\Block',
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
             'block.social' => 'hookSocial',
@@ -34,13 +34,13 @@ return [
         ]
     ],
     'social.hook.config' => [
-        'class' => 'SoosyzeCore\Block\Hook\Config',
+        'class' => 'Soosyze\Core\Modules\Block\Hook\Config',
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'block.hook.user' => [
-        'class' => 'SoosyzeCore\Block\Hook\User',
+        'class' => 'Soosyze\Core\Modules\Block\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.block.section.admin' => 'hookBlockAdmin',
@@ -57,7 +57,7 @@ return [
         ]
     ],
     'block.extend' => [
-        'class' => 'SoosyzeCore\Block\Extend',
+        'class' => 'Soosyze\Core\Modules\Block\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser'
         ]

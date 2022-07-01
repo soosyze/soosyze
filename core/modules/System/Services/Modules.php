@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Services;
+namespace Soosyze\Core\Modules\System\Services;
 
 use Soosyze\Components\Util\Util;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\Translate\Services\Translation;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Translate\Services\Translation;
 
 class Modules
 {

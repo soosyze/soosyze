@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Form;
+namespace Soosyze\Core\Modules\User\Form;
 
 use Soosyze\Components\Form\FormGroupBuilder;
 

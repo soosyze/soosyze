@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Controller;
+namespace Soosyze\Core\Modules\User\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @method \SoosyzeCore\QueryBuilder\Services\Query query()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query query()
  *
- * @phpstan-import-type UserEntity from \SoosyzeCore\User\Extend
+ * @phpstan-import-type UserEntity from \Soosyze\Core\Modules\User\Extend
  */
 class UserApi extends \Soosyze\Controller
 {

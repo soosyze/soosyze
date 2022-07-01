@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Config\Controller;
+namespace Soosyze\Core\Modules\Config\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Config\ConfigInterface;
+use Soosyze\Core\Modules\Config\ConfigInterface;
 
 /**
- * @method \SoosyzeCore\FileSystem\Services\File     file()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\FileSystem\Services\File     file()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  *
- * @phpstan-import-type ConfigMenuEntity from \SoosyzeCore\Config\ConfigInterface
+ * @phpstan-import-type ConfigMenuEntity from \Soosyze\Core\Modules\Config\ConfigInterface
  */
 class Config extends \Soosyze\Controller
 {

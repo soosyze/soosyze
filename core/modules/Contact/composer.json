@@ -2,17 +2,17 @@
     "name": "soosyze-core/contact",
     "type": "soosyze-module",
     "description": "Contact form for internet users",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Contact\\": "/"
+            "Soosyze\\Core\\Modules\\Contact\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Contact",
             "package": "Core",
-            "controller": "SoosyzeCore\\Contact\\Controller\\Contact",
+            "controller": "Soosyze\\Core\\Modules\\Contact\\Controller\\Contact",
             "icon": {
                 "name": "fas fa-id-card",
                 "background-color": "#262626",

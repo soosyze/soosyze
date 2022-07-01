@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Services;
+namespace Soosyze\Core\Modules\System\Services;
 
 use Core;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\System\ExtendModule;
-use SoosyzeCore\System\ExtendTheme;
-use SoosyzeCore\System\Services\Semver;
+use Soosyze\Core\Modules\System\ExtendModule;
+use Soosyze\Core\Modules\System\ExtendTheme;
+use Soosyze\Core\Modules\System\Services\Semver;
 
 class Composer
 {

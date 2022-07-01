@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Filter\Services;
+namespace Soosyze\Core\Modules\Filter\Services;
 
 use Kses\Kses;
 use Kses\KsesAllowedList;

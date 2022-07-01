@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Hook;
+namespace Soosyze\Core\Modules\System\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Translate\Services\Translation;
+use Soosyze\Core\Modules\Translate\Services\Translation;
 
-final class Config implements \SoosyzeCore\Config\ConfigInterface
+final class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
 {
     public const LANG = 'en';
 

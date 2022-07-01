@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News\Hook;
+namespace Soosyze\Core\Modules\News\Hook;
 
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\News\Hook\Config;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\News\Hook\Config;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class Node
 {

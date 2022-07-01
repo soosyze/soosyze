@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Block\\": "/"
+            "Soosyze\\Core\\Modules\\Block\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Block",
             "package": "Core",
-            "controller": "SoosyzeCore\\Block\\Controller\\Block",
+            "controller": "Soosyze\\Core\\Modules\\Block\\Controller\\Block",
             "icon": {
                 "name": "fas fa-columns",
                 "background-color": "#5cb85c",

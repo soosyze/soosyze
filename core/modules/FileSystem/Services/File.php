@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileSystem\Services;
+namespace Soosyze\Core\Modules\FileSystem\Services;
 
 use Core;
 use Psr\Http\Message\UploadedFileInterface;

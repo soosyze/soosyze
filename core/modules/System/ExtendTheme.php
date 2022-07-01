@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System;
+namespace Soosyze\Core\Modules\System;
 
 abstract class ExtendTheme
 {

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Controller;
+namespace Soosyze\Core\Modules\Block\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Block\Form\FormBlock;
-use SoosyzeCore\Block\Form\FormDeleteBlock;
-use SoosyzeCore\Block\Form\FormListBlock;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Block\Form\FormBlock;
+use Soosyze\Core\Modules\Block\Form\FormDeleteBlock;
+use Soosyze\Core\Modules\Block\Form\FormListBlock;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
 
 /**
- * @method \SoosyzeCore\Block\Services\Block         block()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
- * @method \SoosyzeCore\User\Services\User           user()
- * @method \SoosyzeCore\Filter\Services\Xss          xss()
+ * @method \Soosyze\Core\Modules\Block\Services\Block         block()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\Filter\Services\Xss          xss()
  *
- * @phpstan-import-type BlockEntity from \SoosyzeCore\Block\Extend
+ * @phpstan-import-type BlockEntity from \Soosyze\Core\Modules\Block\Extend
  */
 class Block extends \Soosyze\Controller
 {

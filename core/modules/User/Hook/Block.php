@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Hook;
+namespace Soosyze\Core\Modules\User\Hook;
 
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
-use SoosyzeCore\User\Form\FormUser;
-use SoosyzeCore\User\Hook\Config as HookConfig;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\User\Form\FormUser;
+use Soosyze\Core\Modules\User\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\User\Services\User;
 
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     /**
      * @var string

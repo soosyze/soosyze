@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block;
+namespace Soosyze\Core\Modules\Block;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
@@ -26,7 +26,7 @@ use Queryflatfile\TableBuilder;
  *      theme: string,
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

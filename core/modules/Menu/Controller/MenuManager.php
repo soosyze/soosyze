@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Controller;
+namespace Soosyze\Core\Modules\Menu\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Menu\Enum\Menu;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\Menu\Services\Menu           menu()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\Menu\Services\Menu           menu()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  *
- * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
- * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
+ * @phpstan-import-type MenuEntity from \Soosyze\Core\Modules\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \Soosyze\Core\Modules\Menu\Extend
  */
 class MenuManager extends \Soosyze\Controller
 {

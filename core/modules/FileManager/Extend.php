@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager;
+namespace Soosyze\Core\Modules\FileManager;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
-use SoosyzeCore\FileManager\Hook\Config;
-use SoosyzeCore\Menu\Enum\Menu;
+use Soosyze\Core\Modules\FileManager\Hook\Config;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
 
 /**
  * @phpstan-type ProfilFileEntity array{
@@ -31,7 +31,7 @@ use SoosyzeCore\Menu\Enum\Menu;
  *      file_extensions: string
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

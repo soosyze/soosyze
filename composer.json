@@ -42,13 +42,13 @@
     },
     "autoload": {
         "psr-4": {
+            "Soosyze\\App\\Modules\\": "app/modules/",
             "Soosyze\\App\\Themes\\": "app/themes/",
+            "Soosyze\\Core\\Modules\\": "core/modules/",
             "Soosyze\\Core\\Themes\\": "core/themes/"
         },
         "classmap": [
-            "app/",
-            "core/modules/",
-            "app/modules/"
+            "app/"
         ]
     },
     "autoload-dev": {

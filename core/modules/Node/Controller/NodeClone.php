@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Controller;
+namespace Soosyze\Core\Modules\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Http\Redirect;
-use SoosyzeCore\Node\Model\Field\OneToManyOption;
+use Soosyze\Core\Modules\Node\Model\Field\OneToManyOption;
 
 /**
- * @method \SoosyzeCore\System\Services\Alias        alias()
- * @method \SoosyzeCore\Node\Services\Node           node()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\QueryBuilder\Services\Schema schema()
- * @method \SoosyzeCore\User\Services\User           user()
+ * @method \Soosyze\Core\Modules\System\Services\Alias        alias()
+ * @method \Soosyze\Core\Modules\Node\Services\Node           node()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Schema schema()
+ * @method \Soosyze\Core\Modules\User\Services\User           user()
  *
- * @phpstan-import-type NodeTypeFieldOneFieldEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeFieldOneFieldEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class NodeClone extends \Soosyze\Controller
 {

@@ -2,17 +2,17 @@
 
 return [
     'menu' => [
-        'class' => 'SoosyzeCore\Menu\Services\Menu'
+        'class' => 'Soosyze\Core\Modules\Menu\Services\Menu'
     ],
     'menu.extend' => [
-        'class' => 'SoosyzeCore\Menu\Extend',
+        'class' => 'Soosyze\Core\Modules\Menu\Extend',
         'hooks' => [
             'install.block' => 'hookInstallBlock',
             'install.user' => 'hookInstallUser'
         ]
     ],
     'menu.hook.user' => [
-        'class' => 'SoosyzeCore\Menu\Hook\User',
+        'class' => 'Soosyze\Core\Modules\Menu\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.menu.admin' => 'hookMenuAdminister',
@@ -35,14 +35,14 @@ return [
         ]
     ],
     'menu.hook.app' => [
-        'class' => 'SoosyzeCore\Menu\Hook\App',
+        'class' => 'Soosyze\Core\Modules\Menu\Hook\App',
         'hooks' => [
             'menu.admin.response.after' => 'hookMenuShowResponseAfter',
             'menu.show.response.after' => 'hookMenuShowResponseAfter'
         ]
     ],
     'menu.hook.block' => [
-        'class' => 'SoosyzeCore\Menu\Hook\Block',
+        'class' => 'Soosyze\Core\Modules\Menu\Hook\Block',
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
             'block.menu' => 'hookMenu',

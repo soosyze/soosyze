@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Controller;
+namespace Soosyze\Core\Modules\FileManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,12 +10,12 @@ use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
 /**
- * @method \SoosyzeCore\FileManager\Services\FileProfil fileprofil()
- * @method \SoosyzeCore\QueryBuilder\Services\Query     query()
- * @method \SoosyzeCore\Template\Services\Templating    template()
- * @method \SoosyzeCore\User\Services\User              user()
+ * @method \Soosyze\Core\Modules\FileManager\Services\FileProfil fileprofil()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query     query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating    template()
+ * @method \Soosyze\Core\Modules\User\Services\User              user()
  *
- * @phpstan-import-type ProfilFileEntity from \SoosyzeCore\FileManager\Extend
+ * @phpstan-import-type ProfilFileEntity from \Soosyze\Core\Modules\FileManager\Extend
  */
 class FilePermissionManager extends \Soosyze\Controller
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Http\Redirect;
 
 /**
- * @method \SoosyzeCore\System\Services\Migration migration()
+ * @method \Soosyze\Core\Modules\System\Services\Migration migration()
  */
 class ModulesMigration extends \Soosyze\Controller
 {

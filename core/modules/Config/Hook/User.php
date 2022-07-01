@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Config\Hook;
+namespace Soosyze\Core\Modules\Config\Hook;
 
 use Core;
 
 /**
- * @phpstan-import-type ConfigMenuEntity from \SoosyzeCore\Config\ConfigInterface
+ * @phpstan-import-type ConfigMenuEntity from \Soosyze\Core\Modules\Config\ConfigInterface
  */
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     /**
      * @var Core

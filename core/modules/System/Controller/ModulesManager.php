@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Controller;
-use SoosyzeCore\System\ExtendModule;
+use Soosyze\Core\Modules\System\ExtendModule;
 
 /**
- * @method \SoosyzeCore\System\Services\Composer     composer()
- * @method \SoosyzeCore\System\Services\Migration    migration()
- * @method \SoosyzeCore\System\Services\Modules      module()
- * @method \SoosyzeCore\System\Services\Semver       semver()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\System\Services\Composer     composer()
+ * @method \Soosyze\Core\Modules\System\Services\Migration    migration()
+ * @method \Soosyze\Core\Modules\System\Services\Modules      module()
+ * @method \Soosyze\Core\Modules\System\Services\Semver       semver()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class ModulesManager extends Controller
 {

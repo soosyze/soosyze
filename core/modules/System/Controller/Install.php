@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,16 +12,16 @@ use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Template\Template;
 use Soosyze\Components\Util\Util;
 use Soosyze\Controller;
-use SoosyzeCore\System\ExtendModule;
-use SoosyzeCore\System\ExtendTheme;
-use SoosyzeCore\System\Services\Composer;
+use Soosyze\Core\Modules\System\ExtendModule;
+use Soosyze\Core\Modules\System\ExtendTheme;
+use Soosyze\Core\Modules\System\Services\Composer;
 
 /**
- * @method \SoosyzeCore\System\Services\Migration   migration()
- * @method \SoosyzeCore\System\Services\Modules     module()
- * @method \SoosyzeCore\QueryBuilder\Services\Query query()
+ * @method \Soosyze\Core\Modules\System\Services\Migration   migration()
+ * @method \Soosyze\Core\Modules\System\Services\Modules     module()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query query()
  *
- * @phpstan-import-type StepEntity from \Soosyzecore\System\Hook\Step
+ * @phpstan-import-type StepEntity from \Soosyze\Core\Modules\System\Hook\Step
  */
 class Install extends Controller
 {
@@ -31,16 +31,16 @@ class Install extends Controller
      * @var array
      */
     private $modules = [
-        'Config'      => 'SoosyzeCore\\Config\\',
-        'Contact'     => 'SoosyzeCore\\Contact\\',
-        'Dashboard'   => 'SoosyzeCore\\Dashboard\\',
-        'Node'        => 'SoosyzeCore\\Node\\',
-        'Menu'        => 'SoosyzeCore\\Menu\\',
-        'System'      => 'SoosyzeCore\\System\\',
-        'User'        => 'SoosyzeCore\\User\\',
-        'Block'       => 'SoosyzeCore\\Block\\',
-        'FileManager' => 'SoosyzeCore\\FileManager\\',
-        'Trumbowyg'   => 'SoosyzeCore\\Trumbowyg\\'
+        'Config'      => 'Soosyze\\Core\\Modules\\Config\\',
+        'Contact'     => 'Soosyze\\Core\\Modules\\Contact\\',
+        'Dashboard'   => 'Soosyze\\Core\\Modules\\Dashboard\\',
+        'Node'        => 'Soosyze\\Core\\Modules\\Node\\',
+        'Menu'        => 'Soosyze\\Core\\Modules\\Menu\\',
+        'System'      => 'Soosyze\\Core\\Modules\\System\\',
+        'User'        => 'Soosyze\\Core\\Modules\\User\\',
+        'Block'       => 'Soosyze\\Core\\Modules\\Block\\',
+        'FileManager' => 'Soosyze\\Core\\Modules\\FileManager\\',
+        'Trumbowyg'   => 'Soosyze\\Core\\Modules\\Trumbowyg\\'
     ];
 
     /**

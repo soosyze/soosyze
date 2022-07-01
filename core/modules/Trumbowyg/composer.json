@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Trumbowyg\\": "/"
+            "Soosyze\\Core\\Modules\\Trumbowyg\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Trumbowyg",
             "package": "Core",
-            "controller": "SoosyzeCore\\Trumbowyg\\Controller\\Trumbowyg",
+            "controller": "Soosyze\\Core\\Modules\\Trumbowyg\\Controller\\Trumbowyg",
             "icon": {
                 "name": "fas fa-paragraph",
                 "background-color": "#b65207",

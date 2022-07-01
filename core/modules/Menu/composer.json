@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Menu\\": "/"
+            "Soosyze\\Core\\Modules\\Menu\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Menu",
             "package": "Core",
-            "controller": "SoosyzeCore\\Menu\\Controller\\Menu",
+            "controller": "Soosyze\\Core\\Modules\\Menu\\Controller\\Menu",
             "require": {
                 "Block": "1.0.*"
             },

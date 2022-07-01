@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Enum;
+namespace Soosyze\Core\Modules\Menu\Enum;
 
 final class Menu
 {

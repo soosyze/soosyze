@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Controller;
+namespace Soosyze\Core\Modules\Menu\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Menu\Form\FormLink;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\Menu\Form\FormLink;
+use Soosyze\Core\Modules\Template\Services\Block;
 
 /**
- * @method \SoosyzeCore\Menu\Services\Menu           menu()
- * @method \SoosyzeCore\QueryBuilder\Services\Query  query()
- * @method \SoosyzeCore\Template\Services\Templating template()
+ * @method \Soosyze\Core\Modules\Menu\Services\Menu           menu()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query  query()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating template()
  */
 class Link extends \Soosyze\Controller
 {

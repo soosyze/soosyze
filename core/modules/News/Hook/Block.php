@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\News\Hook;
+namespace Soosyze\Core\Modules\News\Hook;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Form\FormGroupBuilder;
@@ -10,15 +10,15 @@ use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Node\Services\Node;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\System\Services\Alias;
-use SoosyzeCore\Template\Services\Block as ServiceBlock;
+use Soosyze\Core\Modules\Node\Services\Node;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\System\Services\Alias;
+use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
 
 /**
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
  */
-class Block implements \SoosyzeCore\Block\BlockInterface
+class Block implements \Soosyze\Core\Modules\Block\BlockInterface
 {
     public const MORE_LINK_NOT_ADD = 0;
 

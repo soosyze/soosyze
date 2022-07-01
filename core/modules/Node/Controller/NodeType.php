@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Controller;
+namespace Soosyze\Core\Modules\Node\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @method \SoosyzeCore\QueryBuilder\Services\Query query()
+ * @method \Soosyze\Core\Modules\QueryBuilder\Services\Query query()
  *
- * @phpstan-import-type NodeTypeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeTypeEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class NodeType extends \Soosyze\Controller
 {

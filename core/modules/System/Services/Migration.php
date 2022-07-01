@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Services;
+namespace Soosyze\Core\Modules\System\Services;
 
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\QueryBuilder\Services\Schema;
-use SoosyzeCore\System\ExtendModule;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\System\ExtendModule;
 
 class Migration
 {

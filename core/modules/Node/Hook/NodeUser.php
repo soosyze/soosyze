@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Config;
-use SoosyzeCore\Node\Services\Node;
-use SoosyzeCore\Node\Services\NodeUser as ServiceNodeUser;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\Template\Services\Templating;
-use SoosyzeCore\User\Hook\Config as UserConfig;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\Node\Services\Node;
+use Soosyze\Core\Modules\Node\Services\NodeUser as ServiceNodeUser;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Template\Services\Templating;
+use Soosyze\Core\Modules\User\Hook\Config as UserConfig;
+use Soosyze\Core\Modules\User\Services\User;
 
 /**
- * @phpstan-import-type NodeEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class NodeUser
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Dashboard\Services;
+namespace Soosyze\Core\Modules\Dashboard\Services;
 
 use Core;
 use Soosyze\Config;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
-final class Config implements \SoosyzeCore\Config\ConfigInterface
+final class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
 {
     public const CRON = false;
 

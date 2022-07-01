@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Controller;
+namespace Soosyze\Core\Modules\System\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @phpstan-import-type RouteApiEntity from \SoosyzeCore\System\ApiRouteInterface
+ * @phpstan-import-type RouteApiEntity from \Soosyze\Core\Modules\System\ApiRouteInterface
  */
 class RouteApi extends \Soosyze\Controller
 {

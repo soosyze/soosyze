@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Services;
+namespace Soosyze\Core\Modules\System\Services;
 
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 /**
- * @phpstan-import-type AliasEntity from \SoosyzeCore\System\Extend
+ * @phpstan-import-type AliasEntity from \Soosyze\Core\Modules\System\Extend
  */
 class Alias
 {

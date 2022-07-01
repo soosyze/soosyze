@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu;
+namespace Soosyze\Core\Modules\Menu;
 
 use Psr\Container\ContainerInterface;
 use Queryflatfile\TableBuilder;
-use SoosyzeCore\Menu\Enum\Menu;
+use Soosyze\Core\Modules\Menu\Enum\Menu;
 
 /**
  * @phpstan-type MenuEntity array{
@@ -31,7 +31,7 @@ use SoosyzeCore\Menu\Enum\Menu;
  *      active: bool
  * }
  */
-class Extend extends \SoosyzeCore\System\ExtendModule
+class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {
     public function getDir(): string
     {

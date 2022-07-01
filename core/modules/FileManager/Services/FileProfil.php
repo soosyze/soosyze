@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Services;
+namespace Soosyze\Core\Modules\FileManager\Services;
 
-use SoosyzeCore\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 
 class FileProfil
 {

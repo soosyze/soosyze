@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Services;
+namespace Soosyze\Core\Modules\System\Services;
 
 class Semver extends \Composer\Semver\Semver
 {

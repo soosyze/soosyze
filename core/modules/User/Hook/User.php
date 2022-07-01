@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Hook;
+namespace Soosyze\Core\Modules\User\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Config;
-use SoosyzeCore\User\Hook\Config as HookConfig;
-use SoosyzeCore\User\Services\User as ServiceUser;
+use Soosyze\Core\Modules\User\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\User\Services\User as ServiceUser;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     /**
      * @var Config

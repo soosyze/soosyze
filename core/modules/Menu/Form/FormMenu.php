@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Menu\Form;
+namespace Soosyze\Core\Modules\Menu\Form;
 
 class FormMenu extends \Soosyze\Components\Form\FormBuilder
 {

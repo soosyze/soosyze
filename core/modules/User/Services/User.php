@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\User\Services;
+namespace Soosyze\Core\Modules\User\Services;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
@@ -12,12 +12,12 @@ use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
 use Soosyze\Config;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\Template\Services\Templating;
-use SoosyzeCore\User\Hook\Config as HookConfig;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Template\Services\Templating;
+use Soosyze\Core\Modules\User\Hook\Config as HookConfig;
 
 /**
- * @phpstan-import-type PermissionsEntity from \SoosyzeCore\User\UserInterface
+ * @phpstan-import-type PermissionsEntity from \Soosyze\Core\Modules\User\UserInterface
  * @phpstan-type Submenu array<
  *      array{
  *          key: string,

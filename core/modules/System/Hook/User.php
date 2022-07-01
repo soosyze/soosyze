@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\System\Hook;
+namespace Soosyze\Core\Modules\System\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class User implements \SoosyzeCore\User\UserInterface
+class User implements \Soosyze\Core\Modules\User\UserInterface
 {
     public function hookUserPermissionModule(array &$permissions): void
     {

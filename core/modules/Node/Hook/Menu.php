@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Hook;
+namespace Soosyze\Core\Modules\Node\Hook;
 
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\Menu\Enum\Menu as EnumMenu;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\QueryBuilder\Services\Schema;
-use SoosyzeCore\System\Services\Alias;
+use Soosyze\Core\Modules\Menu\Enum\Menu as EnumMenu;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\System\Services\Alias;
 
 /**
- * @phpstan-import-type MenuEntity from \SoosyzeCore\Menu\Extend
- * @phpstan-import-type MenuLinkEntity from \SoosyzeCore\Menu\Extend
- * @phpstan-import-type NodeMenuLinkEntity from \SoosyzeCore\Node\Extend
+ * @phpstan-import-type MenuEntity from \Soosyze\Core\Modules\Menu\Extend
+ * @phpstan-import-type MenuLinkEntity from \Soosyze\Core\Modules\Menu\Extend
+ * @phpstan-import-type NodeMenuLinkEntity from \Soosyze\Core\Modules\Node\Extend
  */
 class Menu
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block\Hook;
+namespace Soosyze\Core\Modules\Block\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 
-final class Config implements \SoosyzeCore\Config\ConfigInterface
+final class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
 {
     /**
      * @var array

@@ -2,13 +2,13 @@
 
 return [
     'trumbowyg.install' => [
-        'class' => 'SoosyzeCore\Trumbowyg\Extend',
+        'class' => 'Soosyze\Core\Modules\Trumbowyg\Extend',
         'hooks' => [
             'install.user' => 'hookInstallUser'
         ]
     ],
     'trumbowyg.hook.app' => [
-        'class' => 'SoosyzeCore\Trumbowyg\Hook\App',
+        'class' => 'Soosyze\Core\Modules\Trumbowyg\Hook\App',
         'hooks' => [
             'node.create.response.after' => 'getEditor',
             'node.edit.response.after' => 'getEditor',
@@ -16,7 +16,7 @@ return [
         ]
     ],
     'trumbowyg.hook.user' => [
-        'class' => 'SoosyzeCore\Trumbowyg\Hook\User',
+        'class' => 'Soosyze\Core\Modules\Trumbowyg\Hook\User',
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.trumbowyg.upload' => 'hookUpload'

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Hook;
+namespace Soosyze\Core\Modules\FileManager\Hook;
 
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use SoosyzeCore\Template\Services\Templating;
+use Soosyze\Core\Modules\Template\Services\Templating;
 
 class App
 {

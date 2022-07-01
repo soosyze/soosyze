@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Services;
+namespace Soosyze\Core\Modules\Node\Services;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Util\Util;
 use Soosyze\Config;
-use SoosyzeCore\Node\Hook\User as HookUser;
-use SoosyzeCore\QueryBuilder\Services\Query;
-use SoosyzeCore\System\Services\Alias;
-use SoosyzeCore\User\Services\User;
+use Soosyze\Core\Modules\Node\Hook\User as HookUser;
+use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\System\Services\Alias;
+use Soosyze\Core\Modules\User\Services\User;
 
 class NodeUser
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Block;
+namespace Soosyze\Core\Modules\Block;
 
 interface BlockInterface
 {

@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Node\\": "/"
+            "Soosyze\\Core\\Modules\\Node\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Node",
             "package": "Core",
-            "controller": "SoosyzeCore\\Node\\Controller\\Node",
+            "controller": "Soosyze\\Core\\Modules\\Node\\Controller\\Node",
             "icon": {
                 "name": "fa fa-file",
                 "background-color": "#7fff88",

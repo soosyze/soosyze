@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\Node\Model\Field;
+namespace Soosyze\Core\Modules\Node\Model\Field;
 
 final class OneToManyOption implements \JsonSerializable
 {

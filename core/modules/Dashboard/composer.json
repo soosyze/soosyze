@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "SoosyzeCore\\Dashboard\\": "/"
+            "Soosyze\\Core\\Modules\\Dashboard\\": "/"
         }
     },
     "extra": {
         "soosyze": {
             "title": "Dashboard",
             "package": "Core",
-            "controller": "SoosyzeCore\\Dashboard\\Controller\\Dashboard",
+            "controller": "Soosyze\\Core\\Modules\\Dashboard\\Controller\\Dashboard",
             "icon": {
                 "name": "fas fa-tachometer-alt",
                 "background-color": "#2b26b7",

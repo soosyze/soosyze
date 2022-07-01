@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SoosyzeCore\FileManager\Controller;
+namespace Soosyze\Core\Modules\FileManager\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,15 +11,15 @@ use Soosyze\Components\Http\Response;
 use Soosyze\Components\Http\Stream;
 use Soosyze\Components\Util\Util;
 use Soosyze\Components\Validator\Validator;
-use SoosyzeCore\FileManager\Form\FormFolder;
-use SoosyzeCore\FileManager\Hook\User;
-use SoosyzeCore\FileManager\Services\FileManager;
-use SoosyzeCore\Template\Services\Block;
+use Soosyze\Core\Modules\FileManager\Form\FormFolder;
+use Soosyze\Core\Modules\FileManager\Hook\User;
+use Soosyze\Core\Modules\FileManager\Services\FileManager;
+use Soosyze\Core\Modules\Template\Services\Block;
 use ZipArchive;
 
 /**
- * @method \SoosyzeCore\FileManager\Services\FileManager filemanager()
- * @method \SoosyzeCore\Template\Services\Templating     template()
+ * @method \Soosyze\Core\Modules\FileManager\Services\FileManager filemanager()
+ * @method \Soosyze\Core\Modules\Template\Services\Templating     template()
  */
 class Folder extends \Soosyze\Controller
 {
