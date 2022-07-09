@@ -64,5 +64,9 @@
     ":count users": ":count utilisateurs",
     "The user has no content at the moment.": "L'utilisateur n'a pas de contenu pour le moment.",
     "Your account has no content at the moment.": "Votre compte n'a pas de contenu pour le moment.",
-    "You are not allowed to log in while the site is under maintenance.": "Vous n'êtes pas autorisé à vous connecter pendant que le site est en maintenance."
+    "You are not allowed to log in while the site is under maintenance.": "Vous n'êtes pas autorisé à vous connecter pendant que le site est en maintenance.",
+    "Good morning, :name": "Bonjour, :name",
+    "Good afternoon, :name": "Bonne après-midi, :name",
+    "Good evening, :name": "Bonsoir, :name",
+    "Good night, :name": "Bonne nuit, :name"
 }
