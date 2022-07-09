@@ -115,6 +115,7 @@ class Login extends \Soosyze\Controller
             $validator->getInputString('password')
         );
         $route = $this->getRedirectLogin($user);
+        $this->welcomeMessage($user);
 
         return $this->json(200, [ 'redirect' => $route ]);
     }
@@ -279,5 +280,21 @@ class Login extends \Soosyze\Controller
         }
 
         return self::router()->generateUrl('user.account');
+    }
+
+    private function welcomeMessage(array $user): void
+    {
+        $vars  = [':name' => $user[ 'firstname' ] ?? $user[ 'username' ]];
+        $hours = Util::tryDateCreate()->format('H');
+
+        if ($hours > 6 && $hours < 12) {
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Good morning, :name', $vars);
+        } elseif ($hours >= 12 && $hours < 18) {
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Good afternoon, :name', $vars);
+        } elseif ($hours >= 18 && $hours < 22) {
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Good evening, :name', $vars);
+        } else {
+            $_SESSION[ 'messages' ][ 'success' ][] = t('Good night, :name', $vars);
+        }
     }
 }
