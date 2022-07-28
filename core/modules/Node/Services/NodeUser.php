@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\Node\Services;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Components\Util\Util;
 use Soosyze\Config;
@@ -13,6 +12,7 @@ use Soosyze\Core\Modules\Node\Hook\User as HookUser;
 use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 use Soosyze\Core\Modules\System\Services\Alias;
 use Soosyze\Core\Modules\User\Services\User;
+use Soosyze\Queryflatfile\RequestInterface as QueryInterface;
 
 class NodeUser
 {

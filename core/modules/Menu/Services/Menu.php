@@ -7,7 +7,6 @@ namespace Soosyze\Core\Modules\Menu\Services;
 use Core;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
-use Queryflatfile\RequestInterface as QueryInterface;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Route;
 use Soosyze\Components\Router\Router;
@@ -15,6 +14,7 @@ use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 use Soosyze\Core\Modules\System\Services\Alias;
 use Soosyze\Core\Modules\Template\Services\Block;
 use Soosyze\Core\Modules\Template\Services\Templating;
+use Soosyze\Queryflatfile\RequestInterface as QueryInterface;
 
 /**
  * @phpstan-import-type MenuEntity from \Soosyze\Core\Modules\Menu\Extend
