@@ -2,19 +2,16 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
+use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Set\ValueObject\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    // get parameters
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->paths([
         __DIR__ . '/core/modules',
         __DIR__ . '/tests/unit',
     ]);
-    $parameters->set(Option::SKIP, [
+    $rectorConfig->skip([
         __DIR__ . '/core/modules/*/Assets/*',
         __DIR__ . '/core/modules/*/Config/*',
         __DIR__ . '/core/modules/*/Lang/*',
@@ -22,8 +19,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
    ]);
 
     // is your PHP version different from the one your refactor to? [default: your PHP version], uses PHP_VERSION_ID format
-    $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_72);
+    $rectorConfig->phpVersion(PhpVersion::PHP_72);
 
     // Define what rule sets will be applied
-    $containerConfigurator->import(SetList::CODE_QUALITY);
+    $rectorConfig->sets([SetList::CODE_QUALITY]);
+
+    // Path to phpstan with extensions, that PHPSTan in Rector uses to determine types
+    $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon.dist');
 };
