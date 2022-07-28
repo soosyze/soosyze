@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "Soosyze\\Core\\Theme\\Fez\\": "/"
+            "Soosyze\\Core\\Themes\\Fez\\": "/"
         }
     },
     "extra": {
