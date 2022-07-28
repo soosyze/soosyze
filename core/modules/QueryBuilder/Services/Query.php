@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Soosyze\Core\Modules\QueryBuilder\Services;
 
-class Query extends \Queryflatfile\Request
+class Query extends \Soosyze\Queryflatfile\Request
 {
     /**
      * @var array
