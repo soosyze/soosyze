@@ -27,7 +27,7 @@
         "soosyze/framework": "dev-dev",
         "soosyze/queryflatfile": "dev-dev",
         "phpmailer/phpmailer": "~6.1",
-        "soosyze/kses": "^1.0",
+        "soosyze/kses": "^3.0",
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {

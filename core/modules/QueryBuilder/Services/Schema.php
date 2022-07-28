@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Soosyze\Core\Modules\QueryBuilder\Services;
 
-use Queryflatfile\DriverInterface;
+use Soosyze\Queryflatfile\DriverInterface;
 
-class Schema extends \Queryflatfile\Schema
+class Schema extends \Soosyze\Queryflatfile\Schema
 {
     public function __construct(
         ?string $host = null,

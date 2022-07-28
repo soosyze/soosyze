@@ -10,19 +10,19 @@ require_once $vendor . 'soosyze/framework/src/Autoload.php';
 require_once $vendor . 'erusev/parsedown/Parsedown.php';
 
 $autoload = new Soosyze\Autoload([
-    'Soosyze\Core'    => ROOT . 'core',
-    'Soosyze\App'     => ROOT . 'app',
-    'Soosyze'         => $vendor . 'soosyze/framework/src',
-    'Queryflatfile'   => $vendor . 'soosyze/queryflatfile/src',
-    'Composer\Semver' => $vendor . 'composer/semver/src'
-]);
+    'Soosyze\Core'          => ROOT . 'core',
+    'Soosyze\App'           => ROOT . 'app',
+    'Soosyze'               => $vendor . 'soosyze/framework/src',
+    'Soosyze\Queryflatfile' => $vendor . 'soosyze/queryflatfile/src',
+    'Composer\Semver'       => $vendor . 'composer/semver/src'
+    ]);
 
 $autoload->setPrefix([
-    'Queryflatfile'           => $vendor . 'soosyze/queryflatfile/src',
+    'Soosyze\Queryflatfile'   => $vendor . 'soosyze/queryflatfile/src',
     'Psr\Http\Message'        => $vendor . 'psr/http-message/src',
     'Psr\Container'           => $vendor . 'psr/container/src',
     'Soosyze'                 => $vendor . 'soosyze/framework/src',
-    'Kses'                    => $vendor . 'soosyze/kses/src',
+    'Soosyze\Kses'            => $vendor . 'soosyze/kses/src',
     'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http',
     'PHPMailer\PHPMailer'     => $vendor . 'phpmailer/phpmailer/src'
 ])->setMap([
