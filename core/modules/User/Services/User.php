@@ -400,7 +400,7 @@ class User
         $withs[]     = $request;
         $withs[]     = $this->isConnected();
         /** @phpstan-var array|bool|string|null $permissions */
-        $permissions = $this->core->callHook('route.' . $route->getKey(), $withs);
+        $permissions = $this->core->callHook('route.' . $route->getKey(), array_values($withs));
 
         return $this->isGrantedPermission($permissions);
     }
