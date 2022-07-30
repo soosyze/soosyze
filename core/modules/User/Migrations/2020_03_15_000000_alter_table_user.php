@@ -1,8 +1,8 @@
 <?php
 
-use Queryflatfile\Request;
-use Queryflatfile\Schema;
-use Queryflatfile\TableAlter;
+use Soosyze\Queryflatfile\Request;
+use Soosyze\Queryflatfile\Schema;
+use Soosyze\Queryflatfile\TableAlter;
 
 return [
     'up' => function (Schema $sch, Request $req) {

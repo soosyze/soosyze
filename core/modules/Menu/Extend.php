@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\Menu;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type MenuEntity array{
