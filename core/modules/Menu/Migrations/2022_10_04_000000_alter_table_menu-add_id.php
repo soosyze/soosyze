@@ -11,20 +11,13 @@ return [
             $ta->integer('menu_id');
         });
         $sch->alterTable('menu', function (TableAlter $ta): void {
-            $ta->dropColumn('name');
             $ta->increments('menu_id');
         });
 
+        $menusOld = $req->from('menu')->lists('menu_id', 'name');
         $menuLinks = $req->from('menu_link')->fetchAll();
         foreach ($menuLinks as $link) {
-            $menuId = 1;
-            if ($link[ 'menu' ] === 'menu-main') {
-                $menuId = 2;
-            } elseif ($link[ 'menu' ] === 'menu-user') {
-                $menuId = 3;
-            }
-
-            $req->update('menu_link', [ 'menu_id' => $menuId ])
+            $req->update('menu_link', [ 'menu_id' => $menusOld[ $link[ 'menu' ] ] ])
                 ->where('link_id', '=', $link[ 'link_id' ])
                 ->execute();
         }
@@ -32,18 +25,16 @@ return [
         $sch->alterTable('menu_link', function (TableAlter $ta): void {
             $ta->dropColumn('menu');
         });
+        $sch->alterTable('menu', function (TableAlter $ta): void {
+            $ta->dropColumn('name');
+        });
 
         $menuBlocks = $req->from('block')->where('key_block', '=', 'menu')->fetchAll();
         /** @phpstan-var array{ block_id: int, options: string } $block */
         foreach ($menuBlocks as $block) {
             $options = (array) json_decode($block[ 'options' ], true);
 
-            $options[ 'menu_id' ] = 1;
-            if ($options[ 'name' ] === 'menu-main') {
-                $options[ 'menu_id' ] = 2;
-            } elseif ($options[ 'name' ] === 'menu-user') {
-                $options[ 'menu_id' ] = 3;
-            }
+            $options[ 'menu_id' ] = $menusOld[ $options[ 'name' ] ];
             unset($options[ 'name' ]);
 
             $req->update('block', [ 'options' => json_encode($options) ])
