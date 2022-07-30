@@ -142,7 +142,7 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
         });
     }
 
-    public function hookNodeNextPreviousUpdateValidator(Validator &$validator, int $id): void
+    public function hookNodeNextPreviousUpdateValidator(Validator &$validator): void
     {
         $validator
             ->addRule('display', 'required|inarray:' . $this->getListNameOptionsDisplay())
@@ -156,7 +156,7 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
             ->addLabel('type', t('Content type'));
     }
 
-    public function hookNodeNextPreviousUpdateBefore(Validator $validator, array &$values, int $id): void
+    public function hookNodeNextPreviousUpdateBefore(Validator $validator, array &$values): void
     {
         $values[ 'options' ] = json_encode([
             'display'       => $validator->getInput('display'),
