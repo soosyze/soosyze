@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\News;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Components\Template\Template;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
 use Soosyze\Core\Modules\News\Hook\Config;
+use Soosyze\Queryflatfile\TableBuilder;
 
 class Extend extends \Soosyze\Core\Modules\System\ExtendModule
 {

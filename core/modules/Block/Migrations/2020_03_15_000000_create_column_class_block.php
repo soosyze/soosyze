@@ -1,7 +1,7 @@
 <?php
 
-use Queryflatfile\Schema;
-use Queryflatfile\TableBuilder;
+use Soosyze\Queryflatfile\Schema;
+use Soosyze\Queryflatfile\TableBuilder;
 
 return [
     'up' => function (Schema $sch) {
