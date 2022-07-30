@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\Node;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
 use Soosyze\Core\Modules\Node\Hook\Config;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type NodeEntity array{

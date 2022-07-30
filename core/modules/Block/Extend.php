@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\Block;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type BlockEntity array{

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\System;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
 use Soosyze\Core\Modules\System\Form\FormThemeAdmin;
 use Soosyze\Core\Modules\System\Form\FormThemePublic;
 use Soosyze\Core\Modules\System\Hook\Config;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type AliasEntity array{

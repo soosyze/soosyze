@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\User;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
 use Soosyze\Core\Modules\User\Hook\Config;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type UserEntity array{

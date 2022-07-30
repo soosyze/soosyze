@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\Node\Services;
 
 use Core;
-use Queryflatfile\Request;
 use Soosyze\Config;
 use Soosyze\Core\Modules\Filter\Services\Filter;
 use Soosyze\Core\Modules\Node\Model\Field\CheckboxOption;
@@ -15,6 +14,7 @@ use Soosyze\Core\Modules\Node\Model\Field\SelectOption;
 use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
 use Soosyze\Core\Modules\Template\Services\Templating;
+use Soosyze\Queryflatfile\Request;
 
 /**
  * @phpstan-import-type NodeEntity from \Soosyze\Core\Modules\Node\Extend

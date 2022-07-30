@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Soosyze\Core\Modules\FileManager;
 
 use Psr\Container\ContainerInterface;
-use Queryflatfile\TableBuilder;
 use Soosyze\Core\Modules\FileManager\Hook\Config;
 use Soosyze\Core\Modules\Menu\Enum\Menu;
+use Soosyze\Queryflatfile\TableBuilder;
 
 /**
  * @phpstan-type ProfilFileEntity array{
