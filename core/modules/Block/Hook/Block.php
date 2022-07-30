@@ -11,6 +11,7 @@ use Soosyze\Config;
 use Soosyze\Core\Modules\Filter\Services\LazyLoding;
 use Soosyze\Core\Modules\Filter\Services\Xss;
 use Soosyze\Core\Modules\Template\Services\Block as ServiceBlock;
+use Soosyze\Kses\Xss as Kses;
 
 /**
  * @phpstan-type BlockHook array{
@@ -67,7 +68,7 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
     private $router;
 
     /**
-     * @var Xss
+     * @var Kses
      */
     private $xss;
 
