@@ -14,7 +14,7 @@ class Xss extends Kses
         parent::__construct(AllowedList::getTagsAdmin());
     }
 
-    public function getKses(): self
+    public function getKses(): Kses
     {
         $clone = clone $this;
 
