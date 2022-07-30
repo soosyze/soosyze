@@ -2,7 +2,7 @@
     "name": "soosyze-core/admin",
     "type": "soosyze-theme",
     "description": "Default admin theme.",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Themes\\Admin\\": "/"

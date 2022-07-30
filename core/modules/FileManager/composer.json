@@ -2,7 +2,7 @@
     "name": "soosyze-core/filemanager",
     "type": "soosyze-module",
     "description": "Managing your files and media",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\FileManager\\": "/"
