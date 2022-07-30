@@ -2,7 +2,7 @@
     "name": "soosyze-core/system",
     "type": "soosyze-module",
     "description": "Core of Soosyze CMS",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\System\\": "/"

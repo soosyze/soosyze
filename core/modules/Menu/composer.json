@@ -2,7 +2,7 @@
     "name": "soosyze-core/menu",
     "type": "soosyze-module",
     "description": "Manage your menus",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\Menu\\": "/"
@@ -14,7 +14,7 @@
             "package": "Core",
             "controller": "Soosyze\\Core\\Modules\\Menu\\Controller\\Menu",
             "require": {
-                "Block": "1.0.*"
+                "Block": "2.0.*"
             },
             "icon": {
                 "name": "fas fa-bars",
