@@ -186,13 +186,19 @@ class App
 
     private function isVisibilityPages(array $block): bool
     {
+        $pagesTrim = trim($block[ 'pages' ]);
+        if ($pagesTrim === '') {
+            return true;
+        }
+
         $path = $this->router->getPathFromRequest();
 
         $visibility = $block[ 'visibility_pages' ];
-        $pages      = explode(PHP_EOL, $block[ 'pages' ]);
+        $pages      = explode(PHP_EOL, $pagesTrim);
 
         foreach ($pages as $page) {
-            $page = trim($page);
+            $page = '/' . trim($page, " \n\r\t\v\x00/");
+
             if ($page === $path) {
                 return $visibility;
             }
