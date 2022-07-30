@@ -42,6 +42,10 @@ return [
             ])
             ->execute();
 
+        $req->update('block', [ 'key_block' => 'menu' ])
+            ->where('key_block', 'like', '%menu%')
+            ->execute();
+
         $req->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
             ->values([ 'Menu', 'Block', '1.0.*' ]);
     }
