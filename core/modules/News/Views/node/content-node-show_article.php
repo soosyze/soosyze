@@ -24,7 +24,7 @@
     <?php endif; ?>
 
     <i class="fa fa-calendar-alt"></i> 
-    <?php echo strftime('%d %B %Y', $node[ 'date_created' ]); ?>
+    <?php echo t_date('d F Y', $node[ 'date_created' ]); ?>
     -
     <i class="fa fa-clock"></i> 
     ~<?php echo $fields[ 'reading_time' ][ 'field_value' ] . ' ' . ($fields[ 'reading_time' ][ 'field_value' ] === 1

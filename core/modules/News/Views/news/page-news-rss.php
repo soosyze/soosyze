@@ -24,7 +24,7 @@
                 <?php echo $item[ 'field' ][ 'image' ][ 'field_display' ]; ?>
                 </div>
                 <div class="article_date_time">
-                    <?php echo strftime('%d %B %Y', $item[ 'date_created' ]); ?>
+                    <?php echo t_date('d F Y', $item[ 'date_created' ]); ?>
                     -
                     ~<?php echo $item[ 'field' ][ 'reading_time' ][ 'field_value' ]
                         . ' '
