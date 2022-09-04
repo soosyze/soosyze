@@ -81,7 +81,7 @@
                     </small>
                 </td>
                 <td data-title="<?php echo t('Publishing date'); ?>">
-                    <?php echo strftime('%a %e %b %Y, %H:%M', $node[ 'date_changed' ]); ?>
+                    <?php echo t_date('D j M Y, H:i', $node[ 'date_changed' ]); ?>
 
                 </td>
                 <td data-title="<?php echo t('Actions'); ?>" class="text-right cell-actions">
