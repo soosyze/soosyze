@@ -206,15 +206,13 @@ class Translation extends Config
         'zu'  => 'Zulu'
     ];
 
-    public function __construct(Config $config, string $dir, string $langDefault = 'en')
+    public function __construct(string $dir, ?string $langDefault = null)
     {
         parent::__construct($dir);
         if (isset($_SESSION[ 'lang' ]) && !in_array($_SESSION[ 'lang' ], $this->iso_639_1)) {
             $this->lang = $_SESSION[ 'lang' ];
         } else {
-            /** @phpstan-var string $lang */
-            $lang = $config->get('settings.lang', $langDefault);
-            $this->lang = $lang;
+            $this->lang = $langDefault ?? 'en';
         }
     }
 
@@ -227,7 +225,8 @@ class Translation extends Config
         $subject = $this->get($str, $str);
         $out     = str_replace(array_keys($vars), $vars, $subject);
 
-        return htmlspecialchars($out);
+        /** For PHP <8.1 */
+        return htmlspecialchars($out, ENT_COMPAT);
     }
 
     public function getLang(): array

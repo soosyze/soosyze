@@ -18,6 +18,12 @@ function t(string $str, array $vars = []): string
     return \Core::getInstance()->get('translate')->t($str, $vars);
 }
 
+function t_date(string $format, int $time): string
+{
+    /** @phpstan-ignore-next-line */
+    return \Core::getInstance()->get('date_translate')->date($format, $time);
+}
+
 function xss(string $str): string
 {
     /** @phpstan-ignore-next-line */

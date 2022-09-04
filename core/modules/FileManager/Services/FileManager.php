@@ -142,7 +142,7 @@ class FileManager
             'path'       => $dir->getPath(),
             'size'       => Util::strFileSizeFormatted($info[ 'size' ], 2, t('Empty folder')),
             'size_octet' => $info[ 'size' ],
-            'time'       => strftime('%d/%m/%Y %H:%M', $info[ 'time' ]
+            'time'       => t_date('d/m/Y H:i', $info[ 'time' ]
                 ? $info[ 'time' ]
                 : $dir->getMTime()),
             'type'       => 'dir'
@@ -166,7 +166,7 @@ class FileManager
             'path'       => $path,
             'size'       => Util::strFileSizeFormatted($file->getSize()),
             'size_octet' => $file->getSize(),
-            'time'       => strftime('%d/%m/%Y %H:%M', $file->getMTime()),
+            'time'       => t_date('d/m/Y H:i', $file->getMTime()),
             'type'       => in_array($ext, [ 'gif', 'ico', 'jpg', 'jpeg', 'png' ])
                 ? 'image'
                 : 'file',

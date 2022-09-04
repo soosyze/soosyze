@@ -65,8 +65,15 @@ class Core extends App
             'translate'     => [
                 'class'     => 'Soosyze\Core\Modules\Translate\Services\Translation',
                 'arguments' => [
-                    'dir'=> __DIR__ . '/lang',
-                    'langDefault'=> 'en'
+                    'dir' => __DIR__ . '/lang',
+                    'langDefault' => '#settings.lang'
+                ]
+            ],
+            'date_translate' => [
+                'class' => 'Soosyze\Core\Modules\Translate\Services\DateTranslation',
+                'arguments' => [
+                    'dir' => __DIR__ . '/lang/date',
+                    'langDefault' => '#settings.lang'
                 ]
             ],
             'mailer'        => [

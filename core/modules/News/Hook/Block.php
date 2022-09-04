@@ -136,8 +136,9 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
                 continue;
             }
 
+            /** @phpstan-ignore-next-line */
             $optionsSelect[ $year ][ 'value' ][ $month ] = [
-                'label' => strftime('%b', (int) $value[ 'date_created' ]),
+                'label' => t_date('M', (int) $value[ 'date_created' ]),
                 'value' => $this->router->generateUrl('news.month', [
                     'year'  => $year,
                     'month' => $month
@@ -208,7 +209,7 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
                         'year'  => $year,
                         'month' => $month
                     ]),
-                    'month'  => strftime('%b', (int) $value[ 'date_created' ]),
+                    'month'  => t_date('M', (int) $value[ 'date_created' ]),
                     'number' => 1,
                     'year'   => $year
                 ];

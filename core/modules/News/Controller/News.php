@@ -129,7 +129,7 @@ class News extends \Soosyze\Controller
         $date              = $month . '/01/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 month -1 seconds');
-        $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%B %Y', $this->dateCurrent) ]);
+        $this->titleMain   = t('Articles from :date', [ ':date' => t_date('F Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.month.page', [
             'year'  => $year,
             'month' => $month
@@ -148,7 +148,7 @@ class News extends \Soosyze\Controller
         $date              = $month . '/' . $day . '/' . $year;
         $this->dateCurrent = self::tryStrtotime($date);
         $this->dateNext    = self::tryStrtotime($date . ' +1 day -1 seconds');
-        $this->titleMain   = t('Articles from :date', [ ':date' => strftime('%d %B %Y', $this->dateCurrent) ]);
+        $this->titleMain   = t('Articles from :date', [ ':date' => t_date('d F Y', $this->dateCurrent) ]);
         $this->link        = self::router()->generateUrl('news.day.page', [
             'year'  => $year,
             'month' => $month,
