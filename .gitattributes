@@ -1,11 +1,13 @@
 * text=auto
 
+/.github export-ignore
 /tests export-ignore
 .editorconfig export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 .php-cs-fixer.dist.php export-ignore
+Makefile export-ignore
 phpdoc.dist.xml export-ignore
+phpstan.neon.dist export-ignore
 phpunit.xml export-ignore
-phpunit.xml.dist export-ignore
 rector.php export-ignore
