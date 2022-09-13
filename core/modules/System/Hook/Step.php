@@ -753,7 +753,10 @@ class Step
             'node.show', '', 'Project 4', 'project/4', 'node/' . $idNodeProject4, Menu::MAIN_MENU, 7, $idMenuProjects
         ]);
 
-        $this->query->update('menu_link', [ 'has_children' => true ])->where('id', '=', $idMenuProjects)->execute();
+        $this->query
+            ->update('menu_link', [ 'has_children' => true ])
+            ->where('link_id', '=', $idMenuProjects)
+            ->execute();
 
         $this->query->insertInto('node_menu_link', [ 'node_id', 'menu_link_id' ])
             ->values([ $idNodeEducation, $idMenuEducation ])
