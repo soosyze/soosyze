@@ -222,7 +222,7 @@ class Node extends \Soosyze\Controller
                 ->view('page', [
                     'fields'     => $fields,
                     'node'       => $node,
-                    'title_main' => $node[ 'title' ],
+                    'title_main' => t($node[ 'title' ]),
                     'user'       => $user
                 ])
                 ->override('page', [

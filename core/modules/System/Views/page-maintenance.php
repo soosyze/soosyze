@@ -4,7 +4,7 @@
         <img src="<?php echo $logo; ?>" alt="Logo site">
     <?php endif; ?>
 
-        <h1><?php echo htmlspecialchars($title_main); ?></h1>
+        <h1><?php echo $title_main; ?></h1>
 
 </header>
 
