@@ -10,8 +10,10 @@ require_once $vendor . 'soosyze/framework/src/Autoload.php';
 require_once $vendor . 'erusev/parsedown/Parsedown.php';
 
 $autoload = new Soosyze\Autoload([
-    'Soosyze\Core'          => ROOT . 'core',
-    'Soosyze\App'           => ROOT . 'app',
+    'Soosyze\Core\Modules'  => ROOT . 'core/modules',
+    'Soosyze\Core\Themes'   => ROOT . 'core/themes',
+    'Soosyze\App\Modules'   => ROOT . 'app/modules',
+    'Soosyze\App\Themes'    => ROOT . 'app/themes',
     'Soosyze'               => $vendor . 'soosyze/framework/src',
     'Soosyze\Queryflatfile' => $vendor . 'soosyze/queryflatfile/src',
     'Composer\Semver'       => $vendor . 'composer/semver/src'
@@ -25,9 +27,6 @@ $autoload->setPrefix([
     'Soosyze\Kses'            => $vendor . 'soosyze/kses/src',
     'Soosyze\Components\Http' => $vendor . 'soosyze/framework/src/Components/Http',
     'PHPMailer\PHPMailer'     => $vendor . 'phpmailer/phpmailer/src'
-])->setMap([
-    ROOT . 'core/modules',
-    ROOT . 'app/modules'
 ]);
 
 $autoload->register();
