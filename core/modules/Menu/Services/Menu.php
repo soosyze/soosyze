@@ -367,8 +367,7 @@ class Menu
 
                 continue;
             }
-
-            $menu[ 'link_active' ] = strpos($route, '/' . trim($menu[ 'link' ], '/')) === 0
+            $menu[ 'link_active' ] = $route === '/' . trim($menu[ 'link' ], '/')
                 ? 'active'
                 : '';
 
