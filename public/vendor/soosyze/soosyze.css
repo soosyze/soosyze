@@ -244,15 +244,15 @@ label {
     font-size: 1.3em;
 }
 input:disabled,
-select:disabled {
+select:disabled,
+textarea:disabled {
+    background-color: #e9ecef;
     cursor: not-allowed;
-    opacity: .65;
 }
-input:-moz-read-only {
-    background-color: #e3e3e3;
-}
-input:read-only {
-    background-color: #e3e3e3;
+input[readonly],
+select[readonly],
+textarea[readonly] {
+    background-color: #e9ecef;
 }
 .form-control.is-invalid {
     border-color: #db2828;
@@ -1093,6 +1093,11 @@ body.dark {
     background-color: rgba(86,61,124,.15);
     border-color: rgba(86,61,124,.2);
     color: #fff;
+}
+.dark textarea[readonly],
+.dark select[readonly],
+.dark input[readonly] {
+    background-color: #1a1c23;
 }
 
 /* -------- ALERT -------- */

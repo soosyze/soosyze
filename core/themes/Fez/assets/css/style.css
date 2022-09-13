@@ -376,3 +376,18 @@ ul.icons li a i {
     text-align: center;
     white-space: nowrap;
 }
+
+.faq {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+.faq-reponse,
+.faq-question{
+    margin: 0;
+}
+.faq-reponse {
+    margin-top: 1em
+}
+.faq-question {
+    cursor: pointer;
+}
