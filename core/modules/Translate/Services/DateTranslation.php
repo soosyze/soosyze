@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Soosyze\Core\Modules\Translate\Services;
 
 class DateTranslation
