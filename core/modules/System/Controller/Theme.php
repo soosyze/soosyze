@@ -7,6 +7,7 @@ namespace Soosyze\Core\Modules\System\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Soosyze\Components\Form\FormBuilder;
 use Soosyze\Components\Validator\Validator;
 use Soosyze\Core\Modules\System\ExtendTheme;
 use Soosyze\Core\Modules\System\Form\FormThemeAdmin;
@@ -44,8 +45,13 @@ class Theme extends \Soosyze\Controller
 
         $themes = [];
 
-        $params[ 'token' ] = $this->getToken();
-
+        $form = new FormBuilder([
+            'action' => self::router()->generateUrl('system.theme.active', [
+                'type' => $type
+            ]),
+            'class' => 'form-api',
+            'method' => 'post'
+        ]);
         foreach ($composers as $key => $composer) {
             $theme = $composer[ 'extra' ][ 'soosyze' ];
 
@@ -55,18 +61,16 @@ class Theme extends \Soosyze\Controller
             if ($addTheme) {
                 $themes[ $key ] = $composer;
 
-                $uriActivate = self::router()
-                    ->generateRequest('system.theme.active', [
-                        'type' => $type,
-                        'name' => $theme[ 'title' ]
-                    ])
-                    ->getUri();
-
-                $themes[ $key ][ 'link_activate' ] = $uriActivate->withQuery(
-                    http_build_query($params)
-                );
+                $form->group($key, 'div', function ($form) use ($theme) {
+                    $form->button('name', t('Activate'), [
+                        'class' => 'btn btn-success submit',
+                        'id'    => $theme[ 'title' ],
+                        'value' => $theme[ 'title' ]
+                    ]);
+                });
             }
         }
+        $form->token('token_theme');
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -77,6 +81,7 @@ class Theme extends \Soosyze\Controller
                 ->view('page.submenu', $this->getListThemeSubmenu($type))
                 ->make('page.content', 'system/content-themes-admin.php', $this->pathViews, [
                     'active_theme' => $activeTheme,
+                    'form'         => $form,
                     'link_edit'    => self::module()->has('Block')
                         ? self::router()->generateUrl('block.section.admin', [ 'theme' => $type ])
                         : null,
@@ -89,17 +94,16 @@ class Theme extends \Soosyze\Controller
 
     public function active(
         string $type,
-        string $name,
         ServerRequestInterface $req
     ): ResponseInterface {
         $themes = $this->getThemes($type);
 
         $validator = (new Validator())
             ->setRules([
-                'token' => 'token',
-                'name'  => 'inarray:' . implode(',', $themes)
+                'token_theme' => 'token',
+                'name'        => 'inarray:' . implode(',', $themes)
             ])
-            ->setInputs($req->getQueryParams() + [ 'name' => $name ]);
+            ->setInputs((array) $req->getParsedBody());
 
         if (!$validator->isValid()) {
             return $this->json(400, [
@@ -107,7 +111,7 @@ class Theme extends \Soosyze\Controller
             ]);
         }
 
-        $outInstall = $this->installTheme($type, $name);
+        $outInstall = $this->installTheme($type, $validator->getInputString('name'));
 
         if (empty($outInstall)) {
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
@@ -120,7 +124,7 @@ class Theme extends \Soosyze\Controller
         }
 
         return $this->json(400, [
-                'messages' => [ 'errors' => $validator->getKeyErrors() ]
+                'messages' => [ 'errors' => $outInstall ]
         ]);
     }
 
@@ -312,17 +316,6 @@ class Theme extends \Soosyze\Controller
         }
 
         return $out;
-    }
-
-    private function getToken(): string
-    {
-        $token = uniqid((string) rand(), true);
-
-        $_SESSION[ 'token' ][ 'token' ] = $token;
-
-        $_SESSION[ 'token_time' ][ 'token' ] = time();
-
-        return $token;
     }
 
     private function saveFile(string $key, Validator $validator): void
