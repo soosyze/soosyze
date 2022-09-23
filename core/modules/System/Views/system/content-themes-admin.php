@@ -23,6 +23,7 @@
 <fieldset class="filedset-theme responsive">
     <legend><?php echo t('Theme available'); ?></legend>
 
+    <?php echo $form->form_open(); ?>
     <table class="table table-hover table-striped table-responsive table-themes">
         <thead>
             <tr>
@@ -33,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-        <?php if ($themes): foreach ($themes as $theme): ?>
+        <?php if ($themes): foreach ($themes as $key => $theme): ?>
 
             <tr>
                 <th><?php echo htmlspecialchars($theme[ 'extra' ][ 'soosyze' ][ 'title' ]); ?></th>
@@ -46,10 +47,7 @@
 
                 </td>
                 <td data-title="<?php echo t('Action'); ?>">
-                    <a href="<?php echo $theme[ 'link_activate' ]; ?>" class="btn btn-success">
-                        <?php echo t('Activate'); ?>
-
-                    </a>
+                    <?php echo $form->form_group($key); ?>
                 </td>
             </tr>
         <?php endforeach; else: ?>
@@ -64,4 +62,6 @@
 
         </tbody>
     </table>
+    <?php echo $form->form_input('token_theme'); ?>
+    <?php echo $form->form_close(); ?>
 </fieldset>
