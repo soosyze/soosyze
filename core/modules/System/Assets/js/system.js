@@ -103,7 +103,7 @@ $(function () {
     new LazyLoad({});
 });
 
-$(document).delegate('.form-api input[type="submit"], .form-api button[type="submit"]', 'click', function (evt) {
+$(document).delegate('.form-api input[type="submit"], .form-api button[type="submit"], .form-api button[type="button"].submit', 'click', function (evt) {
     evt.preventDefault();
     const $this = $(this);
     const $form = $this.closest('form');
@@ -111,7 +111,7 @@ $(document).delegate('.form-api input[type="submit"], .form-api button[type="sub
 
     /* Ajoute les données du boutton de soumission aux données envoyé au back.*/
     const activeEl = document.activeElement;
-    if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image")) {
+    if (activeEl && activeEl.name && (activeEl.type === "submit" || activeEl.type === "image" || activeEl.type === "button")) {
         data.append(activeEl.name, activeEl.value);
     }
 
