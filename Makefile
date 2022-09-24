@@ -32,7 +32,7 @@ help: ## Displays the list of commands
 	| sed -e 's/##//'
 
 .PHONY: pack
-pack: ## Displays the list of commands
+pack: ## Pack the project into an archive
 	$(call printSection,PACK)
 	rm -rf ${PACK_DIR} ${PACK_DIR}.zip
 	$(COMPOSER) create-project soosyze/soosyze ${PACK_DIR} --no-dev
@@ -59,7 +59,7 @@ pack: ## Displays the list of commands
 #                       |_|
 
 .PHONY: install
-install: clean-vendor install-vendor ## Install the project
+install: clean-vendor clean-data install-vendor ## Install the project
 
 .PHONY: clean-vendor
 clean-vendor: ## Remove composer dependencies
@@ -72,6 +72,13 @@ install-vendor: ${SOURCE_DIR}/vendor/composer/installed.json ## Install composer
 ${SOURCE_DIR}/vendor/composer/installed.json:
 	$(call printSection,INSTALL VENDOR)
 	$(COMPOSER) --no-interaction install --ansi --no-progress --prefer-dist
+
+.PHONY: clean-data
+clean-data: ## Remove data
+	$(call printSection,CLEAN DATA)
+	rm -f ${SOURCE_DIR}/app/config/default/mailer.json
+	rm -f ${SOURCE_DIR}/app/config/default/settings.json
+	rm -rf ${SOURCE_DIR}/app/data/default
 
 #  _____             _ _ _ 
 # |  _  |           | (_) |
