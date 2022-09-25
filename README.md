@@ -45,14 +45,15 @@ Find us on the networks :
 
 ### Web Server
 
-| Web server              | Soosyze 2.x     |
-| ----------------------- | --------------- |
-| Apache HTTP Server 2.2+ | ✓ Supported     |
-| Ngnix 1+                | ✓ Supported\*   |
-| IIS                     | ✓ Supported\*\* |
+| Web server              | Soosyze 2.x       |
+| ----------------------- | ----------------- |
+| Apache HTTP Server 2.2+ | ✓ Supported\*     |
+| Ngnix 1+                | ✓ Supported\*\*   |
+| IIS                     | ✓ Supported\*\*\* |
 
-\*For Nginx, see the [installation recommendation](#ngnix)
-\*\*For IIS, see the [installation recommendation](#iis)
+- \*For Apache, see the [installation recommendation](#apache),
+- \*\*For Ngnix, see the [installation recommendation](#ngnix),
+- \*\*\*For IIS, see the [installation recommendation](#iis).
 
 ### PHP version
 
@@ -60,7 +61,7 @@ Find us on the networks :
 | --------------- | ------------- |
 | <= 7.1          | ✗ Unsupported |
 | 7.2 / 7.3 / 7.4 | ✓ Supported   |
-| 8.0             | ✓ Supported   |
+| 8.0 / 8.1       | ✓ Supported   |
 
 ### Required PHP extensions
 
@@ -102,50 +103,14 @@ Go to the directory of your server, open a command prompt and run the command:
 (_Remplacer le terme `<my-directory>` par le répertoire qui hébergera votre site._)
 
 ```sh
-php composer.phar create-project soosyze/soosyze <my-directory> --no-dev
+composer create-project soosyze/soosyze <my-directory> --no-dev
 ```
-
-### :airplane: Download via Git & Composer
-
-To install the production version of Soosyze CMS via Git and Composer it is necessary to have:
-
-- Git :
-  - [Windows](https://gitforwindows.org/),
-  - [Mac](http://sourceforge.net/projects/git-osx-installer/)
-  - Debian, Ubuntu... `sudo apt install git`,
-  - Red Hat, Fedora, CentOS... `sudo yum install git`,
-- The installer or the binary file [Composer](https://getcomposer.org/download/),
-- And the `php` command in your environment variables.
-
-Go to the directory of your server, open a command prompt and run the command:
-(_Remplacer le terme `<my-directory>` par le répertoire qui hébergera votre site._)
-
-Clone the repo with Git on your server,
-
-```sh
-git clone https://github.com/soosyze/soosyze.git <my-directory>
-cd <my-directory>
-```
-
-Install dependencies with Composer,
-
-```sh
-composer install --no-dev
-```
-
-Or, if you use the binary file,
-
-```sh
-php composer.phar install --no-dev
-```
-
-To follow the tutorials, install the CMS at the root of your server and keep the `soosyze` default directory.
 
 ### CMS installation
 
 Now that the source files are in the right place, open a web browser (Firefox, Chrome, Opera, Safari, Edge ...) and in the address bar, enter the following value :
 
-- Local, [127.0.0.1/soosyze](http://127.0.0.1/soosyze),
+- Local, [127.0.0.1/<my-directory>](http://127.0.0.1/<my-directory>),
 - Online, your domain name.
 
 The next page will come to you. Follow the instructions to install the CMS.
@@ -156,12 +121,16 @@ That's it, the CMS is installed.
 
 ## Configuration
 
+### Apache
+
+Soosyze will not function properly if `mod_rewriten` is not enabled or `.htaccess` is not allowed. Be sure to check with your hosting provider (or your VPS) that these features are enabled.
+
 ### Ngnix
 
 If you use Nginx, add the following items to your server's configuration block to ensure the security of CMS Soosyze:
 
 ```conf
-include /var/www/soosyze/.nginx.conf;
+include /path/to/soosyze/.nginx.conf;
 ```
 
 ### IIS
