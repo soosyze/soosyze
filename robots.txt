@@ -15,8 +15,3 @@ Disallow: /admin/
 Disallow: /user/register/
 Disallow: /user/login/
 Disallow: /user/logout/
-# Paths (no clean URLs)
-Disallow: /?q=admin/
-Disallow: /?q=user/register/
-Disallow: /?q=user/login/
-Disallow: /?q=user/logout/
