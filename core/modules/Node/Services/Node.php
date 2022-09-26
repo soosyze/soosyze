@@ -452,14 +452,14 @@ class Node
             if ($value[ 'field_type' ] === 'textarea') {
                 $out[ $key ][ 'field_display' ] = $this->filter->parse($data[ $key ]);
             } elseif ($value[ 'field_type' ] === 'image') {
-                $link = is_file($data[ $key ])
+                $link = is_string($data[$key]) && is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]
                     : $data[ $key ];
 
                 $out[ $key ][ 'field_value' ]   = $link;
                 $out[ $key ][ 'field_display' ] = '<img src="' . $link . '" alt="' . $value[ 'field_label' ] . '">';
             } elseif ($value[ 'field_type' ] === 'file') {
-                $link = is_file($data[ $key ])
+                $link = is_string($data[$key]) && is_file($data[ $key ])
                     ? $this->core->getRequest()->getBasePath() . $data[ $key ]
                     : $data[ $key ];
 

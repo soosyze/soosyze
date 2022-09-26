@@ -391,7 +391,10 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
 
     public function isShowFile(OneToManyOption $oneToManyOption, array $field): bool
     {
-        return $oneToManyOption->getFieldTypeShow() === 'image' && is_file($field[ $oneToManyOption->getFieldTypeShow() ]);
+        return $oneToManyOption->getFieldTypeShow() === 'image'
+            && is_string($field[ $oneToManyOption->getFieldTypeShow() ])
+            && is_file($field[ $oneToManyOption->getFieldTypeShow() ])
+        ;
     }
 
     public function makeRadio(FormGroupBuilder &$form, string $key, array $value, RadioOption $radioOption): void
