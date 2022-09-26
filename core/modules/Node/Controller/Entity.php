@@ -385,7 +385,7 @@ class Entity extends \Soosyze\Controller
                 continue;
             }
 
-            $file = $dir = self::core()->getSetting('root', '') . $entity[ $field[ 'field_name' ] ];
+            $file = self::core()->getSetting('root', '') . $entity[ $field[ 'field_name' ] ];
             if (!is_file($file)) {
                 continue;
             }
