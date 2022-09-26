@@ -148,6 +148,10 @@ class Node extends \Soosyze\Controller
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fieldsInsert[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
+                    $input = $validator->getInput($key);
+                    $fieldsInsert[ $key ] = \is_scalar($input)
+                        ? $input
+                        : null;
                     $fieldsInsert[ $key ] = $validator->getInputString($key);
                 }
             }
@@ -322,7 +326,10 @@ class Node extends \Soosyze\Controller
                 } elseif ($value[ 'field_type' ] === 'checkbox') {
                     $fieldsUpdate[ $key ] = implode(',', $validator->getInputArray($key));
                 } else {
-                    $fieldsUpdate[ $key ] = $validator->getInputString($key);
+                    $input = $validator->getInput($key);
+                    $fieldsUpdate[ $key ] = \is_scalar($input)
+                        ? $input
+                        : null;
                 }
             }
 
