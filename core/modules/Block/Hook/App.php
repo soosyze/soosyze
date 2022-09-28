@@ -89,7 +89,7 @@ class App
         RequestInterface $request,
         ResponseInterface &$response
     ): void {
-        if (!($response instanceof Templating) || $response->getStatusCode() !== 200) {
+        if (!($response instanceof Templating) || !in_array($response->getStatusCode(), [200, 403, 404])) {
             return;
         }
 
