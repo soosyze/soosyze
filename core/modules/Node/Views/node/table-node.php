@@ -71,7 +71,7 @@
                     <?php endif; ?>
 
                     <a href="<?php echo $node[ 'link_view' ]; ?>">
-                        <?php echo t($node[ 'title' ]); ?>
+                        <?php echo xss($node[ 'title' ]); ?>
 
                     </a>
                 </th>
