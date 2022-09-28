@@ -381,12 +381,12 @@ class User
         return $grant;
     }
 
-    public function isGrantedRequest(RequestInterface $request): bool
+    public function isGrantedRequest(RequestInterface $request): ?bool
     {
         $route = $this->router->parse($request);
 
         if (!$route instanceof Route) {
-            return false;
+            return null;
         }
         /* Si la permission n'existe pas. */
         if ($this->hasPermission($route->getKey())) {
@@ -436,7 +436,7 @@ class User
         RequestInterface &$request,
         ResponseInterface &$response
     ): void {
-        if (!$this->isGrantedRequest($request)) {
+        if ($this->isGrantedRequest($request) === false) {
             $response = new Response(403, new Stream('Error HTTP 403 Forbidden'));
         }
     }
