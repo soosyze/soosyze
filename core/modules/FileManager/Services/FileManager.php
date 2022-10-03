@@ -160,7 +160,7 @@ class FileManager
             'actions'    => $this->getActionsFile($file, $path),
             'ext'        => $ext,
             'link_show'  => $this->router->generateUrl('filemanager.file.show', [
-                'path' => $path, 'name' => '/' . $name, 'ext'  => '.' . $ext
+                'path' => $path, 'name' => '/' . $name, 'ext'  => $ext
             ]),
             'name'       => $name,
             'path'       => $path,
@@ -261,7 +261,7 @@ class FileManager
                 'icon'       => 'far fa-eye',
                 'key'        => 'filemanager.file.show',
                 'link'       => $this->router->generateUrl('filemanager.file.show', [
-                    'path' => $path, 'name' => $name, 'ext'  => '.' . $ext
+                    'path' => $path, 'name' => $name, 'ext'  => $ext
                 ]),
                 'title_link' => 'View',
                 'type'       => 'button'
@@ -273,7 +273,7 @@ class FileManager
                 'icon'       => 'fa fa-edit',
                 'key'        => 'filemanager.file.edit',
                 'link'       => $this->router->generateUrl('filemanager.file.edit', [
-                    'path' => $path, 'name' => $name, 'ext'  => '.' . $ext
+                    'path' => $path, 'name' => $name, 'ext'  => $ext
                 ]),
                 'title_link' => 'Rename',
                 'type'       => 'button'
@@ -285,7 +285,7 @@ class FileManager
                 'icon'       => 'fa fa-times',
                 'key'        => 'filemanager.file.remove',
                 'link'       => $this->router->generateUrl('filemanager.file.remove', [
-                    'path' => $path, 'name' => $name, 'ext'  => '.' . $ext
+                    'path' => $path, 'name' => $name, 'ext'  => $ext
                 ]),
                 'title_link' => 'Delete',
                 'type'       => 'button'
@@ -297,7 +297,7 @@ class FileManager
                 'icon'       => 'fa fa-download',
                 'key'        => 'filemanager.file.download',
                 'link'       => $this->router->generateUrl('filemanager.file.download', [
-                    'path' => $path, 'name' => $name, 'ext'  => '.' . $ext
+                    'path' => $path, 'name' => $name, 'ext'  => $ext
                 ]),
                 'title_link' => 'Download',
                 'type'       => 'link'
@@ -319,7 +319,7 @@ class FileManager
                 'icon'       => 'fa fa-copy',
                 'key'        => 'filemanager.copy.admin',
                 'link'       => $this->router->generateUrl('filemanager.copy.admin', [
-                    'path' => $path, 'name' => $name, 'ext'  => '.' . $ext
+                    'path' => $path, 'name' => $name, 'ext'  => $ext
                 ]),
                 'title_link' => 'Deplace or copy',
                 'type'       => 'button'
