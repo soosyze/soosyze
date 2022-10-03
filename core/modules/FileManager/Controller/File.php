@@ -67,14 +67,14 @@ class File extends \Soosyze\Controller
         ServerRequestInterface $req
     ) {
         $spl = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+            self::core()->getDir('files_public', 'app/files') . "$path$name.$ext"
         );
         if (!$spl->isFile()) {
             return $this->get404($req);
         }
         $data = self::filemanager()->parseFile($spl, $path);
 
-        $visualize = $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name$ext");
+        $visualize = $this->visualizeFile($data, self::core()->getPath('files_public', 'app/files') . "$path$name.$ext");
 
         return self::template()
                 ->getTheme('theme_admin')
@@ -269,7 +269,7 @@ class File extends \Soosyze\Controller
         ServerRequestInterface $req
     ) {
         $spl = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+            self::core()->getDir('files_public', 'app/files') . "$path$name.$ext"
         );
         if (!$spl->isFile()) {
             return $this->get404($req);
@@ -326,7 +326,7 @@ class File extends \Soosyze\Controller
         ServerRequestInterface $req
     ): ResponseInterface {
         $dir         = self::core()->getDir('files_public', 'app/files') . $path;
-        $fileCurrent = "$dir$name$ext";
+        $fileCurrent = "$dir$name.$ext";
 
         $validator = (new Validator())
             ->setRules([
@@ -353,7 +353,7 @@ class File extends \Soosyze\Controller
         }
 
         $nameUpdate = Util::strSlug($validator->getInputString('name'));
-        $fileUpdate = "$dir/$nameUpdate$ext";
+        $fileUpdate = "$dir/$nameUpdate.$ext";
 
         /* Si le nouveau nom du fichier est déjà utilisé. */
         if ($fileCurrent === $fileUpdate || !is_file($fileUpdate)) {
@@ -380,7 +380,7 @@ class File extends \Soosyze\Controller
         ServerRequestInterface $req
     ) {
         $spl = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+            self::core()->getDir('files_public', 'app/files') . "$path$name.$ext"
         );
         if (!$spl->isFile()) {
             return $this->get404($req);
@@ -401,7 +401,7 @@ class File extends \Soosyze\Controller
                 ->group('info-group', 'div', function ($form) use ($name, $ext) {
                     $form->html('info', '<p:attr>:content</p>', [
                         ':content' => t('Warning ! The deletion of the @name file is final.', [
-                            '@name' => "$name$ext"
+                            '@name' => "$name.$ext"
                         ])
                     ]);
                 }, [ 'class' => 'alert alert-warning' ]);
@@ -433,7 +433,7 @@ class File extends \Soosyze\Controller
         ServerRequestInterface $req
     ): ResponseInterface {
         $dir  = self::core()->getDir('files_public', 'app/files') . $path;
-        $file = "$dir$name$ext";
+        $file = "$dir$name.$ext";
 
         $validator = (new Validator())
             ->setRules([
@@ -469,7 +469,7 @@ class File extends \Soosyze\Controller
         string $ext,
         ServerRequestInterface $req
     ): ResponseInterface {
-        $file = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
+        $file = self::core()->getDir('files_public', 'app/files') . "$path$name.$ext";
         if (!is_file($file)) {
             return $this->get404($req);
         }
@@ -479,7 +479,7 @@ class File extends \Soosyze\Controller
         return (new Response(200, $stream))
                 ->withHeader('content-type', 'application/octet-stream')
                 ->withHeader('content-length', (string) $stream->getSize())
-                ->withHeader('content-disposition', 'attachment; filename=' . substr("$name$ext", 1))
+                ->withHeader('content-disposition', 'attachment; filename=' . substr("$name.$ext", 1))
                 ->withHeader('pragma', 'no-cache')
                 ->withHeader('cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
                 ->withHeader('expires', '0');
