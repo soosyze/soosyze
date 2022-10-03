@@ -36,7 +36,7 @@ class FileCopy extends \Soosyze\Controller
     ) {
         $path = Util::cleanPath('/' . $path);
         $spl  = new \SplFileInfo(
-            self::core()->getDir('files_public', 'app/files') . "$path$name$ext"
+            self::core()->getDir('files_public', 'app/files') . "$path$name.$ext"
         );
 
         if (!$spl->isFile()) {
@@ -148,7 +148,7 @@ class FileCopy extends \Soosyze\Controller
     ): ResponseInterface {
         $path = Util::cleanPath('/' . $path);
 
-        $fileCurrent = self::core()->getDir('files_public', 'app/files') . "$path$name$ext";
+        $fileCurrent = self::core()->getDir('files_public', 'app/files') . "$path$name.$ext";
 
         $validator = (new Validator())
             ->setRules([
@@ -178,7 +178,7 @@ class FileCopy extends \Soosyze\Controller
             ]);
         }
 
-        $fileTarget = "$dirTarget$name$ext";
+        $fileTarget = "$dirTarget$name.$ext";
         if (self::config()->get('settings.replace_file') === Config::KEEP_RENAME) {
             $fileTarget = $this->isResolveName($dirTarget, $name, $ext);
         } elseif (self::config()->get('settings.replace_file') === Config::KEEP_REFUSE && is_file($fileTarget)) {
@@ -218,15 +218,15 @@ class FileCopy extends \Soosyze\Controller
 
     private function isResolveName(string $dir, string $name, string $ext): string
     {
-        $file = "$dir$name$ext";
+        $file = "$dir$name.$ext";
 
         if (is_file($file)) {
             $i = 1;
-            while (is_file("{$dir}{$name}_{$i}{$ext}")) {
+            while (is_file("{$dir}{$name}_{$i}.{$ext}")) {
                 ++$i;
             }
 
-            return "{$dir}{$name}_{$i}{$ext}";
+            return "{$dir}{$name}_{$i}.{$ext}";
         }
 
         return $file;
