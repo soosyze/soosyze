@@ -14,7 +14,7 @@ RouteCollection::setNamespace('Soosyze\Core\Modules\Block\Controller')->name('bl
     });
     $r->setNamespace('\Block')->prefix('/block')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
         $r->get('create.list', '/{theme}/create/{section}', '@createList')->whereWords('section');
-        $r->get('create.show', '/create/{id}', '@createShow', [ 'id' => '[\w\.\-]+' ]);
+        $r->get('create.show', '/create/{id}', '@createShow', [ 'id' => '[\w\-]+' ]);
         $r->post('create.form', '/{theme}/create/form', '@createForm');
 
         $r->post('store', '/{theme}', '@store');
