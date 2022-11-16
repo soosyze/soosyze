@@ -69,7 +69,9 @@ class Block
      */
     public function getBlock(string $key): ?array
     {
-        return $this->getBlocks()[ $key ] ?? null;
+        return $this->getBlocks()[ $key ]
+            ?? $this->getBlocks()[ str_replace('-', '.', $key) ]
+            ?? null;
     }
 
     public function decodeOptions(?string $options): array
