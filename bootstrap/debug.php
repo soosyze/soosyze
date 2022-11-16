@@ -27,6 +27,10 @@ function handlerError(
 ): bool {
     global $config;
 
+    if (strpos($errstr, '#[\ReturnTypeWillChange]') !== false) {
+        return false;
+    }
+    
     if ($config[ 'debug' ]) {
         $msg = parseCode($errno) . ' ' . $errstr;
         printException(new \ErrorException($msg, 0, $errno, $errfile, $errline));
