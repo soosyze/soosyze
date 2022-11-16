@@ -274,7 +274,7 @@ class Login extends \Soosyze\Controller
         /** @phpstan-var string $redirect */
         $redirect = self::config()->get('settings.connect_redirect', Config::CONNECT_REDIRECT);
         if ($redirect !== '') {
-            $redirect = str_replace(':user_id', $user[ 'user_id' ], $redirect);
+            $redirect = str_replace(':user_id', (string) $user[ 'user_id' ], $redirect);
 
             return self::router()->makeUrl('/' . ltrim($redirect, '/'));
         }
