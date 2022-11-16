@@ -37,7 +37,7 @@ class Block extends \Soosyze\Controller
         foreach ($blocks as $key => &$block) {
             $block[ 'link_show_create' ] = self::router()->generateUrl('block.create.show', [
                 'theme' => $theme,
-                'id'    => $key
+                'id'    => str_replace('.', '-', $key)
             ]);
         }
 
