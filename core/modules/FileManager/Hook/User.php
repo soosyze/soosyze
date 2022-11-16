@@ -49,7 +49,7 @@ class User implements \Soosyze\Core\Modules\User\UserInterface
 
         foreach ($profils as $profil) {
             $pattern = $profil[ 'folder_show' ];
-            $pattern = str_replace(':user_id', $userId, $pattern);
+            $pattern = str_replace(':user_id', (string) $userId, $pattern);
             $pattern = preg_quote($pattern, '/');
             $pattern .= $profil[ 'folder_show_sub' ]
                 ? '.*'
