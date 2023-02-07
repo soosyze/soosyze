@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Router\Router;
 use Soosyze\Core\Modules\Block\Services\Block;
 use Soosyze\Core\Modules\QueryBuilder\Services\Query;
+use Soosyze\Core\Modules\Template\Services\Block as ServicesBlock;
 use Soosyze\Core\Modules\Template\Services\Templating;
 use Soosyze\Core\Modules\User\Services\User;
 
@@ -158,7 +159,7 @@ class App
                     $this->block->decodeOptions($block[ 'options' ])
                 );
 
-                /** @var string|object $content */
+                /** @var string|ServicesBlock $content */
                 $content = $this->core->callHook(
                     "block.{$block[ 'hook' ]}",
                     [ $tplBlock, $options ]

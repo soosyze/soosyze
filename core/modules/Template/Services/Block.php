@@ -15,8 +15,8 @@ class Block extends Template
         if ($child) {
             /** @phpstan-ignore-next-line */
             return $this
-                    ->getBlock($parent)
-                    ->getBlock($child);
+                    ->getBlock((string) $parent)
+                    ->getBlock((string) $child);
         }
 
         /** @phpstan-ignore-next-line */
