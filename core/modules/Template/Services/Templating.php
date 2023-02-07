@@ -289,9 +289,9 @@ class Templating extends \Soosyze\Components\Http\Response
         sscanf($selector, '%[a-z].%s', $parent, $child);
 
         if ($child) {
-            $this->getBlock($parent)->addBlock($child, $block);
+            $this->getBlock((string) $parent)->addBlock((string) $child, $block);
         } else {
-            $this->getThemplate()->addBlock($parent, $block);
+            $this->getThemplate()->addBlock((string) $parent, $block);
         }
 
         return $this;
