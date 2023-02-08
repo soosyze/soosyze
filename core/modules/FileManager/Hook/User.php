@@ -77,7 +77,7 @@ class User implements \Soosyze\Core\Modules\User\UserInterface
     ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
-        if (empty($right)) {
+        if ($right === []) {
             return false;
         }
 
@@ -172,7 +172,7 @@ class User implements \Soosyze\Core\Modules\User\UserInterface
     ): bool {
         $profils = $this->fileProfil->getProfilsFileByUser($user[ 'user_id' ] ?? null);
 
-        return !empty($profils);
+        return $profils !== [];
     }
 
     public function hookFolderShow(
@@ -182,7 +182,7 @@ class User implements \Soosyze\Core\Modules\User\UserInterface
     ): bool {
         $right = $this->getRight($path, $user[ 'user_id' ] ?? null);
 
-        return !empty($right);
+        return $right !== [];
     }
 
     public function hookFolderStore(

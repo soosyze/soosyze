@@ -113,7 +113,7 @@ class Theme extends \Soosyze\Controller
 
         $outInstall = $this->installTheme($type, $validator->getInputString('name'));
 
-        if (empty($outInstall)) {
+        if ($outInstall === []) {
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [
@@ -269,7 +269,7 @@ class Theme extends \Soosyze\Controller
             $errors += $out;
         }
 
-        if (!empty($errors)) {
+        if ($errors !== []) {
             return $errors;
         }
 

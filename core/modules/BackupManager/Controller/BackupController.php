@@ -28,7 +28,7 @@ class BackupController extends \Soosyze\Controller
         if ($isRepository = self::backupmanager()->isRepository()) {
             $backups = self::backupmanager()->listBackups();
         }
-        $doBackupRoute = empty($backups)
+        $doBackupRoute = $backups === []
             ? null
             : self::router()->generateUrl('backupmanager.delete.all');
 

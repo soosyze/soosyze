@@ -147,12 +147,12 @@ class Block implements \Soosyze\Core\Modules\Block\BlockInterface
         }
 
         $selected = '#';
-        if (!empty($paramMonth)) {
+        if ($paramMonth !== []) {
             $selected = $this->router->generateUrl('news.month', [
                 'year'  => $paramMonth[ 'year' ],
                 'month' => $paramMonth[ 'month' ]
             ]);
-        } elseif (!empty($paramYear)) {
+        } elseif ($paramYear !== []) {
             $selected = $this->router->generateUrl('news.years', [
                 'year' => $paramYear[ 'year' ]
             ]);

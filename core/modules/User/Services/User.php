@@ -254,7 +254,7 @@ class User
 
     public function hasPermission(?string $idPermission): bool
     {
-        if (!empty($this->permissions)) {
+        if ($this->permissions !== []) {
             return isset($this->permissions[ $idPermission ]);
         }
 
@@ -270,7 +270,7 @@ class User
 
     public function getGranted(array $user, string $idPermission): bool
     {
-        if (!empty($this->granted)) {
+        if ($this->granted !== []) {
             return in_array($idPermission, $this->granted);
         }
 
@@ -290,7 +290,7 @@ class User
 
     public function getGrantedAnonymous(string $idPermission): bool
     {
-        if (!empty($this->granted)) {
+        if ($this->granted !== []) {
             return in_array($idPermission, $this->granted);
         }
 
