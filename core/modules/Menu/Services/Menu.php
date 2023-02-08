@@ -176,7 +176,7 @@ class Menu
             ->orderBy('weight')
             ->fetchAll();
 
-        if (empty($query)) {
+        if ($query === []) {
             return [];
         }
 
@@ -223,7 +223,7 @@ class Menu
             ->orderBy('weight')
             ->fetchAll();
 
-        if (empty($query)) {
+        if ($query === []) {
             return null;
         }
 

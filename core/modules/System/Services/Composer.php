@@ -242,7 +242,7 @@ class Composer
 
     public function getThemeComposers(bool $reload = false): array
     {
-        if (!empty($this->themeComposers) || $reload) {
+        if ($this->themeComposers !== [] || $reload) {
             return $this->themeComposers;
         }
 
@@ -265,7 +265,7 @@ class Composer
 
     public function getModuleComposers(bool $reload = false): array
     {
-        if (!empty($this->moduleComposers) || $reload) {
+        if ($this->moduleComposers !== [] || $reload) {
             return $this->moduleComposers;
         }
 

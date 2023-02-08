@@ -233,7 +233,7 @@ class Node
             ->where('type', '=', $nodeType)
             ->fetchAll();
 
-        if (!empty($nodes)) {
+        if ($nodes !== []) {
             $this->query
                 ->from('system_alias_url')
                 ->delete();

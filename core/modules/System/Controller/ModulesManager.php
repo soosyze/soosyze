@@ -144,7 +144,7 @@ class ModulesManager extends Controller
         $outUninstall = $this->uninstallModule($moduleActive, $data);
         $outInstall   = $this->installModule($moduleActive, $data);
 
-        if (empty($outInstall) && empty($outUninstall)) {
+        if ($outInstall === [] && $outUninstall === []) {
             $_SESSION[ 'messages' ][ 'success' ][] = t('Saved configuration');
 
             return $this->json(200, [ 'redirect' => $route ]);
@@ -185,7 +185,7 @@ class ModulesManager extends Controller
             }
         }
 
-        if (!empty($errors)) {
+        if ($errors !== []) {
             return $errors;
         }
 
@@ -249,7 +249,7 @@ class ModulesManager extends Controller
             }
         }
 
-        if (!empty($errors)) {
+        if ($errors !== []) {
             return $errors;
         }
 

@@ -91,13 +91,13 @@ class NodeManager extends \Soosyze\Controller
             }
 
             $typesInput = $validator->getInputArray('types');
-            if (!empty($typesInput)) {
+            if ($typesInput !== []) {
                 $params[ 'types' ] = $typesInput;
                 $query->in('type', $typesInput);
             }
 
             $nodeStatusIdInput = $validator->getInputArray('node_status_id');
-            if (!empty($nodeStatusIdInput)) {
+            if ($nodeStatusIdInput !== []) {
                 $params[ 'node_status_id' ] = $nodeStatusIdInput;
                 $query->in('node_status_id', $nodeStatusIdInput);
             }

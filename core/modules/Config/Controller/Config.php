@@ -30,7 +30,7 @@ class Config extends \Soosyze\Controller
     {
         /** @phpstan-var ConfigMenuEntity $menu */
         $menu = $this->getMenuConfig();
-        if (!empty($menu)) {
+        if ($menu !== []) {
             return $this->getConfig($menu, array_keys($menu)[ 0 ], $req);
         }
 
