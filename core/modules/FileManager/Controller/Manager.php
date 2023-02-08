@@ -32,7 +32,7 @@ class Manager extends \Soosyze\Controller
     {
         $user = self::user()->isConnected();
         $profils = self::fileprofil()->getProfilsFileByUser($user[ 'user_id' ] ?? null);
-        if (empty($profils)) {
+        if ($profils === []) {
             return $this->get404();
         }
 

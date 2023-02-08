@@ -26,7 +26,7 @@ class RouteApi extends \Soosyze\Controller
         $routes = [];
         $this->container->callHook('api.route', [ &$routes, $search, $exclude, $limit ]);
 
-        if (empty($routes)) {
+        if ($routes === []) {
             $routes[] = [
                 'title' => t('No results found'),
                 'route' => '',

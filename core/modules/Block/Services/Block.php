@@ -53,7 +53,7 @@ class Block
      */
     public function getBlocks(): array
     {
-        if (empty($this->blocks)) {
+        if ($this->blocks === []) {
             $this->core->callHook('block.create.form.data', [ &$this->blocks ]);
 
             uasort($this->blocks, static function (array $a, array $b): int {
