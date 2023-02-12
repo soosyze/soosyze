@@ -2,17 +2,18 @@
 
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
+use Soosyze\Core\Modules\Block\Controller as Ctr;
 
 define('BLOCK_WITHS_THEME', [
     'theme' => 'public|admin'
 ]);
 
-RouteCollection::setNamespace('Soosyze\Core\Modules\Block\Controller')->name('block.')->group(function (RouteGroup $r): void {
-    $r->setNamespace('\Section')->name('section.')->prefix('/admin')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
+RouteCollection::name('block.')->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\Section::class)->name('section.')->prefix('/admin')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
         $r->get('admin', '/theme/{theme}/section', '@admin');
         $r->post('update', '/section/{id}/edit', '@update')->whereDigits('id');
     });
-    $r->setNamespace('\Block')->prefix('/block')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\Block::class)->prefix('/block')->withs(BLOCK_WITHS_THEME)->group(function (RouteGroup $r): void {
         $r->get('create.list', '/{theme}/create/{section}', '@createList')->whereWords('section');
         $r->get('create.show', '/create/{id}', '@createShow', [ 'id' => '[\w\-]+' ]);
         $r->post('create.form', '/{theme}/create/form', '@createForm');

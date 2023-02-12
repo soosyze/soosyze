@@ -2,6 +2,7 @@
 
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
+use Soosyze\Core\Modules\Node\Controller as Ctr;
 
 define('ENTITY_STORE_WITH', [
     'idNode' => '\d+',
@@ -13,22 +14,22 @@ define('ENTITY_EDIT_WITH', [
     'idEntity' => '\d+'
 ]);
 
-RouteCollection::setNamespace('Soosyze\Core\Modules\Node\Controller')->name('node.')->prefix('/node')->group(function (RouteGroup $r): void {
-    $r->get('show', '/{idNode}', '\Node@show', [ 'idNode' => '\d+' ]);
-    $r->get('status.search', '/status/search', '\NodeStatus@search');
-    $r->get('type.search', '/type/search', '\NodeType@search');
-    $r->get('filter', '/filter', '\NodeManager@filter');
-    $r->get('filter.page', '/filter/{pageId}', '\NodeManager@filter', [ 'pageId' => '[1-9]\d*' ]);
+RouteCollection::name('node.')->prefix('/node')->group(function (RouteGroup $r): void {
+    $r->get('show', '/{idNode}', Ctr\Node::class . '@show', [ 'idNode' => '\d+' ]);
+    $r->get('status.search', '/status/search', Ctr\NodeStatus::class . '@search');
+    $r->get('type.search', '/type/search', Ctr\NodeType::class . '@search');
+    $r->get('filter', '/filter', Ctr\NodeManager::class . '@filter');
+    $r->get('filter.page', '/filter/{pageId}', Ctr\NodeManager::class . '@filter', [ 'pageId' => '[1-9]\d*' ]);
 });
-RouteCollection::setNamespace('Soosyze\Core\Modules\Node\Controller\NodeApi')->name('node.api.')->prefix('/api/node/{idNode}')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace(Ctr\NodeApi::class)->name('node.api.')->prefix('/api/node/{idNode}')->group(function (RouteGroup $r): void {
     $r->get('remove', '/remove', '@remove', [ 'idNode' => '\d+' ]);
     $r->delete('delete', '/delete', '@delete', [ 'idNode' => '\d+' ]);
 });
-RouteCollection::setNamespace('Soosyze\Core\Modules\Node\Controller')->prefix('/admin/node')->name('node.')->group(function (RouteGroup $r): void {
-    $r->setNamespace('\NodeManager')->group(function (RouteGroup $r): void {
+RouteCollection::prefix('/admin/node')->name('node.')->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\NodeManager::class)->group(function (RouteGroup $r): void {
         $r->get('admin', '/', '@admin');
     });
-    $r->setNamespace('\Node')->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\Node::class)->group(function (RouteGroup $r): void {
         $r->get('add', '/add', '@add');
         $r->get('create', '/{nodeType}/create', '@create', [ 'nodeType' => '[_a-z]+' ]);
         $r->post('store', '/{nodeType}/create', '@store', [ 'nodeType' => '[_a-z]+' ]);
@@ -37,10 +38,10 @@ RouteCollection::setNamespace('Soosyze\Core\Modules\Node\Controller')->prefix('/
         $r->get('remove', '/{idNode}/remove', '@remove', [ 'idNode' => '\d+' ]);
         $r->delete('delete', '/{idNode}/delete', '@delete', [ 'idNode' => '\d+' ]);
     });
-    $r->setNamespace('\NodeClone')->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\NodeClone::class)->group(function (RouteGroup $r): void {
         $r->get('clone', '/{idNode}/clone', '@duplicate', [ 'idNode' => '\d+' ]);
     });
-    $r->setNamespace('\Entity')->name('entity.')->prefix('/{idNode}/{entity}')->group(function (RouteGroup $r): void {
+    $r->setNamespace(Ctr\Entity::class)->name('entity.')->prefix('/{idNode}/{entity}')->group(function (RouteGroup $r): void {
         $r->get('create', '/', '@create', ENTITY_STORE_WITH);
         $r->post('store', '/', '@store', ENTITY_STORE_WITH);
         $r->get('edit', '/{idEntity}/edit', '@edit', ENTITY_EDIT_WITH);
