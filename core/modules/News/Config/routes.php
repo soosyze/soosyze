@@ -2,8 +2,9 @@
 
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
+use Soosyze\Core\Modules\News\Controller\News;
 
-RouteCollection::setNamespace('Soosyze\Core\Modules\News\Controller\News')->name('news.')->prefix('/news')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace(News::class)->name('news.')->prefix('/news')->group(function (RouteGroup $r): void {
     $r->get('index', '/', '@page');
     $r->get('page', '/page/{pageId}', '@page', [ 'pageId' => '[1-9]\d*' ]);
 

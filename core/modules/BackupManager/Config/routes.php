@@ -2,10 +2,11 @@
 
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
+use Soosyze\Core\Modules\BackupManager\Controller\BackupController;
 
 define('FILE_PATTERN', '2[\d]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][\d]|3[01])T([01][\d]|2[0-3])-[0-5][\d]-[0-5][\d]');
 
-RouteCollection::setNamespace('Soosyze\Core\Modules\BackupManager\Controller\BackupController')->name('backupmanager.')->prefix('/admin/tool/backupmanager')->group(function (RouteGroup $r): void {
+RouteCollection::setNamespace(BackupController::class)->name('backupmanager.')->prefix('/admin/tool/backupmanager')->group(function (RouteGroup $r): void {
     $r->get('admin', '/', '@admin');
     $r->get('dobackup', '/do', '@doBackup');
     $r->get('download', '/download/{file}', '@download', [ 'file' => FILE_PATTERN ]);
