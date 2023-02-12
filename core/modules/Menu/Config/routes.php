@@ -2,17 +2,18 @@
 
 use Soosyze\Components\Router\RouteCollection;
 use Soosyze\Components\Router\RouteGroup;
+use Soosyze\Core\Modules\Menu\Controller as Ctr;
 
-RouteCollection::setNamespace('Soosyze\Core\Modules\Menu\Controller')->name('menu.')->group(function (RouteGroup $r): void {
-    $r->get('api.show', '/admin/api/menu/{menuId}', '\MenuApi@show')->whereDigits('menuId');
+RouteCollection::name('menu.')->group(function (RouteGroup $r): void {
+    $r->get('api.show', '/admin/api/menu/{menuId}', Ctr\MenuApi::class . '@show')->whereDigits('menuId');
 
     $r->prefix('/admin/menu')->group(function (RouteGroup $r): void {
-        $r->setNamespace('\MenuManager')->group(function (RouteGroup $r): void {
+        $r->setNamespace(Ctr\MenuManager::class)->group(function (RouteGroup $r): void {
             $r->get('admin', '/', '@show');
             $r->get('show', '/{menuId}', '@show')->whereDigits('menuId');
             $r->patch('check', '/{menuId}', '@check')->whereDigits('menuId');
         });
-        $r->setNamespace('\Menu')->group(function (RouteGroup $r) {
+        $r->setNamespace(Ctr\Menu::class)->group(function (RouteGroup $r) {
             $r->get('create', '/create', '@create');
             $r->post('store', '/create', '@store');
             $r->get('edit', '/{menuId}/edit', '@edit')->whereDigits('menuId');
@@ -21,7 +22,7 @@ RouteCollection::setNamespace('Soosyze\Core\Modules\Menu\Controller')->name('men
             $r->delete('delete', '/{menuId}', '@delete')->whereDigits('menuId');
         });
 
-        $r->prefix('/{menuId}/link')->withs([ 'menuId' => '\d+' ])->name('link.')->setNamespace('\Link')->group(function (RouteGroup $r): void {
+        $r->prefix('/{menuId}/link')->withs([ 'menuId' => '\d+' ])->name('link.')->setNamespace(Ctr\Link::class)->group(function (RouteGroup $r): void {
             $r->get('create', '/', '@create');
             $r->post('store', '/', '@store');
             $r->get('edit', '/{linkId}/edit', '@edit')->whereDigits('linkId');
