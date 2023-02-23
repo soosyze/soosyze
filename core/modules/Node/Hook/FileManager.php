@@ -93,9 +93,11 @@ class FileManager
             . '</div>';
 
         if ($this->core->callHook('app.granted.request', [ $request ])) {
-            /** @var Route @route */
-            $route    = $this->router->parse($request);
-            $response = $this->router->execute($route, $request);
+            $route = $this->router->parse($request);
+
+            if ($route instanceof Route) {
+                $response = $this->router->execute($route, $request);
+            }
         }
 
         $form->append('fields-fieldset', function ($form) use ($response) {

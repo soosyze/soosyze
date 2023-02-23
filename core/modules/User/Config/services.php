@@ -21,6 +21,9 @@ return [
     ],
     'user.hook.api.route' => [
         'class' => 'Soosyze\Core\Modules\User\Hook\ApiRoute',
+        'arguments' => [
+            'connectUrl' => '#settings.connect_url'
+        ],
         'hooks' => [
             'api.route' => 'apiRoute'
         ]

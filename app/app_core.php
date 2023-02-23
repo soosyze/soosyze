@@ -61,6 +61,9 @@ class Core extends App
             ],
             'file'     => [
                 'class'     => 'Soosyze\Core\Modules\FileSystem\Services\File',
+                'arguments' => [
+                    'root' => ROOT
+                ]
             ],
             'translate'     => [
                 'class'     => 'Soosyze\Core\Modules\Translate\Services\Translation',

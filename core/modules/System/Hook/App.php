@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Soosyze\Components\Http\Redirect;
 use Soosyze\Components\Http\Uri;
 use Soosyze\Components\Router\Router;
+use Soosyze\Components\Util\Util;
 use Soosyze\Config;
 use Soosyze\Core\Modules\System\Hook\Config as HookConfig;
 use Soosyze\Core\Modules\System\Services\Alias;
@@ -93,16 +94,14 @@ class App
         $path            = '/' . ltrim($pathNoFound, '/');
         $responseNoFound = null;
 
-        if ($path !== '') {
+        if ($pathNoFound !== '') {
             /** @phpstan-var string $path */
             $path = $this->alias->getSource($path, $path);
-
             $requestNoFound = $request
                 ->withUri(
-                    Uri::create($this->router->getBasePath() . $path)
+                    Uri::create(Util::cleanPath($this->router->getBasePath() . '/' . $path))
                 )
                 ->withMethod('GET');
-
             if (($route = $this->router->parse($requestNoFound)) !== null) {
                 $responseNoFound = $this->router->execute($route, $requestNoFound);
             }
@@ -137,16 +136,14 @@ class App
         $path             = '/' . ltrim($pathAccessDenied, '/');
         $responseDenied   = null;
 
-        if ($path !== '') {
+        if ($pathAccessDenied !== '') {
             /** @phpstan-var string $path */
             $path = $this->alias->getSource($path, $path);
-
             $requestDenied = $request
                 ->withUri(
                     Uri::create($this->router->getBasePath() . $path)
                 )
                 ->withMethod('GET');
-
             if (($route = $this->router->parse($requestDenied)) !== null) {
                 $responseDenied = $this->router->execute($route, $requestDenied);
             }
@@ -176,15 +173,13 @@ class App
         $path                = '/' . ltrim($pathMaintenance, '/');
         $responseMaintenance = null;
 
-        if ($path !== '') {
+        if ($pathMaintenance !== '') {
             $path = $this->alias->getSource($path, $path);
-
             $requestMaintenance = $request
                 ->withUri(
                     Uri::create($this->router->getBasePath() . $path)
                 )
                 ->withMethod('GET');
-
             if (($route = $this->router->parse($requestMaintenance)) !== null) {
                 $responseMaintenance = $this->router->execute($route, $requestMaintenance);
             }

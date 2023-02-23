@@ -276,11 +276,6 @@ class ModulesManager extends Controller
         return [];
     }
 
-    /**
-     * @param array $module
-     *
-     * @return array
-     */
     private function isRequired(array $module, array $composer, array $data): array
     {
         if (empty($module[ 'require' ])) {
@@ -316,8 +311,6 @@ class ModulesManager extends Controller
      * Si un module installé est requis par d'autre module.
      *
      * @param string $title Titre du module à désactiver.
-     *
-     * @return array
      */
     private function isRequiredForModule(string $title): array
     {

@@ -33,7 +33,7 @@ class Folder extends \Soosyze\Controller
      */
     public function create(string $path, ServerRequestInterface $req)
     {
-        $spl = new \SplFileInfo(
+        new \SplFileInfo(
             self::core()->getDir('files_public', 'app/files') . $path
         );
 
@@ -311,7 +311,7 @@ class Folder extends \Soosyze\Controller
         $zipArchive->open($pathnameZipArchive, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         $zipArchive = $this->zipRecursivly($dir, $path, $zipArchive);
-        $close      = $zipArchive->close();
+        $zipArchive->close();
 
         if (!is_file($pathnameZipArchive)) {
             return $this->get404($req);

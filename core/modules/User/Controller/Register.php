@@ -128,8 +128,8 @@ class Register extends \Soosyze\Controller
                 'token_actived'    => Util::strRandom(30),
                 'time_installed'   => (string) time(),
                 'timezone'         => 'Europe/Paris',
-                'terms_of_service' => (bool) $validator->hasInput('terms_of_service'),
-                'rgpd'             => (bool) $validator->hasInput('rgpd'),
+                'terms_of_service' => $validator->hasInput('terms_of_service'),
+                'rgpd'             => $validator->hasInput('rgpd'),
             ];
 
             $this->container->callHook('user.register.store.before', [ $validator, &$data ]);

@@ -116,9 +116,9 @@ class Templating extends \Soosyze\Components\Http\Response
 
         $this->core       = $core;
         $this->config     = $config;
-        /** @phpstan-var string[] $themePath */
-        $themePath        = $core->getSetting('themes_path');
-        $this->themesPath = $themePath;
+        $this->themesPath = is_array($core->getSetting('themes_path'))
+            ? $core->getSetting('themes_path')
+            : [];
         $this->basePath   = $core->getRequest()->getBasePath();
         $this->pathViews  = dirname(__DIR__) . '/Views/';
 

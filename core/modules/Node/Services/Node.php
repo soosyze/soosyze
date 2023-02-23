@@ -51,7 +51,7 @@ class Node
      *
      * @var array|null
      */
-    private $nodeCurrent = null;
+    private $nodeCurrent;
 
     /**
      * Données permettant de créer l'affichage d'un contenu.
