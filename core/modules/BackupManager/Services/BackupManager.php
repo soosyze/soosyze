@@ -20,11 +20,6 @@ class BackupManager
     public const SUFFIX = 'soosyzecms.zip';
 
     /**
-     * @var Config
-     */
-    private $config;
-
-    /**
      * @var Core
      */
     private $core;
@@ -39,11 +34,22 @@ class BackupManager
      */
     private $repository;
 
-    public function __construct(Config $config, Core $core, Router $router)
+    /**
+     * @var string
+     */
+    private $root;
+
+    /**
+     * @var int|null
+     */
+    private $maxBackups;
+
+    public function __construct(Core $core, Router $router, ?int $maxBackups, string $root)
     {
-        $this->config = $config;
-        $this->core   = $core;
-        $this->router = $router;
+        $this->core       = $core;
+        $this->router     = $router;
+        $this->maxBackups = $maxBackups;
+        $this->root       = $root;
 
         $this->repository = $this->core->getDir('backup_dir', '../soosyze_backups');
     }
@@ -93,9 +99,7 @@ class BackupManager
         if (($backup = $this->getFreshZip()) === null) {
             return false;
         }
-        /** @phpstan-var string @dir */
-        $dir = $this->core->getSetting('root');
-        $backup = $this->zipRecursivly($dir, $backup);
+        $backup = $this->zipRecursivly($this->root, $backup);
 
         return $backup->close();
     }
@@ -104,12 +108,9 @@ class BackupManager
     {
         $file = $this->repository . DS . $date . self::SUFFIX;
         if (file_exists($file)) {
-            /** @phpstan-var string @dir */
-            $dir = $this->core->getSetting('root');
-
             $zip = new \ZipArchive();
             $zip->open($file);
-            $zip->extractTo($dir);
+            $zip->extractTo($this->root);
 
             return $zip->close();
         }
@@ -121,9 +122,7 @@ class BackupManager
     {
         $file = $this->repository . DS . $date . self::SUFFIX;
 
-        return file_exists($file)
-            ? \unlink($file)
-            : false;
+        return file_exists($file) && \unlink($file);
     }
 
     public function deleteAll(): bool
@@ -151,16 +150,15 @@ class BackupManager
 
     private function getFreshZip(): ?\ZipArchive
     {
-        $maxBackups = $this->config->get('settings.max_backups');
         if (!$this->isRepository()) {
             return null;
         }
 
         $dir = scandir($this->repository, SCANDIR_SORT_ASCENDING);
 
-        if ($maxBackups &&
+        if ($this->maxBackups &&
             is_array($dir) &&
-            count($dir) - 2 >= $maxBackups &&
+            count($dir) - 2 >= $this->maxBackups &&
             preg_match('/^' . self::DATE_REGEX . 'soosyzecms/', $dir[ 2 ])
         ) {
             \unlink($this->repository . DS . $dir[ 2 ]);
@@ -193,9 +191,7 @@ class BackupManager
                     $zip = $this->zipRecursivly($file->getPathname(), $zip);
                 }
             } else {
-                /** @phpstan-var string @dir */
-                $dir = $this->core->getSetting('root');
-                $zip->addFile($file->getPathname(), str_replace($dir, '', $file->getPathname()));
+                $zip->addFile($file->getPathname(), str_replace($this->root, '', $file->getPathname()));
             }
         }
 

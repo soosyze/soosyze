@@ -338,8 +338,6 @@ class Menu
      * Retire les liens restreins dans un menu et définit le lien courant.
      *
      * @param array $query liens du menu
-     *
-     * @return array
      */
     private function getGrantedLink(array $query): array
     {

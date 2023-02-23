@@ -34,7 +34,7 @@ class User
      *
      * @var null|array
      */
-    private $connect = null;
+    private $connect;
 
     /**
      * @var Core
@@ -304,8 +304,6 @@ class User
     /**
      * Si la session existe renvoie l'utilisateur,
      * sinon s'il y a correspondance dans les autres cas renvoie faux.
-     *
-     * @return null|array
      */
     public function isConnected(): ?array
     {
@@ -371,11 +369,11 @@ class User
         }
         /* Si l'utilisateur et connecté. */
         elseif ($user = $this->isConnected()) {
-            $grant = (bool) $this->getGranted($user, $key);
+            $grant = $this->getGranted($user, $key);
         }
         /* Si l'utilisateur annonyme peut voir la route. */
         else {
-            $grant = (bool) $this->getGrantedAnonymous($key);
+            $grant = $this->getGrantedAnonymous($key);
         }
 
         return $grant;

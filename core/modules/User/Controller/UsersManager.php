@@ -124,11 +124,9 @@ class UsersManager extends \Soosyze\Controller
         $linkPagination = self::router()->generateRequest('user.filter.page', [], false)->getUri();
         $linkSort       = self::router()->generateRequest('user.filter')->getUri();
 
-        if ($params !== []) {
-            $linkPagination = $linkPagination->withQuery(
-                http_build_query($params)
-            );
-        }
+        $linkPagination = $linkPagination->withQuery(
+            http_build_query($params)
+        );
 
         $paramsActivedSort += [
             'order_by' => 'actived',

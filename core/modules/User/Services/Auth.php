@@ -20,11 +20,6 @@ class Auth
 
     /**
      * Créer la session et les token d'identification.
-     *
-     * @param string $email
-     * @param string $password
-     *
-     * @return bool
      */
     public function login(string $email, string $password): bool
     {

@@ -124,11 +124,9 @@ class NodeManager extends \Soosyze\Controller
         $linkPagination = self::router()->generateRequest('node.filter.page', [], false)->getUri();
         $linkSort       = self::router()->generateRequest('node.filter')->getUri();
 
-        if ($params !== []) {
-            $linkPagination = $linkPagination->withQuery(
-                http_build_query($params)
-            );
-        }
+        $linkPagination = $linkPagination->withQuery(
+            http_build_query($params)
+        );
 
         $paramsDateChangedSort += [
             'order_by' => 'date_changed',

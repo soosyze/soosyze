@@ -43,8 +43,6 @@ class Modules
      * Si le module est requis par le module virtuel "core".
      *
      * @param string $title Nom du module.
-     *
-     * @return array
      */
     public function isRequiredCore(string $title): array
     {
@@ -59,8 +57,6 @@ class Modules
      * Si le module est requis par un autre module installé.
      *
      * @param string $title Nom du module.
-     *
-     * @return array
      */
     public function isRequiredForModule(string $title): array
     {

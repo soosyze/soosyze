@@ -22,7 +22,11 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->phpVersion(PhpVersion::PHP_72);
 
     // Define what rule sets will be applied
-    $rectorConfig->sets([SetList::CODE_QUALITY, SetList::PHP_72]);
+    $rectorConfig->sets([
+        SetList::CODE_QUALITY,
+        SetList::PHP_72,
+        SetList::DEAD_CODE,
+    ]);
 
     // Path to phpstan with extensions, that PHPSTan in Rector uses to determine types
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon.dist');

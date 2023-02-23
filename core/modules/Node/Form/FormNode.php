@@ -92,7 +92,7 @@ class FormNode extends \Soosyze\Components\Form\FormBuilder
      *
      * @var array|null
      */
-    private $userCurrent = null;
+    private $userCurrent;
 
     /**
      * Si l'utilisateur du contenu est modifiable.
