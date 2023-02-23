@@ -346,8 +346,6 @@ class FormUser extends \Soosyze\Components\Form\FormBuilder
     }
 
     /**
-     * @param string $label
-     *
      * @return $this
      */
     public function submitForm(

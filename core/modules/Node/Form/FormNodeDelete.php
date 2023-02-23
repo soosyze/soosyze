@@ -30,7 +30,7 @@ class FormNodeDelete extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array|null
      */
-    private $useInPath = null;
+    private $useInPath;
 
     public function __construct(array $attr, Router $router)
     {

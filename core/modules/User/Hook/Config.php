@@ -48,12 +48,12 @@ final class Config implements \Soosyze\Core\Modules\Config\ConfigInterface
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
+    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     /**
      * @var Router
      */
-    private $router;
+    protected $router;
 
     public function __construct(Router $router)
     {

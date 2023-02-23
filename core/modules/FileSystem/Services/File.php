@@ -23,21 +23,21 @@ class File
      *
      * @var \Closure|null
      */
-    private $callDelete = null;
+    private $callDelete;
 
     /**
      * Fonction de récupération des données du fichier.
      *
      * @var \Closure|null
      */
-    private $callGet = null;
+    private $callGet;
 
     /**
      * Fonction de déplacement des données du fichier.
      *
      * @var \Closure|null
      */
-    private $callMove = null;
+    private $callMove;
 
     /**
      * Le répertoire d'envoie.
@@ -93,7 +93,7 @@ class File
      *
      * @var string|null
      */
-    private $nameResolved = null;
+    private $nameResolved;
 
     /**
      * Le chemin d'envoie.
@@ -105,7 +105,7 @@ class File
     /**
      * @var string|null
      */
-    private $randomPrefix = null;
+    private $randomPrefix;
 
     /**
      * Le répertoire racine.
@@ -114,18 +114,12 @@ class File
      */
     private $root;
 
-    /**
-     * @param Core $core
-     */
-    public function __construct(Core $core)
+    public function __construct(Core $core, string $root)
     {
         $this->basePath = $core->getRequest()->getBasePath();
         $this->dir      = $core->getDir('files_public', 'app/files');
         $this->path     = $core->getSettingEnv('files_public', 'app/files');
-
-        /** @phpstan-var string $root */
-        $root       = $core->getSetting('root', '');
-        $this->root = $root;
+        $this->root     = $root;
     }
 
     public function inputFile(
@@ -304,8 +298,6 @@ class File
 
     /**
      * Le répertoire du serveur dans lequel les fichiers sont envoyés.
-     *
-     * @return string
      */
     public function getMoveDir(): string
     {
@@ -316,8 +308,6 @@ class File
 
     /**
      * Le chemin relatif du répertoire dans lequel fichiers sont envoyés.
-     *
-     * @return string
      */
     public function getMovePath(): string
     {
@@ -328,8 +318,6 @@ class File
 
     /**
      * Le chemin absolu du répertoire dans lequel fichiers sont envoyés.
-     *
-     * @return string
      */
     public function getMovePathAbsolute(): string
     {

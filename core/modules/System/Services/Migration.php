@@ -47,8 +47,6 @@ class Migration
 
     /**
      * Si une migration est disponible.
-     *
-     * @return bool
      */
     public function isMigration(): bool
     {
@@ -130,21 +128,17 @@ class Migration
         $this->query->insertInto('migration', [ 'migration', 'extension' ]);
 
         foreach ($callbacks as $callback) {
-            try {
-                if (isset($callback[ 'callback' ][ 'up' ])) {
-                    call_user_func_array(
-                        $callback[ 'callback' ][ 'up' ],
-                        [ $this->schema, $query ]
-                    );
-                }
-                if (isset($callback[ 'callback' ][ 'up_config' ])) {
-                    call_user_func_array(
-                        $callback[ 'callback' ][ 'up_config' ],
-                        [ $this->config ]
-                    );
-                }
-            } catch (\Exception $e) {
-                throw $e;
+            if (isset($callback[ 'callback' ][ 'up' ])) {
+                call_user_func_array(
+                    $callback[ 'callback' ][ 'up' ],
+                    [ $this->schema, $query ]
+                );
+            }
+            if (isset($callback[ 'callback' ][ 'up_config' ])) {
+                call_user_func_array(
+                    $callback[ 'callback' ][ 'up_config' ],
+                    [ $this->config ]
+                );
             }
             $query->init();
             $this->query->values([
@@ -163,8 +157,6 @@ class Migration
      *
      * @param string $dir       Chemin des migrations
      * @param string $extension Titre du module
-     *
-     * @return void
      */
     public function installMigration(string $dir, string $extension): void
     {

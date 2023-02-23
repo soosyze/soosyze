@@ -8,7 +8,11 @@ return [
         ]
     ],
     'backupmanager' => [
-        'class' => 'Soosyze\Core\Modules\BackupManager\Services\BackupManager'
+        'class' => 'Soosyze\Core\Modules\BackupManager\Services\BackupManager',
+        'arguments' => [
+            'maxBackups' => '#settings.max_backups',
+            'root' => ROOT
+        ]
     ],
     'backupmanager.hook.config' => [
         'class' => 'Soosyze\Core\Modules\BackupManager\Hook\Config',

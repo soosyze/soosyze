@@ -36,12 +36,12 @@ class FormPermission extends \Soosyze\Components\Form\FormBuilder
     /**
      * @var array
      */
-    private static $attrGrp = [ 'class' => 'form-group' ];
+    protected static $attrGrp = [ 'class' => 'form-group' ];
 
     /**
      * @var array
      */
-    private static $attrGrpFlex = [ 'class' => 'form-group-flex' ];
+    protected static $attrGrpFlex = [ 'class' => 'form-group-flex' ];
 
     /**
      * @var array
