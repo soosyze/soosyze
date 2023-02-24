@@ -1,49 +1,53 @@
 <?php
 
+use Soosyze\Core\Modules\FileManager\Extend;
+use Soosyze\Core\Modules\FileManager\Hook;
+use Soosyze\Core\Modules\FileManager\Services;
+
 return [
     'filemanager' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Services\FileManager'
+        'class' => Services\FileManager::class
     ],
     'fileprofil' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Services\FileProfil'
+        'class' => Services\FileProfil::class
     ],
     'filemanager.filter.iterator' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Services\FilterManagerIterator'
+        'class' => Services\FilterManagerIterator::class
     ],
     'filemanager.extend' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'filemanager.hook.api.route' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\ApiRoute',
+        'class' => Hook\ApiRoute::class,
         'hooks' => [
             'api.route' => 'apiRoute'
         ]
     ],
     'filemanager.hook.app' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\App',
+        'class' => Hook\App::class,
         'hooks' => [
             'app.response.after' => 'hookResponseAfter'
         ]
     ],
     'filemanager.hook.config' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\Config',
+        'class' => Hook\Config::class,
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'filemanager.hook.menu' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\Menu',
+        'class' => Hook\Menu::class,
         'hooks' => [
             'user.submenu' => 'hookUsersMenu',
             'user.manager.submenu' => 'hookUserManagerSubmenu'
         ]
     ],
     'filemanager.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\User',
+        'class' => Hook\User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.filemanager.permission.admin' => 'hookFileAdmin',
@@ -79,7 +83,7 @@ return [
         ]
     ],
     'filemanager.hook.role' => [
-        'class' => 'Soosyze\Core\Modules\FileManager\Hook\Role',
+        'class' => Hook\Role::class,
         'hooks' => [
             'role.delete.before' => 'hookRoleDeleteBefore'
         ]
