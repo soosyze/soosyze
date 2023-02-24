@@ -1,23 +1,27 @@
 <?php
 
+use Soosyze\Core\Modules\System\Extend;
+use Soosyze\Core\Modules\System\Hook;
+use Soosyze\Core\Modules\System\Services;
+
 return [
     'alias' => [
-        'class' => 'Soosyze\Core\Modules\System\Services\Alias'
+        'class' => Services\Alias::class
     ],
     'composer' => [
-        'class' => 'Soosyze\Core\Modules\System\Services\Composer'
+        'class' => Services\Composer::class
     ],
     'semver' => [
-        'class' => 'Soosyze\Core\Modules\System\Services\Semver'
+        'class' => Services\Semver::class
     ],
     'module' => [
-        'class' => 'Soosyze\Core\Modules\System\Services\Modules'
+        'class' => Services\Modules::class
     ],
     'migration' => [
-        'class' => 'Soosyze\Core\Modules\System\Services\Migration'
+        'class' => Services\Migration::class
     ],
     'system.hook.app' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\App',
+        'class' => Hook\App::class,
         'hooks' => [
             'app.response.before' => 'hookSys',
             'app.403' => 'hooks403',
@@ -27,14 +31,14 @@ return [
         ]
     ],
     'system.extend' => [
-        'class' => 'Soosyze\Core\Modules\System\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'system.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\User',
+        'class' => Hook\User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.system.module.edit' => 'hookModuleManage',
@@ -53,13 +57,13 @@ return [
         ]
     ],
     'system.hook.config' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\Config',
+        'class' => Hook\Config::class,
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'email.hook.config' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\ConfigEmail',
+        'class' => Hook\ConfigEmail::class,
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]

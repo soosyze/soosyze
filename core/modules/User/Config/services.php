@@ -1,8 +1,12 @@
 <?php
 
+use Soosyze\Core\Modules\User\Extend;
+use Soosyze\Core\Modules\User\Hook;
+use Soosyze\Core\Modules\User\Services;
+
 return [
     'user' => [
-        'class' => 'Soosyze\Core\Modules\User\Services\User',
+        'class' => Services\User::class,
         'hooks' => [
             'app.granted' => 'isGranted',
             'app.granted.request' => 'isGrantedRequest',
@@ -11,16 +15,16 @@ return [
         ]
     ],
     'auth' => [
-        'class' => 'Soosyze\Core\Modules\User\Services\Auth'
+        'class' => Services\Auth::class
     ],
     'user.extend' => [
-        'class' => 'Soosyze\Core\Modules\User\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'user.hook.api.route' => [
-        'class' => 'Soosyze\Core\Modules\User\Hook\ApiRoute',
+        'class' => Hook\ApiRoute::class,
         'arguments' => [
             'connectUrl' => '#settings.connect_url'
         ],
@@ -29,7 +33,7 @@ return [
         ]
     ],
     'user.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\User\Hook\User',
+        'class' => Hook\User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.user.login' => 'hookLogin',
@@ -66,13 +70,13 @@ return [
         ]
     ],
     'user.hook.config' => [
-        'class' => 'Soosyze\Core\Modules\User\Hook\Config',
+        'class' => Hook\Config::class,
         'hooks' => [
             'config.edit.menu' => 'menu'
         ]
     ],
     'user.hook.block' => [
-        'class' => 'Soosyze\Core\Modules\User\Hook\Block',
+        'class' => Hook\Block::class,
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
             'block.user.login' => 'hookUserLogin',

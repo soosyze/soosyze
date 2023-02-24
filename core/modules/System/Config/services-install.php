@@ -1,14 +1,16 @@
 <?php
 
+use Soosyze\Core\Modules\System\Hook;
+
 return [
     'install' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\AppInstall',
+        'class' => Hook\AppInstall::class,
         'hooks' => [
             'app.404' => 'hook404'
         ]
     ],
     'install.hook.install' => [
-        'class' => 'Soosyze\Core\Modules\System\Hook\Step',
+        'class' => Hook\Step::class,
         'hooks' => [
             'step' => 'hookStep',
             'step.language' => 'hookLanguage',

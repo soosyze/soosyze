@@ -1,8 +1,11 @@
 <?php
 
+use Soosyze\Core\Modules\Config\Extend;
+use Soosyze\Core\Modules\Config\Hook\User;
+
 return [
     'config.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\Config\Hook\User',
+        'class' => User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.config.admin' => 'hookConfigAdmin',
@@ -11,7 +14,7 @@ return [
         ]
     ],
     'config.extend' => [
-        'class' => 'Soosyze\Core\Modules\Config\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'

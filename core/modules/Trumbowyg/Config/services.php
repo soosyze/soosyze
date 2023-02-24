@@ -1,14 +1,17 @@
 <?php
 
+use Soosyze\Core\Modules\Trumbowyg\Extend;
+use Soosyze\Core\Modules\Trumbowyg\Hook;
+
 return [
     'trumbowyg.install' => [
-        'class' => 'Soosyze\Core\Modules\Trumbowyg\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser'
         ]
     ],
     'trumbowyg.hook.app' => [
-        'class' => 'Soosyze\Core\Modules\Trumbowyg\Hook\App',
+        'class' => Hook\App::class,
         'hooks' => [
             'node.create.response.after' => 'getEditor',
             'node.edit.response.after' => 'getEditor',
@@ -16,7 +19,7 @@ return [
         ]
     ],
     'trumbowyg.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\Trumbowyg\Hook\User',
+        'class' => Hook\User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.trumbowyg.upload' => 'hookUpload'
