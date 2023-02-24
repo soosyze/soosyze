@@ -1,18 +1,22 @@
 <?php
 
+use Soosyze\Core\Modules\Dashboard\Extend;
+use Soosyze\Core\Modules\Dashboard\Hook\User;
+use Soosyze\Core\Modules\Dashboard\Services\Dashboard;
+
 return [
     'dashboard' => [
-        'class' => 'Soosyze\Core\Modules\Dashboard\Services\Dashboard'
+        'class' => Dashboard::class
     ],
     'dashboard.extend' => [
-        'class' => 'Soosyze\Core\Modules\Dashboard\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.user' => 'hookInstallUser',
             'install.menu' => 'hookInstallMenu'
         ]
     ],
     'dashboard.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\Dashboard\Hook\User',
+        'class' => User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.dashboard.index' => 'hookDashboardAdminister',
