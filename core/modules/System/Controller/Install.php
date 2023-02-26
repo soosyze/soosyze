@@ -233,23 +233,6 @@ class Install extends Controller
             ->set('settings.logo', '');
     }
 
-    private function installMigration(string $dir, string $title): void
-    {
-        if (!\is_dir($dir)) {
-            return;
-        }
-        self::query()->insertInto('migration', [ 'migration', 'extension' ]);
-        foreach (new \DirectoryIterator($dir) as $fileInfo) {
-            if (!$fileInfo->isFile()) {
-                continue;
-            }
-            self::query()->values([
-                $fileInfo->getBasename('.php'), $title
-            ]);
-        }
-        self::query()->execute();
-    }
-
     private function installFinish(): ResponseInterface
     {
         $saveLanguage = $_SESSION[ 'inputs' ][ 'language' ];
