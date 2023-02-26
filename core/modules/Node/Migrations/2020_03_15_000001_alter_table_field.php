@@ -1,11 +1,13 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 use Soosyze\Queryflatfile\TableAlter;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $sch->alterTable('field', function (TableAlter $ta) {
             $ta->dropColumn('field_rules');
         });
@@ -36,4 +38,4 @@ return [
             ->values([ 'page', 1, 'Body', 2, '!required|string', '' ])
             ->execute();
     }
-];
+};

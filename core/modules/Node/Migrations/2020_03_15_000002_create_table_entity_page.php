@@ -1,11 +1,13 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 use Soosyze\Queryflatfile\TableBuilder;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $sch->createTableIfNotExists('entity_page', function (TableBuilder $tb) {
             $tb->increments('page_id');
             $tb->text('body');
@@ -34,4 +36,4 @@ return [
                 ->execute();
         }
     }
-];
+};
