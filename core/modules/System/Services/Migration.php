@@ -7,6 +7,8 @@ namespace Soosyze\Core\Modules\System\Services;
 use Soosyze\Config;
 use Soosyze\Core\Modules\QueryBuilder\Services\Query;
 use Soosyze\Core\Modules\QueryBuilder\Services\Schema;
+use Soosyze\Core\Modules\System\Contract\ConfigMigrationInterface;
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Core\Modules\System\ExtendModule;
 
 class Migration
@@ -128,18 +130,13 @@ class Migration
         $this->query->insertInto('migration', [ 'migration', 'extension' ]);
 
         foreach ($callbacks as $callback) {
-            if (isset($callback[ 'callback' ][ 'up' ])) {
-                call_user_func_array(
-                    $callback[ 'callback' ][ 'up' ],
-                    [ $this->schema, $query ]
-                );
+            if ($callback[ 'callback' ] instanceof DatabaseMigrationInterface) {
+                $callback[ 'callback' ]->up($this->schema, $query);
             }
-            if (isset($callback[ 'callback' ][ 'up_config' ])) {
-                call_user_func_array(
-                    $callback[ 'callback' ][ 'up_config' ],
-                    [ $this->config ]
-                );
+            if ($callback[ 'callback' ] instanceof ConfigMigrationInterface) {
+                $callback[ 'callback' ]->upConfig($this->config);
             }
+
             $query->init();
             $this->query->values([
                 $callback[ 'migration' ], $callback[ 'extension' ]

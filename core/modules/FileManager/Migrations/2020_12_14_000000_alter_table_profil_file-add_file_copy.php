@@ -1,11 +1,13 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 use Soosyze\Queryflatfile\TableBuilder;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $sch->alterTable('profil_file', function (TableBuilder $table) {
             $table->boolean('file_copy')->valueDefault(true);
         });
@@ -20,4 +22,4 @@ return [
                 ->execute();
         }
     }
-];
+};

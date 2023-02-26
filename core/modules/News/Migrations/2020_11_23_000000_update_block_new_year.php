@@ -1,10 +1,12 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $req
             ->update('block', [
                 'hook'      => 'news.archive',
@@ -23,4 +25,4 @@ return [
             ->where('key_block', '=', 'news.year')
             ->execute();
     }
-];
+};

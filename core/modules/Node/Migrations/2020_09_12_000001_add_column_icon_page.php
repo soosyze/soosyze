@@ -1,10 +1,12 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $req->update('node_type', [
                 'node_type_icon' => 'fa fa-file'
             ])
@@ -25,4 +27,4 @@ return [
             ->where('node_type', '=', 'page_gallery')
             ->execute();
     }
-];
+};

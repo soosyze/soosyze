@@ -1,11 +1,13 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 use Soosyze\Queryflatfile\TableBuilder;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $sch->alterTable('node', function (TableBuilder $table) {
             $table->integer('user_id')->nullable();
         });
@@ -18,4 +20,4 @@ return [
             ->values([ 2, 'node.deleted.own' ])
             ->execute();
     }
-];
+};
