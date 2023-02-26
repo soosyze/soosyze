@@ -1,11 +1,13 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 use Soosyze\Queryflatfile\TableAlter;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $sch->alterTable('menu_link', function (TableAlter $ta): void {
             $ta->renameColumn('id', 'link_id');
             $ta->integer('menu_id');
@@ -42,4 +44,4 @@ return [
                 ->execute();
         }
     }
-];
+};

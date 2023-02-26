@@ -1,10 +1,12 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $nodeTypes = $req
             ->from('node_type_field')
             ->leftJoin('field', 'field_id', '=', 'field.field_id')
@@ -28,4 +30,4 @@ return [
                 ->execute();
         }
     }
-];
+};

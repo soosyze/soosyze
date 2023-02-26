@@ -1,10 +1,12 @@
 <?php
 
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         if (!$sch->hasTable('block')) {
             return;
         }
@@ -49,4 +51,4 @@ return [
         $req->insertInto('module_require', [ 'title_module', 'title_required', 'version' ])
             ->values([ 'Menu', 'Block', '1.0.*' ]);
     }
-];
+};

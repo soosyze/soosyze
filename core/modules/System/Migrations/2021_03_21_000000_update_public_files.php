@@ -1,11 +1,14 @@
 <?php
 
 use Soosyze\Config;
+use Soosyze\Core\Modules\System\Contract\ConfigMigrationInterface;
+use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
 
-return [
-    'up' => function (Schema $sch, Request $req) {
+return new class implements DatabaseMigrationInterface, ConfigMigrationInterface {
+    public function up(Schema $sch, Request $req): void
+    {
         $search  = 'app/files';
         $replace = 'public/files';
 
@@ -68,8 +71,10 @@ return [
                     ->execute();
             }
         }
-    },
-    'up_config' => function (Config $config) {
+    }
+
+    public function upConfig(Config $config): void
+    {
         $search  = 'app/files';
         $replace = 'public/files';
 
@@ -85,4 +90,4 @@ return [
             ->set('settings.favicon', str_replace($search, $replace, $favicon))
             ->set('settings.new_default_image', str_replace($search, $replace, $imgaeNew));
     }
-];
+};
