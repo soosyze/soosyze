@@ -3,7 +3,7 @@
     "type": "cms",
     "homepage": "https://soosyze.com",
     "description": "Soosyze CMS is a minimalist content management system in PHP, without database to create and manage your website easily.",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "keywords": ["cms", "php", "framework", "flat-file", "micro", "json", "website", "soosyze", "nosql", "responsive", "mvc"],
     "license": "MIT",
     "authors": [
@@ -23,9 +23,9 @@
     "require": {
         "php": ">=7.2",
         "composer/semver": "~3.2",
-        "soosyze/framework": "dev-dev",
-        "soosyze/queryflatfile": "dev-dev",
-        "phpmailer/phpmailer": "~6.1",
+        "soosyze/framework": "^4.1",
+        "soosyze/queryflatfile": "^3.1",
+        "phpmailer/phpmailer": "^6.7",
         "soosyze/kses": "^3.0",
         "erusev/parsedown": "^1.7"
     },
@@ -37,7 +37,6 @@
         "soosyze/php-cs-fixer-config": "^1.0"
     },
     "suggest": {
-        "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP.",
         "phpdocumentor/phpdocumentor": "Pour générer la documentation des services."
     },
     "autoload": {
