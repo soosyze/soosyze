@@ -1,18 +1,22 @@
 <?php
 
+use Soosyze\Core\Modules\Menu\Extend;
+use Soosyze\Core\Modules\Menu\Hook;
+use Soosyze\Core\Modules\Menu\Services;
+
 return [
     'menu' => [
-        'class' => 'Soosyze\Core\Modules\Menu\Services\Menu'
+        'class' => Services\Menu::class
     ],
     'menu.extend' => [
-        'class' => 'Soosyze\Core\Modules\Menu\Extend',
+        'class' => Extend::class,
         'hooks' => [
             'install.block' => 'hookInstallBlock',
             'install.user' => 'hookInstallUser'
         ]
     ],
     'menu.hook.user' => [
-        'class' => 'Soosyze\Core\Modules\Menu\Hook\User',
+        'class' => Hook\User::class,
         'hooks' => [
             'user.permission.module' => 'hookUserPermissionModule',
             'route.menu.admin' => 'hookMenuAdminister',
@@ -35,14 +39,14 @@ return [
         ]
     ],
     'menu.hook.app' => [
-        'class' => 'Soosyze\Core\Modules\Menu\Hook\App',
+        'class' => Hook\App::class,
         'hooks' => [
             'menu.admin.response.after' => 'hookMenuShowResponseAfter',
             'menu.show.response.after' => 'hookMenuShowResponseAfter'
         ]
     ],
     'menu.hook.block' => [
-        'class' => 'Soosyze\Core\Modules\Menu\Hook\Block',
+        'class' => Hook\Block::class,
         'hooks' => [
             'block.create.form.data' => 'hookBlockCreateFormData',
             'block.menu' => 'hookMenu',
