@@ -61,7 +61,7 @@ Vous pouvez également nous trouver sur les réseaux :
 | --------------- | -------------- |
 | <= 7.1          | ✗ Non supporté |
 | 7.2 / 7.3 / 7.4 | ✓ Supporté     |
-| 8.0 / 8.1       | ✓ Supporté     |
+| 8.0 / 8.1 / 8.2 | ✓ Supporté     |
 
 ### Extensions PHP requises
 
