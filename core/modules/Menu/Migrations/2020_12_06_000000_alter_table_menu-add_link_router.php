@@ -3,12 +3,12 @@
 use Soosyze\Core\Modules\System\Contract\DatabaseMigrationInterface;
 use Soosyze\Queryflatfile\Request;
 use Soosyze\Queryflatfile\Schema;
-use Soosyze\Queryflatfile\TableBuilder;
+use Soosyze\Queryflatfile\TableAlter;
 
 return new class implements DatabaseMigrationInterface {
     public function up(Schema $sch, Request $req): void
     {
-        $sch->alterTable('menu_link', function (TableBuilder $table) {
+        $sch->alterTable('menu_link', function (TableAlter $table) {
             $table->string('link_router')->nullable();
         });
 
