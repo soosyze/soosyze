@@ -2,7 +2,6 @@
     "name": "soosyze-core/block",
     "type": "soosyze-module",
     "description": "Static and dynamic content block manager",
-    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\Block\\": "/"

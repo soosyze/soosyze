@@ -61,8 +61,12 @@ class ModulesManager extends Controller
                 $attr[ 'disabled' ] = 'disabled';
             }
 
+            /* Si la version requis du coeur est non conforme */
+            if ($isRequired = $this->isRequireCoreVersion($module)) {
+                $attr[ 'disabled' ] = 'disabled';
+            }
             /* Si un module requis est non conforme. */
-            if ($isRequired = $this->isRequired($module, $composer, $data)) {
+            elseif ($isRequired = $this->isRequired($module, $composer, $data)) {
                 $attr[ 'disabled' ] = 'disabled';
             }
 
@@ -170,6 +174,9 @@ class ModulesManager extends Controller
         foreach ($modules as $title) {
             if (!isset($composers[ $title ])) {
                 $errors[] = t('The :title module does not exist.', [ ':title' => $title ]);
+            }
+            if ($out = self::composer()->validCoreVersion($title, $composers)) {
+                $errors += $out;
             } elseif ($out = self::composer()->validComposer($title, $composers)) {
                 $errors += $out;
             } elseif ($out = self::composer()->validComposerExtendModule($title, $composers)) {
@@ -293,6 +300,10 @@ class ModulesManager extends Controller
             elseif (!in_array($require, $data)) {
                 $isRequired[] = sprintf('<a href="#%s" class="module-is_required_info">%s</a>', $require, $require);
             }
+            /* Si le module requis ne possède pas de contrainte de version */
+            elseif (empty($composer[ $require ][ 'version' ])) {
+                $isRequired[] = sprintf('<span class="module-is_required_danger">%s x.x.x</span>', $require);
+            }
             /* Si le module requis est installé, mais n'est pas de la bonne version. */
             elseif (!self::semver()->satisfies($composer[ $require ][ 'version' ], $version)) {
                 $isRequired[] = sprintf(
@@ -305,6 +316,34 @@ class ModulesManager extends Controller
         }
 
         return $isRequired;
+    }
+
+    private function isRequireCoreVersion(array $module): array
+    {
+        if ($module['package'] === 'Core') {
+            return [];
+        }
+
+        if (!isset($module['core-version-requirement'])) {
+            return [ '<span class="module-is_required_warning">Soosyze core version</span>' ];
+        }
+
+        if (
+            !self::semver()->satisfies(
+                self::composer()->getVersionCore(),
+                $module['core-version-requirement']
+            )
+        ) {
+            return [
+                sprintf(
+                    '<span class="module-is_required_warning">Soosyze %s (%s)</span>',
+                    $module['core-version-requirement'],
+                    self::composer()->getVersionCore()
+                )
+            ];
+        }
+
+        return [];
     }
 
     /**

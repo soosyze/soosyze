@@ -2,7 +2,6 @@
     "name": "soosyze-core/contact",
     "type": "soosyze-module",
     "description": "Contact form for internet users",
-    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\Contact\\": "/"

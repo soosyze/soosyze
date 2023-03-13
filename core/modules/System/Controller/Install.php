@@ -200,8 +200,8 @@ class Install extends Controller
             ->insertInto('module_require', [
                 'title_module', 'title_required', 'version'
             ])
-            ->values([ 'Core', 'System', '2.0.0' ])
-            ->values([ 'Core', 'User', '2.0.0' ])
+            ->values([ 'Core', 'System', $composerService->getVersionCore() ])
+            ->values([ 'Core', 'User', $composerService->getVersionCore() ])
             ->execute();
     }
 

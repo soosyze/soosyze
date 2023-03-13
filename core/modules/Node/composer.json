@@ -2,7 +2,6 @@
     "name": "soosyze-core/node",
     "type": "soosyze-module",
     "description": "Content management and creation",
-    "version": "2.0.0",
     "autoload": {
         "psr-4": {
             "Soosyze\\Core\\Modules\\Node\\": "/"

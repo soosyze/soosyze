@@ -84,6 +84,15 @@ class Migration
         return false;
     }
 
+    public function isCoreVersionMigrate(): bool
+    {
+        return $this->query
+            ->from('module_active')
+            ->where('title', '=', 'System')
+            ->where('version', '!=', $this->composer->getVersionCore())
+            ->fetch() !== null;
+    }
+
     /**
      * Installe les migrations non installé des modules actifs.
      */
@@ -144,9 +153,26 @@ class Migration
         }
 
         $this->query->execute();
-        $this->config
-            ->set('settings.module_update', false)
-            ->set('settings.module_update_time', time());
+    }
+
+    public function migrateCoreVersion(): void
+    {
+        $modulesCoreTitle = array_keys($this->composer->getCoreModuleComposers());
+
+        $this->query
+            ->update('module_active', [
+                'version' => $this->composer->getVersionCore()
+            ])
+            ->in('title', $modulesCoreTitle)
+            ->execute();
+
+        $this->query
+            ->update('module_require', [
+                'version' => $this->composer->getVersionCore()
+            ])
+            ->in('title_module', $modulesCoreTitle)
+            ->in('title_required', $modulesCoreTitle)
+            ->execute();
     }
 
     /**

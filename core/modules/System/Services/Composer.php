@@ -60,6 +60,32 @@ class Composer
         $this->semver = $semver;
     }
 
+    public function validCoreVersion(string $title, array $composers): array
+    {
+        $module = $composers[$title]['extra']['soosyze'] ?? [];
+
+        $package = $module['package'] ?? null;
+        $coreVersionRequirement = $module['core-version-requirement'] ?? null;
+
+        if ($package === 'Core') {
+            return [];
+        }
+
+        $errors = [];
+        if ($coreVersionRequirement === null) {
+            $errors[] = t('The version of Soosyze for module :title_module is not specified');
+        } elseif (
+            !$this->semver->satisfies($this->getVersionCore(), $coreVersionRequirement)
+        ) {
+            $errors[] = t('The required version of Soosyze for the :title_module module must be :core_version_requirement', [
+                ':title_module' => $title,
+                ':core_version_requirement' => $coreVersionRequirement
+            ]);
+        }
+
+        return $errors;
+    }
+
     public function validComposer(string $title, array $composers): array
     {
         $data = $composers[ $title ];
@@ -265,16 +291,25 @@ class Composer
 
     public function getModuleComposers(bool $reload = false): array
     {
-        if ($this->moduleComposers !== [] || $reload) {
-            return $this->moduleComposers;
+        if ($this->moduleComposers === [] || $reload) {
+            $this->moduleComposers = $this->getAppModuleComposers() + $this->getCoreModuleComposers();
         }
 
-        $moduleCore = $this->core->getDir('modules', 'core/modules', false);
-        $moduleApp  = $this->core->getDir('modules_contributed', 'app/modules', false);
-
-        $this->moduleComposers = $this->getComposer($moduleApp) + $this->getComposer($moduleCore);
-
         return $this->moduleComposers;
+    }
+
+    public function getCoreModuleComposers(): array
+    {
+        return $this->getComposer(
+            $this->core->getDir('modules', 'core/modules', false)
+        );
+    }
+
+    public function getAppModuleComposers(): array
+    {
+        return $this->getComposer(
+            $this->core->getDir('modules_contributed', 'app/modules', false)
+        );
     }
 
     public function getExtendClass(string $title, array $composers): string
@@ -350,6 +385,7 @@ class Composer
     private function getComposer(string $dir, string $type = self::TYPE_MODULE): array
     {
         $out = [];
+        $versionCore = $this->getVersionCore();
 
         foreach (new \DirectoryIterator($dir) as $splFile) {
             if (!$splFile->isDir() || $splFile->isDot()) {
@@ -366,7 +402,24 @@ class Composer
                 continue;
             }
 
-            $out[ $composer[ 'extra' ][ 'soosyze' ][ 'title' ] ] = $composer;
+            $module = $composer[ 'extra' ][ 'soosyze' ];
+
+            /* Charge la version du coeur à ses modules. */
+            if (($module[ 'package' ] ?? null) === 'Core') {
+                $composer[ 'version' ] = $versionCore;
+            }
+            /** Si le module require la version courante du coeur */
+            if (!empty($module[ 'require' ])) {
+                foreach ($module[ 'require' ] as $key => $requiredVersion) {
+                    if ($requiredVersion !== '{current}') {
+                        continue;
+                    }
+
+                    $composer[ 'extra' ][ 'soosyze' ][ 'require' ][ $key ] = $versionCore;
+                }
+            }
+
+            $out[ $module[ 'title' ] ] = $composer;
         }
 
         return $out;

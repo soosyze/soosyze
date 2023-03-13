@@ -15,7 +15,7 @@ class ModulesMigration extends \Soosyze\Controller
 {
     public function check(): ResponseInterface
     {
-        if (self::migration()->isMigration()) {
+        if (self::migration()->isMigration() || self::migration()->isCoreVersionMigrate()) {
             self::config()->set('settings.module_update', true);
         } else {
             $_SESSION[ 'messages' ][ 'success' ][] = t('Your site is up to date');
@@ -28,6 +28,12 @@ class ModulesMigration extends \Soosyze\Controller
     {
         try {
             self::migration()->migrate();
+            self::migration()->migrateCoreVersion();
+
+            self::config()
+                ->set('settings.module_update', false)
+                ->set('settings.module_update_time', time());
+
             $_SESSION[ 'messages' ][ 'success' ][] = t('The update is a success');
         } catch (\Exception $e) {
             $_SESSION[ 'messages' ][ 'errors' ][] = t('An error occurred during the update');
