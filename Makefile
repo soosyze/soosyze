@@ -36,6 +36,7 @@ pack: ## Pack the project into an archive
 	$(call printSection,PACK)
 	rm -rf ${PACK_DIR} ${PACK_DIR}.zip
 	$(COMPOSER) create-project soosyze/soosyze ${PACK_DIR} --no-dev
+	mv -f ${PACK_DIR}/vendor/composer/ClassLoader.php ${PACK_DIR}/vendor/composer/ClassLoader.tmp
 	rm -rf \
 		${PACK_DIR}/app/config/test \
 		${PACK_DIR}/app/data/test \
@@ -43,6 +44,7 @@ pack: ## Pack the project into an archive
 		${PACK_DIR}/composer.lock \
 		${PACK_DIR}/vendor/autoload.php \
 		${PACK_DIR}/vendor/composer/*.{php,json}
+	mv -f ${PACK_DIR}/vendor/composer/ClassLoader.tmp ${PACK_DIR}/vendor/composer/ClassLoader.php
 	mv -f ${PACK_DIR}/vendor/phpmailer/phpmailer/language/phpmailer.lang-fr.php ${PACK_DIR}/vendor/phpmailer/phpmailer/phpmailer.lang-fr.php
 	rm -f ${PACK_DIR}/vendor/phpmailer/phpmailer/language/*.php
 	mv -f ${PACK_DIR}/vendor/phpmailer/phpmailer/phpmailer.lang-fr.php ${PACK_DIR}/vendor/phpmailer/phpmailer/language/phpmailer.lang-fr.php
